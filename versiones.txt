@@ -1,0 +1,8 @@
+- 0.0.1: 
+    - Backend estructurado pero sin conexión con el cliente
+    - Css incorrecto
+    - Sin scripts en el mismo cliente, las páginas no tienen funcionalidad
+    - Navegabilidad únicamente por urls a todas las rutas por el momento necesarias
+    - Solo el mainMenu tiene un diseño, las otras páginas están vacías.
+    - Por parte de java falta reformatear código, pasarlo a inglés, y crear algunos 
+        getters y setters de los controladores.
