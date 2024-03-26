@@ -28,7 +28,7 @@ public class RestauranteController {
         this.pedidoRepository = pedidoRepository;
     }
 
-    @PostMapping("/restaurante")
+    @PostMapping("/restaurant")
     public ResponseEntity<Restaurante> crearRestaurante(@RequestParam("file") MultipartFile file,
                                                         @RequestParam("nombre") String nombre,
                                                         @RequestParam("email") String email,
@@ -56,23 +56,25 @@ public class RestauranteController {
         }
     }
     @CrossOrigin
-    @PostMapping("/restaurante/login")
-    public ResponseEntity<Restaurante> loginRestaurante(@RequestBody Restaurante restauranteDetails) {
+    @PostMapping("/restaurant/login/{email}/{password}")
+    public ResponseEntity<Restaurante> loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) {
         // Busco por email y clave encriptada, si se encuentra envio un ok
-        Optional<Restaurante> restauranteOptional = restauranteRepository.findByEmailAndPassword(restauranteDetails.getEmail(), Encrypt.encryptPassword(restauranteDetails.getContraseña()));
+        Optional<Restaurante> restauranteOptional = restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
         if (restauranteOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        Restaurante restaurante = restauranteOptional.get();
-        return ResponseEntity.ok(restaurante);
+
+        return ResponseEntity.ok(restauranteOptional.get());
     }
 
-    @PutMapping("/restaurante/{id}")
+    @PutMapping("/restaurant/update")
     public ResponseEntity<Restaurante> actualizarRestaurante(@PathVariable Long id, @RequestBody Restaurante restaurante) {
         Optional<Restaurante> restauranteEncontrado = restauranteRepository.findById(id);
         if (restauranteEncontrado.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        //Todo: Setters
 
         Restaurante restauranteFinal = restauranteRepository.save(restaurante);
 

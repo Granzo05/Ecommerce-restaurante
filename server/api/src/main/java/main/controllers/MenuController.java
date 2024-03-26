@@ -32,7 +32,7 @@ public class MenuController {
     }
 
     // Busca por id de menu
-    @GetMapping("/restaurante/{id}/menu")
+    @GetMapping("/menus")
     public List<Menu> getMenusPorIdRestaurante() {
         List<Menu> menus = menuRepository.findAll();
 
@@ -44,17 +44,11 @@ public class MenuController {
         return menus;
     }
 
-    @PostMapping("/restaurante/menu")
-    public ResponseEntity<Menu> crearMenu(@RequestParam("file") MultipartFile file,
-                                          @RequestParam("nombre") String nombre,
-                                          @RequestParam("tipo") EnumTipoMenu tipo,
-                                          @RequestParam("comensales") int comensales,
-                                          @RequestParam("tiempoCoccion") int tiempo,
-                                          @RequestParam("precio") double precio,
-                                          @RequestParam("restauranteID") Long restauranteId,
-                                          @RequestParam("ingredientesInputs") List<String> ingredientesInputs) throws IOException {
+    @Transactional
+    @PostMapping("/menu/create")
+    public ResponseEntity<String> crearMenu(@RequestBody Menu menuDetails) throws IOException {
 
-
+        // Todo: colocar gets para los atributos
         Menu menu = new Menu();
         menu.setNombre(nombre);
         menu.setTipo(tipo);
@@ -75,44 +69,31 @@ public class MenuController {
                 ingrediente.setCantidad(ingredienteJSON.getInt("cantidad"));
                 ingredientes.add(ingrediente);
             }
-        } catch (JSONException ignored) {
+        } catch (JSONException) {
+        return new ResponseEntity<>("El menu no fue añadido", HttpStatus.ACCEPTED);
+
         }
         menu.setIngredientes(ingredientes);
 
         menuRepository.save(menu);
-        return ResponseEntity.ok(menu);
+                return new ResponseEntity<>("El menu ha sido añadido correctamente", HttpStatus.ACCEPTED);
+
     }
 
-    @PutMapping("/restaurante/menu/{id}/update")
-    public ResponseEntity<Menu> actualizarMenu(@PathVariable Long id, @RequestBody Menu rest) {
-        Optional<Menu> menuEncontrado = menuRepository.findById(id);
+    @PutMapping("/menu/update")
+    public ResponseEntity<Menu> actualizarMenu(@RequestBody Menu rest) {
+        Optional<Menu> menuEncontrado = menuRepository.findById(rest.getId());
         if (menuEncontrado.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Menu menu = menuEncontrado.get();
-        Class<?> menuClass = menu.getClass();
-        Class<?> menuDetailClass = rest.getClass();
-
-        for (Field field : menuClass.getDeclaredFields()) {
-            field.setAccessible(true);
-            String nombre = field.getName();
-            try {
-                Field userDetailsField = menuDetailClass.getDeclaredField(nombre);
-                userDetailsField.setAccessible(true);
-                Object newValue = userDetailsField.get(rest);
-                if (newValue != null && !newValue.equals(field.get(menu))) {
-                    field.set(menu, newValue);
-                }
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                System.out.println("El error es " + e.getClass());
-            }
-        }
+        // Todo: settear
         Menu menuFinal = menuRepository.save(menu);
         return ResponseEntity.ok(menuFinal);
     }
 
-    @DeleteMapping("/restaurante/menu/{id}/delete")
-    public ResponseEntity<?> borrarMenu(@PathVariable Long id) {
+    @DeleteMapping("/menu/{id}/delete")
+    public ResponseEntity<?> borrarMenu(@PathVariable("id") Long id) {
         Optional<Menu> menu = menuRepository.findById(id);
         if (menu.isEmpty()) {
             return new ResponseEntity<>("El menu ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);

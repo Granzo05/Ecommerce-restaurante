@@ -1,3 +1,5 @@
+import { Multipart } from "./Multipart";
+
 export interface Restaurant {
     registerDate: Date;
     id: number;
@@ -7,5 +9,6 @@ export interface Restaurant {
     password: string;
     imagen64: string;
     privileges: string;
+    file: Multipart;
 
 }

@@ -45,19 +45,19 @@ public class PedidoController {
         this.clienteRepository = clienteRepository;
         this.restauranteRepository = restauranteRepository;
     }
-    @GetMapping("/cliente/id/{idCliente}/pedidos")
-    public List<Pedido> getPedidosPorCliente(@PathVariable Long idCliente) {
+    @GetMapping("/user/id/{id}/orders")
+    public List<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
         List<Pedido> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
         return pedidos;
     }
 
-    @GetMapping("/restaurante/pedidos")
+    @GetMapping("/orders")
     public List<Pedido> getPedidosPorNegocio() {
         List<Pedido> pedidos = pedidoRepository.findOrders();
         return pedidos;
     }
 
-    @GetMapping("/restaurante/pedidos/entrantes")
+    @GetMapping("/orders/incoming")
     public List<Pedido> getPedidosEntrantesPorNegocio() {
         List<Pedido> pedidos = pedidoRepository.findOrdersProcessed();
         return pedidos;
@@ -116,8 +116,8 @@ public class PedidoController {
                 .body(pdfBytes);
     }
 
-    @PostMapping("/restaurante/id/{id}/pedido")
-    public ResponseEntity<String> crearPedido(@PathVariable Long id, @RequestBody PedidoClienteDTO pedidoRequest) {
+    @PostMapping("/order/create")
+    public ResponseEntity<String> crearPedido(@RequestBody PedidoClienteDTO pedidoRequest) {
         List<Menu> menus = pedidoRequest.getMenus();
         String emailCliente = pedidoRequest.getEmail();
         Date fecha = pedidoRequest.getFecha();
@@ -177,17 +177,6 @@ public class PedidoController {
 
         pedidoRepository.save(pedido);
         return new ResponseEntity<>("La pedido ha sido cargado correctamente", HttpStatus.CREATED);
-    }
-    @PutMapping("/pedido/update/{id}")
-    public ResponseEntity<String> actualizarPedido(@PathVariable Long id, @RequestBody Pedido pedidoDetails) {
-        Optional<Pedido> pedidoEncontrada = pedidoRepository.findById(id);
-        if (pedidoEncontrada.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        // Guarda el pedido actualizado
-        pedidoRepository.save(pedidoDetails);
-
-        return ResponseEntity.ok("El pedido ha sido actualizado correctamente");
     }
 
     @DeleteMapping("/pedido/delete/{id}")

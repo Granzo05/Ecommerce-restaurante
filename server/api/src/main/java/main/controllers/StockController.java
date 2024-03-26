@@ -47,27 +47,25 @@ public class StockController {
     }
 
     // Busca stock mediante el menu, utilizando cada ingrediente para corroborar que hay cantidad para cocinar
-    @GetMapping("/restaurante/stock/check")
-    public ResponseEntity<String> checkStock(@RequestBody List<Menu> menus) {
-        for (Menu menu : menus) {
-            for (IngredienteMenu ingrediente : menu.getIngredientes()) {
-                Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(ingrediente.getNombre());
+@GetMapping("/restaurant/stock/check")
+public ResponseEntity<String> checkStock(@RequestParam(value = "menus") List<Menu> menus) {
+    for (Menu menu : menus) {
+        for (IngredienteMenu ingrediente : menu.getIngredientes()) {
+            Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(ingrediente.getNombre());
 
-                if (stockEncontrado.isPresent() && stockEncontrado.get().getCantidad() < ingrediente.getCantidad()) {
-                    // Si es menor solo devuelve los menus que puede producir junto con un error
-                    return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
-                }
+            if (stockEncontrado.isPresent() && stockEncontrado.get().getCantidad() < ingrediente.getCantidad()) {
+                // Si es menor solo devuelve los menus que puede producir junto con un error
+                return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<>("El stock es suficiente", HttpStatus.CREATED);
     }
+    return new ResponseEntity<>("El stock es suficiente", HttpStatus.CREATED);
+}
+
 
 
     @PostMapping("/restaurante/stock/create")
-    public ResponseEntity<String> crearStock(@RequestParam("nombre") String nombre,
-                                             @RequestParam("cantidad") int cantidad,
-                                             @RequestParam("medida") String medida,
-                                             @RequestParam("costo") double costo) {
+    public ResponseEntity<String> crearStock(@RequestBody Menu menu) {
 
         Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(nombre);
 
@@ -78,21 +76,40 @@ public class StockController {
             // Si no existe stock de ese producto se crea un nuevo objeto
             Stock stock = new Stock();
 
-            // Creamos el ingrediente con el nombre proporcionado y el costo
-            Ingrediente ingrediente = new Ingrediente();
-            ingrediente.setNombre(nombre);
-            if (costo > 0) ingrediente.setCosto(costo);
+            // Iteramos cada ingrediente del menu
+            for(Ingrediente ingrediente: menu.getIngredientes()) {
+            // Buscamos si existe este ingrediente
+            Ingrediente ingredienteDB = ingredienteRepository.getByName(ingrediente.getName());
+            
+            if(ingredienteDB != null) {
+                //  Si no existe lo creamos
+                ingredienteDB = new Ingrediente();
+                // Le asignamos el nombre
+                ingredienteDB.setNombre(menu.getNombre());
+                //Todo: En caso de ser nuevo deberiamos dar aviso de que se le debe
+            }
+
+            // Si el ingrediente tiene un costo nuevo y distinto al almacenado, se le asigna este nuevo
+            if (costo > 0 && costo != ingredienteDB.getCosto()) {
+                ingredienteDB.setCosto(ingrediente.getCosto());
+            }
+            
+            // Asignamos la cantidad de este ingrediente
+            if (ingrediente.getCantidad() > 0) {
+                stock.setCantidad(ingrediente.getCantidad());
+            }
 
             // Asignamos el ingrediente a este nuevo stock
-            stock.setIngrediente(ingrediente);
+            stock.setIngrediente(ingredienteDB);            
+            
+            // Guardamos nuevamente el ingredienteDB con los posibles datos nuevos
+            ingredienteRepository.save(ingredienteDB);
+            }
+
 
             // Asignamos el restaurante a este nuevo stock
             stock.setRestaurante(restauranteEncontrado.get());
 
-            // Asignamos la cantidad de este ingrediente
-            if (cantidad > 0) {
-                stock.setCantidad(cantidad);
-            }
 
             // En caso de ser proporcionada, se coloca la medida, por ejemplo KG, Litro, etc
             if (medida != null) {
@@ -103,19 +120,35 @@ public class StockController {
             stockRepository.save(stock);
             return new ResponseEntity<>("El stock ha sido añadido correctamente", HttpStatus.CREATED);
         } else {
-            // Si existe se actualiza lo necesario
 
-            // Si se proporciona un nuevo costo, entonces se actualiza
-            if (costo > 0) stockEncontrado.get().getIngrediente().setCosto(costo);
-
-            // Si se proporciona una nueva cantidad, entonces se actualiza
-            if (cantidad > 0) {
-                stockEncontrado.get().setCantidad(cantidad);
+            // Iteramos cada ingrediente del menu
+            for(Ingrediente ingrediente: menu.getIngredientes()) {
+            // Buscamos si existe este ingrediente
+            Ingrediente ingredienteDB = ingredienteRepository.getByName(ingrediente.getName());
+            
+            if(ingredienteDB != null) {
+                //  Si no existe lo creamos
+                ingredienteDB = new Ingrediente();
+                // Le asignamos el nombre
+                ingredienteDB.setNombre(menu.getNombre());
+                //Todo: En caso de ser nuevo deberiamos dar aviso de que se le debe
             }
 
-            // Si se proporciona una medida distinta, entonces se actualiza
-            if (medida != null) {
-                stockEncontrado.get().setMedida(medida);
+            // Si el ingrediente tiene un costo nuevo y distinto al almacenado, se le asigna este nuevo
+            if (costo > 0 && costo != ingredienteDB.getCosto()) {
+                ingredienteDB.setCosto(ingrediente.getCosto());
+            }
+            
+            // Asignamos la cantidad de este ingrediente
+            if (ingrediente.getCantidad() > 0) {
+                stock.setCantidad(ingrediente.getCantidad());
+            }
+
+            // Asignamos el ingrediente a este nuevo stock
+            stock.setIngrediente(ingredienteDB);            
+            
+            // Guardamos nuevamente el ingredienteDB con los posibles datos nuevos
+            ingredienteRepository.save(ingredienteDB);
             }
 
             stockRepository.save(stockEncontrado.get());
@@ -124,7 +157,7 @@ public class StockController {
         }
     }
 
-    @PutMapping("/restaurante/stock/update")
+    @PutMapping("/stock/update")
     public ResponseEntity<Stock> actualizarStock(@RequestBody Stock stock) {
         Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(stock.getIngrediente().getNombre());
         if (stockEncontrado.isEmpty()) {
@@ -134,9 +167,9 @@ public class StockController {
         return ResponseEntity.ok(stockFinal);
     }
 
-    @DeleteMapping("/restaurante/stock/delete/{nombre}")
-    public ResponseEntity<?> borrarStock(@PathVariable String nombre) {
-        Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(nombre);
+    @DeleteMapping("stock/delete")
+    public ResponseEntity<?> borrarStock(@RequestBody Stock stock) {
+        Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(stock.getIngrediente().getNombre());
         if (stockEncontrado.isEmpty()) {
             return new ResponseEntity<>("El stock ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
         }

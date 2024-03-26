@@ -30,15 +30,20 @@ public class FacturaController {
         this.pedidoRepository = pedidoRepository;
     }
 
-    @PostMapping("/cliente/factura")
+    @PostMapping("/bill/create")
     public void crearFactura(@RequestBody Factura facturaDetails) {
         Optional<Factura> user = facturaRepository.findById(facturaDetails.getId());
         // Todo: Corregir
         facturaRepository.save(facturaDetails);
     }
 
+        @GetMapping("/bills/client/{id}")
+    public List<Factura> getBillsClientId(@PathVariable("id") Long id) {
+        return facturaRepository.findByIdCliente(id);
+    }
+
     // Enviar Factura asociada al pedido como pdf
-    @GetMapping("/factura/pedido/{idPedido}/pdf")
+    @GetMapping("/bill/order/{idPedido}/pdf")
     public ResponseEntity<byte[]> generarFacturaPDF(@PathVariable Long idPedido) {
         // Lógica para obtener el pedido y su factura desde la base de datos
         Pedido pedido = pedidoRepository.findById(idPedido).orElse(null);

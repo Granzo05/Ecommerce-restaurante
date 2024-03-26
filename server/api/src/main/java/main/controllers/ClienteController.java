@@ -18,7 +18,7 @@ public class ClienteController {
         this.clienteRepository = clienteRepository;
     }
 
-    @PostMapping("/cliente/añadir")
+    @PostMapping("/user/create")
     public ResponseEntity<String> crearCliente(@RequestBody User userDetails) {
         Optional<User> cliente = clienteRepository.findByEmail(userDetails.getEmail());
         if (cliente.isEmpty()) {
@@ -30,21 +30,11 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/cliente/id/{id}")
-    public ResponseEntity<User> buscarClientePorId(@PathVariable long id) {
-        Optional<User> clienteOptional = clienteRepository.findById(id);
-        if (clienteOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        User user = clienteOptional.get();
-        return ResponseEntity.ok(user);
-    }
-
     @CrossOrigin
-    @PostMapping("/cliente/login")
-    public ResponseEntity<User> buscarCliente(@RequestBody User userDetails) {
+    @PostMapping("/user/{email}/password")
+    public ResponseEntity<User> buscarCliente(@PathVariable("email") String email, @PathVariable("password") String password,) {
         // Recibo un email y una password desde el cliente, esa pass la encripto para ver si coincide con la guardada
-        Optional<User> clienteOptional = clienteRepository.findByEmailAndPassword(userDetails.getEmail(), Encrypt.encryptPassword(userDetails.getContraseña()));
+        Optional<User> clienteOptional = clienteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
         if (clienteOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -52,37 +42,24 @@ public class ClienteController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/cliente/id/{id}/update")
-    public ResponseEntity<User> updateCliente(@PathVariable Long id, @RequestBody User userDetails) {
+    @PutMapping("/user/update")
+    public ResponseEntity<User> updateCliente(@RequestBody User userDetails) {
         Optional<User> clienteOptional = clienteRepository.findById(id);
         if (clienteOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         User user = clienteOptional.get();
-        Class<?> clienteClass = user.getClass();
-        Class<?> clienteDetailsClass = userDetails.getClass();
 
-        for (Field field : clienteClass.getDeclaredFields()) {
-            field.setAccessible(true);
-            String fieldName = field.getName();
-            try {
-                Field clienteDetailsField = clienteDetailsClass.getDeclaredField(fieldName);
-                clienteDetailsField.setAccessible(true);
-                Object newValue = clienteDetailsField.get(userDetails);
-                if (newValue != null && !newValue.equals(field.get(user))) {
-                    field.set(user, newValue);
-                }
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                System.out.println("El error es " + e.getClass());
-            }
-        }
-        User savedUser = clienteRepository.save(user);
+        // Todo: Agregar setters
+
+        clienteRepository.save(user);
+
         return ResponseEntity.ok(savedUser);
     }
 
     @DeleteMapping("/cliente/id/{id}/delete")
-    public ResponseEntity<?> borrarCliente(@PathVariable Long id) {
-        Optional<User> cliente = clienteRepository.findById(id);
+    public ResponseEntity<?> borrarCliente(@RequestBody User user) {
+        Optional<User> cliente = clienteRepository.findById(user.getId());
         if (!cliente.isPresent()) {
             return new ResponseEntity<>("El usuario no existe o ya ha sido borrado", HttpStatus.BAD_REQUEST);
         }

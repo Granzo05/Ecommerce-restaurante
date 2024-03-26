@@ -1,19 +1,10 @@
-const URL_API = 'http://localhost:8080/';
 import { User } from '../types/User'
+import { URL_API } from '../utils/global_variables/const';
 
 export const UserService = {
-
-    getUser: async (email: string, password: string): Promise<User> => {
-        const response = await fetch(URL_API + 'user' + '/' + email + '/' + password)
-
-        const data = await response.json();
-
-        return data;
-    },
-
     createUser: async (user: User): Promise<string> => {
-        const response = await fetch(URL_API + 'create-user', {
-            method: 'GET',
+        const response = await fetch(URL_API + 'user/create', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -25,8 +16,16 @@ export const UserService = {
         return data;
     },
 
+    getUser: async (email: string, password: string): Promise<User> => {
+        const response = await fetch(URL_API + 'user' + '/' + email + '/' + password)
+
+        const data = await response.json();
+
+        return data;
+    },
+
     updateUser: async (user: User): Promise<string> => {
-        const response = await fetch(URL_API + 'update-user', {
+        const response = await fetch(URL_API + 'user/update', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,7 +39,7 @@ export const UserService = {
     },
 
     deleteUser: async (user: User): Promise<string> => {
-        const response = await fetch(URL_API + 'delete-user', {
+        const response = await fetch(URL_API + 'user/delete', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
