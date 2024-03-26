@@ -1,0 +1,22 @@
+
+#root, body {
+    width: 100%;
+    padding: 0;
+    overflow-y: auto;
+}
+
+header {
+    margin-bottom: 25px;
+}
+
+header navbar{
+    padding: 20px;
+}
+
+footer {    
+    margin-top: 25px;
+}
+
+footer section {
+    padding: 10px;
+}

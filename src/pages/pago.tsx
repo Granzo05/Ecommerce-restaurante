@@ -1,4 +1,3 @@
-import React from 'react'
 import { enviarPedidoARestaurante, realizarPago } from '../js/pago';
 
 const Pago = () => {
