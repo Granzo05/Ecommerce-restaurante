@@ -133,8 +133,7 @@ public class PedidoController {
 
         User userFinal = new User(cliente.get().getId(), cliente.get().getNombre(), cliente.get().getApellido(), cliente.get().getDomicilio());
 
-        // Buscar si el restaurante existe
-        Optional<Restaurante> restaurante = restauranteRepository.findById(id);
+        Optional<Restaurante> restaurante = restauranteRepository.findById(0l);
 
         if (restaurante.isEmpty()) {
             return new ResponseEntity<>("La restaurante no está registrado", HttpStatus.BAD_REQUEST);

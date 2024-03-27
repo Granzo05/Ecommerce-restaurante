@@ -22,6 +22,8 @@ public class Menu {
     private double precio;
     @Column(name = "nombre")
     private String nombre;
+        @Column(name = "descripcion")
+    private String descripcion;
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
     private Restaurante restaurante;

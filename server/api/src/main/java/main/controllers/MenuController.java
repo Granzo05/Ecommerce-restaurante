@@ -1,21 +1,15 @@
 package main.controllers;
 
-import main.entities.Restaurante.Menu.EnumTipoMenu;
-import main.entities.Restaurante.Menu.IngredienteMenu;
 import main.entities.Restaurante.Menu.Menu;
+import main.repositories.IngredienteRepository;
 import main.repositories.MenuRepository;
 import main.repositories.RestauranteRepository;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +17,15 @@ import java.util.Optional;
 @RestController
 public class MenuController {
     private final MenuRepository menuRepository;
+
     private final RestauranteRepository restauranteRepository;
+    private final IngredienteRepository ingredienteRepository;
 
     public MenuController(MenuRepository menuRepository,
-                          RestauranteRepository restauranteRepository) {
+                          RestauranteRepository restauranteRepository, IngredienteRepository ingredienteRepository) {
         this.menuRepository = menuRepository;
         this.restauranteRepository = restauranteRepository;
+        this.ingredienteRepository = ingredienteRepository;
     }
 
     // Busca por id de menu
@@ -36,7 +33,7 @@ public class MenuController {
     public List<Menu> getMenusPorIdRestaurante() {
         List<Menu> menus = menuRepository.findAll();
 
-        for (Menu menu: menus) {
+        for (Menu menu : menus) {
             // Convertimos la imagen a base64 para poder mostrarla
             menu.setImagen64(Base64.getEncoder().encodeToString(menu.getImagen()));
         }
@@ -50,33 +47,20 @@ public class MenuController {
 
         // Todo: colocar gets para los atributos
         Menu menu = new Menu();
-        menu.setNombre(nombre);
-        menu.setTipo(tipo);
-        menu.setComensales(comensales);
-        menu.setPrecio(precio);
-        menu.setTiempoCoccion(tiempo);
+        menu.setNombre(menuDetails.getNombre());
+        menu.setTipo(menuDetails.getTipo());
+        menu.setComensales(menuDetails.getComensales());
+        menu.setPrecio(menuDetails.getPrecio());
+        menu.setTiempoCoccion(menuDetails.getTiempoCoccion());
         // Separo la imagen en bytes
-        menu.setImagen(file.getBytes());
-        menu.setRestaurante(restauranteRepository.findById(restauranteId).get());
+        menu.setImagen(menuDetails.getImagen());
 
-        List<IngredienteMenu> ingredientes = new ArrayList<>();
-        try {
-            JSONArray ingredientesJSON = new JSONArray(ingredientesInputs);
-            for (int i = 0; i < ingredientesJSON.length(); i++) {
-                JSONObject ingredienteJSON = ingredientesJSON.getJSONObject(i);
-                IngredienteMenu ingrediente = new IngredienteMenu();
-                ingrediente.setNombre(ingredienteJSON.getString("nombre"));
-                ingrediente.setCantidad(ingredienteJSON.getInt("cantidad"));
-                ingredientes.add(ingrediente);
-            }
-        } catch (JSONException) {
-        return new ResponseEntity<>("El menu no fue añadido", HttpStatus.ACCEPTED);
+        menu.setRestaurante(restauranteRepository.findById(0l).get());
 
-        }
-        menu.setIngredientes(ingredientes);
+        menu.setIngredientes(menuDetails.getIngredientes());
 
         menuRepository.save(menu);
-                return new ResponseEntity<>("El menu ha sido añadido correctamente", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("El menu ha sido añadido correctamente", HttpStatus.ACCEPTED);
 
     }
 

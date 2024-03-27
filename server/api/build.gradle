@@ -51,7 +51,8 @@ dependencies {
 	//Generador de pdfs
 	implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
 	//Oracle database
-	implementation 'com.oracle.database.jdbc:ojdbc8:19.8.0.0'
+	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc11', version: '23.3.0.23.09'
+
 }
 
 tasks.named('test') {

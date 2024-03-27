@@ -28,7 +28,6 @@ const AppRoutes: React.FC = () => {
 
         <Route path="/cocina" element={<Cocina/>}>
         </Route>
-
         
         <Route path="/pedidos/cliente/{id}" element={<PedidosCliente/>}>
         </Route>

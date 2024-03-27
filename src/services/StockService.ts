@@ -53,13 +53,13 @@ export const UserService = {
         return data;
     },
 
-    createStock: async (menu: Menu): Promise<string> => {
-        const response = await fetch(`${URL_API}restaurant/stock/create`, {
+    createStock: async (stock: Stock): Promise<string> => {
+        const response = await fetch(`${URL_API}/stock/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(menu)
+            body: JSON.stringify(stock)
         });
 
         const data = await response.json();

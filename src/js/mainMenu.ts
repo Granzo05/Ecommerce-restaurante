@@ -1,4 +1,4 @@
-var primerClic = true;
+const primerClic = true;
 
 export function toggleImage(divId: string) {
 

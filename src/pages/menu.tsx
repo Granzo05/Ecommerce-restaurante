@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { cargarGrids } from '../js/menusPorTipoComida'
+import { cargarMenu } from '../js/menu'
 
 function RestaurantesPorComida() {
-  const { tipoComida } = useParams()
+  const { idMenu } = useParams()
 
   useEffect(() => {
-    if (tipoComida)
-      cargarGrids(tipoComida)
+    if (idMenu)
+      cargarMenu(parseInt(idMenu))
 
-  }, [tipoComida])
+  }, [idMenu])
   return (
     <div id="grid-container">
       

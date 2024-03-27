@@ -9,6 +9,7 @@ export interface Menu {
     diners: number;
     price: number;
     name: string;
+    description: string;
     restaurant: Restaurant;
     ingredients: Ingredient[];
     imagen64: string;
