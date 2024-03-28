@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "buen_sabor")
 public class User {
     @Column(name = "fecha_registro", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -30,8 +30,8 @@ public class User {
     private long telefono;
     @Column(name = "contraseña")
     private String contraseña;
-    @OneToOne(mappedBy = "user")
-    private Factura factura;
+    @OneToMany(mappedBy = "user")
+    private List<Factura> factura;
     @Column(name = "privilegios")
     private String privilegios;
     @OneToMany(mappedBy = "user")
@@ -74,11 +74,11 @@ public class User {
         this.contraseña = contraseña;
     }
 
-    public Factura getFactura() {
+    public List<Factura> getFactura() {
         return factura;
     }
 
-    public void setFactura(Factura factura) {
+    public void setFactura(List<Factura> factura) {
         this.factura = factura;
     }
 

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
     List<Stock> findAll();
-    @Query("SELECT s FROM Stock s WHERE s.ingrediente.nombre = :nombre AND s.borrado = :'NO'")
+    @Query("SELECT s FROM Stock s WHERE s.ingrediente.nombre = :nombre AND s.borrado = 'NO'")
     Optional<Stock> findStockByProductName(@Param("nombre") String nombre);
 
 }

@@ -3,7 +3,7 @@ package main.entities.Restaurante.Menu;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "ingredientes")
+@Table(name = "ingredientes", schema = "buen_sabor")
 public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

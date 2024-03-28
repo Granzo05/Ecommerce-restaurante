@@ -5,7 +5,7 @@ import main.entities.Restaurante.Menu.Menu;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "detalles_pedido")
+@Table(name = "detalles_pedido", schema = "buen_sabor")
 public class DetallesPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

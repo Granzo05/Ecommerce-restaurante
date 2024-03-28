@@ -38,9 +38,9 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.1.4'
 	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.2'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.3.1.Final'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'mysql:mysql-connector-java:8.0.32'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -52,6 +52,7 @@ dependencies {
 	implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
 	//Oracle database
 	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc11', version: '23.3.0.23.09'
+	implementation group: 'com.oracle.database.security', name: 'oraclepki', version: '23.3.0.23.09'
 
 }
 

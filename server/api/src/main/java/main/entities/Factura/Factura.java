@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "facturas")
+@Table(name = "facturas", schema = "buen_sabor")
 public class Factura {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

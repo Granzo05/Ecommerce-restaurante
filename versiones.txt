@@ -9,4 +9,5 @@
 
 - 0.0.2
     - Carga de menus por tipo de comida buscada
-    - Carga de menu seleccionado mostrando los datos del mismo        
+    - Carga de menu seleccionado mostrando los datos del mismo      
+    - Tabla de datos oracle autonomous funcional  

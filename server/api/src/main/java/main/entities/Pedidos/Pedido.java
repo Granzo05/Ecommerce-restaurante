@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "pedidos")
+@Table(name = "pedidos", schema = "buen_sabor")
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

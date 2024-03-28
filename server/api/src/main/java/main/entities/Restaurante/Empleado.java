@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "empleados")
+@Table(name = "empleados", schema = "buen_sabor")
 public class Empleado {
     @Column(name = "fecha_ingreso", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

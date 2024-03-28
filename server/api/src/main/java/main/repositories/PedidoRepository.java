@@ -11,16 +11,16 @@ import java.util.List;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
-    @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :id AND p.borrado = :'NO'")
+    @Query("SELECT p FROM Pedido p WHERE p.user.id = :id AND p.borrado = 'NO'")
     List<Pedido> findOrderByIdCliente(@Param("id") long id);
 
-    @Query("SELECT p FROM Pedido p WHERE c.borrado = :'NO'")
+    @Query("SELECT p FROM Pedido p WHERE p.borrado = 'NO'")
     List<Pedido> findOrders();
 
-    @Query("SELECT p FROM Pedido p WHERE p.estado = 'procesado' AND p.borrado = :'NO'")
+    @Query("SELECT p FROM Pedido p WHERE p.estado = 'procesado' AND p.borrado = 'NO'")
     List<Pedido> findOrdersProcessed();
 
-    @Query("SELECT p FROM Pedido p WHERE p.estado = 'aceptado' AND p.borrado = :'NO'")
+    @Query("SELECT p FROM Pedido p WHERE p.estado = 'aceptado' AND p.borrado = 'NO'")
     List<Pedido> findOrdersAcepted();
 }
 

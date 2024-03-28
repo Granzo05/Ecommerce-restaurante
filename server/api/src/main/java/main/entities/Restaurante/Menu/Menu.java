@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "menus")
+@Table(name = "menus", schema = "buen_sabor")
 public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface DetallesPedidoRepository extends JpaRepository<DetallesPedido, Long> {
-    @Query("SELECT d FROM DetallesPedido d WHERE d.pedido.id = :id AND d.borrado = :'NO'")
+    @Query("SELECT d FROM DetallesPedido d WHERE d.pedido.id = :id")
     List<DetallesPedido> findByIdPedido(@Param("id") long id);
 
 }
