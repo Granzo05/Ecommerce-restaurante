@@ -9,8 +9,7 @@ body {
     height: 100vh;
     font-family: "Roboto", sans-serif;
     transition: 0.25s;
-    background: black;
-    background-image: url(img/fondo2.png);
+    background: rgb(2, 100, 247);
 }
 
 body .options {
