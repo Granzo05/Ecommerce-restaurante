@@ -15,7 +15,7 @@ const Header = () => {
         <header>
             <Navbar expand="lg" className="bg-body-tertiary" style={{ height: '100px', width: '100%', padding: '20px' }}>
                 <Container fluid>
-                    <Navbar.Brand href="/">Buen sabor</Navbar.Brand>
+                    <Navbar.Brand href="/"><img src="" alt="" /></Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                         <Nav
