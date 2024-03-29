@@ -7,7 +7,7 @@ import { Container } from "react-bootstrap";
 const App = () => {
   return (
     <Router>
-      <Header  />
+      <header><Header  /></header>
       <Container >
         <AppRoutes />
       </Container>

@@ -55,7 +55,7 @@ export default function MainMenu() {
     return (
         
         <div className={styles.options}>
-            <div  onClick={() => { toggleImage('hamburguesas') }} className={`${styles.option} ${enlargedImage === 'hamburguesas' ? 'enlarged' : ''}`} id="hamburguesas" style={{ backgroundImage: `url("https://cdn.sanity.io/images/jsdrzfkj/production-esmx/5e2316cc629ede9cd6646163efeafc5486161751-6240x4160.jpg?w=800&h=533&fit=crop")` }}>
+            <div  onClick={() => { toggleImage('hamburguesas') }} className={`${styles.option} ${enlargedImage === 'hamburguesas' ? styles.enlarged : ''}`} id="hamburguesas" style={{ backgroundImage: `url("https://cdn.sanity.io/images/jsdrzfkj/production-esmx/5e2316cc629ede9cd6646163efeafc5486161751-6240x4160.jpg?w=800&h=533&fit=crop")` }}>
                 <div className="_label_1jino_133">
                     <div className="_icon_1jino_193">
                         <img width="28" height="28" src="https://img.icons8.com/external-line-zulfa-mahendra/48/external-burguer-food-delivery-line-zulfa-mahendra.png" alt="external-burguer-food-delivery-line-zulfa-mahendra" />

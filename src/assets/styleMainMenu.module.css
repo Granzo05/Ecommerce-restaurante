@@ -33,9 +33,9 @@ body .options .option {
     cursor: pointer;
 }
 
-.option.enlarged {
+.enlarged {
     flex-grow: 10000;
-    transform: scale(1);
+    width: 500px;
     max-width: 600px;
     margin: 0px;
     border-radius: 40px;
