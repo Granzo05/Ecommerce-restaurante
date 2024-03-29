@@ -8,10 +8,6 @@ import java.util.Date;
 @Entity
 @Table(name = "empleados", schema = "buen_sabor")
 public class Empleado {
-    @Column(name = "fecha_ingreso", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    public Date fechaIngreso;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,11 +19,16 @@ public class Empleado {
     private long cuit;
     @Column(name = "telefono")
     private long telefono;
-    @OneToOne
-    @JoinColumn(name = "id_restaurante")
-    private Restaurante idRestaurante;
+    @Column(name = "fecha_ingreso", updatable = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    public Date fechaIngreso;
     @Column(name = "borrado")
     private String borrado;
+    @ManyToOne
+    @JoinColumn(name = "id_restaurante")
+    private Restaurante idRestaurante;
+    
     public Empleado() {
     }
 

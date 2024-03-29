@@ -9,8 +9,6 @@ interface FormData {
   domicilio: string;
   telefono: string;
   privilegios: string;
-  imagen: File | null;
-  tipoDeComida: string[];
 }
 
 const LoginNegocio = () => {
@@ -20,9 +18,7 @@ const LoginNegocio = () => {
     contraseña: '',
     domicilio: '',
     telefono: '',
-    privilegios: '',
-    imagen: null,
-    tipoDeComida: []
+    privilegios: ''
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,16 +26,6 @@ const LoginNegocio = () => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value
-    }));
-  };
-
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      tipoDeComida: checked
-        ? [...prevData.tipoDeComida, name]
-        : prevData.tipoDeComida.filter((tipo) => tipo !== name)
     }));
   };
 
@@ -51,22 +37,6 @@ const LoginNegocio = () => {
     if (formData.contraseña) formDataToSend.append('contraseña', formData.contraseña);
     if (formData.domicilio) formDataToSend.append('domicilio', formData.domicilio);
     if (formData.telefono) formDataToSend.append('telefono', formData.telefono);
-    if (formData.imagen && formData.imagen instanceof FileList && formData.imagen.length > 0) {
-      formDataToSend.append('file', formData.imagen[0]);
-    } if (formData.tipoDeComida) formDataToSend.append('tipoDeComida', formData.tipoDeComida.join(' '));
-    formDataToSend.append('privilegios', 'negocio');
-
-    const checkboxes = document.getElementsByClassName('checkboxs')
-    let tipoComida = ''
-
-    Array.from(checkboxes).forEach(checkbox => {
-      if (checkbox instanceof HTMLInputElement && checkbox.checked) {
-        tipoComida += checkbox.value + ' ';
-      }
-    });
-
-    if (formData.tipoDeComida) formDataToSend.append('tipoDeComida', tipoComida);
-
     if (formData.privilegios) formDataToSend.append('privilegios', 'negocio');
 
     // Creamos el restaurante en la db
@@ -211,114 +181,7 @@ const LoginNegocio = () => {
                   value={formData.telefono}
                   onChange={handleChange}
                   placeholder="Telefono"
-                />
-                <label>
-                  <input
-                    type="checkbox"
-                    name="panchos"
-                    checked={formData.tipoDeComida.includes('panchos')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="sanguches"
-                    checked={formData.tipoDeComida.includes('sanguches')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="vegetariano"
-                    checked={formData.tipoDeComida.includes('vegetariano')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="pastas"
-                    checked={formData.tipoDeComida.includes('pastas')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="parrilla"
-                    checked={formData.tipoDeComida.includes('parrilla')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="lomos"
-                    checked={formData.tipoDeComida.includes('lomos')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="sushi"
-                    checked={formData.tipoDeComida.includes('sushi')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="helado"
-                    checked={formData.tipoDeComida.includes('helado')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="empanadas"
-                    checked={formData.tipoDeComida.includes('empanadas')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="hamburguesa"
-                    checked={formData.tipoDeComida.includes('hamburguesa')}
-                    onChange={handleCheckboxChange}
-                  />
-                  Pizza
-                </label>
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="pizza" />Pizza
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="hamburguesa" />Hamburguesas
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="empanadas" />Empanadas
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="helado" />Helado
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="sushi" />Sushi
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="lomos" />Lomos
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="parrilla" />Parrilla
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="pastas" />Pastas
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="vegetariano" />Vegetariano
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="sanguches" />Sanguches
-                <input type="checkbox" className={styles.tipoComidaCheckbox} value="panchos" />Panchos
-                <input
-                  type="file"
-                  name="imagen"
-                  onChange={handleChange}
-                  accept="image/*"
-                />
+                />            
                 <button type="submit" onClick={cargarNegocio}>Registrarse</button>
               </form>
             </div>

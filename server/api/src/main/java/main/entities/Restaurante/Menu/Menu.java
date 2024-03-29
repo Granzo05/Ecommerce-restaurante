@@ -24,19 +24,18 @@ public class Menu {
     private String nombre;
         @Column(name = "descripcion")
     private String descripcion;
-    @ManyToOne
-    @JoinColumn(name = "id_restaurante")
-    private Restaurante restaurante;
     @OneToMany
     private List<IngredienteMenu> ingredientes = new ArrayList<>();
     @Lob
     @Column(name = "imagen")
     private byte[] imagen;
     private String imagen64;
-
     @Column(name = "borrado")
     private String borrado;
-
+    @ManyToOne
+    @JoinColumn(name = "id_restaurante")
+    private Restaurante restaurante;
+    
     public Menu() {
     }
     public Menu(int tiempoCoccion, EnumTipoMenu tipo, int comensales, double precio) {
