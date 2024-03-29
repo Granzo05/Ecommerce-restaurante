@@ -15,34 +15,27 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @Column(name = "tipo_envio")
     private EnumTipoEnvio tipoEnvio;
-    @ManyToOne
-    @JoinColumn(name = "id_cliente")
-    private User user;
-    @ManyToOne
-    @JoinColumn(name = "id_restaurante")
-    private Restaurante restaurante;
-    @OneToOne
-    @JoinColumn(name = "id_factura")
-    private Factura factura;
-    @Column(name = "domicilio")
-    private String domicilio;
     @Column(name = "estado")
     private String estado;
-    @Column(name = "telefono")
-    private long telefono;
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DetallesPedido> detallesPedido;
-
     @Column(name = "fecha", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     public Date fechaPedido;
-
     @Column(name = "borrado")
     private String borrado;
+    @OneToOne
+    @JoinColumn(name = "id_factura")
+    private Factura factura;
+    @ManyToOne
+    @JoinColumn(name = "id_restaurante")
+    private Restaurante restaurante;
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    private User user;
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DetallesPedido> detallesPedido;
 
     public Pedido() {
     }

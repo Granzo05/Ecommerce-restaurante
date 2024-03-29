@@ -5,7 +5,6 @@ export interface User {
     dateRegister: Date;
     id: number;
     name: string;
-    last_name: string;
     email: string;
     address: string;
     phone: number;

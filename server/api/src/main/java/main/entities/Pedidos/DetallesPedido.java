@@ -12,31 +12,21 @@ public class DetallesPedido {
     private Long id;
     @Column(name = "cantidad")
     private int cantidad;
-    @ManyToOne
+    @Column(name = "subtotal")
+    private double subTotal;
+    @OneToOne
     @JoinColumn(name = "id_menu")
     private Menu menu;
     @ManyToOne
     @JoinColumn(name = "id_pedido")
     private Pedido pedido;
-    @ManyToOne
-    @JoinColumn(name = "id_factura")
-    private Factura factura;
-    @Column(name = "subTotal")
-    private double subTotal;
+
     public DetallesPedido() {
     }
 
     public DetallesPedido(int cantidad, Menu menu) {
         this.cantidad = cantidad;
         this.menu = menu;
-    }
-
-    public Factura getFactura() {
-        return factura;
-    }
-
-    public void setFactura(Factura factura) {
-        this.factura = factura;
     }
 
     public double getSubTotal() {

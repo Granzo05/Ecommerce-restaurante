@@ -1,4 +1,4 @@
-import { Stock, Ingrediente } from "./types";
+import { Stock } from "../types";
 
 let idRestaurante = 0;
 

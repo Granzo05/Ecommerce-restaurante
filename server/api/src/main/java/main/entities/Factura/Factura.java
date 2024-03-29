@@ -14,34 +14,18 @@ public class Factura {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "fecha_factura", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    public Date fecha;
-    @Column(name = "tipoFactura")
+    @Column(name = "tipo_factura")
     private TipoFactura tipoFactura;
     @Column(name = "metodo_pago")
     private MetodoPago metodoPago;
-
-    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DetallesPedido> detallesPedido;
+    @OneToOne
+    @JoinColumn(name = "pedido")
+    private Pedido pedido;
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private User user;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "domicilio")
-    private String domicilio;
-    @Column(name = "telefono")
-    private long telefono;
 
     public Factura() {
-    }
-    public Factura(MetodoPago metodoPago, String email, String domicilio, long telefono) {
-        this.metodoPago = metodoPago;
-        this.email = email;
-        this.domicilio = domicilio;
-        this.telefono = telefono;
     }
 
     public TipoFactura getTipoFactura() {
@@ -82,30 +66,6 @@ public class Factura {
 
     public void setDetallesPedido(List<DetallesPedido> detallesPedido) {
         this.detallesPedido = detallesPedido;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getDomicilio() {
-        return domicilio;
-    }
-
-    public void setDomicilio(String domicilio) {
-        this.domicilio = domicilio;
-    }
-
-    public long getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(long telefono) {
-        this.telefono = telefono;
     }
 
     public Date getFecha() {

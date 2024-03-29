@@ -6,17 +6,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "restaurantes", schema = "buen_sabor")
+@Table(name = "restaurante", schema = "buen_sabor")
 public class Restaurante {
-    @Column(name = "fecha_registracion", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    public Date fechaRegistracion;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "nombre")
-    private String nombre;
     @Column(name = "domicilio")
     private String domicilio;
     @Column(name = "contraseña")
@@ -25,10 +19,6 @@ public class Restaurante {
     private long telefono;
     @Column(name = "email")
     private String email;
-    @Lob
-    @Column(name = "imagen")
-    private byte[] imagen;
-    private String imagen64;
     @Column(name = "privilegios")
     private String privilegios;
 
@@ -41,9 +31,8 @@ public class Restaurante {
         this.telefono = telefono;
     }
 
-    public Restaurante(String nombre, String imagen, Long id) {
+    public Restaurante(String nombre, Long id) {
         this.nombre = nombre;
-        this.imagen64 = imagen;
         this.id = id;
     }
 
@@ -61,22 +50,6 @@ public class Restaurante {
 
     public void setPrivilegios(String privilegios) {
         this.privilegios = privilegios;
-    }
-
-    public String getImagen64() {
-        return imagen64;
-    }
-
-    public void setImagen64(String imagen64) {
-        this.imagen64 = imagen64;
-    }
-
-    public byte[] getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
     }
 
     public String getContraseña() {
@@ -127,11 +100,4 @@ public class Restaurante {
         this.telefono = telefono;
     }
 
-    public Date getFechaRegistracion() {
-        return fechaRegistracion;
-    }
-
-    public void setFechaRegistracion(Date fechaRegistracion) {
-        this.fechaRegistracion = fechaRegistracion;
-    }
 }

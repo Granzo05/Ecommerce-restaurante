@@ -31,8 +31,8 @@ public class ClienteController {
     }
 
     @CrossOrigin
-    @PostMapping("/user/{email}/password")
-    public ResponseEntity<User> buscarCliente(@PathVariable("email") String email, @PathVariable("password") String password) {
+    @PostMapping("/user/login")
+    public ResponseEntity<User> loginUser(@PathVariable("email") String email, @PathVariable("password") String password) {
         // Recibo un email y una password desde el cliente, esa pass la encripto para ver si coincide con la guardada
         Optional<User> clienteOptional = clienteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
         if (clienteOptional.isEmpty()) {

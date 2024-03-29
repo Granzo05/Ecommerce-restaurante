@@ -11,10 +11,6 @@ import java.util.List;
 @Entity
 @Table(name = "users", schema = "buen_sabor")
 public class User {
-    @Column(name = "fecha_registro", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    public Date fechaRegistro;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,13 +26,12 @@ public class User {
     private long telefono;
     @Column(name = "contraseña")
     private String contraseña;
-    @OneToMany(mappedBy = "user")
-    private List<Factura> factura;
+    @Column(name = "fecha_registro", updatable = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    public Date fechaRegistro;
     @Column(name = "privilegios")
     private String privilegios;
-    @OneToMany(mappedBy = "user")
-    private List<Pedido> pedidos;
-
     @Column(name = "borrado")
     private String borrado;
 
