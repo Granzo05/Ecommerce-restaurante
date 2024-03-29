@@ -69,13 +69,6 @@ public class User {
         this.contraseña = contraseña;
     }
 
-    public List<Factura> getFactura() {
-        return factura;
-    }
-
-    public void setFactura(List<Factura> factura) {
-        this.factura = factura;
-    }
 
     public Long getId() {
         return id;
@@ -133,13 +126,6 @@ public class User {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public List<Pedido> getPedidos() {
-        return pedidos;
-    }
-
-    public void setPedidos(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
-    }
 
     public String getBorrado() {
         return borrado;
@@ -147,5 +133,21 @@ public class User {
 
     public void setBorrado(String borrado) {
         this.borrado = borrado;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", email='" + email + '\'' +
+                ", domicilio='" + domicilio + '\'' +
+                ", telefono=" + telefono +
+                ", contraseña='" + contraseña + '\'' +
+                ", fechaRegistro=" + fechaRegistro +
+                ", privilegios='" + privilegios + '\'' +
+                ", borrado='" + borrado + '\'' +
+                '}';
     }
 }
