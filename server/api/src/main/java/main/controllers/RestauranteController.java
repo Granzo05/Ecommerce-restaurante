@@ -28,14 +28,8 @@ public class RestauranteController {
         this.pedidoRepository = pedidoRepository;
     }
 
-    @PostMapping("/restaurant")
-    public ResponseEntity<Restaurante> crearRestaurante(@RequestParam("file") MultipartFile file,
-                                                        @RequestParam("nombre") String nombre,
-                                                        @RequestParam("email") String email,
-                                                        @RequestParam("contraseña") String contraseña,
-                                                        @RequestParam("domicilio") String domicilio,
-                                                        @RequestParam("telefono") long telefono,
-                                                        @RequestParam("tipoDeComida") String tipoDeComida) throws IOException {
+    @PostMapping("/restaurant/create")
+    public ResponseEntity<Restaurante> crearRestaurante(@RequestBody Restaurante restaurante) throws IOException {
         Optional<Restaurante> rest = restauranteRepository.findByEmail(email);
         if (rest.isEmpty()) {
             Restaurante restauranteDetails = new Restaurante();
@@ -46,8 +40,6 @@ public class RestauranteController {
             restauranteDetails.setDomicilio(domicilio);
             restauranteDetails.setTelefono(telefono);
             restauranteDetails.setPrivilegios("negocio");
-            // Separo la imagen en bytes
-            restauranteDetails.setImagen(file.getBytes());
 
             restauranteRepository.save(restauranteDetails);
             return ResponseEntity.ok(restauranteDetails);
