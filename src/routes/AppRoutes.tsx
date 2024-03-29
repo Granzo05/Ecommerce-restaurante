@@ -5,7 +5,7 @@ import Pago from "../pages/pago"
 import Menu from "../pages/menu"
 import Stock from "../pages/stock"
 import AccesoDenegado from "../pages/accesoDenegado"
-import MainMenu from "../pages/homePage"
+import MainMenu from "../pages/HomePage"
 import PedidosCliente from "../pages/pedidosCliente"
 import PedidosRestaurante from "../pages/pedidosRestaurante"
 
