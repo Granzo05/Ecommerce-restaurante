@@ -2,15 +2,21 @@ import { Menu } from '../types/Menu';
 import { URL_API } from '../utils/global_variables/const';
 
 export const MenuService = {
+
     getMenus: async (): Promise<Menu[]> => {
         const response = await fetch(URL_API + 'menus')
         const data = await response.json();
         return data;
     },
 
+    getMenusPorTipo: async (tipoComida: string): Promise<Menu[]> => {
+        const response = await fetch(URL_API + 'menus/' + tipoComida);
+        const data = await response.json();
+        return data;
+    },
 
     createMenu: async (menu: Menu): Promise<string> => {
-        const response = await fetch(URL_API + 'menu/create', {
+        const response = await fetch(URL_API + 'menu/crear', {
             method: 'POST',
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -24,7 +30,7 @@ export const MenuService = {
     },
 
     updateMenu: async (menu: Menu): Promise<string> => {
-        const response = await fetch(URL_API + '/menu/update', {
+        const response = await fetch(URL_API + 'menu/update', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,7 +40,7 @@ export const MenuService = {
 
         const data = await response.json();
 
-        return data;    
+        return data;
     },
 
     deleteMenu: async (idMenu: number): Promise<string> => {
@@ -47,7 +53,7 @@ export const MenuService = {
 
         const data = await response.json();
 
-        return data;    
+        return data;
     },
 
 }

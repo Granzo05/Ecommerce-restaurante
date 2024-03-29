@@ -1,12 +1,8 @@
 package main.entities.Factura;
 
-import main.entities.Users.User;
-import main.entities.Pedidos.DetallesPedido;
+import main.entities.Pedidos.Pedido;
+import main.entities.Cliente.Cliente;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "facturas", schema = "buen_sabor")
@@ -23,7 +19,7 @@ public class Factura {
     private Pedido pedido;
     @ManyToOne
     @JoinColumn(name = "id_cliente")
-    private User user;
+    private Cliente cliente;
 
     public Factura() {
     }
@@ -36,12 +32,12 @@ public class Factura {
         this.tipoFactura = tipoFactura;
     }
 
-    public User getCliente() {
-        return user;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setCliente(User user) {
-        this.user = user;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public Long getId() {
@@ -60,19 +56,12 @@ public class Factura {
         this.metodoPago = metodoPago;
     }
 
-    public List<DetallesPedido> getDetallesPedido() {
-        return detallesPedido;
+    public Pedido getPedido() {
+        return pedido;
     }
 
-    public void setDetallesPedido(List<DetallesPedido> detallesPedido) {
-        this.detallesPedido = detallesPedido;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
 }

@@ -1,13 +1,12 @@
 package main.controllers;
 
 import main.controllers.EncryptMD5.Encrypt;
-import main.entities.Users.User;
+import main.entities.Cliente.Cliente;
 import main.repositories.ClienteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Field;
 import java.util.Optional;
 
 @RestController
@@ -19,11 +18,12 @@ public class ClienteController {
     }
 
     @PostMapping("/user/create")
-    public ResponseEntity<String> crearCliente(@RequestBody User userDetails) {
-        Optional<User> cliente = clienteRepository.findByEmail(userDetails.getEmail());
+    public ResponseEntity<String> crearCliente(@RequestBody Cliente clienteDetails) {
+        System.out.println(clienteDetails);
+        Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
         if (cliente.isEmpty()) {
-            userDetails.setContraseña(Encrypt.encryptPassword(userDetails.getContraseña()));
-            clienteRepository.save(userDetails);
+            clienteDetails.setContraseña(Encrypt.encryptPassword(clienteDetails.getContraseña()));
+            clienteRepository.save(clienteDetails);
             return new ResponseEntity<>("El usuario ha sido añadido correctamente", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("El usuario ya existe", HttpStatus.BAD_REQUEST);
@@ -32,34 +32,34 @@ public class ClienteController {
 
     @CrossOrigin
     @PostMapping("/user/login")
-    public ResponseEntity<User> loginUser(@PathVariable("email") String email, @PathVariable("password") String password) {
+    public ResponseEntity<Cliente> loginUser(@PathVariable("email") String email, @PathVariable("password") String password) {
         // Recibo un email y una password desde el cliente, esa pass la encripto para ver si coincide con la guardada
-        Optional<User> clienteOptional = clienteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
+        Optional<Cliente> clienteOptional = clienteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
         if (clienteOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        User user = clienteOptional.get();
-        return ResponseEntity.ok(user);
+        Cliente cliente = clienteOptional.get();
+        return ResponseEntity.ok(cliente);
     }
 
     @PutMapping("/user/update")
-    public ResponseEntity<User> updateCliente(@RequestBody User userDetails) {
-        Optional<User> clienteOptional = clienteRepository.findById(userDetails.getId());
+    public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente clienteDetails) {
+        Optional<Cliente> clienteOptional = clienteRepository.findById(clienteDetails.getId());
         if (clienteOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        User user = clienteOptional.get();
+        Cliente cliente = clienteOptional.get();
 
         // Todo: Agregar setters
 
-        clienteRepository.save(user);
+        clienteRepository.save(cliente);
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(cliente);
     }
 
     @DeleteMapping("/cliente/id/{id}/delete")
-    public ResponseEntity<?> borrarCliente(@RequestBody User user) {
-        Optional<User> cliente = clienteRepository.findById(user.getId());
+    public ResponseEntity<?> borrarCliente(@RequestBody Cliente user) {
+        Optional<Cliente> cliente = clienteRepository.findById(user.getId());
         if (!cliente.isPresent()) {
             return new ResponseEntity<>("El usuario no existe o ya ha sido borrado", HttpStatus.BAD_REQUEST);
         }

@@ -1,9 +1,6 @@
 package main.entities.Restaurante;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.util.Date;
 
 @Entity
 @Table(name = "restaurante", schema = "buen_sabor")
@@ -23,7 +20,7 @@ public class Restaurante {
     private String privilegios;
 
 
-    public Restaurante() {
+    public Restaurante(Long id, String domicilio, long telefono) {
     }
 
     public Restaurante(String domicilio, long telefono) {
@@ -31,15 +28,9 @@ public class Restaurante {
         this.telefono = telefono;
     }
 
-    public Restaurante(String nombre, Long id) {
-        this.nombre = nombre;
-        this.id = id;
-    }
-
     public Restaurante(Long id, String domicilio, String nombre, long telefono) {
         this.id = id;
         this.domicilio = domicilio;
-        this.nombre = nombre;
         this.telefono = telefono;
     }
 
@@ -58,14 +49,6 @@ public class Restaurante {
 
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public String getEmail() {

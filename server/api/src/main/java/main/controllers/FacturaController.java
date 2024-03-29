@@ -65,14 +65,11 @@ public class FacturaController {
             // Agregar contenido al PDF
             document.add(new Paragraph("Factura del Pedido"));
             document.add(new Paragraph("Tipo: " + pedido.getFactura().getTipoFactura()));
-            document.add(new Paragraph("Fecha: " + pedido.getFactura().getFecha()));
             document.add(new Paragraph("Cliente: " + pedido.getFactura().getCliente().getNombre() + " " + pedido.getFactura().getCliente().getApellido()));
-            document.add(new Paragraph("Email: " + pedido.getFactura().getEmail()));
-            document.add(new Paragraph("Domicilio del restaurante: " + pedido.getFactura().getFecha()));
             document.add(new Paragraph(""));
             document.add(new Paragraph("Detalles de la factura"));
 
-            for (DetallesPedido facturaDetalle: pedido.getFactura().getDetallesPedido()) {
+            for (DetallesPedido facturaDetalle: pedido.getFactura().getPedido().getDetallesPedido()) {
                 document.add(new Paragraph("Menu: " + facturaDetalle.getMenu()));
                 document.add(new Paragraph("Cantidad: " + facturaDetalle.getCantidad()));
                 document.add(new Paragraph("Subtotal: " + facturaDetalle.getSubTotal()));

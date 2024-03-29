@@ -1,4 +1,4 @@
-package main.entities.Users;
+package main.entities.Cliente;
 
 import main.entities.Factura.MetodoPago;
 import main.entities.Pedidos.EnumTipoEnvio;

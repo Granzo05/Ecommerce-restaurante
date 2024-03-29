@@ -1,16 +1,13 @@
-package main.entities.Users;
+package main.entities.Cliente;
 
-import main.entities.Factura.Factura;
-import main.entities.Pedidos.Pedido;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "users", schema = "buen_sabor")
-public class User {
+@Table(name = "clientes", schema = "buen_sabor")
+public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -35,10 +32,10 @@ public class User {
     @Column(name = "borrado")
     private String borrado;
 
-    public User() {
+    public Cliente() {
     }
 
-    public User(String nombre, String apellido, String email, String domicilio, long telefono) {
+    public Cliente(String nombre, String apellido, String email, String domicilio, long telefono) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
@@ -46,7 +43,7 @@ public class User {
         this.telefono = telefono;
     }
 
-    public User(Long id, String nombre, String apellido, String domicilio) {
+    public Cliente(Long id, String nombre, String apellido, String domicilio) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;

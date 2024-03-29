@@ -1,13 +1,21 @@
-import {abrirModalAñadir, abrirModalBorrar, abrirModalEditar, agregarStock, eliminarStock, actualizarStock} from '../js/stock'
-
-
 const Stock = () => {
+
+    function agregarStock() {
+
+    }
+
+    function actualizarStock() {
+        
+    }
+
+
+    function eliminarStock() {
+        
+    }
+
+
   return (
         <div>
-            <button className="modal" onClick={abrirModalAñadir}>Añadir ingrediente al stock</button>
-            <button className="modal" onClick={abrirModalEditar}>Editar ingrediente del stock</button>
-            <button className="modal" onClick={abrirModalBorrar}>Borrar ingrediente del stock</button>
-
             <div id="modal-añadir" className="modal">
                 <div className="modal-content">
                     <label>

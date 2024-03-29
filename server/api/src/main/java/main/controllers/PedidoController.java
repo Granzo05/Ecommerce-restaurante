@@ -1,7 +1,7 @@
 package main.controllers;
 
-import main.entities.Users.PedidoClienteDTO;
-import main.entities.Users.User;
+import main.entities.Cliente.PedidoClienteDTO;
+import main.entities.Cliente.Cliente;
 import main.entities.Factura.MetodoPago;
 import main.entities.Factura.TipoFactura;
 import main.entities.Factura.Factura;
@@ -86,7 +86,6 @@ public class PedidoController {
             // Agregar contenido al PDF
             document.add(new Paragraph("Información del Pedido"));
             document.add(new Paragraph("Fecha: " + pedido.getFechaPedido()));
-            document.add(new Paragraph("Domicilio: " + pedido.getDomicilio()));
             document.add(new Paragraph("Tipo de Envío: " + pedido.getTipoEnvio()));
             document.add(new Paragraph(""));
             document.add(new Paragraph("Detalles de la factura"));
@@ -125,13 +124,13 @@ public class PedidoController {
         MetodoPago metodoPago = pedidoRequest.getMetodoPago();
 
         // Buscar si el cliente existe
-        Optional<User> cliente = clienteRepository.findByEmail(emailCliente);
+        Optional<Cliente> cliente = clienteRepository.findByEmail(emailCliente);
 
         if (cliente.isEmpty()) {
             return new ResponseEntity<>("La cliente no está registrado", HttpStatus.BAD_REQUEST);
         }
 
-        User userFinal = new User(cliente.get().getId(), cliente.get().getNombre(), cliente.get().getApellido(), cliente.get().getDomicilio());
+        Cliente clienteFinal = new Cliente(cliente.get().getId(), cliente.get().getNombre(), cliente.get().getApellido(), cliente.get().getDomicilio());
 
         Optional<Restaurante> restaurante = restauranteRepository.findById(0l);
 
@@ -139,7 +138,7 @@ public class PedidoController {
             return new ResponseEntity<>("La restaurante no está registrado", HttpStatus.BAD_REQUEST);
         }
 
-        Restaurante restauranteFinal = new Restaurante(restaurante.get().getId(), restaurante.get().getDomicilio(), restaurante.get().getNombre(), restaurante.get().getTelefono());
+        Restaurante restauranteFinal = new Restaurante(restaurante.get().getId(), restaurante.get().getDomicilio(), restaurante.get().getTelefono());
 
         // Vemos los detalles
 
@@ -153,13 +152,8 @@ public class PedidoController {
 
         Factura factura = new Factura();
 
-        factura.setDomicilio(restauranteFinal.getDomicilio());
-        factura.setTelefono(restauranteFinal.getTelefono());
-        factura.setDetallesPedido(detalles);
-        factura.setCliente(userFinal);
-        factura.setFecha(fecha);
+        factura.setCliente(clienteFinal);
         factura.setMetodoPago(metodoPago);
-        factura.setEmail(userFinal.getEmail());
         // Por default es B, tratar el tema de eleccion de tipo en caso de ser empresa o monotributriste, para todo el resto es B
         factura.setTipoFactura(TipoFactura.B);
 
@@ -167,8 +161,7 @@ public class PedidoController {
         pedido.setTipoEnvio(tipoEnvio);
         pedido.setFechaPedido(fecha);
         pedido.setRestaurante(restauranteFinal);
-        pedido.setTelefono(cliente.get().getTelefono());
-        pedido.setCliente(userFinal);
+        pedido.setCliente(clienteFinal);
         pedido.setDetallesPedido(detalles);
         pedido.setFactura(factura);
         // Esto sirve para que al restaurante le aparezca en entrantes ya que en la db se busca constantemente los datos con este atributo en true

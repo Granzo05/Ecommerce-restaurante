@@ -1,6 +1,6 @@
 import { Menu } from '../types/Menu';
 import { Stock } from '../types/Stock';
-import { User } from '../types/User'
+import { User } from '../types/Cliente'
 import { URL_API } from '../utils/global_variables/const';
 
 export const UserService = {

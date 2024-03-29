@@ -1,4 +1,4 @@
-export function descargarFactura(idPedido: number, fechaPedido: String) {
+export function descargarFactura(idPedido: number, fechaPedido: string) {
     fetch("http://localhost:8080/factura/pedido/" + idPedido + "/pdf", {
         method: "GET",
         headers: {
@@ -26,7 +26,7 @@ export function descargarFactura(idPedido: number, fechaPedido: String) {
         });
 }
 
-export function descargarPedido(idPedido: number, fechaPedido: String) {
+export function descargarPedido(idPedido: number, fechaPedido: string) {
     fetch("http://localhost:8080/pedido/" + idPedido + "/pdf", {
         method: "GET",
         headers: {

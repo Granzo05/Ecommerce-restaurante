@@ -1,6 +1,6 @@
 package main.entities.Pedidos;
 
-import main.entities.Users.User;
+import main.entities.Cliente.Cliente;
 import main.entities.Factura.Factura;
 import main.entities.Restaurante.Restaurante;
 import jakarta.persistence.*;
@@ -33,7 +33,7 @@ public class Pedido {
     private Restaurante restaurante;
     @ManyToOne
     @JoinColumn(name = "id_cliente")
-    private User user;
+    private Cliente cliente;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DetallesPedido> detallesPedido;
 
@@ -41,28 +41,26 @@ public class Pedido {
     }
 
     //En caso que sea retiro en local no es necesario ni domicilio ni telefono del cliente
-    public Pedido(EnumTipoEnvio tipoEnvio, User user, Restaurante restaurante, Factura factura) {
+    public Pedido(EnumTipoEnvio tipoEnvio, Cliente cliente, Restaurante restaurante, Factura factura) {
         this.tipoEnvio = tipoEnvio;
-        this.user = user;
+        this.cliente = cliente;
         this.restaurante = restaurante;
         this.factura = factura;
     }
 
-    public Pedido(EnumTipoEnvio tipoEnvio, User userId, Restaurante restauranteId, Factura facturaId, String domicilio, long telefono) {
+    public Pedido(EnumTipoEnvio tipoEnvio, Cliente clienteId, Restaurante restauranteId, Factura facturaId, String domicilio, long telefono) {
         this.tipoEnvio = tipoEnvio;
-        this.user = user;
+        this.cliente = cliente;
         this.restaurante = restaurante;
         this.factura = factura;
-        this.domicilio = domicilio;
-        this.telefono = telefono;
     }
 
-    public User getUser() {
-        return user;
+    public Cliente getUser() {
+        return cliente;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public String getEstado() {
@@ -113,12 +111,12 @@ public class Pedido {
         this.tipoEnvio = tipoEnvio;
     }
 
-    public User getCliente() {
-        return user;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setCliente(User user) {
-        this.user = user;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public Restaurante getRestaurante() {
@@ -135,22 +133,6 @@ public class Pedido {
 
     public void setFactura(Factura factura) {
         this.factura = factura;
-    }
-
-    public String getDomicilio() {
-        return domicilio;
-    }
-
-    public void setDomicilio(String domicilio) {
-        this.domicilio = domicilio;
-    }
-
-    public long getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(long telefono) {
-        this.telefono = telefono;
     }
 
     public Date getFechaPedido() {

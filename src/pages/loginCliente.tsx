@@ -1,24 +1,24 @@
 import { useState } from 'react'
 import styles from '../assets/styleLogin.module.css'
-import { iniciarSesion, cargarUsuario } from '../js/login'
+import { UserService } from '../services/ClienteService'
 
 const LoginCliente = () => {
-  const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [domicilio, setDomicilio] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [telefono, setTelefono] = useState(0);
+    const [nombre, setNombre] = useState('');
+    const [email, setEmail] = useState('');
+    const [contraseña, setContraseña] = useState('');
+    const [domicilio, setDomicilio] = useState('');
+    const [apellido, setApellido] = useState('');
+    const [telefono, setTelefono] = useState(0);
 
-  const handleIniciarSesion = () => {
-    iniciarSesion(email, contraseña);
-  };
+    const handleIniciarSesion = () => {
+        UserService.getUser(email, contraseña);
+    };
 
-  const handleCargarUsuario = () => {
-    cargarUsuario(nombre, apellido, email, contraseña, telefono, domicilio);
-  };
+    const handleCargarUsuario = () => {
+        UserService.createUser(nombre, apellido, email, contraseña, telefono, domicilio);
+    };
 
-  return (
+    return (
         <div className={styles.containerForm}>
             <div className={styles.info}>
                 <div className={styles.infoChilds}>
@@ -61,7 +61,7 @@ const LoginCliente = () => {
                 </div>
             </div>
         </div>
-  )
+    )
 }
 
 export default LoginCliente

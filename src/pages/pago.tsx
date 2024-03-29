@@ -1,4 +1,10 @@
-import { enviarPedidoARestaurante, realizarPago } from '../js/pago';
+function enviarPedidoARestaurante(metodoPago: string) {
+    alert(metodoPago);
+}
+
+function realizarPago() {
+
+}
 
 const Pago = () => {
     return (

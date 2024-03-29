@@ -1,4 +1,4 @@
-import { Bill } from '../types/Bill'
+import { Bill } from '../types/Factura'
 import { URL_API } from '../utils/global_variables/const';
 
 export const BillService = {

@@ -8,12 +8,8 @@ import main.repositories.RestauranteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,22 +26,10 @@ public class RestauranteController {
 
     @PostMapping("/restaurant/create")
     public ResponseEntity<Restaurante> crearRestaurante(@RequestBody Restaurante restaurante) throws IOException {
-        Optional<Restaurante> rest = restauranteRepository.findByEmail(email);
-        if (rest.isEmpty()) {
-            Restaurante restauranteDetails = new Restaurante();
-            restauranteDetails.setNombre(nombre);
-            restauranteDetails.setEmail(email);
-            // Encripto la contraseña con MD5
-            restauranteDetails.setContraseña(Encrypt.encryptPassword(contraseña));
-            restauranteDetails.setDomicilio(domicilio);
-            restauranteDetails.setTelefono(telefono);
-            restauranteDetails.setPrivilegios("negocio");
+        restaurante.setPrivilegios("negocio");
 
-            restauranteRepository.save(restauranteDetails);
-            return ResponseEntity.ok(restauranteDetails);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        restauranteRepository.save(restaurante);
+        return ResponseEntity.ok(restaurante);
     }
     @CrossOrigin
     @PostMapping("/restaurant/login/{email}/{password}")

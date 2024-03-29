@@ -1,11 +1,11 @@
-import { Ingredient } from "./Ingredient";
-import { Restaurant } from "./Restaurant";
+import { Ingrediente } from "./Ingrediente";
+import { Restaurante } from "./Restaurante";
 
 export interface Stock {
-    incomingDate: Date;
+    fechaIngreso: Date;
     id: number;
-    quantity: number;
-    measure: string;
-    restaurant: Restaurant;
-    ingredients: Ingredient;
+    cantidad: number;
+    medida: string;
+    restaurante: Restaurante;
+    ingrediente: Ingrediente;
 }

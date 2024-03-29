@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styles from '../assets/styleLogin.module.css'
 import { cargarNegocio, iniciarSesionNegocio } from '../js/login';
+import GoogleLoginButton from '../components/GoogleLogin/Login';
 
 const LoginNegocio = () => {
   const [nombre, setNombre] = useState('');
@@ -21,6 +22,7 @@ const LoginNegocio = () => {
     <div>
       <div className={styles.containerForm}>
         <div className={styles.info}>
+          <GoogleLoginButton />
           <div className={styles.infoChilds}>
             <h2>¡Bienvenido!</h2>
             <p>Si ya posees una cuenta, por favor, inicia sesión con tus datos</p>
@@ -35,7 +37,7 @@ const LoginNegocio = () => {
                 <input
                   type="text"
                   name="nombre"
-                  value={nombre} 
+                  value={nombre}
                   onChange={(e) => { setNombre(e.target.value) }}
                   placeholder="Nombre del negocio"
                   required
@@ -43,7 +45,7 @@ const LoginNegocio = () => {
                 <input
                   type="email"
                   name="email"
-                  value={email} 
+                  value={email}
                   onChange={(e) => { setEmail(e.target.value) }}
                   required
                   placeholder="Correo electrónico"
@@ -51,7 +53,7 @@ const LoginNegocio = () => {
                 <input
                   type="password"
                   name="contraseña"
-                  value={contraseña} 
+                  value={contraseña}
                   onChange={(e) => { setContraseña(e.target.value) }}
                   required
                   placeholder="Contraseña"
@@ -59,7 +61,7 @@ const LoginNegocio = () => {
                 <input
                   type="text"
                   name="domicilio"
-                  value={domicilio} 
+                  value={domicilio}
                   onChange={(e) => { setDomicilio(e.target.value) }}
                   required
                   placeholder="Domicilio"
@@ -67,7 +69,7 @@ const LoginNegocio = () => {
                 <input
                   type="number"
                   name="telefono"
-                  value={telefono} 
+                  value={telefono}
                   onChange={(e) => { setTelefono(parseInt(e.target.value)) }}
                   required
                   placeholder="Telefono"
@@ -90,12 +92,12 @@ const LoginNegocio = () => {
               <h2>Iniciar sesión</h2>
               <form className={styles.form}>
                 <label>
-                  <input required type="text" placeholder="Correo electrónico" id="emailLogin" value={email} 
-                  onChange={(e) => { setEmail(e.target.value) }} />
+                  <input required type="text" placeholder="Correo electrónico" id="emailLogin" value={email}
+                    onChange={(e) => { setEmail(e.target.value) }} />
                 </label>
                 <label>
-                  <input required type="password" placeholder="Contraseña" id="contraseñaLogin" value={contraseña} 
-                  onChange={(e) => { setContraseña(e.target.value) }} />
+                  <input required type="password" placeholder="Contraseña" id="contraseñaLogin" value={contraseña}
+                    onChange={(e) => { setContraseña(e.target.value) }} />
                 </label>
                 <input type="submit" onClick={handleIniciarSesion} />
               </form>
