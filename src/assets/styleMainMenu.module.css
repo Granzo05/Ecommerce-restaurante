@@ -1,18 +1,6 @@
 @import url(https://pro.fontawesome.com/releases/v5.11.2/css/all.css);
 
-body {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    height: 100vh;
-    font-family: "Roboto", sans-serif;
-    transition: 0.25s;
-    background: rgb(2, 100, 247);
-}
-
-body .options {
+.options {
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -23,7 +11,7 @@ body .options {
     min-height: 600px;
 }
 
-body .options .option {
+.options .option {
     position: relative;
     overflow: hidden;
     max-width: 100px;
@@ -46,10 +34,12 @@ body .options .option {
     bottom: 20px;
     left: 20px;
 }
-.option.enlarged .label .info > div {
+
+.option.enlarged .label .info>div {
     left: 0px;
     opacity: 1;
 }
+
 .option:not(.enlarged) {
     flex-grow: 1;
     border-radius: 30px;
@@ -59,7 +49,8 @@ body .options .option {
     bottom: 10px;
     left: 10px;
 }
-.option:not(.enlarged) .label .info > div {
+
+.option:not(.enlarged) .label .info>div {
     left: 20px;
     opacity: 0;
 }

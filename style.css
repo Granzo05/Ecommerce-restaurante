@@ -1,8 +1,11 @@
-
-#root, body {
-    width: 100%;
+#root {
+    width: 100vw;
+    height: 100vh; 
+    margin: 0;
     padding: 0;
     overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #001219;
 }
 
 header {
@@ -13,16 +16,24 @@ header navbar{
     padding: 20px;
 }
 
-footer {    
-    margin-top: 25px;
+.footer {
+    height: auto;
+    text-align: center;
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 1%;
+    width: 100%;
+    justify-content: center;
+    background-color: #001219;
+    color: white;
 }
 
-footer section {
-    padding: 10px;
-}
-
-.container {
+.main {
     display: flex;
     height: 90vh;
-    justify-content: center;
+    width: 100%;
+    background-color: gray;
+    padding: 25px;
+    margin: 0 auto;
 }
