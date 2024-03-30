@@ -75,9 +75,8 @@ export const EmpleadoService = {
             body: JSON.stringify(empleado)
         })
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
     deleteUser: async (empleado: Empleado): Promise<string> => {
@@ -89,12 +88,11 @@ export const EmpleadoService = {
             body: JSON.stringify(empleado)
         })
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
-    checkUser: async () => {
+    checkUser: async (privilegioRequerido: string) => {
         const empleadoStr: string | null = localStorage.getItem('usuario');
 
         // Check if the item exists and parse it into a Empleado object
@@ -103,7 +101,7 @@ export const EmpleadoService = {
             try {
                 empleado = JSON.parse(empleadoStr);
                 if (empleado) {
-                    fetch(URL_API + 'check/' + empleado.email, {
+                    fetch(URL_API + 'check/' + empleado.email + '/' + privilegioRequerido, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json'

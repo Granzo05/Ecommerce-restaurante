@@ -1,17 +1,20 @@
-import { Ingrediente } from "./Ingrediente";
+import { IngredienteMenu } from "./IngredienteMenu";
 import { Multipart } from "./Multipart";
 import { Restaurante } from "./Restaurante";
 
-export interface Menu {
-    id: number;
-    tiempoCoccion: number;
-    tipo: string;
-    comensales: number;
-    precio: number;
-    nombre: string;
-    descripcion: string;
-    restaurante: Restaurante;
-    ingredientes: Ingrediente[];
-    imagen64: string;
-    file: Multipart;
+export class Menu {
+    id: number = 0;
+    tiempoCoccion: number = 0;
+    tipo: string = '';
+    comensales: number = 0;
+    precio: number = 0;
+    nombre: string = '';
+    descripcion: string = '';
+    restaurante: Restaurante | null = null;
+    ingredientes: IngredienteMenu[] = [];
+    imagen64: string = '';
+    file: Multipart | null = null;
+
+    constructor() {
+    }
 }

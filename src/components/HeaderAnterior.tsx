@@ -10,7 +10,7 @@ import '../styles/header.css';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
 import ReorderIcon from '@mui/icons-material/Reorder';
 
-const Header = () => {
+const HeaderAnterior = () => {
 
     const navigate = useNavigate();
 
@@ -91,4 +91,4 @@ const Header = () => {
     )
 }
 
-export default Header;
+export default HeaderAnterior;

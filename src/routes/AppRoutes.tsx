@@ -5,7 +5,7 @@ import Pago from "../pages/pago"
 import Menu from "../pages/menu"
 import Stock from "../pages/stock"
 import AccesoDenegado from "../pages/accesoDenegado"
-import MainMenu from "../pages/HomePage"
+import MainMenu from "../pages/homePage"
 import PedidosCliente from "../pages/pedidosCliente"
 import PedidosRestaurante from "../pages/pedidosRestaurante"
 
@@ -28,7 +28,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/pedidos/cliente/{id}" element={<PedidosCliente/>}>
         </Route>
 
-        <Route path="/pedidos/resturant" element={<PedidosRestaurante/>}>
+        <Route path="/resturante/pedidos" element={<PedidosRestaurante/>}>
         </Route>
 
         <Route path="/pago" element={<Pago/>}>

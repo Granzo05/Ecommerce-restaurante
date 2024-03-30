@@ -40,8 +40,8 @@ export default function MainMenu() {
                 case "vegetariano":
                     window.location.href = "menu/vegetariano";
                     break;
-                case "sanguche":
-                    window.location.href = "menu/sanguche";
+                case "milanesas":
+                    window.location.href = "menu/milanesas";
                     break;
                 default:
                     break;
@@ -159,9 +159,9 @@ export default function MainMenu() {
                     <div className={styles.label}>
                         <div className={styles.icon}>
                             <img width="31" height="31" src="/Front-End/css/img/icons8-sándwich-50.png" alt="sanguche" />
-                        </div>
+                        </div>  
                         <div className={styles.info}>
-                            <div className={styles.main}>SANGUCHES</div>
+                            <div className={styles.main}>MILANESAS</div>
                             <div className={styles.sub}>¡Ese viene completo
                                 Jamón y queso y pan
                                 Que lindo que es mirarte

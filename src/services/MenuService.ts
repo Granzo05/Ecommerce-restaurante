@@ -24,9 +24,8 @@ export const MenuService = {
             body: JSON.stringify(menu)
         })
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
     updateMenu: async (menu: Menu): Promise<string> => {
@@ -37,23 +36,20 @@ export const MenuService = {
             },
             body: JSON.stringify(menu)
         })
+        
+        return await response.text();
 
-        const data = await response.json();
-
-        return data;
     },
 
-    deleteMenu: async (idMenu: number): Promise<string> => {
-        const response = await fetch(URL_API + `menu/${idMenu}/delete`, {
+    deleteMenu: async (nombre: string): Promise<string> => {
+        const response = await fetch(URL_API + `menu/${nombre}/delete`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
 
-        const data = await response.json();
-
-        return data;
+        return await response.text();
     },
 
 }

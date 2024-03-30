@@ -13,8 +13,13 @@ public class Empleado {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @Column(name = "apellido")
-    private String apellido;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "contraseña")
+    private String contraseña;
+
     @Column(name = "cuit")
     private long cuit;
     @Column(name = "telefono")
@@ -25,6 +30,8 @@ public class Empleado {
     public Date fechaIngreso;
     @Column(name = "borrado")
     private String borrado;
+    @Column(name = "privilegios")
+    private String privilegios;
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
     private Restaurante idRestaurante;
@@ -32,14 +39,36 @@ public class Empleado {
     public Empleado() {
     }
 
-    public Empleado(String nombre, String apellido, long cuit, long telefono, Restaurante idRestaurante) {
+    public Empleado(String nombre, long cuit, long telefono, Restaurante idRestaurante) {
         this.nombre = nombre;
-        this.apellido = apellido;
         this.cuit = cuit;
         this.telefono = telefono;
         this.idRestaurante = idRestaurante;
     }
 
+    public String getPrivilegios() {
+        return privilegios;
+    }
+
+    public void setPrivilegios(String privilegios) {
+        this.privilegios = privilegios;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
+    }
 
     public String getBorrado() {
         return borrado;
@@ -63,14 +92,6 @@ public class Empleado {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public long getCuit() {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styles from '../assets/styleLogin.module.css'
-import { UserService } from '../services/ClienteService'
+import { ClienteService } from '../services/ClienteService'
 
 const LoginCliente = () => {
     const [nombre, setNombre] = useState('');
@@ -11,11 +11,11 @@ const LoginCliente = () => {
     const [telefono, setTelefono] = useState(0);
 
     const handleIniciarSesion = () => {
-        UserService.getUser(email, contraseña);
+        ClienteService.getUser(email, contraseña);
     };
 
     const handleCargarUsuario = () => {
-        UserService.createUser(nombre, apellido, email, contraseña, telefono, domicilio);
+        ClienteService.createUser(nombre, apellido, email, contraseña, telefono, domicilio);
     };
 
     return (
@@ -25,10 +25,10 @@ const LoginCliente = () => {
                     <h2>¡Bienvenido!</h2>
                     <p>Si ya posees una cuenta, por favor, inicia sesión con tus datos</p>
                     <label>
-                        <input required type="email" placeholder="Correo electrónico" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+                        <input required type="email" placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
                     </label>
                     <label>
-                        <input required type="password" placeholder="Contraseña" value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
+                        <input required type="password" placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
                     </label>
                     <input type="button" value="Iniciar sesión" onClick={handleIniciarSesion} />
                 </div>
@@ -39,22 +39,22 @@ const LoginCliente = () => {
                     <p>o usa tu e-mail para registrarte</p>
                     <form className={styles.form}>
                         <label>
-                            <input required type="text" placeholder="Nombre" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+                            <input required type="text" placeholder="Nombre" onChange={(e) => { setNombre(e.target.value) }} />
                         </label>
                         <label>
-                            <input required type="text" placeholder="Apellido" value={apellido} onChange={(e) => { setApellido(e.target.value) }} />
+                            <input required type="text" placeholder="Apellido" onChange={(e) => { setApellido(e.target.value) }} />
                         </label>
                         <label>
-                            <input required type="email" placeholder="Correo electrónico" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+                            <input required type="email" placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
                         </label>
                         <label>
-                            <input required type="phone" placeholder="Telefono" value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+                            <input required type="phone" placeholder="Telefono" onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
                         </label>
                         <label>
-                            <input required type="password" placeholder="Contraseña" value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
+                            <input required type="password" placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
                         </label>
                         <label>
-                            <input required type="text" placeholder="Domicilio" value={domicilio} onChange={(e) => { setDomicilio(e.target.value) }} />
+                            <input required type="text" placeholder="Domicilio" onChange={(e) => { setDomicilio(e.target.value) }} />
                         </label>
                         <input type="button" value="Registrarse" onClick={handleCargarUsuario} />
                     </form>

@@ -76,9 +76,9 @@ public class MenuController {
         return ResponseEntity.ok(menuFinal);
     }
 
-    @DeleteMapping("/menu/{id}/delete")
-    public ResponseEntity<?> borrarMenu(@PathVariable("id") Long id) {
-        Optional<Menu> menu = menuRepository.findById(id);
+    @DeleteMapping("/menu/{nombre}/delete")
+    public ResponseEntity<?> borrarMenu(@PathVariable("nombre") String nombre) {
+        Optional<Menu> menu = menuRepository.findByName(nombre);
         if (menu.isEmpty()) {
             return new ResponseEntity<>("El menu ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
         }

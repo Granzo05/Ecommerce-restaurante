@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import styles from '../assets/styleLogin.module.css'
-import { cargarNegocio, iniciarSesionNegocio } from '../js/login';
-import GoogleLoginButton from '../components/GoogleLogin/Login';
+import { RestauranteService } from '../services/RestauranteService';
 
 const LoginNegocio = () => {
   const [nombre, setNombre] = useState('');
@@ -11,18 +10,17 @@ const LoginNegocio = () => {
   const [telefono, setTelefono] = useState(0);
 
   const handleIniciarSesion = () => {
-    iniciarSesionNegocio(email, contraseña);
+    RestauranteService.getRestaurant(email, contraseña);
   };
 
   const handleCargarNegocio = () => {
-    cargarNegocio(nombre, email, contraseña, domicilio, telefono);
+    RestauranteService.createRestaurant(nombre, email, contraseña, domicilio, telefono);
   };
 
   return (
     <div>
       <div className={styles.containerForm}>
         <div className={styles.info}>
-          <GoogleLoginButton />
           <div className={styles.infoChilds}>
             <h2>¡Bienvenido!</h2>
             <p>Si ya posees una cuenta, por favor, inicia sesión con tus datos</p>

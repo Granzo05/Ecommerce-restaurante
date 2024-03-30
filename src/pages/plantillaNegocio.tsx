@@ -1,36 +1,78 @@
-import styles from '../assets/styleNegocio.module.css'
-import {finalizarPedido, abrirModal, añadirCampoIngrediente, agregarMenu} from '../js/pedidos/ScriptPedido'
+import { useState } from 'react';
+import { IngredienteMenu } from '../types/IngredienteMenu';
+import { Menu } from '../types/Menu';
+import { MenuService } from '../services/MenuService';
 
 
-function PlantillaNegocios () {
+function PlantillaNegocios() {
+  const handleNombreIngredienteChange = (index: number, nombre: string) => {
+    const nuevosIngredientes = [...ingredientes];
+    nuevosIngredientes[index].nombre = nombre;
+    setIngredientes(nuevosIngredientes);
+  };
+
+  const handleCantidadIngredienteChange = (index: number, cantidad: number) => {
+    const nuevosIngredientes = [...ingredientes];
+    nuevosIngredientes[index].cantidad = cantidad;
+    setIngredientes(nuevosIngredientes);
+  };
+
+  const añadirCampoIngrediente = () => {
+    // Agrego un nuevo ingrediente vacío al estado
+    setIngredientes([...ingredientes, { nombre: '', cantidad: 0 }]);
+
+    // Dos nuevos inputs al DOM
+    const inputNombre = document.createElement('input');
+    inputNombre.type = 'text';
+    inputNombre.placeholder = 'Ingrediente';
+    inputNombre.className = 'ingredienteMenu';
+    inputNombre.addEventListener('input', (e) => {
+      if (e.target instanceof HTMLInputElement) {
+        handleNombreIngredienteChange(ingredientes.length, e.target.value);
+      }
+    });
+
+    document.getElementById('inputs-container')?.appendChild(inputNombre);
+
+    const inputCantidad = document.createElement('input');
+    inputCantidad.type = 'number';
+    inputCantidad.placeholder = 'Cantidad necesaria';
+    inputCantidad.className = 'cantidadIngrediente';
+    inputNombre.addEventListener('input', (e) => {
+      if (e.target instanceof HTMLInputElement) {
+        handleCantidadIngredienteChange(ingredientes.length, parseInt(e.target.value));
+      }
+    }); document.getElementById('inputs-container')?.appendChild(inputCantidad);
+  };
+
+  function abrirModal() {
+
+  }
+
+  const [tiempoCoccion, setTiempo] = useState(0);
+  const [tipo, setTipo] = useState('');
+  const [comensales, setComensales] = useState(0);
+  const [precio, setPrecio] = useState(0);
+  const [nombre, setNombre] = useState('');
+  const [file, setImagen] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
+
+  function agregarMenu() {
+    const menu: Menu = new Menu();
+    menu.nombre = nombre
+    menu.tiempoCoccion = tiempoCoccion;
+    menu.tipo = tipo;
+    menu.comensales = comensales;
+    menu.precio = precio;
+    menu.descripcion = descripcion;
+
+    MenuService.createMenu(menu);
+  }
+
+
   return (
     <div>
-      <header>
-        <div>
-          <img src="" className="logo" />
-        </div>
-
-        <div>
-          <h1 className={styles.nombreRestaurante}></h1>
-        </div>
-
-        <div className={styles.containerIcon}>
-          <i className='bx bx-cart'></i>
-          <div className={styles.contadorProductos}>
-            <span id="contador">0</span>
-          </div>
-          <div id="carrito" className="container-productosCarrito hidden-cart">
-            <img width="50" height="50" src="https://img.icons8.com/ios/50/multiply.png" alt="multiply" className="iconoCerrar" />
-            <div id="tarjeta-carrito"></div>
-            <div className={styles.totalCarrito}>
-              <h3>Total:</h3>
-              <span className={styles.totalPagar}></span>
-            </div>
-            <button onClick={finalizarPedido}>Finalizar pedido</button>
-          </div>
-        </div>
-      </header>
-
       <button className="boton negocio" onClick={abrirModal}>Añadir menu</button>
 
       <div id="container-items">
@@ -40,45 +82,68 @@ function PlantillaNegocios () {
         <div className="modal-content">
           <label>
             <i className='bx bx-image'></i>
-            <input type="file" id="imagenProducto" accept="image/*" />
+            <input type="file" id="imagenProducto" accept="image/*" onChange={(e) => { setImagen(e.target.value) }} />
           </label>
           <br />
           <label>
             <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Nombre del menu" id="nombreMenu" />
+            <input type="text" placeholder="Nombre del menu" id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
           </label>
           <br />
           <label>
             <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Minutos de coccion" id="coccionMenu" />
+            <input type="text" placeholder="Descripción del menu" id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
           </label>
           <br />
           <label>
-            <select id="tipoMenu" name="tipoMenu">
-              <option value="ENTRADA">Entrada</option>
-              <option value="DESAYUNO">Desayuno</option>
-              <option value="MEDIATARDE">Merienda</option>
-              <option value="MENU">Menú</option>
-              <option value="BEBIDA_ALCOHOLICA">Bebida Alcohólica</option>
-              <option value="BEBIDA_SIN_ALCOHOL">Bebida sin Alcohol</option>
+            <i className='bx bx-lock'></i>
+            <input type="text" placeholder="Minutos de coccion" id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+          </label>
+          <br />
+          <label>
+            <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
+              <option value="HAMBURGUESAS">Hamburguesas</option>
+              <option value="PANCHOS">Panchos</option>
+              <option value="EMPANADAS">Empanadas</option>
+              <option value="PIZZAS">Pizzas</option>
+              <option value="LOMOS">Lomos</option>
+              <option value="HELADO">Helado</option>
+              <option value="PARRILLA">Parrilla</option>
+              <option value="PASTAS">Pastas</option>
+              <option value="SUSHI">Sushi</option>
+              <option value="VEGETARIANO">Vegetariano</option>
+              <option value="MILANESAS">Milanesas</option>
             </select>
           </label>
           <br />
-          <label>
-            <i className='bx bx-lock'></i>
-            <input type="text" placeholder="¿Cuantas personas comen?" id="comensales" />
-          </label>
-          <br />
-          <label id="ingrediente-containter">
-            <input type="text" placeholder="Ingrediente" className="ingredienteMenu" />
-            <input type="number" placeholder="Cantidad necesaria" className="cantidadIngrediente" />
-          </label>
-          <br />
-          <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
+          <div>
+            {ingredientes.map((ingrediente, index) => (
+              <div key={index}>
+                <input
+                  type="text"
+                  value={ingrediente.nombre}
+                  placeholder="Ingrediente"
+                  onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
+                />
+                <input
+                  type="number"
+                  value={ingrediente.cantidad}
+                  placeholder="Cantidad necesaria"
+                  onChange={(e) => handleCantidadIngredienteChange(index, parseInt(e.target.value))}
+                />
+              </div>
+            ))}
+            <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
+          </div>
           <br />
           <label>
             <i className='bx bx-price'></i>
-            <input type="number" placeholder="Precio" id="precioMenu" />
+            <input type="number" placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+          </label>
+          <br />
+          <label>
+            <i className='bx bx-price'></i>
+            <input type="number" placeholder="Comensales" id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
           </label>
           <br />
           <input type="button" value="agregarMenu" id="agregarMenu" onClick={agregarMenu} />

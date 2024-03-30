@@ -48,9 +48,8 @@ export const stockService = {
             }
         });
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
     createStock: async (stock: Stock): Promise<string> => {
@@ -62,9 +61,8 @@ export const stockService = {
             body: JSON.stringify(stock)
         });
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
     updateUser: async (stock: Stock): Promise<Stock> => {
@@ -90,8 +88,7 @@ export const stockService = {
             body: JSON.stringify(stockNameIngredient)
         })
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 }

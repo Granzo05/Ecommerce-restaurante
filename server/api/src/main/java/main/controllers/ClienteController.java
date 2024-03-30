@@ -22,7 +22,6 @@ public class ClienteController {
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
         if (cliente.isEmpty()) {
             clienteDetails.setContraseña(Encrypt.encryptPassword(clienteDetails.getContraseña()));
-            clienteDetails.setPrivilegios("cliente");
             clienteDetails.setBorrado("NO");
             clienteRepository.save(clienteDetails);
             return clienteDetails;

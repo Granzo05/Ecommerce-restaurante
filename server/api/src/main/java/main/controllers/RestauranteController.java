@@ -1,8 +1,12 @@
 package main.controllers;
 
 import main.controllers.EncryptMD5.Encrypt;
+import main.entities.Cliente.Cliente;
 import main.entities.Pedidos.Pedido;
+import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Restaurante;
+import main.repositories.ClienteRepository;
+import main.repositories.EmpleadoRepository;
 import main.repositories.PedidoRepository;
 import main.repositories.RestauranteRepository;
 import org.springframework.http.HttpStatus;
@@ -16,11 +20,16 @@ import java.util.Optional;
 @RestController
 public class RestauranteController {
     private final RestauranteRepository restauranteRepository;
+    private final EmpleadoRepository empleadoRepository;
+    private final ClienteRepository clienteRepository;
+
     private final PedidoRepository pedidoRepository;
 
-    public RestauranteController(RestauranteRepository restauranteRepository,
+    public RestauranteController(RestauranteRepository restauranteRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository,
                                  PedidoRepository pedidoRepository) {
         this.restauranteRepository = restauranteRepository;
+        this.empleadoRepository = empleadoRepository;
+        this.clienteRepository = clienteRepository;
         this.pedidoRepository = pedidoRepository;
     }
 
@@ -54,34 +63,51 @@ public class RestauranteController {
     // Una vez que el admin acepta el pedido se envia a la cocina
     @GetMapping("/restaurante/cocina")
     public List<Pedido> getPedidosEntrantesACocina() {
-        List<Pedido> pedidos = pedidoRepository.findOrdersAcepted();
+        List<Pedido> pedidos = pedidoRepository.findPedidosEntrantes();
         return pedidos;
     }
 
 
     @CrossOrigin
-    @GetMapping("/check/{email}")
-    public boolean checkUser(@PathVariable("email") String email) {
+    @GetMapping("/check/{email}/{privilegio}")
+    public boolean checkUser(@PathVariable("email") String email, @PathVariable("privilegio") String privilegioNecesario) {
         // Recibo un email y para chequear si se puede dar acceso o no
-        Cliente cliente = clienteRepository.findByEmail(email);
+        Cliente cliente = clienteRepository.findByEmail(email).get();
 
-        Empleado empleado = empleadoRepository.findByEmail(email);
+        Empleado empleado = empleadoRepository.findByEmail(email).get();
 
         Restaurante restaurante = restauranteRepository.findByEmail(email);
 
-        // De entrada un cliente no va a poder acceder
+        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
         if (cliente != null) {
             return false;
         }
 
-        if (empleado.getPrivilegios().contains("empleado")) {
+        // Si privilegiosNecesario = empleado: true
+        if (empleado.getPrivilegios().contains(privilegioNecesario)) {
             return true;
         }
 
-        if (restaurante.getPrivilegios().contains("negocio")) {
+        // Restaurante tiene acceso a todo, por lo tanto si el email coincide entonces se concede acceso
+        if (restaurante != null) {
             return true;
         }
 
         return false;
+    }
+
+    @PostMapping("/empleado/create")
+    public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) {
+        Empleado empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail()).get();
+
+        if (empleado != null){
+            empleado.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
+            empleado.setBorrado("NO");
+            empleado.setPrivilegios("empleado");
+            empleadoRepository.save(empleado);
+            return empleado;
+        } else {
+            return null;
+        }
     }
 }

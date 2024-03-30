@@ -69,9 +69,8 @@ export const PedidoService = {
             body: JSON.stringify(pedido)
         })
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
 
@@ -84,9 +83,8 @@ export const PedidoService = {
             body: JSON.stringify(pedido)
         })
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
     aceptarPedido: async (idPedido: number, idRestaurante: number, emailCliente: string): Promise<string> => {
@@ -105,9 +103,8 @@ export const PedidoService = {
 
         enviarCorreoExitoso(emailCliente);
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
     rechazarPedido: async (idPedido: number, motivoRechazo: string, emailCliente: string)=> {

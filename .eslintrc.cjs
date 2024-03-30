@@ -15,5 +15,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'prefer-const': 'off',
+    "@typescript-eslint/no-non-null-assertion": "off"
   },
 }

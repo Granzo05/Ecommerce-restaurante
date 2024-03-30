@@ -1,8 +1,8 @@
 import styles from '../assets/stylePedidos.module.css'
-import { ClienteService } from '../services/ClienteService'
+import { EmpleadoService } from '../services/EmpleadoService';
 
 const PedidosRealizados = () => {
-  ClienteService.checkUser();
+  EmpleadoService.checkUser('negocio');
 
   /*
   .then(data => {

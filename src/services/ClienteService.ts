@@ -84,9 +84,8 @@ export const ClienteService = {
             body: JSON.stringify(cliente)
         })
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
     },
 
     deleteUser: async (cliente: Cliente): Promise<string> => {
@@ -98,45 +97,7 @@ export const ClienteService = {
             body: JSON.stringify(cliente)
         })
 
-        const data = await response.json();
+        return await response.text();
 
-        return data;
-    },
-
-    checkUser: async () => {
-        const clienteStr: string | null = localStorage.getItem('usuario');
-
-        // Check if the item exists and parse it into a Cliente object
-        let cliente: Cliente | null = null;
-        if (clienteStr) {
-            try {
-                cliente = JSON.parse(clienteStr);
-                if (cliente) {
-                    fetch(URL_API + 'check/' + cliente.email, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                        .then(async response => {
-                            if (!response.ok) {
-                                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
-                            }
-                            return await response.json()
-                        })
-                        .then(data => {
-                            console.log(data)
-                            if (!data) {
-                                window.location.href = '/acceso-denegado';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error)
-                        })
-                }
-            } catch (error) {
-                window.location.href = '/acceso-denegado';
-            }
-        }
     },
 }

@@ -25,8 +25,6 @@ public class Cliente {
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     public Date fechaRegistro;
-    @Column(name = "privilegios")
-    private String privilegios;
     @Column(name = "borrado")
     private String borrado;
 
@@ -45,14 +43,6 @@ public class Cliente {
 
     public Cliente() {
 
-    }
-
-    public String getPrivilegios() {
-        return privilegios;
-    }
-
-    public void setPrivilegios(String privilegios) {
-        this.privilegios = privilegios;
     }
 
     public String getContraseña() {
@@ -121,18 +111,4 @@ public class Cliente {
         this.borrado = borrado;
     }
 
-    @Override
-    public String toString() {
-        return "Cliente{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", email='" + email + '\'' +
-                ", domicilio='" + domicilio + '\'' +
-                ", telefono=" + telefono +
-                ", contraseña='" + contraseña + '\'' +
-                ", fechaRegistro=" + fechaRegistro +
-                ", privilegios='" + privilegios + '\'' +
-                ", borrado='" + borrado + '\'' +
-                '}';
-    }
 }

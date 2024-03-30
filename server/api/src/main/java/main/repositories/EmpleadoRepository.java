@@ -1,6 +1,7 @@
 package main.repositories;
 
 import main.entities.Cliente.Cliente;
+import main.entities.Restaurante.Empleado;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,14 +10,14 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
 
-    @Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.borrado = 'NO'")
-    Optional<Cliente> findByEmail(@Param("email") String email);
+    @Query("SELECT e FROM Empleado e WHERE e.email = :email AND e.borrado = 'NO'")
+    Optional<Empleado> findByEmail(@Param("email") String email);
 
 
-    @Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.contraseña = :contraseña AND c.borrado = 'NO'")
-    Cliente findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String contraseña);
+    @Query("SELECT e FROM Empleado e WHERE e.email = :email AND e.contraseña = :contraseña AND e.borrado = 'NO'")
+    Empleado findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String contraseña);
 
 
 }
