@@ -130,7 +130,7 @@ public class PedidoController {
             return new ResponseEntity<>("La cliente no está registrado", HttpStatus.BAD_REQUEST);
         }
 
-        Cliente clienteFinal = new Cliente(cliente.get().getId(), cliente.get().getNombre(), cliente.get().getApellido(), cliente.get().getDomicilio());
+        Cliente clienteFinal = new Cliente(cliente.get().getId(), cliente.get().getNombre(), cliente.get().getDomicilio());
 
         Optional<Restaurante> restaurante = restauranteRepository.findById(0l);
 

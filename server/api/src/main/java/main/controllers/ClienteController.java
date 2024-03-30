@@ -17,32 +17,30 @@ public class ClienteController {
         this.clienteRepository = clienteRepository;
     }
 
-    @PostMapping("/user/create")
-    public ResponseEntity<String> crearCliente(@RequestBody Cliente clienteDetails) {
-        System.out.println(clienteDetails);
+    @PostMapping("/cliente/create")
+    public Cliente crearCliente(@RequestBody Cliente clienteDetails) {
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
         if (cliente.isEmpty()) {
             clienteDetails.setContraseña(Encrypt.encryptPassword(clienteDetails.getContraseña()));
+            clienteDetails.setPrivilegios("cliente");
+            clienteDetails.setBorrado("NO");
             clienteRepository.save(clienteDetails);
-            return new ResponseEntity<>("El usuario ha sido añadido correctamente", HttpStatus.CREATED);
+            return clienteDetails;
         } else {
-            return new ResponseEntity<>("El usuario ya existe", HttpStatus.BAD_REQUEST);
+            return null;
         }
     }
 
     @CrossOrigin
-    @PostMapping("/user/login")
-    public ResponseEntity<Cliente> loginUser(@PathVariable("email") String email, @PathVariable("password") String password) {
+    @GetMapping("/cliente/login/{email}/{password}")
+    public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) {
         // Recibo un email y una password desde el cliente, esa pass la encripto para ver si coincide con la guardada
-        Optional<Cliente> clienteOptional = clienteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
-        if (clienteOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        Cliente cliente = clienteOptional.get();
-        return ResponseEntity.ok(cliente);
+        Cliente cliente = clienteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
+
+        return cliente;
     }
 
-    @PutMapping("/user/update")
+    @PutMapping("/cliente/update")
     public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente clienteDetails) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(clienteDetails.getId());
         if (clienteOptional.isEmpty()) {
@@ -57,7 +55,7 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
-    @DeleteMapping("/cliente/id/{id}/delete")
+    @DeleteMapping("/cliente/{id}/delete")
     public ResponseEntity<?> borrarCliente(@RequestBody Cliente user) {
         Optional<Cliente> cliente = clienteRepository.findById(user.getId());
         if (!cliente.isPresent()) {

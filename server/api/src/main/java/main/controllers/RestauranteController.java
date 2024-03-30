@@ -24,23 +24,17 @@ public class RestauranteController {
         this.pedidoRepository = pedidoRepository;
     }
 
-    @PostMapping("/restaurant/create")
-    public ResponseEntity<Restaurante> crearRestaurante(@RequestBody Restaurante restaurante) throws IOException {
+    @PostMapping("/restaurante/create")
+    public Restaurante crearRestaurante(@RequestBody Restaurante restaurante) throws IOException {
         restaurante.setPrivilegios("negocio");
-
         restauranteRepository.save(restaurante);
-        return ResponseEntity.ok(restaurante);
+        return restaurante;
     }
     @CrossOrigin
-    @PostMapping("/restaurant/login/{email}/{password}")
-    public ResponseEntity<Restaurante> loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) {
+    @GetMapping("/restaurant/login/{email}/{password}")
+    public Restaurante loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) {
         // Busco por email y clave encriptada, si se encuentra envio un ok
-        Optional<Restaurante> restauranteOptional = restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
-        if (restauranteOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(restauranteOptional.get());
+        return restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
     }
 
     @PutMapping("/restaurant/update")

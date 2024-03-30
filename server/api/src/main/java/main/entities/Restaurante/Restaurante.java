@@ -20,7 +20,7 @@ public class Restaurante {
     private String privilegios;
 
 
-    public Restaurante(Long id, String domicilio, long telefono) {
+    public Restaurante() {
     }
 
     public Restaurante(String domicilio, long telefono) {
@@ -28,7 +28,7 @@ public class Restaurante {
         this.telefono = telefono;
     }
 
-    public Restaurante(Long id, String domicilio, String nombre, long telefono) {
+    public Restaurante(Long id, String domicilio, long telefono) {
         this.id = id;
         this.domicilio = domicilio;
         this.telefono = telefono;

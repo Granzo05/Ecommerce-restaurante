@@ -16,6 +16,6 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
     Optional<Restaurante> findByEmail(@Param("email") String email);
 
     @Query("SELECT r FROM Restaurante r WHERE r.email = :email AND r.contraseña = :contraseña")
-    Optional<Restaurante> findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String password);
+    Restaurante findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String password);
 
 }

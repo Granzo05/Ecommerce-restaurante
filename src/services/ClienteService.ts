@@ -25,10 +25,10 @@ export const UserService = {
                 return await response.json()
             })
             .then(data => {
+                console.log(data)
                 let cliente = {
                     id: data.id,
                     nombre: data.nombre,
-                    apellido: data.apellido,
                     email: data.email,
                     telefono: data.telefono
                 }
@@ -46,9 +46,9 @@ export const UserService = {
 
         cliente.email = email;
         cliente.contraseña = contraseña;
-
-        fetch(URL_API + 'client/login/' + cliente.email + '/' + cliente.contraseña, {
-            method: 'POST',
+        
+        fetch(URL_API + 'cliente/login/' + cliente.email + '/' + cliente.contraseña, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -60,10 +60,10 @@ export const UserService = {
                 return await response.json()
             })
             .then(data => {
+                console.log(data)
                 let cliente = {
                     id: data.id,
                     nombre: data.nombre,
-                    apellido: data.apellido,
                     email: data.email
                 }
                 localStorage.setItem('cliente', JSON.stringify(cliente));

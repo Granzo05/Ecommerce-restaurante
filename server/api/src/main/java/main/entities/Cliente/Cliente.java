@@ -13,8 +13,6 @@ public class Cliente {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @Column(name = "apellido")
-    private String apellido;
     @Column(name = "email")
     private String email;
     @Column(name = "domicilio")
@@ -32,22 +30,21 @@ public class Cliente {
     @Column(name = "borrado")
     private String borrado;
 
-    public Cliente() {
-    }
-
-    public Cliente(String nombre, String apellido, String email, String domicilio, long telefono) {
+    public Cliente(String nombre, String email, String domicilio, long telefono) {
         this.nombre = nombre;
-        this.apellido = apellido;
         this.email = email;
         this.domicilio = domicilio;
         this.telefono = telefono;
     }
 
-    public Cliente(Long id, String nombre, String apellido, String domicilio) {
+    public Cliente(Long id, String nombre, String domicilio) {
         this.id = id;
         this.nombre = nombre;
-        this.apellido = apellido;
         this.domicilio = domicilio;
+    }
+
+    public Cliente() {
+
     }
 
     public String getPrivilegios() {
@@ -81,14 +78,6 @@ public class Cliente {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public String getEmail() {
@@ -134,10 +123,9 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Cliente{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
                 ", email='" + email + '\'' +
                 ", domicilio='" + domicilio + '\'' +
                 ", telefono=" + telefono +
