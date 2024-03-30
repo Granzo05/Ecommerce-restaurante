@@ -2,7 +2,7 @@ import { Pedido } from '../types/Pedido'
 import { URL_API } from '../utils/global_variables/const';
 import { enviarCorreoExitoso, enviarCorreoRechazo } from '../services/EmailService';
 
-export const UserService = {
+export const PedidoService = {
     getPedidosClientes: async (userId: number): Promise<Pedido[]> => {
         const response = await fetch(URL_API + `/user/id/${userId}/orders`, {
             method: 'GET',

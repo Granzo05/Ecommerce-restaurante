@@ -1,4 +1,7 @@
+import { ClienteService } from "../services/ClienteService";
+
 const Stock = () => {
+    ClienteService.checkUser();
 
     function agregarStock() {
 

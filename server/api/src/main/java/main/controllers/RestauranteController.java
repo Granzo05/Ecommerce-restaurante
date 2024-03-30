@@ -58,4 +58,30 @@ public class RestauranteController {
         return pedidos;
     }
 
+
+    @CrossOrigin
+    @GetMapping("/check/{email}")
+    public boolean checkUser(@PathVariable("email") String email) {
+        // Recibo un email y para chequear si se puede dar acceso o no
+        Cliente cliente = clienteRepository.findByEmail(email);
+
+        Empleado empleado = empleadoRepository.findByEmail(email);
+
+        Restaurante restaurante = restauranteRepository.findByEmail(email);
+
+        // De entrada un cliente no va a poder acceder
+        if (cliente != null) {
+            return false;
+        }
+
+        if (empleado.getPrivilegios().contains("empleado")) {
+            return true;
+        }
+
+        if (restaurante.getPrivilegios().contains("negocio")) {
+            return true;
+        }
+
+        return false;
+    }
 }

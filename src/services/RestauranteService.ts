@@ -1,7 +1,7 @@
 import { Restaurante } from '../types/Restaurante';
 import { URL_API } from '../utils/global_variables/const';
 
-export const UserService = {
+export const RestauranteService = {
     createRestaurant: async (nombre: string, email: string, contraseña: string, domicilio: string, telefono: number) => {
         const restaurante = {} as Restaurante;
 

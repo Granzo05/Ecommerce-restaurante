@@ -5,6 +5,8 @@ export interface Empleado {
     id: number;
     nombre: string;
     apellido: string;
+    email:string;
+    contraseña:string;
     cuit: number;
     telefono: number;
     restaurante: Restaurante;

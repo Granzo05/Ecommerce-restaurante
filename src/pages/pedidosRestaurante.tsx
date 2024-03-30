@@ -1,6 +1,9 @@
 import styles from '../assets/stylePedidos.module.css'
+import { ClienteService } from '../services/ClienteService'
 
 const PedidosRealizados = () => {
+  ClienteService.checkUser();
+
   /*
   .then(data => {
   let contenedorPrincipal = document.getElementById("pedidos");

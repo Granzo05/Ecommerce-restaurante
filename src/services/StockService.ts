@@ -1,16 +1,16 @@
 import { Menu } from '../types/Menu';
 import { Stock } from '../types/Stock';
-import { User } from '../types/Cliente'
+import { Cliente } from '../types/Cliente'
 import { URL_API } from '../utils/global_variables/const';
 
-export const UserService = {
-    createUser: async (user: User): Promise<string> => {
+export const stockService = {
+    createUser: async (cliente: Cliente): Promise<string> => {
         const response = await fetch(URL_API + 'user/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify(cliente)
         })
 
         const data = await response.json();
@@ -38,7 +38,7 @@ export const UserService = {
         const queryString = menus.map(menu => `id=${menu.id}`).join('&');
 
         // Construir la URL con los parámetros de consulta
-        const url = `${URL_API}restaurant/stock/check?${queryString}`;
+        const url = `${URL_API}restaurante/stock/check?${queryString}`;
 
         // Realizar la solicitud GET
         const response = await fetch(url, {

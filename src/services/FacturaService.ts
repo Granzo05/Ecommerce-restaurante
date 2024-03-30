@@ -1,10 +1,10 @@
-import { Bill } from '../types/Factura'
+import { Factura } from '../types/Factura'
 import { URL_API } from '../utils/global_variables/const';
 
-export const BillService = {
+export const FacturaService = {
 
-    getBill: async (userId: number): Promise<Bill[]> => {
-        const response = await fetch(URL_API + `bills/client/${userId}`)
+    getBill: async (userId: number): Promise<Factura[]> => {
+        const response = await fetch(URL_API + `facturas/cliente/${userId}`)
         const data = await response.json();
         return data;
     },
