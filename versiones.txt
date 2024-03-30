@@ -15,3 +15,4 @@
 - 0.0.3
     - Creación UML: https://www.canva.com/design/DAGA5Y_LZYQ/5ACwh6IVcRzHNM0Mhu1T-A/edit?utm_content=DAGA5Y_LZYQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
     - Cambios en estructuración de clases y mejora en la distribución de atributos y conexiones entre si
+    - Login y registración funcionales

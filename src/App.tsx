@@ -1,4 +1,4 @@
-import Header from "./components/Header";
+import Header from "./components/HeaderAnterior";
 import Footer from "./components/Footer/Footer";
 import AppRoutes from "./routes/AppRoutes";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -8,8 +8,8 @@ import '../src/App.css'
 const App = () => {
   return (
     <Router>
-      <Header  />
-      <Container >
+      <Header />
+      <Container style={{ height: '90vh' }}>
         <AppRoutes />
       </Container>
       <Footer />

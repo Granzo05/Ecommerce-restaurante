@@ -20,3 +20,9 @@ footer {
 footer section {
     padding: 10px;
 }
+
+.container {
+    display: flex;
+    height: 90vh;
+    justify-content: center;
+}
