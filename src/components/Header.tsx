@@ -1,35 +1,29 @@
-import  { useState } from "react";
-import Logo from "../assets/pizzaLogo.png";
-import { Link } from "react-router-dom";
-import "../styles/Navbar.css";
 
-function Header() {
-  const [openLinks, setOpenLinks] = useState(false);
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import '../styles/header.css';
+import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
+import ReorderIcon from '@mui/icons-material/Reorder';
 
-  const toggleNavbar = () => {
-    setOpenLinks(!openLinks);
-  };
-  return (
-    <div className="navbar">
-      <div className="leftSide" id={openLinks ? "open" : "close"}>
-        <img src={Logo} />
-        <div className="hiddenLinks">
-          <Link to="/"> Home </Link>
-          <Link to="/menu"> Menu </Link>
-          <Link to="/about"> About </Link>
-          <Link to="/contact"> Contact </Link>
+const HeaderAnterior = () => {
+
+    const navigate = useNavigate();
+
+    return (
+        <div className='navbar'>
+            <div className='leftSide'>
+                <img src={Logo} />
+            </div>
+            <div className='rightSide'>
+                <Link to="/">Inicio</Link>
+                <Link to="/">Menú</Link>
+                <Link to="/">Sobre nosotros</Link>
+                <Link to="/">Contáctanos</Link>
+                <button><ReorderIcon/></button>
+            </div>
         </div>
-      </div>
-      <div className="rightSide">
-        <Link to="/"> Home </Link>
-        <Link to="/menu"> Menu </Link>
-        <Link to="/about"> About </Link>
-        <Link to="/contact"> Contact </Link>
-        <button onClick={toggleNavbar}>
-        </button>
-      </div>
-    </div>
-  );
+        
+    )
 }
 
-export default Header;
+export default HeaderAnterior;
