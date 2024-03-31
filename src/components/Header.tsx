@@ -33,8 +33,6 @@ const Header = () => {
                 <button className='icono-responsive' onClick={toggleNavbar}><ReorderIcon/></button>
                 <div className='cuenta'>
                     <button className='iniciar-sesion'>Iniciar sesión</button>
-                    <label id='diagonal'>/</label>
-                    <button className='registrate'>Regístrate</button>
                     <div className='mi-cuenta'>
                         <img src={UserLogo} alt="" style={{width: '50px', cursor: 'pointer', margin: '-17px'}}/>
                         <Link to="/" id='mi-cuenta'>Mi Cuenta</Link>
