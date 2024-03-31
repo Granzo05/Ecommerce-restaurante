@@ -38,6 +38,10 @@ img {
     color: white;
 }
 
+.profile-image label{
+  cursor: pointer;
+}
+
 .card {
   min-width: 70px;
   height: 100%;
