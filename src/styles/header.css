@@ -163,7 +163,9 @@ height: 40px;
 }
 
 .iniciar-sesion:hover{
-
+  background-color: white;
+  color: black;
+  transition: 0.3s;
 }
 
 
