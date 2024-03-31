@@ -1,6 +1,5 @@
 import { Pedido } from '../types/Pedido'
 import { URL_API } from '../utils/global_variables/const';
-import { enviarCorreoExitoso, enviarCorreoRechazo } from '../services/EmailService';
 
 export const PedidoService = {
     getPedidosClientes: async (userId: number): Promise<Pedido[]> => {
@@ -38,8 +37,8 @@ export const PedidoService = {
         return data;
     },
 
-    getPedidosNuevos: async (): Promise<Pedido[]> => {
-        const response = await fetch('http://localhost:8080/restaurante/pedidos/entrantes', {
+    getPedidos: async (estado: string): Promise<Pedido[]> => {
+        const response = await fetch('http://localhost:8080/restaurante/pedidos/' + estado, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,14 +100,14 @@ export const PedidoService = {
             body: JSON.stringify(formData)
         })
 
-        enviarCorreoExitoso(emailCliente);
+        //enviarCorreoExitoso(emailCliente);
 
         return await response.text();
 
     },
 
     rechazarPedido: async (idPedido: number, motivoRechazo: string, emailCliente: string)=> {
-        enviarCorreoRechazo(emailCliente, motivoRechazo);
+        //enviarCorreoRechazo(emailCliente, motivoRechazo);
 
         fetch('http://localhost:8080/pedido/delete/' + idPedido, {
             method: 'DELETE',
