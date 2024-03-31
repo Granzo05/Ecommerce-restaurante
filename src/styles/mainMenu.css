@@ -8,11 +8,11 @@
   box-sizing: border-box;
 }
 
-body {
+.body{
   font-family: Inter, sans-serif;
   height: 100vh;
   color: white;
-  background-color: #e9e9f0;
+  background-color: #840196;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,9 +31,10 @@ img {
   display: flex;
   gap: 10px;
   margin-inline: 50px;
+  
 }
 
-.carta {
+.card {
   min-width: 70px;
   height: 100%;
   border-radius: 30px;
@@ -51,11 +52,11 @@ img {
 /* .card.active {
   flex-grow: 100;
 } */
-.carta:hover {
+.card:hover {
   flex-grow: 7;
 }
 
-.carta > .fondo {
+.card > .background {
   position: absolute;
   inset: 0;
   object-fit: cover;
@@ -64,11 +65,11 @@ img {
   z-index: -1;
   transition: var(--transition-timing) ease;
 }
-.carta:hover > .fondo {
+.card:hover > .background {
   filter: brightness(1);
 }
 
-.carta > .carta-content {
+.card > .card-content {
   display: flex;
   align-items: center;
   position: absolute;
@@ -79,16 +80,16 @@ img {
   transition: var(--transition-timing);
   z-index: 10;
 }
-.carta:hover > .carta-content {
+.card:hover > .card-content {
   inset: 20px;
   top: auto;
 }
 
-.carta-content > * {
+.card-content > * {
   transition: var(--transition-timing);
 }
 
-.carta-content > .profile-image {
+.card-content > .profile-image {
   min-width: 50px;
   max-width: 50px;
   height: 50px;
@@ -99,28 +100,28 @@ img {
   border-radius: 50%;
   overflow: hidden;
 }
-.carta:hover .profile-image {
+.card:hover .profile-image {
   border: 1px solid rgb(110, 252, 205);
 }
 .profile-image > svg {
   stroke: #fefefe;
 }
-.carta:hover .profile-image > svg {
+.card:hover .profile-image > svg {
   stroke: rgb(110, 252, 205);
 }
 
-.carta-content > .titulo {
+.card-content > .title {
   white-space: pre;
   margin-left: 10px;
   translate: 0 100%;
   opacity: 0;
 }
-.carta:hover .titulo {
+.card:hover .title {
   opacity: 1;
   translate: 0 0;
 }
 
-.carta > .backdrop {
+.card > .backdrop {
   position: absolute;
   left: 0;
   right: 0;
