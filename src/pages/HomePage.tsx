@@ -1,5 +1,9 @@
 import '../styles/mainMenu.css'
 import burguerImage from '../assets/img/hamburguesa-background.png'
+import pizzaImage from '../assets/img/pizza-background.png'
+import lomoImage from '../assets/img/lomo-background.jpeg'
+import sushiImage from '../assets/img/sushi-background.jpg'
+import heladoImage from '../assets/img/helado-background.jpg'
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import IcecreamIcon from '@mui/icons-material/Icecream';
@@ -26,7 +30,7 @@ export default function MainMenu() {
             </div>
 
             <div className="card">
-                <img className="background" src="./assets/02.jpg" alt=""/>
+                <img className="background" src={pizzaImage} alt=""/>
 
                 <div className="card-content">
                 <div className="profile-image">
@@ -39,7 +43,7 @@ export default function MainMenu() {
             </div>
 
             <div className="card">
-                <img className="background" src="./assets/03.jpg" alt=""/>
+                <img className="background" src={lomoImage} alt=""/>
 
                 <div className="card-content">
                 <div className="profile-image">
@@ -52,7 +56,7 @@ export default function MainMenu() {
             </div>
 
             <div className="card">
-                <img className="background" src="./assets/04.jpg" alt=""/>
+                <img className="background" src={sushiImage} alt=""/>
 
                 <div className="card-content">
                 <div className="profile-image">
@@ -65,7 +69,7 @@ export default function MainMenu() {
             </div>
 
             <div className="card">
-                <img className="background" src="./assets/05.jpg" alt=""/>
+                <img className="background" src={heladoImage} alt=""/>
 
                 <div className="card-content">
                 <div className="profile-image">
