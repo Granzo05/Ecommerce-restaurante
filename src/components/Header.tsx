@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import '../styles/header.css';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
 import ReorderIcon from '@mui/icons-material/Reorder';
@@ -8,7 +7,6 @@ import UserLogo from '../assets/img/user-icon.png';
 
 const Header = () => {
 
-    const navigate = useNavigate();
 
     const [openLinks, setOpenLinks] = useState(false);
 
