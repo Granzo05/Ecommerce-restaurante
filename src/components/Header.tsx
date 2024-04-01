@@ -4,6 +4,7 @@ import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
 import ReorderIcon from '@mui/icons-material/Reorder';
 import { useState } from 'react';
 import UserLogo from '../assets/img/user-icon.png';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const Header = () => {
 
@@ -34,8 +35,9 @@ const Header = () => {
                 <div className='cuenta'>
                     <button className='iniciar-sesion'>Iniciar sesión</button>
                     <div className='mi-cuenta'>
-                        <img src={UserLogo} alt="" style={{width: '50px', cursor: 'pointer', margin: '-17px'}}/>
-                        <Link to="/" id='mi-cuenta'>Mi Cuenta</Link>
+                    <button id='carrito' style={{background: 'none', border: 'none', color: 'white', margin: '20px'}}><ShoppingCartIcon/></button>
+                        <button id='cuenta' style={{background: 'none', border: 'none', color: 'white'}}><img src={UserLogo} alt="" style={{width: '50px', cursor: 'pointer'}}/></button>
+                        
                     </div>
                 </div>
             </div>

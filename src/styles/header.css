@@ -122,6 +122,7 @@ position: relative;
 overflow: hidden;
 width: 120px;
 height: 40px;
+display: none;
 }
 
 .iniciar-sesion::before{
@@ -207,10 +208,16 @@ transition: 0.4s;
 }
 
 .mi-cuenta{
-  display: none;
+  display: flex;
+  align-items: center;
 }
 
-.mi-cuenta:hover{
+.mi-cuenta #cuenta:hover{
+  filter: drop-shadow(10px 8px 6px #ff0055);
+  transition: 0.4s;
+}
+
+.mi-cuenta #carrito:hover{
   filter: drop-shadow(10px 8px 6px #ff0055);
   transition: 0.4s;
 }
