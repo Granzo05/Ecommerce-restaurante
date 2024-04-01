@@ -5,6 +5,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
 import { useState } from 'react';
 import UserLogo from '../assets/img/user-icon.png';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Header = () => {
 
@@ -14,6 +15,9 @@ const Header = () => {
     const toggleNavbar = () => {
         setOpenLinks(!openLinks);
     };
+
+    
+    
 
     return (
         <div className='navbar'>
@@ -36,7 +40,20 @@ const Header = () => {
                     <button className='iniciar-sesion'>Iniciar sesión</button>
                     <div className='mi-cuenta'>
                         <button id='carrito' style={{background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative'}}><ShoppingCartIcon style={{display: 'block'}}/><label id='contador-carrito'>0</label></button>
-                        
+                        <div className="container-cart-products hidden-cart">
+                            <div className="cart-product">
+                                <div className="info-cart-product">
+                                    <span className='cantidad-producto-carrito'>1</span>
+                                    <p className='titulo-producto-carrito'>Hamburguesa</p>
+                                    <span className='precio-producto-carrito'>$4.600</span>
+                                </div>
+                                <button style={{background: 'none', border: 'none', color: 'black'}} className='icon-close'><CloseIcon/></button>
+                            </div>
+                            <div className="cart-total">
+                                <h3>Total:</h3>
+                                <span className='total-pagar'>$4.600</span>
+                            </div>
+                        </div>
                         <button id='cuenta' style={{background: 'none', border: 'none', color: 'white'}}><img src={UserLogo} alt="" style={{width: '50px', cursor: 'pointer'}}/></button>
                         
                     </div>
@@ -44,6 +61,7 @@ const Header = () => {
             </div>
         </div>
     )
+                        
 }
 
 export default Header;
