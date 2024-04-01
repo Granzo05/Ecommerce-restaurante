@@ -221,3 +221,15 @@ transition: 0.4s;
   filter: drop-shadow(10px 8px 6px #ff0055);
   transition: 0.4s;
 }
+
+#contador-carrito{
+  background-color: white;
+  color: black;
+  padding: 0 5px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  bottom: -5px;
+  right: -2px;
+}

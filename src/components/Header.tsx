@@ -35,7 +35,8 @@ const Header = () => {
                 <div className='cuenta'>
                     <button className='iniciar-sesion'>Iniciar sesión</button>
                     <div className='mi-cuenta'>
-                    <button id='carrito' style={{background: 'none', border: 'none', color: 'white', margin: '20px'}}><ShoppingCartIcon/></button>
+                        <button id='carrito' style={{background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative'}}><ShoppingCartIcon style={{display: 'block'}}/><label id='contador-carrito'>0</label></button>
+                        
                         <button id='cuenta' style={{background: 'none', border: 'none', color: 'white'}}><img src={UserLogo} alt="" style={{width: '50px', cursor: 'pointer'}}/></button>
                         
                     </div>
