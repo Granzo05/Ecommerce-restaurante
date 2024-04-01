@@ -122,7 +122,6 @@ position: relative;
 overflow: hidden;
 width: 120px;
 height: 40px;
-display: none;
 }
 
 .iniciar-sesion::before{
@@ -210,6 +209,7 @@ transition: 0.4s;
 .mi-cuenta{
   display: flex;
   align-items: center;
+  display: none;
 }
 
 .mi-cuenta #cuenta:hover{
