@@ -8,4 +8,8 @@ export class Stock {
     medida: string = '';
     restaurante: Restaurante = new Restaurante();
     ingrediente: Ingrediente = new Ingrediente();
+
+    constructor() {
+        
+    }
 }

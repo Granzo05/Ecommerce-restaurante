@@ -16,7 +16,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
   const [telefono, setTelefono] = useState(0);
 
   function editarEmpleado() {
-    const empleado: Empleado = new Empleado();
+    const empleado: Empleado = empleadoOriginal;
 
     empleado.nombre = `${nombre} ${apellido}`;
     empleado.email = email;

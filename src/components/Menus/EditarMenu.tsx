@@ -74,8 +74,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
 
   function editarMenu() {
-    const menu: Menu = new Menu();
-    menu.id = menuOriginal.id;
+    const menu: Menu = menuOriginal;
     menu.nombre = nombre;
     menu.tiempoCoccion = tiempoCoccion;
     menu.tipo = tipo;

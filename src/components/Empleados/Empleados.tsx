@@ -1,46 +1,84 @@
+import { useEffect, useState } from "react";
 import { EmpleadoService } from "../../services/EmpleadoService";
+import AgregarEmpleado from "./AgregarEmpleado";
+import Modal from "../Modal";
+import { Empleado } from "../../types/Empleado";
+import EliminarEmpleado from "./EliminarEmpleado";
+import EditarEmpleado from "./EditarEmpleado";
 
-const Empleado = () => {
-    EmpleadoService.checkUser('negocio');
+const Empleados = () => {
+    EmpleadoService.checkUser('empleado');
 
-    EmpleadoService.getEmpleados()
-        .then(data => {
-            let contenedorPrincipal = document.getElementById("empleados");
+    const [empleados, setEmpleados] = useState<Empleado[]>([]);
 
-            data.forEach(empleado => {
-                let contenedor = document.createElement("div");
-                contenedor.className = "grid-item";
+    const [showAgregarEmpleadoModal, setShowAgregarEmpleadoModal] = useState(false);
+    const [showEditarEmpleadoModal, setShowEditarEmpleadoModal] = useState(false);
+    const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
 
-                let nombre = document.createElement("h3");
-                nombre.textContent = empleado.nombre;
-                contenedor.appendChild(nombre);
+    const [selectedEmpleado, setSelectedEmpleado] = useState<Empleado | null>(null);
+    const [selectedId, setSelectedId] = useState<number | null>(0);
 
-                let email = document.createElement("h3");
-                email.textContent = empleado.email;
-                contenedor.appendChild(email);
-                
-                let contraseña = document.createElement("h3");
-                contraseña.textContent = empleado.contraseña;
-                contenedor.appendChild(contraseña);
-
-                let cuit = document.createElement("h3");
-                cuit.textContent = (empleado.cuit).toString();
-                contenedor.appendChild(cuit);
-
-                let telefono = document.createElement("h3");
-                telefono.textContent = empleado.telefono.toString();
-                contenedor.appendChild(telefono);
-
-                contenedorPrincipal?.appendChild(contenedor);
+    useEffect(() => {
+        EmpleadoService.getEmpleados()
+            .then(data => {
+                setEmpleados(data);
             })
-        });
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, []);
+
+    const handleAgregarEmpleado = () => {
+        setShowAgregarEmpleadoModal(true);
+    };
+
+    const handleEditarEmpleado = (empleado: Empleado) => {
+        setSelectedEmpleado(empleado);
+        setShowEditarEmpleadoModal(true);
+    };
+
+    const handleEliminarEmpleado = (empleadoId: number) => {
+        setSelectedId(empleadoId);
+        setShowEliminarEmpleadoModal(true);
+    };
+
+    const handleModalClose = () => {
+        setShowAgregarEmpleadoModal(false);
+        setShowEditarEmpleadoModal(false);
+    };
 
     return (
         <div >
-            <h1>Empleados</h1>
-            <div id="empleados"></div>
+            <h1 onClick={() => handleAgregarEmpleado()}>Empleados</h1>
+            <button> + Agregar empleado</button>
+
+            <Modal isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
+                <AgregarEmpleado />
+            </Modal>
+
+            <div id="empleados">
+                {empleados.map(empleado => (
+                    <div key={empleado.id} className="grid-item">
+                        <h3>{empleado.nombre}</h3>
+                        <h3>{empleado.cuit}</h3>
+                        <h3>{empleado.telefono}</h3>
+                        <h3>{empleado.email}</h3>
+                        <h3>{empleado.fechaEntrada.toISOString()}</h3>
+                        <h3>{empleado.contraseña}</h3>
+
+                        <button onClick={() => handleEliminarEmpleado(empleado.id)}>ELIMINAR</button>
+                        <Modal isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
+                            {selectedId && <EliminarEmpleado empleadoId={selectedId} />}
+                        </Modal>
+                        <button onClick={() => handleEditarEmpleado}>EDITAR</button>
+                        <Modal isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
+                            {selectedEmpleado && <EditarEmpleado empleadoOriginal={selectedEmpleado} />}
+                        </Modal>
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }
 
-export default Empleado
+export default Empleados

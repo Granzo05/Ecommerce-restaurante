@@ -1,43 +1,83 @@
+import { useEffect, useState } from "react";
 import { EmpleadoService } from "../../services/EmpleadoService";
-import { stockService } from "../../services/StockService";
+import { StockService } from "../../services/StockService";
+import AgregarStock from "./AgregarStock";
+import Modal from "../Modal";
+import { Stock } from "../../types/Stock";
+import EliminarStock from "./EliminarStock";
+import EditarStock from "./EditarStock";
 
-const Stock = () => {
+const Stocks = () => {
     EmpleadoService.checkUser('empleado');
 
-    stockService.getStock()
-        .then(data => {
-            let contenedorPrincipal = document.getElementById("stock");
+    const [stocks, setStocks] = useState<Stock[]>([]);
 
-            data.forEach(stock => {
-                let contenedor = document.createElement("div");
-                contenedor.className = "grid-item";
+    const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
+    const [showEditarStockModal, setShowEditarStockModal] = useState(false);
+    const [showEliminarStockModal, setShowEliminarStockModal] = useState(false);
 
-                let nombre = document.createElement("h3");
-                nombre.textContent = stock.ingrediente.nombre;
-                contenedor.appendChild(nombre);
+    const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
+    const [selectedId, setSelectedId] = useState<number | null>(0);
 
-                let cantidad = document.createElement("h3");
-                cantidad.textContent = (stock.cantidad).toString();
-                contenedor.appendChild(cantidad);
-
-                let medida = document.createElement("h3");
-                medida.textContent = stock.medida;
-                contenedor.appendChild(medida);
-
-                let fecha = document.createElement("h3");
-                fecha.textContent = stock.fechaIngreso.getTime().toString();
-                contenedor.appendChild(fecha);
-                
-                contenedorPrincipal?.appendChild(contenedor);
+    useEffect(() => {
+        StockService.getStock()
+            .then(data => {
+                setStocks(data);
             })
-        });
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, []);
+
+    const handleAgregarStock = () => {
+        setShowAgregarStockModal(true);
+    };
+
+    const handleEditarStock = (stock: Stock) => {
+        setSelectedStock(stock);
+        setShowEditarStockModal(true);
+    };
+
+    const handleEliminarStock = (stockId: number) => {
+        setSelectedId(stockId);
+        setShowEliminarStockModal(true);
+    };
+
+    const handleModalClose = () => {
+        setShowAgregarStockModal(false);
+        setShowEditarStockModal(false);
+    };
 
     return (
         <div >
-            <h1>Stock</h1>
-            <div id="stock"></div>
+            <h1 onClick={() => handleAgregarStock()}>Stocks</h1>
+            <button> + Agregar stock</button>
+
+            <Modal isOpen={showAgregarStockModal} onClose={handleModalClose}>
+                <AgregarStock />
+            </Modal>
+
+            <div id="stocks">
+                {stocks.map(stock => (
+                    <div key={stock.id} className="grid-item">
+                        <h3>{stock.ingrediente.nombre}</h3>
+                        <h3>{stock.cantidad}</h3>
+                        <h3>{stock.fechaIngreso.toISOString()}</h3>
+                        <h3>{stock.ingrediente.costo}</h3>
+
+                        <button onClick={() => handleEliminarStock(stock.id)}>ELIMINAR</button>
+                        <Modal isOpen={showEliminarStockModal} onClose={handleModalClose}>
+                            {selectedId && <EliminarStock stockId={selectedId} />}
+                        </Modal>
+                        <button onClick={() => handleEditarStock}>EDITAR</button>
+                        <Modal isOpen={showEditarStockModal} onClose={handleModalClose}>
+                            {selectedStock && <EditarStock stockOriginal={selectedStock} />}
+                        </Modal>
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }
 
-export default Stock
+export default Stocks

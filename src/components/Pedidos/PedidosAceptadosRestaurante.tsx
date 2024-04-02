@@ -43,6 +43,7 @@ const PedidosAceptados = () => {
         });
 
     return (
+        
         <div>
             <h1>Tus Pedidos Aceptados</h1>
             <div id="pedidos"></div>
