@@ -1,7 +1,21 @@
-import { EmpleadoService } from "../services/EmpleadoService";
+import { ClienteService } from "../services/ClienteService";
 
 const Stock = () => {
-    EmpleadoService.checkUser('empleado');
+    ClienteService.checkUser();
+
+    function agregarStock() {
+
+    }
+
+    function actualizarStock() {
+        
+    }
+
+
+    function eliminarStock() {
+        
+    }
+
 
   return (
         <div>
@@ -73,8 +87,8 @@ const Stock = () => {
             </div>
 
             <div className="container">
-                <h1 className="title">Ingredientes</h1>
-                <div id="ingredientes"></div>
+                <h1 className="title">Stock total</h1>
+                <div id="stock"></div>
             </div>
         </div>
   )

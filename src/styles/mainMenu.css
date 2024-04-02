@@ -34,6 +34,14 @@ img {
   margin-top: -150px;
 }
 
+.title{
+    color: white;
+}
+
+.profile-image label{
+  cursor: pointer;
+}
+
 .card {
   min-width: 70px;
   height: 100%;
@@ -100,7 +108,7 @@ img {
   overflow: hidden;
 }
 .card:hover .profile-image {
-  border: 1px solid rgb(110, 252, 205);
+  border: 1px solid rgb(255, 255, 255);
 }
 .profile-image > svg {
   stroke: #fefefe;

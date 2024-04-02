@@ -114,28 +114,60 @@ margin-right: 18px;
 }
 
 .cuenta .iniciar-sesion{
-background-color: transparent;
+background-color: black;
 border: none;
-padding: 0;
+padding: 5px;
 color: white;
+position: relative;
+overflow: hidden;
+width: 120px;
+height: 40px;
 }
 
-.cuenta .registrate{
-background-color: transparent;
-border: none;
-padding: 0;
-color: white;
+.iniciar-sesion::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 2px solid white;
+  border-right: 2px solid white;
+  animation: border-top-right 3s infinite alternate;
+}
+
+.iniciar-sesion::after{
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-bottom: 2px solid white;
+  border-left: 2px solid white;
+  animation: border-bottom-left 3s infinite alternate;
+}
+
+@keyframes border-top-right {
+  0% {width: 0px; height: 0px; border-color: red;}
+  25% {width: 120px; height: 0px; border-color: aqua;}
+  50% {width: 120px; height: 40px; border-color: chartreuse;}
+  100% {width: 120px; height: 40px; border-color: yellow;}
+}
+
+@keyframes border-bottom-left {
+  0% {width: 0px; height: 0px; border-color: chartreuse;}
+  50% {width: 0px; height: 0px; border-color: yellow;}
+  75% {width: 120px; height: 0px; border-color: yellow}
+  100% {width: 120px; height: 40px; border-color: chartreuse}
 }
 
 .iniciar-sesion:hover{
-text-decoration: underline;
-transition: 0.4s;
+  background-color: white;
+  color: black;
+  transition: 0.3s;
 }
 
-.registrate:hover{
-text-decoration: underline;
-transition: 0.4s;
-}
 
 #diagonal{
 margin: 5px;
@@ -175,10 +207,107 @@ transition: 0.4s;
 }
 
 .mi-cuenta{
+  display: flex;
+  align-items: center;
   display: none;
 }
 
-.mi-cuenta:hover{
+.mi-cuenta #cuenta:hover{
   filter: drop-shadow(10px 8px 6px #ff0055);
   transition: 0.4s;
+}
+
+.mi-cuenta #carrito:hover{
+  filter: drop-shadow(10px 8px 6px #ff0055);
+  transition: 0.4s;
+}
+
+#contador-carrito{
+  background-color: white;
+  color: black;
+  padding: 0 5px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  bottom: -5px;
+  right: -2px;
+}
+
+
+.container-cart-products{
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #fff;
+  width: 400px;
+  z-index: 1;
+  color: black;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
+  border-radius: 10px;
+}
+
+.cart-product{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.20);
+
+}
+
+.info-cart-product{
+  display: flex;
+  justify-content: space-between;
+  flex: 0.8;
+}
+
+.titulo-producto-carrito{
+  font-size: 20px;
+}
+
+.precio-producto-carrito{
+  font-weight: 700;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.cantidad-producto-carrito{
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.icon-close{
+  width: 25px;
+  height: 25px;
+}
+
+.icon-close:hover{
+  stroke: red;
+}
+
+.cart-total{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  gap: 20px;
+}
+
+.cart-total h3{
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.total-pagar{
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.hidden-cart{
+  display: none;
+}
+
+#carrito:focus + .hidden-cart {
+  display: block;
 }

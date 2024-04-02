@@ -1,5 +1,5 @@
+import nodemailer from 'nodemailer';
 
-/*
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -41,4 +41,3 @@ export function enviarCorreoExitoso(emailCliente: string) {
         }
     });
 }
-*/
