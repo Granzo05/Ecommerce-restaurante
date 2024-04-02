@@ -18,6 +18,10 @@ const Empleado = () => {
                 let email = document.createElement("h3");
                 email.textContent = empleado.email;
                 contenedor.appendChild(email);
+                
+                let contraseña = document.createElement("h3");
+                contraseña.textContent = empleado.contraseña;
+                contenedor.appendChild(contraseña);
 
                 let cuit = document.createElement("h3");
                 cuit.textContent = (empleado.cuit).toString();

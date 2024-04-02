@@ -26,7 +26,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/pago" element={<Pago/>}>
         </Route>
 
-        <Route path="/stock" element={<Opciones/>}>
+        <Route path="/opciones" element={<Opciones/>}>
         </Route>
 
         <Route path="/acceso-denegado" element={<AccesoDenegado/>}>

@@ -1,13 +1,17 @@
 import { Restaurante } from "./Restaurante";
 
-export interface Empleado {
-    fechaEntrada: Date;
-    id: number;
-    nombre: string;
-    apellido: string;
-    email:string;
-    contraseña:string;
-    cuit: number;
-    telefono: number;
-    restaurante: Restaurante;
+export class Empleado {
+    fechaEntrada: Date = new Date();
+    id: number = 0;
+    nombre: string = '';
+    apellido: string = '';
+    email:string = '';
+    contraseña:string = '';
+    cuit: number = 0;
+    telefono: number = 0;
+    restaurante: Restaurante = new Restaurante();
+
+    constructor(){
+        
+    }
 }

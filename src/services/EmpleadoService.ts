@@ -2,14 +2,8 @@ import { Empleado } from '../types/Empleado'
 import { URL_API } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
-    createEmpleado: async (nombre: string, apellido: string, email: string, contraseña: string, telefono: number, cuit: number) => {
-        const empleado = {} as Empleado;
-
-        empleado.nombre = `${nombre} ${apellido}`;
-        empleado.email = email;
-        empleado.contraseña = contraseña;
-        empleado.telefono = telefono;
-        empleado.cuit = cuit;
+    createEmpleado: async (empleado: Empleado) => {
+        empleado.nombre = `${empleado.nombre} ${empleado.apellido}`;
 
         fetch(URL_API + 'empleado/create', {
             method: 'POST',
@@ -98,13 +92,12 @@ export const EmpleadoService = {
 
     },
 
-    deleteEmpleado: async (empleado: Empleado): Promise<string> => {
-        const response = await fetch(URL_API + 'empleado/delete', {
+    deleteEmpleado: async (empleadoId: number): Promise<string> => {
+        const response = await fetch(URL_API + 'empleado/' + empleadoId + '/delete', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(empleado)
+            }
         })
 
         return await response.text();
