@@ -96,6 +96,34 @@ public class RestauranteController {
         return false;
     }
 
+    @CrossOrigin
+    @GetMapping("/check/{email}/{privilegio}")
+    public boolean checkPrivilegios(@PathVariable("email") String email) {
+        // Recibo un email y para chequear si se puede dar acceso o no
+        Cliente cliente = clienteRepository.findByEmail(email).get();
+
+        Empleado empleado = empleadoRepository.findByEmail(email).get();
+
+        Restaurante restaurante = restauranteRepository.findByEmail(email);
+
+        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
+        if (cliente != null) {
+            return false;
+        }
+
+        // Si privilegiosNecesario = empleado: true
+        if (empleado != null) {
+            return true;
+        }
+
+        // Restaurante tiene acceso a todo, por lo tanto si el email coincide entonces se concede acceso
+        if (restaurante != null) {
+            return true;
+        }
+
+        return false;
+    }
+
     @PostMapping("/empleado/create")
     public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) {
         Empleado empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail()).get();

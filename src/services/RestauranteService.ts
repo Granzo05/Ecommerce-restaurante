@@ -1,3 +1,4 @@
+import { Empleado } from '../types/Empleado';
 import { Restaurante } from '../types/Restaurante';
 import { URL_API } from '../utils/global_variables/const';
 
@@ -32,7 +33,7 @@ export const RestauranteService = {
                 localStorage.setItem('cliente', JSON.stringify(cliente));
 
                 // Redirige al usuario al menú principal
-                window.location.href = 'mainNegocio.html'
+                window.location.href = '/'
             })
             .catch(error => {
                 console.error('Error:', error)
@@ -67,7 +68,7 @@ export const RestauranteService = {
                 localStorage.setItem('cliente', JSON.stringify(cliente));
 
                 // Redirige al usuario al menú principal
-                window.location.href = 'mainNegocio.html'
+                window.location.href = '/'
             })
             .catch(error => {
                 console.error('Error:', error)
@@ -88,6 +89,31 @@ export const RestauranteService = {
         return data;
     },
 
-    
-    
+    checkPrivilegies: async (): Promise<boolean> => {
+        const empleadoStr: string | null = localStorage.getItem('usuario');
+
+        let empleado: Empleado | null = null;
+        if (empleadoStr) {
+            try {
+                empleado = JSON.parse(empleadoStr);
+                if (empleado) {
+                    const response = await fetch(URL_API + 'check/user/' + empleado.email, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    })
+
+                    const data = await response.json();
+
+                    return data;
+                }
+            } catch (error) {
+                window.location.href = '/acceso-denegado';
+            }
+        }
+
+        return false;
+    },
+
 }

@@ -18,3 +18,6 @@
     - Login y registración funcionales
     - Menu de opciones para el restaurante donde puede manejar Menus, empleados, pedidos y stock
     - Menu principal mejorado
+    - Crud para todo el restaurante
+    - Navegabilidad del Header
+    - Menu principal mejorado
