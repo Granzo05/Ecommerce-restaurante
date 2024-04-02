@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { IngredienteMenu } from '../types/IngredienteMenu';
-import { Menu } from '../types/Menu';
-import { MenuService } from '../services/MenuService';
+import { IngredienteMenu } from '../../types/IngredienteMenu';
+import { Menu } from '../../types/Menu';
+import { MenuService } from '../../services/MenuService';
 
 
 function PlantillaNegocios() {
@@ -45,10 +45,6 @@ function PlantillaNegocios() {
     }); document.getElementById('inputs-container')?.appendChild(inputCantidad);
   };
 
-  function abrirModal() {
-
-  }
-
   const [tiempoCoccion, setTiempo] = useState(0);
   const [tipo, setTipo] = useState('');
   const [comensales, setComensales] = useState(0);
@@ -73,8 +69,6 @@ function PlantillaNegocios() {
 
   return (
     <div>
-      <button className="boton negocio" onClick={abrirModal}>Añadir menu</button>
-
       <div id="container-items">
       </div>
 

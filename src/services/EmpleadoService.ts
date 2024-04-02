@@ -2,7 +2,7 @@ import { Empleado } from '../types/Empleado'
 import { URL_API } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
-    createUser: async (nombre: string, apellido: string, email: string, contraseña: string, telefono: number, cuit: number) => {
+    createEmpleado: async (nombre: string, apellido: string, email: string, contraseña: string, telefono: number, cuit: number) => {
         const empleado = {} as Empleado;
 
         empleado.nombre = `${nombre} ${apellido}`;
@@ -24,15 +24,12 @@ export const EmpleadoService = {
                 }
                 return await response.json()
             })
-            .then(data => {
-                // Mostrar modal
-            })
             .catch(error => {
                 console.error('Error:', error)
             })
     },
 
-    getUser: async (email: string, contraseña: string) => {
+    getEmpleado: async (email: string, contraseña: string) => {
         const empleado = {} as Empleado;
 
         empleado.email = email;
@@ -66,7 +63,29 @@ export const EmpleadoService = {
             })
     },
 
-    updateUser: async (empleado: Empleado): Promise<string> => {
+    getEmpleados: async (): Promise<Empleado[]> => {
+        const response = await fetch(URL_API + 'empleados', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(async response => {
+                if (!response.ok) {
+                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+                }
+                return await response.json()
+            })
+            .catch(error => {
+                console.error('Error:', error)
+            })
+
+        const data = await response.json();
+
+        return data;
+    },
+
+    updateEmpleado: async (empleado: Empleado): Promise<string> => {
         const response = await fetch(URL_API + 'empleado/update', {
             method: 'PUT',
             headers: {
@@ -79,7 +98,7 @@ export const EmpleadoService = {
 
     },
 
-    deleteUser: async (empleado: Empleado): Promise<string> => {
+    deleteEmpleado: async (empleado: Empleado): Promise<string> => {
         const response = await fetch(URL_API + 'empleado/delete', {
             method: 'PUT',
             headers: {
@@ -95,7 +114,6 @@ export const EmpleadoService = {
     checkUser: async (privilegioRequerido: string) => {
         const empleadoStr: string | null = localStorage.getItem('usuario');
 
-        // Check if the item exists and parse it into a Empleado object
         let empleado: Empleado | null = null;
         if (empleadoStr) {
             try {

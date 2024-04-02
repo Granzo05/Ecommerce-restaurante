@@ -16,12 +16,25 @@ export const MenuService = {
     },
 
     createMenu: async (menu: Menu): Promise<string> => {
+        const formData = new FormData();
+        formData.append('nombre', menu.nombre);
+        formData.append('tipo', menu.tipo);
+        formData.append('tiempoCoccion', menu.tiempoCoccion.toString());
+        formData.append('descripcion', menu.descripcion);
+        formData.append('ingredientes', JSON.stringify(menu.ingredientes));
+        if (menu.files) {
+            menu.files.forEach((file, index) => {
+                formData.append(`file${index}`, JSON.stringify(file)); 
+            });
+        }
+        formData.append('precio', menu.precio.toString());
+
         const response = await fetch(URL_API + 'menu/crear', {
             method: 'POST',
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
-            body: JSON.stringify(menu)
+            body: formData
         })
 
         return await response.text();
@@ -36,7 +49,7 @@ export const MenuService = {
             },
             body: JSON.stringify(menu)
         })
-        
+
         return await response.text();
 
     },
