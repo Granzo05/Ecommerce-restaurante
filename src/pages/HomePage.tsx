@@ -80,7 +80,68 @@ export default function MainMenu() {
                 </div>
                 <div className="backdrop"></div>
             </div>
+            <div className="card">
+                <img className="background" src={heladoImage} alt=""/>
+
+                <div className="card-content">
+                <div className="profile-image">
+                    <label style={{color: 'white'}}><IcecreamIcon/></label>
+                </div>
+
+                <h3 className="title">HELADOS</h3>
+                </div>
+                <div className="backdrop"></div>
+            </div>
+            <div className="card">
+                <img className="background" src={heladoImage} alt=""/>
+
+                <div className="card-content">
+                <div className="profile-image">
+                    <label style={{color: 'white'}}><IcecreamIcon/></label>
+                </div>
+
+                <h3 className="title">HELADOS</h3>
+                </div>
+                <div className="backdrop"></div>
+            </div>
+            <div className="card">
+                <img className="background" src={heladoImage} alt=""/>
+
+                <div className="card-content">
+                <div className="profile-image">
+                    <label style={{color: 'white'}}><IcecreamIcon/></label>
+                </div>
+
+                <h3 className="title">HELADOS</h3>
+                </div>
+                <div className="backdrop"></div>
+            </div>
+            <div className="card">
+                <img className="background" src={heladoImage} alt=""/>
+
+                <div className="card-content">
+                <div className="profile-image">
+                    <label style={{color: 'white'}}><IcecreamIcon/></label>
+                </div>
+
+                <h3 className="title">HELADOS</h3>
+                </div>
+                <div className="backdrop"></div>
+            </div>
+            <div className="card">
+                <img className="background" src={heladoImage} alt=""/>
+
+                <div className="card-content">
+                <div className="profile-image">
+                    <label style={{color: 'white'}}><IcecreamIcon/></label>
+                </div>
+
+                <h3 className="title">HELADOS</h3>
+                </div>
+                <div className="backdrop"></div>
+            </div>
         </div>
+        
     </div>
     );
 }

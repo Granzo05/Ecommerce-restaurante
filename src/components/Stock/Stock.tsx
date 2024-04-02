@@ -50,6 +50,7 @@ const Stocks = () => {
 
     return (
         <div >
+    
             <h1 onClick={() => handleAgregarStock()}>Stocks</h1>
             <button> + Agregar stock</button>
 

@@ -10,7 +10,6 @@ public enum EnumTipoMenu {
     PARRILLA,
     PASTAS,
     SUSHI,
-    VEGETARIANO,
     MILANESAS
 
 }

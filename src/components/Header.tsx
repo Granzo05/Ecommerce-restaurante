@@ -14,35 +14,47 @@ const Header = () => {
         setOpenLinks(!openLinks);
     };
 
+    let creden = true;
+    let cliente = localStorage.getItem('cliente');
+
+    if (cliente) {
+        creden = false;
+    }
+
+    console.log(cliente)
+
+
     /*
-    // Si los privilegios del usuario son distintos de cliente entonces esta opcion se va a mostrar en el html
-    const [showLink, setShowLink] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Esto retorna true o false
-                const result = await EmpleadoService.checkUser('empleado');
-                setShowLink(result); // Se setea para chequear en el div si se puede mostrar en caso de ser true
-                
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
+        const [showLink, setShowLink] = useState(false);
+    
+        useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    // Esto retorna true o false
+                    const result = await EmpleadoService.checkUser('empleado');
+                    setShowLink(result); // Se setea para chequear en el div si se puede mostrar en caso de ser true
+    
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
+    
+            fetchData();
+        }, []);
+    
     */
-
     function handleClickLogo() {
         window.location.href = '/';
+    }
+
+    function iniciarSesionPage() {
+        window.location.href = '/login-cliente';
     }
 
     return (
         <div className='navbar'>
             <div className='leftSide' id={openLinks ? "open" : "close"}>
-                <img id='logo-header' src={Logo} onClick={handleClickLogo}/>
+                <img id='logo-header' src={Logo} onClick={handleClickLogo} />
                 <div className="hiddenLinks">
                     <Link to="/"> Inicio </Link>
                     <Link to="/menu"> Menú </Link>
@@ -61,26 +73,29 @@ const Header = () => {
                 )}
                 <button className='icono-responsive' onClick={toggleNavbar}><ReorderIcon /></button>
                 <div className='cuenta'>
-                    <button className='iniciar-sesion'>Iniciar sesión</button>
-                    <div className='mi-cuenta'>
-                        <button id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}><ShoppingCartIcon style={{ display: 'block' }} /><label id='contador-carrito'>0</label></button>
-                        <div className="container-cart-products hidden-cart">
-                            <div className="cart-product">
-                                <div className="info-cart-product">
-                                    <span className='cantidad-producto-carrito'>1</span>
-                                    <p className='titulo-producto-carrito'>Hamburguesa</p>
-                                    <span className='precio-producto-carrito'>$4.600</span>
+                    {creden && (
+                        <button className='iniciar-sesion' onClick={iniciarSesionPage}>Iniciar sesión</button>
+                    )}
+                    {!creden && (
+                        <div className='mi-cuenta'>
+                            <button id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}><ShoppingCartIcon style={{ display: 'block' }} /><label id='contador-carrito'>0</label></button>
+                            <div className="container-cart-products hidden-cart">
+                                <div className="cart-product">
+                                    <div className="info-cart-product">
+                                        <span className='cantidad-producto-carrito'>1</span>
+                                        <p className='titulo-producto-carrito'>Hamburguesa</p>
+                                        <span className='precio-producto-carrito'>$4.600</span>
+                                    </div>
+                                    <button style={{ background: 'none', border: 'none', color: 'black' }} className='icon-close'><CloseIcon /></button>
                                 </div>
-                                <button style={{ background: 'none', border: 'none', color: 'black' }} className='icon-close'><CloseIcon /></button>
+                                <div className="cart-total">
+                                    <h3>Total:</h3>
+                                    <span className='total-pagar'>$4.600</span>
+                                </div>
                             </div>
-                            <div className="cart-total">
-                                <h3>Total:</h3>
-                                <span className='total-pagar'>$4.600</span>
-                            </div>
-                        </div>
-                        <button id='cuenta' style={{ background: 'none', border: 'none', color: 'white' }}><img src={UserLogo} alt="" style={{ width: '50px', cursor: 'pointer' }} /></button>
+                            <button id='cuenta' style={{ background: 'none', border: 'none', color: 'white' }}><img src={UserLogo} alt="" style={{ width: '50px', cursor: 'pointer' }} /></button>
 
-                    </div>
+                        </div>)}
                 </div>
             </div>
         </div>

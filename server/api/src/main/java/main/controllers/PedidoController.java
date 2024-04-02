@@ -59,7 +59,7 @@ public class PedidoController {
 
     @GetMapping("/orders/incoming")
     public List<Pedido> getPedidosEntrantesPorNegocio() {
-        List<Pedido> pedidos = pedidoRepository.findOrdersProcessed();
+        List<Pedido> pedidos = pedidoRepository.findPedidosEntrantes();
         return pedidos;
     }
 

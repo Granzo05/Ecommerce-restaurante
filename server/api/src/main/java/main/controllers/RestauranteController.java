@@ -66,8 +66,6 @@ public class RestauranteController {
         List<Pedido> pedidos = pedidoRepository.findPedidosEntrantes();
         return pedidos;
     }
-
-
     @CrossOrigin
     @GetMapping("/check/{email}/{privilegio}")
     public boolean checkUser(@PathVariable("email") String email, @PathVariable("privilegio") String privilegioNecesario) {
@@ -97,7 +95,7 @@ public class RestauranteController {
     }
 
     @CrossOrigin
-    @GetMapping("/check/{email}/{privilegio}")
+    @GetMapping("/check/{email}")
     public boolean checkPrivilegios(@PathVariable("email") String email) {
         // Recibo un email y para chequear si se puede dar acceso o no
         Cliente cliente = clienteRepository.findByEmail(email).get();
