@@ -4,21 +4,25 @@ import { Menu } from '../../types/Menu';
 import { MenuService } from '../../services/MenuService';
 import { Multipart } from '../../types/Multipart';
 
+interface EditarMenuProps {
+  menuOriginal: Menu;
+}
 
-function AgregarMenu() {
+const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
+
   const handleImagen = (index: number, file: File | null) => {
     const newImagenes = [...imagenes];
     if (file) {
-      newImagenes[index] = { nombre: nombre, value: file };
+      newImagenes[index] = { nombre: menuOriginal.nombre, value: file };
       setImagenes(newImagenes);
-    }
+    } 
   };
 
   const añadirInputsFiles = () => {
     setImagenes([...imagenes, { nombre: '', value: null }]);
   };
 
-  // Ingredientes
+  ///////// INGREDIENTES
 
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
     const nuevosIngredientes = [...ingredientes];
@@ -57,9 +61,8 @@ function AgregarMenu() {
       if (e.target instanceof HTMLInputElement) {
         handleCantidadIngredienteChange(ingredientes.length, parseInt(e.target.value));
       }
-    }); document.getElementById('inputs-container')?.appendChild(inputCantidad);
+    }); document.getElementById('inputs-ingredientes')?.appendChild(inputCantidad);
   };
-
 
   const [tiempoCoccion, setTiempo] = useState(0);
   const [tipo, setTipo] = useState('');
@@ -70,8 +73,9 @@ function AgregarMenu() {
   const [descripcion, setDescripcion] = useState('');
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
 
-  function agregarMenu() {
+  function editarMenu() {
     const menu: Menu = new Menu();
+    menu.id = menuOriginal.id;
     menu.nombre = nombre;
     menu.tiempoCoccion = tiempoCoccion;
     menu.tipo = tipo;
@@ -81,7 +85,7 @@ function AgregarMenu() {
     menu.ingredientes = ingredientes;
     menu.imagenes = imagenes;
 
-    MenuService.createMenu(menu);
+    MenuService.updateMenu(menu);
   }
 
   return (
@@ -103,21 +107,21 @@ function AgregarMenu() {
           <br />
           <label>
             <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Nombre del menu" id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
+            <input type="text" placeholder="Nombre del menu" value={menuOriginal.nombre} id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
           </label>
           <br />
           <label>
             <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Descripción del menu" id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
+            <input type="text" placeholder="Descripción del menu" value={menuOriginal.descripcion} id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
           </label>
           <br />
           <label>
             <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Minutos de coccion" id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+            <input type="text" placeholder="Minutos de coccion" value={menuOriginal.tiempoCoccion} id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
           </label>
           <br />
           <label>
-            <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
+            <select id="tipoMenu" value={menuOriginal.tipo} name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
               <option value="HAMBURGUESAS">Hamburguesas</option>
               <option value="PANCHOS">Panchos</option>
               <option value="EMPANADAS">Empanadas</option>
@@ -132,8 +136,8 @@ function AgregarMenu() {
             </select>
           </label>
           <br />
-          <div>
-            {ingredientes.map((ingrediente, index) => (
+          <div id='inputs-ingredientes'>
+            {menuOriginal.ingredientes.map((ingrediente: IngredienteMenu, index: number) => (
               <div key={index}>
                 <input
                   type="text"
@@ -154,19 +158,19 @@ function AgregarMenu() {
           <br />
           <label>
             <i className='bx bx-price'></i>
-            <input type="number" placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+            <input type="number" value={menuOriginal.precio} placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
           </label>
           <br />
           <label>
             <i className='bx bx-price'></i>
-            <input type="number" placeholder="Comensales" id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
+            <input type="number" placeholder="Comensales" value={menuOriginal.comensales} id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
           </label>
           <br />
-          <input type="button" value="agregarMenu" id="agregarMenu" onClick={agregarMenu} />
+          <input type="button" value="editarMenu" id="editarMenu" onClick={editarMenu} />
         </div>
       </div>
     </div>
   )
 }
 
-export default AgregarMenu
+export default EditarMenu

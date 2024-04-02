@@ -1,61 +1,87 @@
 import { EmpleadoService } from "../../services/EmpleadoService";
 import { MenuService } from "../../services/MenuService";
+import { useEffect, useState } from 'react';
+import { Menu } from "../../types/Menu";
+import Modal from "../Modal";
+import AgregarMenu from './AgregarMenu';
+import EditarMenu from './EditarMenu';
+import EliminarMenu from "./EliminarMenu";
+
 
 const Menus = () => {
     EmpleadoService.checkUser('negocio');
 
-    MenuService.getMenus()
-        .then(data => {
-            let contenedorPrincipal = document.getElementById("menus");
+    const [menus, setMenus] = useState<Menu[]>([]);
 
-            data.forEach(menu => {
-                let contenedor = document.createElement("div");
-                contenedor.className = "grid-item";
+    const [showAgregarMenuModal, setShowAgregarMenuModal] = useState(false);
+    const [showEditarMenuModal, setShowEditarMenuModal] = useState(false);
+    const [showEliminarMenuModal, setShowEliminarMenuModal] = useState(false);
 
-                let file = document.createElement("h3");
-                file.textContent = menu.imagen64;
-                contenedor.appendChild(file);
+    const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null);
+    const [selectedId, setSelectedId] = useState<number | null>(0);
 
-                let nombre = document.createElement("h3");
-                nombre.textContent = menu.nombre;
-                contenedor.appendChild(nombre);
-
-                let comensales = document.createElement("h3");
-                comensales.textContent = (menu.comensales).toString();
-                contenedor.appendChild(comensales);
-
-                let descripcion = document.createElement("h3");
-                descripcion.textContent = menu.descripcion;
-                contenedor.appendChild(descripcion);
-
-                menu.ingredientes.forEach(ingrediente => {
-                    let ingredienteDiv = document.createElement("h3");
-
-                    let ingredienteNombre = document.createElement("h4");
-                    ingredienteNombre.textContent = ingrediente.nombre;
-
-                    ingredienteDiv.appendChild(ingredienteNombre);
-
-
-                    let ingredienteCantidad = document.createElement("h4");
-                    ingredienteCantidad.textContent = (ingrediente.cantidad).toString();
-
-                    ingredienteDiv.appendChild(ingredienteCantidad);
-                });
-
-                let precio = document.createElement("h3");
-                precio.textContent = (menu.precio).toString();
-                contenedor.appendChild(precio);
-
-
-                contenedorPrincipal?.appendChild(contenedor);
+    useEffect(() => {
+        MenuService.getMenus()
+            .then(data => {
+                setMenus(data);
             })
-        });
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, []);
+
+    const handleAgregarMenu = () => {
+        setShowAgregarMenuModal(true);
+    };
+
+    const handleEditarMenu = (menu: Menu) => {
+        setSelectedMenu(menu);
+        setShowEditarMenuModal(true);
+    };
+
+    const handleEliminarMenu = (menuId: number) => {
+        setSelectedId(menuId);
+        setShowEliminarMenuModal(true);
+    };
+
+    const handleModalClose = () => {
+        setShowAgregarMenuModal(false);
+        setShowEditarMenuModal(false);
+    };
 
     return (
         <div >
-            <h1>Menus</h1>
-            <div id="menus"></div>
+            <h1 onClick={() => handleAgregarMenu()}>Menus</h1>
+            <button> + Agregar menu</button>
+
+            <Modal isOpen={showAgregarMenuModal} onClose={handleModalClose}>
+                <AgregarMenu />
+            </Modal>
+
+            <div id="menus">
+                {menus.map(menu => (
+                    <div key={menu.id} className="grid-item">
+                        <h3>{menu.imagen64}</h3>
+                        <h3>{menu.nombre}</h3>
+                        <h3>{menu.comensales}</h3>
+                        <h3>{menu.descripcion}</h3>
+                        {menu.ingredientes.map(ingrediente => (
+                            <div>
+                                <h4>{ingrediente.nombre} = X{ingrediente.cantidad}</h4>
+                            </div>
+                        ))}
+                        <h3>{menu.precio}</h3>
+                        <button onClick={() => handleEliminarMenu(menu.id)}>ELIMINAR</button>
+                        <Modal isOpen={showEliminarMenuModal} onClose={handleModalClose}>
+                            {selectedId && <EliminarMenu menuId={selectedId} />}
+                        </Modal>
+                        <button onClick={() => handleEditarMenu}>EDITAR</button>
+                        <Modal isOpen={showEditarMenuModal} onClose={handleModalClose}>
+                            {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
+                        </Modal>
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }

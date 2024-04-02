@@ -13,7 +13,7 @@ export class Menu {
     restaurante: Restaurante | null = null;
     ingredientes: IngredienteMenu[] = [];
     imagen64: string = '';
-    files: Multipart[] | null = null;
+    imagenes: Multipart[] | null = null;
 
     constructor() {
     }

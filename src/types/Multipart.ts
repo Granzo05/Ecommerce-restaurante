@@ -1,5 +1,4 @@
 export interface Multipart {
-    name: string;
-    type: string;
-    value: File;
+    nombre: string;
+    value: File | null;
 }

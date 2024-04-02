@@ -22,8 +22,8 @@ export const MenuService = {
         formData.append('tiempoCoccion', menu.tiempoCoccion.toString());
         formData.append('descripcion', menu.descripcion);
         formData.append('ingredientes', JSON.stringify(menu.ingredientes));
-        if (menu.files) {
-            menu.files.forEach((file, index) => {
+        if (menu.imagenes) {
+            menu.imagenes.forEach((file, index) => {
                 formData.append(`file${index}`, JSON.stringify(file)); 
             });
         }
@@ -54,8 +54,8 @@ export const MenuService = {
 
     },
 
-    deleteMenu: async (nombre: string): Promise<string> => {
-        const response = await fetch(URL_API + `menu/${nombre}/delete`, {
+    deleteMenu: async (id: number): Promise<string> => {
+        const response = await fetch(URL_API + `menu/${id}/delete`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

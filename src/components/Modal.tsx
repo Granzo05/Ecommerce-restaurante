@@ -1,0 +1,28 @@
+import React, { ReactNode } from 'react';
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode; 
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+  const handleModalClose = () => {
+    onClose();
+  };
+
+  return (
+    <div>
+      {isOpen && (
+        <div className="modal-overlay" onClick={handleModalClose}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div>{children}</div>
+            <button className="modal-close" onClick={handleModalClose}>Cerrar</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Modal;
