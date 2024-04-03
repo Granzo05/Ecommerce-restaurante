@@ -3,86 +3,122 @@ import { URL_API } from '../utils/global_variables/const';
 
 export const PedidoService = {
     getPedidosClientes: async (userId: number): Promise<Pedido[]> => {
-        const response = await fetch(URL_API + `/user/id/${userId}/orders`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
+        try {
+            const response = await fetch(URL_API + `/user/id/${userId}/orders`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        const data = await response.json();
+            const data = await response.json();
 
-        return data;
+            return data;
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     getPedidosNegocio: async (): Promise<Pedido[]> => {
-        const response = await fetch('http://localhost:8080/restaurante/pedidos', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+        try {
+            const response = await fetch('http://localhost:8080/restaurante/pedidos', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-                return await response.json()
             })
-            .catch(error => {
-                console.error('Error:', error)
-            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        const data = await response.json();
+            const data = await response.json();
 
-        return data;
+            return data;
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     getPedidos: async (estado: string): Promise<Pedido[]> => {
-        const response = await fetch('http://localhost:8080/restaurante/pedidos/' + estado, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+        try {
+            const response = await fetch('http://localhost:8080/restaurante/pedidos/' + estado, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-                return await response.json()
-            })
-            .catch(error => {
-                console.error('Error:', error)
             })
 
-        const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        return data;
+            const data = await response.json();
+
+            return data;
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
     },
 
     crearPedido: async (pedido: Pedido): Promise<string> => {
-        const response = await fetch(URL_API + 'pedido/crear', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(pedido)
-        })
+        try {
+            const response = await fetch(URL_API + 'pedido/crear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pedido)
+            })
 
-        return await response.text();
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
 
     },
 
 
     eliminarPedido: async (pedido: Pedido): Promise<string> => {
-        const response = await fetch(URL_API + 'pedido/delete', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(pedido)
-        })
+        try {
+            const response = await fetch(URL_API + 'pedido/delete', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pedido)
+            })
 
-        return await response.text();
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
 
     },
 
@@ -92,37 +128,51 @@ export const PedidoService = {
             estadoPedido: "aceptado"
         }
 
-        const response = await fetch('http://localhost:8080/pedido/update/' + idPedido, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        })
+        try {
+            const response = await fetch('http://localhost:8080/pedido/update/' + idPedido, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        //enviarCorreoExitoso(emailCliente);
+            //enviarCorreoExitoso(emailCliente);
 
-        return await response.text();
+            return await response.text();
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
 
     },
 
-    rechazarPedido: async (idPedido: number, motivoRechazo: string, emailCliente: string)=> {
+    rechazarPedido: async (idPedido: number, motivoRechazo: string, emailCliente: string) => {
         //enviarCorreoRechazo(emailCliente, motivoRechazo);
 
-        fetch('http://localhost:8080/pedido/delete/' + idPedido, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+        try {
+            const response = await fetch('http://localhost:8080/pedido/delete/' + idPedido, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
 

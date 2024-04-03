@@ -22,6 +22,7 @@ const Header = () => {
     }
 
 
+
     const [showLink, setShowLink] = useState(false);
 
     useEffect(() => {
@@ -29,6 +30,8 @@ const Header = () => {
             try {
                 // Esto retorna true o false
                 const result = await RestauranteService.checkPrivilegies();
+                console.log(result);
+
                 setShowLink(result); // Se setea para chequear en el div si se puede mostrar en caso de ser true
 
             } catch (error) {

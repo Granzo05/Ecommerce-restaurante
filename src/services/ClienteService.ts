@@ -71,28 +71,47 @@ export const ClienteService = {
     },
 
     updateUser: async (cliente: Cliente): Promise<string> => {
-        const response = await fetch(URL_API + 'cliente/update', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(cliente)
-        })
+        try {
+            const response = await fetch(URL_API + 'cliente/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(cliente)
+            })
 
-        return await response.text();
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
 
     },
 
     deleteUser: async (cliente: Cliente): Promise<string> => {
-        const response = await fetch(URL_API + 'cliente/delete', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(cliente)
-        })
+        try {
+            const response = await fetch(URL_API + 'cliente/delete', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(cliente)
+            })
 
-        return await response.text();
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            }
 
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 }

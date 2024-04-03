@@ -24,45 +24,77 @@ export const MenuService = {
         formData.append('ingredientes', JSON.stringify(menu.ingredientes));
         if (menu.imagenes) {
             menu.imagenes.forEach((file, index) => {
-                formData.append(`file${index}`, JSON.stringify(file)); 
+                formData.append(`file${index}`, JSON.stringify(file));
             });
         }
         formData.append('precio', menu.precio.toString());
 
-        const response = await fetch(URL_API + 'menu/crear', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            body: formData
-        })
+        try {
+            const response = await fetch(URL_API + 'menu/crear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                body: formData
+            })
 
-        return await response.text();
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
 
     },
 
     updateMenu: async (menu: Menu): Promise<string> => {
-        const response = await fetch(URL_API + 'menu/update', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(menu)
-        })
+        try {
+            const response = await fetch(URL_API + 'menu/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(menu)
+            })
 
-        return await response.text();
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
 
     },
 
     deleteMenu: async (id: number): Promise<string> => {
-        const response = await fetch(URL_API + `menu/${id}/delete`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
+        try {
+            const response = await fetch(URL_API + `menu/${id}/delete`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
-        })
 
-        return await response.text();
+            return await response.text();
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
 }

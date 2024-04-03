@@ -14,8 +14,8 @@ const Empleados = () => {
     const [showAgregarEmpleadoModal, setShowAgregarEmpleadoModal] = useState(false);
     const [showEditarEmpleadoModal, setShowEditarEmpleadoModal] = useState(false);
     const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
-    const [selectedEmpleado, setSelectedEmpleado] = useState<Empleado | null>(null);
     const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
@@ -32,8 +32,8 @@ const Empleados = () => {
         setShowAgregarEmpleadoModal(true);
     };
 
-    const handleEditarEmpleado = (empleado: Empleado) => {
-        setSelectedEmpleado(empleado);
+    const handleEditarEmpleado = () => {
+        setIsEditing(true);
         setShowEditarEmpleadoModal(true);
     };
 
@@ -45,6 +45,7 @@ const Empleados = () => {
     const handleModalClose = () => {
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(false);
+        setIsEditing(false);
     };
 
     return (
@@ -58,21 +59,26 @@ const Empleados = () => {
 
             <div id="empleados">
                 {empleados.map(empleado => (
-                    <div key={empleado.id} className="grid-item">
-                        <h3>{empleado.nombre}</h3>
-                        <h3>{empleado.cuit}</h3>
-                        <h3>{empleado.telefono}</h3>
-                        <h3>{empleado.email}</h3>
-                        <h3>{empleado.fechaEntrada.toISOString()}</h3>
-                        <h3>{empleado.contraseña}</h3>
+                    <div key={empleado.id} className='grid-item'>
+                        <div className={`datos ${isEditing ? 'hidden' : ''}`}>
+                            <h3>{empleado.nombre}</h3>
+                            <h3>{empleado.cuit}</h3>
+                            <h3>{empleado.telefono}</h3>
+                            <h3>{empleado.email}</h3>
+                            {empleado.fechaIngreso && (
+                                <h3>{empleado.fechaIngreso.toString()}</h3>
+                            )}
+                            <h3>{empleado.contraseña}</h3>
 
-                        <button onClick={() => handleEliminarEmpleado(empleado.id)}>ELIMINAR</button>
-                        <Modal isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
-                            {selectedId && <EliminarEmpleado empleadoId={selectedId} />}
-                        </Modal>
-                        <button onClick={() => handleEditarEmpleado}>EDITAR</button>
+                            <button onClick={() => handleEliminarEmpleado(empleado.id)}>ELIMINAR</button>
+                            <Modal isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
+                                {selectedId && <EliminarEmpleado empleadoId={selectedId} />}
+
+                            </Modal>
+                            <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
+                        </div>
                         <Modal isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
-                            {selectedEmpleado && <EditarEmpleado empleadoOriginal={selectedEmpleado} />}
+                            <EditarEmpleado empleadoOriginal={empleado} />
                         </Modal>
                     </div>
                 ))}

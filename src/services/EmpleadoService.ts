@@ -52,50 +52,70 @@ export const EmpleadoService = {
     },
 
     getEmpleados: async (): Promise<Empleado[]> => {
-        const response = await fetch(URL_API + 'empleados', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+        try {
+            const response = await fetch(URL_API + 'empleados', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-                return await response.json()
-            })
-            .catch(error => {
-                console.error('Error:', error)
-            })
+            });
 
-        const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            }
 
-        return data;
+            const data: Empleado[] = await response.json();
+            
+            return data;
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
-    updateEmpleado: async (empleado: Empleado): Promise<string> => {
-        const response = await fetch(URL_API + 'empleado/update', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(empleado)
-        })
 
-        return await response.text();
+    updateEmpleado: async (empleado: Empleado): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'empleado/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(empleado)
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
 
     },
 
     deleteEmpleado: async (empleadoId: number): Promise<string> => {
-        const response = await fetch(URL_API + 'empleado/' + empleadoId + '/delete', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
+        try {
+            const response = await fetch(URL_API + 'empleado/' + empleadoId + '/delete', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
             }
-        })
 
-        return await response.text();
+            return await response.text();
 
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     checkUser: async (privilegioRequerido: string) => {
@@ -119,7 +139,6 @@ export const EmpleadoService = {
                             return await response.json()
                         })
                         .then(data => {
-                            console.log(data)
                             if (!data) {
                                 window.location.href = '/acceso-denegado';
                             }
@@ -133,6 +152,6 @@ export const EmpleadoService = {
             }
         }
     },
-    
+
 
 }

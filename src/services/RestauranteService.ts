@@ -55,7 +55,6 @@ export const RestauranteService = {
                 return await response.json()
             })
             .then(data => {
-                console.log(data)
                 let restaurante = {
                     id: data.id,
                     email: data.email,
@@ -73,17 +72,25 @@ export const RestauranteService = {
     },
 
     updateRestaurant: async (restaurante: Restaurante): Promise<string> => {
-        const response = await fetch(URL_API + 'restaurant/update', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(restaurante)
-        })
+        try {
+            const response = await fetch(URL_API + 'restaurant/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(restaurante)
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        const data = await response.json();
+            return await response.json();
 
-        return data;
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     checkPrivilegies: async (): Promise<boolean> => {
@@ -94,7 +101,7 @@ export const RestauranteService = {
             try {
                 empleado = JSON.parse(empleadoStr);
                 if (empleado) {
-                    const response = await fetch(URL_API + 'check/user/' + empleado.email, {
+                    const response = await fetch(URL_API + 'check/' + empleado.email, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json'

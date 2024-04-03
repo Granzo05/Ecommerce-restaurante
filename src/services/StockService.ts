@@ -4,76 +4,134 @@ import { URL_API } from '../utils/global_variables/const';
 
 export const StockService = {
     createStock: async (stock: Stock): Promise<string> => {
-        const response = await fetch(URL_API + 'stock/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(stock)
-        })
+        try {
+            const response = await fetch(URL_API + 'stock/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(stock)
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        const data = await response.json();
+            return await response.json();
 
-        return data;
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     getStock: async (): Promise<Stock[]> => {
-        const response = await fetch(URL_API + 'stock')
+        try {
+            const response = await fetch(URL_API + 'stock', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        const data = await response.json();
+            return await response.json();
 
-        return data;
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     getStockProduct: async (name: string): Promise<Stock> => {
-        const response = await fetch(URL_API + `stock/${name}`);
+        try {
+            const response = await fetch(URL_API + `stock/${name}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        const data = await response.json();
+            return await response.json();
 
-        return data;
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     checkStock: async (menus: Menu[]): Promise<string> => {
-        const queryString = menus.map(menu => `id=${menu.id}`).join('&');
+        try {
+            const queryString = menus.map(menu => `id=${menu.id}`).join('&');
 
-        // Construir la URL con los parámetros de consulta
-        const url = `${URL_API}restaurante/stock/check?${queryString}`;
-
-        // Realizar la solicitud GET
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
+            // Construir la URL con los parámetros de consulta
+            const url = `${URL_API}restaurante/stock/check?${queryString}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
-        });
 
-        return await response.text();
+            return await response.text();
 
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     updateStock: async (stock: Stock): Promise<Stock> => {
-        const response = await fetch(URL_API + 'stock/update', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(stock)
-        })
+        try {
+            const response = await fetch(URL_API + 'stock/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(stock)
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
 
-        const data = await response.json();
+            return await response.json();
 
-        return data;
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     deleteStock: async (stockId: number): Promise<string> => {
-        const response = await fetch(URL_API + 'stock/' + stockId + 'delete', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
+        try {
+            const response = await fetch(URL_API + 'stock/' + stockId + 'delete', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
-        })
 
-        return await response.text();
+            return await response.text();
 
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 }

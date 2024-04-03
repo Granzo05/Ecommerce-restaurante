@@ -1,7 +1,7 @@
 import { Restaurante } from "./Restaurante";
 
 export class Empleado {
-    fechaEntrada: Date = new Date();
+    fechaIngreso: Date = new Date();
     id: number = 0;
     nombre: string = '';
     apellido: string = '';

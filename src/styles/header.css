@@ -343,3 +343,13 @@ transition: 0.4s;
   background-color: white;
   color: black;
 }
+
+.datos {
+  display: flex;
+  flex-direction: row;
+}
+
+.datos.hidden {
+  display: none;
+  flex-direction: row;
+}

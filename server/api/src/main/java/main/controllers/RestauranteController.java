@@ -143,7 +143,6 @@ public class RestauranteController {
     @PostMapping("/empleado/create")
     public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) {
         Optional<Empleado> empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail());
-        System.out.println(empleado);
         if (empleado.isEmpty()){
             empleadoDetails.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
             empleadoDetails.setBorrado("NO");
@@ -152,6 +151,29 @@ public class RestauranteController {
             return empleadoDetails;
         } else {
             return null;
+        }
+    }
+
+    @GetMapping("/empleados")
+    public List<Empleado> getEmpleados() {
+        return empleadoRepository.findAll();
+    }
+
+    @PutMapping("/empleado/update")
+    public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) {
+        System.out.println(empleadoDetails);
+        Empleado empleado = empleadoRepository.findByCuit(empleadoDetails.getCuit());
+        if (empleado != null){
+            empleado.setNombre(empleadoDetails.getNombre());
+            empleado.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
+            empleado.setEmail(empleadoDetails.getEmail());
+            empleado.setTelefono(empleadoDetails.getTelefono());
+            System.out.println(empleado);
+
+            empleadoRepository.save(empleado);
+            return ResponseEntity.ok("El empleado se modificó correctamente");
+        } else {
+            return ResponseEntity.ok("El empleado no se encontró");
         }
     }
 }
