@@ -50,9 +50,10 @@ const Menus = () => {
     };
 
     return (
-        <div >
-            <h1 onClick={() => handleAgregarMenu()}>Menus</h1>
-            <button> + Agregar menu</button>
+        <div className="opciones-pantallas">
+
+            <h1>Menus</h1>
+            <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
 
             <Modal isOpen={showAgregarMenuModal} onClose={handleModalClose}>
                 <AgregarMenu />

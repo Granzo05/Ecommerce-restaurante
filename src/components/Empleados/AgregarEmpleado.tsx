@@ -24,12 +24,7 @@ function AgregarEmpleado() {
   }
 
   return (
-    <div>
-      <div id="container-items">
-      </div>
-
-      <div id="miModal" className="modal">
-        <div className="modal-content">          
+<div className="modal-info">          
           <br />
           <label>
             <i className='bx bx-lock'></i>
@@ -63,8 +58,6 @@ function AgregarEmpleado() {
           <br />
           <input type="button" value="agregarEmpleado" id="agregarEmpleado" onClick={agregarEmpleado} />
         </div>
-      </div>
-    </div>
   )
 }
 

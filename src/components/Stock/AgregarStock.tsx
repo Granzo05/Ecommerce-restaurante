@@ -25,35 +25,28 @@ function AgregarStock() {
   }
 
   return (
-    <div>
-      <div id="container-items">
-      </div>
-
-      <div id="miModal" className="modal">
-        <div className="modal-content">
-          <br />
-          <label>
-            <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Nombre del ingrediente" id="nombreStock" onChange={(e) => { setIngredienteNombre(e.target.value) }} />
-          </label>
-          <br />
-          <label>
-            <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Cantidad del ingrediente" id="cantidadStock" onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
-          </label>
-          <br />
-          <label>
-            <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Medida del ingrediente" id="medidaStock" onChange={(e) => { setMedida(e.target.value) }} />
-          </label>
-          <br />
-          <label>
-            <i className='bx bx-lock'></i>
-            <input type="text" placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-          </label>
-          <input type="button" value="agregarStock" id="agregarStock" onClick={agregarStock} />
-        </div>
-      </div>
+    <div className="modal-info">
+      <br />
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" placeholder="Nombre del ingrediente" id="nombreStock" onChange={(e) => { setIngredienteNombre(e.target.value) }} />
+      </label>
+      <br />
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" placeholder="Cantidad del ingrediente" id="cantidadStock" onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+      </label>
+      <br />
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" placeholder="Medida del ingrediente" id="medidaStock" onChange={(e) => { setMedida(e.target.value) }} />
+      </label>
+      <br />
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+      </label>
+      <input type="button" value="agregarStock" id="agregarStock" onClick={agregarStock} />
     </div>
   )
 }

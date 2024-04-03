@@ -10,7 +10,7 @@ const LoginCliente = () => {
     const [apellido, setApellido] = useState('');
     const [telefono, setTelefono] = useState(0);
 
-    const handleIniciarSesion = () => {
+    const handleIniciarSesionUsuario = () => {
         ClienteService.getUser(email, contraseña);
     };
 
@@ -30,7 +30,7 @@ const LoginCliente = () => {
                     <label>
                         <input required type="password" placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
                     </label>
-                    <input type="button" value="Iniciar sesión" onClick={handleIniciarSesion} />
+                    <input type="button" value="Iniciar sesión" onClick={handleIniciarSesionUsuario} />
                 </div>
             </div>
             <div className={styles.formInfo}>

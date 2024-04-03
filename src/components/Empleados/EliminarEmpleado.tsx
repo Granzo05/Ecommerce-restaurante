@@ -23,14 +23,11 @@ const EliminarMenu: React.FC<EliminarMenuProps> = ({ empleadoId }) => {
     navigate('/opciones');
   };
 
-  return (
-    <div id="miModal" className="modal">
-      <div className="modal-content">
-        <p>¿Seguro que quieres eliminar el empleado?</p>
-        <button onClick={onConfirm}>Confirmar</button>
-        <button onClick={onCancel}>Cancelar</button>
-      </div>
-    </div>
+  return (<div className="modal-info">
+    <p>¿Seguro que quieres eliminar el empleado?</p>
+    <button onClick={onConfirm}>Confirmar</button>
+    <button onClick={onCancel}>Cancelar</button>
+  </div>
   );
 }
 

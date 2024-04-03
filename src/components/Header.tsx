@@ -2,10 +2,11 @@ import { Link } from 'react-router-dom';
 import '../styles/header.css';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
 import ReorderIcon from '@mui/icons-material/Reorder';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserLogo from '../assets/img/user-icon.png';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CloseIcon from '@mui/icons-material/Close';
+import { RestauranteService } from '../services/RestauranteService';
 
 const Header = () => {
     const [openLinks, setOpenLinks] = useState(false);
@@ -15,34 +16,29 @@ const Header = () => {
     };
 
     let creden = true;
-    let cliente = localStorage.getItem('cliente');
 
-    if (cliente) {
+    if (localStorage.getItem('usuario')) {
         creden = false;
     }
 
-    console.log(cliente)
 
+    const [showLink, setShowLink] = useState(false);
 
-    /*
-        const [showLink, setShowLink] = useState(false);
-    
-        useEffect(() => {
-            const fetchData = async () => {
-                try {
-                    // Esto retorna true o false
-                    const result = await EmpleadoService.checkUser('empleado');
-                    setShowLink(result); // Se setea para chequear en el div si se puede mostrar en caso de ser true
-    
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            };
-    
-            fetchData();
-        }, []);
-    
-    */
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esto retorna true o false
+                const result = await RestauranteService.checkPrivilegies();
+                setShowLink(result); // Se setea para chequear en el div si se puede mostrar en caso de ser true
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     function handleClickLogo() {
         window.location.href = '/';
     }
@@ -67,8 +63,7 @@ const Header = () => {
                 <Link to="/" id='menu'>Menú</Link>
                 <Link to="/" id='about'>Sobre nosotros</Link>
                 <Link to="/" id='contact'>Contáctanos</Link>
-                {false && (
-                    // Falta codigo pero ya lo hago
+                {showLink && (
                     <Link to="/opciones" id='opciones'>Opciones</Link>
                 )}
                 <button className='icono-responsive' onClick={toggleNavbar}><ReorderIcon /></button>

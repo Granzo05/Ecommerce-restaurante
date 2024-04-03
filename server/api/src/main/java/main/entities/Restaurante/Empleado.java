@@ -125,4 +125,20 @@ public class Empleado {
     public void setIdRestaurante(Restaurante idRestaurante) {
         this.idRestaurante = idRestaurante;
     }
+
+    @Override
+    public String toString() {
+        return "Empleado{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", email='" + email + '\'' +
+                ", contraseña='" + contraseña + '\'' +
+                ", cuit=" + cuit +
+                ", telefono=" + telefono +
+                ", fechaIngreso=" + fechaIngreso +
+                ", borrado='" + borrado + '\'' +
+                ", privilegios='" + privilegios + '\'' +
+                ", idRestaurante=" + idRestaurante +
+                '}';
+    }
 }

@@ -9,7 +9,6 @@ import main.repositories.ClienteRepository;
 import main.repositories.EmpleadoRepository;
 import main.repositories.PedidoRepository;
 import main.repositories.RestauranteRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +40,14 @@ public class RestauranteController {
     }
     @CrossOrigin
     @GetMapping("/restaurant/login/{email}/{password}")
-    public Restaurante loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) {
+    public Object loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) {
         // Busco por email y clave encriptada, si se encuentra envio un ok
+        Restaurante restaurante = restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
+
+        if(restaurante == null) {
+            return empleadoRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
+        }
+
         return restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
     }
 
@@ -70,21 +75,30 @@ public class RestauranteController {
     @GetMapping("/check/{email}/{privilegio}")
     public boolean checkUser(@PathVariable("email") String email, @PathVariable("privilegio") String privilegioNecesario) {
         // Recibo un email y para chequear si se puede dar acceso o no
-        Cliente cliente = clienteRepository.findByEmail(email).get();
+        try{
+            Optional<Cliente> cliente = clienteRepository.findByEmail(email);
+            // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
+            if (cliente.isPresent()) {
+                return false;
+            }
+        } catch (Exception ignored){
 
-        Empleado empleado = empleadoRepository.findByEmail(email).get();
+        }
+
+        try{
+            Optional<Empleado> empleado = empleadoRepository.findByEmail(email);
+            // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
+            if (empleado.isPresent()) {
+                if (empleado.get().getPrivilegios().contains(privilegioNecesario)) {
+                    return true;
+                }
+                return true;
+            }
+        } catch (Exception ignored){
+
+        }
 
         Restaurante restaurante = restauranteRepository.findByEmail(email);
-
-        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
-        if (cliente != null) {
-            return false;
-        }
-
-        // Si privilegiosNecesario = empleado: true
-        if (empleado.getPrivilegios().contains(privilegioNecesario)) {
-            return true;
-        }
 
         // Restaurante tiene acceso a todo, por lo tanto si el email coincide entonces se concede acceso
         if (restaurante != null) {
@@ -98,21 +112,25 @@ public class RestauranteController {
     @GetMapping("/check/{email}")
     public boolean checkPrivilegios(@PathVariable("email") String email) {
         // Recibo un email y para chequear si se puede dar acceso o no
-        Cliente cliente = clienteRepository.findByEmail(email).get();
+        try{
+            Optional<Cliente> cliente = clienteRepository.findByEmail(email);
+            // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
+            if (cliente.isPresent()) {
+                return false;
+            }
+        } catch (Exception ignored){}
 
-        Empleado empleado = empleadoRepository.findByEmail(email).get();
+        try{
+            Optional<Empleado> empleado = empleadoRepository.findByEmail(email);
+            // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
+            if (empleado.isPresent()) {
+                return true;
+            }
+        } catch (Exception ignored){
+
+        }
 
         Restaurante restaurante = restauranteRepository.findByEmail(email);
-
-        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
-        if (cliente != null) {
-            return false;
-        }
-
-        // Si privilegiosNecesario = empleado: true
-        if (empleado != null) {
-            return true;
-        }
 
         // Restaurante tiene acceso a todo, por lo tanto si el email coincide entonces se concede acceso
         if (restaurante != null) {
@@ -124,14 +142,14 @@ public class RestauranteController {
 
     @PostMapping("/empleado/create")
     public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) {
-        Empleado empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail()).get();
-
-        if (empleado != null){
-            empleado.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
-            empleado.setBorrado("NO");
-            empleado.setPrivilegios("empleado");
-            empleadoRepository.save(empleado);
-            return empleado;
+        Optional<Empleado> empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail());
+        System.out.println(empleado);
+        if (empleado.isEmpty()){
+            empleadoDetails.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
+            empleadoDetails.setBorrado("NO");
+            empleadoDetails.setPrivilegios("empleado");
+            empleadoRepository.save(empleadoDetails);
+            return empleadoDetails;
         } else {
             return null;
         }

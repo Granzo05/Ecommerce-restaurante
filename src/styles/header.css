@@ -310,3 +310,36 @@ transition: 0.4s;
 #carrito:focus + .hidden-cart {
   display: block;
 }
+
+
+
+
+
+
+
+
+/* Pantalla de opciones pal restaurante, no se a donde ponerla para que me lo lea pero te lo dejo separado porq se que ak anda bien */
+.opciones-pantallas {
+  background-color: gray;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+} 
+
+.modal-div {
+  width: 100%;
+  height: 500px;
+  background-color: white;
+  color: black;
+}
+
+.modal-content {
+  width: 100%;
+  height: 500px;
+  background-color: white;
+  color: black;
+}

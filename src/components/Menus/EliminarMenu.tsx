@@ -24,13 +24,11 @@ const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuId }) => {
   };
 
   return (
-    <div id="miModal" className="modal">
-      <div className="modal-content">
+      <div className="modal-info">
         <p>¿Seguro que quieres eliminar el menú?</p>
         <button onClick={onConfirm}>Confirmar</button>
         <button onClick={onCancel}>Cancelar</button>
       </div>
-    </div>
   );
 }
 

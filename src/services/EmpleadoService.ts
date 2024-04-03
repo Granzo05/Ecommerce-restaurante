@@ -4,7 +4,6 @@ import { URL_API } from '../utils/global_variables/const';
 export const EmpleadoService = {
     createEmpleado: async (empleado: Empleado) => {
         empleado.nombre = `${empleado.nombre} ${empleado.apellido}`;
-
         fetch(URL_API + 'empleado/create', {
             method: 'POST',
             headers: {
@@ -24,12 +23,7 @@ export const EmpleadoService = {
     },
 
     getEmpleado: async (email: string, contraseña: string) => {
-        const empleado = {} as Empleado;
-
-        empleado.email = email;
-        empleado.contraseña = contraseña;
-
-        fetch(URL_API + 'empleado/login/' + empleado.email + '/' + empleado.contraseña, {
+        fetch('http://localhost:8080/restaurant/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -47,7 +41,7 @@ export const EmpleadoService = {
                     nombre: data.nombre,
                     email: data.email
                 }
-                localStorage.setItem('empleado', JSON.stringify(empleado));
+                localStorage.setItem('usuario', JSON.stringify(empleado));
 
                 // Redirige al usuario al menú principal
                 window.location.href = '/cocina'

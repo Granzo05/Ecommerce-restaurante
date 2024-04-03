@@ -49,10 +49,10 @@ const Stocks = () => {
     };
 
     return (
-        <div >
+        <div className="opciones-pantallas">
     
-            <h1 onClick={() => handleAgregarStock()}>Stocks</h1>
-            <button> + Agregar stock</button>
+            <h1>Stocks</h1>
+            <button onClick={() => handleAgregarStock()}> + Agregar stock</button>
 
             <Modal isOpen={showAgregarStockModal} onClose={handleModalClose}>
                 <AgregarStock />

@@ -10,9 +10,7 @@ import IcecreamIcon from '@mui/icons-material/Icecream';
 import lomoIcono from '../assets/img/icono-lomos.png'
 import sushiIcono from '../assets/img/icono-sushi.png'
 
-export default function MainMenu() {
-
-    
+export default function MainMenu() {    
     return (
     <div className='body'>
         <div className="container">

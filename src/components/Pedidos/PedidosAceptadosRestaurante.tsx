@@ -44,7 +44,7 @@ const PedidosAceptados = () => {
 
     return (
         
-        <div>
+        <div className="opciones-pantallas">
             <h1>Tus Pedidos Aceptados</h1>
             <div id="pedidos"></div>
         </div>

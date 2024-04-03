@@ -48,9 +48,9 @@ const Empleados = () => {
     };
 
     return (
-        <div >
-            <h1 onClick={() => handleAgregarEmpleado()}>Empleados</h1>
-            <button> + Agregar empleado</button>
+        <div className="opciones-pantallas">
+            <h1>Empleados</h1>
+            <button onClick={() => handleAgregarEmpleado()}> + Agregar empleado</button>
 
             <Modal isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
                 <AgregarEmpleado />

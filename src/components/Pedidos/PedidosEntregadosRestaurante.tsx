@@ -43,7 +43,7 @@ const PedidosEntregados = () => {
         });
 
     return (
-        <div>
+        <div className="opciones-pantallas">
             <h1>Tus Pedidos Entregados</h1>
             <div id="pedidos"></div>
         </div>

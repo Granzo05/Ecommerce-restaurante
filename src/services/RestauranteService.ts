@@ -25,12 +25,12 @@ export const RestauranteService = {
                 return await response.json()
             })
             .then(data => {
-                let cliente = {
+                let restaurante = {
                     id: data.id,
                     email: data.email,
                     telefono: data.telefono
                 }
-                localStorage.setItem('cliente', JSON.stringify(cliente));
+                localStorage.setItem('usuario', JSON.stringify(restaurante));
 
                 // Redirige al usuario al menú principal
                 window.location.href = '/'
@@ -41,12 +41,7 @@ export const RestauranteService = {
     },
 
     getRestaurant: async (email: string, contraseña: string) => {
-        const restaurante = {} as Restaurante;
-
-        restaurante.email = email;
-        restaurante.contraseña = contraseña;
-
-        fetch('http://localhost:8080/restaurant/login/' + restaurante.email + '/' + restaurante.contraseña, {
+        fetch('http://localhost:8080/restaurant/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -60,12 +55,14 @@ export const RestauranteService = {
                 return await response.json()
             })
             .then(data => {
-                let cliente = {
+                console.log(data)
+                let restaurante = {
                     id: data.id,
                     email: data.email,
                     telefono: data.telefono
                 }
-                localStorage.setItem('cliente', JSON.stringify(cliente));
+
+                localStorage.setItem('usuario', JSON.stringify(restaurante));
 
                 // Redirige al usuario al menú principal
                 window.location.href = '/'

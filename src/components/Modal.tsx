@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  children: ReactNode; 
+  children: ReactNode;
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
@@ -14,9 +14,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <div>
       {isOpen && (
-        <div className="modal-overlay" onClick={handleModalClose}>
+        <div className="modal-div" onClick={handleModalClose}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div>{children}</div>
+            {children}
             <button className="modal-close" onClick={handleModalClose}>Cerrar</button>
           </div>
         </div>

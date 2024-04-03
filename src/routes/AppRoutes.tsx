@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom"
-import LoginNegocio from "../pages/loginCliente"
+import LoginNegocio from "../pages/loginRestaurante"
 import LoginCliente from "../pages/loginCliente"
 import Pago from "../pages/pago"
 import Menu from "../pages/menu"
@@ -11,26 +11,26 @@ import MainMenu from "../pages/HomePage"
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-        <Route path="/" element={<MainMenu/>}>
-        </Route>
-        
-        <Route path="/login-cliente" element={<LoginCliente/>}>
-        </Route>
+      <Route path="/" element={<MainMenu />}>
+      </Route>
 
-        <Route path="/login-negocio" element={<LoginNegocio/>}>
-        </Route>
+      <Route path="/login-cliente" element={<LoginCliente />}>
+      </Route>
 
-        <Route path="/menu/:tipoComida" element={<Menu/>}>
-        </Route>
+      <Route path="/login-negocio" element={<LoginNegocio />}>
+      </Route>
 
-        <Route path="/pago" element={<Pago/>}>
-        </Route>
+      <Route path="/menu/:tipoComida" element={<Menu />}>
+      </Route>
 
-        <Route path="/opciones" element={<Opciones/>}>
-        </Route>
+      <Route path="/pago" element={<Pago />}>
+      </Route>
 
-        <Route path="/acceso-denegado" element={<AccesoDenegado/>}>
-        </Route>
+      <Route path="/opciones" element={<Opciones />}>
+      </Route>
+
+      <Route path="/acceso-denegado" element={<AccesoDenegado />}>
+      </Route>
 
     </Routes>
   )

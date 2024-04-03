@@ -31,7 +31,7 @@ export const ClienteService = {
                     email: data.email,
                     telefono: data.telefono
                 }
-                localStorage.setItem('cliente', JSON.stringify(cliente));
+                localStorage.setItem('usuario', JSON.stringify(cliente));
                 // Redirige al usuario al menú principal
                 window.location.href = '/'
             })
@@ -41,12 +41,7 @@ export const ClienteService = {
     },
 
     getUser: async (email: string, contraseña: string) => {
-        const cliente = {} as Cliente;
-
-        cliente.email = email;
-        cliente.contraseña = contraseña;
-
-        fetch(URL_API + 'cliente/login/' + cliente.email + '/' + cliente.contraseña, {
+        fetch(URL_API + 'cliente/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -65,7 +60,7 @@ export const ClienteService = {
                     nombre: data.nombre,
                     email: data.email
                 }
-                localStorage.setItem('cliente', JSON.stringify(cliente));
+                localStorage.setItem('usuario', JSON.stringify(cliente));
 
                 // Redirige al usuario al menú principal
                 window.location.href = '/'
