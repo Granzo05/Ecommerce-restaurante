@@ -1,53 +1,44 @@
+import { useEffect, useState } from 'react';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { PedidoService } from '../../services/PedidoService';
-import { DetallePedido } from '../../types/Detalles_pedido';
-import { Menu } from '../../types/Menu';
 import { Pedido } from '../../types/Pedido';
 
 const PedidosEntrantes = () => {
-    EmpleadoService.checkUser('negocio');
+    EmpleadoService.checkUser('empleado');
+    const [pedidosAceptados, setPedidos] = useState<Pedido[]>([]);
 
-    PedidoService.getPedidos('entrantes').
-        then(data => {
-            let contenedorPrincipal = document.getElementById("pedidos");
-            let menus: Menu[];
-
-            data.forEach((pedido: Pedido) => {
-                let contenedor = document.createElement("div");
-                contenedor.className = "grid-item";
-
-                let tipoEnvio = document.createElement("h3");
-                tipoEnvio.textContent = pedido.tipoEnvio;
-                contenedor.appendChild(tipoEnvio);
-
-                // Si hubo envido el domicilio deberia estar, si fue retiro en tienda no
-                if (pedido.cliente.domicilio != null) {
-                    let domicilio = document.createElement("h3");
-                    domicilio.textContent = pedido.cliente.domicilio;
-                    contenedor.appendChild(domicilio);
-                }
-
-                pedido.detalles.forEach((detalle: DetallePedido) => {
-                    let menu = document.createElement("p");
-                    menu.textContent = detalle.menu.nombre;
-                    contenedor.appendChild(menu);
-                    // Obtengo todos los menus para validar mas adelante
-                    menus.push(detalle.menu)
-
-                    let cantidad = document.createElement("p");
-                    cantidad.textContent = detalle.cantidad.toString();
-                    contenedor.appendChild(cantidad);
-                });
-                contenedorPrincipal?.appendChild(contenedor);
+    useEffect(() => {
+        PedidoService.getPedidos('entrantes')
+            .then(data => {
+                setPedidos(data);
             })
-        });
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }, []);
+
+    function handleFinalizar(idPedido: number) {
+
+    }
 
     return (
-        <div className="opciones-pantallas">
 
-            <h1>Tus Pedidos entrantes</h1>
-            <div id="pedidos"></div>
-        </div>
+        <div className="opciones-pantallas">
+            <h1>Pedidos aceptados</h1>
+            <div id="pedidos">
+                {pedidosAceptados.map(pedido => (
+                    <div key={pedido.id} className="grid-item">
+                        {pedido.detalles.map(detalle => (
+                            <div>
+                                <h3>{detalle.menu.nombre}</h3>
+                                <h3>{detalle.cantidad}</h3>
+                            </div>
+                        ))}
+                        <button onClick={() => handleFinalizar(pedido.id)}>Finalizado</button>
+                    </div>
+                ))}
+            </div>
+        </div >
     )
 }
 

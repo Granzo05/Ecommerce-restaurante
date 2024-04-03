@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { IngredienteMenu } from '../../types/IngredienteMenu';
 import { Menu } from '../../types/Menu';
 import { MenuService } from '../../services/MenuService';
-import { Multipart } from '../../types/Multipart';
 
 interface EditarMenuProps {
   menuOriginal: Menu;
@@ -64,34 +63,36 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     }); document.getElementById('inputs-ingredientes')?.appendChild(inputCantidad);
   };
 
-  const [tiempoCoccion, setTiempo] = useState(0);
-  const [tipo, setTipo] = useState('');
-  const [comensales, setComensales] = useState(0);
-  const [precio, setPrecio] = useState(0);
-  const [nombre, setNombre] = useState('');
-  const [imagenes, setImagenes] = useState<Multipart[]>([{ nombre: '', value: null }]);
-  const [descripcion, setDescripcion] = useState('');
-  const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
+  const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
+  const [tipo, setTipo] = useState(menuOriginal.tipo);
+  const [comensales, setComensales] = useState(menuOriginal.comensales);
+  const [precio, setPrecio] = useState(menuOriginal.precio);
+  const [nombre, setNombre] = useState(menuOriginal.nombre);
+  const [imagenes, setImagenes] = useState(menuOriginal.imagenes);
+  const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
+  const [ingredientes, setIngredientes] = useState(menuOriginal.ingredientes);
 
   function editarMenu() {
-    const menu: Menu = menuOriginal;
-    menu.nombre = nombre;
-    menu.tiempoCoccion = tiempoCoccion;
-    menu.tipo = tipo;
-    menu.comensales = comensales;
-    menu.precio = precio;
-    menu.descripcion = descripcion;
-    menu.ingredientes = ingredientes;
-    menu.imagenes = imagenes;
+    const menuActualizado: Menu = {
+      ...menuOriginal,
+      nombre,
+      tiempoCoccion,
+      tipo,
+      comensales,
+      precio,
+      descripcion,
+      ingredientes,
+      imagenes
+    };
 
-    MenuService.updateMenu(menu);
+    MenuService.updateMenu(menuActualizado);
   }
 
   return (
     <div id="miModal" className="modal">
       <div className="modal-content">
         <div id="inputs-imagenes">
-          {imagenes.map((imagen, index) => (
+          {imagenes?.map((imagen, index) => (
             <div key={index}>
               <input type="file" onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)} />
               {imagen.nombre && <span>{imagen.nombre}</span>}
@@ -102,21 +103,21 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
         <br />
         <label>
           <i className='bx bx-lock'></i>
-          <input type="text" placeholder="Nombre del menu" value={menuOriginal.nombre} id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
+          <input type="text" placeholder="Nombre del menu" value={nombre} id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
         </label>
         <br />
         <label>
           <i className='bx bx-lock'></i>
-          <input type="text" placeholder="Descripción del menu" value={menuOriginal.descripcion} id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
+          <input type="text" placeholder="Descripción del menu" value={descripcion} id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
         </label>
         <br />
         <label>
           <i className='bx bx-lock'></i>
-          <input type="text" placeholder="Minutos de coccion" value={menuOriginal.tiempoCoccion} id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+          <input type="text" placeholder="Minutos de coccion" value={tiempoCoccion} id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
         </label>
         <br />
         <label>
-          <select id="tipoMenu" value={menuOriginal.tipo} name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
+          <select id="tipoMenu" value={tipo} name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
             <option value="HAMBURGUESAS">Hamburguesas</option>
             <option value="PANCHOS">Panchos</option>
             <option value="EMPANADAS">Empanadas</option>
@@ -132,7 +133,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
         </label>
         <br />
         <div id='inputs-ingredientes'>
-          {menuOriginal.ingredientes.map((ingrediente: IngredienteMenu, index: number) => (
+          {ingredientes.map((ingrediente: IngredienteMenu, index: number) => (
             <div key={index}>
               <input
                 type="text"
@@ -153,12 +154,12 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
         <br />
         <label>
           <i className='bx bx-price'></i>
-          <input type="number" value={menuOriginal.precio} placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+          <input type="number" value={precio} placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
         </label>
         <br />
         <label>
           <i className='bx bx-price'></i>
-          <input type="number" placeholder="Comensales" value={menuOriginal.comensales} id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
+          <input type="number" placeholder="Comensales" value={comensales} id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
         </label>
         <br />
         <input type="button" value="editarMenu" id="editarMenu" onClick={editarMenu} />
