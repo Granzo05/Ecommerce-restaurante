@@ -7,7 +7,7 @@ import EliminarEmpleado from "./EliminarEmpleado";
 import EditarEmpleado from "./EditarEmpleado";
 
 const Empleados = () => {
-    EmpleadoService.checkUser('empleado');
+    EmpleadoService.checkUser('negocio');
 
     const [empleados, setEmpleados] = useState<Empleado[]>([]);
 

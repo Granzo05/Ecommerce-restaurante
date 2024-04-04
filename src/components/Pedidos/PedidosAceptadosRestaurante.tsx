@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { EmpleadoService } from '../../services/EmpleadoService';
 import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedido';
 
 const PedidosAceptados = () => {
-    EmpleadoService.checkUser('empleado');
     const [pedidosAceptados, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {

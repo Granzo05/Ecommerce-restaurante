@@ -15,34 +15,43 @@ public class Menu {
     @Column(name = "tiempo")
     private int tiempoCoccion;
     @Column(name = "tipo")
-    private EnumTipoMenu tipo;
+    private String tipo;
     @Column(name = "comensales")
     private int comensales;
     @Column(name = "precio")
     private double precio;
     @Column(name = "nombre")
     private String nombre;
-        @Column(name = "descripcion")
+    @Column(name = "descripcion")
     private String descripcion;
     @OneToMany
     private List<IngredienteMenu> ingredientes = new ArrayList<>();
-    @Lob
+    @ElementCollection
+    @CollectionTable(name = "menu_imagenes", joinColumns = @JoinColumn(name = "menu_id"))
     @Column(name = "imagen")
-    private byte[] imagen;
-    private String imagen64;
+    private List<byte[]> imagenes = new ArrayList<>();
     @Column(name = "borrado")
     private String borrado;
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
     private Restaurante restaurante;
-    
+
     public Menu() {
     }
-    public Menu(int tiempoCoccion, EnumTipoMenu tipo, int comensales, double precio) {
+
+    public Menu(int tiempoCoccion, String tipo, int comensales, double precio) {
         this.tiempoCoccion = tiempoCoccion;
         this.tipo = tipo;
         this.comensales = comensales;
         this.precio = precio;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getBorrado() {
@@ -53,21 +62,26 @@ public class Menu {
         this.borrado = borrado;
     }
 
-    public byte[] getImagen() {
-        return imagen;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getImagen64() {
-        return imagen64;
+    public List<byte[]> getImagenes() {
+        return imagenes;
     }
 
-    public void setImagen64(String imagen64) {
-        this.imagen64 = imagen64;
+    public void setImagenes(List<byte[]> imagenes) {
+        this.imagenes = imagenes;
     }
+
+    public void addImagen(byte[] imagen) {
+        this.imagenes.add(imagen);
+    }
+
 
     public String getNombre() {
         return nombre;
@@ -101,13 +115,6 @@ public class Menu {
         this.tiempoCoccion = tiempoCoccion;
     }
 
-    public EnumTipoMenu getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(EnumTipoMenu tipo) {
-        this.tipo = tipo;
-    }
 
     public int getComensales() {
         return comensales;
@@ -131,5 +138,25 @@ public class Menu {
 
     public void setIngredientes(List<IngredienteMenu> ingredientes) {
         this.ingredientes = ingredientes;
+    }
+    public void addIngrediente(IngredienteMenu ingrediente) {
+        this.ingredientes.add(ingrediente);
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "id=" + id +
+                ", tiempoCoccion=" + tiempoCoccion +
+                ", tipo=" + tipo +
+                ", comensales=" + comensales +
+                ", precio=" + precio +
+                ", nombre='" + nombre + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", ingredientes=" + ingredientes +
+                ", imagenes=" + imagenes +
+                ", borrado='" + borrado + '\'' +
+                ", restaurante=" + restaurante +
+                '}';
     }
 }

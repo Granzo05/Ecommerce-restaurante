@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { EmpleadoService } from "../../services/EmpleadoService";
 import { StockService } from "../../services/StockService";
 import AgregarStock from "./AgregarStock";
 import Modal from "../Modal";
@@ -8,8 +7,6 @@ import EliminarStock from "./EliminarStock";
 import EditarStock from "./EditarStock";
 
 const Stocks = () => {
-    EmpleadoService.checkUser('empleado');
-
     const [stocks, setStocks] = useState<Stock[]>([]);
 
     const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);

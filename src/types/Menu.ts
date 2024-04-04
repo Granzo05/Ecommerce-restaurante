@@ -1,5 +1,4 @@
 import { IngredienteMenu } from "./IngredienteMenu";
-import { Multipart } from "./Multipart";
 import { Restaurante } from "./Restaurante";
 
 export class Menu {
@@ -12,8 +11,7 @@ export class Menu {
     descripcion: string = '';
     restaurante: Restaurante | null = null;
     ingredientes: IngredienteMenu[] = [];
-    imagen64: string = '';
-    imagenes: Multipart[] | null = null;
+    imagenes: File[] = [];
 
     constructor() {
     }

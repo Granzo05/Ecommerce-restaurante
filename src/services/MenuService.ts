@@ -15,42 +15,27 @@ export const MenuService = {
         return data;
     },
 
-    createMenu: async (menu: Menu): Promise<string> => {
-        const formData = new FormData();
-        formData.append('nombre', menu.nombre);
-        formData.append('tipo', menu.tipo);
-        formData.append('tiempoCoccion', menu.tiempoCoccion.toString());
-        formData.append('descripcion', menu.descripcion);
-        formData.append('ingredientes', JSON.stringify(menu.ingredientes));
-        if (menu.imagenes) {
-            menu.imagenes.forEach((file, index) => {
-                formData.append(`file${index}`, JSON.stringify(file));
-            });
-        }
-        formData.append('precio', menu.precio.toString());
-
+    createMenu: async (menu: Menu) => {
         try {
-            const response = await fetch(URL_API + 'menu/crear', {
+            const response = await fetch(URL_API + 'menu/create', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json'
                 },
-                body: formData
-            })
+                body: JSON.stringify(menu)
+            });
 
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
             }
 
             return await response.text();
-
-
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error:', error); 
             throw error;
         }
-
     },
+    
 
     updateMenu: async (menu: Menu): Promise<string> => {
         try {

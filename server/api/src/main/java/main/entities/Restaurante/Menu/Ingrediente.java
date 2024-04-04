@@ -13,7 +13,6 @@ public class Ingrediente {
     @Column(name = "nombre")
     private String nombre;
 
-
     public Ingrediente() {
     }
     public Ingrediente(double costo, String nombre) {
@@ -43,5 +42,14 @@ public class Ingrediente {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Ingrediente{" +
+                "id=" + id +
+                ", costo=" + costo +
+                ", nombre='" + nombre + '\'' +
+                '}';
     }
 }

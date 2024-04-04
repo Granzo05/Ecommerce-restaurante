@@ -11,6 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface MenuRepository extends JpaRepository<Menu, Long> {
-    @Query("SELECT m FROM Menu m WHERE m.nombre = :nombre")
+    @Query("SELECT m FROM Menu m WHERE m.nombre = :nombre AND m.borrado = 'NO'")
     Optional<Menu> findByName(@Param("nombre") String nombre);
+
+    @Query("SELECT m FROM Menu m WHERE m.borrado = 'NO'")
+    List<Menu> findAllByNotBorrado();
 }

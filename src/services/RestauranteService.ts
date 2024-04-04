@@ -113,7 +113,7 @@ export const RestauranteService = {
                     return data;
                 }
             } catch (error) {
-                window.location.href = '/acceso-denegado';
+                console.error('Error:', error);
             }
         }
 

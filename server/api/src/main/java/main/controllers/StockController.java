@@ -54,7 +54,7 @@ public class StockController {
     public ResponseEntity<String> checkStock(@RequestParam(value = "menus") List<Menu> menus) {
         for (Menu menu : menus) {
             for (IngredienteMenu ingrediente : menu.getIngredientes()) {
-                Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(ingrediente.getNombre());
+                Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(ingrediente.getIngrediente().getNombre());
 
                 if (stockEncontrado.isPresent() && stockEncontrado.get().getCantidad() < ingrediente.getCantidad()) {
                     // Si es menor solo devuelve los menus que puede producir junto con un error

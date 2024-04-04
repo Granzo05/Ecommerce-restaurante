@@ -1,28 +1,40 @@
 import { useState } from 'react';
-import { IngredienteMenu } from '../../types/IngredienteMenu';
 import { Menu } from '../../types/Menu';
 import { MenuService } from '../../services/MenuService';
-import { Multipart } from '../../types/Multipart';
-
+import { IngredienteMenu } from '../../types/IngredienteMenu';
+import { Ingrediente } from '../../types/Ingrediente';
 
 function AgregarMenu() {
   const handleImagen = (index: number, file: File | null) => {
-    const newImagenes = [...imagenes];
     if (file) {
-      newImagenes[index] = { nombre: nombre, value: file };
+      const newImagenes = [...imagenes];
+      newImagenes[index] = file;
       setImagenes(newImagenes);
     }
   };
 
-  const añadirInputsFiles = () => {
-    setImagenes([...imagenes, { nombre: '', value: null }]);
+  const añadirCampoImagen = (index: number) => {
+    const imagen = document.createElement('input');
+    imagen.type = 'file';
+    imagen.addEventListener('input', (e) => {
+      if (e.target instanceof HTMLInputElement) {
+        handleImagen(index, e.target.files?.[0] ?? null);
+      }
+    });
+
+    document.getElementById('inputs-imagenes')?.appendChild(imagen);
+  };
+
+  const agregarNuevaImagen = () => {
+    const index = imagenes.length;
+    añadirCampoImagen(index);
   };
 
   // Ingredientes
 
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
     const nuevosIngredientes = [...ingredientes];
-    nuevosIngredientes[index].nombre = nombre;
+    nuevosIngredientes[index].ingrediente.nombre = nombre;
     setIngredientes(nuevosIngredientes);
   };
 
@@ -34,7 +46,7 @@ function AgregarMenu() {
 
   const añadirCampoIngrediente = () => {
     // Agrego un nuevo ingrediente vacío al estado
-    setIngredientes([...ingredientes, { nombre: '', cantidad: 0 }]);
+    setIngredientes([...ingredientes, { ingrediente: new Ingrediente(), cantidad: 0 }]);
 
     // Dos nuevos inputs al DOM
     const inputNombre = document.createElement('input');
@@ -62,11 +74,11 @@ function AgregarMenu() {
 
 
   const [tiempoCoccion, setTiempo] = useState(0);
-  const [tipo, setTipo] = useState('');
+  const [tipo, setTipo] = useState('HAMBURGUESAS');
   const [comensales, setComensales] = useState(0);
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
-  const [imagenes, setImagenes] = useState<Multipart[]>([{ nombre: '', value: null }]);
+  const [imagenes, setImagenes] = useState<File[]>([]);
   const [descripcion, setDescripcion] = useState('');
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
 
@@ -90,11 +102,10 @@ function AgregarMenu() {
         {imagenes.map((imagen, index) => (
           <div key={index}>
             <input type="file" onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)} />
-            {imagen.nombre && <span>{imagen.nombre}</span>}
           </div>
         ))}
       </div>
-      <button onClick={añadirInputsFiles}>Añadir imagen</button>
+      <button onClick={agregarNuevaImagen}>Agregar Imagen</button>
       <br />
       <label>
         <i className='bx bx-lock'></i>
@@ -128,17 +139,17 @@ function AgregarMenu() {
       </label>
       <br />
       <div>
-        {ingredientes.map((ingrediente, index) => (
+        {ingredientes.map((ingredienteMenu, index) => (
           <div key={index}>
             <input
               type="text"
-              value={ingrediente.nombre}
+              value={ingredienteMenu.ingrediente.nombre}
               placeholder="Ingrediente"
               onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
             />
             <input
               type="number"
-              value={ingrediente.cantidad}
+              value={ingredienteMenu.cantidad}
               placeholder="Cantidad necesaria"
               onChange={(e) => handleCantidadIngredienteChange(index, parseInt(e.target.value))}
             />

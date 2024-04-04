@@ -65,7 +65,7 @@ export const EmpleadoService = {
             }
 
             const data: Empleado[] = await response.json();
-            
+
             return data;
         } catch (error) {
             console.error('Error:', error);
@@ -121,37 +121,36 @@ export const EmpleadoService = {
     checkUser: async (privilegioRequerido: string) => {
         const empleadoStr: string | null = localStorage.getItem('usuario');
 
-        let empleado: Empleado | null = null;
-        if (empleadoStr) {
-            try {
-                empleado = JSON.parse(empleadoStr);
-                if (empleado) {
-                    fetch(URL_API + 'check/' + empleado.email + '/' + privilegioRequerido, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                        .then(async response => {
-                            if (!response.ok) {
-                                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
-                            }
-                            return await response.json()
-                        })
-                        .then(data => {
-                            if (!data) {
-                                window.location.href = '/acceso-denegado';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error)
-                        })
+        if (!empleadoStr) {
+            window.location.href = '/acceso-denegado';
+            return;
+        }
+
+        try {
+            const empleado: Empleado = JSON.parse(empleadoStr);
+
+            const response = await fetch(URL_API + 'check/' + empleado.email + '/' + privilegioRequerido, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-            } catch (error) {
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (!data) {
                 window.location.href = '/acceso-denegado';
             }
+        } catch (error) {
+            console.error('Error:', error);
+            window.location.href = '/acceso-denegado';
         }
-    },
+    }
+
 
 
 }

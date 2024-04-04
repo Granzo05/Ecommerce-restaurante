@@ -4,7 +4,8 @@ import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedido';
 
 const PedidosEntrantes = () => {
-    EmpleadoService.checkUser('empleado');
+    EmpleadoService.checkUser('negocio');
+
     const [pedidosAceptados, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {

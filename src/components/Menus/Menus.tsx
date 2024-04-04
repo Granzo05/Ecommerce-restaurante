@@ -1,4 +1,3 @@
-import { EmpleadoService } from "../../services/EmpleadoService";
 import { MenuService } from "../../services/MenuService";
 import { useEffect, useState } from 'react';
 import { Menu } from "../../types/Menu";
@@ -9,8 +8,6 @@ import EliminarMenu from "./EliminarMenu";
 
 
 const Menus = () => {
-    EmpleadoService.checkUser('negocio');
-
     const [menus, setMenus] = useState<Menu[]>([]);
 
     const [showAgregarMenuModal, setShowAgregarMenuModal] = useState(false);
@@ -24,6 +21,7 @@ const Menus = () => {
         MenuService.getMenus()
             .then(data => {
                 setMenus(data);
+                console.log(data);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -62,7 +60,12 @@ const Menus = () => {
             <div id="menus">
                 {menus.map(menu => (
                     <div key={menu.id} className="grid-item">
-                        <h3>{menu.imagen64}</h3>
+                        {menu.imagenes.map((imagen, index) => (
+                            <div key={index}>
+                                <img src={`data:image/png;base64,${imagen}`} alt={`Imagen ${index}`} />
+                            </div>
+                        ))}
+
                         <h3>{menu.nombre}</h3>
                         <h3>{menu.comensales}</h3>
                         <h3>{menu.descripcion}</h3>
