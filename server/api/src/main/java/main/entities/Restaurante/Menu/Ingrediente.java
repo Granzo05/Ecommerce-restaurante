@@ -45,7 +45,7 @@ public class Ingrediente {
     }
 
     @Override
-    public String toString() {
+    public String oString() {
         return "Ingrediente{" +
                 "id=" + id +
                 ", costo=" + costo +
