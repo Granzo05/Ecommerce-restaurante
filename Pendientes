@@ -1,0 +1,11 @@
+[] Carga de menu con fotos
+[] Visualizacion de menu correctamente por tipo
+[] Crear exclusiones para el check de privilegios dependiendo la ruta en la que estoy, como por ej acceso-denegado
+[x] Login restaurante 
+[x] Registro restaurante
+
+
+
+
+Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
+Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

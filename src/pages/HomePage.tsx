@@ -11,10 +11,15 @@ import lomoIcono from '../assets/img/icono-lomos.png'
 import sushiIcono from '../assets/img/icono-sushi.png'
 
 export default function MainMenu() {    
+
+    function handleMenu(tipoComida: string) {
+        window.location.href = 'menu/' + tipoComida;
+    }
+
     return (
     <div className='body'>
         <div className="container">
-            <div className="card">
+            <div className="card" onClick={() => handleMenu('hamburguesas')}>
                 <img className="background" src={burguerImage} alt=""/>
 
                 <div className="card-content">
@@ -27,7 +32,7 @@ export default function MainMenu() {
                 <div className="backdrop"></div>
             </div>
 
-            <div className="card">
+            <div className="card" onClick={() => handleMenu('pizzas')}>
                 <img className="background" src={pizzaImage} alt=""/>
 
                 <div className="card-content">
@@ -40,7 +45,7 @@ export default function MainMenu() {
                 <div className="backdrop"></div>
             </div>
 
-            <div className="card">
+            <div className="card" onClick={() => handleMenu('lomos')}>
                 <img className="background" src={lomoImage} alt=""/>
 
                 <div className="card-content">
@@ -53,7 +58,7 @@ export default function MainMenu() {
                 <div className="backdrop"></div>
             </div>
 
-            <div className="card">
+            <div className="card" onClick={() => handleMenu('sushi')}>
                 <img className="background" src={sushiImage} alt=""/>
 
                 <div className="card-content">
@@ -66,7 +71,7 @@ export default function MainMenu() {
                 <div className="backdrop"></div>
             </div>
 
-            <div className="card">
+            <div className="card" onClick={() => handleMenu('helado')}>
                 <img className="background" src={heladoImage} alt=""/>
 
                 <div className="card-content">

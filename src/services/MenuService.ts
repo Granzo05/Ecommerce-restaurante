@@ -15,9 +15,12 @@ export const MenuService = {
         return data;
     },
 
-    createMenu: async (menu: Menu) => {
+
+    createMenu: async (menu: Menu, imagenes: File[]) => {
         try {
-            const response = await fetch(URL_API + 'menu/create', {
+            /*
+            // Primero cargar el menú
+            const menuResponse = await fetch(URL_API + 'menu/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -25,17 +28,38 @@ export const MenuService = {
                 body: JSON.stringify(menu)
             });
 
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            if (!menuResponse.ok) {
+                throw new Error(`Error al obtener datos (${menuResponse.status}): ${menuResponse.statusText}`);
             }
+            */
+            console.log(imagenes)
 
-            return await response.text();
+            imagenes.forEach(async (imagen) => {
+                if (imagen) {
+                    // Crear objeto FormData para las imágenes
+                    const formData = new FormData();
+
+                    formData.append('file', imagen);
+
+                    const menuResponse = await fetch(URL_API + 'menu/imagenes', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!menuResponse.ok) {
+                        throw new Error(`Error al obtener datos (${menuResponse.status}): ${menuResponse.statusText}`);
+                    }
+
+                }
+            });
+
         } catch (error) {
-            console.error('Error:', error); 
+            console.error('Error:', error);
             throw error;
         }
     },
-    
+
+
 
     updateMenu: async (menu: Menu): Promise<string> => {
         try {

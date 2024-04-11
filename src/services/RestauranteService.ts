@@ -3,18 +3,19 @@ import { Restaurante } from '../types/Restaurante';
 import { URL_API } from '../utils/global_variables/const';
 
 export const RestauranteService = {
-    createRestaurant: async (nombre: string, email: string, contraseña: string, domicilio: string, telefono: number) => {
+    createRestaurant: async (email: string, contraseña: string, domicilio: string, telefono: number) => {
         const restaurante = {} as Restaurante;
 
-        restaurante.nombre = nombre;
         restaurante.email = email;
         restaurante.contraseña = contraseña;
         restaurante.telefono = telefono;
         restaurante.domicilio = domicilio;
-
         // Creamos el restaurante en la db
-        fetch('http://localhost:8080/restaurant/create', {
+        await fetch('http://localhost:8080/restaurante/create', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(restaurante)
         })
             .then(async response => {
@@ -41,7 +42,7 @@ export const RestauranteService = {
     },
 
     getRestaurant: async (email: string, contraseña: string) => {
-        fetch('http://localhost:8080/restaurant/login/' + email + '/' + contraseña, {
+        await fetch('http://localhost:8080/restaurant/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -55,6 +56,7 @@ export const RestauranteService = {
                 return await response.json()
             })
             .then(data => {
+                console.log(data)
                 let restaurante = {
                     id: data.id,
                     email: data.email,

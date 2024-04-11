@@ -13,17 +13,19 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
   const [medida, setMedida] = useState('');
   const [nombreIngrediente, setIngredienteNombre] = useState('');
   const [costoIngrediente, setCostoIngrediente] = useState(0);
+  const [fechaReposicion, setFechaReposicion] = useState(new Date());
 
   function editarStock() {
     const stock: Stock = stockOriginal;
 
     const ingrediente: Ingrediente = stockOriginal.ingrediente;
     ingrediente.nombre = nombreIngrediente;
-    ingrediente.costo = costoIngrediente;
 
     stock.ingrediente = ingrediente;
     stock.cantidad = cantidad;
     stock.medida = medida;
+    stock.costo = costoIngrediente;
+    stock.fechaIngreso = fechaReposicion;
 
     StockService.updateStock(stock);
   }
@@ -49,7 +51,12 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <br />
         <label>
           <i className='bx bx-lock'></i>
-          <input type="text" value={stockOriginal.ingrediente.costo} placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+          <input type="text" placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+        </label>
+        <label>
+          <i className='bx bx-lock'></i>
+          <label htmlFor="fechaReposicion">Fecha de próximo stock</label>
+          <input type="date" id="fechaReposicion" onChange={(e) => { setFechaReposicion(new Date(e.target.value)) }} />
         </label>
         <input type="button" value="editarStock" id="editarStock" onClick={editarStock} />
       </div>

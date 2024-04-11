@@ -1,23 +1,17 @@
 package main.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import main.entities.Restaurante.Menu.Ingrediente;
-import main.entities.Restaurante.Menu.IngredienteMenu;
-import main.entities.Restaurante.Menu.Menu;
-import main.repositories.IngredienteMenuRepository;
-import main.repositories.IngredienteRepository;
-import main.repositories.MenuRepository;
-import main.repositories.RestauranteRepository;
+import main.entities.Restaurante.Menu.*;
+import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +22,15 @@ public class MenuController {
     private final RestauranteRepository restauranteRepository;
     private final IngredienteMenuRepository ingredienteMenuRepository;
     private final IngredienteRepository ingredienteRepository;
+    private final ImagenMenuRepository imagenMenuRepository;
 
     public MenuController(MenuRepository menuRepository,
-                          RestauranteRepository restauranteRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository) {
+                          RestauranteRepository restauranteRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenMenuRepository imagenMenuRepository) {
         this.menuRepository = menuRepository;
         this.restauranteRepository = restauranteRepository;
         this.ingredienteMenuRepository = ingredienteMenuRepository;
         this.ingredienteRepository = ingredienteRepository;
+        this.imagenMenuRepository = imagenMenuRepository;
     }
 
     // Busca por id de menu
@@ -63,10 +59,62 @@ public class MenuController {
             }
         }
 
-        menu.setBorrado("NO");
+        menu.setBorrado("NO ");
 
         menuRepository.save(menu);
         return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
+    }
+
+    /*
+    @Transactional
+    @PostMapping("/menu/imagenes")
+    public ResponseEntity<String> crearMenu(@RequestBody List<ImagenesMenuDTO> imagenes) {
+        for (ImagenesMenuDTO imagen: imagenes) {
+            try {
+                // Obtener los bytes del archivo
+                byte[] archivoBytes = imagen.getArchivo().getBytes();
+
+                // Crear una instancia de ImagenesMenu y establecer los valores
+                ImagenesMenu imagenFinal = new ImagenesMenu();
+                imagenFinal.setNombre(imagen.getArchivo().getOriginalFilename());
+                imagenFinal.setArchivo(archivoBytes);
+
+                imagenMenuRepository.save(imagenFinal);
+            } catch (IOException e) {
+                System.err.println("Error al cargar la imagen: " + e.getMessage());
+                continue;
+            }
+        }
+        // Devolver una respuesta de éxito si todas las imágenes se procesaron correctamente
+        return ResponseEntity.ok("Imágenes cargadas exitosamente");
+    }
+
+     */
+
+    @PostMapping("/menu/imagenes")
+    public ResponseEntity<String> handleMultipleFilesUpload(@RequestParam("file") MultipartFile file) {
+        System.out.println(file);
+        List<ResponseClass> responseList = new ArrayList<>();
+        String fileName = file.getOriginalFilename();
+        try {
+            String basePath = new File("").getAbsolutePath();
+            String rutaArchivo = basePath + File.separator + "src" + File.separator + "assets" + File.separator + fileName;
+            System.out.println(rutaArchivo);
+            file.transferTo(new File(rutaArchivo));
+            String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/download/")
+                    .path(fileName)
+                    .toUriString();
+            ResponseClass response = new ResponseClass(fileName,
+                    downloadUrl,
+                    file.getContentType(),
+                    file.getSize());
+            responseList.add(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return ResponseEntity.ok("Imágenes cargadas exitosamente");
     }
 
 

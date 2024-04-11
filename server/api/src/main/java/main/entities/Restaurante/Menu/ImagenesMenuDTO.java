@@ -1,31 +1,14 @@
 package main.entities.Restaurante.Menu;
 
-import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@Entity
-@Table(name = "imagenes_menu", schema = "buen_sabor")
-public class ImagenesMenu {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(name = "nombre")
+public class ImagenesMenuDTO {
     private String nombre;
 
-    @Column(name = "archivo")
-    private byte[] archivo;
-    @ManyToOne
-    @Column(name = "menu")
+    private MultipartFile archivo;
     private Menu menu;
 
-    public ImagenesMenu() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public ImagenesMenuDTO() {
     }
 
     public String getNombre() {
@@ -36,11 +19,11 @@ public class ImagenesMenu {
         this.nombre = nombre;
     }
 
-    public byte[] getArchivo() {
+    public MultipartFile getArchivo() {
         return archivo;
     }
 
-    public void setArchivo(byte[] archivo) {
+    public void setArchivo(MultipartFile archivo) {
         this.archivo = archivo;
     }
 

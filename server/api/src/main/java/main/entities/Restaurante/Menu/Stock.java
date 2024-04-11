@@ -1,7 +1,7 @@
 package main.entities.Restaurante.Menu;
 
-import main.entities.Restaurante.Restaurante;
 import jakarta.persistence.*;
+import main.entities.Restaurante.Restaurante;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;

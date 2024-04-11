@@ -39,6 +39,11 @@ const Header = () => {
         fetchData();
     }, []);
 
+    function cerrarSesion() {
+        localStorage.removeItem('usuario');
+        window.location.reload();
+    }
+
     function handleClickLogo() {
         window.location.href = '/';
     }
@@ -62,7 +67,7 @@ const Header = () => {
                 <Link to="/" id='inicio'>Inicio</Link>
                 <Link to="/" id='menu'>Menú</Link>
                 <Link to="/" id='about'>Sobre nosotros</Link>
-                <Link to="/" id='contact'>Contáctanos</Link>
+                <button onClick={cerrarSesion}>Cerrar sesión</button>
                 {showLink && (
                     <Link to="/opciones" id='opciones'>Opciones</Link>
                 )}

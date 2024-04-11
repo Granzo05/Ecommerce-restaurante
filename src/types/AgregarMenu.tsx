@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Menu } from '../../types/Menu';
-import { MenuService } from '../../services/MenuService';
-import { IngredienteMenu } from '../../types/IngredienteMenu';
-import { Ingrediente } from '../../types/Ingrediente';
+import { Menu } from '../types/Menu';
+import { MenuService } from '../services/MenuService';
+import { IngredienteMenu } from '../types/IngredienteMenu';
+import { Ingrediente } from '../types/Ingrediente';
 
 function AgregarMenu() {
   const handleImagen = (index: number, file: File | null) => {
@@ -13,9 +13,13 @@ function AgregarMenu() {
     }
   };
 
-  const añadirCampoImagen = (index: number) => {
+  const añadirCampoImagen = () => {
+    const index = imagenes.length;
+
     const imagen = document.createElement('input');
     imagen.type = 'file';
+    imagen.accept = "image/*";
+    imagen.maxLength = 10048576;
     imagen.addEventListener('input', (e) => {
       if (e.target instanceof HTMLInputElement) {
         handleImagen(index, e.target.files?.[0] ?? null);
@@ -23,11 +27,6 @@ function AgregarMenu() {
     });
 
     document.getElementById('inputs-imagenes')?.appendChild(imagen);
-  };
-
-  const agregarNuevaImagen = () => {
-    const index = imagenes.length;
-    añadirCampoImagen(index);
   };
 
   // Ingredientes
@@ -100,12 +99,11 @@ function AgregarMenu() {
       <div id="inputs-imagenes">
         {imagenes.map((imagen, index) => (
           <div key={index}>
-            // Max 10MB por foto
             <input type="file" accept="image/*" maxLength={10048576} onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)} />
           </div>
         ))}
       </div>
-      <button onClick={agregarNuevaImagen}>Agregar Imagen</button>
+      <button onClick={añadirCampoImagen}>Agregar Imagen</button>
       <br />
       <label>
         <i className='bx bx-lock'></i>

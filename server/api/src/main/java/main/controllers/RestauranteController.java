@@ -34,6 +34,7 @@ public class RestauranteController {
 
     @PostMapping("/restaurante/create")
     public Restaurante crearRestaurante(@RequestBody Restaurante restaurante) throws IOException {
+        restaurante.setContraseña(Encrypt.encryptPassword(restaurante.getContraseña()));
         restaurante.setPrivilegios("negocio");
         restauranteRepository.save(restaurante);
         return restaurante;
@@ -41,12 +42,14 @@ public class RestauranteController {
     @CrossOrigin
     @GetMapping("/restaurant/login/{email}/{password}")
     public Object loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) {
-        // Busco por email y clave encriptada, si se encuentra envio un ok
+        // Busco por email y clave encriptada, si se encuentra devuelvo el objeto
         Restaurante restaurante = restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
-
+        // Utilizo la misma funcion tanto para empleados como para el restaurante
         if(restaurante == null) {
             return empleadoRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
         }
+
+        System.out.println(restaurante);
 
         return restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
     }

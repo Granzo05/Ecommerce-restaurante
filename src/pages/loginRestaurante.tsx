@@ -3,7 +3,6 @@ import styles from '../assets/styleLogin.module.css'
 import { RestauranteService } from '../services/RestauranteService';
 
 const LoginNegocio = () => {
-  const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [domicilio, setDomicilio] = useState('');
@@ -14,7 +13,7 @@ const LoginNegocio = () => {
   };
 
   const handleCargarNegocio = () => {
-    RestauranteService.createRestaurant(nombre, email, contraseña, domicilio, telefono);
+    RestauranteService.createRestaurant(email, contraseña, domicilio, telefono);
   };
 
   return (
@@ -32,14 +31,6 @@ const LoginNegocio = () => {
             <h2>Crear una cuenta</h2>
             <div>
               <form>
-                <input
-                  type="text"
-                  name="nombre"
-           
-                  onChange={(e) => { setNombre(e.target.value) }}
-                  placeholder="Nombre del negocio"
-                  required
-                />
                 <input
                   type="email"
                   name="email"  
@@ -70,7 +61,7 @@ const LoginNegocio = () => {
                   required
                   placeholder="Telefono"
                 />
-                <button type="submit" onClick={handleCargarNegocio}>Registrarse</button>
+                <button type="button" onClick={handleCargarNegocio}>Registrarse</button>
               </form>
             </div>
           </div>

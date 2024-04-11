@@ -47,7 +47,7 @@ const Stocks = () => {
 
     return (
         <div className="opciones-pantallas">
-    
+
             <h1>Stocks</h1>
             <button onClick={() => handleAgregarStock()}> + Agregar stock</button>
 
@@ -60,8 +60,8 @@ const Stocks = () => {
                     <div key={stock.id} className="grid-item">
                         <h3>{stock.ingrediente.nombre}</h3>
                         <h3>{stock.cantidad}</h3>
+                        <h3>{stock.costo}</h3>
                         <h3>{stock.fechaIngreso.toISOString()}</h3>
-                        <h3>{stock.ingrediente.costo}</h3>
 
                         <button onClick={() => handleEliminarStock(stock.id)}>ELIMINAR</button>
                         <Modal isOpen={showEliminarStockModal} onClose={handleModalClose}>

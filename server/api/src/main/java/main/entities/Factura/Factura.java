@@ -1,8 +1,8 @@
 package main.entities.Factura;
 
-import main.entities.Pedidos.Pedido;
-import main.entities.Cliente.Cliente;
 import jakarta.persistence.*;
+import main.entities.Cliente.Cliente;
+import main.entities.Pedidos.Pedido;
 
 @Entity
 @Table(name = "facturas", schema = "buen_sabor")

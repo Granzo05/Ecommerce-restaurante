@@ -83,4 +83,15 @@ public class Restaurante {
         this.telefono = telefono;
     }
 
+    @Override
+    public String toString() {
+        return "Restaurante{" +
+                "id=" + id +
+                ", domicilio='" + domicilio + '\'' +
+                ", contraseña='" + contraseña + '\'' +
+                ", telefono=" + telefono +
+                ", email='" + email + '\'' +
+                ", privilegios='" + privilegios + '\'' +
+                '}';
+    }
 }

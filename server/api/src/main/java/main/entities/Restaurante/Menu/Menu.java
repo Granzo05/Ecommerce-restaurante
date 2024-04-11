@@ -1,7 +1,7 @@
 package main.entities.Restaurante.Menu;
 
-import main.entities.Restaurante.Restaurante;
 import jakarta.persistence.*;
+import main.entities.Restaurante.Restaurante;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +26,14 @@ public class Menu {
     private String descripcion;
     @OneToMany
     private List<IngredienteMenu> ingredientes = new ArrayList<>();
-    @ElementCollection
-    @CollectionTable(name = "menu_imagenes", joinColumns = @JoinColumn(name = "menu_id"))
-    @Column(name = "imagen")
-    private List<byte[]> imagenes = new ArrayList<>();
+
     @Column(name = "borrado")
     private String borrado;
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
     private Restaurante restaurante;
+    @OneToMany
+    private List<ImagenesMenu> imagenes;
 
     public Menu() {
     }
@@ -69,20 +68,6 @@ public class Menu {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-
-    public List<byte[]> getImagenes() {
-        return imagenes;
-    }
-
-    public void setImagenes(List<byte[]> imagenes) {
-        this.imagenes = imagenes;
-    }
-
-    public void addImagen(byte[] imagen) {
-        this.imagenes.add(imagen);
-    }
-
-
     public String getNombre() {
         return nombre;
     }
@@ -154,7 +139,6 @@ public class Menu {
                 ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 ", ingredientes=" + ingredientes +
-                ", imagenes=" + imagenes +
                 ", borrado='" + borrado + '\'' +
                 ", restaurante=" + restaurante +
                 '}';

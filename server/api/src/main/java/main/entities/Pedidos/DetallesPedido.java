@@ -1,8 +1,7 @@
 package main.entities.Pedidos;
 
-import main.entities.Factura.Factura;
-import main.entities.Restaurante.Menu.Menu;
 import jakarta.persistence.*;
+import main.entities.Restaurante.Menu.Menu;
 
 @Entity
 @Table(name = "detalles_pedido", schema = "buen_sabor")
