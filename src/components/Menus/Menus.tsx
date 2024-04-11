@@ -1,7 +1,7 @@
 import { MenuService } from "../../services/MenuService";
 import { useEffect, useState } from 'react';
 import { Menu } from "../../types/Menu";
-import Modal from "../Modal";
+import ModalCrud from "../ModalCrud";
 import AgregarMenu from './AgregarMenu';
 import EditarMenu from './EditarMenu';
 import EliminarMenu from "./EliminarMenu";
@@ -53,9 +53,9 @@ const Menus = () => {
             <h1>Menus</h1>
             <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
 
-            <Modal isOpen={showAgregarMenuModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
                 <AgregarMenu />
-            </Modal>
+            </ModalCrud>
 
             <div id="menus">
                 {menus.map(menu => (
@@ -71,18 +71,18 @@ const Menus = () => {
                         <h3>{menu.descripcion}</h3>
                         {menu.ingredientes.map(ingrediente => (
                             <div>
-                                <h4>{ingrediente.nombre} = X{ingrediente.cantidad}</h4>
+                                <h4>{ingrediente.ingrediente.nombre} = X{ingrediente.cantidad}</h4>
                             </div>
                         ))}
                         <h3>{menu.precio}</h3>
                         <button onClick={() => handleEliminarMenu(menu.id)}>ELIMINAR</button>
-                        <Modal isOpen={showEliminarMenuModal} onClose={handleModalClose}>
+                        <ModalCrud isOpen={showEliminarMenuModal} onClose={handleModalClose}>
                             {selectedId && <EliminarMenu menuId={selectedId} />}
-                        </Modal>
+                        </ModalCrud>
                         <button onClick={() => handleEditarMenu}>EDITAR</button>
-                        <Modal isOpen={showEditarMenuModal} onClose={handleModalClose}>
+                        <ModalCrud isOpen={showEditarMenuModal} onClose={handleModalClose}>
                             {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
-                        </Modal>
+                        </ModalCrud>
                     </div>
                 ))}
             </div>

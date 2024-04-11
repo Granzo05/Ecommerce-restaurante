@@ -3,34 +3,31 @@ import { Menu } from '../../types/Menu';
 import { MenuService } from '../../services/MenuService';
 import { IngredienteMenu } from '../../types/IngredienteMenu';
 import { Ingrediente } from '../../types/Ingrediente';
+import AgregarStock from '../Stock/AgregarStock';
+import ModalFlotante from '../ModalFlotante';
 
 function AgregarMenu() {
+
+  type Imagen = {
+    index: number;
+    file: File | null;
+  };
+
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
       const newImagenes = [...imagenes];
-      newImagenes[index] = file;
+      newImagenes[index] = { ...newImagenes[index], file };
       setImagenes(newImagenes);
     }
   };
 
-  const añadirCampoImagen = (index: number) => {
-    const imagen = document.createElement('input');
-    imagen.type = 'file';
-    imagen.addEventListener('input', (e) => {
-      if (e.target instanceof HTMLInputElement) {
-        handleImagen(index, e.target.files?.[0] ?? null);
-      }
-    });
-
-    document.getElementById('inputs-imagenes')?.appendChild(imagen);
+  const añadirCampoImagen = () => {
+    setImagenes([...imagenes, { index: imagenes.length, file: null }]);
   };
 
-  const agregarNuevaImagen = () => {
-    const index = imagenes.length;
-    añadirCampoImagen(index);
-  };
 
   // Ingredientes
+
 
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
     const nuevosIngredientes = [...ingredientes];
@@ -47,38 +44,25 @@ function AgregarMenu() {
   const añadirCampoIngrediente = () => {
     // Agrego un nuevo ingrediente vacío al estado
     setIngredientes([...ingredientes, { ingrediente: new Ingrediente(), cantidad: 0 }]);
-
-    // Dos nuevos inputs al DOM
-    const inputNombre = document.createElement('input');
-    inputNombre.type = 'text';
-    inputNombre.placeholder = 'Ingrediente';
-    inputNombre.className = 'ingredienteMenu';
-    inputNombre.addEventListener('input', (e) => {
-      if (e.target instanceof HTMLInputElement) {
-        handleNombreIngredienteChange(ingredientes.length, e.target.value);
-      }
-    });
-
-    document.getElementById('inputs-container')?.appendChild(inputNombre);
-
-    const inputCantidad = document.createElement('input');
-    inputCantidad.type = 'number';
-    inputCantidad.placeholder = 'Cantidad necesaria';
-    inputCantidad.className = 'cantidadIngrediente';
-    inputNombre.addEventListener('input', (e) => {
-      if (e.target instanceof HTMLInputElement) {
-        handleCantidadIngredienteChange(ingredientes.length, parseInt(e.target.value));
-      }
-    }); document.getElementById('inputs-container')?.appendChild(inputCantidad);
   };
 
+  // ModalCrud de ingrediente
+  const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
+
+  const handleAgregarStock = () => {
+    setShowAgregarStockModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowAgregarStockModal(false);
+  };
 
   const [tiempoCoccion, setTiempo] = useState(0);
   const [tipo, setTipo] = useState('hamburguesas');
   const [comensales, setComensales] = useState(0);
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
-  const [imagenes, setImagenes] = useState<File[]>([]);
+  const [imagenes, setImagenes] = useState<Imagen[]>([]);
   const [descripcion, setDescripcion] = useState('');
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
 
@@ -100,13 +84,16 @@ function AgregarMenu() {
       <div id="inputs-imagenes">
         {imagenes.map((imagen, index) => (
           <div key={index}>
-            // Max 10MB por foto
-            <input type="file" accept="image/*" maxLength={10048576} onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)} />
+            <input
+              type="file"
+              accept="image/*"
+              maxLength={10048576}
+              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+            />
           </div>
         ))}
+        <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
-      <button onClick={agregarNuevaImagen}>Agregar Imagen</button>
-      <br />
       <label>
         <i className='bx bx-lock'></i>
         <input type="text" placeholder="Nombre del menu" id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
@@ -138,14 +125,18 @@ function AgregarMenu() {
       </label>
       <br />
       <div>
+        <h2>Ingredientes</h2>
+        <button onClick={() => handleAgregarStock()}>Cargar nuevo ingrediente</button>
+        <ModalFlotante isOpen={showAgregarStockModal} onClose={handleModalClose}>
+          <AgregarStock />
+        </ModalFlotante>
         {ingredientes.map((ingredienteMenu, index) => (
           <div key={index}>
-            <input
-              type="text"
-              value={ingredienteMenu.ingrediente.nombre}
-              placeholder="Ingrediente"
+            <select
+              id={`select-ingredientes-${index}`}
               onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
-            />
+            >
+            </select>
             <input
               type="number"
               value={ingredienteMenu.cantidad}

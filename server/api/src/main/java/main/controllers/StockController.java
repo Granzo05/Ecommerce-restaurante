@@ -1,5 +1,6 @@
 package main.controllers;
 
+import jakarta.transaction.Transactional;
 import main.entities.Restaurante.Menu.Ingrediente;
 import main.entities.Restaurante.Menu.IngredienteMenu;
 import main.entities.Restaurante.Menu.Menu;
@@ -66,71 +67,41 @@ public class StockController {
     }
 
 
+    @Transactional
     @PostMapping("/stock/create")
     public ResponseEntity<String> crearStock(@RequestBody Stock stockDetail) {
-
-        Stock stockEncontrado = stockRepository.findStockByProductName(stockDetail.getIngrediente().getNombre()).get();
-
-        Restaurante restaurante = restauranteRepository.findById(0l).get();
-
+        System.out.println(stockDetail);
+        Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(stockDetail.getIngrediente().getNombre());
         // Si no hay stock del producto cargado, entonces creamos uno nuevo. Caso contrario utilizamos y editamos el que ya está cargado en la base de datos
-        if (stockEncontrado == null) {
+        if (stockEncontrado.isEmpty()) {
             // Si no existe stock de ese producto se crea un nuevo objeto
             Stock stock = new Stock();
 
-            Ingrediente ingredienteDB = ingredienteRepository.findByName(stockDetail.getIngrediente().getNombre());
+            stock.setFechaIngreso(stockDetail.getFechaIngreso());
+            stock.setCantidad(stockDetail.getCantidad());
+            stock.setBorrado("NO");
 
-            if (ingredienteDB != null) {
-                //  Si no existe lo creamos
-                // Le asignamos el nombre
-                ingredienteDB.setNombre(stockDetail.getIngrediente().getNombre());
-            }
+            Ingrediente ingrediente = new Ingrediente();
 
-            // Si el ingrediente tiene un costo nuevo y distinto al almacenado, se le asigna este nuevo
-            if (stockDetail.getIngrediente().getCosto() > 0 && stockDetail.getIngrediente().getCosto() != ingredienteDB.getCosto()) {
-                ingredienteDB.setCosto(stockDetail.getIngrediente().getCosto());
-            }
+            ingrediente.setNombre(stockDetail.getIngrediente().getNombre());
+
+            ingrediente.setCosto(stockDetail.getIngrediente().getCosto());
+
+            ingrediente.setMedida(stockDetail.getIngrediente().getMedida());
 
             // Asignamos el ingrediente a este nuevo stock
-            stock.setIngrediente(ingredienteDB);
-
+            stock.setIngrediente(ingrediente);
             // Guardamos nuevamente el ingredienteDB con los posibles datos nuevos
-            ingredienteRepository.save(ingredienteDB);
+            ingredienteRepository.save(ingrediente);
 
-            // Asignamos el restaurante a este nuevo stock
-            stock.setRestaurante(restaurante);
-
+            System.out.println(stockDetail.getFechaIngreso());
             // Finalmente se guarda y se devuelve un mensaje con el ok
             stockRepository.save(stock);
 
             return new ResponseEntity<>("El stock ha sido añadido correctamente", HttpStatus.CREATED);
-        } else {
-            Ingrediente ingredienteDB = ingredienteRepository.findByName(stockDetail.getIngrediente().getNombre());
-
-            if (ingredienteDB != null) {
-                //  Si no existe lo creamos
-                // Le asignamos el nombre
-                ingredienteDB.setNombre(stockDetail.getIngrediente().getNombre());
-            }
-
-            // Si el ingrediente tiene un costo nuevo y distinto al almacenado, se le asigna este nuevo
-            if (stockDetail.getIngrediente().getCosto() > 0 && stockDetail.getIngrediente().getCosto() != ingredienteDB.getCosto()) {
-                ingredienteDB.setCosto(stockDetail.getIngrediente().getCosto());
-            }
-
-            // Asignamos el ingrediente a este nuevo stock
-            stockEncontrado.setIngrediente(ingredienteDB);
-
-            // Guardamos nuevamente el ingredienteDB con los posibles datos nuevos
-            ingredienteRepository.save(ingredienteDB);
-
-            // Asignamos el restaurante a este nuevo stock
-            stockEncontrado.setRestaurante(restaurante);
-
-            stockRepository.save(stockEncontrado);
-
-            return new ResponseEntity<>("El stock ha sido actualizado correctamente", HttpStatus.CREATED);
         }
+
+        return new ResponseEntity<>("El stock ya existe", HttpStatus.FOUND);
     }
 
     @PutMapping("/stock/update")

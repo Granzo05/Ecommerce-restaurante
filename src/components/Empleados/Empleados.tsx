@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { EmpleadoService } from "../../services/EmpleadoService";
 import AgregarEmpleado from "./AgregarEmpleado";
-import Modal from "../Modal";
+import ModalCrud from "../ModalCrud";
 import { Empleado } from "../../types/Empleado";
 import EliminarEmpleado from "./EliminarEmpleado";
 import EditarEmpleado from "./EditarEmpleado";
@@ -53,9 +53,9 @@ const Empleados = () => {
             <h1>Empleados</h1>
             <button onClick={() => handleAgregarEmpleado()}> + Agregar empleado</button>
 
-            <Modal isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
                 <AgregarEmpleado />
-            </Modal>
+            </ModalCrud>
 
             <div id="empleados">
                 {empleados.map(empleado => (
@@ -71,15 +71,15 @@ const Empleados = () => {
                             <h3>{empleado.contraseña}</h3>
 
                             <button onClick={() => handleEliminarEmpleado(empleado.id)}>ELIMINAR</button>
-                            <Modal isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
+                            <ModalCrud isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
                                 {selectedId && <EliminarEmpleado empleadoId={selectedId} />}
 
-                            </Modal>
+                            </ModalCrud>
                             <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
                         </div>
-                        <Modal isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
+                        <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
                             <EditarEmpleado empleadoOriginal={empleado} />
-                        </Modal>
+                        </ModalCrud>
                     </div>
                 ))}
             </div>

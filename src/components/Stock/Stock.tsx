@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { StockService } from "../../services/StockService";
 import AgregarStock from "./AgregarStock";
-import Modal from "../Modal";
+import ModalCrud from "../ModalCrud";
 import { Stock } from "../../types/Stock";
 import EliminarStock from "./EliminarStock";
 import EditarStock from "./EditarStock";
@@ -51,9 +51,9 @@ const Stocks = () => {
             <h1>Stocks</h1>
             <button onClick={() => handleAgregarStock()}> + Agregar stock</button>
 
-            <Modal isOpen={showAgregarStockModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showAgregarStockModal} onClose={handleModalClose}>
                 <AgregarStock />
-            </Modal>
+            </ModalCrud>
 
             <div id="stocks">
                 {stocks.map(stock => (
@@ -64,13 +64,13 @@ const Stocks = () => {
                         <h3>{stock.fechaIngreso.toISOString()}</h3>
 
                         <button onClick={() => handleEliminarStock(stock.id)}>ELIMINAR</button>
-                        <Modal isOpen={showEliminarStockModal} onClose={handleModalClose}>
+                        <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
                             {selectedId && <EliminarStock stockId={selectedId} />}
-                        </Modal>
+                        </ModalCrud>
                         <button onClick={() => handleEditarStock}>EDITAR</button>
-                        <Modal isOpen={showEditarStockModal} onClose={handleModalClose}>
+                        <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
                             {selectedStock && <EditarStock stockOriginal={selectedStock} />}
-                        </Modal>
+                        </ModalCrud>
                     </div>
                 ))}
             </div>

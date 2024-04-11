@@ -49,6 +49,7 @@
 .navbar #open {
   padding-left: 0px;
 }
+
 .navbar #open img {
   display: none;
 }
@@ -70,10 +71,12 @@
   width: 70px;
   margin: 5px;
 }
+
 @media only screen and (max-width: 900px) {
   .navbar .rightSide a {
     width: 70px;
   }
+
   .navbar .leftSide {
     padding-left: 50px;
   }
@@ -104,27 +107,27 @@
   }
 }
 
-.cuenta{
-color: white;
-display: flex;
-align-items: center;
-justify-content: right;
-flex: 0%;
-margin-right: 18px;
+.cuenta {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  flex: 0%;
+  margin-right: 18px;
 }
 
-.cuenta .iniciar-sesion{
-background-color: black;
-border: none;
-padding: 5px;
-color: white;
-position: relative;
-overflow: hidden;
-width: 120px;
-height: 40px;
+.cuenta .iniciar-sesion {
+  background-color: black;
+  border: none;
+  padding: 5px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  width: 120px;
+  height: 40px;
 }
 
-.iniciar-sesion::before{
+.iniciar-sesion::before {
   content: "";
   position: absolute;
   left: 0;
@@ -136,7 +139,7 @@ height: 40px;
   animation: border-top-right 3s infinite alternate;
 }
 
-.iniciar-sesion::after{
+.iniciar-sesion::after {
   content: "";
   position: absolute;
   right: 0;
@@ -149,79 +152,117 @@ height: 40px;
 }
 
 @keyframes border-top-right {
-  0% {width: 0px; height: 0px; border-color: red;}
-  25% {width: 120px; height: 0px; border-color: aqua;}
-  50% {width: 120px; height: 40px; border-color: chartreuse;}
-  100% {width: 120px; height: 40px; border-color: yellow;}
+  0% {
+    width: 0px;
+    height: 0px;
+    border-color: red;
+  }
+
+  25% {
+    width: 120px;
+    height: 0px;
+    border-color: aqua;
+  }
+
+  50% {
+    width: 120px;
+    height: 40px;
+    border-color: chartreuse;
+  }
+
+  100% {
+    width: 120px;
+    height: 40px;
+    border-color: yellow;
+  }
 }
 
 @keyframes border-bottom-left {
-  0% {width: 0px; height: 0px; border-color: chartreuse;}
-  50% {width: 0px; height: 0px; border-color: yellow;}
-  75% {width: 120px; height: 0px; border-color: yellow}
-  100% {width: 120px; height: 40px; border-color: chartreuse}
+  0% {
+    width: 0px;
+    height: 0px;
+    border-color: chartreuse;
+  }
+
+  50% {
+    width: 0px;
+    height: 0px;
+    border-color: yellow;
+  }
+
+  75% {
+    width: 120px;
+    height: 0px;
+    border-color: yellow
+  }
+
+  100% {
+    width: 120px;
+    height: 40px;
+    border-color: chartreuse
+  }
 }
 
-.iniciar-sesion:hover{
+.iniciar-sesion:hover {
   background-color: white;
   color: black;
   transition: 0.3s;
 }
 
 
-#diagonal{
-margin: 5px;
+#diagonal {
+  margin: 5px;
 }
 
-#logo-header:hover{
-filter: drop-shadow(10px 8px 6px #ff0055);
-transition: 0.4s;
+#logo-header:hover {
+  filter: drop-shadow(10px 8px 6px #ff0055);
+  transition: 0.4s;
 }
 
-#inicio:hover{
-color: #ff0055;
-font-weight: bold;
-filter: drop-shadow(8px 5px 6px white);
-transition: 0.4s;
+#inicio:hover {
+  color: #ff0055;
+  font-weight: bold;
+  filter: drop-shadow(8px 5px 6px white);
+  transition: 0.4s;
 }
 
-#menu:hover{
-color: #ff0055;
-font-weight: bold;
-filter: drop-shadow(8px 5px 6px white);
-transition: 0.4s;
+#menu:hover {
+  color: #ff0055;
+  font-weight: bold;
+  filter: drop-shadow(8px 5px 6px white);
+  transition: 0.4s;
 }
 
-#about:hover{
-color: #ff0055;
-font-weight: bold;
-filter: drop-shadow(8px 5px 6px white);
-transition: 0.4s;
+#about:hover {
+  color: #ff0055;
+  font-weight: bold;
+  filter: drop-shadow(8px 5px 6px white);
+  transition: 0.4s;
 }
 
-#contact:hover{
-color: #ff0055;
-font-weight: bold;
-filter: drop-shadow(8px 5px 6px white);
-transition: 0.4s;
+#contact:hover {
+  color: #ff0055;
+  font-weight: bold;
+  filter: drop-shadow(8px 5px 6px white);
+  transition: 0.4s;
 }
 
-.mi-cuenta{
+.mi-cuenta {
   display: flex;
   align-items: center;
 }
 
-.mi-cuenta #cuenta:hover{
+.mi-cuenta #cuenta:hover {
   filter: drop-shadow(10px 8px 6px #ff0055);
   transition: 0.4s;
 }
 
-.mi-cuenta #carrito:hover{
+.mi-cuenta #carrito:hover {
   filter: drop-shadow(10px 8px 6px #ff0055);
   transition: 0.4s;
 }
 
-#contador-carrito{
+#contador-carrito {
   background-color: white;
   color: black;
   padding: 0 5px;
@@ -234,7 +275,7 @@ transition: 0.4s;
 }
 
 
-.container-cart-products{
+.container-cart-products {
   position: absolute;
   top: 50px;
   right: 0;
@@ -246,7 +287,7 @@ transition: 0.4s;
   border-radius: 10px;
 }
 
-.cart-product{
+.cart-product {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -255,37 +296,37 @@ transition: 0.4s;
 
 }
 
-.info-cart-product{
+.info-cart-product {
   display: flex;
   justify-content: space-between;
   flex: 0.8;
 }
 
-.titulo-producto-carrito{
+.titulo-producto-carrito {
   font-size: 20px;
 }
 
-.precio-producto-carrito{
+.precio-producto-carrito {
   font-weight: 700;
   font-size: 20px;
   margin-left: 10px;
 }
 
-.cantidad-producto-carrito{
+.cantidad-producto-carrito {
   font-weight: 400;
   font-size: 20px;
 }
 
-.icon-close{
+.icon-close {
   width: 25px;
   height: 25px;
 }
 
-.icon-close:hover{
+.icon-close:hover {
   stroke: red;
 }
 
-.cart-total{
+.cart-total {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -293,21 +334,21 @@ transition: 0.4s;
   gap: 20px;
 }
 
-.cart-total h3{
+.cart-total h3 {
   font-size: 20px;
   font-weight: 700;
 }
 
-.total-pagar{
+.total-pagar {
   font-size: 20px;
   font-weight: 900;
 }
 
-.hidden-cart{
+.hidden-cart {
   display: none;
 }
 
-#carrito:focus + .hidden-cart {
+#carrito:focus+.hidden-cart {
   display: block;
 }
 
@@ -328,7 +369,7 @@ transition: 0.4s;
   justify-content: center;
   width: 100%;
   height: auto;
-} 
+}
 
 .modal-div {
   width: 100%;
@@ -352,4 +393,34 @@ transition: 0.4s;
 .datos.hidden {
   display: none;
   flex-direction: row;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-flotante-content {
+  width: 50%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+
+}
+
+.modal-flotante-content div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-flotante-content label {
+  margin-top: 25px;
 }

@@ -72,9 +72,6 @@ export const MenuService = {
         }
     },
 
-
-
-
     updateMenu: async (menu: Menu): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'menu/update', {

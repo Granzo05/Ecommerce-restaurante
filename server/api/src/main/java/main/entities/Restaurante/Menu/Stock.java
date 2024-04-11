@@ -15,24 +15,13 @@ public class Stock {
     @Column(name = "cantidad")
     private int cantidad;
     @Column(name = "fecha_llegada", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    public Date fechaLlegada;
+    public Date fechaIngreso;
     @Column(name = "borrado")
     private String borrado;
-    @ManyToOne
-    @JoinColumn(name = "id_restaurante")
-    private Restaurante restaurante;
     @OneToOne
     private Ingrediente ingrediente;
 
     public Stock() {
-    }
-
-    public Stock(int cantidad, Restaurante restaurante, Ingrediente ingrediente) {
-        this.cantidad = cantidad;
-        this.restaurante = restaurante;
-        this.ingrediente = ingrediente;
     }
 
     public String getBorrado() {
@@ -59,14 +48,6 @@ public class Stock {
         this.cantidad = cantidad;
     }
 
-    public Restaurante getRestaurante() {
-        return restaurante;
-    }
-
-    public void setRestaurante(Restaurante idRestaurante) {
-        this.restaurante = idRestaurante;
-    }
-
     public Ingrediente getIngrediente() {
         return ingrediente;
     }
@@ -75,11 +56,22 @@ public class Stock {
         this.ingrediente = ingrediente;
     }
 
-    public Date getFechaLlegada() {
-        return fechaLlegada;
+    public Date getFechaIngreso() {
+        return fechaIngreso;
     }
 
-    public void setFechaLlegada(Date fechaLlegada) {
-        this.fechaLlegada = fechaLlegada;
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "id=" + id +
+                ", cantidad=" + cantidad +
+                ", fechaIngreso=" + fechaIngreso +
+                ", borrado='" + borrado + '\'' +
+                ", ingrediente=" + ingrediente +
+                '}';
     }
 }

@@ -6,7 +6,7 @@ interface ModalProps {
   children: ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const ModalCrud: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   const handleModalClose = () => {
     onClose();
   };
@@ -25,4 +25,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   );
 };
 
-export default Modal;
+export default ModalCrud;

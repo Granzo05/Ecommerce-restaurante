@@ -19,7 +19,6 @@ public class Empleado {
 
     @Column(name = "contraseña")
     private String contraseña;
-
     @Column(name = "cuit")
     private long cuit;
     @Column(name = "telefono")

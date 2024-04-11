@@ -16,12 +16,12 @@ function AgregarStock() {
 
     const ingrediente: Ingrediente = new Ingrediente();
     ingrediente.nombre = nombreIngrediente;
-
-    stock.ingrediente = ingrediente;
+    ingrediente.costo = costoIngrediente;    
+    ingrediente.medida = medida;
+    
     stock.cantidad = cantidad;
-    stock.medida = medida;
-    stock.costo = costoIngrediente;
-    stock.fechaIngreso = fechaReposicion;
+    stock.fechaIngreso =  new Date(fechaReposicion.getFullYear(), fechaReposicion.getMonth(), fechaReposicion.getDate() + 1);
+    stock.ingrediente = ingrediente;
 
     StockService.createStock(stock);
   }
