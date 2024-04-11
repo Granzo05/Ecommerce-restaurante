@@ -1,12 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Menu } from '../../types/Menu';
 import { MenuService } from '../../services/MenuService';
-import { IngredienteMenu } from '../../types/IngredienteMenu';
 import { Ingrediente } from '../../types/Ingrediente';
 import AgregarStock from '../Stock/AgregarStock';
 import ModalFlotante from '../ModalFlotante';
+import { IngredienteService } from '../../services/IngredienteService';
 
 function AgregarMenu() {
+  const [ingredientes, setIngredientes] = useState<{ ingrediente: Ingrediente; cantidad: number }[]>([]);
+  const [ingredientesSelect, setIngredientesSelect] = useState<Ingrediente[]>([]);
+  const [imagenes, setImagenes] = useState<Imagen[]>([]);
+  const [selectIndex, setSelectIndex] = useState<number>(0);
+
+  useEffect(() => {
+    // Obtener ingredientes disponibles
+    IngredienteService.getIngredientes()
+      .then(data => {
+        setIngredientesSelect(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, []);
+
 
   type Imagen = {
     index: number;
@@ -25,9 +41,7 @@ function AgregarMenu() {
     setImagenes([...imagenes, { index: imagenes.length, file: null }]);
   };
 
-
   // Ingredientes
-
 
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
     const nuevosIngredientes = [...ingredientes];
@@ -42,11 +56,11 @@ function AgregarMenu() {
   };
 
   const añadirCampoIngrediente = () => {
-    // Agrego un nuevo ingrediente vacío al estado
     setIngredientes([...ingredientes, { ingrediente: new Ingrediente(), cantidad: 0 }]);
+    setSelectIndex(prevIndex => prevIndex + 1); 
   };
 
-  // ModalCrud de ingrediente
+  // Modal flotante de ingrediente
   const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
 
   const handleAgregarStock = () => {
@@ -62,9 +76,7 @@ function AgregarMenu() {
   const [comensales, setComensales] = useState(0);
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
-  const [imagenes, setImagenes] = useState<Imagen[]>([]);
   const [descripcion, setDescripcion] = useState('');
-  const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
 
   function agregarMenu() {
     const menu: Menu = new Menu();
@@ -134,8 +146,13 @@ function AgregarMenu() {
           <div key={index}>
             <select
               id={`select-ingredientes-${index}`}
+              value={ingredienteMenu.ingrediente.nombre} // Asignar el valor del ingrediente al select
               onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
             >
+              <option value="">Seleccionar ingrediente</option>
+              {ingredientesSelect.map((ingrediente, index) => (
+                <option key={index} value={ingrediente.nombre}>{ingrediente.nombre}</option>
+              ))}
             </select>
             <input
               type="number"

@@ -14,6 +14,8 @@ public class Ingrediente {
     private String nombre;
     @Column(name = "medida")
     private String medida;
+    @Column(name = "borrado")
+    private String borrado;
 
     public Ingrediente() {
     }
@@ -52,6 +54,14 @@ public class Ingrediente {
 
     public void setMedida(String medida) {
         this.medida = medida;
+    }
+
+    public String getBorrado() {
+        return borrado;
+    }
+
+    public void setBorrado(String borrado) {
+        this.borrado = borrado;
     }
 
     @Override

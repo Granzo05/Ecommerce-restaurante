@@ -89,6 +89,8 @@ public class StockController {
 
             ingrediente.setMedida(stockDetail.getIngrediente().getMedida());
 
+            ingrediente.setBorrado("NO");
+
             // Asignamos el ingrediente a este nuevo stock
             stock.setIngrediente(ingrediente);
             // Guardamos nuevamente el ingredienteDB con los posibles datos nuevos

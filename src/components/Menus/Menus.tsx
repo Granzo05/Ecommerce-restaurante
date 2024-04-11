@@ -9,7 +9,7 @@ import EliminarMenu from "./EliminarMenu";
 
 const Menus = () => {
     const [menus, setMenus] = useState<Menu[]>([]);
-
+    
     const [showAgregarMenuModal, setShowAgregarMenuModal] = useState(false);
     const [showEditarMenuModal, setShowEditarMenuModal] = useState(false);
     const [showEliminarMenuModal, setShowEliminarMenuModal] = useState(false);
