@@ -1,6 +1,11 @@
 import { Menu } from '../types/Menu';
 import { URL_API } from '../utils/global_variables/const';
 
+type Imagen = {
+    index: number;
+    file: File | null;
+};
+
 export const MenuService = {
 
     getMenus: async (): Promise<Menu[]> => {
@@ -16,9 +21,9 @@ export const MenuService = {
     },
 
 
-    createMenu: async (menu: Menu, imagenes: File[]) => {
+    createMenu: async (menu: Menu, imagenes: Imagen[]) => {
+        console.log(menu)
         try {
-            /*
             // Primero cargar el menú
             const menuResponse = await fetch(URL_API + 'menu/create', {
                 method: 'POST',
@@ -31,33 +36,42 @@ export const MenuService = {
             if (!menuResponse.ok) {
                 throw new Error(`Error al obtener datos (${menuResponse.status}): ${menuResponse.statusText}`);
             }
-            */
-            console.log(imagenes)
 
-            imagenes.forEach(async (imagen) => {
-                if (imagen) {
-                    // Crear objeto FormData para las imágenes
-                    const formData = new FormData();
+            let cargarImagenes = true;
 
-                    formData.append('file', imagen);
+            // Verificar si la respuesta indica que el menú ya existe
+            if (menuResponse.status === 302) { // 302 Found
+                cargarImagenes = false;
+            }
 
-                    const menuResponse = await fetch(URL_API + 'menu/imagenes', {
-                        method: 'POST',
-                        body: formData
-                    });
+            // Cargar imágenes solo si se debe hacer
+            if (cargarImagenes) {
+                await Promise.all(imagenes.map(async (imagen) => {
+                    if (imagen.file) { 
+                        // Crear objeto FormData para las imágenes
+                        const formData = new FormData();
+                        formData.append('file', imagen.file);
+                        formData.append('nombreMenu', menu.nombre);
 
-                    if (!menuResponse.ok) {
-                        throw new Error(`Error al obtener datos (${menuResponse.status}): ${menuResponse.statusText}`);
+                        const menuImagenesResponse = await fetch(URL_API + 'menu/imagenes', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!menuImagenesResponse.ok) {
+                            throw new Error(`Error al obtener datos (${menuImagenesResponse.status}): ${menuImagenesResponse.statusText}`);
+                        }
                     }
+                }));
 
-                }
-            });
+            }
 
         } catch (error) {
             console.error('Error:', error);
             throw error;
         }
     },
+
 
 
 

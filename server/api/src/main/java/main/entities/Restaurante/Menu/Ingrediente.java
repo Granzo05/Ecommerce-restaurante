@@ -12,6 +12,8 @@ public class Ingrediente {
     private double costo;
     @Column(name = "nombre")
     private String nombre;
+    @Column(name = "medida")
+    private String medida;
 
     public Ingrediente() {
     }
@@ -44,12 +46,21 @@ public class Ingrediente {
         this.id = id;
     }
 
+    public String getMedida() {
+        return medida;
+    }
+
+    public void setMedida(String medida) {
+        this.medida = medida;
+    }
+
     @Override
-    public String oString() {
+    public String toString() {
         return "Ingrediente{" +
                 "id=" + id +
                 ", costo=" + costo +
                 ", nombre='" + nombre + '\'' +
+                ", medida='" + medida + '\'' +
                 '}';
     }
 }

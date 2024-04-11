@@ -5,29 +5,24 @@ import { IngredienteMenu } from '../types/IngredienteMenu';
 import { Ingrediente } from '../types/Ingrediente';
 
 function AgregarMenu() {
+
+  type Imagen = {
+    index: number;
+    file: File | null;
+  };
+
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
       const newImagenes = [...imagenes];
-      newImagenes[index] = file;
+      newImagenes[index] = { ...newImagenes[index], file };
       setImagenes(newImagenes);
     }
   };
-
+  
   const añadirCampoImagen = () => {
-    const index = imagenes.length;
-
-    const imagen = document.createElement('input');
-    imagen.type = 'file';
-    imagen.accept = "image/*";
-    imagen.maxLength = 10048576;
-    imagen.addEventListener('input', (e) => {
-      if (e.target instanceof HTMLInputElement) {
-        handleImagen(index, e.target.files?.[0] ?? null);
-      }
-    });
-
-    document.getElementById('inputs-imagenes')?.appendChild(imagen);
+    setImagenes([...imagenes, { index: imagenes.length, file: null }]);
   };
+
 
   // Ingredientes
 
@@ -46,29 +41,6 @@ function AgregarMenu() {
   const añadirCampoIngrediente = () => {
     // Agrego un nuevo ingrediente vacío al estado
     setIngredientes([...ingredientes, { ingrediente: new Ingrediente(), cantidad: 0 }]);
-
-    // Dos nuevos inputs al DOM
-    const inputNombre = document.createElement('input');
-    inputNombre.type = 'text';
-    inputNombre.placeholder = 'Ingrediente';
-    inputNombre.className = 'ingredienteMenu';
-    inputNombre.addEventListener('input', (e) => {
-      if (e.target instanceof HTMLInputElement) {
-        handleNombreIngredienteChange(ingredientes.length, e.target.value);
-      }
-    });
-
-    document.getElementById('inputs-container')?.appendChild(inputNombre);
-
-    const inputCantidad = document.createElement('input');
-    inputCantidad.type = 'number';
-    inputCantidad.placeholder = 'Cantidad necesaria';
-    inputCantidad.className = 'cantidadIngrediente';
-    inputNombre.addEventListener('input', (e) => {
-      if (e.target instanceof HTMLInputElement) {
-        handleCantidadIngredienteChange(ingredientes.length, parseInt(e.target.value));
-      }
-    }); document.getElementById('inputs-container')?.appendChild(inputCantidad);
   };
 
 
@@ -77,7 +49,7 @@ function AgregarMenu() {
   const [comensales, setComensales] = useState(0);
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
-  const [imagenes, setImagenes] = useState<File[]>([]);
+  const [imagenes, setImagenes] = useState<Imagen[]>([]);
   const [descripcion, setDescripcion] = useState('');
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
 
@@ -99,12 +71,16 @@ function AgregarMenu() {
       <div id="inputs-imagenes">
         {imagenes.map((imagen, index) => (
           <div key={index}>
-            <input type="file" accept="image/*" maxLength={10048576} onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)} />
+            <input
+              type="file"
+              accept="image/*"
+              maxLength={10048576}
+              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+            />
           </div>
         ))}
+        <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
-      <button onClick={añadirCampoImagen}>Agregar Imagen</button>
-      <br />
       <label>
         <i className='bx bx-lock'></i>
         <input type="text" placeholder="Nombre del menu" id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
@@ -136,14 +112,14 @@ function AgregarMenu() {
       </label>
       <br />
       <div>
+        <h2>Ingredientes</h2>
         {ingredientes.map((ingredienteMenu, index) => (
           <div key={index}>
-            <input
-              type="text"
-              value={ingredienteMenu.ingrediente.nombre}
-              placeholder="Ingrediente"
+            <select
+              id={`select-ingredientes-${index}`}
               onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
-            />
+            >
+            </select>
             <input
               type="number"
               value={ingredienteMenu.cantidad}

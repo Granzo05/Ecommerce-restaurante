@@ -24,16 +24,12 @@ public class Menu {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
+
+    @Transient
     @OneToMany
     private List<IngredienteMenu> ingredientes = new ArrayList<>();
-
     @Column(name = "borrado")
     private String borrado;
-    @ManyToOne
-    @JoinColumn(name = "id_restaurante")
-    private Restaurante restaurante;
-    @OneToMany
-    private List<ImagenesMenu> imagenes;
 
     public Menu() {
     }
@@ -74,14 +70,6 @@ public class Menu {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Restaurante getRestaurante() {
-        return restaurante;
-    }
-
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
     }
 
     public Long getId() {
@@ -140,7 +128,17 @@ public class Menu {
                 ", descripcion='" + descripcion + '\'' +
                 ", ingredientes=" + ingredientes +
                 ", borrado='" + borrado + '\'' +
-                ", restaurante=" + restaurante +
                 '}';
+    }
+
+    @ManyToOne(optional = false)
+    private IngredienteMenu ingredienteMenus;
+
+    public IngredienteMenu getIngredienteMenus() {
+        return ingredienteMenus;
+    }
+
+    public void setIngredienteMenus(IngredienteMenu ingredienteMenus) {
+        this.ingredienteMenus = ingredienteMenus;
     }
 }

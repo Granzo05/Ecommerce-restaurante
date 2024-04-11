@@ -42,63 +42,28 @@ public class MenuController {
     @Transactional
     @PostMapping("/menu/create")
     public ResponseEntity<String> crearMenu(@RequestBody Menu menu) {
-        for (IngredienteMenu ingredienteMenu : menu.getIngredientes()) {
-            try {
-                Ingrediente ingr = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre());
-                if (ingr == null) {
-                    ingr = new Ingrediente();
-                    ingr.setNombre(ingredienteMenu.getIngrediente().getNombre());
-                    ingredienteRepository.save(ingr);
-                }
+        System.out.println(menu);
+        Optional<Menu> menuDB = menuRepository.findByName(menu.getNombre());
+        // Buscamos si hay un menu creado, en caso de encontrarlo se envía el error
+        if (menuDB.isEmpty()) {
+            menu.setBorrado("NO");
+            menuRepository.save(menu);
+            return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
 
-                ingredienteMenu.setIngrediente(ingr);
-                // Guarda cada instancia de IngredienteMenu antes de continuar
-                ingredienteMenuRepository.save(ingredienteMenu);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } else {
+            return new ResponseEntity<>("Hay un menu creado con ese nombre", HttpStatus.FOUND);
         }
-
-        menu.setBorrado("NO ");
-
-        menuRepository.save(menu);
-        return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
     }
 
-    /*
-    @Transactional
     @PostMapping("/menu/imagenes")
-    public ResponseEntity<String> crearMenu(@RequestBody List<ImagenesMenuDTO> imagenes) {
-        for (ImagenesMenuDTO imagen: imagenes) {
-            try {
-                // Obtener los bytes del archivo
-                byte[] archivoBytes = imagen.getArchivo().getBytes();
+    public ResponseEntity<String> handleMultipleFilesUpload(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
 
-                // Crear una instancia de ImagenesMenu y establecer los valores
-                ImagenesMenu imagenFinal = new ImagenesMenu();
-                imagenFinal.setNombre(imagen.getArchivo().getOriginalFilename());
-                imagenFinal.setArchivo(archivoBytes);
-
-                imagenMenuRepository.save(imagenFinal);
-            } catch (IOException e) {
-                System.err.println("Error al cargar la imagen: " + e.getMessage());
-                continue;
-            }
-        }
-        // Devolver una respuesta de éxito si todas las imágenes se procesaron correctamente
-        return ResponseEntity.ok("Imágenes cargadas exitosamente");
-    }
-
-     */
-
-    @PostMapping("/menu/imagenes")
-    public ResponseEntity<String> handleMultipleFilesUpload(@RequestParam("file") MultipartFile file) {
-        System.out.println(file);
         List<ResponseClass> responseList = new ArrayList<>();
+        // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename();
         try {
             String basePath = new File("").getAbsolutePath();
-            String rutaArchivo = basePath + File.separator + "src" + File.separator + "assets" + File.separator + fileName;
+            String rutaArchivo = basePath + File.separator + "src" + File.separator + "assets" + File.separator + nombreMenu + File.separator + fileName;
             System.out.println(rutaArchivo);
             file.transferTo(new File(rutaArchivo));
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -110,9 +75,22 @@ public class MenuController {
                     file.getContentType(),
                     file.getSize());
             responseList.add(response);
+
+            ImagenesMenu imagen = new ImagenesMenu();
+            // Asignamos el menu a la imagen
+            Optional<Menu> menu = menuRepository.findByName(nombreMenu);
+
+            if (menu.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            imagen.setMenu(menu.get());
+            // Asignamos la ruta
+            imagen.setRuta(rutaArchivo);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+
 
         return ResponseEntity.ok("Imágenes cargadas exitosamente");
     }

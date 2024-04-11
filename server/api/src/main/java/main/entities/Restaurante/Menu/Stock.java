@@ -14,8 +14,6 @@ public class Stock {
     private Long id;
     @Column(name = "cantidad")
     private int cantidad;
-    @Column(name = "medida")
-    private String medida;
     @Column(name = "fecha_llegada", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -31,9 +29,8 @@ public class Stock {
     public Stock() {
     }
 
-    public Stock(int cantidad, String medida, Restaurante restaurante, Ingrediente ingrediente) {
+    public Stock(int cantidad, Restaurante restaurante, Ingrediente ingrediente) {
         this.cantidad = cantidad;
-        this.medida = medida;
         this.restaurante = restaurante;
         this.ingrediente = ingrediente;
     }
@@ -60,14 +57,6 @@ public class Stock {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
-    }
-
-    public String getMedida() {
-        return medida;
-    }
-
-    public void setMedida(String medida) {
-        this.medida = medida;
     }
 
     public Restaurante getRestaurante() {

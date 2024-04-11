@@ -100,11 +100,6 @@ public class StockController {
             // Asignamos el restaurante a este nuevo stock
             stock.setRestaurante(restaurante);
 
-            // En caso de ser proporcionada, se coloca la medida, por ejemplo KG, Litro, etc
-            if (stockDetail.getMedida() != null) {
-                stock.setMedida(stockDetail.getMedida());
-            }
-
             // Finalmente se guarda y se devuelve un mensaje con el ok
             stockRepository.save(stock);
 
@@ -131,11 +126,6 @@ public class StockController {
 
             // Asignamos el restaurante a este nuevo stock
             stockEncontrado.setRestaurante(restaurante);
-
-            // En caso de ser proporcionada, se coloca la medida, por ejemplo KG, Litro, etc
-            if (stockDetail.getMedida() != null) {
-                stockEncontrado.setMedida(stockDetail.getMedida());
-            }
 
             stockRepository.save(stockEncontrado);
 

@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IngredienteMenuRepository extends JpaRepository<IngredienteMenu, Long> {
     @Query("SELECT i FROM IngredienteMenu i WHERE i.ingrediente.nombre = :nombre")
-    Ingrediente findByName(@Param("nombre") String nombre);
+    IngredienteMenu findByName(@Param("nombre") String nombre);
 
 }

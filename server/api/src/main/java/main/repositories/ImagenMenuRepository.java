@@ -1,7 +1,6 @@
 package main.repositories;
 
 import main.entities.Restaurante.Menu.ImagenesMenu;
-import main.entities.Restaurante.Menu.ImagenesMenuDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +11,6 @@ import java.util.List;
 @Repository
 public interface ImagenMenuRepository extends JpaRepository<ImagenesMenu, Long> {
     @Query("SELECT i FROM ImagenesMenu i WHERE i.menu.nombre = :nombre")
-    List<ImagenesMenuDTO> findImagenesByMenuName(@Param("nombre") String nombre);
+    List<ImagenesMenu> findImagenesByMenuName(@Param("nombre") String nombre);
 
 }

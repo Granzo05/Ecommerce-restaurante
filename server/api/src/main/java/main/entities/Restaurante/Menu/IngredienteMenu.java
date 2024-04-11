@@ -11,6 +11,9 @@ public class IngredienteMenu {
     @ManyToOne
     @JoinColumn(name = "ingrediente_id")
     private Ingrediente ingrediente;
+    @ManyToOne
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
     @Column(name = "cantidad")
     private int cantidad;
 
@@ -38,11 +41,20 @@ public class IngredienteMenu {
         this.cantidad = cantidad;
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
     @Override
     public String toString() {
         return "IngredienteMenu{" +
                 "id=" + id +
                 ", ingrediente=" + ingrediente +
+                ", menu=" + menu +
                 ", cantidad=" + cantidad +
                 '}';
     }
