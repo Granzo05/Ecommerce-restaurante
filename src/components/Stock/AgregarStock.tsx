@@ -16,11 +16,11 @@ function AgregarStock() {
 
     const ingrediente: Ingrediente = new Ingrediente();
     ingrediente.nombre = nombreIngrediente;
-    ingrediente.costo = costoIngrediente;    
+    ingrediente.costo = costoIngrediente;
     ingrediente.medida = medida;
-    
+
     stock.cantidad = cantidad;
-    stock.fechaIngreso =  new Date(fechaReposicion.getFullYear(), fechaReposicion.getMonth(), fechaReposicion.getDate() + 1);
+    stock.fechaIngreso = new Date(fechaReposicion.getFullYear(), fechaReposicion.getMonth(), fechaReposicion.getDate() + 1);
     stock.ingrediente = ingrediente;
 
     StockService.createStock(stock);
@@ -41,7 +41,13 @@ function AgregarStock() {
       <br />
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Medida del ingrediente" id="medidaStock" onChange={(e) => { setMedida(e.target.value) }} />
+        <select id="medidaStock" onChange={(e) => { setMedida(e.target.value) }}>
+          <option value="Kg">Kilogramos</option>
+          <option value="Gramos">Gramos</option>
+          <option value="Litros">Litros</option>
+          <option value="Unidades">Unidades</option>
+          <option value="Docenas">Docenas</option>
+        </select>
       </label>
       <br />
       <label>

@@ -16,9 +16,7 @@ export const StockService = {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
 
-            return await response.json();
-
-
+            return await response.text();
         } catch (error) {
             console.error('Error:', error);
             throw error;

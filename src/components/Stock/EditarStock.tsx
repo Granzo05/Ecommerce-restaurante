@@ -20,13 +20,13 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
 
     const ingrediente: Ingrediente = stockOriginal.ingrediente;
     ingrediente.nombre = nombreIngrediente;
+    ingrediente.costo = costoIngrediente;
+    ingrediente.medida = medida;
 
-    stock.ingrediente = ingrediente;
     stock.cantidad = cantidad;
-    stock.medida = medida;
-    stock.costo = costoIngrediente;
-    stock.fechaIngreso = fechaReposicion;
-
+    stock.fechaIngreso = new Date(fechaReposicion.getFullYear(), fechaReposicion.getMonth(), fechaReposicion.getDate() + 1);
+    stock.ingrediente = ingrediente;
+    
     StockService.updateStock(stock);
   }
 
@@ -46,7 +46,13 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <br />
         <label>
           <i className='bx bx-lock'></i>
-          <input type="text" value={stockOriginal.medida} placeholder="Medida del ingrediente" id="medidaStock" onChange={(e) => { setMedida(e.target.value) }} />
+          <select id="medidaStock" onChange={(e) => { setMedida(e.target.value) }}>
+            <option value="Kg">Kilogramos</option>
+            <option value="Gramos">Gramos</option>
+            <option value="Litros">Litros</option>
+            <option value="Unidades">Unidades</option>
+            <option value="Docenas">Docenas</option>
+          </select>
         </label>
         <br />
         <label>
