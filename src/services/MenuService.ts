@@ -36,8 +36,10 @@ export const MenuService = {
 
             if (menuResponse.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
                 cargarImagenes = false;
-                alert('Menu existente');
+                return 'Menu existente';
             }
+
+            let imagenCargadaExitosamente = false;
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes) {
@@ -53,16 +55,22 @@ export const MenuService = {
                             body: formData
                         });
 
-                        if(imagenResponse.status === 404){
-                            alert('El menu no se cargó')
-                        }                          
+                        console.log(imagenResponse.status)
 
+                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
+                            imagenCargadaExitosamente = false
+                        } else {
+                            imagenCargadaExitosamente = true;
+                        }
                     }
                 }));
             }
 
-            return 'Menu creado con éxito';
-
+            if (imagenCargadaExitosamente) {
+                return 'Menu creado con éxito';
+            } else {
+                return 'Error con la imagen'
+            }
         } catch (error) {
             console.error('Error:', error);
             throw error;

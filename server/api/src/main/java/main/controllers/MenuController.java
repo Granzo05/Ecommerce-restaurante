@@ -35,8 +35,6 @@ public class MenuController {
     @Transactional
     @PostMapping("/menu/create")
     public ResponseEntity<String> crearMenu(@RequestBody Menu menu) {
-        System.out.println(menu);
-
         Optional<Menu> menuDB = menuRepository.findByName(menu.getNombre());
         // Buscamos si hay un menu creado, en caso de encontrarlo se envía el error
         if (menuDB.isEmpty()) {
@@ -55,8 +53,17 @@ public class MenuController {
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
             String basePath = new File("").getAbsolutePath();
-            String rutaArchivo = basePath + File.separator + "src" + File.separator + "assets" + File.separator + nombreMenu.replaceAll(" ", "") + File.separator + fileName;
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "assets" + File.separator + nombreMenu.replaceAll(" ", "") + File.separator;
+
+            // Verificar si la carpeta existe, caso contrario, crearla
+            File carpeta = new File(rutaCarpeta);
+            if (!carpeta.exists()) {
+                carpeta.mkdirs();
+            }
+
+            String rutaArchivo = rutaCarpeta + fileName;
             file.transferTo(new File(rutaArchivo));
+
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/download/")
                     .path(fileName)
@@ -67,25 +74,34 @@ public class MenuController {
                     file.getSize());
             responseList.add(response);
 
-            ImagenesMenu imagen = new ImagenesMenu();
-            // Asignamos el menu a la imagen
-            Optional<Menu> menu = menuRepository.findByName(nombreMenu);
-            System.out.println(menu);
-            if (menu.isEmpty()) {
-                return new ResponseEntity<>("Menu no encontrado", HttpStatus.NOT_FOUND);
-            }
-            imagen.setMenu(menu.get());
-            // Asignamos la ruta
-            imagen.setRuta(rutaArchivo);
+            try {
+                ImagenesMenu imagen = new ImagenesMenu();
+                System.out.println(nombreMenu);
+                // Asignamos el menu a la imagen
+                Optional<Menu> menu = menuRepository.findByName(nombreMenu);
+                System.out.println(menu);
+                if (menu.isEmpty()) {
+                    return new ResponseEntity<>("Menu vacio", HttpStatus.NOT_FOUND);
+                }
+                imagen.setMenu(menu.get());
+                // Asignamos la ruta
+                imagen.setRuta(rutaArchivo);
 
-            imagenMenuRepository.save(imagen);
+                imagenMenuRepository.save(imagen);
+
+            } catch (Exception e) {
+                System.out.println("Error al insertar la ruta en el menu: " + e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.ACCEPTED);
 
         } catch (Exception e) {
-            return new ResponseEntity<>("Error al crear la imagen", HttpStatus.NOT_FOUND);
+            System.out.println("Error al crear la imagen: " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
 
 
     @PutMapping("/menu/update")
