@@ -24,10 +24,9 @@ public class Menu {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
-
     @Transient
     @OneToMany
-    private List<IngredienteMenu> ingredientes = new ArrayList<>();
+    private List<IngredienteMenu> ingredientesMenu = new ArrayList<>();
     @Column(name = "borrado")
     private String borrado;
 
@@ -106,14 +105,14 @@ public class Menu {
     }
 
     public List<IngredienteMenu> getIngredientes() {
-        return ingredientes;
+        return ingredientesMenu;
     }
 
     public void setIngredientes(List<IngredienteMenu> ingredientes) {
-        this.ingredientes = ingredientes;
+        this.ingredientesMenu = ingredientes;
     }
     public void addIngrediente(IngredienteMenu ingrediente) {
-        this.ingredientes.add(ingrediente);
+        this.ingredientesMenu.add(ingrediente);
     }
 
     @Override
@@ -126,19 +125,8 @@ public class Menu {
                 ", precio=" + precio +
                 ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
-                ", ingredientes=" + ingredientes +
+                ", ingredientes=" + ingredientesMenu +
                 ", borrado='" + borrado + '\'' +
                 '}';
-    }
-
-    @ManyToOne(optional = false)
-    private IngredienteMenu ingredienteMenus;
-
-    public IngredienteMenu getIngredienteMenus() {
-        return ingredienteMenus;
-    }
-
-    public void setIngredienteMenus(IngredienteMenu ingredienteMenus) {
-        this.ingredienteMenus = ingredienteMenus;
     }
 }

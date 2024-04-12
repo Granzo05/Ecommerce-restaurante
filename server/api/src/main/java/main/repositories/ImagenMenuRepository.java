@@ -10,7 +10,8 @@ import java.util.List;
 
 @Repository
 public interface ImagenMenuRepository extends JpaRepository<ImagenesMenu, Long> {
-    @Query("SELECT i FROM ImagenesMenu i WHERE i.menu.nombre = :nombre")
-    List<ImagenesMenu> findImagenesByMenuName(@Param("nombre") String nombre);
+    @Query("SELECT i FROM ImagenesMenu i WHERE i.ruta = :nombre")
+    ImagenesMenu findByRuta(@Param("nombre") String nombre);
+
 
 }

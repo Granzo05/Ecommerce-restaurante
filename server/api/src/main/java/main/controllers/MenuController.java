@@ -19,23 +19,16 @@ import java.util.Optional;
 public class MenuController {
     private final MenuRepository menuRepository;
 
-    private final RestauranteRepository restauranteRepository;
-    private final IngredienteMenuRepository ingredienteMenuRepository;
-    private final IngredienteRepository ingredienteRepository;
     private final ImagenMenuRepository imagenMenuRepository;
 
-    public MenuController(MenuRepository menuRepository,
-                          RestauranteRepository restauranteRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenMenuRepository imagenMenuRepository) {
+    public MenuController(MenuRepository menuRepository, ImagenMenuRepository imagenMenuRepository) {
         this.menuRepository = menuRepository;
-        this.restauranteRepository = restauranteRepository;
-        this.ingredienteMenuRepository = ingredienteMenuRepository;
-        this.ingredienteRepository = ingredienteRepository;
         this.imagenMenuRepository = imagenMenuRepository;
     }
 
     // Busca por id de menu
     @GetMapping("/menus")
-    public List<Menu> getMenusPorIdRestaurante() {
+    public List<Menu> getMenusDisponibles() {
         return menuRepository.findAllByNotBorrado();
     }
 
@@ -43,13 +36,13 @@ public class MenuController {
     @PostMapping("/menu/create")
     public ResponseEntity<String> crearMenu(@RequestBody Menu menu) {
         System.out.println(menu);
+
         Optional<Menu> menuDB = menuRepository.findByName(menu.getNombre());
         // Buscamos si hay un menu creado, en caso de encontrarlo se envía el error
         if (menuDB.isEmpty()) {
             menu.setBorrado("NO");
             menuRepository.save(menu);
             return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
-
         } else {
             return new ResponseEntity<>("Hay un menu creado con ese nombre", HttpStatus.FOUND);
         }
@@ -57,7 +50,6 @@ public class MenuController {
 
     @PostMapping("/menu/imagenes")
     public ResponseEntity<String> handleMultipleFilesUpload(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
-
         List<ResponseClass> responseList = new ArrayList<>();
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename();
@@ -87,24 +79,35 @@ public class MenuController {
             // Asignamos la ruta
             imagen.setRuta(rutaArchivo);
 
+            imagenMenuRepository.save(imagen);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
 
         return ResponseEntity.ok("Imágenes cargadas exitosamente");
     }
 
 
     @PutMapping("/menu/update")
-    public ResponseEntity<String> actualizarMenu(@RequestBody Menu rest) {
-        Optional<Menu> menuEncontrado = menuRepository.findById(rest.getId());
+    public ResponseEntity<String> actualizarMenu(@RequestBody Menu menuDetail) {
+        Optional<Menu> menuEncontrado = menuRepository.findById(menuDetail.getId());
+
         if (menuEncontrado.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("El menu no se encuentra", HttpStatus.NOT_FOUND);
         }
+
         Menu menu = menuEncontrado.get();
-        // Todo: settear
-        Menu menuFinal = menuRepository.save(menu);
+
+        menu.setPrecio(menuDetail.getPrecio());
+        menu.setIngredientes(menuDetail.getIngredientes());
+        menu.setTiempoCoccion(menuDetail.getTiempoCoccion());
+        menu.setDescripcion(menuDetail.getDescripcion());
+        menu.setNombre(menuDetail.getNombre());
+        menu.setTipo(menuDetail.getTipo());
+        menu.setComensales(menuDetail.getComensales());
+
+        menuRepository.save(menu);
         return new ResponseEntity<>("El menu ha sido actualizado correctamente", HttpStatus.ACCEPTED);
     }
 

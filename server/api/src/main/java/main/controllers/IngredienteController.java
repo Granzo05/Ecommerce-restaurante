@@ -16,32 +16,27 @@ import java.util.Optional;
 
 @RestController
 public class IngredienteController {
-    private final RestauranteRepository restauranteRepository;
     private final IngredienteRepository ingredienteRepository;
 
-    public IngredienteController(RestauranteRepository restauranteRepository,
-                                 IngredienteRepository ingredienteRepository) {
-        this.restauranteRepository = restauranteRepository;
+    public IngredienteController(IngredienteRepository ingredienteRepository) {
         this.ingredienteRepository = ingredienteRepository;
     }
 
     @GetMapping("/ingredientes")
     public List<Ingrediente> getIngredientes() {
-        List<Ingrediente> ingredientes = ingredienteRepository.findAll();
-        if (ingredientes.isEmpty()) {
-            return null;
-        }
-
-        return ingredientes;
+        return ingredienteRepository.findAll();
     }
     @PutMapping("/ingrediente/update")
-    public ResponseEntity<Ingrediente> actualizarIngrediente(@RequestBody Ingrediente ingrediente) {
+    public ResponseEntity<String> actualizarIngrediente(@RequestBody Ingrediente ingrediente) {
         Ingrediente ingredienteEncontrado = ingredienteRepository.findByName(ingrediente.getNombre());
+
         if (ingredienteEncontrado == null) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("El ingrediente no existe", HttpStatus.NOT_FOUND);
         }
-        Ingrediente ingredienteFinal = ingredienteRepository.save(ingredienteEncontrado);
-        return ResponseEntity.ok(ingredienteFinal);
+
+        ingredienteRepository.save(ingredienteEncontrado);
+
+        return new ResponseEntity<>("Ingrediente actualizado correctamente", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("ingrediente/delete")

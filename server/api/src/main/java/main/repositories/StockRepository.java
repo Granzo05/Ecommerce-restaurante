@@ -1,5 +1,6 @@
 package main.repositories;
 
+import main.entities.Restaurante.Menu.Ingrediente;
 import main.entities.Restaurante.Menu.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,5 +15,8 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     List<Stock> findAll();
     @Query("SELECT s FROM Stock s WHERE s.ingrediente.nombre = :nombre AND s.borrado = 'NO'")
     Optional<Stock> findStockByProductName(@Param("nombre") String nombre);
+
+    @Query("SELECT s FROM Stock s WHERE s.ingrediente.id = :id")
+    Optional<Stock> findByIdIngrediente(@Param("id") Long id);
 
 }

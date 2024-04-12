@@ -36,6 +36,7 @@ public class RestauranteController {
     public Restaurante crearRestaurante(@RequestBody Restaurante restaurante) throws IOException {
         restaurante.setContraseña(Encrypt.encryptPassword(restaurante.getContraseña()));
         restaurante.setPrivilegios("negocio");
+
         restauranteRepository.save(restaurante);
         return restaurante;
     }

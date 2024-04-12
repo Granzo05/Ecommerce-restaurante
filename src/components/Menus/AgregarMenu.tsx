@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Menu } from '../../types/Menu';
-import { MenuService } from '../../services/MenuService';
 import { Ingrediente } from '../../types/Ingrediente';
 import AgregarStock from '../Stock/AgregarStock';
 import ModalFlotante from '../ModalFlotante';
 import { IngredienteService } from '../../services/IngredienteService';
+import { IngredienteMenu } from '../../types/IngredienteMenu';
+import { MenuService } from '../../services/MenuService';
+import { Imagen } from '../../types/Imagen';
 
 function AgregarMenu() {
-  const [ingredientes, setIngredientes] = useState<{ ingrediente: Ingrediente; cantidad: number }[]>([]);
+  const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [ingredientesSelect, setIngredientesSelect] = useState<Ingrediente[]>([]);
   const [imagenes, setImagenes] = useState<Imagen[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
-  useEffect(() => {
-    // Obtener ingredientes disponibles
+  function cargarSelectsIngredientes() {
     IngredienteService.getIngredientes()
       .then(data => {
         setIngredientesSelect(data);
@@ -21,13 +22,7 @@ function AgregarMenu() {
       .catch(error => {
         console.error('Error:', error);
       });
-  }, []);
-
-
-  type Imagen = {
-    index: number;
-    file: File | null;
-  };
+  }
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -55,9 +50,28 @@ function AgregarMenu() {
     setIngredientes(nuevosIngredientes);
   };
 
+  const handleMedidaIngredienteChange = (index: number, medida: string) => {
+    const nuevosIngredientes = [...ingredientes];
+    nuevosIngredientes[index].ingrediente.medida = medida;
+    setIngredientes(nuevosIngredientes);
+  };
+
   const añadirCampoIngrediente = () => {
     setIngredientes([...ingredientes, { ingrediente: new Ingrediente(), cantidad: 0 }]);
-    setSelectIndex(prevIndex => prevIndex + 1); 
+    setSelectIndex(prevIndex => prevIndex + 1);
+    cargarSelectsIngredientes();
+  };
+
+  const quitarCampoIngrediente = () => {
+    if (ingredientes.length > 0) {
+      const nuevosIngredientes = [...ingredientes];
+      nuevosIngredientes.pop();
+      setIngredientes(nuevosIngredientes);
+
+      if (selectIndex > 0) {
+        setSelectIndex(prevIndex => prevIndex - 1);
+      }
+    }
   };
 
   // Modal flotante de ingrediente
@@ -69,6 +83,7 @@ function AgregarMenu() {
 
   const handleModalClose = () => {
     setShowAgregarStockModal(false);
+    cargarSelectsIngredientes();
   };
 
   const [tiempoCoccion, setTiempo] = useState(0);
@@ -78,7 +93,7 @@ function AgregarMenu() {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
-  function agregarMenu() {
+  async function agregarMenu() {
     const menu: Menu = new Menu();
     menu.nombre = nombre;
     menu.tiempoCoccion = tiempoCoccion;
@@ -86,9 +101,12 @@ function AgregarMenu() {
     menu.comensales = comensales;
     menu.precio = precio;
     menu.descripcion = descripcion;
-    menu.ingredientes = ingredientes;
+    menu.ingredientesMenu = ingredientes;
 
-    MenuService.createMenu(menu, imagenes);
+    console.log(menu)
+    console.log(imagenes)
+    let response = await MenuService.createMenu(menu, imagenes);
+    alert(response);
   }
 
   return (
@@ -143,10 +161,10 @@ function AgregarMenu() {
           <AgregarStock />
         </ModalFlotante>
         {ingredientes.map((ingredienteMenu, index) => (
-          <div key={index}>
+          <div key={index} className='div-ingrediente-menu'>
             <select
               id={`select-ingredientes-${index}`}
-              value={ingredienteMenu.ingrediente.nombre} // Asignar el valor del ingrediente al select
+              value={ingredienteMenu.ingrediente.nombre}
               onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
             >
               <option value="">Seleccionar ingrediente</option>
@@ -158,8 +176,20 @@ function AgregarMenu() {
               type="number"
               value={ingredienteMenu.cantidad}
               placeholder="Cantidad necesaria"
-              onChange={(e) => handleCantidadIngredienteChange(index, parseInt(e.target.value))}
+              onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))}
             />
+            <select
+              id={`select-medidas-${index}`}
+              value={ingredienteMenu.ingrediente.medida}
+              onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
+            >
+              <option value="">Seleccionar medida ingrediente</option>
+              <option value="Kg">Kilogramos</option>
+              <option value="Gramos">Gramos</option>
+              <option value="Litros">Litros</option>
+              <option value="Unidades">Unidades</option>
+            </select>
+            <p onClick={quitarCampoIngrediente}>X</p>
           </div>
         ))}
         <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
@@ -176,7 +206,7 @@ function AgregarMenu() {
       </label>
       <br />
       <input type="button" value="agregarMenu" id="agregarMenu" onClick={agregarMenu} />
-    </div>
+    </div >
   )
 }
 

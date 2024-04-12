@@ -1,3 +1,4 @@
+import { Imagen } from "./Imagen";
 import { IngredienteMenu } from "./IngredienteMenu";
 import { Restaurante } from "./Restaurante";
 
@@ -10,8 +11,8 @@ export class Menu {
     nombre: string = '';
     descripcion: string = '';
     restaurante: Restaurante | null = null;
-    ingredientes: IngredienteMenu[] = [];
-    imagenes: File[] = [];
+    ingredientesMenu: IngredienteMenu[] = [];
+    imagenes: Imagen[] = [];
 
     constructor() {
     }

@@ -18,13 +18,10 @@ import java.util.Optional;
 
 @RestController
 public class StockController {
-    private final RestauranteRepository restauranteRepository;
     private final StockRepository stockRepository;
     private final IngredienteRepository ingredienteRepository;
 
-    public StockController(RestauranteRepository restauranteRepository,
-                           StockRepository stockRepository, IngredienteRepository ingredienteRepository) {
-        this.restauranteRepository = restauranteRepository;
+    public StockController(StockRepository stockRepository, IngredienteRepository ingredienteRepository) {
         this.stockRepository = stockRepository;
         this.ingredienteRepository = ingredienteRepository;
     }
@@ -71,9 +68,11 @@ public class StockController {
     @PostMapping("/stock/create")
     public ResponseEntity<String> crearStock(@RequestBody Stock stockDetail) {
         System.out.println(stockDetail);
-        Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(stockDetail.getIngrediente().getNombre());
+        // Busco el ingrediente en la base de datos
+        Ingrediente ingredienteDB = ingredienteRepository.findByName(stockDetail.getIngrediente().getNombre());
+
         // Si no hay stock del producto cargado, entonces creamos uno nuevo. Caso contrario utilizamos y editamos el que ya está cargado en la base de datos
-        if (stockEncontrado.isEmpty()) {
+        if (ingredienteDB == null) {
             // Si no existe stock de ese producto se crea un nuevo objeto
             Stock stock = new Stock();
 
@@ -107,17 +106,22 @@ public class StockController {
     }
 
     @PutMapping("/stock/update")
-    public ResponseEntity<Stock> actualizarStock(@RequestBody Stock stock) {
-        Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(stock.getIngrediente().getNombre());
+    public ResponseEntity<String> actualizarStock(@RequestBody Stock stock) {
+        Ingrediente ingredienteDB = ingredienteRepository.findByName(stock.getIngrediente().getNombre());
+
+        // Busco el stock de ese ingrediente
+        Optional<Stock> stockEncontrado = stockRepository.findByIdIngrediente(ingredienteDB.getId());
+
         if (stockEncontrado.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("El stock no existe", HttpStatus.FOUND);
         }
-        Stock stockFinal = stockRepository.save(stockEncontrado.get());
-        return ResponseEntity.ok(stockFinal);
+
+        stockRepository.save(stockEncontrado.get());
+        return new ResponseEntity<>("El stock ha sido añadido correctamente", HttpStatus.CREATED);
     }
 
     @DeleteMapping("stock/delete")
-    public ResponseEntity<?> borrarStock(@RequestBody Stock stock) {
+    public ResponseEntity<String> borrarStock(@RequestBody Stock stock) {
         Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(stock.getIngrediente().getNombre());
         if (stockEncontrado.isEmpty()) {
             return new ResponseEntity<>("El stock ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);

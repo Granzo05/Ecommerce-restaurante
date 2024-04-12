@@ -21,8 +21,7 @@ export const MenuService = {
     },
 
 
-    createMenu: async (menu: Menu, imagenes: Imagen[]) => {
-        console.log(menu)
+    createMenu: async (menu: Menu, imagenes: Imagen[]): Promise<string> => {
         try {
             // Primero cargar el menú
             const menuResponse = await fetch(URL_API + 'menu/create', {
@@ -34,10 +33,11 @@ export const MenuService = {
             });
 
             if (!menuResponse.ok) {
-                throw new Error(`Error al obtener datos (${menuResponse.status}): ${menuResponse.statusText}`);
+                return 'Ocurrió un error al cargar el menu';
             }
 
             let cargarImagenes = true;
+            let cargarImagenesFallida = false;
 
             // Verificar si la respuesta indica que el menú ya existe
             if (menuResponse.status === 302) { // 302 Found
@@ -47,7 +47,7 @@ export const MenuService = {
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes) {
                 await Promise.all(imagenes.map(async (imagen) => {
-                    if (imagen.file) { 
+                    if (imagen.file) {
                         // Crear objeto FormData para las imágenes
                         const formData = new FormData();
                         formData.append('file', imagen.file);
@@ -59,11 +59,17 @@ export const MenuService = {
                         });
 
                         if (!menuImagenesResponse.ok) {
-                            throw new Error(`Error al obtener datos (${menuImagenesResponse.status}): ${menuImagenesResponse.statusText}`);
+                            cargarImagenesFallida = true;
+                            throw new Error('Error con la imagen \n' + imagen);
                         }
                     }
                 }));
+            }
 
+            if (!cargarImagenesFallida) {
+                return 'Menu creado con éxito';
+            } else {
+                return 'Ocurrió un error al cargar las imágenes';
             }
 
         } catch (error) {

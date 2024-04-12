@@ -11,7 +11,7 @@ function AgregarStock() {
   const [costoIngrediente, setCostoIngrediente] = useState(0);
   const [fechaReposicion, setFechaReposicion] = useState(new Date());
 
-  function agregarStock() {
+  async function agregarStock() {
     const stock: Stock = new Stock();
 
     const ingrediente: Ingrediente = new Ingrediente();
@@ -23,7 +23,8 @@ function AgregarStock() {
     stock.fechaIngreso = new Date(fechaReposicion.getFullYear(), fechaReposicion.getMonth(), fechaReposicion.getDate() + 1);
     stock.ingrediente = ingrediente;
 
-    StockService.createStock(stock);
+    let response = await StockService.createStock(stock);
+    alert(response);
   }
 
   return (
@@ -36,7 +37,7 @@ function AgregarStock() {
       <br />
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Cantidad del ingrediente" id="cantidadStock" onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+        <input type="text" placeholder="Cantidad stock del ingrediente" id="cantidadStock" onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
       </label>
       <br />
       <label>
@@ -46,13 +47,12 @@ function AgregarStock() {
           <option value="Gramos">Gramos</option>
           <option value="Litros">Litros</option>
           <option value="Unidades">Unidades</option>
-          <option value="Docenas">Docenas</option>
         </select>
       </label>
       <br />
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+        <input type="text" placeholder="Costo del ingrediente por una unidad de medida" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
       </label>
       <label>
         <i className='bx bx-lock'></i>

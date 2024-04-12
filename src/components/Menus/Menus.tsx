@@ -9,7 +9,7 @@ import EliminarMenu from "./EliminarMenu";
 
 const Menus = () => {
     const [menus, setMenus] = useState<Menu[]>([]);
-    
+
     const [showAgregarMenuModal, setShowAgregarMenuModal] = useState(false);
     const [showEditarMenuModal, setShowEditarMenuModal] = useState(false);
     const [showEliminarMenuModal, setShowEliminarMenuModal] = useState(false);
@@ -47,29 +47,17 @@ const Menus = () => {
         setShowEditarMenuModal(false);
     };
 
-    return (
-        <div className="opciones-pantallas">
-
-            <h1>Menus</h1>
-            <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
-
-            <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
-                <AgregarMenu />
-            </ModalCrud>
-
-            <div id="menus">
+    /*
+    <div id="menus">
                 {menus.map(menu => (
                     <div key={menu.id} className="grid-item">
-                        {menu.imagenes.map((imagen, index) => (
-                            <div key={index}>
-                                <img src={`data:image/png;base64,${imagen}`} alt={`Imagen ${index}`} />
-                            </div>
-                        ))}
+                        
+       
 
                         <h3>{menu.nombre}</h3>
                         <h3>{menu.comensales}</h3>
                         <h3>{menu.descripcion}</h3>
-                        {menu.ingredientes.map(ingrediente => (
+                        {menu.ingredientesMenu.map(ingrediente => (
                             <div>
                                 <h4>{ingrediente.ingrediente.nombre} = X{ingrediente.cantidad}</h4>
                             </div>
@@ -86,6 +74,19 @@ const Menus = () => {
                     </div>
                 ))}
             </div>
+    */
+
+    return (
+        <div className="opciones-pantallas">
+
+            <h1>Menus</h1>
+            <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
+
+            <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
+                <AgregarMenu />
+            </ModalCrud>
+
+
         </div>
     )
 }
