@@ -52,11 +52,10 @@ public class MenuController {
     public ResponseEntity<String> handleMultipleFilesUpload(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
         List<ResponseClass> responseList = new ArrayList<>();
         // Buscamos el nombre de la foto
-        String fileName = file.getOriginalFilename();
+        String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
             String basePath = new File("").getAbsolutePath();
-            String rutaArchivo = basePath + File.separator + "src" + File.separator + "assets" + File.separator + nombreMenu + File.separator + fileName;
-            System.out.println(rutaArchivo);
+            String rutaArchivo = basePath + File.separator + "src" + File.separator + "assets" + File.separator + nombreMenu.replaceAll(" ", "") + File.separator + fileName;
             file.transferTo(new File(rutaArchivo));
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/download/")
@@ -71,9 +70,9 @@ public class MenuController {
             ImagenesMenu imagen = new ImagenesMenu();
             // Asignamos el menu a la imagen
             Optional<Menu> menu = menuRepository.findByName(nombreMenu);
-
+            System.out.println(menu);
             if (menu.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                return new ResponseEntity<>("Menu no encontrado", HttpStatus.NOT_FOUND);
             }
             imagen.setMenu(menu.get());
             // Asignamos la ruta
@@ -81,11 +80,11 @@ public class MenuController {
 
             imagenMenuRepository.save(imagen);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+            return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.ACCEPTED);
 
-        return ResponseEntity.ok("Imágenes cargadas exitosamente");
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al crear la imagen", HttpStatus.NOT_FOUND);
+        }
     }
 
 

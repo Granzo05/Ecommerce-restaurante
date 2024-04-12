@@ -103,8 +103,6 @@ function AgregarMenu() {
     menu.descripcion = descripcion;
     menu.ingredientesMenu = ingredientes;
 
-    console.log(menu)
-    console.log(imagenes)
     let response = await MenuService.createMenu(menu, imagenes);
     alert(response);
   }

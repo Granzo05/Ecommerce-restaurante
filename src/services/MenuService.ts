@@ -32,16 +32,11 @@ export const MenuService = {
                 body: JSON.stringify(menu)
             });
 
-            if (!menuResponse.ok) {
-                return 'Ocurrió un error al cargar el menu';
-            }
-
             let cargarImagenes = true;
-            let cargarImagenesFallida = false;
 
-            // Verificar si la respuesta indica que el menú ya existe
-            if (menuResponse.status === 302) { // 302 Found
+            if (menuResponse.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
                 cargarImagenes = false;
+                alert('Menu existente');
             }
 
             // Cargar imágenes solo si se debe hacer
@@ -53,24 +48,20 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        const menuImagenesResponse = await fetch(URL_API + 'menu/imagenes', {
+                        const imagenResponse = await fetch(URL_API + 'menu/imagenes', {
                             method: 'POST',
                             body: formData
                         });
 
-                        if (!menuImagenesResponse.ok) {
-                            cargarImagenesFallida = true;
-                            throw new Error('Error con la imagen \n' + imagen);
-                        }
+                        if(imagenResponse.status === 404){
+                            alert('El menu no se cargó')
+                        }                          
+
                     }
                 }));
             }
 
-            if (!cargarImagenesFallida) {
-                return 'Menu creado con éxito';
-            } else {
-                return 'Ocurrió un error al cargar las imágenes';
-            }
+            return 'Menu creado con éxito';
 
         } catch (error) {
             console.error('Error:', error);
