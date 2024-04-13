@@ -74,7 +74,7 @@ export const MenuService = {
         }
     },
 
-    updateMenu: async (menu: Menu): Promise<string> => {
+    updateMenu: async (menu: Menu, imagenes: Imagen[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'menu/update', {
                 method: 'PUT',
@@ -84,11 +84,43 @@ export const MenuService = {
                 body: JSON.stringify(menu)
             })
 
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            let cargarImagenes = true;
+
+            if (response.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
+                cargarImagenes = false;
+                return 'Menu existente';
             }
 
-            return await response.text();
+            let imagenCargadaExitosamente = false;
+
+            // Cargar imágenes solo si se debe hacer
+            if (cargarImagenes) {
+                await Promise.all(imagenes.map(async (imagen) => {
+                    if (imagen.file) {
+                        // Crear objeto FormData para las imágenes
+                        const formData = new FormData();
+                        formData.append('file', imagen.file);
+                        formData.append('nombreMenu', menu.nombre);
+
+                        const imagenResponse = await fetch(URL_API + 'menu/imagenes', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
+                            imagenCargadaExitosamente = false
+                        } else {
+                            imagenCargadaExitosamente = true;
+                        }
+                    }
+                }));
+            }
+
+            if (imagenCargadaExitosamente) {
+                return 'Menu creado con éxito';
+            } else {
+                return 'Ocurrió un error';
+            }
 
 
         } catch (error) {
