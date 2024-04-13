@@ -1,3 +1,4 @@
+import { Imagen } from "./Imagen";
 import { IngredienteMenu } from "./IngredienteMenu";
 
 export class Menu {
@@ -9,6 +10,7 @@ export class Menu {
     nombre: string = '';
     descripcion: string = '';
     ingredientesMenu: IngredienteMenu[] = [];
+    imagenes: Imagen[] = [];
 
     constructor() {
     }

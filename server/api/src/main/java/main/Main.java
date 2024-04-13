@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 @EntityScan("main.entities")
-@ComponentScan(basePackages = {"main.controllers", "main.repositories"})
+@ComponentScan(basePackages = {"main.controllers", "main.repositories", "main.*"})
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
@@ -26,7 +26,9 @@ public class Main {
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("Origin", "Content-Type", "Accept", "Authorization")
                         .allowCredentials(true);
+
             }
         };
     }
+
 }

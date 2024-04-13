@@ -3,6 +3,7 @@ package main.entities.Restaurante.Menu;
 import jakarta.persistence.*;
 import main.entities.Restaurante.Restaurante;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +25,11 @@ public class Menu {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
-
     @Transient
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngredienteMenu> ingredientesMenu = new ArrayList<>();
+    @Transient
+    private List<ResponseClass> imagenes = new ArrayList<>();
     @Column(name = "borrado")
     private String borrado;
 
@@ -112,9 +114,16 @@ public class Menu {
     public void setIngredientesMenu(List<IngredienteMenu> ingredientesMenu) {
         this.ingredientesMenu = ingredientesMenu;
     }
+    public List<ResponseClass> getImagenes() {
+        return imagenes;
+    }
 
-    public void addIngredientesMenu(IngredienteMenu ingredientesMenu) {
-        this.ingredientesMenu.add(ingredientesMenu);
+    public void setImagenes(List<ResponseClass> imagenes) {
+        this.imagenes = imagenes;
+    }
+
+    public void addImagen(ResponseClass imagen) {
+        this.imagenes.add(imagen);
     }
 
     @Override

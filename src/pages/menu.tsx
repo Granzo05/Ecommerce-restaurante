@@ -6,32 +6,35 @@ import { Menu } from '../types/Menu'
 function RestaurantesPorComida() {
   const { tipoComida } = useParams()
 
-  const [menus, setMenus] = useState<Menu[]>([]); 
+  const [menus, setMenus] = useState<Menu[]>([]);
 
   useEffect(() => {
     if (tipoComida) {
       MenuService.getMenusPorTipo(tipoComida)
         .then(menus => {
+          console.log(menus)
           setMenus(menus);
         })
         .catch(error => {
           console.error("Error al obtener los menús:", error);
         });
     }
-  }, [tipoComida]); 
+  }, [tipoComida]);
 
   return (
     <div id="grid-container">
-      {menus.map((menu : Menu) => (
+      {menus.map((menu) => (
         <div key={menu.id} className="grid-item">
-          <img src={`data:image/png;base64,${menu.imagenes}`} alt={menu.nombre} />
+          {menu.imagenes.map((imagen) => (
+            <img key={imagen.fileName} src={'http://localhost:8080/' + menu.nombre.replace(' ', '') + '/' + imagen.fileName} alt={imagen.fileName} />
+          ))}
           <h2>{menu.nombre}</h2>
           <h2>${menu.precio}</h2>
           <h2>Descripción: {menu.descripcion}</h2>
           <h2>Comensales: {menu.comensales}</h2>
           <h2>Ingredientes:</h2>
           <ul>
-            {menu.ingredientes.map((ingredienteMenu, index) => (
+            {menu.ingredientesMenu.map((ingredienteMenu, index) => (
               <li key={index}>* {ingredienteMenu.ingrediente.nombre}</li>
             ))}
           </ul>
@@ -40,6 +43,7 @@ function RestaurantesPorComida() {
       ))}
     </div>
   );
+
 }
 
 export default RestaurantesPorComida;

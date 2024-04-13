@@ -10,14 +10,14 @@ export const MenuService = {
 
     getMenus: async (): Promise<Menu[]> => {
         const response = await fetch(URL_API + 'menus')
-        const data = await response.json();
-        return data;
+
+        return await response.json();
     },
 
     getMenusPorTipo: async (tipoComida: string): Promise<Menu[]> => {
-        const response = await fetch(URL_API + 'menus/' + tipoComida);
-        const data = await response.json();
-        return data;
+        const response = await fetch(URL_API + 'menu/tipo/' + tipoComida);
+
+        return await response.json();
     },
 
 

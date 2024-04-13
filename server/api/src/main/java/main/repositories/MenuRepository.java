@@ -16,4 +16,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 
     @Query("SELECT m FROM Menu m WHERE m.borrado = 'NO'")
     List<Menu> findAllByNotBorrado();
+
+    @Query("SELECT m FROM Menu m WHERE m.borrado = 'NO' AND m.tipo = :tipo")
+    List<Menu> findByType(String tipo);
 }

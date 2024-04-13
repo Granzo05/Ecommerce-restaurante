@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -90,9 +91,9 @@ public class MenuController {
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/download/")
-                    .path(fileName)
+                    .path(fileName.replaceAll(" ", ""))
                     .toUriString();
-            ResponseClass response = new ResponseClass(fileName,
+            ResponseClass response = new ResponseClass(fileName.replaceAll(" ", ""),
                     downloadUrl,
                     file.getContentType(),
                     file.getSize());
@@ -124,7 +125,55 @@ public class MenuController {
         }
     }
 
+    @GetMapping("/menu/tipo/{tipoMenu}")
+    public List<Menu> getMenusPorTipo(@PathVariable("tipoMenu") String tipo) {
+        List<Menu> menus = menuRepository.findByType(tipo);
 
+        for(Menu menu: menus) {
+            // Obtener la ruta de la carpeta de imágenes
+            String basePath = new File("").getAbsolutePath();
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + menu.getNombre().replaceAll(" ", "") + File.separator;
+            System.out.println(rutaCarpeta);
+            // Verificar si la carpeta existe
+            File carpeta = new File(rutaCarpeta);
+            if (!carpeta.exists()) {
+                // Si la carpeta no existe, pasamos al siguiente menu
+                continue;
+            }
+
+            // Obtener todos los archivos en la carpeta
+            File[] archivos = carpeta.listFiles();
+
+            // Recorrer los archivos y agregarlos a la lista de respuestas
+            if (archivos != null) {
+                for (File archivo : archivos) {
+                    if (archivo.isFile()) {
+                        try {
+                            // Construir la URL de descarga
+                            String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                                    .path("/menu/imagenes/")
+                                    .path(menu.getNombre().replaceAll(" ", ""))
+                                    .path("/")
+                                    .path(archivo.getName().replaceAll(" ", ""))
+                                    .toUriString();
+                            ResponseClass response = new ResponseClass(archivo.getName().replaceAll(" ", ""),
+                                    downloadUrl,
+                                    Files.probeContentType(archivo.toPath()),
+                                    archivo.length());
+                            menu.addImagen(response);
+                        } catch (IOException e) {
+                            // Manejar errores de IO
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Devolver la lista de menus
+        return menus;
+    }
 
     @PutMapping("/menu/update")
     public ResponseEntity<String> actualizarMenu(@RequestBody Menu menuDetail) {
