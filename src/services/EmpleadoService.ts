@@ -137,7 +137,7 @@ export const EmpleadoService = {
             });
 
             if (!response.ok) {
-                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+                localStorage.removeItem('usuario');
             }
 
             const data = await response.json();

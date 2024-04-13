@@ -51,7 +51,7 @@ public class StockController {
     @GetMapping("/restaurant/stock/check")
     public ResponseEntity<String> checkStock(@RequestParam(value = "menus") List<Menu> menus) {
         for (Menu menu : menus) {
-            for (IngredienteMenu ingrediente : menu.getIngredientes()) {
+            for (IngredienteMenu ingrediente : menu.getIngredientesMenu()) {
                 Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(ingrediente.getIngrediente().getNombre());
 
                 if (stockEncontrado.isPresent() && stockEncontrado.get().getCantidad() < ingrediente.getCantidad()) {

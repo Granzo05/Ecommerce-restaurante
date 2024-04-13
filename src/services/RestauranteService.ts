@@ -110,8 +110,12 @@ export const RestauranteService = {
                         },
                     })
 
-                    const data = await response.json();
+                    if (!response.ok) {
+                        localStorage.removeItem('usuario');
+                        return false;
+                    }
 
+                    const data = await response.json();
                     return data;
                 }
             } catch (error) {

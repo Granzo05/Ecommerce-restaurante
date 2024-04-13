@@ -19,10 +19,15 @@ import java.util.Optional;
 public class MenuController {
     private final MenuRepository menuRepository;
 
+    private final IngredienteMenuRepository ingredienteMenuRepository;
+    private final IngredienteRepository ingredienteRepository;
+
     private final ImagenMenuRepository imagenMenuRepository;
 
-    public MenuController(MenuRepository menuRepository, ImagenMenuRepository imagenMenuRepository) {
+    public MenuController(MenuRepository menuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenMenuRepository imagenMenuRepository) {
         this.menuRepository = menuRepository;
+        this.ingredienteMenuRepository = ingredienteMenuRepository;
+        this.ingredienteRepository = ingredienteRepository;
         this.imagenMenuRepository = imagenMenuRepository;
     }
 
@@ -36,13 +41,32 @@ public class MenuController {
     @PostMapping("/menu/create")
     public ResponseEntity<String> crearMenu(@RequestBody Menu menu) {
         Optional<Menu> menuDB = menuRepository.findByName(menu.getNombre());
-        // Buscamos si hay un menu creado, en caso de encontrarlo se envía el error
+
         if (menuDB.isEmpty()) {
+            // Seteamos que no está borrado
             menu.setBorrado("NO");
-            menuRepository.save(menu);
-            return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
+            Menu menuSaved = menuRepository.save(menu);
+
+            List<IngredienteMenu> ingredientesMenu = menu.getIngredientesMenu();
+
+            for (int i = 0; i < ingredientesMenu.size(); i++) {
+                IngredienteMenu ingredienteMenu = ingredientesMenu.get(i);
+
+                Ingrediente ingredienteDB = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre());
+
+                ingredienteMenu.setIngrediente(ingredienteDB);
+                ingredienteMenu.setCantidad(ingredienteMenu.getCantidad());
+                ingredienteMenu.setMenu(menuSaved);
+                ingredienteMenu.setMedida(ingredienteMenu.getIngrediente().getMedida());
+                System.out.println(ingredienteMenu);
+
+                ingredienteMenuRepository.save(ingredienteMenu);
+            }
+
+          return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
+
         } else {
-            return new ResponseEntity<>("Hay un menu creado con ese nombre", HttpStatus.FOUND);
+            return new ResponseEntity<>("Hay un menú creado con ese nombre", HttpStatus.FOUND);
         }
     }
 
@@ -76,10 +100,8 @@ public class MenuController {
 
             try {
                 ImagenesMenu imagen = new ImagenesMenu();
-                System.out.println(nombreMenu);
                 // Asignamos el menu a la imagen
                 Optional<Menu> menu = menuRepository.findByName(nombreMenu);
-                System.out.println(menu);
                 if (menu.isEmpty()) {
                     return new ResponseEntity<>("Menu vacio", HttpStatus.NOT_FOUND);
                 }
@@ -115,7 +137,7 @@ public class MenuController {
         Menu menu = menuEncontrado.get();
 
         menu.setPrecio(menuDetail.getPrecio());
-        menu.setIngredientes(menuDetail.getIngredientes());
+        menu.setIngredientesMenu(menuDetail.getIngredientesMenu());
         menu.setTiempoCoccion(menuDetail.getTiempoCoccion());
         menu.setDescripcion(menuDetail.getDescripcion());
         menu.setNombre(menuDetail.getNombre());

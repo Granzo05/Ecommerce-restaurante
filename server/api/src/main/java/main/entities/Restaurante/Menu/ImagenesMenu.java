@@ -11,7 +11,7 @@ public class ImagenesMenu {
     @Column(name = "ruta")
     private String ruta;
     @ManyToOne
-    @JoinColumn(name = "menu_imagenes")
+    @JoinColumn(name = "menu_id")
     private Menu menu;
 
     public ImagenesMenu() {

@@ -24,8 +24,9 @@ public class Menu {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
+
     @Transient
-    @OneToMany
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngredienteMenu> ingredientesMenu = new ArrayList<>();
     @Column(name = "borrado")
     private String borrado;
@@ -104,15 +105,16 @@ public class Menu {
         this.precio = precio;
     }
 
-    public List<IngredienteMenu> getIngredientes() {
+    public List<IngredienteMenu> getIngredientesMenu() {
         return ingredientesMenu;
     }
 
-    public void setIngredientes(List<IngredienteMenu> ingredientes) {
-        this.ingredientesMenu = ingredientes;
+    public void setIngredientesMenu(List<IngredienteMenu> ingredientesMenu) {
+        this.ingredientesMenu = ingredientesMenu;
     }
-    public void addIngrediente(IngredienteMenu ingrediente) {
-        this.ingredientesMenu.add(ingrediente);
+
+    public void addIngredientesMenu(IngredienteMenu ingredientesMenu) {
+        this.ingredientesMenu.add(ingredientesMenu);
     }
 
     @Override
@@ -120,12 +122,12 @@ public class Menu {
         return "Menu{" +
                 "id=" + id +
                 ", tiempoCoccion=" + tiempoCoccion +
-                ", tipo=" + tipo +
+                ", tipo='" + tipo + '\'' +
                 ", comensales=" + comensales +
                 ", precio=" + precio +
                 ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
-                ", ingredientes=" + ingredientesMenu +
+                ", ingredientesMenu=" + ingredientesMenu +
                 ", borrado='" + borrado + '\'' +
                 '}';
     }

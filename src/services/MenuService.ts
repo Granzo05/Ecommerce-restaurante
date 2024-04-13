@@ -23,7 +23,6 @@ export const MenuService = {
 
     createMenu: async (menu: Menu, imagenes: Imagen[]): Promise<string> => {
         try {
-            // Primero cargar el menú
             const menuResponse = await fetch(URL_API + 'menu/create', {
                 method: 'POST',
                 headers: {
@@ -55,8 +54,6 @@ export const MenuService = {
                             body: formData
                         });
 
-                        console.log(imagenResponse.status)
-
                         if (imagenResponse.status === 404 || imagenResponse.status === 400) {
                             imagenCargadaExitosamente = false
                         } else {
@@ -69,7 +66,7 @@ export const MenuService = {
             if (imagenCargadaExitosamente) {
                 return 'Menu creado con éxito';
             } else {
-                return 'Error con la imagen'
+                return 'Ocurrió un error';
             }
         } catch (error) {
             console.error('Error:', error);

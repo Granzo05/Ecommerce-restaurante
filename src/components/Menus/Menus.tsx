@@ -21,7 +21,6 @@ const Menus = () => {
         MenuService.getMenus()
             .then(data => {
                 setMenus(data);
-                console.log(data);
             })
             .catch(error => {
                 console.error('Error:', error);

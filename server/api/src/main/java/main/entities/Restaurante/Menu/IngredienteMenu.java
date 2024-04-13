@@ -14,8 +14,10 @@ public class IngredienteMenu {
     @ManyToOne
     @JoinColumn(name = "menu_id")
     private Menu menu;
-    @Column(name = "cantidad")
+    @Column(name = "cantidad_ingrediente")
     private int cantidad;
+    @Column(name = "medida")
+    private String medida;
 
     public Long getId() {
         return id;
@@ -47,6 +49,14 @@ public class IngredienteMenu {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
+    }
+
+    public String getMedida() {
+        return medida;
+    }
+
+    public void setMedida(String medida) {
+        this.medida = medida;
     }
 
     @Override
