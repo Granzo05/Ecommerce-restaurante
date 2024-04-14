@@ -172,8 +172,6 @@ public class MenuController {
                 }
             }
         }
-
-
         // Devolver la lista de menus
         return menus;
     }

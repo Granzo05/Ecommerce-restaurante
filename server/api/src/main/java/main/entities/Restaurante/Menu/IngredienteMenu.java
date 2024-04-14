@@ -1,5 +1,6 @@
 package main.entities.Restaurante.Menu;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +12,7 @@ public class IngredienteMenu {
     @ManyToOne
     @JoinColumn(name = "ingrediente_id")
     private Ingrediente ingrediente;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "menu_id")
     private Menu menu;

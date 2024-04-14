@@ -25,7 +25,7 @@ function RestaurantesPorComida() {
 
   const [showDetailsMenu, setShowDetailsMenuModal] = useState(false);
 
-  const handleAgregarStock = () => {
+  const handleMostrarMenu = () => {
     setShowDetailsMenuModal(true);
   };
 
@@ -36,7 +36,7 @@ function RestaurantesPorComida() {
   return (
     <div id="grid-container">
       {menus.map((menu) => (
-        <div key={menu.id} className="grid-item">
+        <div key={menu.id} className="grid-item" onClick={handleMostrarMenu}>
           <img key={menu.imagenes[0].fileName} src={'http://localhost:8080/' + menu.nombre.replace(/\s+/g, '') + '/' + menu.imagenes[0].fileName} alt={menu.imagenes[0].fileName} />
           <h2>{menu.nombre}</h2>
           <h2>${menu.precio}</h2>
@@ -50,7 +50,6 @@ function RestaurantesPorComida() {
             ))}
           </ul>
           <h2>Tiempo de cocción: {menu.tiempoCoccion}</h2>
-          <button onClick={() => handleAgregarStock()}>Cargar nuevo ingrediente</button>
           <ModalFlotante isOpen={showDetailsMenu} onClose={handleModalClose}>
             <DetallesMenu menuActual={menu} />
           </ModalFlotante>
