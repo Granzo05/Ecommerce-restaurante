@@ -130,6 +130,10 @@ public class MenuController {
         List<Menu> menus = menuRepository.findByType(tipo);
 
         for(Menu menu: menus) {
+            List<IngredienteMenu> ingredientes = ingredienteMenuRepository.findByMenuId(menu.getId());
+
+            menu.setIngredientesMenu(ingredientes);
+
             // Obtener la ruta de la carpeta de imágenes
             String basePath = new File("").getAbsolutePath();
             String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + menu.getNombre().replaceAll(" ", "") + File.separator;

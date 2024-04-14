@@ -359,7 +359,8 @@
 
 
 
-/* Pantalla de opciones pal restaurante, no se a donde ponerla para que me lo lea pero te lo dejo separado porq se que ak anda bien */
+/* Pantalla de opciones pal restaurante, no se a donde ponerla para que me lo lea pero te lo dejo separado porq se que ak anda bien /pages/opciones */
+
 .opciones-pantallas {
   background-color: gray;
   color: black;
@@ -394,6 +395,11 @@
   display: none;
   flex-direction: row;
 }
+
+/*
+  Esto es del components/modalFlotante. La diferencia es que el flotante se muestra por encima del codigo como un cartel, y el modalCRUD reemplaza el codigo mostrado hasta que se cierra
+  Es decir, uno se superpone al codigo como un z-index 1000 y el otro se muestra en reemplazo del codigo
+*/
 
 .modal-overlay {
   position: fixed;
@@ -441,4 +447,39 @@
 .div-ingrediente-menu p {
   margin-left: 15px;
   cursor: pointer;
+}
+
+/*
+  Esto es del pages/menu donde se muestra cada menu por tipo
+*/
+
+#grid-container {
+  margin-top: 80px;
+  padding: 25px;
+}
+
+.grid-item img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/16;
+  max-width: 300px;
+}
+
+.grid-item {
+  width: 300px;
+  border: 1px solid black;
+  margin-inline-end: 25px;
+  background-color: white;
+  color: black;
+}
+
+.grid-item h2 {
+  padding: 10px;
+}
+
+.grid-item h2 svg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/16;
+  max-width: 30px;
 }
