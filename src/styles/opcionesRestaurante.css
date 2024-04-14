@@ -1,0 +1,10 @@
+.opciones-pantallas {
+    background-color: gray;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+  }

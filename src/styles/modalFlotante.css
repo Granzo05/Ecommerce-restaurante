@@ -1,0 +1,47 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-flotante-content {
+    width: 50%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+  
+  }
+  
+  .modal-flotante-content div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .modal-flotante-content label {
+    margin-top: 25px;
+  }
+  
+  .div-ingrediente-menu {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .div-ingrediente-menu select {
+    width: 120px;
+  }
+  
+  .div-ingrediente-menu input {
+    width: 50px;
+  }
+  
+  .div-ingrediente-menu p {
+    margin-left: 15px;
+    cursor: pointer;
+  }

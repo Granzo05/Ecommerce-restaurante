@@ -137,7 +137,6 @@ public class MenuController {
             // Obtener la ruta de la carpeta de imágenes
             String basePath = new File("").getAbsolutePath();
             String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + menu.getNombre().replaceAll(" ", "") + File.separator;
-            System.out.println(rutaCarpeta);
             // Verificar si la carpeta existe
             File carpeta = new File(rutaCarpeta);
             if (!carpeta.exists()) {

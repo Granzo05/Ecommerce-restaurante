@@ -15,7 +15,6 @@ export const MenuService = {
     },
 
     getMenusPorTipo: async (tipoComida: string): Promise<Menu[]> => {
-        console.log(tipoComida)
         const response = await fetch(URL_API + 'menu/tipo/' + tipoComida);
 
         return await response.json();

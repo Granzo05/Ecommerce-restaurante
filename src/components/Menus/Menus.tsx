@@ -5,6 +5,10 @@ import ModalCrud from "../ModalCrud";
 import AgregarMenu from './AgregarMenu';
 import EditarMenu from './EditarMenu';
 import EliminarMenu from "./EliminarMenu";
+import '../../styles/menuPorTIpo.css';
+import '../../styles/modalCrud.css';
+import '../../styles/modalFlotante.css';
+
 
 
 const Menus = () => {
