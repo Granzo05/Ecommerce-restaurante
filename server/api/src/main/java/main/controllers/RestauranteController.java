@@ -9,6 +9,7 @@ import main.repositories.ClienteRepository;
 import main.repositories.EmpleadoRepository;
 import main.repositories.PedidoRepository;
 import main.repositories.RestauranteRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -145,16 +146,16 @@ public class RestauranteController {
     }
 
     @PostMapping("/empleado/create")
-    public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) {
+    public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails) {
         Optional<Empleado> empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail());
         if (empleado.isEmpty()){
             empleadoDetails.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
             empleadoDetails.setBorrado("NO");
             empleadoDetails.setPrivilegios("empleado");
             empleadoRepository.save(empleadoDetails);
-            return empleadoDetails;
+            return new ResponseEntity<>("Empleado creado correctamente", HttpStatus.ACCEPTED);
         } else {
-            return null;
+            return new ResponseEntity<>("Error al crear el empleado", HttpStatus.ACCEPTED);
         }
     }
 
@@ -176,6 +177,21 @@ public class RestauranteController {
 
             empleadoRepository.save(empleado);
             return ResponseEntity.ok("El empleado se modificó correctamente");
+        } else {
+            return ResponseEntity.ok("El empleado no se encontró");
+        }
+    }
+
+    @PutMapping("/empleado/{cuit}/delete")
+    public ResponseEntity<String> deleteEmpleado(@PathVariable("cuit") Long cuit) {
+        System.out.println(cuit);
+        Empleado empleado = empleadoRepository.findByCuit(cuit);
+        System.out.println(empleado);
+
+        if (empleado != null){
+            empleado.setBorrado("SI");
+            empleadoRepository.save(empleado);
+            return ResponseEntity.ok("El empleado se eliminó correctamente");
         } else {
             return ResponseEntity.ok("El empleado no se encontró");
         }

@@ -31,7 +31,7 @@ const Opciones = () => {
             return <Empleados />;
         }
     };
-
+    /*
     
     useEffect(() => {
         const fetchData = async () => {
@@ -45,10 +45,11 @@ const Opciones = () => {
 
         fetchData();
     }, []);
+    */
 
     return (
         <div style={{ display: 'flex' }} className='opciones'>
-            <div style={{ width: '350px', backgroundColor: '#f0f0f0', color: 'black', cursor: 'pointer', padding: '25px' }}>
+            <div className='opciones-menu'>
                 <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
                 <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
                 <p onClick={() => handleOpcionClick(3)}>Pedidos entregados</p>

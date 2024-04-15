@@ -2,24 +2,27 @@ import { Empleado } from '../types/Empleado'
 import { URL_API } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
-    createEmpleado: async (empleado: Empleado) => {
-        empleado.nombre = `${empleado.nombre} ${empleado.apellido}`;
-        fetch(URL_API + 'empleado/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(empleado)
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
-                }
-                return await response.json()
+    createEmpleado: async (empleado: Empleado): Promise<string> => {
+        try {
+            empleado.nombre = `${empleado.nombre} ${empleado.apellido}`;
+            const response = await fetch(URL_API + 'empleado/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(empleado)
             })
-            .catch(error => {
-                console.error('Error:', error)
-            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     getEmpleado: async (email: string, contraseña: string) => {
@@ -41,6 +44,7 @@ export const EmpleadoService = {
                     nombre: data.nombre,
                     email: data.email
                 }
+
                 localStorage.setItem('usuario', JSON.stringify(empleado));
 
                 // Redirige al usuario al menú principal
@@ -64,9 +68,7 @@ export const EmpleadoService = {
                 throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
             }
 
-            const data: Empleado[] = await response.json();
-
-            return data;
+            return response.json();
         } catch (error) {
             console.error('Error:', error);
             throw error;
@@ -88,7 +90,7 @@ export const EmpleadoService = {
                 throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
             }
 
-            return await response.text();
+            return response.text();
 
         } catch (error) {
             console.error('Error:', error);
@@ -97,9 +99,9 @@ export const EmpleadoService = {
 
     },
 
-    deleteEmpleado: async (empleadoId: number): Promise<string> => {
+    deleteEmpleado: async (cuitEmpleado: number): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/' + empleadoId + '/delete', {
+            const response = await fetch(URL_API + 'empleado/' + cuitEmpleado + '/delete', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -111,7 +113,6 @@ export const EmpleadoService = {
             }
 
             return await response.text();
-
         } catch (error) {
             console.error('Error:', error);
             throw error;

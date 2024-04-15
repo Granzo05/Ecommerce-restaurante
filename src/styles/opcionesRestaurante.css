@@ -1,14 +1,24 @@
 .opciones-pantallas {
-    background-color: gray;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    margin-top: 50px;
-    justify-content: center;
-    width: 100%;
-    height: auto;
-  }
+  background-color: gray;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+}
 
-  .opciones {
-    margin-top: 50px;
-  }
+.opciones {
+  margin-top: 50px;
+}
+
+.opciones-menu {
+  width: 350px;
+  background-color: rgb(240, 240, 240);
+  padding: 20px;
+}
+
+.opciones-menu p {
+  color: black;
+  cursor: pointer;
+}

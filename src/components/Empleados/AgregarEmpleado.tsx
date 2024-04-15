@@ -20,7 +20,8 @@ function AgregarEmpleado() {
     empleado.telefono = telefono;
     empleado.cuit = cuit;
 
-    EmpleadoService.createEmpleado(empleado);
+    let response = EmpleadoService.createEmpleado(empleado);
+    alert(response);
   }
 
   return (

@@ -1,16 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmpleadoService } from '../../services/EmpleadoService';
+import '../../styles/empleados.css';
 
 interface EliminarMenuProps {
-  empleadoId: number;
+  cuitEmpleado: number;
 }
 
-const EliminarMenu: React.FC<EliminarMenuProps> = ({ empleadoId }) => {
+const EliminarMenu: React.FC<EliminarMenuProps> = ({ cuitEmpleado }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
-    EmpleadoService.deleteEmpleado(empleadoId)
+    EmpleadoService.deleteEmpleado(cuitEmpleado)
       .then(() => {
         navigate('/opciones');
       })
@@ -23,10 +24,12 @@ const EliminarMenu: React.FC<EliminarMenuProps> = ({ empleadoId }) => {
     navigate('/opciones');
   };
 
-  return (<div className="modal-info">
+  return (<div>
     <p>¿Seguro que quieres eliminar el empleado?</p>
-    <button onClick={onConfirm}>Confirmar</button>
-    <button onClick={onCancel}>Cancelar</button>
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <button onClick={onConfirm}>Confirmar</button>
+      <button onClick={onCancel}>Cancelar</button>
+    </div>
   </div>
   );
 }

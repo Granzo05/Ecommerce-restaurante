@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { Empleado } from '../../types/Empleado';
+import '../../styles/empleados.css';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -14,7 +15,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
   const [contraseña, setContraseña] = useState(empleadoOriginal.contraseña);
   const [telefono, setTelefono] = useState(String(empleadoOriginal.telefono));
 
-  function editarEmpleado() {
+  async function editarEmpleado() {
     const empleadoActualizado: Empleado = {
       ...empleadoOriginal,
       nombre,
@@ -23,8 +24,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       contraseña,
       telefono: parseInt(telefono)
     };
-
-    EmpleadoService.updateEmpleado(empleadoActualizado);
+    let response = await EmpleadoService.updateEmpleado(empleadoActualizado);
+    alert(response);
   }
 
   return (

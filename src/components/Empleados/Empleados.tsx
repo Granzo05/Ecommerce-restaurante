@@ -5,6 +5,8 @@ import ModalCrud from "../ModalCrud";
 import { Empleado } from "../../types/Empleado";
 import EliminarEmpleado from "./EliminarEmpleado";
 import EditarEmpleado from "./EditarEmpleado";
+import '../../styles/empleados.css';
+import ModalFlotante from "../ModalFlotante";
 
 const Empleados = () => {
     EmpleadoService.checkUser('negocio');
@@ -17,20 +19,25 @@ const Empleados = () => {
     const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
-    const [selectedId, setSelectedId] = useState<number | null>(0);
+    const [selectedCuit, setSelectedCuit] = useState<number | null>(0);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Esto retorna true o false
-                await EmpleadoService.checkUser('negocio');
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
         fetchData();
 
+        fetchEmpleados();
+
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            // Esto retorna true o false
+            await EmpleadoService.checkUser('negocio');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const fetchEmpleados = async () => {
         EmpleadoService.getEmpleados()
             .then(data => {
                 setEmpleados(data);
@@ -38,7 +45,7 @@ const Empleados = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, []);
+    }
 
     const handleAgregarEmpleado = () => {
         setShowAgregarEmpleadoModal(true);
@@ -48,14 +55,13 @@ const Empleados = () => {
     const handleEditarEmpleado = () => {
         setIsEditing(true);
         setShowEditarEmpleadoModal(true);
-        setMostrarEmpleados(false);
-
+        setMostrarEmpleados(true);
     };
 
-    const handleEliminarEmpleado = (empleadoId: number) => {
-        setSelectedId(empleadoId);
+    const handleEliminarEmpleado = (cuit: number) => {
+        setSelectedCuit(cuit);
         setShowEliminarEmpleadoModal(true);
-        setMostrarEmpleados(false);
+        setMostrarEmpleados(true);
 
     };
 
@@ -67,6 +73,7 @@ const Empleados = () => {
         setIsEditing(false);
         setMostrarEmpleados(true);
 
+        fetchEmpleados();
     };
 
     return (
@@ -87,15 +94,14 @@ const Empleados = () => {
                                 <h3>{empleado.telefono}</h3>
                                 <h3>{empleado.email}</h3>
                                 {empleado.fechaIngreso && (
-                                    <h3>{empleado.fechaIngreso.toString()}</h3>
+                                    <h3>{new Date(empleado.fechaIngreso).toLocaleDateString('es-ES', { day: 'numeric', month: 'numeric', year: 'numeric' })}</h3>
                                 )}
-                                <h3>{empleado.contraseña}</h3>
 
-                                <button onClick={() => handleEliminarEmpleado(empleado.id)}>ELIMINAR</button>
-                                <ModalCrud isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
-                                    {selectedId && <EliminarEmpleado empleadoId={selectedId} />}
 
-                                </ModalCrud>
+                                <button onClick={() => handleEliminarEmpleado(empleado.cuit)}>ELIMINAR</button>
+                                <ModalFlotante isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
+                                    {selectedCuit && <EliminarEmpleado cuitEmpleado={selectedCuit} />}
+                                </ModalFlotante>
                                 <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
                             </div>
                             <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>

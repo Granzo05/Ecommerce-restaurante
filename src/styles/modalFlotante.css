@@ -15,7 +15,6 @@
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-
 }
 
 .modal-flotante-content div {
@@ -23,6 +22,7 @@
   flex-direction: column;
   align-items: center;
 }
+
 
 .modal-flotante-content label {
   margin-top: 25px;
@@ -87,7 +87,7 @@ DetalleMenu
   aspect-ratio: 16/16;
   max-width: 250px;
   display: flex;
-  margin-right: 0px; 
+  margin-right: 0px;
 }
 
 .carousel-indicators {
