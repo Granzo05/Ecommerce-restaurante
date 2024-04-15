@@ -1,6 +1,6 @@
 [x] Carga de menu con fotos
 [x] Visualizacion de menu correctamente por tipo
-[] Crear exclusiones para el check de privilegios dependiendo la ruta en la que estoy, como por ej acceso-denegado
+[x] Crear exclusiones para el check de privilegios dependiendo la ruta en la que estoy, como por ej acceso-denegado
 [x] Login restaurante 
 [x] Registro restaurante
 [] Precio sugerido segun ingredientes y los costos

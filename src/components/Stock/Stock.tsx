@@ -9,6 +9,7 @@ import { EmpleadoService } from "../../services/EmpleadoService";
 
 const Stocks = () => {
     const [stocks, setStocks] = useState<Stock[]>([]);
+    const [mostrarStocks, setMostrarStocks] = useState(true);
 
     const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
     const [showEditarStockModal, setShowEditarStockModal] = useState(false);
@@ -28,7 +29,7 @@ const Stocks = () => {
         };
 
         fetchData();
-        
+
         StockService.getStock()
             .then(data => {
                 setStocks(data);
@@ -40,21 +41,30 @@ const Stocks = () => {
 
     const handleAgregarStock = () => {
         setShowAgregarStockModal(true);
+        setMostrarStocks(false);
     };
 
     const handleEditarStock = (stock: Stock) => {
         setSelectedStock(stock);
         setShowEditarStockModal(true);
+        setMostrarStocks(false);
+
     };
 
     const handleEliminarStock = (stockId: number) => {
         setSelectedId(stockId);
         setShowEliminarStockModal(true);
+        setMostrarStocks(false);
+
     };
 
     const handleModalClose = () => {
         setShowAgregarStockModal(false);
         setShowEditarStockModal(false);
+        setShowEliminarStockModal(false);
+
+        setMostrarStocks(true);
+
     };
 
     return (
@@ -67,25 +77,28 @@ const Stocks = () => {
                 <AgregarStock />
             </ModalCrud>
 
-            <div id="stocks">
-                {stocks.map(stock => (
-                    <div key={stock.id} className="grid-item">
-                        <h3>{stock.ingrediente.nombre}</h3>
-                        <h3>{stock.cantidad}</h3>
-                        <h3>{stock.ingrediente.costo}</h3>
-                        <h3>{stock.fechaIngreso.toISOString()}</h3>
+            {mostrarStocks && (
+                <div id="stocks">
+                    {stocks.map(stock => (
+                        <div key={stock.id} className="grid-item">
+                            <h3>{stock.ingrediente.nombre}</h3>
+                            <h3>{stock.cantidad}</h3>
+                            <h3>{stock.ingrediente.costo}</h3>
+                            <h3>{stock.fechaIngreso.toISOString()}</h3>
 
-                        <button onClick={() => handleEliminarStock(stock.id)}>ELIMINAR</button>
-                        <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                            {selectedId && <EliminarStock stockId={selectedId} />}
-                        </ModalCrud>
-                        <button onClick={() => handleEditarStock}>EDITAR</button>
-                        <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
-                            {selectedStock && <EditarStock stockOriginal={selectedStock} />}
-                        </ModalCrud>
-                    </div>
-                ))}
-            </div>
+                            <button onClick={() => handleEliminarStock(stock.id)}>ELIMINAR</button>
+                            <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
+                                {selectedId && <EliminarStock stockId={selectedId} />}
+                            </ModalCrud>
+                            <button onClick={() => handleEditarStock}>EDITAR</button>
+                            <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
+                                {selectedStock && <EditarStock stockOriginal={selectedStock} />}
+                            </ModalCrud>
+                        </div>
+                    ))}
+                </div>
+            )}
+
         </div>
     )
 }

@@ -3,8 +3,12 @@
     color: black;
     display: flex;
     flex-direction: column;
-    margin-top: 100px;
+    margin-top: 50px;
     justify-content: center;
     width: 100%;
     height: auto;
+  }
+
+  .opciones {
+    margin-top: 50px;
   }

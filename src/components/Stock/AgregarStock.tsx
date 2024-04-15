@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Stock } from '../../types/Stock';
 import { StockService } from '../../services/StockService';
 import { Ingrediente } from '../../types/Ingrediente';
+import { clearInputs } from '../../utils/global_variables/clearInputs';
 
 function AgregarStock() {
 
@@ -25,6 +26,8 @@ function AgregarStock() {
 
     let response = await StockService.createStock(stock);
     alert(response);
+
+    clearInputs();
   }
 
   return (

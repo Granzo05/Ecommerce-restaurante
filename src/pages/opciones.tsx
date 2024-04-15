@@ -6,6 +6,7 @@ import Stock from '../components/Stock/Stock';
 import Empleados from '../components/Empleados/Empleados';
 import Menus from '../components/Menus/Menus';
 import { EmpleadoService } from '../services/EmpleadoService';
+import '../styles/opcionesRestaurante.css'
 
 const Opciones = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState(1);
@@ -46,7 +47,7 @@ const Opciones = () => {
     }, []);
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex' }} className='opciones'>
             <div style={{ width: '350px', backgroundColor: '#f0f0f0', color: 'black', cursor: 'pointer', padding: '25px' }}>
                 <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
                 <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>

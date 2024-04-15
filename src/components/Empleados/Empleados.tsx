@@ -10,6 +10,7 @@ const Empleados = () => {
     EmpleadoService.checkUser('negocio');
 
     const [empleados, setEmpleados] = useState<Empleado[]>([]);
+    const [mostrarEmpleados, setMostrarEmpleados] = useState(true);
 
     const [showAgregarEmpleadoModal, setShowAgregarEmpleadoModal] = useState(false);
     const [showEditarEmpleadoModal, setShowEditarEmpleadoModal] = useState(false);
@@ -41,22 +42,31 @@ const Empleados = () => {
 
     const handleAgregarEmpleado = () => {
         setShowAgregarEmpleadoModal(true);
+        setMostrarEmpleados(false);
     };
 
     const handleEditarEmpleado = () => {
         setIsEditing(true);
         setShowEditarEmpleadoModal(true);
+        setMostrarEmpleados(false);
+
     };
 
     const handleEliminarEmpleado = (empleadoId: number) => {
         setSelectedId(empleadoId);
         setShowEliminarEmpleadoModal(true);
+        setMostrarEmpleados(false);
+
     };
 
     const handleModalClose = () => {
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(false);
+        setShowEliminarEmpleadoModal(false);
+
         setIsEditing(false);
+        setMostrarEmpleados(true);
+
     };
 
     return (
@@ -67,33 +77,35 @@ const Empleados = () => {
             <ModalCrud isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
                 <AgregarEmpleado />
             </ModalCrud>
+            {mostrarEmpleados && (
+                <div id="empleados">
+                    {empleados.map(empleado => (
+                        <div key={empleado.id} className='grid-item'>
+                            <div className={`datos ${isEditing ? 'hidden' : ''}`}>
+                                <h3>{empleado.nombre}</h3>
+                                <h3>{empleado.cuit}</h3>
+                                <h3>{empleado.telefono}</h3>
+                                <h3>{empleado.email}</h3>
+                                {empleado.fechaIngreso && (
+                                    <h3>{empleado.fechaIngreso.toString()}</h3>
+                                )}
+                                <h3>{empleado.contraseña}</h3>
 
-            <div id="empleados">
-                {empleados.map(empleado => (
-                    <div key={empleado.id} className='grid-item'>
-                        <div className={`datos ${isEditing ? 'hidden' : ''}`}>
-                            <h3>{empleado.nombre}</h3>
-                            <h3>{empleado.cuit}</h3>
-                            <h3>{empleado.telefono}</h3>
-                            <h3>{empleado.email}</h3>
-                            {empleado.fechaIngreso && (
-                                <h3>{empleado.fechaIngreso.toString()}</h3>
-                            )}
-                            <h3>{empleado.contraseña}</h3>
+                                <button onClick={() => handleEliminarEmpleado(empleado.id)}>ELIMINAR</button>
+                                <ModalCrud isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
+                                    {selectedId && <EliminarEmpleado empleadoId={selectedId} />}
 
-                            <button onClick={() => handleEliminarEmpleado(empleado.id)}>ELIMINAR</button>
-                            <ModalCrud isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
-                                {selectedId && <EliminarEmpleado empleadoId={selectedId} />}
-
+                                </ModalCrud>
+                                <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
+                            </div>
+                            <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
+                                <EditarEmpleado empleadoOriginal={empleado} />
                             </ModalCrud>
-                            <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
                         </div>
-                        <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
-                            <EditarEmpleado empleadoOriginal={empleado} />
-                        </ModalCrud>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
+
         </div>
     )
 }
