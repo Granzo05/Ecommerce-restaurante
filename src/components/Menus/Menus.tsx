@@ -8,6 +8,7 @@ import EliminarMenu from "./EliminarMenu";
 import '../../styles/menuPorTIpo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
+import { EmpleadoService } from "../../services/EmpleadoService";
 
 
 
@@ -22,6 +23,17 @@ const Menus = () => {
     const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esto retorna true o false
+                await EmpleadoService.checkUser('negocio');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+
         MenuService.getMenus()
             .then(data => {
                 setMenus(data);
@@ -50,12 +62,22 @@ const Menus = () => {
         setShowEditarMenuModal(false);
     };
 
-    /*
-    <div id="menus">
+
+    return (
+        <div className="opciones-pantallas">
+
+            <h1>Menus</h1>
+            <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
+
+            <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
+                <AgregarMenu />
+            </ModalCrud>
+
+            <div id="menus">
                 {menus.map(menu => (
                     <div key={menu.id} className="grid-item">
-                        
-       
+
+
 
                         <h3>{menu.nombre}</h3>
                         <h3>{menu.comensales}</h3>
@@ -77,19 +99,6 @@ const Menus = () => {
                     </div>
                 ))}
             </div>
-    */
-
-    return (
-        <div className="opciones-pantallas">
-
-            <h1>Menus</h1>
-            <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
-
-            <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
-                <AgregarMenu />
-            </ModalCrud>
-
-
         </div>
     )
 }

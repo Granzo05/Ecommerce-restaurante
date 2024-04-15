@@ -1,11 +1,23 @@
 import { useEffect, useState } from 'react';
 import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedido';
+import { EmpleadoService } from '../../services/EmpleadoService';
 
 const PedidosAceptados = () => {
     const [pedidosAceptados, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esto retorna true o false
+                await EmpleadoService.checkUser('empleado');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+
         PedidoService.getPedidos('aceptados')
             .then(data => {
                 setPedidos(data);
@@ -16,7 +28,7 @@ const PedidosAceptados = () => {
     }, []);
 
     function handleFinalizar(idPedido: number) {
-
+        console.log(idPedido)
     }
 
     return (

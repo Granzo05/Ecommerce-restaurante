@@ -19,6 +19,17 @@ const Empleados = () => {
     const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esto retorna true o false
+                await EmpleadoService.checkUser('negocio');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+
         EmpleadoService.getEmpleados()
             .then(data => {
                 setEmpleados(data);

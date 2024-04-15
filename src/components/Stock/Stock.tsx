@@ -5,6 +5,7 @@ import ModalCrud from "../ModalCrud";
 import { Stock } from "../../types/Stock";
 import EliminarStock from "./EliminarStock";
 import EditarStock from "./EditarStock";
+import { EmpleadoService } from "../../services/EmpleadoService";
 
 const Stocks = () => {
     const [stocks, setStocks] = useState<Stock[]>([]);
@@ -17,6 +18,17 @@ const Stocks = () => {
     const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esto retorna true o false
+                await EmpleadoService.checkUser('empleado');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+        
         StockService.getStock()
             .then(data => {
                 setStocks(data);
@@ -60,7 +72,7 @@ const Stocks = () => {
                     <div key={stock.id} className="grid-item">
                         <h3>{stock.ingrediente.nombre}</h3>
                         <h3>{stock.cantidad}</h3>
-                        <h3>{stock.costo}</h3>
+                        <h3>{stock.ingrediente.costo}</h3>
                         <h3>{stock.fechaIngreso.toISOString()}</h3>
 
                         <button onClick={() => handleEliminarStock(stock.id)}>ELIMINAR</button>

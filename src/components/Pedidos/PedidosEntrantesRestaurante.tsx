@@ -9,6 +9,17 @@ const PedidosEntrantes = () => {
     const [pedidosAceptados, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esto retorna true o false
+                await EmpleadoService.checkUser('negocio');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+
         PedidoService.getPedidos('entrantes')
             .then(data => {
                 setPedidos(data);
@@ -19,6 +30,7 @@ const PedidosEntrantes = () => {
     }, []);
 
     function handleFinalizar(idPedido: number) {
+        console.log(idPedido)
 
     }
 

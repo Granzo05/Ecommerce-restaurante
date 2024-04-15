@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PedidosEntrantes from '../components/Pedidos/PedidosEntrantesRestaurante';
 import PedidosAceptados from '../components/Pedidos/PedidosAceptadosRestaurante';
 import PedidosEntregados from '../components/Pedidos/PedidosEntregadosRestaurante';
 import Stock from '../components/Stock/Stock';
 import Empleados from '../components/Empleados/Empleados';
 import Menus from '../components/Menus/Menus';
+import { EmpleadoService } from '../services/EmpleadoService';
 
 const Opciones = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState(1);
@@ -29,6 +30,20 @@ const Opciones = () => {
             return <Empleados />;
         }
     };
+
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esto retorna true o false
+                await EmpleadoService.checkUser('empleado');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <div style={{ display: 'flex' }}>
