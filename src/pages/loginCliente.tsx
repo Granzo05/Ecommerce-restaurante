@@ -19,7 +19,8 @@ const LoginCliente = () => {
     };
 
     return (
-        <div className={styles.containerForm}>
+        <body>
+            <div className={styles.containerForm}>
             <div className={styles.info}>
                 <div className={styles.infoChilds}>
                     <h2>¡Bienvenido!</h2>
@@ -61,6 +62,8 @@ const LoginCliente = () => {
                 </div>
             </div>
         </div>
+        </body>
+        
     )
 }
 
