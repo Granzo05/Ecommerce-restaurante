@@ -53,7 +53,8 @@ const Header = () => {
     }
 
     return (
-        <div className='navbar'>
+        <header>
+            <div className='navbar'>
             <div className='leftSide' id={openLinks ? "open" : "close"}>
                 <img id='logo-header' src={Logo} onClick={handleClickLogo} />
                 <div className="hiddenLinks">
@@ -99,6 +100,8 @@ const Header = () => {
                 </div>
             </div>
         </div>
+        </header>
+        
     )
 
 }
