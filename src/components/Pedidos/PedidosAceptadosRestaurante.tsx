@@ -5,6 +5,7 @@ import { EmpleadoService } from '../../services/EmpleadoService';
 
 const PedidosAceptados = () => {
     const [pedidosAceptados, setPedidos] = useState<Pedido[]>([]);
+    const [mostrarPedidos, setMostrarPedidos] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,19 +36,22 @@ const PedidosAceptados = () => {
 
         <div className="opciones-pantallas">
             <h1>Pedidos aceptados</h1>
-            <div id="pedidos">
-                {pedidosAceptados.map(pedido => (
-                    <div key={pedido.id} className="grid-item">
-                        {pedido.detalles.map(detalle => (
-                            <div>
-                                <h3>{detalle.menu.nombre}</h3>
-                                <h3>{detalle.cantidad}</h3>
-                            </div>
-                        ))}
-                        <button onClick={() => handleFinalizar(pedido.id)}>Finalizado</button>
-                    </div>
-                ))}
-            </div>
+            {mostrarPedidos && (
+                <div id="pedidos">
+                    {pedidosAceptados.map(pedido => (
+                        <div key={pedido.id} className="grid-item">
+                            {pedido.detalles.map(detalle => (
+                                <div>
+                                    <h3>{detalle.menu.nombre}</h3>
+                                    <h3>{detalle.cantidad}</h3>
+                                </div>
+                            ))}
+                            <button onClick={() => handleFinalizar(pedido.id)}>Finalizado</button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
         </div >
     )
 }
