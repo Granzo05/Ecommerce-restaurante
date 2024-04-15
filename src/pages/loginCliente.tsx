@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import styles from '../assets/styleLogin.module.css'
+import '../styles/login.css';
 import { ClienteService } from '../services/ClienteService'
+
 
 const LoginCliente = () => {
     const [nombre, setNombre] = useState('');
@@ -20,51 +21,78 @@ const LoginCliente = () => {
 
     return (
         <body>
-            <div className={styles.containerForm}>
-            <div className={styles.info}>
-                <div className={styles.infoChilds}>
-                    <h2>¡Bienvenido!</h2>
-                    <p>Si ya posees una cuenta, por favor, inicia sesión con tus datos</p>
-                    <label>
-                        <input required type="email" placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
-                    </label>
-                    <label>
-                        <input required type="password" placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
-                    </label>
-                    <input type="button" value="Iniciar sesión" onClick={handleIniciarSesionUsuario} />
+            {/*INICIAR SESION*/}
+            <section className="form-main">
+                <div className="form-content">
+                    <div className="box">
+                        <h3>¡BIENVENIDO!</h3>
+                        <form action="">
+                            <div className="input-box">
+                                <label>
+                                    <input required type="email" className='input-control' placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
+                                </label>
+                            </div>
+                            <div className="input-box">
+                                <label>
+                                    <input required type="password" className='input-control' placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
+                                </label>
+                                <div className="input-link">
+                                    <a href="#" className='gradient-text'>¿Has olvidado tu contraseña?</a>
+                                </div>
+                            </div>
+                            <input type="button" className='btn' value="Iniciar sesión" onClick={handleIniciarSesionUsuario} />
+                        </form>
+                        <p>¿No tienes una cuenta? <a href="#" className='gradient-text'>Crear cuenta</a></p>
+                    </div>
                 </div>
-            </div>
-            <div className={styles.formInfo}>
-                <div className="form-info-childs">
-                    <h2>Crear una cuenta</h2>
-                    <p>o usa tu e-mail para registrarte</p>
-                    <form className={styles.form}>
-                        <label>
-                            <input required type="text" placeholder="Nombre" onChange={(e) => { setNombre(e.target.value) }} />
-                        </label>
-                        <label>
-                            <input required type="text" placeholder="Apellido" onChange={(e) => { setApellido(e.target.value) }} />
-                        </label>
-                        <label>
-                            <input required type="email" placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
-                        </label>
-                        <label>
-                            <input required type="phone" placeholder="Telefono" onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-                        </label>
-                        <label>
-                            <input required type="password" placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
-                        </label>
-                        <label>
-                            <input required type="text" placeholder="Domicilio" onChange={(e) => { setDomicilio(e.target.value) }} />
-                        </label>
-                        <input type="button" value="Registrarse" onClick={handleCargarUsuario} />
-                    </form>
+            </section>
+
+            {/*CREAR CUENTA*/}
+            <section className="form-main" style={{display: 'none'}}>
+                <div className="form-content">
+                    <div className="box">
+                        <h3>CREAR UNA CUENTA</h3>
+                        <p>o usa tu e-mail para registrarte</p>
+                        <form action="">
+                            <div className="input-box">
+                                <label>
+                                    <input required type="text" className='input-control' placeholder="Nombre" onChange={(e) => { setNombre(e.target.value) }} />
+                                </label>
+                            </div>
+                            <div className="input-box">
+                                <label>
+                                    <input required type="text" className='input-control' placeholder="Apellido" onChange={(e) => { setApellido(e.target.value) }} />
+                                </label>
+                            </div>
+                            <div className="input-box">
+                                <label>
+                                    <input required type="email" className='input-control' placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
+                                </label>
+                            </div>
+                            <div className="input-box">
+                                <label>
+                                    <input required type="phone" className='input-control' placeholder="Telefono" onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+                                </label>
+                            </div>
+                            <div className="input-box">
+                                <label>
+                                    <input required type="password" className='input-control' placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
+                                </label>
+                            </div>
+                            <div className="input-box">
+                                <label>
+                                    <input required type="text" className='input-control' placeholder="Domicilio" onChange={(e) => { setDomicilio(e.target.value) }} />
+                                </label>
+                            </div>
+                            <input type="button" className='btn' value="Registrarse" onClick={handleCargarUsuario} />
+                        </form>
+                        <p>¿Ya tienes una cuenta? <a href="#" className='gradient-text'>Iniciar sesión</a></p>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </section>
         </body>
-        
     )
 }
 
 export default LoginCliente
+
