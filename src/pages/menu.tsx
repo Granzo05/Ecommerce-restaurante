@@ -4,6 +4,9 @@ import { MenuService } from '../services/MenuService'
 import { Menu } from '../types/Menu'
 import ModalFlotante from '../components/ModalFlotante';
 import { DetallesMenu } from '../components/Menus/DetallesMenu';
+import '../styles/menuPorTipo.css';
+import '../styles/modalCrud.css';
+import '../styles/modalFlotante.css';
 
 function RestaurantesPorComida() {
   const { tipoComida } = useParams()
@@ -14,7 +17,6 @@ function RestaurantesPorComida() {
     if (tipoComida) {
       MenuService.getMenusPorTipo(tipoComida)
         .then(menus => {
-          console.log(menus)
           setMenus(menus);
         })
         .catch(error => {

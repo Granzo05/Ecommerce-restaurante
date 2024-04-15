@@ -1,16 +1,25 @@
 import { Menu } from '../../types/Menu'
+import Carousel from 'react-bootstrap/Carousel';
+import '../../styles/modalFlotante.css';
 
 interface Props {
   menuActual: Menu;
 }
 
 export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
+  const imagenesInvertidas = [...menuActual.imagenes].reverse();
+
   return (
-    <div id="grid-container">
-      <div key={menuActual.id} className="grid-item">
-        {menuActual.imagenes.map((imagen) => (
-          <img key={imagen.fileName} src={'http://localhost:8080/' + menuActual.nombre.replace(' ', '') + '/' + imagen.fileName} alt={imagen.fileName} />
-        ))}          <h2>{menuActual.nombre}</h2>
+    <div id="grid-container-modal">
+      <div key={menuActual.id} className="grid-item-modal">
+        <Carousel>
+          {imagenesInvertidas.map((imagen, index) => (
+            <Carousel.Item key={index} interval={4000}>
+              <img src={`http://localhost:8080/${menuActual.nombre.replace(' ', '')}/${imagen.fileName}`} alt={imagen.fileName} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+        <h2>{menuActual.nombre}</h2>
         <h2>${menuActual.precio}</h2>
         <h2>Descripción: {menuActual.descripcion}</h2>
         <h2>
