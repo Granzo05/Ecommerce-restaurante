@@ -4,7 +4,7 @@ import { MenuService } from '../services/MenuService'
 import { Menu } from '../types/Menu'
 import ModalFlotante from '../components/ModalFlotante';
 import { DetallesMenu } from '../components/Menus/DetallesMenu';
-import '../styles/menuPorTipo.css';
+import '../styles/menuPorTIpo.css'
 import '../styles/modalCrud.css';
 import '../styles/modalFlotante.css';
 
