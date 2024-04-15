@@ -1,13 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
 
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
+body {
     background-color: #840196;
     color: black;
     font-family: Inter, sans-serif;
@@ -15,47 +15,63 @@ body{
     font-size: 16px;
     line-height: 1.5;
     overflow-x: hidden;
-
 }
 
-body::after,body::before{
-    content: '';
-    position: fixed;
-    height: 400px;
-    width: 400px;
-    border-radius: 50%;
-    z-index: -1;
-    filter: blur(150px);
-    opacity: 0.5;
+#create-account {
+    text-align: center;
 }
 
-body::before{
-    background-color: #d322eb;
-    left: 0;
-    bottom: 0;
-    transform: translate(-50%);
-}
-body::after{
-    background-color: #6d057a;
-    right: 0;
-    top: 0;
-    transform: translate(50%);
+#icon-lock {
+    color: white;
+    position: absolute;
+    right: 15%;
+    margin-top: 4px;
+    padding: 5px;
 }
 
-a{
+#icon-lock:hover{
+    cursor: pointer;
+    background-color: gray;
+    border-radius: 20px;
+}
+
+#icon-gmail{
+    height: 50px;
+    width: 50px;
+    border: 1px solid white;
+    padding: 5px;
+    margin-left: 8px;
+    border-radius: 25px;
+}
+
+#icon-gmail:hover{
+    background-color: white;
+    transition: .2s;
+    cursor: pointer;
+}
+
+#back-icon{
+    color: white;
+    display: flex;
+}
+
+#back-icon:hover{
+    cursor: pointer;
+    color: grey;
+    transition: .2s;
+}
+
+a {
     text-decoration: none;
     font-weight: 500;
     display: inline-block;
 }
 
-.gradient-text{
-    background: linear-gradient(to right, green, red);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+.gradient-text:hover {
+    text-decoration: underline;
 }
 
-.form-main{
+.form-main {
     min-height: 100vh;
     padding: 60px 15px;
     display: flex;
@@ -63,91 +79,109 @@ a{
     justify-content: center;
 }
 
-.form-content{
+.form-content {
     width: 100%;
-    max-width: 450px;
+    max-width: 100%;
     position: relative;
     z-index: 1;
 }
 
-.form-content::placeholder{
+.form-content::placeholder {
     color: inherit;
 }
 
-.form-content .box{
+.form-content .box {
     border-color: black;
-    border: 1px solid black;
-    padding: 40px 50px;
+    border: 3px solid white;
+    padding: 40px 100px;
     border-radius: 20px;
+    background-color: #121619;
 }
 
-.form-content h3{
-    font-size: 28px;
+.form-content h3 {
+    font-size: 35px;
     text-align: center;
     line-height: 1.2;
     color: white;
     font-weight: 500;
 }
 
-.form-content form{
+p {
+    color: white;
+}
+
+.form-content #subtitle {
+    color: white;
+    display: flex;
+    text-align: center;
+}
+
+.form-content form {
     margin: 25px 0 20px;
 }
 
-.form-content .input-box{
+.form-content .input-box {
     margin: 25px;
+    display: flex;
+    flex-direction: column;
 }
 
-.form-content .input-control{
+.form-content .input-control {
     display: block;
     height: 45px;
     width: 100%;
+    padding: 2px;
     background-color: transparent;
     border: none;
-    border-bottom: 3px solid black;
-    color: inherit;
+    border-bottom: 2px solid white;
+    border-right: 2px solid white;
     font-weight: inherit;
     font-family: inherit;
     font-size: 16px;
+    color: white;
 }
 
-.form-content .input-control:focus{
+.form-content .input-control::placeholder {
+    color: rgb(145, 145, 145);
+}
+
+.form-content .input-control:focus {
     outline: none;
 }
 
-.form-content .input-link{
+.form-content .input-link {
     margin-top: 10px;
     text-align: right;
 }
 
-.form-content .btn{
+.form-content .btn {
     height: 45px;
     width: 100%;
+    align-items: center;
+    justify-content: center;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: bold;
     text-transform: capitalize;
     font-family: inherit;
-    cursor: pointer;
     border-radius: 25px;
     user-select: none;
-    background: linear-gradient(to right, green, red);
+    background-color: #840196;
     border: none;
     color: black;
     z-index: 1;
     position: relative;
     overflow: hidden;
+    margin-top: -19px;
 }
 
-.form-content .btn::before{
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    transition: background-color 0.5 ease;
-    z-index: -1;
+.form-content .btn:hover {
+    cursor: pointer;
+    background-color: #d009eb;
+    transition: .8s;
 }
 
-.form-content .btn:hover::before{
-    background-color: #d322eb;
+#subtitle{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
