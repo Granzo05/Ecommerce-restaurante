@@ -17,7 +17,6 @@ const Empleados = () => {
     const [showAgregarEmpleadoModal, setShowAgregarEmpleadoModal] = useState(false);
     const [showEditarEmpleadoModal, setShowEditarEmpleadoModal] = useState(false);
     const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
 
     const [selectedCuit, setSelectedCuit] = useState<number | null>(0);
 
@@ -53,7 +52,6 @@ const Empleados = () => {
     };
 
     const handleEditarEmpleado = () => {
-        setIsEditing(true);
         setShowEditarEmpleadoModal(true);
         setMostrarEmpleados(true);
     };
@@ -70,7 +68,6 @@ const Empleados = () => {
         setShowEditarEmpleadoModal(false);
         setShowEliminarEmpleadoModal(false);
 
-        setIsEditing(false);
         setMostrarEmpleados(true);
 
         fetchEmpleados();
@@ -86,29 +83,40 @@ const Empleados = () => {
             </ModalCrud>
             {mostrarEmpleados && (
                 <div id="empleados">
-                    {empleados.map(empleado => (
-                        <div key={empleado.id} className='grid-item'>
-                            <div className={`datos ${isEditing ? 'hidden' : ''}`}>
-                                <h3>{empleado.nombre}</h3>
-                                <h3>{empleado.cuit}</h3>
-                                <h3>{empleado.telefono}</h3>
-                                <h3>{empleado.email}</h3>
-                                {empleado.fechaIngreso && (
-                                    <h3>{new Date(empleado.fechaIngreso).toLocaleDateString('es-ES', { day: 'numeric', month: 'numeric', year: 'numeric' })}</h3>
-                                )}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cuit</th>
+                                <th>Telefono</th>
+                                <th>Email</th>
+                                <th>Fecha de ingreso</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {empleados.map(empleado => (
+                                <tr key={empleado.id}>
+                                    <td>{empleado.nombre}</td>
+                                    <td>{empleado.cuit}</td>
+                                    <td>{empleado.telefono}</td>
+                                    <td>{empleado.email}</td>
+                                    <td>{new Date(empleado.fechaIngreso).toLocaleDateString('es-ES', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
 
-
-                                <button onClick={() => handleEliminarEmpleado(empleado.cuit)}>ELIMINAR</button>
-                                <ModalFlotante isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
-                                    {selectedCuit && <EliminarEmpleado cuitEmpleado={selectedCuit} />}
-                                </ModalFlotante>
-                                <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
-                            </div>
-                            <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
-                                <EditarEmpleado empleadoOriginal={empleado} />
-                            </ModalCrud>
-                        </div>
-                    ))}
+                                    <td>
+                                        <button onClick={() => handleEliminarEmpleado(empleado.cuit)}>ELIMINAR</button>
+                                        <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
+                                    </td>
+                                    <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
+                                        <EditarEmpleado empleadoOriginal={empleado} />
+                                    </ModalCrud>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <ModalFlotante isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
+                        {selectedCuit && <EliminarEmpleado cuitEmpleado={selectedCuit} />}
+                    </ModalFlotante>
                 </div>
             )}
 

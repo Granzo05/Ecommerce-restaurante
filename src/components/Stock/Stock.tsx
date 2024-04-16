@@ -6,6 +6,7 @@ import { Stock } from "../../types/Stock";
 import EliminarStock from "./EliminarStock";
 import EditarStock from "./EditarStock";
 import { EmpleadoService } from "../../services/EmpleadoService";
+import '../../styles/stock.css';
 
 const Stocks = () => {
     const [stocks, setStocks] = useState<Stock[]>([]);
@@ -79,23 +80,40 @@ const Stocks = () => {
 
             {mostrarStocks && (
                 <div id="stocks">
-                    {stocks.map(stock => (
-                        <div key={stock.id} className="grid-item">
-                            <h3>{stock.ingrediente.nombre}</h3>
-                            <h3>{stock.cantidad}</h3>
-                            <h3>{stock.ingrediente.costo}</h3>
-                            <h3>{stock.fechaIngreso.toISOString()}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Costo</th>
+                                <th>Fecha próximo ingreso</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {stocks.map(stock => (
+                                <tr key={stock.id}>
+                                    <td>{stock.ingrediente.nombre}</td>
+                                    <td>{stock.cantidad}</td>
+                                    <td>{stock.ingrediente.costo}</td>
+                                    <td>{new Date(stock.fechaIngreso).toLocaleDateString('es-ES', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
+                                    <td>
+                                        <button onClick={() => handleEliminarStock(stock.id)}>ELIMINAR</button>
+                                        <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
 
-                            <button onClick={() => handleEliminarStock(stock.id)}>ELIMINAR</button>
-                            <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                                {selectedId && <EliminarStock stockId={selectedId} />}
-                            </ModalCrud>
-                            <button onClick={() => handleEditarStock}>EDITAR</button>
-                            <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
-                                {selectedStock && <EditarStock stockOriginal={selectedStock} />}
-                            </ModalCrud>
-                        </div>
-                    ))}
+                    <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
+                        {selectedId && <EliminarStock stockId={selectedId} />}
+                    </ModalCrud>
+
+                    <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
+                        {selectedStock && <EditarStock stockOriginal={selectedStock} />}
+                    </ModalCrud>
+
                 </div>
             )}
 

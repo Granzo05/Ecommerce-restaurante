@@ -9,6 +9,10 @@ interface Props {
 export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
   const imagenesInvertidas = [...menuActual.imagenes].reverse();
 
+  function handleAñadirCarrito (menu: Menu) {
+    
+  }
+
   return (
     <div id="grid-container-modal">
       <div key={menuActual.id} className="grid-item-modal">
@@ -31,6 +35,8 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
           ))}
         </ul>
         <h2>Tiempo de cocción: {menuActual.tiempoCoccion}</h2>
+
+        <button onClick={() => handleAñadirCarrito(menuActual)}>Añadir al carrito</button>
       </div>
     </div>
   );

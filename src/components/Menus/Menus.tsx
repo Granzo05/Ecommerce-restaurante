@@ -76,27 +76,42 @@ const Menus = () => {
             </ModalCrud>
             {mostrarMenus && (
                 <div id="menus">
-                    {menus.map(menu => (
-                        <div key={menu.id} className="grid-item">
-                            <h3>{menu.nombre}</h3>
-                            <h3>{menu.comensales}</h3>
-                            <h3>{menu.descripcion}</h3>
-                            {menu.ingredientesMenu.map(ingrediente => (
-                                <div>
-                                    <h4>{ingrediente.ingrediente.nombre} = X{ingrediente.cantidad}</h4>
-                                </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Comensales</th>
+                                <th>Descripcion</th>
+                                <th>Ingredientes</th>
+                                <th>Precio</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {menus.map(menu => (
+                                <tr key={menu.id}>
+                                    <td>{menu.nombre}</td>
+                                    <td>{menu.comensales}</td>
+                                    <td>{menu.descripcion}</td>
+                                    {menu.ingredientesMenu.map(ingrediente => (
+                                        <td>{ingrediente.ingrediente.nombre}</td>
+                                    ))}
+                                    <td>{menu.precio}</td>
+
+                                    <td>
+                                        <button onClick={() => handleEliminarMenu(menu.id)}>ELIMINAR</button>
+                                        <button onClick={() => handleEditarMenu}>EDITAR</button>
+                                    </td>
+                                </tr>
                             ))}
-                            <h3>{menu.precio}</h3>
-                            <button onClick={() => handleEliminarMenu(menu.id)}>ELIMINAR</button>
-                            <ModalCrud isOpen={showEliminarMenuModal} onClose={handleModalClose}>
-                                {selectedId && <EliminarMenu menuId={selectedId} />}
-                            </ModalCrud>
-                            <button onClick={() => handleEditarMenu}>EDITAR</button>
-                            <ModalCrud isOpen={showEditarMenuModal} onClose={handleModalClose}>
-                                {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
-                            </ModalCrud>
-                        </div>
-                    ))}
+                        </tbody>
+                    </table>
+                    <ModalCrud isOpen={showEliminarMenuModal} onClose={handleModalClose}>
+                        {selectedId && <EliminarMenu menuId={selectedId} />}
+                    </ModalCrud>
+                    <ModalCrud isOpen={showEditarMenuModal} onClose={handleModalClose}>
+                        {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
+                    </ModalCrud>
                 </div>
             )}
         </div>
