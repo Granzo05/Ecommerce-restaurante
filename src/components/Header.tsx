@@ -42,16 +42,23 @@ const Header = () => {
 
         fetchData();
 */
-        const cargarCarrito = () => {
-            const carritoString = localStorage.getItem('carrito');
-            let carrito: Carrito = carritoString ? JSON.parse(carritoString) : new Carrito();
-
-            setCarrito(carrito);
-        }
-
-        cargarCarrito();
 
     }, []);
+
+    function cargarCarrito() {
+        const carritoString = localStorage.getItem('carrito');
+        let carrito: Carrito = carritoString ? JSON.parse(carritoString) : new Carrito();
+
+        setCarrito(carrito);
+    }
+
+    function handleFinalizarPedido() {
+        if (carrito) {
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+        }
+        window.location.href = '/pago';
+    }
+
 
     function cerrarSesion() {
         localStorage.removeItem('usuario');
@@ -93,7 +100,7 @@ const Header = () => {
                         )}
                         {!creden && (
                             <div className='mi-cuenta'>
-                                <button id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}><ShoppingCartIcon style={{ display: 'block' }} /><label id='contador-carrito'>0</label></button>
+                                <button onClick={() => cargarCarrito()} id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}><ShoppingCartIcon style={{ display: 'block' }} /><label id='contador-carrito'>0</label></button>
                                 <div className="container-cart-products hidden-cart">
                                     <button id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}>
                                         <ShoppingCartIcon style={{ display: 'block' }} />
@@ -122,6 +129,7 @@ const Header = () => {
                                             <h3>Total:</h3>
                                             <span className='total-pagar'>{carrito?.totalPrecio}</span>
                                         </div>
+                                        <button onClick={handleFinalizarPedido}>Finalizar pedido</button>
                                     </div>
                                 </div>
                                 <button id='cuenta' style={{ background: 'none', border: 'none', color: 'white' }}><img src={UserLogo} alt="" style={{ width: '50px', cursor: 'pointer' }} /></button>
