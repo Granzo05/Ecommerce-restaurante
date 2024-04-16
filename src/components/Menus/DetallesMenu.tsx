@@ -1,6 +1,8 @@
 import { Menu } from '../../types/Menu'
 import Carousel from 'react-bootstrap/Carousel';
 import '../../styles/modalFlotante.css';
+import { useState } from 'react';
+import { Carrito } from '../../types/Carrito';
 
 interface Props {
   menuActual: Menu;
@@ -8,10 +10,29 @@ interface Props {
 
 export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
   const imagenesInvertidas = [...menuActual.imagenes].reverse();
+  const [cantidadMenu, setCantidadMenu] = useState<number>(0);
 
-  function handleAñadirCarrito (menu: Menu) {
-    
+  function handleAñadirCarrito(menu: Menu) {
+    const carritoString = localStorage.getItem('carrito');
+    let carrito: Carrito = carritoString ? JSON.parse(carritoString) : new Carrito();
+
+    // Verificamos si el carrito es null o no está definido correctamente
+    if (!(carrito instanceof Carrito)) {
+      carrito = new Carrito();
+    }
+
+    carrito.menu.push(menu);
+    carrito.cantidad.push(cantidadMenu);
+    carrito.precio.push(menu.precio);
+    carrito.imagenSrc.push(menu.imagenes[0].ruta);
+
+    // Recalculamos el total de productos y el total de precios
+    carrito.totalProductos += cantidadMenu;
+    carrito.totalPrecio += menu.precio * cantidadMenu;
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
   }
+
 
   return (
     <div id="grid-container-modal">
@@ -36,6 +57,7 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
         </ul>
         <h2>Tiempo de cocción: {menuActual.tiempoCoccion}</h2>
 
+        <input type="number" value={1} onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
         <button onClick={() => handleAñadirCarrito(menuActual)}>Añadir al carrito</button>
       </div>
     </div>

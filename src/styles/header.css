@@ -261,6 +261,7 @@
   transition: 0.4s;
 }
 
+
 #contador-carrito {
   background-color: white;
   color: black;
@@ -349,4 +350,21 @@
 
 #carrito:focus+.hidden-cart {
   display: block;
+}
+
+
+
+.container-empty-cart {
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  width: 400px;
+  color: black;
+  border-radius: 10px;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.container-empty-cart p {
+  color: black;
 }
