@@ -11,6 +11,7 @@ interface Props {
 export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
   const imagenesInvertidas = [...menuActual.imagenes].reverse();
   const [cantidadMenu, setCantidadMenu] = useState<number>(0);
+  
 
   function handleAñadirCarrito(menu: Menu) {
     const carritoString = localStorage.getItem('carrito');
@@ -29,6 +30,8 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
     // Recalculamos el total de productos y el total de precios
     carrito.totalProductos += cantidadMenu;
     carrito.totalPrecio += menu.precio * cantidadMenu;
+
+    console.log(carrito)
 
     localStorage.setItem('carrito', JSON.stringify(carrito));
   }
@@ -57,7 +60,7 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
         </ul>
         <h2>Tiempo de cocción: {menuActual.tiempoCoccion}</h2>
 
-        <input type="number" value={1} onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
+        <input type="number" onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
         <button onClick={() => handleAñadirCarrito(menuActual)}>Añadir al carrito</button>
       </div>
     </div>

@@ -261,6 +261,9 @@
   transition: 0.4s;
 }
 
+#carrito {
+  color: black;
+}
 
 #contador-carrito {
   background-color: white;
@@ -274,17 +277,18 @@
   right: -2px;
 }
 
-
 .container-cart-products {
   position: absolute;
   top: 50px;
   right: 0;
+  margin-right: 5px;
   background-color: #fff;
-  width: 400px;
+  width: 500px;
   z-index: 1;
   color: black;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
   border-radius: 10px;
+  margin-top: 40px;
 }
 
 .cart-product {
@@ -350,9 +354,8 @@
 
 #carrito:focus+.hidden-cart {
   display: block;
+  margin-right: 25px;
 }
-
-
 
 .container-empty-cart {
   display: flex;
@@ -367,4 +370,10 @@
 
 .container-empty-cart p {
   color: black;
+}
+
+.finalizar-pedido-button {
+  width: 300px;
+  margin-left: 100px;
+  margin-bottom: 25px;
 }

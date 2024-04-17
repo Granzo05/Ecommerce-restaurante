@@ -43,12 +43,12 @@ const Header = () => {
         fetchData();
 */
 
+        cargarCarrito();
     }, []);
 
     function cargarCarrito() {
         const carritoString = localStorage.getItem('carrito');
         let carrito: Carrito = carritoString ? JSON.parse(carritoString) : new Carrito();
-
         setCarrito(carrito);
     }
 
@@ -71,6 +71,26 @@ const Header = () => {
 
     function iniciarSesionPage() {
         window.location.href = '/login-cliente';
+    }
+
+    function eliminarProducto(index: number) {
+        setCarrito(prevCarrito => {
+            const newCarrito = new Carrito();
+            if (prevCarrito) {
+                newCarrito.menu = prevCarrito.menu.filter((_, i) => i !== index);
+                newCarrito.cantidad = prevCarrito.cantidad.filter((_, i) => i !== index);
+                newCarrito.precio = prevCarrito.precio.filter((_, i) => i !== index);
+                newCarrito.imagenSrc = prevCarrito.imagenSrc.filter((_, i) => i !== index);
+                newCarrito.totalProductos = prevCarrito.totalProductos - 1;
+                newCarrito.totalPrecio = prevCarrito.totalPrecio - prevCarrito.precio[index];
+            }
+
+            localStorage.setItem('carrito', JSON.stringify(newCarrito));
+
+            return newCarrito;
+        });
+
+        cargarCarrito();
     }
 
     return (
@@ -100,13 +120,8 @@ const Header = () => {
                         )}
                         {!creden && (
                             <div className='mi-cuenta'>
-                                <button onClick={() => cargarCarrito()} id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}><ShoppingCartIcon style={{ display: 'block' }} /><label id='contador-carrito'>0</label></button>
+                                <button onClick={() => cargarCarrito()} id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}><ShoppingCartIcon style={{ display: 'block' }} /><label id='contador-carrito'>{carrito?.totalProductos}</label></button>
                                 <div className="container-cart-products hidden-cart">
-                                    <button id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}>
-                                        <ShoppingCartIcon style={{ display: 'block' }} />
-                                        <label id='contador-carrito'>0</label>
-                                    </button>
-
                                     <div className="container-cart-products">
                                         {carrito && carrito.menu.length === 0 && (
                                             <div className="container-empty-cart">
@@ -114,23 +129,33 @@ const Header = () => {
                                                 <button style={{ background: 'none', border: 'none', color: 'black' }} className='icon-close'><CloseIcon /></button>
                                             </div>
                                         )}
+                                        <button id='carrito' style={{ background: 'none', border: 'none', color: 'black', margin: '50px', position: 'relative', marginTop: '20px', marginLeft: '5px' }}>
+                                            <ShoppingCartIcon style={{ display: 'block' }} />
+                                            <label id='contador-carrito'>{carrito?.totalProductos}</label>
+                                        </button>
+                                        <button style={{ background: 'none', border: 'none', color: 'black', marginLeft: '300px', padding: '15px' }} className='icon-close'><CloseIcon /></button>
 
                                         {carrito && carrito.menu.map((item, index) => (
                                             <div className="cart-product" key={index}>
                                                 <div className="info-cart-product">
+                                                    <img src={item.imagenes[0].ruta} alt="" />
                                                     <span className='cantidad-producto-carrito'>{carrito.cantidad[index]}</span>
-                                                    <p className='titulo-producto-carrito'>{item.nombre}</p>
+                                                    <span className='titulo-producto-carrito'>{item.nombre}</span>
                                                     <span className='precio-producto-carrito'>{item.precio}</span>
+                                                    <span onClick={() => eliminarProducto(index)}>X</span>
                                                 </div>
-                                                <button style={{ background: 'none', border: 'none', color: 'black' }} className='icon-close'><CloseIcon /></button>
                                             </div>
                                         ))}
                                         <div className="cart-total">
                                             <h3>Total:</h3>
                                             <span className='total-pagar'>{carrito?.totalPrecio}</span>
+
                                         </div>
-                                        <button onClick={handleFinalizarPedido}>Finalizar pedido</button>
+
+                                        <button onClick={handleFinalizarPedido} className='finalizar-pedido-button'>Finalizar pedido</button>
+
                                     </div>
+
                                 </div>
                                 <button id='cuenta' style={{ background: 'none', border: 'none', color: 'white' }}><img src={UserLogo} alt="" style={{ width: '50px', cursor: 'pointer' }} /></button>
                             </div>)}
