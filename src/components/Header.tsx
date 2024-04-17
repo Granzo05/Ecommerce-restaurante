@@ -7,6 +7,7 @@ import UserLogo from '../assets/img/user-icon.png';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CloseIcon from '@mui/icons-material/Close';
 import { Carrito } from '../types/Carrito';
+import { CarritoService } from '../services/CarritoService';
 
 const Header = () => {
 
@@ -19,16 +20,16 @@ const Header = () => {
     const toggleNavbar = () => {
         setOpenLinks(!openLinks);
     };
-
-    // Esto verifica si la sesion esta iniciada
-    let creden = true;
-
-    if (localStorage.getItem('usuario')) {
-        creden = false;
-    }
-
-    //const [showLink, setShowLink] = useState(false);
-
+    /*
+        // Esto verifica si la sesion esta iniciada
+        let creden = true;
+    
+        if (localStorage.getItem('usuario')) {
+            creden = false;
+        }
+    
+        //const [showLink, setShowLink] = useState(false);
+    */
     useEffect(() => {
         /*
         const fetchData = async () => {
@@ -53,7 +54,11 @@ const Header = () => {
         const carritoString = localStorage.getItem('carrito');
         let carrito: Carrito = carritoString ? JSON.parse(carritoString) : new Carrito();
         setCarrito(carrito);
-        setCarritoAbierto(true);
+    }
+
+    function abrirCarrito() {
+        cargarCarrito();
+        setCarritoAbierto(true)
     }
 
     function handleFinalizarPedido() {
@@ -73,28 +78,21 @@ const Header = () => {
         window.location.href = '/';
     }
 
-    function iniciarSesionPage() {
-        window.location.href = '/login-cliente';
+    function handleLimpiarCarrito() {
+        CarritoService.limpiarCarrito();
+        console.log(carrito);
+        setCarritoAbierto(false);
+        setCarrito(null);
     }
 
-    function eliminarProducto(index: number) {
-        setCarrito(prevCarrito => {
-            const newCarrito = new Carrito();
-            if (prevCarrito) {
-                newCarrito.menu = prevCarrito.menu.filter((_, i) => i !== index);
-                newCarrito.cantidad = prevCarrito.cantidad.filter((_, i) => i !== index);
-                newCarrito.precio = prevCarrito.precio.filter((_, i) => i !== index);
-                newCarrito.imagenSrc = prevCarrito.imagenSrc.filter((_, i) => i !== index);
-                newCarrito.totalProductos = prevCarrito.totalProductos - 1;
-                newCarrito.totalPrecio = prevCarrito.totalPrecio - prevCarrito.precio[index];
-            }
+    /*
+        function iniciarSesionPage() {
+            window.location.href = '/login-cliente';
+        }
+    */
 
-            localStorage.setItem('carrito', JSON.stringify(newCarrito));
-
-            return newCarrito;
-        });
-
-        cargarCarrito();
+    async function eliminarProducto(menuNombre: string) {
+        await CarritoService.borrarProducto(menuNombre)
     }
 
     return (
@@ -120,29 +118,28 @@ const Header = () => {
                     <button className='icono-responsive' onClick={toggleNavbar}><ReorderIcon /></button>
                     <div className='cuenta'>
                         <div className='mi-cuenta'>
-                            <button onClick={() => cargarCarrito()} id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}><ShoppingCartIcon style={{ display: 'block' }} /><label id='contador-carrito'>{carrito?.totalProductos}</label></button>
+                            <button onClick={() => abrirCarrito()} id='carrito' style={{ background: 'none', border: 'none', color: 'white', margin: '20px', position: 'relative' }}><ShoppingCartIcon style={{ display: 'block' }} /><label id='contador-carrito'>{carrito?.totalProductos}</label></button>
                             <div className={`container-cart-products ${carritoAbierto ? '' : 'hidden-cart'}`}>
                                 <div className="container-cart-products">
-                                    {carrito && carrito.menu.length === 0 && (
-                                        <div className="container-empty-cart">
-                                            <p>El carrito está vacío</p>
-                                            <button style={{ background: 'none', border: 'none', color: 'black' }} className='icon-close'><CloseIcon /></button>
-                                        </div>
-                                    )}
+                        
                                     <button id='carrito' style={{ background: 'none', border: 'none', color: 'black', margin: '50px', position: 'relative', marginTop: '20px', marginLeft: '5px' }}>
                                         <ShoppingCartIcon style={{ display: 'block' }} />
                                         <label id='contador-carrito'>{carrito?.totalProductos}</label>
                                     </button>
-                                    <button style={{ background: 'none', border: 'none', color: 'black', marginLeft: '300px', padding: '15px' }} className='icon-close'><CloseIcon /></button>
-
-                                    {carrito && carrito.menu.map((item, index) => (
+                                    <button style={{ background: 'none', border: 'none', color: 'black', marginLeft: '300px', padding: '15px' }} className='icon-close' onClick={() => setCarritoAbierto(false)}><CloseIcon /></button>
+                                    {carrito && carrito.productos && carrito.productos.length === 0 && (
+                                        <div className="container-empty-cart">
+                                            <p>El carrito está vacío</p>
+                                        </div>
+                                    )}
+                                    {carrito && carrito.productos && carrito.productos.map((producto, index) => (
                                         <div className="cart-product" key={index}>
                                             <div className="info-cart-product">
-                                                <img src={item.imagenes[0].ruta} alt="" />
-                                                <span className='cantidad-producto-carrito'>{carrito.cantidad[index]}</span>
-                                                <span className='titulo-producto-carrito'>{item.nombre}</span>
-                                                <span className='precio-producto-carrito'>{item.precio}</span>
-                                                <span onClick={() => eliminarProducto(index)}>X</span>
+                                                <img src={producto.menu.imagenes[0].ruta} alt="" />
+                                                <span className='cantidad-producto-carrito'>{carrito.productos[index].cantidad}</span>
+                                                <span className='titulo-producto-carrito'>{producto.menu.nombre}</span>
+                                                <span className='precio-producto-carrito'>{producto.menu.precio * producto.cantidad}</span>
+                                                <span onClick={() => eliminarProducto(producto.menu.nombre)}>X</span>
                                             </div>
                                         </div>
                                     ))}
@@ -152,6 +149,7 @@ const Header = () => {
 
                                     </div>
 
+                                    <button onClick={handleLimpiarCarrito} className='finalizar-pedido-button'>Limpiar carrito</button>
                                     <button onClick={handleFinalizarPedido} className='finalizar-pedido-button'>Finalizar pedido</button>
 
                                 </div>

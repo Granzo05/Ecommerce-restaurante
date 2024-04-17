@@ -66,12 +66,12 @@ const Pago = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {carrito && carrito.menu.map((menu, index) => (
+                        {carrito && carrito.productos.map((producto, index) => (
                             <tr className="item-pago" key={index}>
-                                <td><img src={menu.imagenes[0].ruta} alt="" /></td>
-                                <td><p>{menu.nombre}</p></td>
-                                <td><p>{carrito.cantidad[index]}</p></td>
-                                <td><p>{carrito.cantidad[index] * menu.precio}</p></td>
+                                <td><img src={producto.menu.imagenes[0].ruta} alt="" /></td>
+                                <td><p>{producto.menu.nombre}</p></td>
+                                <td><p>{carrito.productos[index].cantidad}</p></td>
+                                <td><p>{carrito.productos[index].cantidad * carrito.productos[index].menu.precio}</p></td>
                             </tr>
                         ))}
 

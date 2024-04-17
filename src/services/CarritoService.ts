@@ -1,84 +1,103 @@
-import { Carrito } from "../types/Carrito";
 import { Menu } from "../types/Menu";
+import { Carrito } from "../types/Carrito";
+import { Productos } from "../types/Productos";
 
-const carritoString = localStorage.getItem('carrito');
-const carrito = carritoString ? JSON.parse(carritoString) : [];
+export const CarritoService = {
+    getCarrito: async (): Promise<Carrito> => {
+        const carritoString = localStorage.getItem('carrito');
+        const carrito: Carrito = carritoString ? JSON.parse(carritoString) : new Carrito();
 
-actualizarCarrito();
+        return carrito;
+    },
 
-export function agregarAlCarrito(menu: Menu) {
-    let nombre: string = menu.nombre;
-    let srcImage: string = menu.imagenes[0].ruta;
-    let precio: number = menu.precio;
+    agregarAlCarrito: async (menu: Menu, cantidad = 1) => {
+        const nombre: string = menu.nombre;
 
-    let productoEnCarrito = carrito.find((item: Carrito) => item.menu[0].nombre === nombre);
+        // Busco el carrito existente
+        let carrito = await CarritoService.getCarrito();
 
-    if (productoEnCarrito) {
-        productoEnCarrito.cantidad++;
-    } else {
-        carrito.push({ nombre, precio, cantidad: 1, srcImage });
+        let productoEnCarrito = false;
+
+        // Veo si el menu entrante ya está cargado en el carrito
+        carrito.productos.forEach((producto, index) => {
+            if (producto.menu.nombre === nombre) {
+                // Si existe, simplemente sumamos la cantidad
+                carrito.productos[index].cantidad += cantidad;
+                productoEnCarrito = true;
+            }
+        });
+
+        // Si no está cargado entonces lo agrego
+        if (!productoEnCarrito) {
+            let producto = new Productos();
+
+            producto.cantidad = cantidad;
+            producto.menu = menu;
+
+            carrito.subTotal = producto.menu.precio * producto.cantidad;
+
+            carrito.totalProductos += cantidad;
+
+            carrito.totalPrecio += carrito.subTotal;
+
+            carrito.productos.push(producto);
+        }
+
+        CarritoService.actualizarCarrito(carrito);
+    },
+
+    actualizarCarrito: (carrito: Carrito) => {
+        carrito.totalPrecio = 0;
+        carrito.totalProductos = 0;
+
+        carrito.productos.forEach(producto => {
+            carrito.totalPrecio += producto.menu.precio * producto.cantidad;
+            
+            carrito.totalProductos += producto.cantidad;
+        });
+
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+    },
+
+    limpiarCarrito: () => {
+        localStorage.removeItem('carrito');
+    },
+
+    // Esta actualiza el precio cuando se agregan o restan productos en el pago
+
+    actualizarPrecio: async (productoIndex: number) => {
+        let carrito = await CarritoService.getCarrito();
+
+        if (!isNaN(carrito.productos[productoIndex - 1].cantidad) && carrito.productos[productoIndex - 1].cantidad > 0) {
+            let precioProducto = carrito.productos[productoIndex - 1].menu.precio;
+            let nuevoTotal = carrito.productos[productoIndex - 1].cantidad * (precioProducto - 1);
+
+            carrito.totalPrecio = nuevoTotal;
+
+            CarritoService.actualizarCarrito(carrito);
+        }
+    },
+
+    borrarProducto: async (menuNombre: string) => {
+        let carrito = await CarritoService.getCarrito();
+
+        // Encuentra el producto en el carrito
+        const index = carrito.productos.findIndex((item) => item.menu.nombre === menuNombre);
+
+        if (index !== -1) {
+            // Elimina el producto del carrito usando splice
+            carrito.productos.splice(index, 1);
+
+            // Actualiza el carrito
+            CarritoService.actualizarCarrito(carrito);
+        } else {
+            console.error("Producto no encontrado en el carrito.");
+        }
+    },
+
+
+    finalizarCompra: () => {
+        window.location.href = '/pago';
     }
-    actualizarCarrito();
-}
 
-// Esta función se encarga de volver a cargar el carrito cada vez que se cambia de página. 
-export function actualizarCarrito() {
-    // Actualizar el almacenamiento local
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-}
-
-// Esta función se usa cuando se da a comprar en el html producto.
-export function agregarAlCarritoProductoUnico(menu: Menu, cantidad: number) {
-    const nombre = menu.nombre;
-    const total = menu.precio * cantidad;
-
-    let productoEnCarrito = carrito.find((item: Carrito) => item.menu[0].nombre === nombre);
-
-    if (productoEnCarrito) {
-        productoEnCarrito.cantidad++;
-    } else {
-        carrito.push({ nombre, total, cantidad });
-    }
-
-    actualizarCarrito();
-}
-
-export function limpiarCarrito() {
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-}
-
-// Esta actualiza el precio cuando se agregan o restan productos en el pago
-
-export function actualizarPrecio(productoIndex: number) {
-    if (!isNaN(carrito.cantidad) && carrito.cantidad > 0) {
-        let precioProducto = parseFloat(carrito[productoIndex - 1].precio);
-
-        let nuevoTotal = carrito.cantidad * (precioProducto - 1);
-
-        carrito[productoIndex - 1].cantidad = carrito.cantidad;
-        carrito[productoIndex - 1].total = nuevoTotal;
-
-        actualizarCarrito();
-    }
-}
-
-
-export function borrarProducto(menuNombre: string) {
-    // Encuentra el producto en el carrito
-    const index = carrito.findIndex((item: Carrito) => item.menu[0].nombre === menuNombre);
-
-    if (index !== -1) {
-        // Elimina el producto del carrito usando splice
-        carrito.splice(index, 1);
-
-        // Actualiza el carrito
-        actualizarCarrito();
-    } else {
-        console.error("Producto no encontrado en el carrito.");
-    }
-}
-
-
-export function finalizarCompra() {
-    window.location.href = '/pago';
 }
