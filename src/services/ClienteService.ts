@@ -70,6 +70,27 @@ export const ClienteService = {
             })
     },
 
+    getDomicilio: async (email: string): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'cliente/domicilio/' + email, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
     updateUser: async (cliente: Cliente): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'cliente/update', {

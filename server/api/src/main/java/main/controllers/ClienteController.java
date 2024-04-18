@@ -39,6 +39,19 @@ public class ClienteController {
         return cliente;
     }
 
+    @CrossOrigin
+    @GetMapping("/cliente/domicilio/{email}")
+    public String getDomicilio(@PathVariable("email") String email) {
+        // Recibo un email y una password desde el cliente, esa pass la encripto para ver si coincide con la guardada
+        Optional<Cliente> cliente = clienteRepository.findByEmail(email);
+
+        if (cliente.isEmpty()) {
+            return null;
+        }
+
+        return cliente.get().getDomicilio();
+    }
+
     @PutMapping("/cliente/update")
     public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente clienteDetails) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(clienteDetails.getId());

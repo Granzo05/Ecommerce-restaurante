@@ -1,23 +1,30 @@
 import { useEffect, useState } from "react";
 import { Carrito } from "../types/Carrito";
 import { Cliente } from "../types/Cliente";
-
-
-
+import '../styles/pago.css';
+import { ClienteService } from "../services/ClienteService";
 
 const Pago = () => {
 
     const [carrito, setCarrito] = useState<Carrito | null>(null);
     const [cliente, setCliente] = useState<Cliente | null>(null);
+    const [domicilio, setDomicilio] = useState<string>();
 
     useEffect(() => {
         const clienteString = localStorage.getItem('usuario');
-        let cliente: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+        let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
 
-        setCliente(cliente);
+        setCliente(clienteMem);
 
         cargarPedido();
 
+        const buscarDomicilio = async () => {
+            if (cliente) {
+                setDomicilio(await ClienteService.getDomicilio(cliente.email));
+            }
+        }
+
+        buscarDomicilio();
     }, []);
 
     function cargarPedido() {
@@ -37,12 +44,13 @@ const Pago = () => {
 
     return (
         <div>
-            <div>
+            <div className="div-pago">
                 <div id="detalle-producto"></div>
                 <select name="tipoEnvio" id="tipoEnvio">
                     <option value="DELIVERY">Delivery</option>
                     <option value="RETIRO">Retiro en tienda</option>
                 </select>
+
                 <h2>Detalles del domicilio</h2>
                 <form>
                     <label id="domicilio">Domicilio:</label>
@@ -51,33 +59,24 @@ const Pago = () => {
                         id="domicilioCliente"
                         name="domicilioCliente"
                         required
-                        value={cliente?.domicilio}
+                        value={domicilio}
                         placeholder="Ingresa tu domicilio"
                         hidden
                     />
                 </form>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Imagen</th>
-                            <th>Nombre menu</th>
-                            <th>Cantidad</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {carrito && carrito.productos.map((producto, index) => (
-                            <tr className="item-pago" key={index}>
-                                <td><img src={producto.menu.imagenes[0].ruta} alt="" /></td>
-                                <td><p>{producto.menu.nombre}</p></td>
-                                <td><p>{carrito.productos[index].cantidad}</p></td>
-                                <td><p>{carrito.productos[index].cantidad * carrito.productos[index].menu.precio}</p></td>
-                            </tr>
-                        ))}
 
-                        <h3>Total: {carrito?.totalPrecio}</h3>
-                    </tbody>
-                </table>
+                <div className="productos">
+                    {carrito && carrito.productos.map((producto, index) => (
+                        <div className="item-pago" key={index}>
+                            <img src={producto.menu.imagenes[0].ruta} alt="" />
+                            <p>{producto.menu.nombre}</p>
+                            <p>{carrito.productos[index].cantidad}</p>
+                            <p>{carrito.productos[index].cantidad * carrito.productos[index].menu.precio}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <h3>Total: {carrito?.totalPrecio}</h3>
 
                 <section className="informacion-pago">
                     <button
@@ -98,8 +97,6 @@ const Pago = () => {
                     </button>
                 </section>
             </div>
-
-
         </div>
     )
 }

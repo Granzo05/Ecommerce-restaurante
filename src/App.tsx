@@ -1,10 +1,10 @@
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import AppRoutes from "./routes/AppRoutes";
-import { BrowserRouter as Router } from "react-router-dom";
-import '../src/App.css'
+import { BrowserRouter as Router } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import AppRoutes from './routes/AppRoutes';
+import './App.css';
 
-const App = () => {
+function App() {
   return (
     <Router>
       <Header />
@@ -14,4 +14,4 @@ const App = () => {
   );
 }
 
-export default App
+export default App;

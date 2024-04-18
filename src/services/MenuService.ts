@@ -1,10 +1,6 @@
+import { Imagen } from '../types/Imagen';
 import { Menu } from '../types/Menu';
 import { URL_API } from '../utils/global_variables/const';
-
-type Imagen = {
-    index: number;
-    file: File | null;
-};
 
 export const MenuService = {
 
@@ -17,7 +13,15 @@ export const MenuService = {
     getMenusPorTipo: async (tipoComida: string): Promise<Menu[]> => {
         const response = await fetch(URL_API + 'menu/tipo/' + tipoComida);
 
-        return await response.json();
+        let menus = await response.json();
+
+        menus.forEach((menu: Menu) => {
+            menu.imagenes.forEach((imagen, index) => {
+                imagen.ruta = 'http://localhost:8080/' + menu.nombre.replace(/\s+/g, '') + '/' + menu.imagenes[index].fileName;
+            });
+        });
+
+        return menus;
     },
 
 
