@@ -4,11 +4,7 @@ import { Carrito } from '../types/Carrito';
 import { CarritoService } from '../services/CarritoService';
 import { useEffect, useState } from 'react';
 
-interface Props {
-    carritoActualizado: Carrito;
-}
-
-const CarritoComponent: React.FC<Props> = ({ carritoActualizado }) => {
+const CarritoComponent = () => {
     const [carritoAbierto, setCarritoAbierto] = useState(false);
 
     const [carrito, setCarrito] = useState<Carrito | null>(null);
@@ -16,6 +12,7 @@ const CarritoComponent: React.FC<Props> = ({ carritoActualizado }) => {
     useEffect(() => {
         const actualizarCarrito = async () => {
             try {
+                const carritoActualizado = await CarritoService.getCarrito();
                 setCarrito(carritoActualizado);
             } catch (error) {
                 console.error('Error:', error);
@@ -24,7 +21,10 @@ const CarritoComponent: React.FC<Props> = ({ carritoActualizado }) => {
 
         actualizarCarrito();
 
-    }, [carritoActualizado]);
+        const intervalo = setInterval(actualizarCarrito, 500); 
+
+        return () => clearInterval(intervalo);
+    }, []);
 
     function handleLimpiarCarrito() {
         CarritoService.limpiarCarrito();
