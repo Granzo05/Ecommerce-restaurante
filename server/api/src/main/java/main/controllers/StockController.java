@@ -52,16 +52,22 @@ public class StockController {
         return false;
     }
 
-    // Busca stock mediante el menu, utilizando cada ingrediente para corroborar que hay cantidad para cocinar
     @GetMapping("/restaurant/stock/check")
     public ResponseEntity<String> checkStock(@RequestParam(value = "menus") List<Menu> menus) {
         for (Menu menu : menus) {
             for (IngredienteMenu ingrediente : menu.getIngredientesMenu()) {
                 Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(ingrediente.getIngrediente().getNombre());
 
-                if (stockEncontrado.isPresent() && stockEncontrado.get().getCantidad() < ingrediente.getCantidad()) {
-                    // Si es menor solo devuelve los menus que puede producir junto con un error
-                    return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
+                if (stockEncontrado.isPresent()) {
+                    // Si el ingrediente tiene la misma medida que el stock almacenado entonces se calcula a la misma medida.
+                    if(stockEncontrado.get().getIngrediente().getMedida().equals(ingrediente.getMedida()) && stockEncontrado.get().getCantidad() < ingrediente.getCantidad()) {
+                        return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
+                    } else if(!stockEncontrado.get().getIngrediente().getMedida().equals("Kg") && ingrediente.getMedida().equals("Gramos")) {
+                        // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
+                        if (stockEncontrado.get().getCantidad() * 1000 < ingrediente.getCantidad()) {
+                            return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
+                        }
+                    }
                 }
             }
         }
