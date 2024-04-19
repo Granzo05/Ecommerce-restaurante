@@ -1,6 +1,2 @@
-package main.entities.Pedidos;
-
-public enum EnumTipoEnvio {
-    DELIVERY,
-    RETIRO
+package main.entities.Pedidos;public class EnumTipoEnvio {
 }
