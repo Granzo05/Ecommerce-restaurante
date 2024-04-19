@@ -37,14 +37,19 @@ public class StockController {
     }
 
 
-    @GetMapping("/stock/{nombre}")
-    public ResponseEntity<Stock> getStockPorNombre(@PathVariable String nombre) {
+    @GetMapping("/stock/{nombre}/{cantidad}")
+    public boolean getStockPorNombre(@PathVariable("nombre") String nombre, @PathVariable("cantidad") int cantidad) {
         Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(nombre);
         if (stockEncontrado.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return false;
         }
         Stock stock = stockEncontrado.get();
-        return ResponseEntity.ok(stock);
+        // Si hay mayor stock que producto solicitado se devuelve true para aceptar el pedido
+        if(stock.getCantidad() > cantidad) {
+            return true;
+        }
+
+        return false;
     }
 
     // Busca stock mediante el menu, utilizando cada ingrediente para corroborar que hay cantidad para cocinar

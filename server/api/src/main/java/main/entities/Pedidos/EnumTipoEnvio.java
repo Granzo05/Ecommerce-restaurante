@@ -1,2 +1,6 @@
-package main.entities.Pedidos;public class EnumTipoEnvio {
+package main.entities.Pedidos;
+
+public enum EnumTipoEnvio {
+    DELIVERY,
+    TIENDA
 }

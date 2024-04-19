@@ -107,8 +107,15 @@ public class Pedido {
         return tipoEnvio;
     }
 
-    public void setTipoEnvio(EnumTipoEnvio tipoEnvio) {
-        this.tipoEnvio = tipoEnvio;
+    public void setTipoEnvio(String tipoEnvio) {
+        String tipoEnvioUpper = tipoEnvio.trim().toUpperCase();
+
+        try {
+            this.tipoEnvio = EnumTipoEnvio.valueOf(tipoEnvioUpper);
+        } catch (IllegalArgumentException e) {
+
+            System.err.println("Tipo de envío no válido: " + tipoEnvio);
+        }
     }
 
     public Cliente getCliente() {
@@ -141,5 +148,20 @@ public class Pedido {
 
     public void setFechaPedido(Date fechaPedido) {
         this.fechaPedido = fechaPedido;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", tipoEnvio=" + tipoEnvio +
+                ", estado='" + estado + '\'' +
+                ", fechaPedido=" + fechaPedido +
+                ", borrado='" + borrado + '\'' +
+                ", factura=" + factura +
+                ", restaurante=" + restaurante +
+                ", cliente=" + cliente +
+                ", detallesPedido=" + detallesPedido +
+                '}';
     }
 }

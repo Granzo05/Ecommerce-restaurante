@@ -75,7 +75,7 @@ export const PedidoService = {
 
     crearPedido: async (pedido: Pedido): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'pedido/crear', {
+            const response = await fetch(URL_API + 'pedido/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

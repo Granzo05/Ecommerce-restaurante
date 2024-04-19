@@ -9,9 +9,7 @@ export class Pedido {
     cliente: Cliente = new Cliente;
     restaurante: Restaurante = new Restaurante();
     factura: Factura = new Factura();
-    direccion: string = '';
     estado: string = '';
-    telefono: number = 0;
     detalles: DetallePedido[] = [];
 
     constructor(){

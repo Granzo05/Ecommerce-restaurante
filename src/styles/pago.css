@@ -1,8 +1,14 @@
+.container-pago {
+    height: 45vw;
+}
+
 .div-pago {
     width: 60%;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
+    background-color: white;
+    padding: 25px 15px 10px;
 }
 
 .productos {
@@ -34,14 +40,28 @@ h2 {
     color: black;
 }
 
-button {
+h3 {
+    margin-top: 50px;
+    font-weight: 700;
+}
+
+#botonEncargo, #checkout-btn {
     padding: 6px 10px;
     background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 20px;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+select, input {
+    width: 180px;
+    padding: 10px;
 }

@@ -4,16 +4,8 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-import main.entities.Cliente.Cliente;
-import main.entities.Cliente.PedidoClienteDTO;
-import main.entities.Factura.Factura;
-import main.entities.Factura.MetodoPago;
-import main.entities.Factura.TipoFactura;
 import main.entities.Pedidos.DetallesPedido;
-import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Pedidos.Pedido;
-import main.entities.Restaurante.Menu.Menu;
-import main.entities.Restaurante.Restaurante;
 import main.repositories.ClienteRepository;
 import main.repositories.DetallesPedidoRepository;
 import main.repositories.PedidoRepository;
@@ -25,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,19 +35,19 @@ public class PedidoController {
         this.clienteRepository = clienteRepository;
         this.restauranteRepository = restauranteRepository;
     }
-    @GetMapping("/user/id/{id}/orders")
+    @GetMapping("/user/id/{id}/pedidos")
     public List<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
         List<Pedido> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
         return pedidos;
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/pedidos")
     public List<Pedido> getPedidosPorNegocio() {
         List<Pedido> pedidos = pedidoRepository.findOrders();
         return pedidos;
     }
 
-    @GetMapping("/orders/incoming")
+    @GetMapping("/pedidos/entrantes")
     public List<Pedido> getPedidosEntrantesPorNegocio() {
         List<Pedido> pedidos = pedidoRepository.findPedidosEntrantes();
         return pedidos;
@@ -115,58 +105,11 @@ public class PedidoController {
                 .body(pdfBytes);
     }
 
-    @PostMapping("/order/create")
-    public ResponseEntity<String> crearPedido(@RequestBody PedidoClienteDTO pedidoRequest) {
-        List<Menu> menus = pedidoRequest.getMenus();
-        String emailCliente = pedidoRequest.getEmail();
-        Date fecha = pedidoRequest.getFecha();
-        EnumTipoEnvio tipoEnvio = pedidoRequest.getTipoEnvio();
-        MetodoPago metodoPago = pedidoRequest.getMetodoPago();
+    @PostMapping("/pedido/create")
+    public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido) {
+        System.out.println(pedido);
 
-        // Buscar si el cliente existe
-        Optional<Cliente> cliente = clienteRepository.findByEmail(emailCliente);
-
-        if (cliente.isEmpty()) {
-            return new ResponseEntity<>("La cliente no está registrado", HttpStatus.BAD_REQUEST);
-        }
-
-        Cliente clienteFinal = new Cliente(cliente.get().getId(), cliente.get().getNombre(), cliente.get().getDomicilio());
-
-        Optional<Restaurante> restaurante = restauranteRepository.findById(2l);
-
-        if (restaurante.isEmpty()) {
-            return new ResponseEntity<>("La restaurante no está registrado", HttpStatus.BAD_REQUEST);
-        }
-
-        Restaurante restauranteFinal = new Restaurante(restaurante.get().getId(), restaurante.get().getDomicilio(), restaurante.get().getTelefono());
-
-        // Vemos los detalles
-
-        List<DetallesPedido> detalles = new ArrayList<>();
-
-        for (Menu menu: menus){
-            DetallesPedido detalle = new DetallesPedido();
-            detalle.setMenu(menu);
-            detalles.add(detalle);
-        }
-
-        Factura factura = new Factura();
-
-        factura.setCliente(clienteFinal);
-        factura.setMetodoPago(metodoPago);
-        // Por default es B, tratar el tema de eleccion de tipo en caso de ser empresa o monotributriste, para todo el resto es B
-        factura.setTipoFactura(TipoFactura.B);
-
-        Pedido pedido = new Pedido();
-        pedido.setTipoEnvio(tipoEnvio);
-        pedido.setFechaPedido(fecha);
-        pedido.setRestaurante(restauranteFinal);
-        pedido.setCliente(clienteFinal);
-        pedido.setDetallesPedido(detalles);
-        pedido.setFactura(factura);
-        // Esto sirve para que al restaurante le aparezca en entrantes ya que en la db se busca constantemente los datos con este atributo en true
-        pedido.setEstadoPedido("procesado");
-
+        pedido.setTipoEnvio(pedido.getTipoEnvio().toString());
         pedidoRepository.save(pedido);
         return new ResponseEntity<>("La pedido ha sido cargado correctamente", HttpStatus.CREATED);
     }
