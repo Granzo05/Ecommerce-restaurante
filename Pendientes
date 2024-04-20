@@ -3,11 +3,11 @@
 [x] Crear exclusiones para el check de privilegios dependiendo la ruta en la que estoy, como por ej acceso-denegado
 [x] Login restaurante 
 [x] Registro restaurante
-[] Precio sugerido segun ingredientes y los costos
-[] Limpiar inputs (Agregar stock, agregar menu)
-[] Poder eliminar imagen (Agregar menu)
+[x] Precio sugerido segun ingredientes y los costos
+[x] Limpiar inputs (Agregar stock, agregar menu)
+[x] Poder eliminar imagen (Agregar menu)
 [x] Asignar la ruta estatica al menu
-[] Ver que se carguen bien las medidas de el los ingredientes
+[x] Ver que se carguen bien las medidas de el los ingredientes
 [] Ver que se chequee el stock antes de un pedido
 [] Recibir el pedido entrante
 [] Aceptar pedido y recibirlo en la cocina

@@ -1,6 +1,8 @@
 #grid-container {
   margin-top: 80px;
   padding: 25px;
+  display: flex;
+  flex-direction: row;
 }
 
 .grid-item img {

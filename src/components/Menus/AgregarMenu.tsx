@@ -14,6 +14,7 @@ function AgregarMenu() {
   const [ingredientesSelect, setIngredientesSelect] = useState<Ingrediente[]>([]);
   const [imagenes, setImagenes] = useState<Imagen[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
+  const [costos, setCostos] = useState<number>(0);
 
   function cargarSelectsIngredientes() {
     IngredienteService.getIngredientes()
@@ -37,6 +38,18 @@ function AgregarMenu() {
     setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagen]);
   };
 
+  const quitarCampoImagen = () => {
+    if (imagenes.length > 0) {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+
+      if (selectIndex > 0) {
+        setSelectIndex(prevIndex => prevIndex - 1);
+      }
+    }
+  };
+
   // Ingredientes
 
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
@@ -55,6 +68,9 @@ function AgregarMenu() {
     const nuevosIngredientes = [...ingredientes];
     nuevosIngredientes[index].medida = medida;
     setIngredientes(nuevosIngredientes);
+
+    calcularCostos(index);
+
   };
 
   const añadirCampoIngrediente = () => {
@@ -74,6 +90,29 @@ function AgregarMenu() {
       }
     }
   };
+
+  function calcularCostos(index: number) {
+    let totalCosto = costos;
+
+    const ingrediente = ingredientes[index];
+    if (!ingrediente) return; // Asegurarse de que el ingrediente exista
+
+    // Obtener el ingrediente seleccionado correspondiente
+    const ingredienteSelect = ingredientesSelect.find(item => item.nombre === ingrediente.ingrediente.nombre);
+
+    if (ingredienteSelect) {
+      // Calcular costo basado en la medida del ingrediente
+      if (ingrediente.medida === 'Gramos' && ingredienteSelect.medida === 'Kilogramos') {
+        totalCosto += (ingrediente.cantidad * ingredienteSelect.costo) / 1000;
+      } else if (ingrediente.medida === 'Centímetros cubicos' && ingredienteSelect.medida === 'Litros') {
+        totalCosto += (ingrediente.cantidad * ingredienteSelect.costo) / 1000;
+      } else {
+        totalCosto += ingrediente.cantidad * ingredienteSelect.costo;
+      }
+    }
+
+    setCostos(totalCosto);
+  }
 
   // Modal flotante de ingrediente
   const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
@@ -114,13 +153,15 @@ function AgregarMenu() {
     <div className="modal-info">
       <div id="inputs-imagenes">
         {imagenes.map((imagen, index) => (
-          <div key={index}>
+          <div key={index} style={{ display: 'flex', flexDirection: 'row' }}>
             <input
               type="file"
               accept="image/*"
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+              style={{ width: '400px' }}
             />
+            <p style={{ cursor: 'pointer', marginTop: '13px' }} onClick={quitarCampoImagen}>X</p>
           </div>
         ))}
         <button onClick={añadirCampoImagen}>Añadir imagen</button>
@@ -198,6 +239,7 @@ function AgregarMenu() {
         <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
       </div>
       <br />
+      <p>Costo de ingredientes: {costos}</p>
       <label>
         <i className='bx bx-price'></i>
         <input type="number" placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
@@ -208,7 +250,7 @@ function AgregarMenu() {
         <input type="number" placeholder="Comensales" id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
       </label>
       <br />
-      <input type="button" value="agregarMenu" id="agregarMenu" onClick={agregarMenu} />
+      <input type="button" value="Agregar menu" id="agregarMenu" onClick={agregarMenu} />
     </div >
   )
 }
