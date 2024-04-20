@@ -68,6 +68,7 @@ public class IngredienteMenu {
                 ", ingrediente=" + ingrediente +
                 ", menu=" + menu +
                 ", cantidad=" + cantidad +
+                ", medida='" + medida + '\'' +
                 '}';
     }
 }

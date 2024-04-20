@@ -6,7 +6,16 @@
 [] Precio sugerido segun ingredientes y los costos
 [] Limpiar inputs (Agregar stock, agregar menu)
 [] Poder eliminar imagen (Agregar menu)
-[] Asignar la ruta estatica al menu
+[x] Asignar la ruta estatica al menu
+[] Ver que se carguen bien las medidas de el los ingredientes
+[] Ver que se chequee el stock antes de un pedido
+[] Recibir el pedido entrante
+[] Aceptar pedido y recibirlo en la cocina
+[] Mostrar tiempo
+[] Aceptar entrega del menu
+[] Avisar que el menu está en traslado junto con el envio de la factura
+[] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
+
 
 Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

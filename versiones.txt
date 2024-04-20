@@ -22,3 +22,7 @@
 
 - 0.0.4
     - Carga de empleado y login de empleado funcional    
+    - Carga de menus con imágenes
+    - Carga de pedidos
+    - Chequeo de stock necesario
+    -

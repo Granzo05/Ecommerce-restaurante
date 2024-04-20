@@ -67,10 +67,10 @@ export const MenuService = {
                 }));
             }
 
-            if (imagenCargadaExitosamente) {
+            if (imagenCargadaExitosamente && imagenes.length > 0) {
                 return 'Menu creado con éxito';
             } else {
-                return 'Ocurrió un error';
+                return 'Ocurrió un error con la imagen';
             }
         } catch (error) {
             console.error('Error:', error);

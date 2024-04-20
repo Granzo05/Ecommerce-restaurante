@@ -46,9 +46,11 @@ function AgregarStock() {
       <label>
         <i className='bx bx-lock'></i>
         <select id="medidaStock" onChange={(e) => { setMedida(e.target.value) }}>
-          <option value="Kg">Kilogramos</option>
+          <option value="">Seleccionar medida ingrediente</option>
+          <option value="Kilogramos">Kilogramos</option>
           <option value="Gramos">Gramos</option>
           <option value="Litros">Litros</option>
+          <option value="Centimetros cubicos">Centimetros cúbicos</option>
           <option value="Unidades">Unidades</option>
         </select>
       </label>

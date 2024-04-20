@@ -1,9 +1,11 @@
-export type Imagen = {
-    index: number;
-    file: File | null;
-    ruta: string;
-    fileName: string;
-    downloadUrl: string;
-    fileType: string;
-    fileSize: number;
-};
+export class Imagen {
+    index: number = 0;
+    file: File | null = null; 
+    ruta: string = '';
+    fileName: string = '';
+    downloadUrl: string = '';
+    fileType: string = '';
+    fileSize: number = 0;
+
+    constructor() { }
+}

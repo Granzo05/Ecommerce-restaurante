@@ -37,7 +37,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   };
 
   const añadirCampoImagen = () => {
-    setImagenes([...imagenes, { index: imagenes.length, file: null }]);
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagen]);
   };
 
   ///////// INGREDIENTES
@@ -144,6 +144,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       <br />
       <label>
         <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
+          <option value="">Seleccionar tipo de menú</option>
           <option value="hamburguesas">Hamburguesas</option>
           <option value="panchos">Panchos</option>
           <option value="empanadas">Empanadas</option>
@@ -187,8 +188,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
               onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
             >
               <option value="">Seleccionar medida ingrediente</option>
-              <option value="Kg">Kilogramos</option>
+              <option value="Kilogramos">Kilogramos</option>
               <option value="Gramos">Gramos</option>
+              <option value="Centimetros cubicos">Centimetros cúbicos</option>
               <option value="Litros">Litros</option>
               <option value="Unidades">Unidades</option>
             </select>

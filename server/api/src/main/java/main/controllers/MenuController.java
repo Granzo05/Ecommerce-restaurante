@@ -42,6 +42,7 @@ public class MenuController {
     @PostMapping("/menu/create")
     public ResponseEntity<String> crearMenu(@RequestBody Menu menu) {
         Optional<Menu> menuDB = menuRepository.findByName(menu.getNombre());
+        System.out.println(menu);
 
         if (menuDB.isEmpty()) {
             // Seteamos que no está borrado
@@ -58,7 +59,7 @@ public class MenuController {
                 ingredienteMenu.setIngrediente(ingredienteDB);
                 ingredienteMenu.setCantidad(ingredienteMenu.getCantidad());
                 ingredienteMenu.setMenu(menuSaved);
-                ingredienteMenu.setMedida(ingredienteMenu.getIngrediente().getMedida());
+                ingredienteMenu.setMedida(ingredienteMenu.getMedida());
                 System.out.println(ingredienteMenu);
 
                 ingredienteMenuRepository.save(ingredienteMenu);
@@ -78,7 +79,7 @@ public class MenuController {
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
             String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "assets" + File.separator + nombreMenu.replaceAll(" ", "") + File.separator;
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + nombreMenu.replaceAll(" ", "") + File.separator;
 
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);
@@ -107,8 +108,6 @@ public class MenuController {
                     return new ResponseEntity<>("Menu vacio", HttpStatus.NOT_FOUND);
                 }
                 imagen.setMenu(menu.get());
-                // Asignamos la ruta
-                imagen.setRuta(rutaArchivo);
 
                 imagenMenuRepository.save(imagen);
 

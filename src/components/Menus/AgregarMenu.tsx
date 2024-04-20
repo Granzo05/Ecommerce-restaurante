@@ -7,6 +7,7 @@ import { IngredienteService } from '../../services/IngredienteService';
 import { IngredienteMenu } from '../../types/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
 import { Imagen } from '../../types/Imagen';
+import { clearInputs } from '../../utils/global_variables/clearInputs';
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
@@ -33,7 +34,7 @@ function AgregarMenu() {
   };
 
   const añadirCampoImagen = () => {
-    setImagenes([...imagenes, { index: imagenes.length, file: null }]);
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagen]);
   };
 
   // Ingredientes
@@ -52,12 +53,12 @@ function AgregarMenu() {
 
   const handleMedidaIngredienteChange = (index: number, medida: string) => {
     const nuevosIngredientes = [...ingredientes];
-    nuevosIngredientes[index].ingrediente.medida = medida;
+    nuevosIngredientes[index].medida = medida;
     setIngredientes(nuevosIngredientes);
   };
 
   const añadirCampoIngrediente = () => {
-    setIngredientes([...ingredientes, { ingrediente: new Ingrediente(), cantidad: 0 }]);
+    setIngredientes([...ingredientes, { ingrediente: new Ingrediente(), cantidad: 0, medida: '' }]);
     setSelectIndex(prevIndex => prevIndex + 1);
     cargarSelectsIngredientes();
   };
@@ -105,6 +106,8 @@ function AgregarMenu() {
 
     let response = await MenuService.createMenu(menu, imagenes);
     alert(response);
+
+    clearInputs();
   }
 
   return (
@@ -139,6 +142,7 @@ function AgregarMenu() {
       <br />
       <label>
         <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
+          <option value="">Seleccionar tipo de menú</option>
           <option value="hamburguesas">Hamburguesas</option>
           <option value="panchos">Panchos</option>
           <option value="empanadas">Empanadas</option>
@@ -178,13 +182,14 @@ function AgregarMenu() {
             />
             <select
               id={`select-medidas-${index}`}
-              value={ingredienteMenu.ingrediente.medida}
+              value={ingredienteMenu.medida}
               onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
             >
               <option value="">Seleccionar medida ingrediente</option>
-              <option value="Kg">Kilogramos</option>
+              <option value="Kilogramos">Kilogramos</option>
               <option value="Gramos">Gramos</option>
               <option value="Litros">Litros</option>
+              <option value="Centimetros cubicos">Centimetros cúbicos</option>
               <option value="Unidades">Unidades</option>
             </select>
             <p onClick={quitarCampoIngrediente}>X</p>
