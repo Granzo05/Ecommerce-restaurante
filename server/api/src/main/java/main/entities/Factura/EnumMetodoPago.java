@@ -1,6 +1,6 @@
 package main.entities.Factura;
 
-public enum MetodoPago {
+public enum EnumMetodoPago {
     EFECTIVO,
     MERCADOPAGO
 }
