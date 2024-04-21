@@ -2,6 +2,7 @@ package main.entities.Factura;
 
 import jakarta.persistence.*;
 import main.entities.Cliente.Cliente;
+import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Pedidos.Pedido;
 
 @Entity
@@ -13,7 +14,7 @@ public class Factura {
     @Column(name = "tipo_factura")
     private TipoFactura tipoFactura;
     @Column(name = "metodo_pago")
-    private MetodoPago metodoPago;
+    private EnumMetodoPago metodoPago;
     @OneToOne
     @JoinColumn(name = "pedido")
     private Pedido pedido;
@@ -48,12 +49,18 @@ public class Factura {
         this.id = id;
     }
 
-    public MetodoPago getMetodoPago() {
+    public EnumMetodoPago getMetodoPago() {
         return metodoPago;
     }
 
-    public void setMetodoPago(MetodoPago metodoPago) {
-        this.metodoPago = metodoPago;
+    public void setMetodoPago(String metodoPago) {
+        String tipoEnvioUpper = metodoPago.trim().toUpperCase();
+
+        try {
+            this.metodoPago = EnumMetodoPago.valueOf(tipoEnvioUpper);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Tipo de envío no válido: " + metodoPago);
+        }
     }
 
     public Pedido getPedido() {

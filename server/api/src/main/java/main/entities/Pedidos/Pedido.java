@@ -28,9 +28,7 @@ public class Pedido {
     @OneToOne
     @JoinColumn(name = "id_factura")
     private Factura factura;
-    @ManyToOne
-    @JoinColumn(name = "id_restaurante")
-    private Restaurante restaurante;
+
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
@@ -41,17 +39,15 @@ public class Pedido {
     }
 
     //En caso que sea retiro en local no es necesario ni domicilio ni telefono del cliente
-    public Pedido(EnumTipoEnvio tipoEnvio, Cliente cliente, Restaurante restaurante, Factura factura) {
+    public Pedido(EnumTipoEnvio tipoEnvio, Cliente cliente, Factura factura) {
         this.tipoEnvio = tipoEnvio;
         this.cliente = cliente;
-        this.restaurante = restaurante;
         this.factura = factura;
     }
 
     public Pedido(EnumTipoEnvio tipoEnvio, Cliente clienteId, Restaurante restauranteId, Factura facturaId, String domicilio, long telefono) {
         this.tipoEnvio = tipoEnvio;
         this.cliente = cliente;
-        this.restaurante = restaurante;
         this.factura = factura;
     }
 
@@ -126,14 +122,6 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public Restaurante getRestaurante() {
-        return restaurante;
-    }
-
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
-    }
-
     public Factura getFactura() {
         return factura;
     }
@@ -159,7 +147,6 @@ public class Pedido {
                 ", fechaPedido=" + fechaPedido +
                 ", borrado='" + borrado + '\'' +
                 ", factura=" + factura +
-                ", restaurante=" + restaurante +
                 ", cliente=" + cliente +
                 ", detallesPedido=" + detallesPedido +
                 '}';

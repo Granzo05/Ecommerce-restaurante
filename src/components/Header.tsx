@@ -5,27 +5,22 @@ import ReorderIcon from '@mui/icons-material/Reorder';
 import { useEffect, useState } from 'react';
 import UserLogo from '../assets/img/user-icon.png';
 import CarritoComponent from './CarritoComponent';
-import { Carrito } from '../types/Carrito';
-import { CarritoService } from '../services/CarritoService';
 
 const Header = () => {
     const [openLinks, setOpenLinks] = useState(false);
-
-    const [carrito, setCarrito] = useState<Carrito>(new Carrito());
-
     const toggleNavbar = () => {
         setOpenLinks(!openLinks);
     };
-    /*
-        // Esto verifica si la sesion esta iniciada
-        let creden = true;
-    
-        if (localStorage.getItem('usuario')) {
-            creden = false;
-        }
-    
-        //const [showLink, setShowLink] = useState(false);
-    */
+
+    // Esto verifica si la sesion esta iniciada
+    let creden = true;
+
+    if (localStorage.getItem('usuario')) {
+        creden = false;
+    }
+
+    //const [showLink, setShowLink] = useState(false);
+
     useEffect(() => {
         /*
         const fetchData = async () => {
@@ -42,15 +37,6 @@ const Header = () => {
 
         fetchData();
 */
-        const actualizarCarrito = async () => {
-            try {     
-                setCarrito(await CarritoService.getCarrito())
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        actualizarCarrito();
     }, []);
 
     function cerrarSesion() {
@@ -85,17 +71,25 @@ const Header = () => {
                     <Link to="/" id='inicio'>Inicio</Link>
                     <Link to="/" id='menu'>Menú</Link>
                     <Link to="/" id='about'>Sobre nosotros</Link>
-                    <button onClick={cerrarSesion}>Cerrar sesión</button>
+                    {creden ? (
+                        <button className='iniciar-sesion' onClick={() => window.location.href = '/login-cliente'}>Iniciar sesión</button>
+                    ) :
+                        (
+                            <div className='cuenta'>
+                                <div className='mi-cuenta'>
+                                    <CarritoComponent />
+                                    <button id='cuenta' style={{ background: 'none', border: 'none', color: 'white' }}><img src={UserLogo} alt="" style={{ width: '50px', cursor: 'pointer' }} /></button>
+                                </div>
+                                <button onClick={cerrarSesion}>Cerrar sesión</button>
+
+                            </div>
+
+                        )}
 
                     <Link to="/opciones" id='opciones'>Opciones</Link>
 
                     <button className='icono-responsive' onClick={toggleNavbar}><ReorderIcon /></button>
-                    <div className='cuenta'>
-                        <div className='mi-cuenta'>
-                            <CarritoComponent carritoActualizado={carrito}/>
-                            <button id='cuenta' style={{ background: 'none', border: 'none', color: 'white' }}><img src={UserLogo} alt="" style={{ width: '50px', cursor: 'pointer' }} /></button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </header>
@@ -106,7 +100,3 @@ const Header = () => {
 
 export default Header;
 
-/*{creden && (
-    <button className='iniciar-sesion' onClick={iniciarSesionPage}>Iniciar sesión</button>
-)}
-{!creden && ()}*/

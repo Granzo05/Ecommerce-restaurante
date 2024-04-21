@@ -7,6 +7,7 @@ import main.entities.Restaurante.Menu.Menu;
 import main.entities.Restaurante.Menu.Stock;
 import main.entities.Restaurante.Restaurante;
 import main.repositories.IngredienteRepository;
+import main.repositories.MenuRepository;
 import main.repositories.RestauranteRepository;
 import main.repositories.StockRepository;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,12 @@ import java.util.Optional;
 public class StockController {
     private final StockRepository stockRepository;
     private final IngredienteRepository ingredienteRepository;
+    private final MenuRepository menuRepository;
 
-    public StockController(StockRepository stockRepository, IngredienteRepository ingredienteRepository) {
+    public StockController(StockRepository stockRepository, IngredienteRepository ingredienteRepository, MenuRepository menuRepository) {
         this.stockRepository = stockRepository;
         this.ingredienteRepository = ingredienteRepository;
+        this.menuRepository = menuRepository;
     }
 
     @GetMapping("/stock")
@@ -38,31 +41,57 @@ public class StockController {
 
 
     @GetMapping("/stock/{nombre}/{cantidad}")
-    public boolean getStockPorNombre(@PathVariable("nombre") String nombre, @PathVariable("cantidad") int cantidad) {
-        Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(nombre);
-        if (stockEncontrado.isEmpty()) {
-            return false;
-        }
-        Stock stock = stockEncontrado.get();
-        // Si hay mayor stock que producto solicitado se devuelve true para aceptar el pedido
-        if(stock.getCantidad() > cantidad) {
-            return true;
-        }
+    public ResponseEntity<String> getStockPorNombre(@PathVariable("nombre") String nombre, @PathVariable("cantidad") int cantidad) {
+        // Recibimos el nombre del menu y la cantidad pedida del mismo
+        Optional<Menu> menu = menuRepository.findByName(nombre);
 
-        return false;
+        if(!menu.isEmpty()){
+            // Buscamos ingrediente por ingrediente a ver si el stock es suficiente
+            for (IngredienteMenu ingrediente : menu.get().getIngredientesMenu()) {
+                // Mediante el ingrediente accedemos al stock del mismo
+                Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(ingrediente.getIngrediente().getNombre());
+
+                if (stockEncontrado.isPresent()) {
+                    System.out.println("Stock db medida: " + stockEncontrado.get().getIngrediente().getMedida() + " y cantidad: " + stockEncontrado.get().getCantidad());
+                    System.out.println("Stock db cliente medida: " + ingrediente.getMedida() + " y cantidad: " + ingrediente.getCantidad());
+                    // Si el ingrediente tiene la misma medida que el stock almacenado entonces se calcula a la misma medida.
+
+                    // Si hay stock, entonces se multiplica por la cantidad del menu requerida, si para un menu necesito 300 gramos de X ingrediente, si estoy pidiendo
+                    // 4 menus, entonces necesitaría en total 1200 gramos de eso
+
+                    if (stockEncontrado.get().getIngrediente().getMedida().equals(ingrediente.getMedida()) && stockEncontrado.get().getCantidad() < ingrediente.getCantidad() * cantidad) {
+                        return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
+
+                    } else if (!stockEncontrado.get().getIngrediente().getMedida().equals("Kg") && ingrediente.getMedida().equals("Gramos")) {
+
+                        // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
+                        if (stockEncontrado.get().getCantidad() * 1000 < ingrediente.getCantidad() * cantidad) {
+                            return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
+                        }
+
+                    }
+                }
+            }
+        } else {
+            return new ResponseEntity<>("El menú no existe", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("El stock es suficiente", HttpStatus.CREATED);
     }
 
     @GetMapping("/restaurant/stock/check")
     public ResponseEntity<String> checkStock(@RequestParam(value = "menus") List<Menu> menus) {
+        System.out.println(menus);
         for (Menu menu : menus) {
             for (IngredienteMenu ingrediente : menu.getIngredientesMenu()) {
                 Optional<Stock> stockEncontrado = stockRepository.findStockByProductName(ingrediente.getIngrediente().getNombre());
 
                 if (stockEncontrado.isPresent()) {
+                    System.out.println("Stock db medida: " + stockEncontrado.get().getIngrediente().getMedida() + " y cantidad: " + stockEncontrado.get().getCantidad());
+                    System.out.println("Stock db cliente medida: " + ingrediente.getMedida() + " y cantidad: " + ingrediente.getCantidad());
                     // Si el ingrediente tiene la misma medida que el stock almacenado entonces se calcula a la misma medida.
-                    if(stockEncontrado.get().getIngrediente().getMedida().equals(ingrediente.getMedida()) && stockEncontrado.get().getCantidad() < ingrediente.getCantidad()) {
+                    if (stockEncontrado.get().getIngrediente().getMedida().equals(ingrediente.getMedida()) && stockEncontrado.get().getCantidad() < ingrediente.getCantidad()) {
                         return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
-                    } else if(!stockEncontrado.get().getIngrediente().getMedida().equals("Kg") && ingrediente.getMedida().equals("Gramos")) {
+                    } else if (!stockEncontrado.get().getIngrediente().getMedida().equals("Kg") && ingrediente.getMedida().equals("Gramos")) {
                         // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
                         if (stockEncontrado.get().getCantidad() * 1000 < ingrediente.getCantidad()) {
                             return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);

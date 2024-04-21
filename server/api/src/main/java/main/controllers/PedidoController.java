@@ -110,6 +110,8 @@ public class PedidoController {
         System.out.println(pedido);
 
         pedido.setTipoEnvio(pedido.getTipoEnvio().toString());
+        pedido.setFactura(null);
+        pedido.setBorrado("NO");
         pedidoRepository.save(pedido);
         return new ResponseEntity<>("La pedido ha sido cargado correctamente", HttpStatus.CREATED);
     }

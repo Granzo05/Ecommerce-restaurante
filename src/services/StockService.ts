@@ -44,7 +44,7 @@ export const StockService = {
         }
     },
 
-    getStockProduct: async (nombre: string, cantidad: number): Promise<boolean> => {
+    getStockProduct: async (nombre: string, cantidad: number): Promise<string> => {
         try {
             const response = await fetch(URL_API + `stock/${nombre}/${cantidad}`, {
                 method: 'GET',
@@ -55,9 +55,7 @@ export const StockService = {
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
-
-            return await response.json();
-
+            return await response.text();
 
         } catch (error) {
             console.error('Error:', error);

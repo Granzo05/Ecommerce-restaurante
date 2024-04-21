@@ -47,9 +47,10 @@ const Pago = () => {
         for (const producto of carrito?.productos || []) {
             // Esta funcion devuelve un booleano, true en caso de haber stock y false caso contrario
             const stockProducto = await StockService.getStockProduct(producto.menu.nombre, producto.cantidad);
-            if (!stockProducto) {
+
+            if (!stockProducto.match('El stock es suficiente')) {
                 hayStock = false;
-                alert("No tenemos la cantidad necesaria para preparar: " + producto.menu.nombre)
+                alert(stockProducto)
                 // Salimos si encontramos un producto sin stock
                 break;
             }
@@ -58,7 +59,7 @@ const Pago = () => {
         if (hayStock) {
             let pedido = new Pedido();
             // Asignamos el cliente
-            //if (cliente) pedido.cliente = cliente;
+            if (cliente) pedido.cliente = cliente;
 
             // Asignamos la forma de pago
             pedido.tipoEnvio = tipoEnvio;
@@ -74,6 +75,8 @@ const Pago = () => {
 
                 detalles.push(detalle);
             });
+
+            pedido.factura = null;
 
             pedido.detalles = detalles;
 

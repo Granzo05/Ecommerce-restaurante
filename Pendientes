@@ -3,19 +3,20 @@
 [x] Crear exclusiones para el check de privilegios dependiendo la ruta en la que estoy, como por ej acceso-denegado
 [x] Login restaurante 
 [x] Registro restaurante
-[x] Precio sugerido segun ingredientes y los costos
 [x] Limpiar inputs (Agregar stock, agregar menu)
 [x] Poder eliminar imagen (Agregar menu)
 [x] Asignar la ruta estatica al menu
 [x] Ver que se carguen bien las medidas de el los ingredientes
-[] Ver que se chequee el stock antes de un pedido
-[] Recibir el pedido entrante
+[x] Ver que se chequee el stock antes de un pedido
+[x] Recibir el pedido entrante
 [] Aceptar pedido y recibirlo en la cocina
 [] Mostrar tiempo
 [] Aceptar entrega del menu
 [] Avisar que el menu está en traslado junto con el envio de la factura
 [] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
-
+[] Precio sugerido segun ingredientes y los costos
+[] Cifrar domicilio
+[] Limpiar carrito después de una compra
 
 Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

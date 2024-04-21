@@ -1,4 +1,3 @@
-import { Factura } from "./Factura";
 import { Pedido } from "./Pedido";
 
 export class Cliente {
@@ -9,7 +8,6 @@ export class Cliente {
     domicilio: string = '';
     telefono: number = 0;
     contraseña: string = '';
-    factura: Factura = new Factura();
     privilegios: string = '';
     pedidos: Pedido[] = [];
 

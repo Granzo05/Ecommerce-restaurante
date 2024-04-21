@@ -1,18 +1,17 @@
 import { Factura } from "./Factura";
 import { DetallePedido } from "./Detalles_pedido";
-import { Restaurante } from "./Restaurante";
 import { Cliente } from "./Cliente";
 
 export class Pedido {
     id: number = 0;
-    tipoEnvio: string= '' ;
+    tipoEnvio: string = '';
     cliente: Cliente = new Cliente;
-    restaurante: Restaurante = new Restaurante();
-    factura: Factura = new Factura();
+    //restaurante: Restaurante = new Restaurante();
+    factura: Factura | null = null;
     estado: string = '';
     detalles: DetallePedido[] = [];
 
-    constructor(){
-        
+    constructor() {
+
     }
 }

@@ -87,6 +87,9 @@ function AgregarMenu() {
 
       if (selectIndex > 0) {
         setSelectIndex(prevIndex => prevIndex - 1);
+        calcularCostos(selectIndex - 1);
+      } else {
+        setCostos(0);
       }
     }
   };
@@ -95,7 +98,7 @@ function AgregarMenu() {
     let totalCosto = costos;
 
     const ingrediente = ingredientes[index];
-    if (!ingrediente) return; // Asegurarse de que el ingrediente exista
+    if (!ingrediente) return;
 
     // Obtener el ingrediente seleccionado correspondiente
     const ingredienteSelect = ingredientesSelect.find(item => item.nombre === ingrediente.ingrediente.nombre);
