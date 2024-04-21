@@ -17,6 +17,7 @@
 [] Precio sugerido segun ingredientes y los costos
 [] Cifrar domicilio
 [] Limpiar carrito después de una compra
+[] Arreglar  privilegios en caso de tener el mismo correo tanto en restaurante como en cliente (Puedo ser empleado y trabajador queriendo encargar comida)
 
 Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
