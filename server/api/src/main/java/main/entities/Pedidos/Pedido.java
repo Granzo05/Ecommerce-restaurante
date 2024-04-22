@@ -76,12 +76,8 @@ public class Pedido {
         this.borrado = borrado;
     }
 
-    public String getEstadoPedido() {
-        return estado;
-    }
-
-    public void setEstadoPedido(String estadoPedido) {
-        this.estado = estadoPedido;
+    public void setTipoEnvio(EnumTipoEnvio tipoEnvio) {
+        this.tipoEnvio = tipoEnvio;
     }
 
     public List<DetallesPedido> getDetallesPedido() {

@@ -6,14 +6,12 @@ import '../../styles/pedidos.css';
 
 
 const PedidosEntrantes = () => {
-    EmpleadoService.checkUser('negocio');
-
     const [pedidosEntrantes, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await EmpleadoService.checkUser('negocio');
+                await EmpleadoService.checkUser();
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -21,6 +19,11 @@ const PedidosEntrantes = () => {
 
         fetchData();
 
+        buscarPedidos();
+
+    }, []);
+
+    const buscarPedidos = async () => {
         PedidoService.getPedidos('entrantes')
             .then(data => {
                 setPedidos(data);
@@ -28,19 +31,21 @@ const PedidosEntrantes = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, []);
+    }
 
-    function handleAceptarPedido(idPedido: number) {
+    async function handleAceptarPedido(pedido: Pedido) {
         // Modificar estado de pantalla del cliente donde vea que el negocio acepto el pedido, podria
         // usar la condicional de estado 'aceptado' para ir variando las imagenes que se le muestran al cliente en su pedido
 
-        PedidoService.enviarPedidoACocina(idPedido);
-        alert("Pedido aceptado")
+        let response = await PedidoService.updateEstadoPedido(pedido, 'aceptados');
+        alert(await response);
+        buscarPedidos();
     }
 
-    function handleRechazarPedido(idPedido: number) {
-        PedidoService.rechazarPedido(idPedido);
-        alert("Pedido rechazado")
+    async function handleRechazarPedido(pedido: Pedido) {
+        let response = await PedidoService.updateEstadoPedido(pedido, 'rechazados');
+        alert(await response);
+        buscarPedidos();
     }
 
     return (
@@ -77,8 +82,8 @@ const PedidosEntrantes = () => {
                                         </div>
                                     ))}
                                 </td>
-                                <td><button onClick={() => handleAceptarPedido(pedido.id)}>Aceptar</button></td>
-                                <td><button onClick={() => handleRechazarPedido(pedido.id)}>Rechazar</button></td>
+                                <td><button onClick={() => handleAceptarPedido(pedido)}>Aceptar</button></td>
+                                <td><button onClick={() => handleRechazarPedido(pedido)}>Rechazar</button></td>
                             </tr>
                         ))}
 

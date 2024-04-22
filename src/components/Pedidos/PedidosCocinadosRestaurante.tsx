@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { EmpleadoService } from '../../services/EmpleadoService';
 import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedido';
-import { EmpleadoService } from '../../services/EmpleadoService';
+import '../../styles/pedidos.css';
 
-const PedidosEntregados = () => {
-    const [pedidosEntregados, setPedidos] = useState<Pedido[]>([]);
+
+const PedidosEntrantes = () => {
+    const [pedidosEntrantes, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,7 +24,7 @@ const PedidosEntregados = () => {
     }, []);
 
     const buscarPedidos = async () => {
-        PedidoService.getPedidos('entregados')
+        PedidoService.getPedidos('cocinados')
             .then(data => {
                 setPedidos(data);
             })
@@ -31,11 +33,25 @@ const PedidosEntregados = () => {
             });
     }
 
+    async function handleEntregarPedido(pedido: Pedido) {
+        // Modificar estado de pantalla del cliente donde vea que el negocio acepto el pedido, podria
+        // usar la condicional de estado 'aceptado' para ir variando las imagenes que se le muestran al cliente en su pedido
+
+        let response = await PedidoService.updateEstadoPedido(pedido, 'entregados');
+        alert(await response);
+        buscarPedidos();
+    }
+
+    async function handleCancelarPedido(pedido: Pedido) {
+        let response = await PedidoService.updateEstadoPedido(pedido, 'rechazados');
+        alert(await response);
+        buscarPedidos();
+    }
 
     return (
 
         <div className="opciones-pantallas">
-            <h1>Pedidos entregados</h1>
+            <h1>Pedidos listos</h1>
             <div id="pedidos">
                 <table>
                     <thead>
@@ -43,10 +59,12 @@ const PedidosEntregados = () => {
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
                             <th>Menu</th>
+                            <th>Entregar</th>
+                            <th>Cancelar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {pedidosEntregados.map(pedido => (
+                        {pedidosEntrantes.map(pedido => (
                             <tr key={pedido.id}>
                                 <td>
                                     <div>
@@ -64,6 +82,8 @@ const PedidosEntregados = () => {
                                         </div>
                                     ))}
                                 </td>
+                                <td><button onClick={() => handleEntregarPedido(pedido)}>Entregar</button></td>
+                                <td><button onClick={() => handleCancelarPedido(pedido)}>Cancelar</button></td>
                             </tr>
                         ))}
 
@@ -75,4 +95,4 @@ const PedidosEntregados = () => {
     )
 }
 
-export default PedidosEntregados
+export default PedidosEntrantes

@@ -4,20 +4,24 @@ import { Pedido } from '../../types/Pedido';
 import { EmpleadoService } from '../../services/EmpleadoService';
 
 const PedidosAceptados = () => {
-    const [pedidosAceptados, setPedidos] = useState<Pedido[]>([]);
+    const [PedidosAceptados, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Esto retorna true o false
-                await EmpleadoService.checkUser('empleado');
+                await EmpleadoService.checkUser();
             } catch (error) {
                 console.error('Error:', error);
             }
         };
 
-        //fetchData();
+        fetchData();
 
+        buscarPedidos();
+
+    }, []);
+
+    const buscarPedidos = async () => {
         PedidoService.getPedidos('aceptados')
             .then(data => {
                 setPedidos(data);
@@ -25,10 +29,12 @@ const PedidosAceptados = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, []);
+    }
 
-    function handleFinalizar(idPedido: number) {
-        console.log(idPedido)
+    async function handleFinalizarPedido(pedido: Pedido) {
+        let response = await PedidoService.updateEstadoPedido(pedido, 'cocinados');
+        alert(await response);
+        buscarPedidos();
     }
 
     return (
@@ -36,17 +42,29 @@ const PedidosAceptados = () => {
         <div className="opciones-pantallas">
             <h1>Pedidos aceptados</h1>
             <div id="pedidos">
-                {pedidosAceptados.map(pedido => (
-                    <div key={pedido.id} className="grid-item">
-                        {pedido.detallesPedido.map(detalle => (
-                            <div>
-                                <h3>{detalle.menu.nombre}</h3>
-                                <h3>{detalle.cantidad}</h3>
-                            </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Menu</th>
+                            <th>Finalizar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {PedidosAceptados.map(pedido => (
+                            <tr key={pedido.id}>
+                                <td>
+                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
+                                        <div key={detalle.id}>
+                                            <p>{detalle.menu.nombre} - {detalle.cantidad}</p>
+                                        </div>
+                                    ))}
+                                </td>
+                                <td><button onClick={() => handleFinalizarPedido(pedido)}>Finalizar</button></td>
+                            </tr>
                         ))}
-                        <button onClick={() => handleFinalizar(pedido.id)}>Finalizado</button>
-                    </div>
-                ))}
+                    </tbody>
+                </table>
+
             </div>
         </div >
     )

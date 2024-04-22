@@ -109,13 +109,37 @@ public class PedidoController {
         return new ResponseEntity<>("La pedido ha sido cargado correctamente", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/pedido/delete/{id}")
+    @PutMapping("/pedido/delete/{id}")
     public ResponseEntity<?> borrarPedido(@PathVariable Long id) {
         Optional<Pedido> pedido = pedidoRepository.findById(id);
         if (pedido.isEmpty()) {
             return new ResponseEntity<>("La pedido ya ha sido borrada previamente", HttpStatus.BAD_REQUEST);
         }
-        pedidoRepository.delete(pedido.get());
-        return new ResponseEntity<>("La pedido ha sido correctamente", HttpStatus.ACCEPTED);
+        pedido.get().setBorrado("SI");
+        pedidoRepository.save(pedido.get());
+        return new ResponseEntity<>("El pedido ha sido eliminado correctamente", HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/pedido/update")
+    public ResponseEntity<?> updatePedido(@RequestBody Pedido pedido) {
+        pedidoRepository.save(pedido);
+        return new ResponseEntity<>("El pedido ha sido actualizado correctamente", HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/pedido/update/estado")
+    public ResponseEntity<?> updateEstadoPedido(@RequestBody Pedido pedido) {
+        System.out.println(pedido);
+
+        Optional<Pedido> pedidoDb = pedidoRepository.findById(pedido.getId());
+
+        if (pedidoDb.isEmpty()) {
+            return new ResponseEntity<>("La pedido ya ha sido borrada previamente", HttpStatus.BAD_REQUEST);
+        }
+
+        pedidoDb.get().setEstado(pedido.getEstado());
+        System.out.println(pedidoDb.get());
+        pedidoRepository.save(pedidoDb.get());
+
+        return new ResponseEntity<>("El pedido ha sido actualizado correctamente", HttpStatus.ACCEPTED);
     }
 }

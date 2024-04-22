@@ -119,47 +119,17 @@ export const PedidoService = {
 
     },
 
-    /*
-    aceptarPedido: async (idPedido: number, idRestaurante: number, emailCliente: string): Promise<string> => {
-        let formData = {
-            restaurante: idRestaurante,
-            estadoPedido: "aceptado"
-        }
-
+    updateEstadoPedido: async (pedido: Pedido, estado: string): Promise<string> => {
+        pedido.estado = estado;
         try {
-            const response = await fetch('http://localhost:8080/pedido/update/' + idPedido, {
+            const response = await fetch(URL_API + 'pedido/update/estado', {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(pedido)
             })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
-            }
 
-            //enviarCorreoExitoso(emailCliente);
-
-            return await response.text();
-
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-
-    },
-
-    rechazarPedido: async (idPedido: number, motivoRechazo: string, emailCliente: string) => {
-        //enviarCorreoRechazo(emailCliente, motivoRechazo);
-
-        try {
-            const response = await fetch('http://localhost:8080/pedido/delete/' + idPedido, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
@@ -171,7 +141,7 @@ export const PedidoService = {
             console.error('Error:', error);
             throw error;
         }
+
     },
-*/
 
 }
