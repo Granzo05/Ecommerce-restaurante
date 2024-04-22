@@ -6,6 +6,7 @@ import main.entities.Factura.Factura;
 import main.entities.Restaurante.Restaurante;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,12 +29,12 @@ public class Pedido {
     @OneToOne
     @JoinColumn(name = "id_factura")
     private Factura factura;
-
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DetallesPedido> detallesPedido;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "pedido_id")
+    private List<DetallesPedido> detallesPedido = new ArrayList<>();
 
     public Pedido() {
     }

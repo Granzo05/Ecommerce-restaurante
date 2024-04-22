@@ -15,9 +15,6 @@ public class Factura {
     private TipoFactura tipoFactura;
     @Column(name = "metodo_pago")
     private EnumMetodoPago metodoPago;
-    @OneToOne
-    @JoinColumn(name = "pedido")
-    private Pedido pedido;
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
@@ -63,12 +60,5 @@ public class Factura {
         }
     }
 
-    public Pedido getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
 
 }

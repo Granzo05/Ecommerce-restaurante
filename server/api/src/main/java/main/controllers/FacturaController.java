@@ -67,12 +67,6 @@ public class FacturaController {
             document.add(new Paragraph(""));
             document.add(new Paragraph("Detalles de la factura"));
 
-            for (DetallesPedido facturaDetalle: pedido.getFactura().getPedido().getDetallesPedido()) {
-                document.add(new Paragraph("Menu: " + facturaDetalle.getMenu()));
-                document.add(new Paragraph("Cantidad: " + facturaDetalle.getCantidad()));
-                document.add(new Paragraph("Subtotal: " + facturaDetalle.getSubTotal()));
-                total += facturaDetalle.getSubTotal();
-            }
             document.add(new Paragraph("Total: " + total));
 
             document.close();

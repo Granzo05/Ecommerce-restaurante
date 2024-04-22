@@ -9,7 +9,7 @@ export class Pedido {
     //restaurante: Restaurante = new Restaurante();
     factura: Factura | null = null;
     estado: string = '';
-    detalles: DetallePedido[] = [];
+    detallesPedido: DetallePedido[] = [];
 
     constructor() {
 

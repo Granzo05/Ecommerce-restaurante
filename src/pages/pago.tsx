@@ -78,14 +78,18 @@ const Pago = () => {
 
             pedido.factura = null;
 
-            pedido.detalles = detalles;
-
+            pedido.detallesPedido = detalles;
             pedido.estado = 'entrantes';
 
             // Realizar el envío del pedido
             let response = await PedidoService.crearPedido(pedido);
 
             alert(response);
+
+            localStorage.removeItem('carrito');
+
+            //window.location.href = Pagina de muestra de tiempo y eso
+    
         } else {
             console.error('No hay suficiente stock para completar el pedido');
         }

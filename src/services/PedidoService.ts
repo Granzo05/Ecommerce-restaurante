@@ -50,7 +50,7 @@ export const PedidoService = {
 
     getPedidos: async (estado: string): Promise<Pedido[]> => {
         try {
-            const response = await fetch('http://localhost:8080/restaurante/pedidos/' + estado, {
+            const response = await fetch('http://localhost:8080/pedidos/' + estado, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -61,10 +61,7 @@ export const PedidoService = {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
 
-            const data = await response.json();
-
-            return data;
-
+            return await response.json();
 
         } catch (error) {
             console.error('Error:', error);
@@ -122,6 +119,7 @@ export const PedidoService = {
 
     },
 
+    /*
     aceptarPedido: async (idPedido: number, idRestaurante: number, emailCliente: string): Promise<string> => {
         let formData = {
             restaurante: idRestaurante,
@@ -174,6 +172,6 @@ export const PedidoService = {
             throw error;
         }
     },
-
+*/
 
 }

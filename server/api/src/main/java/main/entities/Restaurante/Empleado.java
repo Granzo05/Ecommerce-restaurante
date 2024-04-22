@@ -33,16 +33,16 @@ public class Empleado {
     private String privilegios;
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
-    private Restaurante idRestaurante;
+    private Restaurante restaurante;
     
     public Empleado() {
     }
 
-    public Empleado(String nombre, long cuit, long telefono, Restaurante idRestaurante) {
+    public Empleado(String nombre, long cuit, long telefono, Restaurante restaurante) {
         this.nombre = nombre;
         this.cuit = cuit;
         this.telefono = telefono;
-        this.idRestaurante = idRestaurante;
+        this.restaurante = restaurante;
     }
 
     public String getPrivilegios() {
@@ -118,11 +118,11 @@ public class Empleado {
     }
 
     public Restaurante getIdRestaurante() {
-        return idRestaurante;
+        return restaurante;
     }
 
     public void setIdRestaurante(Restaurante idRestaurante) {
-        this.idRestaurante = idRestaurante;
+        this.restaurante = idRestaurante;
     }
 
     @Override
@@ -137,7 +137,7 @@ public class Empleado {
                 ", fechaIngreso=" + fechaIngreso +
                 ", borrado='" + borrado + '\'' +
                 ", privilegios='" + privilegios + '\'' +
-                ", idRestaurante=" + idRestaurante +
+                ", idRestaurante=" + restaurante +
                 '}';
     }
 }

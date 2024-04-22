@@ -4,10 +4,10 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import jakarta.transaction.Transactional;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.Pedido;
 import main.repositories.ClienteRepository;
-import main.repositories.DetallesPedidoRepository;
 import main.repositories.PedidoRepository;
 import main.repositories.RestauranteRepository;
 import org.springframework.http.HttpHeaders;
@@ -23,15 +23,13 @@ import java.util.Optional;
 @RestController
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
-    private final DetallesPedidoRepository detallesPedidoRepository;
     private final ClienteRepository clienteRepository;
     private final RestauranteRepository restauranteRepository;
 
-    public PedidoController(PedidoRepository pedidoRepository, DetallesPedidoRepository detallesPedidoRepository,
+    public PedidoController(PedidoRepository pedidoRepository,
                             ClienteRepository clienteRepository,
                             RestauranteRepository restauranteRepository) {
         this.pedidoRepository = pedidoRepository;
-        this.detallesPedidoRepository = detallesPedidoRepository;
         this.clienteRepository = clienteRepository;
         this.restauranteRepository = restauranteRepository;
     }
@@ -47,9 +45,9 @@ public class PedidoController {
         return pedidos;
     }
 
-    @GetMapping("/pedidos/entrantes")
-    public List<Pedido> getPedidosEntrantesPorNegocio() {
-        List<Pedido> pedidos = pedidoRepository.findPedidosEntrantes();
+    @GetMapping("/pedidos/{estado}")
+    public List<Pedido> getPedidosPorEstado(@PathVariable("estado") String estado) {
+        List<Pedido> pedidos = pedidoRepository.findPedidos(estado);
         return pedidos;
     }
 
@@ -80,12 +78,6 @@ public class PedidoController {
             document.add(new Paragraph(""));
             document.add(new Paragraph("Detalles de la factura"));
 
-            for (DetallesPedido detalle: detallesPedidoRepository.findByIdPedido(pedido.getId())) {
-                document.add(new Paragraph("Menu: " + detalle.getMenu()));
-                document.add(new Paragraph("Cantidad: " + detalle.getCantidad()));
-                document.add(new Paragraph("Subtotal: " + detalle.getSubTotal()));
-                total += detalle.getSubTotal();
-            }
             document.add(new Paragraph("Total: " + total));
 
             document.close();
@@ -105,14 +97,15 @@ public class PedidoController {
                 .body(pdfBytes);
     }
 
+    @Transactional
     @PostMapping("/pedido/create")
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido) {
-        System.out.println(pedido);
-
         pedido.setTipoEnvio(pedido.getTipoEnvio().toString());
         pedido.setFactura(null);
         pedido.setBorrado("NO");
+
         pedidoRepository.save(pedido);
+
         return new ResponseEntity<>("La pedido ha sido cargado correctamente", HttpStatus.CREATED);
     }
 

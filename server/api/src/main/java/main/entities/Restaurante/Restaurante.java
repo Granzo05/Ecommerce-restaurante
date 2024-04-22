@@ -19,7 +19,6 @@ public class Restaurante {
     @Column(name = "privilegios")
     private String privilegios;
 
-
     public Restaurante() {
     }
 

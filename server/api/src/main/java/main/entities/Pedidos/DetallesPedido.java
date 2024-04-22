@@ -2,6 +2,7 @@ package main.entities.Pedidos;
 
 import jakarta.persistence.*;
 import main.entities.Restaurante.Menu.Menu;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "detalles_pedido", schema = "buen_sabor")
@@ -16,9 +17,6 @@ public class DetallesPedido {
     @OneToOne
     @JoinColumn(name = "id_menu")
     private Menu menu;
-    @ManyToOne
-    @JoinColumn(name = "id_pedido")
-    private Pedido pedido;
 
     public DetallesPedido() {
     }
@@ -34,14 +32,6 @@ public class DetallesPedido {
 
     public void setSubTotal(double subTotal) {
         this.subTotal = subTotal;
-    }
-
-    public Pedido getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
     }
 
     public Long getId() {

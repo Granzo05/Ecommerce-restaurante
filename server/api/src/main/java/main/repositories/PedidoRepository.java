@@ -17,13 +17,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query("SELECT p FROM Pedido p WHERE p.borrado = 'NO'")
     List<Pedido> findOrders();
 
-    @Query("SELECT p FROM Pedido p WHERE p.estado = 'entrantes' AND p.borrado = 'NO'")
-    List<Pedido> findPedidosEntrantes();
+    @Query("SELECT p FROM Pedido p WHERE p.estado = :estado AND p.borrado = 'NO'")
+    List<Pedido> findPedidos(String estado);
 
-    @Query("SELECT p FROM Pedido p WHERE p.estado = 'aceptados' AND p.borrado = 'NO'")
-    List<Pedido> findPedidosAceptados();
-
-    @Query("SELECT p FROM Pedido p WHERE p.estado = 'entregados' AND p.borrado = 'NO'")
-    List<Pedido> findPedidosEntregados();
 }
 
