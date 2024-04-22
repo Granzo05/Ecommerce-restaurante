@@ -124,16 +124,16 @@ public class RestauranteController {
     }
 
     @PostMapping("/empleado/create")
-    public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails) {
+    public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) {
         Optional<Empleado> empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail());
         if (empleado.isEmpty()){
             empleadoDetails.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
             empleadoDetails.setBorrado("NO");
             empleadoDetails.setPrivilegios("empleado");
             empleadoRepository.save(empleadoDetails);
-            return new ResponseEntity<>("Empleado creado correctamente", HttpStatus.ACCEPTED);
+            return empleadoDetails;
         } else {
-            return new ResponseEntity<>("Error al crear el empleado", HttpStatus.ACCEPTED);
+            return null;
         }
     }
 

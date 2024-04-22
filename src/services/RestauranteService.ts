@@ -1,4 +1,3 @@
-import { Empleado } from '../types/Empleado';
 import { Restaurante } from '../types/Restaurante';
 import { URL_API } from '../utils/global_variables/const';
 
@@ -20,7 +19,6 @@ export const RestauranteService = {
         })
             .then(async response => {
                 if (!response.ok) {
-                    // MOSTRAR CARTEL DE QUE HUBO ALGUN ERROR
                     throw new Error('Restaurante existente')
                 }
                 return await response.json()
@@ -29,7 +27,8 @@ export const RestauranteService = {
                 let restaurante = {
                     id: data.id,
                     email: data.email,
-                    telefono: data.telefono
+                    telefono: data.telefono,
+                    privilegios: data.privilegios
                 }
                 localStorage.setItem('usuario', JSON.stringify(restaurante));
 
@@ -60,7 +59,8 @@ export const RestauranteService = {
                 let restaurante = {
                     id: data.id,
                     email: data.email,
-                    telefono: data.telefono
+                    telefono: data.telefono,
+                    privilegios: data.privilegios
                 }
 
                 localStorage.setItem('usuario', JSON.stringify(restaurante));
@@ -93,37 +93,5 @@ export const RestauranteService = {
             console.error('Error:', error);
             throw error;
         }
-    },
-
-    checkPrivilegies: async (): Promise<boolean> => {
-        const empleadoStr: string | null = localStorage.getItem('usuario');
-
-        let empleado: Empleado | null = null;
-        if (empleadoStr) {
-            try {
-                empleado = JSON.parse(empleadoStr);
-                if (empleado) {
-                    const response = await fetch(URL_API + 'check/' + empleado.email, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                    })
-
-                    if (!response.ok) {
-                        localStorage.removeItem('usuario');
-                        return false;
-                    }
-
-                    const data = await response.json();
-                    return data;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        return false;
-    },
-
+    }
 }

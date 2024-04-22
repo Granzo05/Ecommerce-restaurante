@@ -10,6 +10,7 @@ import '../styles/opcionesRestaurante.css'
 
 const Opciones = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState(1);
+    const [isVisible, setVisible] = useState<boolean>(true);
 
     const handleOpcionClick = (opcion: number) => {
         setOpcionSeleccionada(opcion);
@@ -31,36 +32,50 @@ const Opciones = () => {
             return <Empleados />;
         }
     };
-    /*
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Esto retorna true o false
-                await EmpleadoService.checkUser('empleado');
+                const isVisible = await EmpleadoService.checkUser();
+                setVisible(isVisible)
+                if (!isVisible) {
+                    setOpcionSeleccionada(2);
+                } else {
+                    setOpcionSeleccionada(1);
+                }
             } catch (error) {
                 console.error('Error:', error);
             }
         };
-
+    
         fetchData();
     }, []);
-    */
+    
+
 
     return (
         <div style={{ display: 'flex' }} className='opciones'>
-            <div className='opciones-menu'>
-                <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
-                <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
-                <p onClick={() => handleOpcionClick(3)}>Pedidos entregados</p>
-                <p onClick={() => handleOpcionClick(4)}>Stock</p>
-                <p onClick={() => handleOpcionClick(5)}>Menus</p>
-                <p onClick={() => handleOpcionClick(6)}>Empleados</p>
-            </div>
+            {isVisible ? (
+                <div className='opciones-menu'>
+                    <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
+                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
+                    <p onClick={() => handleOpcionClick(3)}>Pedidos entregados</p>
+                    <p onClick={() => handleOpcionClick(4)}>Stock</p>
+                    <p onClick={() => handleOpcionClick(5)}>Menus</p>
+                    <p onClick={() => handleOpcionClick(6)}>Empleados</p>
+                </div >
+            ) : (
+                <div className='opciones-menu'>
+                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
+                    <p onClick={() => handleOpcionClick(4)}>Stock</p>
+                    <p onClick={() => handleOpcionClick(5)}>Menus</p>
+                </div >
+            )}
+
             <div style={{ flex: 1 }}>
                 {renderInformacion()}
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -17,7 +17,7 @@
 [] Precio sugerido segun ingredientes y los costos
 [] Cifrar domicilio
 [] Limpiar carrito después de una compra
-[] Mejorar la toma de privilegios para no estar haciendo mil llamadas a la db
+[x] Mejorar la toma de privilegios para no estar haciendo mil llamadas a la db
 [x] Arreglar  privilegios en caso de tener el mismo correo tanto en restaurante como en cliente (Puedo ser empleado y trabajador queriendo encargar comida)
 [] Crear los DTOS para enviar los datos necesarios desde la api y no todos
 [] Solicitar localidad, provincia al pedir domicilio

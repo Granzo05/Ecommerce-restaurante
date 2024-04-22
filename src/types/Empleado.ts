@@ -7,6 +7,7 @@ export class Empleado {
     apellido: string = '';
     email:string = '';
     contraseña:string = '';
+    privilegios:string = '';
     cuit: number = 0;
     telefono: number = 0;
     restaurante: Restaurante = new Restaurante();

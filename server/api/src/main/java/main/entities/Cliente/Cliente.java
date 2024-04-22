@@ -28,6 +28,7 @@ public class Cliente {
     @Column(name = "borrado")
     private String borrado;
 
+
     public Cliente(String nombre, String email, String domicilio, long telefono) {
         this.nombre = nombre;
         this.email = email;

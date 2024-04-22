@@ -29,7 +29,7 @@ export const ClienteService = {
                     id: data.id,
                     nombre: data.nombre,
                     email: data.email,
-                    telefono: data.telefono
+                    telefono: data.telefono,
                 }
                 localStorage.setItem('usuario', JSON.stringify(cliente));
                 // Redirige al usuario al menú principal

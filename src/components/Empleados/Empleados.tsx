@@ -9,8 +9,6 @@ import '../../styles/empleados.css';
 import ModalFlotante from "../ModalFlotante";
 
 const Empleados = () => {
-    EmpleadoService.checkUser('negocio');
-
     const [empleados, setEmpleados] = useState<Empleado[]>([]);
     const [mostrarEmpleados, setMostrarEmpleados] = useState(true);
 
@@ -22,15 +20,12 @@ const Empleados = () => {
 
     useEffect(() => {
         fetchData();
-
         fetchEmpleados();
-
     }, []);
 
     const fetchData = async () => {
         try {
-            // Esto retorna true o false
-            await EmpleadoService.checkUser('negocio');
+            await EmpleadoService.checkUser();
         } catch (error) {
             console.error('Error:', error);
         }

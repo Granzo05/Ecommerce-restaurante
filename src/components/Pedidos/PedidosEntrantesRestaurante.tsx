@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedido';
+import '../../styles/pedidos.css';
+
 
 const PedidosEntrantes = () => {
     EmpleadoService.checkUser('negocio');
@@ -17,12 +19,11 @@ const PedidosEntrantes = () => {
             }
         };
 
-        //fetchData();
+        fetchData();
 
         PedidoService.getPedidos('entrantes')
             .then(data => {
                 setPedidos(data);
-                console.log(data)
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -47,18 +48,43 @@ const PedidosEntrantes = () => {
         <div className="opciones-pantallas">
             <h1>Pedidos entrantes</h1>
             <div id="pedidos">
-                {pedidosEntrantes.map(pedido => (
-                    <div key={pedido.id} className="grid-item">
-                        {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                            <div key={detalle.id}>
-                                <h3>{detalle.menu.nombre}</h3>
-                                <h3>{detalle.cantidad}</h3>
-                            </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Tipo de envío</th>
+                            <th>Menu</th>
+                            <th>Aceptar</th>
+                            <th>Rechazar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {pedidosEntrantes.map(pedido => (
+                            <tr key={pedido.id}>
+                                <td>
+                                    <div>
+                                        <p>{pedido.cliente.nombre}</p>
+                                        <p>{pedido.cliente.domicilio}</p>
+                                        <p>{pedido.cliente.telefono}</p>
+                                        <p>{pedido.cliente.email}</p>
+                                    </div>
+                                </td>
+                                <td>{pedido.tipoEnvio}</td>
+                                <td>
+                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
+                                        <div key={detalle.id}>
+                                            <p>{detalle.menu.nombre} - {detalle.cantidad}</p>
+                                        </div>
+                                    ))}
+                                </td>
+                                <td><button onClick={() => handleAceptarPedido(pedido.id)}>Aceptar</button></td>
+                                <td><button onClick={() => handleRechazarPedido(pedido.id)}>Rechazar</button></td>
+                            </tr>
                         ))}
-                        <button onClick={() => handleAceptarPedido(pedido.id)}>Aceptar</button>
-                        <button onClick={() => handleRechazarPedido(pedido.id)}>Rechazar</button>
-                    </div>
-                ))}
+
+                    </tbody>
+                </table>
+
             </div>
         </div >
     )
