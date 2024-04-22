@@ -19,6 +19,7 @@ public class Ingrediente {
 
     public Ingrediente() {
     }
+
     public Ingrediente(double costo, String nombre) {
         this.costo = costo;
         this.nombre = nombre;

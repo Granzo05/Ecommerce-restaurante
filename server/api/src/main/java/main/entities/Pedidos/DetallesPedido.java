@@ -2,7 +2,6 @@ package main.entities.Pedidos;
 
 import jakarta.persistence.*;
 import main.entities.Restaurante.Menu.Menu;
-import net.minidev.json.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "detalles_pedido", schema = "buen_sabor")

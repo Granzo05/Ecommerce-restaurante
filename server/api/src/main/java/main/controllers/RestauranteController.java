@@ -2,14 +2,12 @@ package main.controllers;
 
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
-import main.entities.Pedidos.Pedido;
 import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Restaurante;
 import main.repositories.ClienteRepository;
 import main.repositories.EmpleadoRepository;
 import main.repositories.PedidoRepository;
 import main.repositories.RestauranteRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,13 +39,14 @@ public class RestauranteController {
         restauranteRepository.save(restaurante);
         return restaurante;
     }
+
     @CrossOrigin
     @GetMapping("/restaurant/login/{email}/{password}")
     public Object loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) {
         // Busco por email y clave encriptada, si se encuentra devuelvo el objeto
         Restaurante restaurante = restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
         // Utilizo la misma funcion tanto para empleados como para el restaurante
-        if(restaurante == null) {
+        if (restaurante == null) {
             return empleadoRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
         }
 
@@ -126,7 +125,7 @@ public class RestauranteController {
     @PostMapping("/empleado/create")
     public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) {
         Optional<Empleado> empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail());
-        if (empleado.isEmpty()){
+        if (empleado.isEmpty()) {
             empleadoDetails.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
             empleadoDetails.setBorrado("NO");
             empleadoDetails.setPrivilegios("empleado");
@@ -145,7 +144,7 @@ public class RestauranteController {
     @PutMapping("/empleado/update")
     public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) {
         Empleado empleado = empleadoRepository.findByCuit(empleadoDetails.getCuit());
-        if (empleado != null){
+        if (empleado != null) {
             empleado.setNombre(empleadoDetails.getNombre());
             empleado.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
             empleado.setEmail(empleadoDetails.getEmail());
@@ -163,7 +162,7 @@ public class RestauranteController {
         Empleado empleado = empleadoRepository.findByCuit(cuit);
         System.out.println(empleado);
 
-        if (empleado != null){
+        if (empleado != null) {
             empleado.setBorrado("SI");
             empleadoRepository.save(empleado);
             return ResponseEntity.ok("El empleado se eliminó correctamente");

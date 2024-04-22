@@ -5,7 +5,6 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
-import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.Pedido;
 import main.repositories.ClienteRepository;
 import main.repositories.PedidoRepository;
@@ -33,9 +32,12 @@ public class PedidoController {
         this.clienteRepository = clienteRepository;
         this.restauranteRepository = restauranteRepository;
     }
-    @GetMapping("/user/id/{id}/pedidos")
+
+    @GetMapping("/cliente/{id}/pedidos")
     public List<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
+        System.out.println(idCliente);
         List<Pedido> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
+        System.out.println(pedidos);
         return pedidos;
     }
 

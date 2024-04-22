@@ -25,4 +25,4 @@
     - Carga de menus con imágenes
     - Carga de pedidos
     - Chequeo de stock necesario
-    -
+    - Pedidos realizables y visibles

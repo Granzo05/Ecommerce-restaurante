@@ -6,6 +6,7 @@ import Menu from "../pages/menu"
 import Opciones from "../pages/opciones"
 import AccesoDenegado from "../pages/accesoDenegado"
 import MainMenu from "../pages/HomePage"
+import PedidosCliente from "../pages/pedidosCliente"
 
 
 const AppRoutes: React.FC = () => {
@@ -30,6 +31,9 @@ const AppRoutes: React.FC = () => {
       </Route>
 
       <Route path="/acceso-denegado" element={<AccesoDenegado />}>
+      </Route>
+
+      <Route path="/pedidos" element={<PedidosCliente />}>
       </Route>
 
     </Routes>

@@ -1,9 +1,7 @@
 package main.entities.Restaurante.Menu;
 
 import jakarta.persistence.*;
-import main.entities.Restaurante.Restaurante;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +64,7 @@ public class Menu {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
     public String getNombre() {
         return nombre;
     }
@@ -114,6 +113,7 @@ public class Menu {
     public void setIngredientesMenu(List<IngredienteMenu> ingredientesMenu) {
         this.ingredientesMenu = ingredientesMenu;
     }
+
     public List<ResponseClass> getImagenes() {
         return imagenes;
     }

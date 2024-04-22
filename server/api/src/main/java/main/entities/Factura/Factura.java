@@ -2,8 +2,6 @@ package main.entities.Factura;
 
 import jakarta.persistence.*;
 import main.entities.Cliente.Cliente;
-import main.entities.Pedidos.EnumTipoEnvio;
-import main.entities.Pedidos.Pedido;
 
 @Entity
 @Table(name = "facturas", schema = "buen_sabor")

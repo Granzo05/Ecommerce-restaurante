@@ -1,5 +1,7 @@
+import { URL_API } from "../utils/global_variables/const";
+
 export function descargarFactura(idPedido: number, fechaPedido: string) {
-    fetch("http://localhost:8080/factura/pedido/" + idPedido + "/pdf", {
+    fetch(URL_API + "factura/pedido/" + idPedido + "/pdf", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -27,7 +29,7 @@ export function descargarFactura(idPedido: number, fechaPedido: string) {
 }
 
 export function descargarPedido(idPedido: number, fechaPedido: string) {
-    fetch("http://localhost:8080/pedido/" + idPedido + "/pdf", {
+    fetch(URL_API+ "pedido/" + idPedido + "/pdf", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

@@ -1,18 +1,12 @@
 package main.controllers;
 
-import jakarta.transaction.Transactional;
 import main.entities.Restaurante.Menu.Ingrediente;
-import main.entities.Restaurante.Menu.IngredienteMenu;
-import main.entities.Restaurante.Menu.Menu;
-import main.repositories.IngredienteRepository;
-import main.repositories.RestauranteRepository;
 import main.repositories.IngredienteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class IngredienteController {
@@ -26,6 +20,7 @@ public class IngredienteController {
     public List<Ingrediente> getIngredientes() {
         return ingredienteRepository.findAll();
     }
+
     @PutMapping("/ingrediente/update")
     public ResponseEntity<String> actualizarIngrediente(@RequestBody Ingrediente ingrediente) {
         Ingrediente ingredienteEncontrado = ingredienteRepository.findByName(ingrediente.getNombre());

@@ -17,7 +17,7 @@ export const MenuService = {
 
         menus.forEach((menu: Menu) => {
             menu.imagenes.forEach((imagen, index) => {
-                imagen.ruta = 'http://localhost:8080/' + menu.nombre.replace(/\s+/g, '') + '/' + menu.imagenes[index].fileName;
+                imagen.ruta = URL_API + menu.nombre.replace(/\s+/g, '') + '/' + menu.imagenes[index].fileName;
             });
         });
 

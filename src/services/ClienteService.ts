@@ -58,7 +58,8 @@ export const ClienteService = {
                 let cliente = {
                     id: data.id,
                     nombre: data.nombre,
-                    email: data.email
+                    email: data.email,
+                    telefono: data.telefono
                 }
                 localStorage.setItem('usuario', JSON.stringify(cliente));
 

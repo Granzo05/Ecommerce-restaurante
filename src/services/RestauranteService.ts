@@ -10,7 +10,7 @@ export const RestauranteService = {
         restaurante.telefono = telefono;
         restaurante.domicilio = domicilio;
         // Creamos el restaurante en la db
-        await fetch('http://localhost:8080/restaurante/create', {
+        await fetch(URL_API + '/restaurante/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -41,7 +41,7 @@ export const RestauranteService = {
     },
 
     getRestaurant: async (email: string, contraseña: string) => {
-        await fetch('http://localhost:8080/restaurant/login/' + email + '/' + contraseña, {
+        await fetch(URL_API + 'restaurant/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

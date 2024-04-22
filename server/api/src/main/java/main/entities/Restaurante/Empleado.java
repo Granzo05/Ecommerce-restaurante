@@ -34,7 +34,7 @@ public class Empleado {
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
     private Restaurante restaurante;
-    
+
     public Empleado() {
     }
 

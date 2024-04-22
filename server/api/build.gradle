@@ -1,59 +1,59 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.4'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-web-services'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-	implementation 'javax.persistence:javax.persistence-api:2.2'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.projectlombok:lombok'
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.1.4'
-	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.2'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.3.1.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'javax.persistence:javax.persistence-api:2.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.projectlombok:lombok'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.1.4'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.3.1.Final'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 
-	// JSONS
-	implementation group: 'org.json', name: 'json', version: '20231013'
-	//Generador de pdfs
-	implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
-	//Oracle database
-	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc11', version: '23.3.0.23.09'
-	implementation group: 'com.oracle.database.security', name: 'oraclepki', version: '23.3.0.23.09'
+    // JSONS
+    implementation group: 'org.json', name: 'json', version: '20231013'
+    //Generador de pdfs
+    implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
+    //Oracle database
+    implementation group: 'com.oracle.database.jdbc', name: 'ojdbc11', version: '23.3.0.23.09'
+    implementation group: 'com.oracle.database.security', name: 'oraclepki', version: '23.3.0.23.09'
 
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

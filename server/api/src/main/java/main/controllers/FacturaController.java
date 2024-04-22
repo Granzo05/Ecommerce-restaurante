@@ -5,7 +5,6 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import main.entities.Factura.Factura;
-import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.Pedido;
 import main.repositories.FacturaRepository;
 import main.repositories.PedidoRepository;
@@ -36,7 +35,7 @@ public class FacturaController {
         facturaRepository.save(facturaDetails);
     }
 
-        @GetMapping("/bills/client/{id}")
+    @GetMapping("/bills/client/{id}")
     public List<Factura> getBillsClientId(@PathVariable("id") Long id) {
         return facturaRepository.findByIdCliente(id);
     }

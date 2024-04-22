@@ -5,10 +5,8 @@ import main.entities.Restaurante.Menu.Ingrediente;
 import main.entities.Restaurante.Menu.IngredienteMenu;
 import main.entities.Restaurante.Menu.Menu;
 import main.entities.Restaurante.Menu.Stock;
-import main.entities.Restaurante.Restaurante;
 import main.repositories.IngredienteRepository;
 import main.repositories.MenuRepository;
-import main.repositories.RestauranteRepository;
 import main.repositories.StockRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +43,7 @@ public class StockController {
         // Recibimos el nombre del menu y la cantidad pedida del mismo
         Optional<Menu> menu = menuRepository.findByName(nombre);
 
-        if(!menu.isEmpty()){
+        if (!menu.isEmpty()) {
             // Buscamos ingrediente por ingrediente a ver si el stock es suficiente
             for (IngredienteMenu ingrediente : menu.get().getIngredientesMenu()) {
                 // Mediante el ingrediente accedemos al stock del mismo

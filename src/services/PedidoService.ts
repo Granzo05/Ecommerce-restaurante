@@ -1,56 +1,43 @@
+import { Cliente } from '../types/Cliente';
 import { Pedido } from '../types/Pedido'
 import { URL_API } from '../utils/global_variables/const';
 
 export const PedidoService = {
-    getPedidosClientes: async (userId: number): Promise<Pedido[]> => {
-        try {
-            const response = await fetch(URL_API + `/user/id/${userId}/orders`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            return data;
-
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
-
-    getPedidosNegocio: async (): Promise<Pedido[]> => {
-        try {
-            const response = await fetch('http://localhost:8080/restaurante/pedidos', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
+    getPedidosClientes: async (): Promise<Pedido[] | null> => {
+        const clienteString = localStorage.getItem('usuario');
+        let cliente: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+        console.log(cliente);
+        if (!cliente) {
+            window.location.href = '/acceso-denegado';
+        } else {
+            try {
+                const response = await fetch(URL_API + `cliente/${cliente.id}/pedidos`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                if (!response.ok) {
+                    throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
                 }
-            })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+
+                const data = await response.json();
+
+                return data;
+
+
+            } catch (error) {
+                console.error('Error:', error);
+                throw error;
             }
-
-            const data = await response.json();
-
-            return data;
-
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
         }
+
+        return null;
     },
 
     getPedidos: async (estado: string): Promise<Pedido[]> => {
         try {
-            const response = await fetch('http://localhost:8080/pedidos/' + estado, {
+            const response = await fetch(URL_API + 'pedidos/' + estado, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

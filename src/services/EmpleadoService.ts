@@ -39,7 +39,7 @@ export const EmpleadoService = {
     },
 
     getEmpleado: async (email: string, contraseña: string) => {
-        fetch('http://localhost:8080/restaurant/login/' + email + '/' + contraseña, {
+        fetch(URL_API + 'restaurant/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,7 +1,10 @@
 package main.controllers;
 
 import main.entities.Restaurante.Menu.*;
-import main.repositories.*;
+import main.repositories.ImagenMenuRepository;
+import main.repositories.IngredienteMenuRepository;
+import main.repositories.IngredienteRepository;
+import main.repositories.MenuRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +68,7 @@ public class MenuController {
                 ingredienteMenuRepository.save(ingredienteMenu);
             }
 
-          return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
 
         } else {
             return new ResponseEntity<>("Hay un menú creado con ese nombre", HttpStatus.FOUND);
@@ -128,7 +131,7 @@ public class MenuController {
     public List<Menu> getMenusPorTipo(@PathVariable("tipoMenu") String tipo) {
         List<Menu> menus = menuRepository.findByType(tipo);
 
-        for(Menu menu: menus) {
+        for (Menu menu : menus) {
             List<IngredienteMenu> ingredientes = ingredienteMenuRepository.findByMenuId(menu.getId());
 
             menu.setIngredientesMenu(ingredientes);
