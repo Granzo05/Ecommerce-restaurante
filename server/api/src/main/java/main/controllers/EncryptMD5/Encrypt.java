@@ -1,7 +1,5 @@
 package main.controllers.EncryptMD5;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;

@@ -55,7 +55,6 @@ export const RestauranteService = {
                 return await response.json()
             })
             .then(data => {
-                console.log(data)
                 let restaurante = {
                     id: data.id,
                     email: data.email,

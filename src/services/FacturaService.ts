@@ -1,7 +1,30 @@
 import { Factura } from '../types/Factura'
+import { Pedido } from '../types/Pedido';
 import { URL_API } from '../utils/global_variables/const';
 
 export const FacturaService = {
+
+    crearFactura: async (pedido: Pedido) : Promise<Pedido> => {
+        try {
+            const response = await fetch(URL_API + 'factura/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pedido)
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 
     getBill: async (userId: number): Promise<Factura[]> => {
         try {

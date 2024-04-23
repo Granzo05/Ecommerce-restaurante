@@ -3,19 +3,25 @@ package main.controllers;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
+import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.Pedido;
 import main.repositories.ClienteRepository;
 import main.repositories.PedidoRepository;
 import main.repositories.RestauranteRepository;
+import main.utility.Gmail;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,7 +135,7 @@ public class PedidoController {
     }
 
     @PutMapping("/pedido/update/estado")
-    public ResponseEntity<?> updateEstadoPedido(@RequestBody Pedido pedido) {
+    public ResponseEntity<?> updateEstadoPedido(@RequestBody Pedido pedido) throws GeneralSecurityException, IOException, MessagingException {
         System.out.println(pedido);
 
         Optional<Pedido> pedidoDb = pedidoRepository.findById(pedido.getId());
@@ -139,9 +145,75 @@ public class PedidoController {
         }
 
         pedidoDb.get().setEstado(pedido.getEstado());
-        System.out.println(pedidoDb.get());
+
+        if(pedido.getEstado().equals("entregados")) {
+            pedidoDb.get().setFactura(pedido.getFactura());
+
+            ResponseEntity<byte[]> archivo = generarFacturaPDF(pedidoDb.get().getId());
+            Gmail gmail = new Gmail();
+            gmail.enviarCorreoConArchivo("Pedido entregado", "Factura del pedido: ", "facu.granzotto5@gmail.com", archivo.getBody());
+        }
+
         pedidoRepository.save(pedidoDb.get());
 
         return new ResponseEntity<>("El pedido ha sido actualizado correctamente", HttpStatus.ACCEPTED);
+    }
+
+    public ResponseEntity<byte[]> generarFacturaPDF(Long idPedido) {
+        Optional<Pedido> pedido = pedidoRepository.findById(idPedido);
+
+        if (pedido.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        // Crear un nuevo documento PDF
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, baos);
+            document.open();
+            double total = 0;
+
+            document.add(new Paragraph("Factura del Pedido"));
+            document.add(new Paragraph("Tipo: " + pedido.get().getFactura().getTipoFactura().toString()));
+            document.add(new Paragraph("Cliente: " + pedido.get().getFactura().getCliente().getNombre()));
+            document.add(new Paragraph(""));
+            document.add(new Paragraph("Detalles de la factura"));
+
+            // Crear la tabla para los detalles de la factura
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+
+            table.addCell("Nombre del Menú");
+            table.addCell("Cantidad");
+            table.addCell("Subtotal");
+
+            for (DetallesPedido detalle : pedido.get().getDetallesPedido()) {
+                // Agregar cada detalle como una fila en la tabla
+                table.addCell(detalle.getMenu().getNombre());
+                table.addCell(String.valueOf(detalle.getCantidad()));
+                table.addCell(String.valueOf(detalle.getSubTotal()));
+                total += detalle.getSubTotal();
+            }
+
+            document.add(table);
+
+            document.add(new Paragraph("Total: " + total));
+
+            document.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
+        // Obtener los bytes del PDF generado
+        byte[] pdfBytes = baos.toByteArray();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=factura.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
     }
 }

@@ -16,13 +16,16 @@
 [] Avisar que el menu está en traslado junto con el envio de la factura
 [] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
 [] Precio sugerido segun ingredientes y los costos
-[] Cifrar domicilio
+[x] Cifrar domicilio
 [x] Limpiar carrito después de una compra
 [x] Mejorar la toma de privilegios para no estar haciendo mil llamadas a la db
 [x] Arreglar  privilegios en caso de tener el mismo correo tanto en restaurante como en cliente (Puedo ser empleado y trabajador queriendo encargar comida)
 [] Crear los DTOS para enviar los datos necesarios desde la api y no todos
 [] Solicitar localidad, provincia al pedir domicilio
 [] Boton en pedidos del cliente para poder repetir un pedido anterior
+[] Descontar stock al comprar
+[x] Probar envio de correos
+[] Probar envio de la factura como pdf al correo
 
 Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

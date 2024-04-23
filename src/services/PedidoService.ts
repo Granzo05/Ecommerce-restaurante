@@ -1,6 +1,7 @@
 import { Cliente } from '../types/Cliente';
 import { Pedido } from '../types/Pedido'
 import { URL_API } from '../utils/global_variables/const';
+import { FacturaService } from './FacturaService';
 
 export const PedidoService = {
     getPedidosClientes: async (): Promise<Pedido[] | null> => {
@@ -108,6 +109,13 @@ export const PedidoService = {
 
     updateEstadoPedido: async (pedido: Pedido, estado: string): Promise<string> => {
         pedido.estado = estado;
+
+        // La factura solo se crea cuando el producto esta para entregar
+        if (pedido.estado.match('entregados')) {
+            pedido = await FacturaService.crearFactura(pedido);
+            console.log(pedido);
+        }
+        
         try {
             const response = await fetch(URL_API + 'pedido/update/estado', {
                 method: 'PUT',
