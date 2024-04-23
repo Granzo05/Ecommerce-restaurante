@@ -7,7 +7,7 @@ export const PedidoService = {
     getPedidosClientes: async (): Promise<Pedido[] | null> => {
         const clienteString = localStorage.getItem('usuario');
         let cliente: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
-        console.log(cliente);
+        
         if (!cliente) {
             window.location.href = '/acceso-denegado';
         } else {
@@ -113,7 +113,6 @@ export const PedidoService = {
         // La factura solo se crea cuando el producto esta para entregar
         if (pedido.estado.match('entregados')) {
             pedido = await FacturaService.crearFactura(pedido);
-            console.log(pedido);
         }
         
         try {

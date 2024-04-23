@@ -10,6 +10,7 @@ export class Pedido {
     factura: Factura | null = null;
     estado: string = '';
     detallesPedido: DetallePedido[] = [];
+    horaFinalizacion: string = '';
 
     constructor() {
 

@@ -26,6 +26,8 @@ public class Pedido {
     public Date fechaPedido;
     @Column(name = "borrado")
     private String borrado;
+    @Column(name = "hora_finalizacion")
+    private String horaFinalizacion;
     @OneToOne
     @JoinColumn(name = "id_factura")
     private Factura factura;
@@ -35,6 +37,7 @@ public class Pedido {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "pedido_id")
     private List<DetallesPedido> detallesPedido = new ArrayList<>();
+
 
     public Pedido() {
     }
@@ -133,6 +136,14 @@ public class Pedido {
 
     public void setFechaPedido(Date fechaPedido) {
         this.fechaPedido = fechaPedido;
+    }
+
+    public String getHoraFinalizacion() {
+        return horaFinalizacion;
+    }
+
+    public void setHoraFinalizacion(String horaFinalizacion) {
+        this.horaFinalizacion = horaFinalizacion;
     }
 
     @Override

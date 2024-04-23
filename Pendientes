@@ -25,7 +25,8 @@
 [] Boton en pedidos del cliente para poder repetir un pedido anterior
 [] Descontar stock al comprar
 [x] Probar envio de correos
-[] Probar envio de la factura como pdf al correo
+[x] Probar envio de la factura como pdf al correo
+[] Cancelacion de pedido
 
 Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

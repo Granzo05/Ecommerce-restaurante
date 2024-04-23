@@ -19,7 +19,9 @@ const PedidosEntrantes = () => {
 
         fetchData();
 
-        buscarPedidos();
+        setInterval(() => {
+            buscarPedidos();
+        }, 15000);
 
     }, []);
 
@@ -34,12 +36,43 @@ const PedidosEntrantes = () => {
     }
 
     async function handleAceptarPedido(pedido: Pedido) {
-        // Modificar estado de pantalla del cliente donde vea que el negocio acepto el pedido, podria
-        // usar la condicional de estado 'aceptado' para ir variando las imagenes que se le muestran al cliente en su pedido
+        const horaActual = new Date();
 
-        let response = await PedidoService.updateEstadoPedido(pedido, 'aceptados');
-        alert(await response);
+        // Calcular el tiempo de preparación en minutos
+        const tiempoMayor: number = await calcularTiempoPreparacion(pedido);
+
+        // Sumar los minutos del tiempo mayor al objeto Date
+        horaActual.setMinutes(horaActual.getMinutes() + tiempoMayor);
+
+        // Obtener horas y minutos de la hora estimada de finalización
+        const horaFinalizacion = horaActual.getHours();
+        const minutosFinalizacion = horaActual.getMinutes();
+
+        // Formatear la hora estimada de finalización como una cadena HH:MM
+        const horaFinalizacionFormateada = `${horaFinalizacion.toString().padStart(2, '0')}:${minutosFinalizacion.toString().padStart(2, '0')}`;
+
+        // Almacenar la hora de finalización estimada en localStorage
+        localStorage.setItem('horaFinalizacionPedido', horaFinalizacionFormateada);
+
+        pedido.horaFinalizacion = horaFinalizacionFormateada;
+
+        await PedidoService.updateEstadoPedido(pedido, 'aceptados');
+
         buscarPedidos();
+    }
+
+
+    async function calcularTiempoPreparacion(pedido: Pedido) {
+        let tiempoTotal = 0;
+
+        // Asignamos el tiempo del menú con la preparación más tardía
+        pedido.detallesPedido.forEach(detalle => {
+            if (detalle.menu.tiempoCoccion > tiempoTotal) {
+                tiempoTotal = detalle.menu.tiempoCoccion;
+            }
+        });
+
+        return tiempoTotal;
     }
 
     async function handleRechazarPedido(pedido: Pedido) {

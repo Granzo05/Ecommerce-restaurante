@@ -54,7 +54,6 @@ export const ClienteService = {
                 return await response.json()
             })
             .then(data => {
-                console.log(data)
                 let cliente = {
                     id: data.id,
                     nombre: data.nombre,

@@ -154,6 +154,8 @@ public class PedidoController {
             gmail.enviarCorreoConArchivo("Pedido entregado", "Factura del pedido: ", "facu.granzotto5@gmail.com", archivo.getBody());
         }
 
+        pedidoDb.get().setHoraFinalizacion(pedido.getHoraFinalizacion());
+
         pedidoRepository.save(pedidoDb.get());
 
         return new ResponseEntity<>("El pedido ha sido actualizado correctamente", HttpStatus.ACCEPTED);
