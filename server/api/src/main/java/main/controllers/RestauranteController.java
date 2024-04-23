@@ -20,39 +20,37 @@ public class RestauranteController {
     private final RestauranteRepository restauranteRepository;
     private final EmpleadoRepository empleadoRepository;
     private final ClienteRepository clienteRepository;
-
-    private final PedidoRepository pedidoRepository;
-
-    public RestauranteController(RestauranteRepository restauranteRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository,
-                                 PedidoRepository pedidoRepository) {
+    public RestauranteController(RestauranteRepository restauranteRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository) {
         this.restauranteRepository = restauranteRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
-        this.pedidoRepository = pedidoRepository;
     }
 
     @PostMapping("/restaurante/create")
-    public Restaurante crearRestaurante(@RequestBody Restaurante restaurante) throws IOException {
-        restaurante.setContraseña(Encrypt.encryptPassword(restaurante.getContraseña()));
-        restaurante.setPrivilegios("negocio");
+    public Restaurante crearRestaurante(@RequestBody Restaurante restaurante) throws Exception {
+        try {
+            restaurante.setContraseña(Encrypt.cifrarPassword(restaurante.getContraseña()));
+            restaurante.setPrivilegios("negocio");
 
-        restauranteRepository.save(restaurante);
-        return restaurante;
+            restauranteRepository.save(restaurante);
+            return restaurante;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @CrossOrigin
     @GetMapping("/restaurant/login/{email}/{password}")
-    public Object loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) {
+    public Object loginRestaurante(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         // Busco por email y clave encriptada, si se encuentra devuelvo el objeto
-        Restaurante restaurante = restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
+        Restaurante restaurante = restauranteRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
         // Utilizo la misma funcion tanto para empleados como para el restaurante
         if (restaurante == null) {
-            return empleadoRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
+            return empleadoRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
         }
 
-        System.out.println(restaurante);
-
-        return restauranteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
+        return restaurante;
     }
 
     @PutMapping("/restaurant/update")
@@ -67,33 +65,6 @@ public class RestauranteController {
         Restaurante restauranteFinal = restauranteRepository.save(restaurante);
 
         return ResponseEntity.ok(restauranteFinal);
-    }
-
-    @CrossOrigin
-    @GetMapping("/check/{email}/{privilegio}")
-    public boolean checkUser(@PathVariable("email") String email, @PathVariable("privilegio") String privilegioNecesario) {
-        Restaurante restaurante = restauranteRepository.findByEmail(email);
-        // Restaurante tiene acceso a todo, por lo tanto si el email coincide entonces se concede acceso
-        if (restaurante != null) {
-            return true;
-        }
-
-        Optional<Cliente> cliente = clienteRepository.findByEmail(email);
-        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
-        if (cliente.isPresent()) {
-            return false;
-        }
-
-        Optional<Empleado> empleado = empleadoRepository.findByEmail(email);
-        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
-        if (empleado.isPresent()) {
-            if (empleado.get().getPrivilegios().contains(privilegioNecesario)) {
-                return true;
-            }
-            return true;
-        }
-
-        return false;
     }
 
     @CrossOrigin
@@ -123,12 +94,13 @@ public class RestauranteController {
     }
 
     @PostMapping("/empleado/create")
-    public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) {
+    public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
         Optional<Empleado> empleado = empleadoRepository.findByEmail(empleadoDetails.getEmail());
         if (empleado.isEmpty()) {
-            empleadoDetails.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
+            empleadoDetails.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
             empleadoDetails.setBorrado("NO");
             empleadoDetails.setPrivilegios("empleado");
+            empleadoDetails.setCuit(Encrypt.encriptarString(empleadoDetails.getCuit()));
             empleadoRepository.save(empleadoDetails);
             return empleadoDetails;
         } else {
@@ -142,11 +114,12 @@ public class RestauranteController {
     }
 
     @PutMapping("/empleado/update")
-    public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) {
-        Empleado empleado = empleadoRepository.findByCuit(empleadoDetails.getCuit());
+    public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
+        Empleado empleado = empleadoRepository.findByCuit(Encrypt.encriptarString(empleadoDetails.getCuit()));
         if (empleado != null) {
             empleado.setNombre(empleadoDetails.getNombre());
-            empleado.setContraseña(Encrypt.encryptPassword(empleadoDetails.getContraseña()));
+            empleado.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
+            empleado.setCuit(empleadoDetails.getCuit());
             empleado.setEmail(empleadoDetails.getEmail());
             empleado.setTelefono(empleadoDetails.getTelefono());
 
@@ -158,9 +131,8 @@ public class RestauranteController {
     }
 
     @PutMapping("/empleado/{cuit}/delete")
-    public ResponseEntity<String> deleteEmpleado(@PathVariable("cuit") Long cuit) {
-        Empleado empleado = empleadoRepository.findByCuit(cuit);
-        System.out.println(empleado);
+    public ResponseEntity<String> deleteEmpleado(@PathVariable("cuit") String cuit) throws Exception {
+        Empleado empleado = empleadoRepository.findByCuit(Encrypt.encriptarString(cuit));
 
         if (empleado != null) {
             empleado.setBorrado("SI");

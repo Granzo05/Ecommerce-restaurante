@@ -22,6 +22,7 @@ function AgregarEmpleado() {
     empleado.cuit = cuit;
 
     let response = await EmpleadoService.createEmpleado(empleado);
+    
     alert(response);
 
     clearInputs();
@@ -60,7 +61,7 @@ function AgregarEmpleado() {
         <input type="text" placeholder="Telefono del empleado" id="telefonoEmpleado" onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
       </label>
       <br />
-      <input type="button" value="agregarEmpleado" id="agregarEmpleado" onClick={agregarEmpleado} />
+      <input type="button" value="Agregar empleado" id="agregarEmpleado" onClick={agregarEmpleado} />
     </div>
   )
 }

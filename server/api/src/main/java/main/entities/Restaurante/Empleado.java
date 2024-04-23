@@ -20,7 +20,7 @@ public class Empleado {
     @Column(name = "contraseña")
     private String contraseña;
     @Column(name = "cuit")
-    private long cuit;
+    private String cuit;
     @Column(name = "telefono")
     private long telefono;
     @Column(name = "fecha_ingreso", updatable = false, nullable = false)
@@ -31,18 +31,18 @@ public class Empleado {
     private String borrado;
     @Column(name = "privilegios")
     private String privilegios;
+
+    /*
     @ManyToOne
     @JoinColumn(name = "id_restaurante")
     private Restaurante restaurante;
-
+*/
     public Empleado() {
     }
 
-    public Empleado(String nombre, long cuit, long telefono, Restaurante restaurante) {
+    public Empleado(String nombre, long telefono, Restaurante restaurante) {
         this.nombre = nombre;
-        this.cuit = cuit;
         this.telefono = telefono;
-        this.restaurante = restaurante;
     }
 
     public String getPrivilegios() {
@@ -93,11 +93,11 @@ public class Empleado {
         this.nombre = nombre;
     }
 
-    public long getCuit() {
+    public String getCuit() {
         return cuit;
     }
 
-    public void setCuit(long cuit) {
+    public void setCuit(String cuit) {
         this.cuit = cuit;
     }
 
@@ -117,14 +117,6 @@ public class Empleado {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public Restaurante getIdRestaurante() {
-        return restaurante;
-    }
-
-    public void setIdRestaurante(Restaurante idRestaurante) {
-        this.restaurante = idRestaurante;
-    }
-
     @Override
     public String toString() {
         return "Empleado{" +
@@ -137,7 +129,6 @@ public class Empleado {
                 ", fechaIngreso=" + fechaIngreso +
                 ", borrado='" + borrado + '\'' +
                 ", privilegios='" + privilegios + '\'' +
-                ", idRestaurante=" + restaurante +
                 '}';
     }
 }

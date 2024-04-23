@@ -10,7 +10,7 @@ export const RestauranteService = {
         restaurante.telefono = telefono;
         restaurante.domicilio = domicilio;
         // Creamos el restaurante en la db
-        await fetch(URL_API + '/restaurante/create', {
+        await fetch(URL_API + 'restaurante/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -19,7 +19,7 @@ export const RestauranteService = {
         })
             .then(async response => {
                 if (!response.ok) {
-                    throw new Error('Restaurante existente')
+                    throw new Error(await response.text())
                 }
                 return await response.json()
             })

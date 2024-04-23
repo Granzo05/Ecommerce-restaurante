@@ -51,7 +51,7 @@ dependencies {
     //Oracle database
     implementation group: 'com.oracle.database.jdbc', name: 'ojdbc11', version: '23.3.0.23.09'
     implementation group: 'com.oracle.database.security', name: 'oraclepki', version: '23.3.0.23.09'
-
+    
 }
 
 tasks.named('test') {

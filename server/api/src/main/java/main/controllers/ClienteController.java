@@ -18,10 +18,12 @@ public class ClienteController {
     }
 
     @PostMapping("/cliente/create")
-    public Cliente crearCliente(@RequestBody Cliente clienteDetails) {
+    public Cliente crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
+        System.out.println(clienteDetails.getContraseña());
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
         if (cliente.isEmpty()) {
-            clienteDetails.setContraseña(Encrypt.encryptPassword(clienteDetails.getContraseña()));
+            clienteDetails.setContraseña(Encrypt.cifrarPassword(clienteDetails.getContraseña()));
+            clienteDetails.setDomicilio(Encrypt.encriptarString(clienteDetails.getDomicilio()));
             clienteDetails.setBorrado("NO");
             clienteRepository.save(clienteDetails);
             return clienteDetails;
@@ -32,24 +34,23 @@ public class ClienteController {
 
     @CrossOrigin
     @GetMapping("/cliente/login/{email}/{password}")
-    public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) {
+    public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         // Recibo un email y una password desde el cliente, esa pass la encripto para ver si coincide con la guardada
-        Cliente cliente = clienteRepository.findByEmailAndPassword(email, Encrypt.encryptPassword(password));
+        Cliente cliente = clienteRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
 
         return cliente;
     }
 
     @CrossOrigin
     @GetMapping("/cliente/domicilio/{email}")
-    public String getDomicilio(@PathVariable("email") String email) {
-        // Recibo un email y una password desde el cliente, esa pass la encripto para ver si coincide con la guardada
+    public String getDomicilio(@PathVariable("email") String email) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmail(email);
 
         if (cliente.isEmpty()) {
             return null;
         }
 
-        return cliente.get().getDomicilio();
+        return Encrypt.desencriptarString(cliente.get().getDomicilio());
     }
 
     @PutMapping("/cliente/update")
