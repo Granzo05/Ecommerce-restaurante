@@ -9,6 +9,10 @@ import Menus from '../components/Menus/Menus';
 import { EmpleadoService } from '../services/EmpleadoService';
 import '../styles/opcionesRestaurante.css'
 
+import Logo from '../assets/img//HatchfulExport-All/logo_transparent.png'
+
+const navItems = ["home", "settings", "build", "cloud", "mail", "bookmark"];
+
 const Opciones = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState(1);
     const [isVisible, setVisible] = useState<boolean>(true);
@@ -50,14 +54,65 @@ const Opciones = () => {
                 console.error('Error:', error);
             }
         };
-    
+
         fetchData();
     }, []);
-    
 
 
+    const [isOpen, setIsOpen] = useState(false);
     return (
-        <div style={{ display: 'flex' }} className='opciones'>
+        <body>
+            <section className="page sidebar-2-page">
+                <aside className={`sidebar-2 ${isOpen ? "open" : ""}`}>
+                    <div className="inner">
+                        <header>
+                            <button
+                                type="button"
+                                className="sidebar-2-burger"
+                                onClick={() => setIsOpen(!isOpen)}
+                            >
+                                <span className="material-symbols-outlined">
+                                    {isOpen ? "close" : "menu"}
+                                </span>
+                            </button>
+                            <img style={{ width: '60%', height: '160px' }} src={Logo} />
+                        </header>
+                        <nav>
+                            {isVisible ? (
+                                <div className='opciones-menu'>
+                                    <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
+                                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
+                                    <p onClick={() => handleOpcionClick(3)}>Pedidos cocinados</p>
+                                    <p onClick={() => handleOpcionClick(4)}>Pedidos entregados</p>
+                                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
+                                    <p onClick={() => handleOpcionClick(6)}>Menus</p>
+                                    <p onClick={() => handleOpcionClick(7)}>Empleados</p>
+                                </div >
+                            ) : (
+                                <div className='opciones-menu'>
+                                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
+                                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
+                                    <p onClick={() => handleOpcionClick(6)}>Menus</p>
+                                </div >
+                            )}
+                        </nav>
+                    </div>
+                </aside>
+                <div className='styled-table' style={{ flex: 1 }}>
+                    {renderInformacion()}
+                </div>
+            </section>
+
+        </body>
+
+
+    );
+};
+
+export default Opciones;
+
+/*<body>
+            <div style={{ display: 'flex' }} className='opciones'>
             {isVisible ? (
                 <div className='opciones-menu'>
                     <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
@@ -80,7 +135,4 @@ const Opciones = () => {
                 {renderInformacion()}
             </div>
         </div >
-    );
-};
-
-export default Opciones;
+        </body>*/
