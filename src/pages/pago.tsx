@@ -16,14 +16,13 @@ const Pago = () => {
     const [envio, setTipoEnvio] = useState<string>('DELIVERY');
 
     useEffect(() => {
-        const clienteString = localStorage.getItem('usuario');
-        let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
-
-        setCliente(clienteMem);
-
         cargarPedido();
 
         const buscarDomicilio = async () => {
+            const clienteString = localStorage.getItem('usuario');
+            let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+
+            setCliente(clienteMem);
             if (cliente) {
                 setDomicilio(await ClienteService.getDomicilio(cliente.email));
             }
@@ -89,7 +88,7 @@ const Pago = () => {
             localStorage.removeItem('carrito');
 
             //window.location.href = Pagina de muestra de tiempo y eso
-    
+
         } else {
             console.error('No hay suficiente stock para completar el pedido');
         }

@@ -11,7 +11,7 @@
 [x] Recibir el pedido entrante
 [x] Aceptar pedido y recibirlo en la cocina
 [x] Pagina de pedidos cliente
-[] Mostrar tiempo
+[x] Mostrar tiempo
 [x] Aceptar entrega del menu
 [] Avisar que el menu está en traslado junto con el envio de la factura
 [] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
@@ -27,6 +27,7 @@
 [x] Probar envio de correos
 [x] Probar envio de la factura como pdf al correo
 [] Cancelacion de pedido
+[] Mercadopago
 
 Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

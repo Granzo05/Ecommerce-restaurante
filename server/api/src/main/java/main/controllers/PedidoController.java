@@ -11,7 +11,7 @@ import main.entities.Pedidos.Pedido;
 import main.repositories.ClienteRepository;
 import main.repositories.PedidoRepository;
 import main.repositories.RestauranteRepository;
-import main.utility.Gmail;
+import main.utility.gmail.Gmail;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -151,7 +151,13 @@ public class PedidoController {
 
             ResponseEntity<byte[]> archivo = generarFacturaPDF(pedidoDb.get().getId());
             Gmail gmail = new Gmail();
-            gmail.enviarCorreoConArchivo("Pedido entregado", "Factura del pedido: ", "facu.granzotto5@gmail.com", archivo.getBody());
+
+            if(pedido.getTipoEnvio().toString().equals("DELVIERY")) {
+                gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", "facu.granzotto5@gmail.com", archivo.getBody());
+            } else {
+                gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", "facu.granzotto5@gmail.com", archivo.getBody());
+            }
+
         }
 
         pedidoDb.get().setHoraFinalizacion(pedido.getHoraFinalizacion());

@@ -1,4 +1,4 @@
-package main.utility;
+package main.utility.gmail;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -12,12 +12,9 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.Base64;
 import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.gmail.model.Draft;
 import com.google.api.services.gmail.model.Message;
 
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;

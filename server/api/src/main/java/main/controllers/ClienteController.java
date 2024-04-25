@@ -49,7 +49,7 @@ public class ClienteController {
         if (cliente.isEmpty()) {
             return null;
         }
-
+        System.out.println(Encrypt.desencriptarString(cliente.get().getDomicilio()));
         return Encrypt.desencriptarString(cliente.get().getDomicilio());
     }
 

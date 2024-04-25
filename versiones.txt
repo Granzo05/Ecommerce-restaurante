@@ -26,3 +26,4 @@
     - Carga de pedidos
     - Chequeo de stock necesario
     - Pedidos realizables y visibles
+    - Tiempo restante para entrega de pedido

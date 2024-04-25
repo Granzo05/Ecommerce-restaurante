@@ -58,6 +58,10 @@ dependencies {
     implementation 'com.google.apis:google-api-services-gmail:v1-rev20220404-2.0.0'
     implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.4.1'
+
+    // Mercadopago
+    implementation group: 'com.mercadopago', name: 'sdk-java', version: '2.1.22'
+
 }
 
 tasks.named('test') {

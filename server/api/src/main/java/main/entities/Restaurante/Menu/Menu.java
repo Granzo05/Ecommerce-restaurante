@@ -2,6 +2,7 @@ package main.entities.Restaurante.Menu;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class Menu {
         this.comensales = comensales;
     }
 
-    public double getPrecio() {
+    public BigDecimal getPrecio() {
         return precio;
     }
 

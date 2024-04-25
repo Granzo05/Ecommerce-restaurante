@@ -73,7 +73,7 @@ export const ClienteService = {
     getDomicilio: async (email: string): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'cliente/domicilio/' + email, {
-                method: 'PUT',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -82,8 +82,7 @@ export const ClienteService = {
             if (!response.ok) {
                 throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
             }
-
-            return await response.json();
+            return await response.text();
 
         } catch (error) {
             console.error('Error:', error);
