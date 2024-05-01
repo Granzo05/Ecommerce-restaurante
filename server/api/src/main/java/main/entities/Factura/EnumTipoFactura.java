@@ -1,6 +1,6 @@
 package main.entities.Factura;
 
-public enum TipoFactura {
+public enum EnumTipoFactura {
     A,
     B,
     C,

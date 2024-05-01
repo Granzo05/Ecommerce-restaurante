@@ -1,4 +1,4 @@
-package main.utility.gmail;
+package main.utility.gmail.Gmail;
 
 import org.springframework.web.multipart.MultipartFile;
 

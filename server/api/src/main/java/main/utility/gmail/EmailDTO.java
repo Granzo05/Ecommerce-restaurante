@@ -1,12 +1,12 @@
-package main.utility.gmail;
+package main.utility.gmail.Gmail;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-
 public class EmailDTO {
     private String emailCliente;
-    private String file;    public String getEmailCliente() {
+    private String file;
+
+    public String getEmailCliente() {
         return emailCliente;
     }
 
