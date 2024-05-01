@@ -5,28 +5,25 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.entities.Factura.EnumMetodoPago;
-import main.entities.Factura.EnumTipoFactura;
-import main.entities.Pedidos.Pedido;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "domicilios", schema = "buen_sabor")
-public class Domicilio {
+@Table(name = "localidades", schema = "buen_sabor")
+public class Localidad {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "calle")
-    private String calle;
-    @Column(name = "numero")
-    private int numero;
-    @Column(name = "codigo_postal")
-    private int codigoPostal;
-
+    @Column(name = "nombre")
+    private String nombre;
+    @OneToMany(mappedBy = "localidad")
+    private Set<Domicilio> domicilios = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_provincia")
+    private Provincia provincia;
 }

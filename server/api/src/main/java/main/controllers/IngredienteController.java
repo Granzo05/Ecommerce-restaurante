@@ -1,6 +1,6 @@
 package main.controllers;
 
-import main.entities.Restaurante.Menu.Ingrediente;
+import main.entities.Ingredientes.Ingrediente;
 import main.repositories.IngredienteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

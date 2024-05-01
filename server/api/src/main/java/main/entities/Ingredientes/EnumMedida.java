@@ -1,4 +1,4 @@
-package main.entities.Pedidos;
+package main.entities.Ingredientes;
 
 public enum EnumMedida {
     KILOGRAMOS,

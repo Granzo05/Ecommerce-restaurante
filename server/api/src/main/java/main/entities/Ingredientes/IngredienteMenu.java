@@ -1,8 +1,8 @@
-package main.entities.Restaurante.Menu;
+package main.entities.Ingredientes;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Productos.ArticuloMenu;
 
 @Getter
 @Setter
@@ -18,11 +18,12 @@ public class IngredienteMenu {
     @Column(name = "cantidad_ingrediente")
     private int cantidad;
     @Column(name = "medida")
-    private String medida;
-    @ManyToOne
+    private EnumMedida medida;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_menu")
-    private Menu menu;
+    private ArticuloMenu articuloMenu;
+
 }

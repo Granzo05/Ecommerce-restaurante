@@ -1,34 +1,38 @@
-package main.entities.Restaurante.Stock;
+package main.entities.Stock;
 
 import jakarta.persistence.*;
-import lombok.*;
-import main.entities.Restaurante.Menu.Ingrediente;
-
-import java.util.Date;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import main.entities.Ingredientes.EnumMedida;
+import main.entities.Restaurante.Sucursal;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
-@Table(name = "stock", schema = "buen_sabor")
-public class Stock {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "precio_compra")
+    private double precioCompra;
     @Column(name = "cantidad_actual")
     private int cantidadActual;
     @Column(name = "cantidad_minima")
     private int cantidadMinima;
     @Column(name = "cantidad_maxima")
     private int cantidadMaxima;
-    @OneToMany(mappedBy = "stock")
-    public List<FechaStock> fechaIngreso;
+    @Column(name = "medida")
+    private EnumMedida medida;
+    @JsonIgnore
     @Column(name = "borrado")
-    private String borrado;
-    @OneToOne
-    private Ingrediente ingrediente;
-
+    private String borrado = "NO";
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_sucursal")
+    private Sucursal sucursal;
 }

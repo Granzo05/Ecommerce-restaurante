@@ -1,6 +1,6 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CloseIcon from '@mui/icons-material/Close';
-import { Carrito } from '../types/Carrito';
+import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
 import { useEffect, useState } from 'react';
 
@@ -21,7 +21,7 @@ const CarritoComponent = () => {
 
         actualizarCarrito();
 
-        const intervalo = setInterval(actualizarCarrito, 500); 
+        const intervalo = setInterval(actualizarCarrito, 500);
 
         return () => clearInterval(intervalo);
     }, []);
@@ -65,19 +65,31 @@ const CarritoComponent = () => {
                         <label id='contador-carrito'>{carrito?.totalProductos}</label>
                     </button>
                     <button style={{ background: 'none', border: 'none', color: 'black', marginLeft: '300px', padding: '15px' }} className='icon-close' onClick={() => setCarritoAbierto(false)}><CloseIcon /></button>
-                    {carrito && carrito.productos && carrito.productos.length === 0 && (
+                    {carrito && (carrito.articuloMenu && carrito.articuloMenu.length === 0 || carrito.articuloVenta && carrito.articuloVenta.length === 0) && (
                         <div className="container-empty-cart">
                             <p>El carrito está vacío</p>
                         </div>
                     )}
-                    {carrito && carrito.productos && carrito.productos.map((producto, index) => (
+                    {carrito && carrito.articuloMenu && carrito.articuloMenu.map((producto, index) => (
                         <div className="cart-product" key={index}>
                             <div className="info-cart-product">
-                                <img src={producto.menu.imagenes[0].ruta} alt="" />
-                                <span className='cantidad-producto-carrito'>{carrito.productos[index].cantidad}</span>
-                                <span className='titulo-producto-carrito'>{producto.menu.nombre}</span>
-                                <span className='precio-producto-carrito'>{producto.menu.precio * producto.cantidad}</span>
-                                <span onClick={() => eliminarProducto(producto.menu.nombre)}>X</span>
+                                <img src={producto.imagenes[0].ruta} alt="" />
+                                <span className='cantidad-producto-carrito'>{carrito.articuloMenu[index].cantidad}</span>
+                                <span className='titulo-producto-carrito'>{producto.nombre}</span>
+                                <span className='precio-producto-carrito'>{producto.precioVenta * producto.cantidad}</span>
+                                <span onClick={() => eliminarProducto(producto.nombre)}>X</span>
+                            </div>
+                        </div>
+                    ))}
+
+                    {carrito && carrito.articuloVenta && carrito.articuloVenta.map((producto, index) => (
+                        <div className="cart-product" key={index}>
+                            <div className="info-cart-product">
+                                <img src={producto.imagenes[0].ruta} alt="" />
+                                <span className='cantidad-producto-carrito'>{carrito.articuloVenta[index].cantidad}</span>
+                                <span className='titulo-producto-carrito'>{producto.nombre}</span>
+                                <span className='precio-producto-carrito'>{producto.precioVenta * producto.cantidad}</span>
+                                <span onClick={() => eliminarProducto(producto.nombre)}>X</span>
                             </div>
                         </div>
                     ))}

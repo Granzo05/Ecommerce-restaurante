@@ -1,11 +1,11 @@
-import { Menu } from '../types/Menu';
-import { Stock } from '../types/Stock';
-import { URL_API } from '../utils/global_variables/const';
+import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
+import { StockArticuloVenta } from '../types/Stock/StockArticuloVenta';
+import { sucursalId, URL_API } from '../utils/global_variables/const';
 
-export const StockService = {
-    createStock: async (stock: Stock): Promise<string> => {
+export const StockArticuloVentaService = {
+    createStock: async (stock: StockArticuloVenta): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'stock/create', {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/StockArticuloVenta/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ export const StockService = {
         }
     },
 
-    getStock: async (): Promise<Stock[]> => {
+    getStock: async (): Promise<StockArticuloVenta[]> => {
         try {
             const response = await fetch(URL_API + 'stock', {
                 method: 'GET',
@@ -46,7 +46,7 @@ export const StockService = {
 
     getStockProduct: async (nombre: string, cantidad: number): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `stock/${nombre}/${cantidad}`, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockproduct/${nombre}/${cantidad}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -55,7 +55,9 @@ export const StockService = {
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
+
             return await response.text();
+
 
         } catch (error) {
             console.error('Error:', error);
@@ -63,12 +65,12 @@ export const StockService = {
         }
     },
 
-    checkStock: async (menus: Menu[]): Promise<string> => {
+    checkStock: async (menus: ArticuloMenu[]): Promise<string> => {
         try {
             const queryString = menus.map(menu => `id=${menu.id}`).join('&');
 
             // Construir la URL con los parámetros de consulta
-            const url = `${URL_API}restaurante/stock/check?${queryString}`;
+            const url = `${URL_API}sucursal/${sucursalId}/StockArticuloVenta/check?${queryString}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -88,9 +90,9 @@ export const StockService = {
         }
     },
 
-    updateStock: async (stock: Stock): Promise<Stock> => {
+    updateStock: async (stock: StockArticuloVenta): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'stock/update', {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/update`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -101,7 +103,7 @@ export const StockService = {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
 
-            return await response.json();
+            return await response.text();
 
 
         } catch (error) {
@@ -112,7 +114,7 @@ export const StockService = {
 
     deleteStock: async (stockId: number): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'stock/' + stockId + 'delete', {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/${stockId}/delete`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

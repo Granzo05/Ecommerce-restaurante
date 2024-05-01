@@ -1,16 +1,22 @@
 package main.entities.Pedidos;
 
 import jakarta.persistence.*;
+import lombok.*;
 import main.entities.Cliente.Cliente;
 import main.entities.Factura.Factura;
-import main.entities.Restaurante.Restaurante;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "pedidos", schema = "buen_sabor")
 public class Pedido {
     @Id
@@ -19,89 +25,23 @@ public class Pedido {
     @Column(name = "tipo_envio")
     private EnumTipoEnvio tipoEnvio;
     @Column(name = "estado")
-    private String estado;
-    @Column(name = "fecha", updatable = false, nullable = false)
+    private EnumEstadoPedido estado;
+    @Column(name = "fecha_pedido", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     public Date fechaPedido;
+    @JsonIgnore
     @Column(name = "borrado")
-    private String borrado;
+    private String borrado = "NO";
     @Column(name = "hora_finalizacion")
     private String horaFinalizacion;
-    @OneToOne
-    @JoinColumn(name = "id_factura")
+    @OneToOne(mappedBy = "pedido")
     private Factura factura;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "pedido_id")
-    private List<DetallesPedido> detallesPedido = new ArrayList<>();
-
-
-    public Pedido() {
-    }
-
-    //En caso que sea retiro en local no es necesario ni domicilio ni telefono del cliente
-    public Pedido(EnumTipoEnvio tipoEnvio, Cliente cliente, Factura factura) {
-        this.tipoEnvio = tipoEnvio;
-        this.cliente = cliente;
-        this.factura = factura;
-    }
-
-    public Pedido(EnumTipoEnvio tipoEnvio, Cliente clienteId, Restaurante restauranteId, Factura facturaId, String domicilio, long telefono) {
-        this.tipoEnvio = tipoEnvio;
-        this.cliente = cliente;
-        this.factura = factura;
-    }
-
-    public Cliente getUser() {
-        return cliente;
-    }
-
-    public void setUser(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getBorrado() {
-        return borrado;
-    }
-
-    public void setBorrado(String borrado) {
-        this.borrado = borrado;
-    }
-
-    public void setTipoEnvio(EnumTipoEnvio tipoEnvio) {
-        this.tipoEnvio = tipoEnvio;
-    }
-
-    public List<DetallesPedido> getDetallesPedido() {
-        return detallesPedido;
-    }
-
-    public void setDetallesPedido(List<DetallesPedido> detallesPedido) {
-        this.detallesPedido = detallesPedido;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public EnumTipoEnvio getTipoEnvio() {
-        return tipoEnvio;
-    }
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pedido")
+    private Set<DetallesPedido> detallesPedido = new HashSet<>();
 
     public void setTipoEnvio(String tipoEnvio) {
         String tipoEnvioUpper = tipoEnvio.trim().toUpperCase();
@@ -112,51 +52,5 @@ public class Pedido {
 
             System.err.println("Tipo de envío no válido: " + tipoEnvio);
         }
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Factura getFactura() {
-        return factura;
-    }
-
-    public void setFactura(Factura factura) {
-        this.factura = factura;
-    }
-
-    public Date getFechaPedido() {
-        return fechaPedido;
-    }
-
-    public void setFechaPedido(Date fechaPedido) {
-        this.fechaPedido = fechaPedido;
-    }
-
-    public String getHoraFinalizacion() {
-        return horaFinalizacion;
-    }
-
-    public void setHoraFinalizacion(String horaFinalizacion) {
-        this.horaFinalizacion = horaFinalizacion;
-    }
-
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "id=" + id +
-                ", tipoEnvio=" + tipoEnvio +
-                ", estado='" + estado + '\'' +
-                ", fechaPedido=" + fechaPedido +
-                ", borrado='" + borrado + '\'' +
-                ", factura=" + factura +
-                ", cliente=" + cliente +
-                ", detallesPedido=" + detallesPedido +
-                '}';
     }
 }

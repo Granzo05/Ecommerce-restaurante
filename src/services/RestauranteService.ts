@@ -1,9 +1,10 @@
-import { Restaurante } from '../types/Restaurante';
+import { Domicilio } from '../types/Domicilio/Domicilio';
+import { Sucursal } from '../types/Restaurante/Sucursal';
 import { URL_API } from '../utils/global_variables/const';
 
 export const RestauranteService = {
-    createRestaurant: async (email: string, contraseña: string, domicilio: string, telefono: number) => {
-        const restaurante = {} as Restaurante;
+    createRestaurant: async (email: string, contraseña: string, domicilio: Domicilio, telefono: number) => {
+        const restaurante = {} as Sucursal;
 
         restaurante.email = email;
         restaurante.contraseña = contraseña;
@@ -72,7 +73,7 @@ export const RestauranteService = {
             })
     },
 
-    updateRestaurant: async (restaurante: Restaurante): Promise<string> => {
+    updateRestaurant: async (restaurante: Sucursal): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'restaurant/update', {
                 method: 'PUT',

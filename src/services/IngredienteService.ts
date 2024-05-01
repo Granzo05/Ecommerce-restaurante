@@ -1,4 +1,4 @@
-import { Ingrediente } from '../types/Ingrediente';
+import { Ingrediente } from '../types/Ingredientes/Ingrediente';
 import { URL_API } from '../utils/global_variables/const';
 
 export const IngredienteService = {

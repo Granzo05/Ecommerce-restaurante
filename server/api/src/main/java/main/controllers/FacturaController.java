@@ -1,26 +1,16 @@
 package main.controllers;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import main.entities.Factura.EnumMetodoPago;
+import main.entities.Factura.EnumTipoFactura;
 import main.entities.Factura.Factura;
-import main.entities.Factura.TipoFactura;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Pedidos.Pedido;
 import main.repositories.FacturaRepository;
 import main.repositories.PedidoRepository;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class FacturaController {
@@ -38,15 +28,21 @@ public class FacturaController {
 
         Factura factura = new Factura();
 
-        factura.setTipoFactura(TipoFactura.B);
+        factura.setTipoFactura(EnumTipoFactura.B);
 
         if (pedido.getTipoEnvio().equals(EnumTipoEnvio.TIENDA)) {
-            factura.setMetodoPago("EFECTIVO");
+            factura.setMetodoPago(EnumMetodoPago.EFECTIVO);
         } else {
-            factura.setMetodoPago("MERCADOPAGO");
+            factura.setMetodoPago(EnumMetodoPago.MERCADOPAGO);
         }
 
-        factura.setCliente(pedido.getCliente());
+        double total = 0;
+
+        for (DetallesPedido detalle : pedido.getDetallesPedido()) {
+            total += detalle.getSubTotal() * detalle.getCantidad();
+        }
+
+        factura.setTotal(total);
 
         Factura facturaSave = facturaRepository.save(factura);
 
@@ -55,8 +51,8 @@ public class FacturaController {
         return pedido;
     }
 
-    @GetMapping("/bills/client/{id}")
-    public List<Factura> getBillsClientId(@PathVariable("id") Long id) {
+    @GetMapping("/facturas/cliente/{id}")
+    public Set<Factura> getFacturas(@PathVariable("id") Long id) {
         return facturaRepository.findByIdCliente(id);
     }
 

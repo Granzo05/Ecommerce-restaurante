@@ -11,7 +11,7 @@ import '../styles/opcionesRestaurante.css'
 
 import Logo from '../assets/img//HatchfulExport-All/logo_transparent.png'
 
-const navItems = ["home", "settings", "build", "cloud", "mail", "bookmark"];
+//const navItems = ["home", "settings", "build", "cloud", "mail", "bookmark"];
 
 const Opciones = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState(1);

@@ -1,12 +1,12 @@
 package main.repositories;
 
-import main.entities.Restaurante.Menu.IngredienteMenu;
+import main.entities.Ingredientes.IngredienteMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.HashSet;
 
 
 @Repository
@@ -15,6 +15,6 @@ public interface IngredienteMenuRepository extends JpaRepository<IngredienteMenu
     IngredienteMenu findByName(@Param("nombre") String nombre);
 
     @Query("SELECT i FROM IngredienteMenu i WHERE i.menu.id = :id")
-    List<IngredienteMenu> findByMenuId(@Param("id") Long id);
+    HashSet<IngredienteMenu> findByMenuId(@Param("id") Long id);
 
 }

@@ -14,8 +14,8 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
     @Query("SELECT e FROM Empleado e WHERE e.email = :email AND e.borrado = 'NO'")
     Optional<Empleado> findByEmail(@Param("email") String email);
 
-    @Query("SELECT e FROM Empleado e WHERE e.cuit = :cuit AND e.borrado = 'NO'")
-    Empleado findByCuit(@Param("cuit") String cuit);
+    @Query("SELECT e FROM Empleado e WHERE e.cuil = :cuil AND e.borrado = 'NO'")
+    Empleado findByCuil(@Param("cuil") String cuil);
 
 
     @Query("SELECT e FROM Empleado e WHERE e.email = :email AND e.contraseña = :contraseña AND e.borrado = 'NO'")

@@ -1,7 +1,10 @@
 package main.entities.Productos;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Ingredientes.IngredienteMenu;
 
 import java.util.HashSet;
@@ -12,34 +15,20 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
-@Table(name = "menus", schema = "buen_sabor")
-public class Menu {
+@Table(name = "articulos_menu", schema = "buen_sabor")
+public class ArticuloMenu extends Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "tiempo")
     private int tiempoCoccion;
     @Column(name = "tipo")
-    private String tipo;
+    private EnumTipoArticuloComida tipo;
     @Column(name = "comensales")
     private int comensales;
-    @Column(name = "precio")
-    private double precio;
-    @Column(name = "nombre")
-    private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
-    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
-    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, orphanRemoval = true)
-    private Set<ImagenesProducto> imagenes = new HashSet<>();
-    @Column(name = "borrado")
-    private String borrado;
-    @ManyToMany(mappedBy = "menus", fetch = FetchType.LAZY)
-    private Set<Promocion> promociones = new HashSet<>();
 
-    public void addImagen(ImagenesProducto imagen) {
-        this.imagenes.add(imagen);
-    }
 }

@@ -1,33 +1,58 @@
 import { useState } from 'react';
-import { Stock } from '../../types/Stock';
-import { StockService } from '../../services/StockService';
-import { Ingrediente } from '../../types/Ingrediente';
+import { StockIngredientes } from '../../types/Stock/StockIngredientes';
+import { StockIngredientesService } from '../../services/StockIngredientesService';
+import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
+import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
+import { StockArticuloVentaService } from '../../services/StockArticulosService';
+import { clearInputs } from '../../utils/global_variables/functions';
 
 interface EditarStockProps {
-  stockOriginal: Stock;
+  stockOriginal: StockArticuloVenta | StockIngredientes;
 }
 
 const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
 
-  const [cantidad, setCantidad] = useState(0);
+  const [cantidadActual, setCantidadActual] = useState(0);
+  const [cantidadMinima, setCantidadMinima] = useState(0);
+  const [cantidadMaxima, setCantidadMaxima] = useState(0);
   const [medida, setMedida] = useState('');
-  const [nombreIngrediente, setIngredienteNombre] = useState('');
   const [costoIngrediente, setCostoIngrediente] = useState(0);
-  const [fechaReposicion, setFechaReposicion] = useState(new Date());
 
   function editarStock() {
-    const stock: Stock = stockOriginal;
+    if (stockOriginal instanceof StockIngredientes) {
+      const stock: StockIngredientes = stockOriginal;
 
-    const ingrediente: Ingrediente = stockOriginal.ingrediente;
-    ingrediente.nombre = nombreIngrediente;
-    ingrediente.costo = costoIngrediente;
-    ingrediente.medida = medida;
+      let medidaEnum: EnumMedida | undefined = undefined;
+      if (Object.values(EnumMedida).includes(medida as EnumMedida)) {
+        medidaEnum = EnumMedida[medida as keyof typeof EnumMedida];
+        stock.medida = medidaEnum;
+      }
 
-    stock.cantidad = cantidad;
-    stock.fechaIngreso = new Date(fechaReposicion.getFullYear(), fechaReposicion.getMonth(), fechaReposicion.getDate() + 1);
-    stock.ingrediente = ingrediente;
-    
-    StockService.updateStock(stock);
+      stock.cantidadActual = cantidadActual;
+      stock.cantidadMinima = cantidadMinima;
+      stock.cantidadMaxima = cantidadMaxima;
+      stock.precioCompra = costoIngrediente;
+      StockIngredientesService.updateStock(stock);
+
+    } else if (stockOriginal instanceof StockArticuloVenta) {
+      const stock: StockArticuloVenta = stockOriginal;
+
+      let medidaEnum: EnumMedida | undefined = undefined;
+      if (Object.values(EnumMedida).includes(medida as EnumMedida)) {
+        medidaEnum = EnumMedida[medida as keyof typeof EnumMedida];
+        stock.medida = medidaEnum;
+      }
+
+      stock.cantidadActual = cantidadActual;
+      stock.cantidadMinima = cantidadMinima;
+      stock.cantidadMaxima = cantidadMaxima;
+      stock.precioCompra = costoIngrediente;
+      StockArticuloVentaService.updateStock(stock);
+    } else {
+      console.error('Tipo de stock no reconocido');
+    }
+
+    clearInputs();
   }
 
   return (
@@ -36,12 +61,15 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <br />
         <label>
           <i className='bx bx-lock'></i>
-          <input type="text" value={stockOriginal.ingrediente.nombre} placeholder="Nombre del ingrediente" id="nombreStock" onChange={(e) => { setIngredienteNombre(e.target.value) }} />
+          <input type="text" value={stockOriginal.cantidadMinima} placeholder="Cantidad mínima del ingrediente" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
         </label>
-        <br />
         <label>
           <i className='bx bx-lock'></i>
-          <input type="text" value={stockOriginal.cantidad} placeholder="Cantidad del ingrediente" id="cantidadStock" onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+          <input type="text" value={stockOriginal.cantidadMaxima} placeholder="Cantidad máxima del ingrediente" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+        </label>
+        <label>
+          <i className='bx bx-lock'></i>
+          <input type="text" value={stockOriginal.cantidadActual} placeholder="Cantidad actual del ingrediente" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
         </label>
         <br />
         <label>
@@ -58,11 +86,6 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <label>
           <i className='bx bx-lock'></i>
           <input type="text" placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-        </label>
-        <label>
-          <i className='bx bx-lock'></i>
-          <label htmlFor="fechaReposicion">Fecha de próximo stock</label>
-          <input type="date" id="fechaReposicion" onChange={(e) => { setFechaReposicion(new Date(e.target.value)) }} />
         </label>
         <input type="button" value="editarStock" id="editarStock" onClick={editarStock} />
       </div>

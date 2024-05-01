@@ -10,7 +10,7 @@ import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.Pedido;
 import main.repositories.ClienteRepository;
 import main.repositories.PedidoRepository;
-import main.repositories.RestauranteRepository;
+import main.repositories.SucursalRepository;
 import main.utility.gmail.Gmail;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,14 +29,14 @@ import java.util.Optional;
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
     private final ClienteRepository clienteRepository;
-    private final RestauranteRepository restauranteRepository;
+    private final SucursalRepository sucursalRepository;
 
     public PedidoController(PedidoRepository pedidoRepository,
                             ClienteRepository clienteRepository,
-                            RestauranteRepository restauranteRepository) {
+                            SucursalRepository sucursalRepository) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
-        this.restauranteRepository = restauranteRepository;
+        this.sucursalRepository = sucursalRepository;
     }
 
     @GetMapping("/cliente/{id}/pedidos")
@@ -110,7 +110,6 @@ public class PedidoController {
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido) {
         pedido.setTipoEnvio(pedido.getTipoEnvio().toString());
         pedido.setFactura(null);
-        pedido.setBorrado("NO");
 
         pedidoRepository.save(pedido);
 
@@ -146,13 +145,13 @@ public class PedidoController {
 
         pedidoDb.get().setEstado(pedido.getEstado());
 
-        if(pedido.getEstado().equals("entregados")) {
+        if (pedido.getEstado().equals("entregados")) {
             pedidoDb.get().setFactura(pedido.getFactura());
 
             ResponseEntity<byte[]> archivo = generarFacturaPDF(pedidoDb.get().getId());
             Gmail gmail = new Gmail();
 
-            if(pedido.getTipoEnvio().toString().equals("DELVIERY")) {
+            if (pedido.getTipoEnvio().toString().equals("DELVIERY")) {
                 gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", "facu.granzotto5@gmail.com", archivo.getBody());
             } else {
                 gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", "facu.granzotto5@gmail.com", archivo.getBody());
@@ -184,7 +183,7 @@ public class PedidoController {
 
             document.add(new Paragraph("Factura del Pedido"));
             document.add(new Paragraph("Tipo: " + pedido.get().getFactura().getTipoFactura().toString()));
-            document.add(new Paragraph("Cliente: " + pedido.get().getFactura().getCliente().getNombre()));
+            document.add(new Paragraph("Cliente: " + pedido.get().getCliente().getNombre()));
             document.add(new Paragraph(""));
             document.add(new Paragraph("Detalles de la factura"));
 
@@ -198,7 +197,7 @@ public class PedidoController {
 
             for (DetallesPedido detalle : pedido.get().getDetallesPedido()) {
                 // Agregar cada detalle como una fila en la tabla
-                table.addCell(detalle.getMenu().getNombre());
+                table.addCell(detalle.getArticuloMenu().getNombre());
                 table.addCell(String.valueOf(detalle.getCantidad()));
                 table.addCell(String.valueOf(detalle.getSubTotal()));
                 total += detalle.getSubTotal();

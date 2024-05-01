@@ -1,22 +1,37 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StockService } from '../../services/StockService';
+import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
+import { StockIngredientes } from '../../types/Stock/StockIngredientes';
+import { StockIngredientesService } from '../../services/StockIngredientesService';
+import { StockArticuloVentaService } from '../../services/StockArticulosService';
 
 interface EliminarStockProps {
-  stockId: number;
+  stockOriginal: StockArticuloVenta | StockIngredientes;
 }
 
-const EliminarStock: React.FC<EliminarStockProps> = ({ stockId }) => {
+const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
-    StockService.deleteStock(stockId)
-      .then(() => {
-        navigate('/opciones');
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    if (stockOriginal instanceof StockIngredientes) {
+      StockIngredientesService.deleteStock(stockOriginal.id)
+        .then(() => {
+          navigate('/opciones');
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } else if (stockOriginal instanceof StockArticuloVenta) {
+      StockArticuloVentaService.deleteStock(stockOriginal.id)
+        .then(() => {
+          navigate('/opciones');
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } else {
+      console.error('Tipo de stock no reconocido');
+    }
   };
 
   const onCancel = () => {

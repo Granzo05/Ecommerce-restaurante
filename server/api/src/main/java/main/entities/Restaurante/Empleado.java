@@ -1,11 +1,20 @@
 package main.entities.Restaurante;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.*;
+import main.entities.Domicilio.Domicilio;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "empleados", schema = "buen_sabor")
 public class Empleado {
     @Id
@@ -13,122 +22,28 @@ public class Empleado {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-
     @Column(name = "email")
     private String email;
-
+    @JsonIgnore
     @Column(name = "contraseña")
     private String contraseña;
-    @Column(name = "cuit")
-    private String cuit;
+    @Column(name = "cuil")
+    private String cuil;
     @Column(name = "telefono")
-    private long telefono;
-    @Column(name = "fecha_ingreso", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    public Date fechaIngreso;
+    private Long telefono;
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+    private Set<Domicilio> domicilios = new HashSet<>();
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+    public Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
+    @Column(name = "fecha_nacimiento", updatable = false, nullable = false)
+    public Date fechaNacimiento;
+    @JsonIgnore
     @Column(name = "borrado")
-    private String borrado;
+    private String borrado = "NO";
+    @JsonIgnore
     @Column(name = "privilegios")
     private String privilegios;
-
-    /*
-    @ManyToOne
-    @JoinColumn(name = "id_restaurante")
-    private Restaurante restaurante;
-*/
-    public Empleado() {
-    }
-
-    public Empleado(String nombre, long telefono, Restaurante restaurante) {
-        this.nombre = nombre;
-        this.telefono = telefono;
-    }
-
-    public String getPrivilegios() {
-        return privilegios;
-    }
-
-    public void setPrivilegios(String privilegios) {
-        this.privilegios = privilegios;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-    }
-
-    public String getBorrado() {
-        return borrado;
-    }
-
-    public void setBorrado(String borrado) {
-        this.borrado = borrado;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCuit() {
-        return cuit;
-    }
-
-    public void setCuit(String cuit) {
-        this.cuit = cuit;
-    }
-
-    public long getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(long telefono) {
-        this.telefono = telefono;
-    }
-
-    public Date getFechaIngreso() {
-        return fechaIngreso;
-    }
-
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
-
-    @Override
-    public String toString() {
-        return "Empleado{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", email='" + email + '\'' +
-                ", contraseña='" + contraseña + '\'' +
-                ", cuit=" + cuit +
-                ", telefono=" + telefono +
-                ", fechaIngreso=" + fechaIngreso +
-                ", borrado='" + borrado + '\'' +
-                ", privilegios='" + privilegios + '\'' +
-                '}';
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_sucursal")
+    private Sucursal sucursal;
 }

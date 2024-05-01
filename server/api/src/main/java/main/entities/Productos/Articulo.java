@@ -1,10 +1,10 @@
-package main.entities.Restaurante.Menu;
+package main.entities.Productos;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,17 +12,20 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "articulos", schema = "buen_sabor")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "tipo")
-    private String tipo;
-    @Column(name = "precio")
-    private double precio;
-    @OneToMany(mappedBy = "articulo", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<ImagenesProducto> imagenes = new ArrayList<>();
+    @Column(name = "nombre")
+    private String nombre;
+    @Column(name = "precio_venta")
+    private double precioVenta;
+    @OneToMany(mappedBy = "articulo", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<ImagenesProducto> imagenes = new HashSet<>();
     @Column(name = "borrado")
-    private String borrado;
+    private String borrado = "NO";
+    @ManyToMany(mappedBy = "articulos", fetch = FetchType.LAZY)
+    private Set<Promocion> promociones = new HashSet<>();
+
 }

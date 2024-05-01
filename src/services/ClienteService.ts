@@ -1,15 +1,16 @@
-import { Cliente } from '../types/Cliente'
+import { Cliente } from '../types/Cliente/Cliente'
+import { Domicilio } from '../types/Domicilio/Domicilio';
 import { URL_API } from '../utils/global_variables/const';
 
 export const ClienteService = {
-    createUser: async (nombre: string, apellido: string, email: string, contraseña: string, telefono: number, domicilio: string) => {
+    createUser: async (nombre: string, apellido: string, email: string, contraseña: string, telefono: number, domicilio: Domicilio) => {
         const cliente = {} as Cliente;
 
         cliente.nombre = `${nombre} ${apellido}`;
         cliente.email = email;
         cliente.contraseña = contraseña;
         cliente.telefono = telefono;
-        cliente.domicilio = domicilio;
+        cliente.domicilio?.push(domicilio);
 
         fetch(URL_API + 'cliente/create', {
             method: 'POST',

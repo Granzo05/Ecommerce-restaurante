@@ -1,5 +1,5 @@
-import { Factura } from '../types/Factura'
-import { Pedido } from '../types/Pedido';
+import { Factura } from '../types/Factura/Factura'
+import { Pedido } from '../types/Pedidos/Pedido';
 import { URL_API } from '../utils/global_variables/const';
 
 export const FacturaService = {

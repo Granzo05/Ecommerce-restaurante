@@ -1,9 +1,12 @@
-package main.entities.Pedidos;
+package main.entities.Stock;
 
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Cliente.Cliente;
 import main.entities.Factura.Factura;
+import main.entities.Pedidos.DetallesPedido;
+import main.entities.Pedidos.EnumEstadoPedido;
+import main.entities.Pedidos.EnumTipoEnvio;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,40 +20,16 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "pedidos", schema = "buen_sabor")
-public class Pedido {
+@Table(name = "stock_entrante", schema = "buen_sabor")
+public class StockEntrante {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "tipo_envio")
-    private EnumTipoEnvio tipoEnvio;
-    @Column(name = "estado")
-    private EnumEstadoPedido estado;
-    @Column(name = "fecha_pedido", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    public Date fechaPedido;
+    @Column(name = "fecha_llegada", updatable = false, nullable = false)
+    public Date fechaLlegada;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
-    @Column(name = "hora_finalizacion")
-    private String horaFinalizacion;
-    @OneToOne(mappedBy = "pedido")
-    private Factura factura;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pedido")
-    private Set<DetallesPedido> detallesPedido = new HashSet<>();
-
-    public void setTipoEnvio(String tipoEnvio) {
-        String tipoEnvioUpper = tipoEnvio.trim().toUpperCase();
-
-        try {
-            this.tipoEnvio = EnumTipoEnvio.valueOf(tipoEnvioUpper);
-        } catch (IllegalArgumentException e) {
-
-            System.err.println("Tipo de envío no válido: " + tipoEnvio);
-        }
-    }
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "stockEntrante")
+    private Set<DetalleStock> detallesStock = new HashSet<>();
 }

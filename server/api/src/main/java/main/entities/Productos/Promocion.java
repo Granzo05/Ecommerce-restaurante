@@ -2,9 +2,12 @@ package main.entities.Productos;
 
 import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Restaurante.Sucursal;
+import net.minidev.json.annotate.JsonIgnore;
 
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,31 +15,46 @@ import java.util.HashSet;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "menus", schema = "buen_sabor")
-public class Menu {
+@Table(name = "promociones", schema = "buen_sabor")
+public class Promocion {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "tiempo")
-    private int tiempoCoccion;
-    @Column(name = "tipo")
-    private String tipo;
-    @Column(name = "comensales")
-    private int comensales;
-    @Column(name = "precio")
-    private double precio;
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
-    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, orphanRemoval = true)
-    private HashSet<IngredienteMenu> ingredientesMenu = new HashSet<>();
-    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, orphanRemoval = true)
-    private HashSet<ImagenesProducto> imagenes = new HashSet<>();
+    @Column(name = "fecha_desde")
+    private Date fechaDesde;
+    @Column(name = "fecha_hasta")
+    private Date fechaHasta;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "promocion_articulo",
+            joinColumns = @JoinColumn(name = "id_promocion"),
+            inverseJoinColumns = @JoinColumn(name = "id_articulo")
+    )
+    private Set<Articulo> articulos = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "promocion_menu",
+            joinColumns = @JoinColumn(name = "id_promocion"),
+            inverseJoinColumns = @JoinColumn(name = "id_menu")
+    )
+    private Set<ArticuloMenu> articulosMenu = new HashSet<>();
+    @OneToMany(mappedBy = "promocion")
+    private Set<ImagenesProducto> imagenes = new HashSet<>();
+    @Column(name = "precio_promocion")
+    private double precio;
+    @JsonIgnore
     @Column(name = "borrado")
-    private String borrado;
+    private String borrado = "NO";
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "promocion_sucursal",
+            joinColumns = @JoinColumn(name = "id_promocion"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
+    private Set<Sucursal> sucursales = new HashSet<>();
 
-    public void addImagen(ImagenesProducto imagen) {
-        this.imagenes.add(imagen);
-    }
 }

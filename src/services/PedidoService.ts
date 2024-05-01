@@ -1,5 +1,6 @@
-import { Cliente } from '../types/Cliente';
-import { Pedido } from '../types/Pedido'
+import { Cliente } from '../types/Cliente/Cliente';
+import { EnumEstadoPedido } from '../types/Pedidos/EnumEstadoPedido';
+import { Pedido } from '../types/Pedidos/Pedido'
 import { URL_API } from '../utils/global_variables/const';
 import { FacturaService } from './FacturaService';
 
@@ -107,11 +108,11 @@ export const PedidoService = {
 
     },
 
-    updateEstadoPedido: async (pedido: Pedido, estado: string): Promise<string> => {
+    updateEstadoPedido: async (pedido: Pedido, estado: EnumEstadoPedido): Promise<string> => {
         pedido.estado = estado;
 
         // La factura solo se crea cuando el producto esta para entregar
-        if (pedido.estado.match('entregados')) {
+        if (pedido.estado.toString().match('entregados')) {
             pedido = await FacturaService.crearFactura(pedido);
         }
         

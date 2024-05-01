@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { PedidoService } from '../../services/PedidoService';
-import { Pedido } from '../../types/Pedido';
+import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
+import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 
 
 const PedidosEntrantes = () => {
@@ -37,13 +38,13 @@ const PedidosEntrantes = () => {
         // Modificar estado de pantalla del cliente donde vea que el negocio acepto el pedido, podria
         // usar la condicional de estado 'aceptado' para ir variando las imagenes que se le muestran al cliente en su pedido
 
-        let response = await PedidoService.updateEstadoPedido(pedido, 'entregados');
+        let response = await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ENTREGADOS);
         alert(await response);
         buscarPedidos();
     }
 
     async function handleCancelarPedido(pedido: Pedido) {
-        let response = await PedidoService.updateEstadoPedido(pedido, 'rechazados');
+        let response = await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS);
         alert(await response);
         buscarPedidos();
     }
@@ -68,17 +69,22 @@ const PedidosEntrantes = () => {
                             <tr key={pedido.id}>
                                 <td>
                                     <div>
-                                        <p>{pedido.cliente.nombre}</p>
-                                        <p>{pedido.cliente.domicilio}</p>
-                                        <p>{pedido.cliente.telefono}</p>
-                                        <p>{pedido.cliente.email}</p>
+                                        <p>{pedido.cliente?.nombre}</p>
+                                        <p>{pedido.domicilioEnvio?.calle} {pedido.domicilioEnvio?.numero}, {pedido.domicilioEnvio?.localidad?.nombre}</p>
+                                        <p>{pedido.cliente?.telefono}</p>
+                                        <p>{pedido.cliente?.email}</p>
                                     </div>
                                 </td>
                                 <td>{pedido.tipoEnvio}</td>
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
-                                            <p>{detalle.menu.nombre} - {detalle.cantidad}</p>
+                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
+                                        </div>
+                                    ))}
+                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
+                                        <div key={detalle.id}>
+                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
                                         </div>
                                     ))}
                                 </td>

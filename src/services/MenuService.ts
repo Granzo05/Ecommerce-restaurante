@@ -1,23 +1,23 @@
-import { Imagen } from '../types/Imagen';
-import { Menu } from '../types/Menu';
+import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
+import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
 import { URL_API } from '../utils/global_variables/const';
 
 export const MenuService = {
 
-    getMenus: async (): Promise<Menu[]> => {
+    getMenus: async (): Promise<ArticuloMenu[]> => {
         const response = await fetch(URL_API + 'menus')
 
         return await response.json();
     },
 
-    getMenusPorTipo: async (tipoComida: string): Promise<Menu[]> => {
+    getMenusPorTipo: async (tipoComida: string): Promise<ArticuloMenu[]> => {
         const response = await fetch(URL_API + 'menu/tipo/' + tipoComida);
 
         let menus = await response.json();
 
-        menus.forEach((menu: Menu) => {
+        menus.forEach((menu: ArticuloMenu) => {
             menu.imagenes.forEach((imagen, index) => {
-                imagen.ruta = URL_API + menu.nombre.replace(/\s+/g, '') + '/' + menu.imagenes[index].fileName;
+                imagen.ruta = URL_API + menu.nombre.replace(/\s+/g, '') + '/' + menu.imagenes[index].nombre;
             });
         });
 
@@ -25,7 +25,7 @@ export const MenuService = {
     },
 
 
-    createMenu: async (menu: Menu, imagenes: Imagen[]): Promise<string> => {
+    createMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[]): Promise<string> => {
         try {
             const menuResponse = await fetch(URL_API + 'menu/create', {
                 method: 'POST',
@@ -39,7 +39,7 @@ export const MenuService = {
 
             if (menuResponse.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
                 cargarImagenes = false;
-                return 'Menu existente';
+                return 'ArticuloMenu existente';
             }
 
             let imagenCargadaExitosamente = false;
@@ -68,7 +68,7 @@ export const MenuService = {
             }
 
             if (imagenCargadaExitosamente && imagenes.length > 0) {
-                return 'Menu creado con éxito';
+                return 'ArticuloMenu creado con éxito';
             } else {
                 return 'Ocurrió un error con la imagen';
             }
@@ -78,7 +78,7 @@ export const MenuService = {
         }
     },
 
-    updateMenu: async (menu: Menu, imagenes: Imagen[]): Promise<string> => {
+    updateMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'menu/update', {
                 method: 'PUT',
@@ -92,7 +92,7 @@ export const MenuService = {
 
             if (response.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
                 cargarImagenes = false;
-                return 'Menu existente';
+                return 'ArticuloMenu existente';
             }
 
             let imagenCargadaExitosamente = false;
@@ -121,7 +121,7 @@ export const MenuService = {
             }
 
             if (imagenCargadaExitosamente) {
-                return 'Menu creado con éxito';
+                return 'ArticuloMenu creado con éxito';
             } else {
                 return 'Ocurrió un error';
             }

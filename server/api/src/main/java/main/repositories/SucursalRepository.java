@@ -7,12 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RestauranteRepository extends JpaRepository<Sucursal, Long> {
+public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
 
-    @Query("SELECT r FROM Sucursal r WHERE r.email = :email")
+    @Query("SELECT s FROM Sucursal s WHERE s.email = :email")
     Sucursal findByEmail(@Param("email") String email);
 
-    @Query("SELECT r FROM Sucursal r WHERE r.email = :email AND r.contraseña = :contraseña")
+    @Query("SELECT s FROM Sucursal s WHERE s.email = :email AND s.contraseña = :contraseña")
     Sucursal findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String password);
 
 }

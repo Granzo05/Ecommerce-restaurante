@@ -1,115 +1,51 @@
 package main.entities.Cliente;
 
 import jakarta.persistence.*;
+import lombok.*;
+import main.entities.Domicilio.Domicilio;
+import main.entities.Pedidos.Pedido;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "clientes", schema = "buen_sabor")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "email")
     private String email;
-    @Column(name = "domicilio")
-    private String domicilio;
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Domicilio> domicilios = new HashSet<>();
     @Column(name = "telefono")
     private long telefono;
+    @JsonIgnore
     @Column(name = "contraseña")
     private String contraseña;
-    @Column(name = "fecha_registro", updatable = false, nullable = false)
+    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
+    @Column(name = "fecha_registro", updatable = false, nullable = false)
     public Date fechaRegistro;
+    @JsonIgnore
+    @Column(name = "fecha_nacimiento", updatable = false, nullable = false)
+    public Date fechaNacimiento;
+    @JsonIgnore
     @Column(name = "borrado")
-    private String borrado;
-
-
-    public Cliente(String nombre, String email, String domicilio, long telefono) {
-        this.nombre = nombre;
-        this.email = email;
-        this.domicilio = domicilio;
-        this.telefono = telefono;
-    }
-
-    public Cliente(Long id, String nombre, String domicilio) {
-        this.id = id;
-        this.nombre = nombre;
-        this.domicilio = domicilio;
-    }
-
-    public Cliente() {
-
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getDomicilio() {
-        return domicilio;
-    }
-
-    public void setDomicilio(String domicilio) {
-        this.domicilio = domicilio;
-    }
-
-    public long getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(long telefono) {
-        this.telefono = telefono;
-    }
-
-    public Date getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(Date fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
-
-    public String getBorrado() {
-        return borrado;
-    }
-
-    public void setBorrado(String borrado) {
-        this.borrado = borrado;
-    }
-
+    private String borrado = "NO";
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    private Set<Pedido> pedido = new HashSet<>();
 }
+

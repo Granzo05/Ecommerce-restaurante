@@ -1,6 +1,6 @@
 package main.repositories;
 
-import main.entities.Restaurante.Menu.Ingrediente;
+import main.entities.Ingredientes.Ingrediente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

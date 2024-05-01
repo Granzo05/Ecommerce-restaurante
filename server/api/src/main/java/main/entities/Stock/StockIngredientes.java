@@ -1,10 +1,11 @@
 package main.entities.Stock;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Ingredientes.Ingrediente;
-import main.entities.Pedidos.EnumMedida;
-import main.entities.Restaurante.Sucursal;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
 @Table(name = "stock_ingredientes", schema = "buen_sabor")
 public class StockIngredientes extends Stock {
     @Id
@@ -24,14 +24,6 @@ public class StockIngredientes extends Stock {
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
     @OneToMany(mappedBy = "stockIngredientes", cascade = CascadeType.ALL)
-    public Set<FechaStock> fechaIngreso = new HashSet<>();
-    public StockIngredientes(int cantidadActual, int cantidadMinima, int cantidadMaxima, Sucursal sucursal, Ingrediente ingrediente, EnumMedida medida, double precioCompra) {
-        super(cantidadActual, cantidadMinima, cantidadMaxima, sucursal, medida, precioCompra);
-        this.ingrediente = ingrediente;
-    }
-
-    public StockIngredientes(int cantidadActual, int cantidadMinima, int cantidadMaxima, Sucursal sucursal) {
-        super(cantidadActual, cantidadMinima, cantidadMaxima, sucursal);
-    }
+    public Set<DetalleStock> fechaIngreso = new HashSet<>();
 
 }

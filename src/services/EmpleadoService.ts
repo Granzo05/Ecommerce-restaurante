@@ -1,11 +1,9 @@
-import { Empleado } from '../types/Empleado'
+import { Empleado } from '../types/Restaurante/Empleado'
 import { URL_API } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
     createEmpleado: async (empleado: Empleado): Promise<string> => {
         try {
-            empleado.nombre = `${empleado.nombre} ${empleado.apellido}`;
-
             let response = await fetch(URL_API + 'empleado/create', {
                 method: 'POST',
                 headers: {

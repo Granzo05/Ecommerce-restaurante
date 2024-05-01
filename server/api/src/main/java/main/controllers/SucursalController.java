@@ -129,7 +129,7 @@ public class SucursalController {
 
     @PutMapping("/empleado/update")
     public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
-        Empleado empleado = empleadoRepository.findByCuit(Encrypt.encriptarString(empleadoDetails.getCuil()));
+        Empleado empleado = empleadoRepository.findByCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
         if (empleado != null) {
             empleado.setNombre(empleadoDetails.getNombre());
             empleado.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
@@ -146,7 +146,7 @@ public class SucursalController {
 
     @PutMapping("/empleado/{cuit}/delete")
     public ResponseEntity<String> deleteEmpleado(@PathVariable("cuit") String cuit) throws Exception {
-        Empleado empleado = empleadoRepository.findByCuit(Encrypt.encriptarString(cuit));
+        Empleado empleado = empleadoRepository.findByCuil(Encrypt.encriptarString(cuit));
 
         if (empleado != null) {
             empleado.setBorrado("SI");

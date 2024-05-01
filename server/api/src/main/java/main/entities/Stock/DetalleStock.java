@@ -3,6 +3,9 @@ package main.entities.Stock;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
+import main.entities.Pedidos.Pedido;
+import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.ArticuloVenta;
 
 import java.util.Date;
 
@@ -13,30 +16,23 @@ import java.util.Date;
 @Entity
 @Builder
 @ToString
-@Table(name = "fecha_stock", schema = "buen_sabor")
-public class FechaStock {
+@Table(name = "detalle_stock", schema = "buen_sabor")
+public class DetalleStock {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "cantidad_llegada")
-    private int cantidadLlegada;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "fecha_stock_ingredientes",
-            joinColumns = @JoinColumn(name = "id_fecha"),
-            inverseJoinColumns = @JoinColumn(name = "id_stock_ingrediente")
-    )
-    private StockIngredientes stockIngredientes;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "fecha_stock_articulos",
-            joinColumns = @JoinColumn(name = "id_fecha"),
-            inverseJoinColumns = @JoinColumn(name = "id_stock_articulo")
-    )
-    private StockArticuloVenta stockArticuloVenta;
+    @Column(name = "cantidad")
+    private int cantidad;
     @Column(name = "medida")
     private EnumMedida medida;
-    @Column(name = "fecha")
-    private Date fecha;
+    @OneToOne
+    @JoinColumn(name = "id_menu")
+    private ArticuloMenu articuloMenu;
+    @OneToOne
+    @JoinColumn(name = "id_articulo")
+    private ArticuloVenta articuloVenta;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_stock_entrante")
+    private StockEntrante stockEntrante;
 
 }

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { PedidoService } from '../../services/PedidoService';
-import { Pedido } from '../../types/Pedido';
+import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
+import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 
 
 const PedidosEntrantes = () => {
@@ -56,7 +57,7 @@ const PedidosEntrantes = () => {
 
         pedido.horaFinalizacion = horaFinalizacionFormateada;
 
-        await PedidoService.updateEstadoPedido(pedido, 'aceptados');
+        await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ACEPTADOS);
 
         buscarPedidos();
     }
@@ -67,8 +68,8 @@ const PedidosEntrantes = () => {
 
         // Asignamos el tiempo del menú con la preparación más tardía
         pedido.detallesPedido.forEach(detalle => {
-            if (detalle.menu.tiempoCoccion > tiempoTotal) {
-                tiempoTotal = detalle.menu.tiempoCoccion;
+            if (detalle.articuloMenu && detalle.articuloMenu.tiempoCoccion > tiempoTotal) {
+                tiempoTotal = detalle.articuloMenu.tiempoCoccion;
             }
         });
 
@@ -76,7 +77,7 @@ const PedidosEntrantes = () => {
     }
 
     async function handleRechazarPedido(pedido: Pedido) {
-        let response = await PedidoService.updateEstadoPedido(pedido, 'rechazados');
+        let response = await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS);
         alert(await response);
         buscarPedidos();
     }
@@ -101,17 +102,17 @@ const PedidosEntrantes = () => {
                             <tr key={pedido.id}>
                                 <td>
                                     <div>
-                                        <p>{pedido.cliente.nombre}</p>
-                                        <p>{pedido.cliente.domicilio}</p>
-                                        <p>{pedido.cliente.telefono}</p>
-                                        <p>{pedido.cliente.email}</p>
+                                        <p>{pedido.cliente?.nombre}</p>
+                                        <p>{pedido.domicilioEnvio?.calle} {pedido.domicilioEnvio?.numero}, {pedido.domicilioEnvio?.localidad?.nombre}</p>
+                                        <p>{pedido.cliente?.telefono}</p>
+                                        <p>{pedido.cliente?.email}</p>
                                     </div>
                                 </td>
                                 <td>{pedido.tipoEnvio}</td>
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
-                                            <p>{detalle.menu.nombre} - {detalle.cantidad}</p>
+                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
                                         </div>
                                     ))}
                                 </td>

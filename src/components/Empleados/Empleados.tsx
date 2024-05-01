@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { EmpleadoService } from "../../services/EmpleadoService";
 import AgregarEmpleado from "./AgregarEmpleado";
 import ModalCrud from "../ModalCrud";
-import { Empleado } from "../../types/Empleado";
+import { Empleado } from "../../types/Restaurante/Empleado";
 import EliminarEmpleado from "./EliminarEmpleado";
 import EditarEmpleado from "./EditarEmpleado";
 import '../../styles/empleados.css';

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { EmpleadoService } from '../../services/EmpleadoService';
-import { Empleado } from '../../types/Empleado';
+import { Empleado } from '../../types/Restaurante/Empleado';
 import '../../styles/empleados.css';
 
 interface EditarEmpleadoProps {

@@ -3,9 +3,8 @@ package main.entities.Restaurante;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,25 +12,16 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "sucursales", schema = "buen_sabor")
-public class Sucursal {
+@Table(name = "empresa", schema = "buen_sabor")
+public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "domicilio")
-    private String domicilio;
-    @Column(name = "contraseña")
-    private String contraseña;
-    @Column(name = "telefono")
-    private long telefono;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "privilegios")
-    private String privilegios;
-    @Column(name = "horario_apertura")
-    private LocalDate horarioApertura;
-    @Column(name = "horario_cierre")
-    private LocalDate horarioCierre;
-    @OneToMany(mappedBy = "sucursal")
-    private List<Empleado> empleados = new ArrayList<>();
+    @Column(name = "cuit")
+    private long cuit;
+    @Column(name = "razon_social")
+    private String razonSocial;
+    @OneToMany(mappedBy = "empresa")
+    private Set<Sucursal> sucursales = new HashSet<>();
+
 }

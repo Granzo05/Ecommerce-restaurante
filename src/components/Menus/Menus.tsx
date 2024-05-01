@@ -1,6 +1,5 @@
 import { MenuService } from "../../services/MenuService";
 import { useEffect, useState } from 'react';
-import { Menu } from "../../types/Menu";
 import ModalCrud from "../ModalCrud";
 import AgregarMenu from './AgregarMenu';
 import EditarMenu from './EditarMenu';
@@ -9,22 +8,23 @@ import '../../styles/menuPorTipo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
 import { EmpleadoService } from "../../services/EmpleadoService";
+import { ArticuloMenu } from "../../types/Productos/ArticuloMenu";
 
 const Menus = () => {
-    const [menus, setMenus] = useState<Menu[]>([]);
+    const [menus, setMenus] = useState<ArticuloMenu[]>([]);
     const [mostrarMenus, setMostrarMenus] = useState(true);
 
     const [showAgregarMenuModal, setShowAgregarMenuModal] = useState(false);
     const [showEditarMenuModal, setShowEditarMenuModal] = useState(false);
     const [showEliminarMenuModal, setShowEliminarMenuModal] = useState(false);
 
-    const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null);
+    const [selectedMenu, setSelectedMenu] = useState<ArticuloMenu | null>(null);
     const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await EmpleadoService.checkUser('negocio');
+                await EmpleadoService.checkUser();
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -47,7 +47,7 @@ const Menus = () => {
         setMostrarMenus(false);
     };
 
-    const handleEditarMenu = (menu: Menu) => {
+    const handleEditarMenu = (menu: ArticuloMenu) => {
         setSelectedMenu(menu);
         setShowEditarMenuModal(true);
         setMostrarMenus(false);
@@ -93,10 +93,10 @@ const Menus = () => {
                                     <td>{menu.nombre}</td>
                                     <td>{menu.comensales}</td>
                                     <td>{menu.descripcion}</td>
-                                    {menu.ingredientesMenu.map(ingrediente => (
-                                        <td>{ingrediente.ingrediente.nombre}</td>
+                                    {menu.ingredientesMenu?.map(ingrediente => (
+                                        <td>{ingrediente.ingrediente?.nombre}</td>
                                     ))}
-                                    <td>{menu.precio}</td>
+                                    <td>{menu.precioVenta}</td>
 
                                     <td>
                                         <button onClick={() => handleEliminarMenu(menu.id)}>ELIMINAR</button>

@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { Carrito } from "../types/Carrito";
-import { Cliente } from "../types/Cliente";
+import { Carrito } from "../types/Pedidos/Carrito";
+import { Cliente } from "../types/Cliente/Cliente";
 import '../styles/pago.css';
 import { ClienteService } from "../services/ClienteService";
-import { StockService } from "../services/StockService";
-import { Pedido } from "../types/Pedido";
-import { DetallePedido } from "../types/Detalles_pedido";
+import { Pedido } from "../types/Pedidos/Pedido";
 import { PedidoService } from "../services/PedidoService";
+import { EnumTipoEnvio } from "../types/Pedidos/EnumTipoEnvio";
+import { DetallesPedido } from "../types/Pedidos/Detalles_pedido";
+import { EnumEstadoPedido } from "../types/Pedidos/EnumEstadoPedido";
+import { StockIngredientesService } from "../services/StockIngredientesService";
+import { StockArticuloVentaService } from "../services/StockArticulosService";
 
 const Pago = () => {
 
@@ -23,13 +26,14 @@ const Pago = () => {
             let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
 
             setCliente(clienteMem);
+
             if (cliente) {
                 setDomicilio(await ClienteService.getDomicilio(cliente.email));
             }
         }
 
         buscarDomicilio();
-    }, []);
+    }, [cliente]);
 
     function cargarPedido() {
         const carritoString = localStorage.getItem('carrito');
@@ -38,14 +42,26 @@ const Pago = () => {
         setCarrito(carrito);
     }
 
-    async function enviarPedidoARestaurante(tipoEnvio: string) {
+    async function enviarPedidoARestaurante(tipoEnvio: EnumTipoEnvio) {
         // Chequeamos que haya stock antes que nada
 
         let hayStock = true;
 
-        for (const producto of carrito?.productos || []) {
+        for (const producto of carrito?.articuloMenu || []) {
             // Esta funcion devuelve un booleano, true en caso de haber stock y false caso contrario
-            const stockProducto = await StockService.getStockProduct(producto.menu.nombre, producto.cantidad);
+            const stockProducto = await StockIngredientesService.getStockProduct(producto.nombre, producto.cantidad);
+
+            if (!stockProducto.match('El stock es suficiente')) {
+                hayStock = false;
+                alert(stockProducto)
+                // Salimos si encontramos un producto sin stock
+                break;
+            }
+        }
+
+        for (const producto of carrito?.articuloVenta || []) {
+            // Esta funcion devuelve un booleano, true en caso de haber stock y false caso contrario
+            const stockProducto = await StockArticuloVentaService.getStockProduct(producto.nombre, producto.cantidad);
 
             if (!stockProducto.match('El stock es suficiente')) {
                 hayStock = false;
@@ -64,13 +80,22 @@ const Pago = () => {
             pedido.tipoEnvio = tipoEnvio;
 
             // Creamos los detalles
-            let detalles: DetallePedido[] = [];
+            let detalles: DetallesPedido[] = [];
 
-            carrito?.productos.forEach(producto => {
-                let detalle = new DetallePedido();
-                detalle.menu = producto.menu;
+            carrito?.articuloMenu.forEach(producto => {
+                let detalle = new DetallesPedido();
+                detalle.articuloMenu = producto;
                 detalle.cantidad = producto.cantidad;
-                detalle.subTotal = producto.cantidad * producto.menu.precio;
+                detalle.subTotal = producto.cantidad * producto.precioVenta;
+
+                detalles.push(detalle);
+            });
+
+            carrito?.articuloVenta.forEach(producto => {
+                let detalle = new DetallesPedido();
+                detalle.articuloVenta = producto;
+                detalle.cantidad = producto.cantidad;
+                detalle.subTotal = producto.cantidad * producto.precioVenta;
 
                 detalles.push(detalle);
             });
@@ -78,7 +103,7 @@ const Pago = () => {
             pedido.factura = null;
 
             pedido.detallesPedido = detalles;
-            pedido.estado = 'entrantes';
+            pedido.estado = EnumEstadoPedido.ENTRANTES;
 
             // Realizar el envío del pedido
             let response = await PedidoService.crearPedido(pedido);
@@ -122,18 +147,24 @@ const Pago = () => {
                     />
                 )}
 
-
                 <div className="productos">
-                    {carrito && carrito.productos.map((producto, index) => (
+                    {carrito && carrito.articuloMenu.map((producto, index) => (
                         <div className="item-pago" key={index}>
-                            <img src={producto.menu.imagenes[0].ruta} alt="" />
-                            <p>{producto.menu.nombre}</p>
-                            <p>{carrito.productos[index].cantidad}</p>
-                            <p>{carrito.productos[index].cantidad * carrito.productos[index].menu.precio}</p>
+                            <img src={producto.imagenes[0].ruta} alt="" />
+                            <p>{producto.nombre}</p>
+                            <p>{carrito.articuloMenu[index].cantidad}</p>
+                            <p>{carrito.articuloMenu[index].cantidad * carrito.articuloMenu[index].precioVenta}</p>
+                        </div>
+                    ))}
+                    {carrito && carrito.articuloVenta.map((producto, index) => (
+                        <div className="item-pago" key={index}>
+                            <img src={producto.imagenes[0].ruta} alt="" />
+                            <p>{producto.nombre}</p>
+                            <p>{carrito.articuloVenta[index].cantidad}</p>
+                            <p>{carrito.articuloVenta[index].cantidad * carrito.articuloVenta[index].precioVenta}</p>
                         </div>
                     ))}
                 </div>
-
 
                 {envio === 'DELIVERY' ? (
                     <div className="total">
@@ -156,7 +187,7 @@ const Pago = () => {
                         <p>*Retiro en tienda con 10% de descuento</p>
                         <button
                             type="submit"
-                            onClick={() => enviarPedidoARestaurante('TIENDA')}
+                            onClick={() => enviarPedidoARestaurante(EnumTipoEnvio.TIENDA)}
                             id="botonEncargo"
                         >
                             Realizar encargo

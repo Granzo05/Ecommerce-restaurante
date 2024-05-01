@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { PedidoService } from '../services/PedidoService';
-import { Pedido } from '../types/Pedido';
+import { Pedido } from '../types/Pedidos/Pedido';
 import '../styles/pedidos.css';
 
 
@@ -33,8 +33,8 @@ const PedidosCliente = () => {
         try {
             const data = await PedidoService.getPedidosClientes();
             if (data) {
-                const entregados = data.filter(pedido => pedido.estado.includes('entregados'));
-                const pendientes = data.filter(pedido => !pedido.estado.includes('entregados'));
+                const entregados = data.filter(pedido => pedido.estado?.toString().includes('entregados'));
+                const pendientes = data.filter(pedido => !pedido.estado?.toString().includes('entregados'));
                 setPedidosEntregados(entregados);
                 setPedidosPendientes(pendientes);
 
@@ -91,7 +91,8 @@ const PedidosCliente = () => {
                                             <td>
                                                 {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                                     <div key={detalle.id}>
-                                                        <p>{detalle.menu.nombre} - {detalle.cantidad}</p>
+                                                        <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
+                                                        <p>{detalle.articuloVenta?.nombre} - {detalle.cantidad}</p>
                                                     </div>
                                                 ))}
                                             </td>
@@ -127,17 +128,18 @@ const PedidosCliente = () => {
                                 <tr key={pedido.id}>
                                     <td>
                                         <div>
-                                            <p>{pedido.cliente.nombre}</p>
-                                            <p>{pedido.cliente.domicilio}</p>
-                                            <p>{pedido.cliente.telefono}</p>
-                                            <p>{pedido.cliente.email}</p>
+                                            <p>{pedido.cliente?.nombre}</p>
+                                            <p>{pedido.domicilioEnvio?.calle} {pedido.domicilioEnvio?.numero}, {pedido.domicilioEnvio?.localidad?.nombre}</p>
+                                            <p>{pedido.cliente?.telefono}</p>
+                                            <p>{pedido.cliente?.email}</p>
                                         </div>
                                     </td>
                                     <td>{pedido.tipoEnvio}</td>
                                     <td>
                                         {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                             <div key={detalle.id}>
-                                                <p>{detalle.menu.nombre} - {detalle.cantidad}</p>
+                                                <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
+                                                <p>{detalle.articuloVenta?.nombre} - {detalle.cantidad}</p>
                                             </div>
                                         ))}
                                     </td>

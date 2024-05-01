@@ -1,21 +1,24 @@
 import { useState } from 'react';
-import { IngredienteMenu } from '../../types/IngredienteMenu';
-import { Menu } from '../../types/Menu';
+import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
 import ModalFlotante from '../ModalFlotante';
-import AgregarStock from '../Stock/AgregarStock';
+import AgregarStock from '../Stock/AgregarStockArticulo';
 import { IngredienteService } from '../../services/IngredienteService';
-import { Imagen } from '../../types/Imagen';
-import { Ingrediente } from '../../types/Ingrediente';
+import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
+import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
+import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
+import { stringToEnumMedidas, stringToEnumTipoComida } from '../../utils/global_variables/functions';
+import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
+import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 
 interface EditarMenuProps {
-  menuOriginal: Menu;
+  menuOriginal: ArticuloMenu;
 }
 
 const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [ingredientesSelect, setIngredientesSelect] = useState<Ingrediente[]>([]);
-  const [imagenes, setImagenes] = useState<Imagen[]>([]);
+  const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   function cargarSelectsIngredientes() {
@@ -37,15 +40,17 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   };
 
   const añadirCampoImagen = () => {
-    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagen]);
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as ImagenesProducto]);
   };
 
   ///////// INGREDIENTES
 
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
     const nuevosIngredientes = [...ingredientes];
-    nuevosIngredientes[index].ingrediente.nombre = nombre;
-    setIngredientes(nuevosIngredientes);
+    if (nuevosIngredientes && nuevosIngredientes[index].ingrediente) {
+      nuevosIngredientes[index].ingrediente.nombre = nombre;
+      setIngredientes(nuevosIngredientes);
+    }
   };
 
   const handleCantidadIngredienteChange = (index: number, cantidad: number) => {
@@ -56,12 +61,12 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
   const handleMedidaIngredienteChange = (index: number, medida: string) => {
     const nuevosIngredientes = [...ingredientes];
-    nuevosIngredientes[index].ingrediente.medida = medida;
+    nuevosIngredientes[index].medida = stringToEnumMedidas(medida);
     setIngredientes(nuevosIngredientes);
   };
 
   const añadirCampoIngrediente = () => {
-    setIngredientes([...ingredientes, { ingrediente: new Ingrediente(), cantidad: 0 }]);
+    setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: EnumMedida.CENTIMETROS_CUBICOS, articuloMenu: null }]);
     setSelectIndex(prevIndex => prevIndex + 1);
     cargarSelectsIngredientes();
   };
@@ -91,20 +96,20 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     };
 
   const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
-  const [tipo, setTipo] = useState(menuOriginal.tipo);
+  const [tipo, setTipo] = useState<EnumTipoArticuloComida | null>(null);
   const [comensales, setComensales] = useState(menuOriginal.comensales);
-  const [precio, setPrecio] = useState(menuOriginal.precio);
+  const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
   const [nombre, setNombre] = useState(menuOriginal.nombre);
   const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
 
   function editarMenu() {
-    const menuActualizado: Menu = {
+    const menuActualizado: ArticuloMenu = {
       ...menuOriginal,
       nombre,
       tiempoCoccion,
       tipo,
       comensales,
-      precio,
+      precioVenta,
       descripcion,
       ingredientesMenu: ingredientes
     };
@@ -143,7 +148,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       </label>
       <br />
       <label>
-        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
+        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(stringToEnumTipoComida(e.target.value.toUpperCase())) }}>
           <option value="">Seleccionar tipo de menú</option>
           <option value="hamburguesas">Hamburguesas</option>
           <option value="panchos">Panchos</option>
@@ -168,7 +173,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
           <div key={index} className='div-ingrediente-menu'>
             <select
               id={`select-ingredientes-${index}`}
-              value={ingredienteMenu.ingrediente.nombre}
+              value={ingredienteMenu.ingrediente?.nombre}
               onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
             >
               <option value="">Seleccionar ingrediente</option>
@@ -184,7 +189,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             />
             <select
               id={`select-medidas-${index}`}
-              value={ingredienteMenu.ingrediente.medida}
+              value={ingredienteMenu.ingrediente?.medida?.toString()}
               onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
             >
               <option value="">Seleccionar medida ingrediente</option>

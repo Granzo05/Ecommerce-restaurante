@@ -1,7 +1,9 @@
-package main.entities.Restaurante.Menu;
+package main.entities.Ingredientes;
 
 import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Stock.StockIngredientes;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Getter
 @Setter
@@ -14,13 +16,11 @@ public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "costo")
-    private double costo;
     @Column(name = "nombre")
     private String nombre;
-    @Column(name = "medida")
-    private String medida;
+    @JsonIgnore
     @Column(name = "borrado")
-    private String borrado;
-
+    private String borrado = "NO";
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "ingrediente")
+    private StockIngredientes stock;
 }

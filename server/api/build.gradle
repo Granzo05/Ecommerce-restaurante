@@ -62,6 +62,9 @@ dependencies {
     // Mercadopago
     implementation group: 'com.mercadopago', name: 'sdk-java', version: '2.1.22'
 
+    runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'mysql:mysql-connector-java:8.0.32'
+
 }
 
 tasks.named('test') {

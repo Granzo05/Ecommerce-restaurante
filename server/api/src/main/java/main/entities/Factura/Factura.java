@@ -1,8 +1,19 @@
 package main.entities.Factura;
 
 import jakarta.persistence.*;
-import main.entities.Cliente.Cliente;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import main.entities.Pedidos.Pedido;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.Date;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "facturas", schema = "buen_sabor")
 public class Factura {
@@ -10,53 +21,16 @@ public class Factura {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "tipo_factura")
-    private TipoFactura tipoFactura;
+    private EnumTipoFactura tipoFactura;
     @Column(name = "metodo_pago")
     private EnumMetodoPago metodoPago;
-    @ManyToOne
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
-
-    public Factura() {
-    }
-
-    public TipoFactura getTipoFactura() {
-        return tipoFactura;
-    }
-
-    public void setTipoFactura(TipoFactura tipoFactura) {
-        this.tipoFactura = tipoFactura;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public EnumMetodoPago getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(String metodoPago) {
-        String tipoEnvioUpper = metodoPago.trim().toUpperCase();
-
-        try {
-            this.metodoPago = EnumMetodoPago.valueOf(tipoEnvioUpper);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Tipo de envío no válido: " + metodoPago);
-        }
-    }
-
-
+    @Column(name = "fecha_creacion", updatable = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    public Date fechaFacturacion;
+    @Column(name = "total")
+    private double total;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_pedido")
+    private Pedido pedido;
 }

@@ -1,6 +1,10 @@
 package main.entities.Pedidos;
 
-public enum EnumTipoEnvio {
-    DELIVERY,
-    TIENDA
+public enum EnumEstadoPedido {
+    ENTRANTES,
+    ACEPTADOS,
+    COCINADOS,
+    ENTREGADOS,
+    RECHAZADOS,
+    EN_CAMINO
 }

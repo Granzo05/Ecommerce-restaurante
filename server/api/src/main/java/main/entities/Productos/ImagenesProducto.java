@@ -1,4 +1,4 @@
-package main.entities.Restaurante.Menu;
+package main.entities.Productos;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "imagenes_menu", schema = "buen_sabor")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "imagenes", schema = "buen_sabor")
 public class ImagenesProducto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,10 +23,26 @@ public class ImagenesProducto {
     private String formato;
     @Column(name = "peso")
     private long peso;
-    @ManyToOne
-    @JoinColumn(name = "id_menu")
-    private Menu idMenu;
-    @ManyToOne
-    @JoinColumn(name = "id_articulo")
-    private Articulo idArticulo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "imagenes_menu",
+            joinColumns = @JoinColumn(name = "id_imagen"),
+            inverseJoinColumns = @JoinColumn(name = "id_menu")
+    )
+    private ArticuloMenu articuloMenu;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "imagenes_articulo",
+            joinColumns = @JoinColumn(name = "id_imagen"),
+            inverseJoinColumns = @JoinColumn(name = "id_articulo")
+    )
+    private Articulo articulo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "imagenes_promocion",
+            joinColumns = @JoinColumn(name = "id_imagen"),
+            inverseJoinColumns = @JoinColumn(name = "id_promocion")
+    )
+    private Promocion promocion;
+
 }

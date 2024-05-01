@@ -1,13 +1,13 @@
-import { Pedido } from "./Pedido";
+import { Domicilio } from "../Domicilio/Domicilio";
+import { Pedido } from "../Pedidos/Pedido";
 
 export class Cliente {
-    fechaRegistro: Date = new Date();
     id: number = 0;
     nombre: string = '';
     email: string = '';
-    domicilio: string = '';
-    telefono: number = 0;
     contraseña: string = '';
+    domicilio: Domicilio[] | null = [];
+    telefono: number = 0;
     privilegios: string = '';
     pedidos: Pedido[] = [];
 

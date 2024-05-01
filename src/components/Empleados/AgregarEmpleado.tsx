@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Empleado } from '../../types/Empleado';
+import { Empleado } from '../../types/Restaurante/Empleado';
 import { EmpleadoService } from '../../services/EmpleadoService';
-import { clearInputs } from '../../utils/global_variables/clearInputs';
+import { clearInputs } from '../../utils/global_variables/functions';
 
 function AgregarEmpleado() {
 
