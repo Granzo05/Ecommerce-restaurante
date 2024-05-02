@@ -1,5 +1,6 @@
 package main;
 
+import main.controllers.PaisController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -18,6 +19,7 @@ import java.security.GeneralSecurityException;
 public class Main {
     public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
         SpringApplication.run(Main.class, args);
+
     }
 
     @Bean

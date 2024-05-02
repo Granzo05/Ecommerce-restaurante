@@ -73,7 +73,6 @@ public class StockArticulosController {
             stock.setPrecioCompra(stockDetail.getPrecioCompra());
             stock.setMedida(stockDetail.getMedida());
             stock.setArticuloVenta(stockDetail.getArticuloVenta());
-            stock.setFechaIngreso(stockDetail.getFechaIngreso());
 
             Sucursal sucursal = sucursalRepository.findById(id).get();
             stock.setSucursal(sucursal);

@@ -1,24 +1,92 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../styles/login.css';
 import { ClienteService } from '../services/ClienteService'
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { Domicilio } from '../types/Domicilio/Domicilio';
+import { Provincia } from '../types/Domicilio/Provincia';
+import { Localidad } from '../types/Domicilio/Localidad';
+import { LocalidadService } from '../services/LocalidadService';
+import { Departamento } from '../types/Domicilio/Departamento';
+import { ProvinciaService } from '../services/ProvinciaService';
+import { DepartamentoService } from '../services/DepartamentoService';
 
 
 const LoginCliente = () => {
     const [nombre, setNombre] = useState('');
     const [email, setEmail] = useState('');
     const [contraseña, setContraseña] = useState('');
-    const [domicilio, setDomicilio] = useState('');
+    const [calle, setCalle] = useState('');
+    const [numeroCasa, setNumeroCasa] = useState(0);
+    const [codigoPostal, setCodigoPostal] = useState(0);
+    const [localidadId, setLocalidadId] = useState(0);
+    const [departamentoId, setDepartamentoId] = useState(0);
+    const [provinciaId, setProvinciaId] = useState(0);
     const [apellido, setApellido] = useState('');
     const [telefono, setTelefono] = useState(0);
+    const [provincias, setProvincias] = useState<Provincia[] | null>([]);
+    const [departamentos, setDepartamentos] = useState<Departamento[] | null>([]);
+    const [localidades, setLocalidades] = useState<Localidad[] | null>([]);
 
     const handleIniciarSesionUsuario = () => {
         ClienteService.getUser(email, contraseña);
     };
 
+    useEffect(() => {
+        ProvinciaService.getProvincias()
+            .then(provincias => {
+                setProvincias(provincias);
+            })
+            .catch(error => {
+                console.error("Error al obtener las provincias:", error);
+            });
+    }, []);
+
+    const buscarDepartamentos = async () => {
+        DepartamentoService.getDepartamentosByProvinciaId(provinciaId)
+            .then(departamentos => {
+                setDepartamentos(departamentos);
+            })
+            .catch(error => {
+                console.error("Error al obtener los departamentos:", error);
+            });
+    }
+
+    const buscarLocalidades = async () => {
+        LocalidadService.getLocalidadesByDepartamentoId(departamentoId)
+            .then(localidades => {
+                setLocalidades(localidades);
+            })
+            .catch(error => {
+                console.error("Error al obtener las localidades:", error);
+            });
+    }
+
+    const handleProvincia = async (provinciaId: number) => {
+        setProvinciaId(provinciaId);
+        
+        buscarDepartamentos();
+    }
+
+    const handleDepartamento = async (departamentoId: number) => {
+        setDepartamentoId(departamentoId);
+        
+        buscarLocalidades();
+    }
+
     const handleCargarUsuario = () => {
+        let domicilio = new Domicilio();
+        domicilio.calle = calle;
+        domicilio.codigoPostal = codigoPostal;
+        domicilio.numero = numeroCasa;
+
+
+        if (localidades) {
+            let localidad = localidades.find(localidad => localidad.id === localidadId);
+            domicilio.localidad = localidad;
+        }
+
         ClienteService.createUser(nombre, apellido, email, contraseña, telefono, domicilio);
     };
 
@@ -102,7 +170,7 @@ const LoginCliente = () => {
                 <div className="form-content">
                     <div className="box">
                         <h3>- CREAR UNA CUENTA -</h3>
-                        <p id='subtitle'>o registrate con: <img id='icon-gmail' src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new"/></p>
+                        <p id='subtitle'>o registrate con: <img id='icon-gmail' src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new" /></p>
                         <form action="">
                             <div className="input-box">
                                 <label>
@@ -133,10 +201,45 @@ const LoginCliente = () => {
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type="text" className='input-control' placeholder="Domicilio" onChange={(e) => { setDomicilio(e.target.value) }} />
+                                    <input required type="text" className='input-control' placeholder="Nombre de la calle" onChange={(e) => { setCalle(e.target.value) }} />
                                 </label>
                             </div>
-                            <input style={{marginTop: '1px'}} type="button" className='btn' value="REGISTRARSE" onClick={handleCargarUsuario} />
+                            <div className="input-box">
+                                <label>
+                                    <input required type="number" className='input-control' placeholder="Número de la casa" onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
+                                </label>
+                            </div>
+                            <select
+                                onChange={(e) => handleProvincia(parseInt(e.target.value))}
+                            >
+                                <option value="">Seleccionar provincia</option>
+                                {provincias?.map((provincia, index) => (
+                                    <option key={index} value={provincia.id}>{provincia.nombre}</option>
+                                ))}
+                            </select>
+                            <select
+                                onChange={(e) => handleDepartamento(parseInt(e.target.value))}
+                            >
+                                <option value="">Seleccionar departamento</option>
+                                {departamentos?.map((departamento, index) => (
+                                    <option key={index} value={departamento.id}>{departamento.nombre}</option>
+                                ))}
+                            </select>
+                            <select
+                                onChange={(e) => setLocalidadId(parseInt(e.target.value))}
+                            >
+                                <option value="">Seleccionar localidad</option>
+                                {localidades?.map((localidad, index) => (
+                                    <option key={index} value={localidad.id}>{localidad.nombre}</option>
+                                ))}
+                            </select>
+                            <div className="input-box">
+                                <label>
+                                    <input required type="number" className='input-control' placeholder="Codigo postal" onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+                                </label>
+                            </div>
+
+                            <input style={{ marginTop: '1px' }} type="button" className='btn' value="REGISTRARSE" onClick={handleCargarUsuario} />
                         </form>
                         <p id='subtitle'>¿Ya tienes una cuenta?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('iniciarSesion')}>Iniciar sesión</a></p>
                     </div>

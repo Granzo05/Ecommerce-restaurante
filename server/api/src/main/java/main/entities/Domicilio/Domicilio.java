@@ -26,21 +26,21 @@ public class Domicilio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_localidad")
     private Localidad localidad;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinTable(
             name = "clientes_domicilio",
             joinColumns = @JoinColumn(name = "id_domicilio"),
             inverseJoinColumns = @JoinColumn(name = "id_cliente")
     )
     private Cliente cliente;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinTable(
             name = "sucursales_domicilio",
             joinColumns = @JoinColumn(name = "id_domicilio"),
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Sucursal sucursal;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinTable(
             name = "empleados_domicilio",
             joinColumns = @JoinColumn(name = "id_domicilio"),

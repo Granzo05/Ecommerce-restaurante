@@ -5,6 +5,7 @@ import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Productos.Promocion;
 import main.entities.Stock.Stock;
+import main.entities.Stock.StockEntrante;
 
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -44,6 +45,8 @@ public class Sucursal {
     private String borrado = "NO";
     @OneToMany(mappedBy = "sucursal")
     private Set<Stock> stocksSucursal = new HashSet<>();
+    @OneToMany(mappedBy = "sucursal")
+    private Set<StockEntrante> stocksEntranteSucursal = new HashSet<>();
     @ManyToMany(mappedBy = "sucursales")
     private Set<Promocion> promociones = new HashSet<>();
 }

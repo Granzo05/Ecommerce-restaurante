@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
 public class MercadopagoController {
 
     @Value("${MERCADOLIBRE.ACCESS_TOKEN}")

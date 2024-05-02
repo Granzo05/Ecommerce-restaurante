@@ -24,6 +24,6 @@ public class ArticuloVenta extends Articulo {
     @Column(name = "cantidad_medida")
     private int cantidadMedida;
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private StockArticuloVenta stock;
 }

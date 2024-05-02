@@ -14,7 +14,7 @@ public interface IngredienteMenuRepository extends JpaRepository<IngredienteMenu
     @Query("SELECT i FROM IngredienteMenu i WHERE i.ingrediente.nombre = :nombre")
     IngredienteMenu findByName(@Param("nombre") String nombre);
 
-    @Query("SELECT i FROM IngredienteMenu i WHERE i.menu.id = :id")
+    @Query("SELECT i FROM IngredienteMenu i WHERE i.articuloMenu.id = :id")
     HashSet<IngredienteMenu> findByMenuId(@Param("id") Long id);
 
 }

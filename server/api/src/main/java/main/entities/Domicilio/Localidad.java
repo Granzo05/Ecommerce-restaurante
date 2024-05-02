@@ -24,6 +24,6 @@ public class Localidad {
     @OneToMany(mappedBy = "localidad")
     private Set<Domicilio> domicilios = new HashSet<>();
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_provincia")
-    private Provincia provincia;
+    @JoinColumn(name = "id_departamento")
+    private Departamento departamento;
 }

@@ -23,7 +23,4 @@ public class StockIngredientes extends Stock {
     @OneToOne
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
-    @OneToMany(mappedBy = "stockIngredientes", cascade = CascadeType.ALL)
-    public Set<DetalleStock> fechaIngreso = new HashSet<>();
-
 }

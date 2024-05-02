@@ -28,7 +28,7 @@ public class ArticuloMenu extends Articulo {
     private int comensales;
     @Column(name = "descripcion")
     private String descripcion;
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
 
 }
