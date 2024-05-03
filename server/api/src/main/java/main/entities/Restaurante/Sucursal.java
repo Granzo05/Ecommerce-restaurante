@@ -7,6 +7,7 @@ import main.entities.Domicilio.Localidad;
 import main.entities.Productos.Promocion;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockEntrante;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -44,12 +45,16 @@ public class Sucursal {
     private Empresa empresa;
     @Column(name = "borrado")
     private String borrado = "NO";
+    @JsonIgnore
     @OneToMany(mappedBy = "sucursal")
     private Set<Stock> stocksSucursal = new HashSet<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "sucursal")
     private Set<StockEntrante> stocksEntranteSucursal = new HashSet<>();
+    @JsonIgnore
     @ManyToMany(mappedBy = "sucursales")
     private Set<Promocion> promociones = new HashSet<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "sucursal")
     private Set<Localidad> localidadesDisponiblesDelivery = new HashSet<>();
 }

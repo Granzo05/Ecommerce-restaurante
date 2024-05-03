@@ -22,23 +22,11 @@ public class ClienteController {
 
     @PostMapping("/cliente/create")
     public Cliente crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
+        System.out.println(clienteDetails);
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
+
         if (cliente.isEmpty()) {
             clienteDetails.setContraseña(Encrypt.cifrarPassword(clienteDetails.getContraseña()));
-
-            Set<Domicilio> domicilios = new HashSet<>();
-
-            for (Domicilio domicilioCliente : clienteDetails.getDomicilios()) {
-                Domicilio domicilio = Domicilio.builder()
-                        .calle(Encrypt.encriptarString(domicilioCliente.getCalle()))
-                        .codigoPostal(domicilioCliente.getCodigoPostal())
-                        .localidad(domicilioCliente.getLocalidad())
-                        .numero(domicilioCliente.getNumero())
-                        .build();
-
-                domicilios.add(domicilio);
-            }
-            clienteDetails.setDomicilios(domicilios);
 
             clienteRepository.save(clienteDetails);
             return clienteDetails;
@@ -67,6 +55,7 @@ public class ClienteController {
         for (Domicilio domicilio : domicilios) {
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
         }
+
         return domicilios;
     }
 

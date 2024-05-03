@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
+import main.repositories.ArticuloMenuRepository;
 import main.repositories.IngredienteRepository;
 import main.repositories.StockArticuloVentaRepository;
 import main.repositories.SucursalRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,13 +21,13 @@ import java.util.Set;
 public class StockArticulosController {
     private final StockArticuloVentaRepository stockArticuloRepository;
     private final IngredienteRepository ingredienteRepository;
-    private final MenuRepository menuRepository;
+    private final ArticuloMenuRepository articuloMenuRepository;
     private final SucursalRepository sucursalRepository;
 
-    public StockArticulosController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, MenuRepository menuRepository, SucursalRepository sucursalRepository) {
+    public StockArticulosController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, ArticuloMenuRepository articuloMenuRepository, SucursalRepository sucursalRepository) {
         this.stockArticuloRepository = stockArticuloRepository;
         this.ingredienteRepository = ingredienteRepository;
-        this.menuRepository = menuRepository;
+        this.articuloMenuRepository = articuloMenuRepository;
         this.sucursalRepository = sucursalRepository;
     }
 
@@ -36,7 +38,7 @@ public class StockArticulosController {
             return null;
         }
 
-        return (Set<StockArticuloVenta>) stockArticuloVenta;
+        return (HashSet<StockArticuloVenta>) stockArticuloVenta;
     }
 
     @GetMapping("/sucursal/{idSucursal}/stockArticuloVenta/check")

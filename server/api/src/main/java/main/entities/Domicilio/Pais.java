@@ -21,6 +21,6 @@ public class Pais {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(mappedBy = "pais")
+    @OneToMany(mappedBy = "pais", cascade = CascadeType.ALL)
     private Set<Provincia> provincias = new HashSet<>();
 }

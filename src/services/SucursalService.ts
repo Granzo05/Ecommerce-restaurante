@@ -35,7 +35,7 @@ export const SucursalService = {
     },
 
     getSucursal: async (email: string, contraseña: string) => {
-        await fetch(URL_API + 'restaurant/login/' + email + '/' + contraseña, {
+        await fetch(URL_API + 'sucursal/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

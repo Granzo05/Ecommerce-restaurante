@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import main.entities.Restaurante.Sucursal;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,9 +22,12 @@ public class Localidad {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(mappedBy = "localidad")
+    @OneToMany(mappedBy = "localidad", cascade = CascadeType.ALL)
     private Set<Domicilio> domicilios = new HashSet<>();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_departamento")
     private Departamento departamento;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_sucursal")
+    private Sucursal sucursal;
 }

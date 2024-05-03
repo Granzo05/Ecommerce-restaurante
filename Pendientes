@@ -33,6 +33,7 @@
 [] Select provincia, departamento y localidad en ambos registros
 [] Opcion para seleccionar que localidades abarcaria el local, para asi cargar la db con los datos de esa provincia y no de todo el pais
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
+[] Crear modal para mostrar opciones extra al interactuar con las opciones
 
     Pruebas
 [] Carga sucursal

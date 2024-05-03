@@ -22,8 +22,10 @@ import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class PedidoController {
@@ -40,23 +42,23 @@ public class PedidoController {
     }
 
     @GetMapping("/cliente/{id}/pedidos")
-    public List<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
+    public Set<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
         System.out.println(idCliente);
         List<Pedido> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
         System.out.println(pedidos);
-        return pedidos;
+        return new HashSet<>(pedidos);
     }
 
     @GetMapping("/pedidos")
-    public List<Pedido> getPedidosPorNegocio() {
+    public Set<Pedido> getPedidosPorNegocio() {
         List<Pedido> pedidos = pedidoRepository.findOrders();
-        return pedidos;
+        return new HashSet<>(pedidos);
     }
 
     @GetMapping("/pedidos/{estado}")
-    public List<Pedido> getPedidosPorEstado(@PathVariable("estado") String estado) {
+    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") String estado) {
         List<Pedido> pedidos = pedidoRepository.findPedidos(estado);
-        return pedidos;
+        return new HashSet<>(pedidos);
     }
 
     //Funcion para cargar pdfs
@@ -108,7 +110,6 @@ public class PedidoController {
     @Transactional
     @PostMapping("/pedido/create")
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido) {
-        pedido.setTipoEnvio(pedido.getTipoEnvio().toString());
         pedido.setFactura(null);
 
         pedidoRepository.save(pedido);

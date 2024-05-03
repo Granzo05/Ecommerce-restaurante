@@ -10,6 +10,8 @@ import main.repositories.FacturaRepository;
 import main.repositories.PedidoRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -53,7 +55,9 @@ public class FacturaController {
 
     @GetMapping("/facturas/cliente/{id}")
     public Set<Factura> getFacturas(@PathVariable("id") Long id) {
-        return facturaRepository.findByIdCliente(id);
+        List<Factura> facturas = facturaRepository.findByIdCliente(id);
+
+        return new HashSet<>(facturas);
     }
 
 

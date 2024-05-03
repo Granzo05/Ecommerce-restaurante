@@ -23,5 +23,4 @@ public class Empresa {
     private String razonSocial;
     @OneToMany(mappedBy = "empresa")
     private Set<Sucursal> sucursales = new HashSet<>();
-
 }

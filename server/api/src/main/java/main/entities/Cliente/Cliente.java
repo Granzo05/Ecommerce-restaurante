@@ -17,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
+@ToString
 @Table(name = "clientes", schema = "buen_sabor")
 public class Cliente {
     @Id

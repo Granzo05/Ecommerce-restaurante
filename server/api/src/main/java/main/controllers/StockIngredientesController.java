@@ -6,6 +6,7 @@ import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockIngredientes;
+import main.repositories.ArticuloMenuRepository;
 import main.repositories.IngredienteRepository;
 import main.repositories.StockIngredientesRepository;
 import main.repositories.SucursalRepository;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,31 +23,31 @@ import java.util.Set;
 public class StockIngredientesController {
     private final StockIngredientesRepository stockIngredientesRepository;
     private final IngredienteRepository ingredienteRepository;
-    private final MenuRepository menuRepository;
+    private final ArticuloMenuRepository articuloMenuRepository;
     private final SucursalRepository sucursalRepository;
 
-    public StockIngredientesController(StockIngredientesRepository stockIngredientesRepository, IngredienteRepository ingredienteRepository, MenuRepository menuRepository, SucursalRepository sucursalRepository) {
+    public StockIngredientesController(StockIngredientesRepository stockIngredientesRepository, IngredienteRepository ingredienteRepository, ArticuloMenuRepository articuloMenuRepository, SucursalRepository sucursalRepository) {
         this.stockIngredientesRepository = stockIngredientesRepository;
         this.ingredienteRepository = ingredienteRepository;
-        this.menuRepository = menuRepository;
+        this.articuloMenuRepository = articuloMenuRepository;
         this.sucursalRepository = sucursalRepository;
     }
 
     @GetMapping("/stockIngredientes/{idSucursal}")
     public Set<StockIngredientes> getStock(@PathVariable("idSucursal") long id) {
-        List<StockIngredientes> stockIngredientes = stockIngredientesRepository.findAllByIdSucursal(id);
+        Set<StockIngredientes> stockIngredientes = (HashSet<StockIngredientes>) stockIngredientesRepository.findAllByIdSucursal(id);
         if (stockIngredientes.isEmpty()) {
             return null;
         }
 
-        return (Set<StockIngredientes>) stockIngredientes;
+        return stockIngredientes;
     }
 
 
     @GetMapping("sucursal/{idSucursal}/stockIngredientes/{nombre}/{cantidad}")
     public ResponseEntity<String> getStockPorNombre(@PathVariable("nombre") String nombre, @PathVariable("cantidad") int cantidad, @PathVariable("idSucursal") long id) {
         // Recibimos el nombre del menu y la cantidad pedida del mismo
-        Optional<ArticuloMenu> menu = menuRepository.findByName(nombre);
+        Optional<ArticuloMenu> menu = articuloMenuRepository.findByName(nombre);
 
         if (!menu.isEmpty()) {
             // Buscamos ingrediente por ingrediente a ver si el stockIngredientes es suficiente

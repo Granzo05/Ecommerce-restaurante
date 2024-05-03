@@ -13,22 +13,20 @@ const LoginNegocio = () => {
   return (
     <div>
       <div className={styles.containerForm}>
-        <div className={styles.containerForm}>
-          <div className={styles.formInfo}>
-            <div>
-              <h2>Iniciar sesión</h2>
-              <form className={styles.form}>
-                <label>
-                  <input required type="text" placeholder="Correo electrónico" id="emailLogin"
-                    onChange={(e) => { setEmail(e.target.value) }} />
-                </label>
-                <label>
-                  <input required type="password" placeholder="Contraseña" id="contraseñaLogin"
-                    onChange={(e) => { setContraseña(e.target.value) }} />
-                </label>
-                <input type="button" onClick={handleIniciarSesionNegocio} />
-              </form>
-            </div>
+        <div className={styles.formInfo}>
+          <div>
+            <h2>Iniciar sesión</h2>
+            <form className={styles.form}>
+              <label>
+                <input required type="text" placeholder="Correo electrónico" id="emailLogin"
+                  onChange={(e) => { setEmail(e.target.value) }} />
+              </label>
+              <label>
+                <input required type="password" placeholder="Contraseña" id="contraseñaLogin"
+                  onChange={(e) => { setContraseña(e.target.value) }} />
+              </label>
+              <input type="button" onClick={handleIniciarSesionNegocio} />
+            </form>
           </div>
         </div>
       </div>
