@@ -9,7 +9,6 @@ import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import IcecreamIcon from '@mui/icons-material/Icecream';
 import lomoIcono from '../assets/img/icono-lomos.png'
 import sushiIcono from '../assets/img/icono-sushi.png'
-import { ProvinciaService } from '../services/ProvinciaService'
 
 export default function MainMenu() {
 
@@ -17,18 +16,18 @@ export default function MainMenu() {
         window.location.href = 'menu/' + tipoComida;
     }
 
+    /*
     const cargarDB = () => {
         ProvinciaService.createProvincias()
             .catch(error => {
                 console.error("Error al obtener las provincias:", error);
             });
     }
-
+    */
+   
     return (
         <div className='body'>
             <div className="container">
-                {/* Dejame esto un poco que es para cargar paises en la db, despues lo saco, de ultima ocultalo si necesitas xd */}
-                <button onClick={cargarDB}>CARGAR</button>
 
                 <div className="card" onClick={() => handleMenu('hamburguesas')}>
                     <img className="background" src={burguerImage} alt="" />

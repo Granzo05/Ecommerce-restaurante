@@ -3,6 +3,7 @@ package main.entities.Restaurante;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
+import main.entities.Domicilio.Localidad;
 import main.entities.Productos.Promocion;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockEntrante;
@@ -49,4 +50,6 @@ public class Sucursal {
     private Set<StockEntrante> stocksEntranteSucursal = new HashSet<>();
     @ManyToMany(mappedBy = "sucursales")
     private Set<Promocion> promociones = new HashSet<>();
+    @OneToMany(mappedBy = "sucursal")
+    private Set<Localidad> localidadesDisponiblesDelivery = new HashSet<>();
 }

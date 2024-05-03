@@ -2,6 +2,7 @@ package main.entities.Restaurante;
 
 import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Domicilio.Localidad;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,16 +13,13 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "empresa", schema = "buen_sabor")
-public class Empresa {
+@Table(name = "localidades_delivery", schema = "buen_sabor")
+public class LocalidadDelivery {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "cuit")
-    private long cuit;
-    @Column(name = "razon_social")
-    private String razonSocial;
-    @OneToMany(mappedBy = "empresa")
-    private Set<Sucursal> sucursales = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "id_sucursal")
+    private Sucursal sucursal;
 
 }

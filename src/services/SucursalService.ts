@@ -1,22 +1,15 @@
-import { Domicilio } from '../types/Domicilio/Domicilio';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { URL_API } from '../utils/global_variables/const';
 
-export const RestauranteService = {
-    createRestaurant: async (email: string, contraseña: string, domicilio: Domicilio, telefono: number) => {
-        const restaurante = {} as Sucursal;
-
-        restaurante.email = email;
-        restaurante.contraseña = contraseña;
-        restaurante.telefono = telefono;
-        restaurante.domicilio = domicilio;
+export const SucursalService = {
+    createRestaurant: async (sucursal: Sucursal) => {
         // Creamos el restaurante en la db
         await fetch(URL_API + 'restaurante/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(restaurante)
+            body: JSON.stringify(sucursal)
         })
             .then(async response => {
                 if (!response.ok) {
@@ -41,7 +34,7 @@ export const RestauranteService = {
             })
     },
 
-    getRestaurant: async (email: string, contraseña: string) => {
+    getSucursal: async (email: string, contraseña: string) => {
         await fetch(URL_API + 'restaurant/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
@@ -73,6 +66,27 @@ export const RestauranteService = {
             })
     },
 
+    getSucursales: async (): Promise<Sucursal[]> => {
+        try {
+            const response = await fetch(URL_API + 'sucursales', {
+
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
     updateRestaurant: async (restaurante: Sucursal): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'restaurant/update', {
@@ -93,5 +107,25 @@ export const RestauranteService = {
             console.error('Error:', error);
             throw error;
         }
-    }
+    },
+
+    deleteSucursal: async (idSucursal: number): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'sucursal/' + idSucursal + '/delete', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 }

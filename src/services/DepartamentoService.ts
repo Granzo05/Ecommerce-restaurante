@@ -81,4 +81,24 @@ export const DepartamentoService = {
             throw error;
         }
     },
+
+    createDepartamentosByIdProvincia: async (idProvincia: number): Promise<Departamento[] | null> => {
+        try {
+            const response = await fetch(URL_API + `departamentos/create/${idProvincia}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 }

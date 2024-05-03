@@ -32,7 +32,7 @@
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
 [] Select provincia, departamento y localidad en ambos registros
 [] Opcion para seleccionar que localidades abarcaria el local, para asi cargar la db con los datos de esa provincia y no de todo el pais
-
+[] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 
     Pruebas
 [] Carga sucursal

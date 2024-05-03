@@ -42,15 +42,4 @@ public class Pedido {
     private Cliente cliente;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pedido")
     private Set<DetallesPedido> detallesPedido = new HashSet<>();
-
-    public void setTipoEnvio(String tipoEnvio) {
-        String tipoEnvioUpper = tipoEnvio.trim().toUpperCase();
-
-        try {
-            this.tipoEnvio = EnumTipoEnvio.valueOf(tipoEnvioUpper);
-        } catch (IllegalArgumentException e) {
-
-            System.err.println("Tipo de envío no válido: " + tipoEnvio);
-        }
-    }
 }

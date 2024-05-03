@@ -1,4 +1,5 @@
 import { Domicilio } from "../Domicilio/Domicilio";
+import { Localidad } from "../Domicilio/Localidad";
 import { Empleado } from "./Empleado";
 
 export class Sucursal {
@@ -11,7 +12,7 @@ export class Sucursal {
     horarioApertura: Date | null = null;
     horarioCierre: Date | null = null;
     empleados: Empleado[] = [];
-
+    localidadesDisponiblesDelivery: Localidad[] = [];
     constructor() {
 
     }

@@ -24,7 +24,7 @@ export const ProvinciaService = {
 
     createProvincias: async () => {
         try {
-            const response = await fetch(URL_API + `localidades/create`, {
+            const response = await fetch(URL_API + `provincias/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

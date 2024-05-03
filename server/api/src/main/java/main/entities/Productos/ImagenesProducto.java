@@ -21,8 +21,6 @@ public class ImagenesProducto {
     private String ruta;
     @Column(name = "formato")
     private String formato;
-    @Column(name = "peso")
-    private long peso;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "imagenes_menu",

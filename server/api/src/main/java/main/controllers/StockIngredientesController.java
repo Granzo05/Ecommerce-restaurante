@@ -7,7 +7,6 @@ import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockIngredientes;
 import main.repositories.IngredienteRepository;
-import main.repositories.MenuRepository;
 import main.repositories.StockIngredientesRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;

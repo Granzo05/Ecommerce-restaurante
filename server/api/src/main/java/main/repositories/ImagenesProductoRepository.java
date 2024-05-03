@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ImagenRepository extends JpaRepository<ImagenesProducto, Long> {
+public interface ImagenesProductoRepository extends JpaRepository<ImagenesProducto, Long> {
     @Query("SELECT i FROM ImagenesProducto i WHERE i.ruta = :nombre")
     ImagenesProducto findByRuta(@Param("nombre") String nombre);
 
