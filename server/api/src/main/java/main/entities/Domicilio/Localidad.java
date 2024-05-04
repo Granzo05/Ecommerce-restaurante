@@ -24,11 +24,7 @@ public class Localidad {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @JsonIgnore
-    @OneToMany(mappedBy = "localidad", cascade = CascadeType.ALL)
-    private Set<Domicilio> domicilios = new HashSet<>();
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_departamento")
     private Departamento departamento;
     @JsonIgnore

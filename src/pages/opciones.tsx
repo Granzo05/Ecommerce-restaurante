@@ -12,6 +12,7 @@ import '../styles/opcionesRestaurante.css'
 //import Logo from '../assets/img//HatchfulExport-All/logo_transparent.png'
 import StocksEntrantes from '../components/StockEntrante/StockEntrante';
 import Sucursales from '../components/Sucursales/Sucursales';
+import { ProvinciaService } from '../services/ProvinciaService';
 
 //const navItems = ["home", "settings", "build", "cloud", "mail", "bookmark"];
 
@@ -47,6 +48,12 @@ const Opciones = () => {
     };
 
     useEffect(() => {
+        if (opcionSeleccionada === 9) {
+            crearProvincias();
+        }
+    }, [opcionSeleccionada]);
+
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const isVisible = await EmpleadoService.checkUser();
@@ -63,6 +70,13 @@ const Opciones = () => {
 
         fetchData();
     }, []);
+
+    async function crearProvincias() {
+        await ProvinciaService.createProvincias()
+            .catch(error => {
+                console.error('Error:', error);
+            })
+    }
 
     return (
         <div style={{ display: 'flex' }} className='opciones'>

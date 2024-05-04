@@ -14,4 +14,7 @@ public interface ProvinciaRepository extends JpaRepository<Provincia, Long> {
 
     @Query("SELECT p FROM Provincia p WHERE p.nombre = :nombre")
     Optional<Provincia> findByNombre(@Param("nombre") String nombre);
+
+    @Query("SELECT COUNT(p) FROM Provincia p")
+    int getCantidadProvincias();
 }

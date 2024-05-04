@@ -7,8 +7,10 @@ import { Localidad } from '../../types/Domicilio/Localidad';
 import { SucursalService } from '../../services/SucursalService';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
+import { LocalidadService } from '../../services/LocalidadService';
 
 function AgregarSucursal() {
+  const [loading, setLoading] = useState(false);
 
   // Atributos necesarios para Sucursal
   const [email, setEmail] = useState('');
@@ -22,7 +24,7 @@ function AgregarSucursal() {
   // Cargamos los departamentos de la provincia elegida en el select
   const [departamentos, setDepartamentos] = useState<Departamento[] | null>([]);
   // Cargamos las localidades disponibles, tanto para el domicilio de la sucursal como para los disponibles para el delivery
-  const [localidades, setLocalidades] = useState<Localidad[] | null>([]);
+  const [localidadesDelivery, setLocalidadesDelivery] = useState<Localidad[] | null>([]);
   //Select que nos permite filtrar para los departamentos de la sucursal asi no cargamos de más innecesariamente
   const [provinciasSelect, setProvinciasSelect] = useState<Provincia[] | null>([]);
   //Select que nos permite filtrar para las localidades de la sucursal asi no cargamos de más innecesariamente
@@ -35,11 +37,8 @@ function AgregarSucursal() {
 
   useEffect(() => {
     cargarSelectProvincias();
-
-    if (!provinciasSelect) {
-      crearProvincias();
-    }
   }, []);
+
 
   const handleDepartamentosCheckboxChange = (departamentoId: number) => {
     const updatedSelectedDepartamentos = new Set(idDepartamentosElegidos);
@@ -52,7 +51,7 @@ function AgregarSucursal() {
 
     departamentos?.map(departamento => {
       if (departamentoId === departamento.id) {
-        setLocalidades(departamento.localidades);
+        setLocalidadesDelivery(departamento.localidades);
       }
     })
   };
@@ -67,16 +66,6 @@ function AgregarSucursal() {
     setLocalidadesDisponibles(updatedSelectedLocalidades);
   };
 
-  // Si el select de provincias no se carga es porque la base de datos está vacía, entonces cargo las provincias
-  async function crearProvincias() {
-    await ProvinciaService.createProvincias()
-      .then(() => {
-        cargarSelectProvincias();
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
   // Una vez cargadas las provincias vuelvo a cargar el select
   async function cargarSelectProvincias() {
     await ProvinciaService.getProvincias()
@@ -90,21 +79,45 @@ function AgregarSucursal() {
 
   // Al seleccionar una provincia cargo los departamentos asociados
   async function cargarSelectDepartamentos(idProvincia: number) {
+    await DepartamentoService.getDepartamentosByProvinciaId(idProvincia)
+      .then(async departamentos => {
+        setDepartamentos(departamentos);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+        if (departamentos && departamentos.length == 0) {
+          crearDepartamentos(idProvincia);
+        }
+      });
+  }
+
+  async function crearDepartamentos(idProvincia: number) {
     await DepartamentoService.createDepartamentosByIdProvincia(idProvincia)
       .then(async departamentos => {
         setDepartamentos(departamentos);
       })
       .catch(error => {
         console.error('Error:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
-  function setDepartamentoSucursal(idDepartamento: number) {
-    departamentos?.forEach(departamento => {
-      if (departamento.id === idDepartamento) {
-        setLocalidadesSucursalSelect(departamento.localidades);
-      }
-    });
+  async function cargarSelectLocalidades(idDepartamento: number) {
+    await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento)
+      .then(async localidades => {
+        setLocalidadesSucursalSelect(localidades);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   const handleCargarNegocio = () => {
@@ -149,6 +162,8 @@ function AgregarSucursal() {
   return (
     <div className='form-info'>
       <div>
+        {loading && <p>Cargando...</p>}
+
         <h2>Crear una sucursal</h2>
         <div>
           <form>
@@ -202,6 +217,7 @@ function AgregarSucursal() {
               onChange={(e) => { cargarSelectDepartamentos(parseInt(e.target.value)) }}
               required
             >
+              <option value=''>Selecciona una provincia</option>
               {provinciasSelect?.map((provincia, index) => (
                 <option key={index} value={provincia.id}>{provincia.nombre}</option>
               ))}
@@ -210,7 +226,7 @@ function AgregarSucursal() {
             <h2>Departamentos</h2>
             <select
               name="departamento"
-              onChange={(e) => { setDepartamentoSucursal(parseInt(e.target.value)) }}
+              onChange={(e) => { cargarSelectLocalidades(parseInt(e.target.value)) }}
               required
             >
               {departamentos?.map((departamento, index) => (
@@ -248,9 +264,9 @@ function AgregarSucursal() {
             )}
 
             <h3>Localidades disponibles para delivery: </h3>
-            {localidades && (
+            {localidadesDelivery && (
               <div>
-                {localidades.map((localidad, index) => (
+                {localidadesDelivery.map((localidad, index) => (
                   <div key={index}>
                     <input
                       type="checkbox"

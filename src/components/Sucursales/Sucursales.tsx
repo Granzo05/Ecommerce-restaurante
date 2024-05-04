@@ -21,7 +21,7 @@ const Sucursales = () => {
     useEffect(() => {
         fetchData();
         fetchSucursales();
-    }, []);
+    }, []);    
 
     const fetchData = async () => {
         try {

@@ -1,5 +1,7 @@
 package main.controllers;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import main.entities.Domicilio.Departamento;
 import main.entities.Domicilio.Localidad;
 import main.entities.Domicilio.Pais;
@@ -8,6 +10,7 @@ import main.repositories.DepartamentoRepository;
 import main.repositories.LocalidadRepository;
 import main.repositories.PaisRepository;
 import main.repositories.ProvinciaRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
@@ -36,20 +39,25 @@ public class PaisController {
     }
 
     @PostMapping("/provincias/create")
-    public void cargarProvincias() {
-        try (BufferedReader br = new BufferedReader(new FileReader(RUTACSV))) {
-            Pais pais = crearPais("Argentina");
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(SEPARACIONCSV);
-                String provinciaNombre = data[2];
+    public ResponseEntity<String> cargarProvincias() {
+        int provincias = provinciaRepository.getCantidadProvincias();
 
-                crearProvincia(provinciaNombre, pais);
+        if (provincias < 24) {
+            try (BufferedReader br = new BufferedReader(new FileReader(RUTACSV))) {
+                Pais pais = crearPais("Argentina");
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(SEPARACIONCSV);
+                    String provinciaNombre = data[2];
+
+                    crearProvincia(provinciaNombre, pais);
+                }
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+        return ResponseEntity.ok("Provincias cargadas");
     }
 
     @PostMapping("/departamentos/create/{idProvincia}")
@@ -58,22 +66,26 @@ public class PaisController {
             String line;
 
             Optional<Provincia> provincia = provinciaRepository.findById(id);
+
             Set<Departamento> departamentos = new HashSet<>();
 
             if(!provincia.isEmpty()) {
-                while ((line = br.readLine()) != null) {
-                    String[] data = line.split(SEPARACIONCSV);
-                    // Columna 2 es la de provincia, si coincide entonces la cargamos
-                    if (data[2].equals(provincia.get().getNombre())) {
-                        // Columna 1 es el departamento
-                        Departamento departamento = (crearDepartamento(data[1], provincia.get()));
+                List<Departamento> departamentosDb = departamentoRepository.findByProvinciaId(provincia.get().getId());
 
-                        departamentos.add(departamento);
-                        // Columna 0 es la localidad
-                        crearLocalidad(data[0], departamento);
+                if(departamentosDb.isEmpty()) {
+                    while ((line = br.readLine()) != null) {
+                        String[] data = line.split(SEPARACIONCSV);
+
+                        // Verificar si la línea tiene al menos tres elementos y si el tercer elemento coincide con el nombre de la provincia
+                        if (data.length > 2 && data[2].equals(provincia.get().getNombre())) {
+                            Departamento departamento = crearDepartamento(data[1], provincia.get());
+                            departamentos.add(departamento);
+                            crearLocalidad(data[0], departamento);
+                        }
                     }
                 }
             }
+
 
             return departamentos;
         } catch (IOException e) {
@@ -93,17 +105,15 @@ public class PaisController {
         return paisDb.get();
     }
 
-    private Provincia crearProvincia(String nombre, Pais pais) {
+    private void crearProvincia(String nombre, Pais pais) {
         Optional<Provincia> provinciaDb = provinciaRepository.findByNombre(nombre);
 
         if (provinciaDb.isEmpty()) {
             Provincia provincia = new Provincia();
             provincia.setNombre(nombre);
             provincia.setPais(pais);
-            return provinciaRepository.save(provincia);
+            provinciaRepository.save(provincia);
         }
-
-        return provinciaDb.get();
     }
 
     private Departamento crearDepartamento(String nombre, Provincia provincia) {
@@ -142,7 +152,7 @@ public class PaisController {
     @CrossOrigin
     @GetMapping("/localidades")
     public Set<Localidad> getLocalidades() {
-        Set localidades =  new HashSet<>(localidadRepository.findAll());
+        Set localidades = new HashSet<>(localidadRepository.findAll());
 
         return localidades;
     }

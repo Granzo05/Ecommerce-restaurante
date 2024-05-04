@@ -25,8 +25,7 @@ public class Domicilio {
     private int numero;
     @Column(name = "codigo_postal")
     private int codigoPostal;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_localidad")
     private Localidad localidad;
     @JsonIgnore

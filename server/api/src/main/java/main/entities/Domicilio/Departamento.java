@@ -23,11 +23,7 @@ public class Departamento {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @JsonIgnore
-    @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL)
-    private Set<Localidad> localidades = new HashSet<>();
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_provincia")
     private Provincia provincia;
 }

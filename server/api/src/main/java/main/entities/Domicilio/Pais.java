@@ -23,7 +23,4 @@ public class Pais {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @JsonIgnore
-    @OneToMany(mappedBy = "pais", cascade = CascadeType.ALL)
-    private Set<Provincia> provincias = new HashSet<>();
 }
