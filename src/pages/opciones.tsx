@@ -9,7 +9,9 @@ import Menus from '../components/Menus/Menus';
 import { EmpleadoService } from '../services/EmpleadoService';
 import '../styles/opcionesRestaurante.css'
 
-import Logo from '../assets/img//HatchfulExport-All/logo_transparent.png'
+//import Logo from '../assets/img//HatchfulExport-All/logo_transparent.png'
+import StocksEntrantes from '../components/StockEntrante/StockEntrante';
+import Sucursales from '../components/Sucursales/Sucursales';
 
 //const navItems = ["home", "settings", "build", "cloud", "mail", "bookmark"];
 
@@ -34,9 +36,13 @@ const Opciones = () => {
         } else if (opcionSeleccionada === 5) {
             return <Stock />;
         } else if (opcionSeleccionada === 6) {
-            return <Menus />;
+            return <StocksEntrantes />;
         } else if (opcionSeleccionada === 7) {
+            return <Menus />;
+        } else if (opcionSeleccionada === 8) {
             return <Empleados />;
+        } else if (opcionSeleccionada === 9) {
+            return <Sucursales />;
         }
     };
 
@@ -58,10 +64,41 @@ const Opciones = () => {
         fetchData();
     }, []);
 
-
-    const [isOpen, setIsOpen] = useState(false);
     return (
-        <section className="page sidebar-2-page">
+        <div style={{ display: 'flex' }} className='opciones'>
+            {isVisible ? (
+                <div className='opciones-menu'>
+                    <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
+                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
+                    <p onClick={() => handleOpcionClick(3)}>Pedidos cocinados</p>
+                    <p onClick={() => handleOpcionClick(4)}>Pedidos entregados</p>
+                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
+                    <p onClick={() => handleOpcionClick(6)}>Stock entrante</p>
+                    <p onClick={() => handleOpcionClick(7)}>Menus</p>
+                    <p onClick={() => handleOpcionClick(8)}>Empleados</p>
+                    <p onClick={() => handleOpcionClick(9)}>Sucursales</p>
+                </div >
+            ) : (
+                <div className='opciones-menu'>
+                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
+                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
+                    <p onClick={() => handleOpcionClick(6)}>Stock entrante</p>
+                    <p onClick={() => handleOpcionClick(7)}>Menus</p>
+                </div >
+            )}
+
+            <div style={{ flex: 1 }}>
+                {renderInformacion()}
+            </div>
+        </div >
+
+
+    );
+};
+
+export default Opciones;
+
+/*<section className="page sidebar-2-page">
             <aside className={`sidebar-2 ${isOpen ? "open" : ""}`}>
                 <div className="inner">
                     <header>
@@ -100,35 +137,4 @@ const Opciones = () => {
             <div className='styled-table' style={{ flex: 1 }}>
                 {renderInformacion()}
             </div>
-        </section>
-
-    );
-};
-
-export default Opciones;
-
-/*<body>
-            <div style={{ display: 'flex' }} className='opciones'>
-            {isVisible ? (
-                <div className='opciones-menu'>
-                    <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
-                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
-                    <p onClick={() => handleOpcionClick(3)}>Pedidos cocinados</p>
-                    <p onClick={() => handleOpcionClick(4)}>Pedidos entregados</p>
-                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
-                    <p onClick={() => handleOpcionClick(6)}>Menus</p>
-                    <p onClick={() => handleOpcionClick(7)}>Empleados</p>
-                </div >
-            ) : (
-                <div className='opciones-menu'>
-                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
-                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
-                    <p onClick={() => handleOpcionClick(6)}>Menus</p>
-                </div >
-            )}
-
-            <div style={{ flex: 1 }}>
-                {renderInformacion()}
-            </div>
-        </div >
-        </body>*/
+        </section>*/

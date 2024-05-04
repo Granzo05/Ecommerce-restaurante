@@ -18,12 +18,12 @@ const PedidosAceptados = () => {
 
         fetchData();
 
-        buscarPedidos();
+        //buscarPedidos();
 
     }, []);
 
     const buscarPedidos = async () => {
-        PedidoService.getPedidos('aceptados')
+        PedidoService.getPedidos(EnumEstadoPedido.ACEPTADOS)
             .then(data => {
                 setPedidos(data);
             })

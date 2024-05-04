@@ -4,7 +4,6 @@ import AgregarSucursal from "./AgregarSucursal";
 import ModalCrud from "../ModalCrud";
 import EliminarSucursal from "./EliminarSucursal";
 import EditarSucursal from "./EditarSucursal";
-import '../../styles/sucursales.css';
 import ModalFlotante from "../ModalFlotante";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 import { EmpleadoService } from "../../services/EmpleadoService";

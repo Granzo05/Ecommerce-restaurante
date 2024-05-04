@@ -5,7 +5,6 @@ import { Domicilio } from '../../types/Domicilio/Domicilio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Localidad } from '../../types/Domicilio/Localidad';
 import { SucursalService } from '../../services/SucursalService';
-import styles from '../assets/styleLogin.module.css'
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
 
@@ -137,7 +136,7 @@ const EditarEmpleado: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   }
 
   return (
-    <div className={styles.formInfo}>
+    <div className='form-info'>
       <div>
         <h2>Crear una sucursal</h2>
         <div>

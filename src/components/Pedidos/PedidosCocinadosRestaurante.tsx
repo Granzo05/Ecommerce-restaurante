@@ -25,7 +25,7 @@ const PedidosEntrantes = () => {
     }, []);
 
     const buscarPedidos = async () => {
-        PedidoService.getPedidos('cocinados')
+        PedidoService.getPedidos(EnumEstadoPedido.COCINADOS)
             .then(data => {
                 setPedidos(data);
             })

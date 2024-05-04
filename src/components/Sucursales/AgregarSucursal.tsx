@@ -5,7 +5,6 @@ import { Domicilio } from '../../types/Domicilio/Domicilio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Localidad } from '../../types/Domicilio/Localidad';
 import { SucursalService } from '../../services/SucursalService';
-import styles from '../assets/styleLogin.module.css'
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
 
@@ -148,7 +147,7 @@ function AgregarSucursal() {
   };
 
   return (
-    <div className={styles.formInfo}>
+    <div className='form-info'>
       <div>
         <h2>Crear una sucursal</h2>
         <div>
@@ -160,6 +159,7 @@ function AgregarSucursal() {
               required
               placeholder="Correo electrónico"
             />
+            <br />
             <input
               type="password"
               name="contraseña"
@@ -168,6 +168,8 @@ function AgregarSucursal() {
               required
               placeholder="Contraseña"
             />
+            <br />
+
             <input
               type="text"
               name="calle"
@@ -175,6 +177,8 @@ function AgregarSucursal() {
               required
               placeholder="Nombre de calle"
             />
+            <br />
+
             <input
               type="text"
               name="numeroCalle"
@@ -182,6 +186,7 @@ function AgregarSucursal() {
               required
               placeholder="Número de calle"
             />
+            <br />
 
             <input
               type="text"
@@ -190,7 +195,8 @@ function AgregarSucursal() {
               required
               placeholder="Codigo Postal"
             />
-
+            <br />
+            <h2>Provincia</h2>
             <select
               name="provincia"
               onChange={(e) => { cargarSelectDepartamentos(parseInt(e.target.value)) }}
@@ -200,7 +206,8 @@ function AgregarSucursal() {
                 <option key={index} value={provincia.id}>{provincia.nombre}</option>
               ))}
             </select>
-
+            <br />
+            <h2>Departamentos</h2>
             <select
               name="departamento"
               onChange={(e) => { setDepartamentoSucursal(parseInt(e.target.value)) }}
@@ -210,7 +217,8 @@ function AgregarSucursal() {
                 <option key={index} value={departamento.id}>{departamento.nombre}</option>
               ))}
             </select>
-
+            <br />
+            <h2>Localidad</h2>
             <select
               name="localidad"
               onChange={(e) => { setLocalidadId(parseInt(e.target.value)) }}

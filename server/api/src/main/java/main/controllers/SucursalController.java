@@ -10,8 +10,10 @@ import main.repositories.SucursalRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class SucursalController {
@@ -37,6 +39,14 @@ public class SucursalController {
         }
 
         return sucursal;
+    }
+
+    @CrossOrigin
+    @GetMapping("/sucursales")
+    public Set<Sucursal> getSucursales() throws Exception {
+        Set sucursales = new HashSet<>(sucursalRepository.findAllNoBorrado());
+
+        return sucursales;
     }
 
     @PutMapping("/sucursal/update")
@@ -84,17 +94,7 @@ public class SucursalController {
         Sucursal sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
         if (sucursalDB != null) {
-            Sucursal sucursal = Sucursal.builder()
-                    .contraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()))
-                    .borrado("NO")
-                    .privilegios("empleado")
-                    .domicilio(sucursalDetails.getDomicilio())
-                    .telefono(sucursalDetails.getTelefono())
-                    .horarioApertura(sucursalDetails.getHorarioApertura())
-                    .horarioCierre(sucursalDetails.getHorarioCierre())
-                    .build();
-
-            sucursalRepository.save(sucursal);
+            Sucursal sucursal = sucursalRepository.save(sucursalDetails);
 
             return sucursal;
         } else {

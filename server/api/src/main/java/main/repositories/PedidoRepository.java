@@ -1,5 +1,6 @@
 package main.repositories;
 
+import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +19,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findOrders();
 
     @Query("SELECT p FROM Pedido p WHERE p.estado = :estado AND p.borrado = 'NO'")
-    List<Pedido> findPedidos(String estado);
+    List<Pedido> findPedidos(EnumEstadoPedido estado);
 
 }
 

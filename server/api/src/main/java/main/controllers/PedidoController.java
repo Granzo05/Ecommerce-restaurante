@@ -7,6 +7,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
 import main.entities.Pedidos.DetallesPedido;
+import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.Pedido;
 import main.repositories.ClienteRepository;
 import main.repositories.PedidoRepository;
@@ -56,8 +57,9 @@ public class PedidoController {
     }
 
     @GetMapping("/pedidos/{estado}")
-    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") String estado) {
-        List<Pedido> pedidos = pedidoRepository.findPedidos(estado);
+    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") int estado) {
+        EnumEstadoPedido enumEstado = EnumEstadoPedido.fromIndex(estado);
+        List<Pedido> pedidos = pedidoRepository.findPedidos(enumEstado);
         return new HashSet<>(pedidos);
     }
 

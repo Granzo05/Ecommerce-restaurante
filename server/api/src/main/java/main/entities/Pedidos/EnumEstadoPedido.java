@@ -6,5 +6,10 @@ public enum EnumEstadoPedido {
     COCINADOS,
     ENTREGADOS,
     RECHAZADOS,
-    EN_CAMINO
+    EN_CAMINO;
+
+    public static EnumEstadoPedido fromIndex(int index) {
+        return EnumEstadoPedido.values()[index];
+    }
 }
+

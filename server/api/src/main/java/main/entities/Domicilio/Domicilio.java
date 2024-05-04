@@ -1,10 +1,12 @@
 package main.entities.Domicilio;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Cliente.Cliente;
 import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Sucursal;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Getter
 @Setter
@@ -23,9 +25,11 @@ public class Domicilio {
     private int numero;
     @Column(name = "codigo_postal")
     private int codigoPostal;
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_localidad")
     private Localidad localidad;
+    @JsonIgnore
     @ManyToOne
     @JoinTable(
             name = "clientes_domicilio",
@@ -33,6 +37,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_cliente")
     )
     private Cliente cliente;
+    @JsonIgnore
     @OneToOne
     @JoinTable(
             name = "sucursales_domicilio",
@@ -40,6 +45,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Sucursal sucursal;
+    @JsonIgnore
     @ManyToOne
     @JoinTable(
             name = "empleados_domicilio",

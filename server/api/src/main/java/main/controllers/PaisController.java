@@ -134,33 +134,33 @@ public class PaisController {
     @CrossOrigin
     @GetMapping("/provincias")
     public Set<Provincia> getProvincias() {
-        List<Provincia> provincias = provinciaRepository.findAll();
+        Set provincias = new HashSet<>(provinciaRepository.findAll());
 
-        return (HashSet<Provincia>) provincias;
+        return provincias;
     }
 
     @CrossOrigin
     @GetMapping("/localidades")
     public Set<Localidad> getLocalidades() {
-        List<Localidad> localidades = localidadRepository.findAll();
+        Set localidades =  new HashSet<>(localidadRepository.findAll());
 
-        return (HashSet<Localidad>) localidades;
+        return localidades;
     }
 
     @CrossOrigin
     @GetMapping("/localidades/{departamentoId}")
     public Set<Localidad> getLocalidadesByDepartamentoId(@PathVariable("departamentoId") Long id) {
-        List<Localidad> localidades = localidadRepository.findByIdDepartamento(id);
+        Set localidades = new HashSet<>(localidadRepository.findByIdDepartamento(id));
 
-        return (HashSet<Localidad>) localidades;
+        return localidades;
     }
 
     @CrossOrigin
     @GetMapping("/departamentos/{provinciaId}")
     public Set<Departamento> getDepartamentosByDepartamentoId(@PathVariable("provinciaId") Long id) {
-        List<Departamento> departamentos = departamentoRepository.findByProvinciaId(id);
+        Set departamentos = new HashSet<>(departamentoRepository.findByProvinciaId(id));
 
-        return (new HashSet<>(departamentos));
+        return departamentos;
     }
 
 }

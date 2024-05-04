@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import { EmpleadoService } from '../../services/EmpleadoService';
+import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 
 const PedidosEntregados = () => {
     const [pedidosEntregados, setPedidos] = useState<Pedido[]>([]);
@@ -22,7 +23,7 @@ const PedidosEntregados = () => {
     }, []);
 
     const buscarPedidos = async () => {
-        PedidoService.getPedidos('entregados')
+        PedidoService.getPedidos(EnumEstadoPedido.ENTREGADOS)
             .then(data => {
                 setPedidos(data);
             })

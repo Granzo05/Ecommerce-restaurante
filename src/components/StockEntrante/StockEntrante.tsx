@@ -7,7 +7,7 @@ import { StockEntranteService } from "../../services/StockEntranteService";
 import { StockEntrante } from "../../types/Stock/StockEntrante";
 import AgregarStockEntrante from "./AgregarStockEntrante";
 
-const Stocks = () => {
+const StocksEntrantes = () => {
     const [stockEntrante, setStockEntrante] = useState<StockEntrante[]>([]);
     const [mostrarStocks, setMostrarStocks] = useState(true);
 
@@ -104,4 +104,4 @@ const Stocks = () => {
     )
 }
 
-export default Stocks
+export default StocksEntrantes

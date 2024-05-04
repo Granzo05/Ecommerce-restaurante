@@ -6,11 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
 
     @Query("SELECT s FROM Sucursal s WHERE s.email = :email")
     Sucursal findByEmail(@Param("email") String email);
+
+    @Query("SELECT s.id,s.email,s.horarioApertura,s.horarioCierre,s.domicilio FROM Sucursal s WHERE s.borrado = 'NO'")
+    List<Sucursal> findAllNoBorrado();
 
     @Query("SELECT s FROM Sucursal s WHERE s.email = :email AND s.contraseña = :contraseña")
     Sucursal findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String password);

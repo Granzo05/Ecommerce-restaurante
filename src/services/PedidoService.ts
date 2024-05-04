@@ -37,7 +37,7 @@ export const PedidoService = {
         return null;
     },
 
-    getPedidos: async (estado: string): Promise<Pedido[]> => {
+    getPedidos: async (estado: EnumEstadoPedido): Promise<Pedido[]> => {
         try {
             const response = await fetch(URL_API + 'pedidos/' + estado, {
                 method: 'GET',
