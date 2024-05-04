@@ -7,7 +7,7 @@ export class Domicilio {
     codigoPostal: number = 0;
     localidad: Localidad | undefined = undefined;
 
-    constructor(){
+    constructor() {
 
     }
 

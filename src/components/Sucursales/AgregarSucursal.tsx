@@ -24,7 +24,6 @@ function AgregarSucursal() {
   // Cargamos los departamentos de la provincia elegida en el select
   const [departamentos, setDepartamentos] = useState<Departamento[] | null>([]);
   // Cargamos las localidades disponibles, tanto para el domicilio de la sucursal como para los disponibles para el delivery
-  const [localidadesDelivery, setLocalidadesDelivery] = useState<Localidad[] | null>([]);
   //Select que nos permite filtrar para los departamentos de la sucursal asi no cargamos de más innecesariamente
   const [provinciasSelect, setProvinciasSelect] = useState<Provincia[] | null>([]);
   //Select que nos permite filtrar para las localidades de la sucursal asi no cargamos de más innecesariamente
@@ -48,12 +47,6 @@ function AgregarSucursal() {
       updatedSelectedDepartamentos.add(departamentoId);
     }
     setDepartamentosDisponibles(updatedSelectedDepartamentos);
-
-    departamentos?.map(departamento => {
-      if (departamentoId === departamento.id) {
-        setLocalidadesDelivery(departamento.localidades);
-      }
-    })
   };
 
   const handleLocalidadesCheckboxChange = (localidadId: number) => {
@@ -125,32 +118,14 @@ function AgregarSucursal() {
 
     const domicilio = new Domicilio();
 
-    departamentos?.forEach(departamento => {
-      let localidad = departamento.localidades.find(localidad => localidad.id === localidadId);
-
-      if (localidad) {
-        domicilio.localidad = localidad;
-      }
-    });
-
     domicilio.calle = calle;
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
 
     sucursal.domicilio = domicilio;
 
-    let localidadesDisponibles: Localidad[] = [];
 
-    departamentos?.forEach(departamento => {
-      idLocalidadesElegidas.forEach(id => {
-        let localidad = departamento.localidades.find(localidad => localidad.id === id);
-        if (localidad) {
-          localidadesDisponibles.push(localidad);
-        }
-      });
-    });
-
-    sucursal.localidadesDisponiblesDelivery = localidadesDisponibles;
+    //sucursal.localidadesDisponiblesDelivery = localidadesDisponibles;
 
     sucursal.contraseña = contraseña;
     sucursal.telefono = telefono;
@@ -162,6 +137,7 @@ function AgregarSucursal() {
   return (
     <div className='form-info'>
       <div>
+        {/* Todo: Hacer un cartelito de cargando con el circulo girando o un modal */}
         {loading && <p>Cargando...</p>}
 
         <h2>Crear una sucursal</h2>

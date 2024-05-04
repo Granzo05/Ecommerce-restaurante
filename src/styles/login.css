@@ -7,7 +7,7 @@
     box-sizing: border-box;
 }
 
-body {
+.body {
     background-color: #840196;
     color: black;
     font-family: Inter, sans-serif;

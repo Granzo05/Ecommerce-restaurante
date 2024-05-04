@@ -11,6 +11,7 @@ import { LocalidadService } from '../services/LocalidadService';
 import { Departamento } from '../types/Domicilio/Departamento';
 import { ProvinciaService } from '../services/ProvinciaService';
 import { DepartamentoService } from '../services/DepartamentoService';
+import { Cliente } from '../types/Cliente/Cliente';
 
 
 const LoginCliente = () => {
@@ -19,10 +20,9 @@ const LoginCliente = () => {
     const [contraseña, setContraseña] = useState('');
     const [calle, setCalle] = useState('');
     const [numeroCasa, setNumeroCasa] = useState(0);
+    const [fechaNacimiento, setFechaNacimiento] = useState<Date>(new Date());
     const [codigoPostal, setCodigoPostal] = useState(0);
     const [localidadId, setLocalidadId] = useState(0);
-    const [departamentoId, setDepartamentoId] = useState(0);
-    const [provinciaId, setProvinciaId] = useState(0);
     const [apellido, setApellido] = useState('');
     const [telefono, setTelefono] = useState(0);
     const [provincias, setProvincias] = useState<Provincia[] | null>([]);
@@ -43,51 +43,58 @@ const LoginCliente = () => {
             });
     }, []);
 
-    const buscarDepartamentos = async () => {
-        DepartamentoService.getDepartamentosByProvinciaId(provinciaId)
-            .then(departamentos => {
+    // Al seleccionar una provincia cargo los departamentos asociados
+    async function cargarSelectDepartamentos(idProvincia: number) {
+        await DepartamentoService.getDepartamentosByProvinciaId(idProvincia)
+            .then(async departamentos => {
                 setDepartamentos(departamentos);
             })
             .catch(error => {
-                console.error("Error al obtener los departamentos:", error);
-            });
+                console.error('Error:', error);
+            })
     }
 
-    const buscarLocalidades = async () => {
-        LocalidadService.getLocalidadesByDepartamentoId(departamentoId)
-            .then(localidades => {
+
+    async function cargarSelectLocalidades(idDepartamento: number) {
+        await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento)
+            .then(async localidades => {
                 setLocalidades(localidades);
             })
             .catch(error => {
-                console.error("Error al obtener las localidades:", error);
-            });
-    }
-
-    const handleProvincia = async (provinciaId: number) => {
-        setProvinciaId(provinciaId);
-        
-        buscarDepartamentos();
-    }
-
-    const handleDepartamento = async (departamentoId: number) => {
-        setDepartamentoId(departamentoId);
-        
-        buscarLocalidades();
+                console.error('Error:', error);
+            })
     }
 
     const handleCargarUsuario = () => {
+        const cliente = new Cliente();
+
         let domicilio = new Domicilio();
         domicilio.calle = calle;
         domicilio.codigoPostal = codigoPostal;
         domicilio.numero = numeroCasa;
-
 
         if (localidades) {
             let localidad = localidades.find(localidad => localidad.id === localidadId);
             domicilio.localidad = localidad;
         }
 
-        ClienteService.createUser(nombre, apellido, email, contraseña, telefono, domicilio);
+        cliente.nombre = `${nombre} ${apellido}`;
+        cliente.email = email;
+        cliente.contraseña = contraseña;
+        cliente.telefono = telefono;
+
+        if (domicilio) {
+            cliente.domicilios.push(domicilio);
+        }
+
+        const fechaNacimientoDate = new Date(fechaNacimiento);
+        fechaNacimientoDate.setUTCDate(fechaNacimientoDate.getUTCDate() + 1); 
+
+        const fechaNacimientoLocal = new Date(fechaNacimientoDate.toLocaleString()); 
+
+        cliente.fechaNacimiento = fechaNacimientoLocal;
+
+        ClienteService.createUser(cliente);
     };
 
     const [tipoInput, setTipoInput] = useState('password');
@@ -116,7 +123,7 @@ const LoginCliente = () => {
     };
 
     return (
-        <body>
+        <div className='body'>
             {/*INICIAR SESION*/}
             <section className="form-main" style={{ display: mostrarIniciarSesion ? '' : 'none' }}>
                 <div className="form-content">
@@ -189,6 +196,11 @@ const LoginCliente = () => {
                             </div>
                             <div className="input-box">
                                 <label>
+                                    <input required type="date" className='input-control' onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+                                </label>
+                            </div>
+                            <div className="input-box">
+                                <label>
                                     <input required type="phone" className='input-control' placeholder="Telefono" onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
                                 </label>
                             </div>
@@ -210,25 +222,31 @@ const LoginCliente = () => {
                                 </label>
                             </div>
                             <select
-                                onChange={(e) => handleProvincia(parseInt(e.target.value))}
+                                name="provincia"
+                                onChange={(e) => { cargarSelectDepartamentos(parseInt(e.target.value)) }}
+                                required
                             >
-                                <option value="">Seleccionar provincia</option>
+                                <option value=''>Selecciona una provincia</option>
                                 {provincias?.map((provincia, index) => (
                                     <option key={index} value={provincia.id}>{provincia.nombre}</option>
                                 ))}
                             </select>
                             <select
-                                onChange={(e) => handleDepartamento(parseInt(e.target.value))}
+                                name="departamento"
+                                onChange={(e) => { cargarSelectLocalidades(parseInt(e.target.value)) }}
+                                required
                             >
-                                <option value="">Seleccionar departamento</option>
+                                <option value=''>Selecciona un departamento</option>
                                 {departamentos?.map((departamento, index) => (
                                     <option key={index} value={departamento.id}>{departamento.nombre}</option>
                                 ))}
                             </select>
                             <select
-                                onChange={(e) => setLocalidadId(parseInt(e.target.value))}
+                                name="localidad"
+                                onChange={(e) => { setLocalidadId(parseInt(e.target.value)) }}
+                                required
                             >
-                                <option value="">Seleccionar localidad</option>
+                                <option value=''>Selecciona una localidad</option>
                                 {localidades?.map((localidad, index) => (
                                     <option key={index} value={localidad.id}>{localidad.nombre}</option>
                                 ))}
@@ -245,7 +263,7 @@ const LoginCliente = () => {
                     </div>
                 </div>
             </section>
-        </body>
+        </div>
     )
 }
 

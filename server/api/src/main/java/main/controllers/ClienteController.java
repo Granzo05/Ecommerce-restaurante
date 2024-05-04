@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,13 +21,16 @@ public class ClienteController {
 
     @PostMapping("/cliente/create")
     public Cliente crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
-        System.out.println(clienteDetails);
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
 
         if (cliente.isEmpty()) {
             clienteDetails.setContraseña(Encrypt.cifrarPassword(clienteDetails.getContraseña()));
+            for (Domicilio domicilio : clienteDetails.getDomicilios()) {
+                domicilio.setCliente(clienteDetails);
+            }
 
             clienteRepository.save(clienteDetails);
+
             return clienteDetails;
         } else {
             return null;

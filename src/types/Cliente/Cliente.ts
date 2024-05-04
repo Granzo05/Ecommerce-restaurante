@@ -6,7 +6,8 @@ export class Cliente {
     nombre: string = '';
     email: string = '';
     contraseña: string = '';
-    domicilio: Domicilio[] | null = [];
+    domicilios: Domicilio[] = [];
+    fechaNacimiento: Date | null = null;
     telefono: number = 0;
     privilegios: string = '';
     pedidos: Pedido[] = [];

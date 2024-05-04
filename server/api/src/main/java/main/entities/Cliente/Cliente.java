@@ -28,6 +28,7 @@ public class Cliente {
     private String nombre;
     @Column(name = "email")
     private String email;
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Domicilio> domicilios = new HashSet<>();
     @Column(name = "telefono")
@@ -46,7 +47,5 @@ public class Cliente {
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
-    private Set<Pedido> pedido = new HashSet<>();
 }
 
