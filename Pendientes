@@ -35,6 +35,7 @@
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Crear modal para mostrar opciones extra al interactuar con las opciones
 [] Probar el plugin Sonner para los mensajes en pantalla buenardos
+[] Input con lista de posibles resultados debajo
 
     Pruebas
 [] Carga sucursal

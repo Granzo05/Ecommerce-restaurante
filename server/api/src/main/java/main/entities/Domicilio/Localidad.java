@@ -27,8 +27,4 @@ public class Localidad {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_departamento")
     private Departamento departamento;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_sucursal")
-    private Sucursal sucursal;
 }

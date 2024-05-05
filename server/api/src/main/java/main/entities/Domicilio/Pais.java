@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties
 @Table(name = "paises", schema = "buen_sabor")
 public class Pais {
     @Id
@@ -23,4 +24,7 @@ public class Pais {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
+    @JsonIgnore
+    @OneToMany(mappedBy = "pais", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Provincia> provincias = new HashSet<>();
 }

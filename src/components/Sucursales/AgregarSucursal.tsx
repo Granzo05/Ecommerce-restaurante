@@ -121,6 +121,9 @@ function AgregarSucursal() {
     domicilio.calle = calle;
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
+    
+    console.log(departamentos);
+
 
     sucursal.domicilio = domicilio;
 
@@ -240,9 +243,9 @@ function AgregarSucursal() {
             )}
 
             <h3>Localidades disponibles para delivery: </h3>
-            {localidadesDelivery && (
+            {localidadesSucursalSelect && (
               <div>
-                {localidadesDelivery.map((localidad, index) => (
+                {localidadesSucursalSelect.map((localidad, index) => (
                   <div key={index}>
                     <input
                       type="checkbox"

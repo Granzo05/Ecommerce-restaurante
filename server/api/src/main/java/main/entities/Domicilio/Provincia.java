@@ -17,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "provincias", schema = "buen_sabor")
+@JsonIgnoreProperties
 public class Provincia {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,4 +27,7 @@ public class Provincia {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_pais")
     private Pais pais;
+    @JsonIgnore
+    @OneToMany(mappedBy = "provincia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Departamento> departamentos = new HashSet<>();
 }

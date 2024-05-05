@@ -21,21 +21,4 @@ export const ProvinciaService = {
             throw error;
         }
     },
-
-    createProvincias: async () => {
-        try {
-            const response = await fetch(URL_API + `provincias/create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-
-            return await response.text();
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
 }

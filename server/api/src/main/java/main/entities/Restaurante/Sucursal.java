@@ -60,5 +60,5 @@ public class Sucursal {
     private Set<Promocion> promociones = new HashSet<>();
     @JsonIgnore
     @OneToMany(mappedBy = "sucursal")
-    private Set<Localidad> localidadesDisponiblesDelivery = new HashSet<>();
+    private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
 }
