@@ -2,6 +2,8 @@ package main.controllers;
 
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
+import main.entities.Cliente.ClienteDTO;
+import main.entities.Domicilio.Domicilio;
 import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.ClienteRepository;
@@ -94,6 +96,8 @@ public class SucursalController {
         Sucursal sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
         if (sucursalDB != null) {
+            sucursalDetails.getDomicilio().setSucursal(sucursalDetails);
+
             Sucursal sucursal = sucursalRepository.save(sucursalDetails);
 
             return sucursal;
@@ -114,6 +118,10 @@ public class SucursalController {
                     .cuil(Encrypt.encriptarString(empleadoDetails.getCuil()))
                     .sucursal(empleadoDetails.getSucursal())
                     .build();
+
+            for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
+                domicilio.setEmpleado(empleadoDetails);
+            }
 
             empleadoRepository.save(empleado);
 

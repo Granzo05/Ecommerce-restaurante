@@ -40,7 +40,7 @@ public class PaisController {
     @CrossOrigin
     @GetMapping("/provincias")
     public Set<Provincia> getProvincias() {
-        Set provincias = new HashSet<>(provinciaRepository.findAll());
+        Set provincias = new HashSet<>(provinciaRepository.findAllDTO());
 
         return provincias;
     }
@@ -48,7 +48,7 @@ public class PaisController {
     @CrossOrigin
     @GetMapping("/localidades")
     public Set<Localidad> getLocalidades() {
-        Set localidades = new HashSet<>(localidadRepository.findAll());
+        Set localidades = new HashSet<>(localidadRepository.findAllDTO());
 
         return localidades;
     }

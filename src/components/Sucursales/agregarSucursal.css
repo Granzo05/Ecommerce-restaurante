@@ -1,0 +1,8 @@
+.lista-recomendaciones {
+    background-color: rgb(190, 190, 190);
+}
+
+.opcion-recomendada {
+    color: black;
+    cursor: pointer;
+}

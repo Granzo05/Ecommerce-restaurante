@@ -16,7 +16,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@JsonIgnoreProperties
 @Table(name = "departamentos", schema = "buen_sabor")
 public class Departamento {
     @Id
@@ -27,7 +26,6 @@ public class Departamento {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_provincia")
     private Provincia provincia;
-    @JsonIgnore
     @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Localidad> localidades = new HashSet<>();
 }

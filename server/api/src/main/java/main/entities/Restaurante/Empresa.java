@@ -21,6 +21,6 @@ public class Empresa {
     private long cuit;
     @Column(name = "razon_social")
     private String razonSocial;
-    @OneToMany(mappedBy = "empresa")
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private Set<Sucursal> sucursales = new HashSet<>();
 }

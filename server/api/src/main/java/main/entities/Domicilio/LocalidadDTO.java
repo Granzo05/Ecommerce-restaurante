@@ -13,5 +13,4 @@ import lombok.Setter;
 public class LocalidadDTO {
     private Long id;
     private String nombre;
-    private Departamento departamento;
 }

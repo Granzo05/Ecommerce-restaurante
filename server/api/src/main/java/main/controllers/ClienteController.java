@@ -1,26 +1,35 @@
 package main.controllers;
 
+import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
+import main.entities.Cliente.ClienteDTO;
 import main.entities.Domicilio.Domicilio;
+import main.entities.Domicilio.DomicilioDTO;
 import main.repositories.ClienteRepository;
+import main.repositories.DomicilioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @RestController
 public class ClienteController {
     private final ClienteRepository clienteRepository;
+    private final DomicilioRepository domicilioRepository;
 
-    public ClienteController(ClienteRepository clienteRepository) {
+    public ClienteController(ClienteRepository clienteRepository, DomicilioRepository domicilioRepository) {
         this.clienteRepository = clienteRepository;
+        this.domicilioRepository = domicilioRepository;
     }
 
+    @Transactional
     @PostMapping("/cliente/create")
-    public Cliente crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
+    public ClienteDTO crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
 
         if (cliente.isEmpty()) {
@@ -29,9 +38,17 @@ public class ClienteController {
                 domicilio.setCliente(clienteDetails);
             }
 
-            clienteRepository.save(clienteDetails);
+            clienteDetails = clienteRepository.save(clienteDetails);
 
-            return clienteDetails;
+            ClienteDTO clienteDTO = new ClienteDTO();
+
+            clienteDTO.setId(clienteDetails.getId());
+            clienteDTO.setNombre(clienteDetails.getNombre());
+            clienteDTO.setTelefono(clienteDetails.getTelefono());
+            clienteDTO.setEmail(clienteDetails.getEmail());
+
+            System.out.println(clienteDTO);
+            return clienteDTO;
         } else {
             return null;
         }
@@ -39,26 +56,26 @@ public class ClienteController {
 
     @CrossOrigin
     @GetMapping("/cliente/login/{email}/{password}")
-    public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        return clienteRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+    public ClienteDTO loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+        return clienteRepository.findByEmailAndPasswordDTO(email, Encrypt.cifrarPassword(password));
     }
 
     @CrossOrigin
     @GetMapping("/cliente/domicilio/{email}")
-    public Set<Domicilio> getDomicilio(@PathVariable("email") String email) throws Exception {
+    public Set<DomicilioDTO> getDomicilio(@PathVariable("email") String email) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmail(email);
 
         if (cliente.isEmpty()) {
             return null;
         }
 
-        Set<Domicilio> domicilios = cliente.get().getDomicilios();
+        List<DomicilioDTO> domicilios = domicilioRepository.findByIdClienteDTO(cliente.get().getId());
 
-        for (Domicilio domicilio : domicilios) {
+        for (DomicilioDTO domicilio : domicilios) {
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
         }
 
-        return domicilios;
+        return new HashSet<>(domicilios);
     }
 
     @PutMapping("/cliente/update")

@@ -16,5 +16,4 @@ import java.util.Set;
 public class DepartamentoDTO {
     private Long id;
     private String nombre;
-    private Provincia provincia;
 }

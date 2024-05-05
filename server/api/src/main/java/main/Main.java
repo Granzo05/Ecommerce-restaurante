@@ -4,10 +4,9 @@ import main.entities.Domicilio.Departamento;
 import main.entities.Domicilio.Localidad;
 import main.entities.Domicilio.Pais;
 import main.entities.Domicilio.Provincia;
-import main.repositories.DepartamentoRepository;
-import main.repositories.PaisRepository;
-import main.repositories.PromocionRepository;
-import main.repositories.ProvinciaRepository;
+import main.entities.Restaurante.Empresa;
+import main.entities.Restaurante.Sucursal;
+import main.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -33,26 +33,6 @@ import java.util.Set;
 public class Main {
     public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
         SpringApplication.run(Main.class, args);
-
-        // Query para añadir una empresa
-
-        /*
-        INSERT INTO empresa(id, cuit, razon_social)
-        VALUES (1, 201234560, "El buen sabor");
-
-        INSERT INTO `utn`.`sucursales`
-        (`id`,
-        `borrado`,
-        `contraseña`,
-        `email`,
-        `horario_apertura`,
-        `horario_cierre`,
-        `privilegios`,
-        `telefono`,
-        `id_empresa`)
-        VALUES
-        (1,"NO",123,"ABC@gmail.com", "17:00", "22:00","negocio", 261358111,1);
-         */
     }
 
     @Bean
@@ -74,12 +54,34 @@ public class Main {
     private PaisRepository paisRepository;
     @Autowired
     private ProvinciaRepository provinciaRepository;
+    @Autowired
+    private EmpresaRepository empresaRepository;
     private final String RUTACSV = "D://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
     private final String SEPARACIONCSV = ";";
 
     @Bean
     CommandLineRunner init() {
         return args -> {
+
+            Optional<Empresa> empresaOp = empresaRepository.findByCuit(201234560l);
+
+            if (empresaOp.isEmpty()) {
+                Empresa empresa = new Empresa();
+                empresa.setCuit(201234560);
+                empresa.setRazonSocial("El buen sabor");
+
+                Sucursal sucursal = new Sucursal();
+                sucursal.setEmpresa(empresa);
+                sucursal.setHorarioApertura(LocalTime.of(18,0));
+                sucursal.setHorarioCierre(LocalTime.of(23,0));
+                sucursal.setEmail("a@gmail.com");
+                sucursal.setPrivilegios("negocio");
+
+                empresa.getSucursales().add(sucursal);
+
+                empresaRepository.save(empresa);
+            }
+
             int cantidadProvincias = provinciaRepository.getCantidadProvincias();
             System.out.println("Provincias listas para usar");
 

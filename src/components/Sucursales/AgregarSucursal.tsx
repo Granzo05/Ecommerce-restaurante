@@ -8,15 +8,26 @@ import { SucursalService } from '../../services/SucursalService';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { LocalidadService } from '../../services/LocalidadService';
+import { Toaster, toast } from 'sonner'
+import { useDebounce } from '@uidotdev/usehooks';
+import './agregarSucursal.css'
 
 function AgregarSucursal() {
-  const [loading, setLoading] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const debouncedInputValue = useDebounce(inputValue, 5000);
+
+  const [inputValueProvincia, setInputValueProvincia] = useState('');
+  const [inputValueDepartamento, setInputValueDepartamento] = useState('');
+  const [inputValueLocalidad, setInputValueLocalidad] = useState('');
+
+  const [resultadosProvincias, setResultadosProvincias] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
+  const [resultadosDepartamentos, setResultadosDepartamentos] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
+  const [resultadosLocalidades, setResultadosLocalidades] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
 
   // Atributos necesarios para Sucursal
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [calle, setCalle] = useState('');
-  const [localidadId, setLocalidadId] = useState(0);
   const [numeroCalle, setNumeroCalle] = useState(0);
   const [codigoPostal, setCodigoPostal] = useState(0);
   const [telefono, setTelefono] = useState(0);
@@ -25,9 +36,11 @@ function AgregarSucursal() {
   const [departamentos, setDepartamentos] = useState<Departamento[] | null>([]);
   // Cargamos las localidades disponibles, tanto para el domicilio de la sucursal como para los disponibles para el delivery
   //Select que nos permite filtrar para los departamentos de la sucursal asi no cargamos de más innecesariamente
-  const [provinciasSelect, setProvinciasSelect] = useState<Provincia[] | null>([]);
+  const [provincias, setProvincias] = useState<Provincia[] | null>([]);
   //Select que nos permite filtrar para las localidades de la sucursal asi no cargamos de más innecesariamente
-  const [localidadesSucursalSelect, setLocalidadesSucursalSelect] = useState<Localidad[] | null>([]);
+  const [localidades, setLocalidades] = useState<Localidad[] | null>([]);
+  // Id de la localidad para el domicilio de la sucursal
+  const [idLocalidadDomicilioSucursal, setLocalidadDomicilioSucursal] = useState<number>(0)
   // Array que va guardando las checkboxes con los departamentos donde la sucursal hace delivery
   const [idDepartamentosElegidos, setDepartamentosDisponibles] = useState(new Set());
   // Array que va guardando las checkboxes con las localidades donde la sucursal hace delivery
@@ -35,9 +48,15 @@ function AgregarSucursal() {
 
 
   useEffect(() => {
-    cargarSelectProvincias();
+    cargarProvincias();
   }, []);
 
+  useEffect(() => {
+    // Si se deja de escribir de borran todas las recomendaciones
+    setResultadosDepartamentos([])
+    setResultadosLocalidades([])
+    setResultadosProvincias([])
+  }, [debouncedInputValue]);
 
   const handleDepartamentosCheckboxChange = (departamentoId: number) => {
     const updatedSelectedDepartamentos = new Set(idDepartamentosElegidos);
@@ -60,10 +79,10 @@ function AgregarSucursal() {
   };
 
   // Una vez cargadas las provincias vuelvo a cargar el select
-  async function cargarSelectProvincias() {
+  async function cargarProvincias() {
     await ProvinciaService.getProvincias()
       .then(data => {
-        setProvinciasSelect(data);
+        setProvincias(data);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -71,7 +90,7 @@ function AgregarSucursal() {
   }
 
   // Al seleccionar una provincia cargo los departamentos asociados
-  async function cargarSelectDepartamentos(idProvincia: number) {
+  async function cargarDepartamentos(idProvincia: number) {
     await DepartamentoService.getDepartamentosByProvinciaId(idProvincia)
       .then(async departamentos => {
         setDepartamentos(departamentos);
@@ -79,41 +98,68 @@ function AgregarSucursal() {
       .catch(error => {
         console.error('Error:', error);
       })
-      .finally(() => {
-        setLoading(false);
-        if (departamentos && departamentos.length == 0) {
-          crearDepartamentos(idProvincia);
-        }
-      });
   }
 
-  async function crearDepartamentos(idProvincia: number) {
-    await DepartamentoService.createDepartamentosByIdProvincia(idProvincia)
-      .then(async departamentos => {
-        setDepartamentos(departamentos);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
-
-  async function cargarSelectLocalidades(idDepartamento: number) {
+  async function cargarLocalidades(idDepartamento: number) {
     await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento)
       .then(async localidades => {
-        setLocalidadesSucursalSelect(localidades);
+        setLocalidades(localidades);
       })
       .catch(error => {
         console.error('Error:', error);
       })
-      .finally(() => {
-        setLoading(false);
-      });
   }
 
-  const handleCargarNegocio = () => {
+  const handleInputProvinciaChange = (value: string) => {
+    setInputValue(value);
+    setInputValueProvincia(value);
+
+    const provinciasFiltradas = provincias?.filter(provincia =>
+      provincia.nombre.toLowerCase().includes(value.toLowerCase())
+    );
+
+    if (provinciasFiltradas && provinciasFiltradas.length > 1) {
+      setResultadosProvincias(provinciasFiltradas);
+    } else if (provinciasFiltradas && provinciasFiltradas.length === 1) {
+      // Si solamente tengo un resultado entonces actualizo el valor del Input a ese
+      setResultadosProvincias(provinciasFiltradas);
+      cargarDepartamentos(provinciasFiltradas[0].id)
+    }
+  };
+
+  const handleInputDepartamentoChange = (value: string) => {
+    setInputValue(value);
+    setInputValueDepartamento(value);
+    const departamentosFiltrados = departamentos?.filter(departamento =>
+      departamento.nombre.toLowerCase().includes(value.toLowerCase())
+    );
+
+    if (departamentosFiltrados && departamentosFiltrados.length > 1) {
+      setResultadosDepartamentos(departamentosFiltrados);
+    } else if (departamentosFiltrados && departamentosFiltrados.length === 1) {
+      setResultadosDepartamentos(departamentosFiltrados);
+      cargarLocalidades(departamentosFiltrados[0].id)
+    }
+  };
+
+  const handleInputLocalidadChange = (value: string) => {
+    setInputValue(value);
+    setInputValueLocalidad(value);
+
+    const localidadesFiltradas = localidades?.filter(localidad =>
+      localidad.nombre.toLowerCase().includes(value.toLowerCase())
+    );
+
+    if (localidadesFiltradas && localidadesFiltradas.length > 1) {
+      setResultadosLocalidades(localidadesFiltradas);
+    } else if (localidadesFiltradas && localidadesFiltradas.length === 1) {
+      setResultadosLocalidades(localidadesFiltradas);
+      setLocalidadDomicilioSucursal(localidadesFiltradas[0].id)
+    }
+  };
+
+
+  const handleCargarNegocio = async () => {
     let sucursal: Sucursal = new Sucursal();
 
     const domicilio = new Domicilio();
@@ -121,12 +167,10 @@ function AgregarSucursal() {
     domicilio.calle = calle;
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
-    
-    console.log(departamentos);
-
+    const localidad = localidades?.find(localidad => localidad.id === idLocalidadDomicilioSucursal);
+    domicilio.localidad = localidad
 
     sucursal.domicilio = domicilio;
-
 
     //sucursal.localidadesDisponiblesDelivery = localidadesDisponibles;
 
@@ -134,15 +178,20 @@ function AgregarSucursal() {
     sucursal.telefono = telefono;
     sucursal.email = email;
 
-    SucursalService.createRestaurant(sucursal);
+    toast.promise(SucursalService.createRestaurant(sucursal), {
+      loading: 'Guardando sucursal...',
+      success: () => {
+        return `Sucursal añadida correctamente`;
+      },
+      error: 'Error',
+    });
   };
 
   return (
     <div className='form-info'>
-      <div>
-        {/* Todo: Hacer un cartelito de cargando con el circulo girando o un modal */}
-        {loading && <p>Cargando...</p>}
+      <Toaster />
 
+      <div>
         <h2>Crear una sucursal</h2>
         <div>
           <form>
@@ -191,38 +240,58 @@ function AgregarSucursal() {
             />
             <br />
             <h2>Provincia</h2>
-            <select
-              name="provincia"
-              onChange={(e) => { cargarSelectDepartamentos(parseInt(e.target.value)) }}
-              required
-            >
-              <option value=''>Selecciona una provincia</option>
-              {provinciasSelect?.map((provincia, index) => (
-                <option key={index} value={provincia.id}>{provincia.nombre}</option>
+            <input
+              value={inputValueProvincia}
+              type="text"
+              onChange={(e) => { handleInputProvinciaChange(e.target.value) }}
+              placeholder="Buscar provincia..."
+            />
+            <ul className='lista-recomendaciones'>
+              {resultadosProvincias?.map((provincia, index) => (
+                <li className='opcion-recomendada' key={index} onClick={() => {
+                  setInputValueProvincia(provincia.nombre)
+                  setResultadosProvincias([])
+                }}>
+                  {provincia.nombre}
+                </li>
               ))}
-            </select>
+            </ul>
             <br />
-            <h2>Departamentos</h2>
-            <select
-              name="departamento"
-              onChange={(e) => { cargarSelectLocalidades(parseInt(e.target.value)) }}
-              required
-            >
-              {departamentos?.map((departamento, index) => (
-                <option key={index} value={departamento.id}>{departamento.nombre}</option>
-              ))}
-            </select>
+            <h2>Departamento</h2>
+            <input
+              type="text"
+              value={inputValueDepartamento}
+              onChange={(e) => { handleInputDepartamentoChange(e.target.value) }}
+              placeholder="Buscar departamento..."
+            />
+            <ul className='lista-recomendaciones'>
+              {resultadosDepartamentos?.map((departamento, index) => (
+                <li className='opcion-recomendada' key={index} onClick={() => {
+                  setInputValueDepartamento(departamento.nombre)
+                  setResultadosDepartamentos([])
+                }}>
+                  {departamento.nombre}
+                </li>))}
+            </ul>
+
             <br />
             <h2>Localidad</h2>
-            <select
-              name="localidad"
-              onChange={(e) => { setLocalidadId(parseInt(e.target.value)) }}
-              required
-            >
-              {localidadesSucursalSelect?.map((localidad, index) => (
-                <option key={index} value={localidad.id}>{localidad.nombre}</option>
+            <input
+              type="text"
+              value={inputValueLocalidad}
+              onChange={(e) => { handleInputLocalidadChange(e.target.value) }}
+              placeholder="Buscar localidad..."
+            />
+            <ul className='lista-recomendaciones'>
+              {resultadosLocalidades?.map((localidad, index) => (
+                <li className='opcion-recomendada' key={index} onClick={() => {
+                  setInputValueLocalidad(localidad.nombre)
+                  setResultadosLocalidades([])
+                }}>
+                  {localidad.nombre}
+                </li>
               ))}
-            </select>
+            </ul>
 
             <h3>Departamentos disponibles para delivery: </h3>
             {departamentos && (
@@ -243,9 +312,9 @@ function AgregarSucursal() {
             )}
 
             <h3>Localidades disponibles para delivery: </h3>
-            {localidadesSucursalSelect && (
+            {localidades && (
               <div>
-                {localidadesSucursalSelect.map((localidad, index) => (
+                {localidades.map((localidad, index) => (
                   <div key={index}>
                     <input
                       type="checkbox"

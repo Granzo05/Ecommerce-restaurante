@@ -116,6 +116,7 @@ export const EmpleadoService = {
     },
 
     checkUser: async (): Promise<boolean> => {
+        /*
         const empleadoStr: string | null = localStorage.getItem('usuario');
         const empleado: Empleado = empleadoStr ? JSON.parse(empleadoStr) : new Empleado();
 
@@ -125,10 +126,10 @@ export const EmpleadoService = {
         }
 
         // Si los privilegios son solo para el negocio entonces en caso de ser empleado se devuelve un false para no mostrarle las opciones donde no deberia poder acceder
-        if (empleado.privilegios.match('empleado')) {
+        if (empleado && empleado.privilegios.match('empleado')) {
             return false;
         }
-
+*/
         return true;
     }
 }

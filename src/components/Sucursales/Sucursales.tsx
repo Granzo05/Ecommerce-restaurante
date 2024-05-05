@@ -19,9 +19,9 @@ const Sucursales = () => {
     const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
-        fetchData();
+        //fetchData();
         fetchSucursales();
-    }, []);    
+    }, []);
 
     const fetchData = async () => {
         try {

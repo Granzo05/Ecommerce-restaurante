@@ -3,7 +3,7 @@ package main.entities.Cliente;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Pedidos.Pedido;
+import main.entities.Domicilio.DomicilioDTO;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -16,36 +16,27 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@ToString
-@Table(name = "clientes", schema = "buen_sabor")
-public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+public class ClienteDTO {
     private Long id;
-    @Column(name = "nombre")
     private String nombre;
-    @Column(name = "email")
     private String email;
-    @JsonIgnore
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Domicilio> domicilios = new HashSet<>();
-    @Column(name = "telefono")
+    private Set<DomicilioDTO> domicilios = new HashSet<>();
     private long telefono;
-    @JsonIgnore
-    @Column(name = "contraseña")
     private String contraseña;
-    @JsonIgnore
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    @Column(name = "fecha_registro", updatable = false, nullable = false)
     public Date fechaRegistro;
-    @JsonIgnore
-    @Column(name = "fecha_nacimiento", updatable = false, nullable = false)
     public Date fechaNacimiento;
-    @JsonIgnore
-    @Column(name = "borrado")
     private String borrado = "NO";
+
+    // Necesarios para los repositorios
+    public ClienteDTO(String email) {
+        this.email = email;
+    }
+
+    public ClienteDTO(Long id, String nombre, String email, long telefono) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.telefono = telefono;
+    }
 }
 

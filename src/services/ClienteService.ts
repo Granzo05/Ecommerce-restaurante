@@ -3,7 +3,6 @@ import { URL_API } from '../utils/global_variables/const';
 
 export const ClienteService = {
     createUser: async (cliente: Cliente) => {
-  
 
         fetch(URL_API + 'cliente/create', {
             method: 'POST',
@@ -26,6 +25,7 @@ export const ClienteService = {
                     telefono: data.telefono,
                 }
                 localStorage.setItem('usuario', JSON.stringify(cliente));
+
                 // Redirige al usuario al menú principal
                 window.location.href = '/'
             })

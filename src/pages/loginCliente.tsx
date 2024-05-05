@@ -12,9 +12,21 @@ import { Departamento } from '../types/Domicilio/Departamento';
 import { ProvinciaService } from '../services/ProvinciaService';
 import { DepartamentoService } from '../services/DepartamentoService';
 import { Cliente } from '../types/Cliente/Cliente';
-
+import { Toaster, toast } from 'sonner'
+import { useDebounce } from '@uidotdev/usehooks';
 
 const LoginCliente = () => {
+    const [inputValue, setInputValue] = useState('');
+    const debouncedInputValue = useDebounce(inputValue, 5000);
+
+    const [inputValueProvincia, setInputValueProvincia] = useState('');
+    const [inputValueDepartamento, setInputValueDepartamento] = useState('');
+    const [inputValueLocalidad, setInputValueLocalidad] = useState('');
+
+    const [resultadosProvincias, setResultadosProvincias] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
+    const [resultadosDepartamentos, setResultadosDepartamentos] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
+    const [resultadosLocalidades, setResultadosLocalidades] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
+
     const [nombre, setNombre] = useState('');
     const [email, setEmail] = useState('');
     const [contraseña, setContraseña] = useState('');
@@ -34,17 +46,29 @@ const LoginCliente = () => {
     };
 
     useEffect(() => {
-        ProvinciaService.getProvincias()
-            .then(provincias => {
-                setProvincias(provincias);
-            })
-            .catch(error => {
-                console.error("Error al obtener las provincias:", error);
-            });
+        cargarProvincias();
     }, []);
 
+    useEffect(() => {
+        // Si se deja de escribir de borran todas las recomendaciones
+        setResultadosDepartamentos([])
+        setResultadosLocalidades([])
+        setResultadosProvincias([])
+    }, [debouncedInputValue]);
+
+    // Una vez cargadas las provincias vuelvo a cargar el select
+    async function cargarProvincias() {
+        await ProvinciaService.getProvincias()
+            .then(data => {
+                setProvincias(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
     // Al seleccionar una provincia cargo los departamentos asociados
-    async function cargarSelectDepartamentos(idProvincia: number) {
+    async function cargarDepartamentos(idProvincia: number) {
         await DepartamentoService.getDepartamentosByProvinciaId(idProvincia)
             .then(async departamentos => {
                 setDepartamentos(departamentos);
@@ -54,8 +78,8 @@ const LoginCliente = () => {
             })
     }
 
-
-    async function cargarSelectLocalidades(idDepartamento: number) {
+    async function cargarLocalidades(idDepartamento: number) {
+        console.log(idDepartamento)
         await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento)
             .then(async localidades => {
                 setLocalidades(localidades);
@@ -64,6 +88,53 @@ const LoginCliente = () => {
                 console.error('Error:', error);
             })
     }
+
+    const handleInputProvinciaChange = (value: string) => {
+        setInputValue(value);
+        setInputValueProvincia(value);
+
+        const provinciasFiltradas = provincias?.filter(provincia =>
+            provincia.nombre.toLowerCase().includes(value.toLowerCase())
+        );
+
+        if (provinciasFiltradas && provinciasFiltradas.length > 1) {
+            setResultadosProvincias(provinciasFiltradas);
+        } else if (provinciasFiltradas && provinciasFiltradas.length === 1) {
+            // Si solamente tengo un resultado entonces actualizo el valor del Input a ese
+            setResultadosProvincias(provinciasFiltradas);
+            cargarDepartamentos(provinciasFiltradas[0].id)
+        }
+    };
+
+    const handleInputDepartamentoChange = (value: string) => {
+        setInputValue(value);
+        setInputValueDepartamento(value);
+        const departamentosFiltrados = departamentos?.filter(departamento =>
+            departamento.nombre.toLowerCase().includes(value.toLowerCase())
+        );
+
+        if (departamentosFiltrados && departamentosFiltrados.length > 1) {
+            setResultadosDepartamentos(departamentosFiltrados);
+        } else if (departamentosFiltrados && departamentosFiltrados.length === 1) {
+            setResultadosDepartamentos(departamentosFiltrados);
+            cargarLocalidades(departamentosFiltrados[0].id)
+        }
+    };
+
+    const handleInputLocalidadChange = (value: string) => {
+        setInputValue(value);
+        setInputValueLocalidad(value);
+        const localidadesFiltradas = localidades?.filter(localidad =>
+            localidad.nombre.toLowerCase().includes(value.toLowerCase())
+        );
+
+        if (localidadesFiltradas && localidadesFiltradas.length > 1) {
+            setResultadosLocalidades(localidadesFiltradas);
+        } else if (localidadesFiltradas && localidadesFiltradas.length === 1) {
+            setResultadosLocalidades(localidadesFiltradas);
+            setLocalidadId(localidadesFiltradas[0].id)
+        }
+    };
 
     const handleCargarUsuario = () => {
         const cliente = new Cliente();
@@ -88,13 +159,19 @@ const LoginCliente = () => {
         }
 
         const fechaNacimientoDate = new Date(fechaNacimiento);
-        fechaNacimientoDate.setUTCDate(fechaNacimientoDate.getUTCDate() + 1); 
+        fechaNacimientoDate.setUTCDate(fechaNacimientoDate.getUTCDate() + 1);
 
-        const fechaNacimientoLocal = new Date(fechaNacimientoDate.toLocaleString()); 
+        const fechaNacimientoLocal = new Date(fechaNacimientoDate.toLocaleString());
 
         cliente.fechaNacimiento = fechaNacimientoLocal;
 
-        ClienteService.createUser(cliente);
+        toast.promise(ClienteService.createUser(cliente), {
+            loading: 'Creando usuario...',
+            success: () => {
+                return `Iniciando sesión...`;
+            },
+            error: 'Error',
+        });
     };
 
     const [tipoInput, setTipoInput] = useState('password');
@@ -124,6 +201,7 @@ const LoginCliente = () => {
 
     return (
         <div className='body'>
+            <Toaster />
             {/*INICIAR SESION*/}
             <section className="form-main" style={{ display: mostrarIniciarSesion ? '' : 'none' }}>
                 <div className="form-content">
@@ -221,36 +299,64 @@ const LoginCliente = () => {
                                     <input required type="number" className='input-control' placeholder="Número de la casa" onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
                                 </label>
                             </div>
-                            <select
-                                name="provincia"
-                                onChange={(e) => { cargarSelectDepartamentos(parseInt(e.target.value)) }}
-                                required
-                            >
-                                <option value=''>Selecciona una provincia</option>
-                                {provincias?.map((provincia, index) => (
-                                    <option key={index} value={provincia.id}>{provincia.nombre}</option>
+                            <h2>Provincia</h2>
+                            <input
+                                value={inputValueProvincia}
+                                type="text"
+                                onChange={(e) => { handleInputProvinciaChange(e.target.value) }}
+                                placeholder="Buscar provincia..."
+                            />
+                            <ul className='lista-recomendaciones'>
+                                {resultadosProvincias?.map((provincia, index) => (
+                                    <li className='opcion-recomendada' key={index} onClick={() => {
+                                        setInputValueProvincia(provincia.nombre)
+                                        setResultadosProvincias([])
+                                    }}>
+                                        {provincia.nombre}
+                                    </li>
                                 ))}
-                            </select>
-                            <select
-                                name="departamento"
-                                onChange={(e) => { cargarSelectLocalidades(parseInt(e.target.value)) }}
-                                required
-                            >
-                                <option value=''>Selecciona un departamento</option>
-                                {departamentos?.map((departamento, index) => (
-                                    <option key={index} value={departamento.id}>{departamento.nombre}</option>
+                            </ul>
+                            <br />
+                            <h2>Departamento</h2>
+                            <input
+                                type="text"
+                                value={inputValueDepartamento}
+                                onChange={(e) => { handleInputDepartamentoChange(e.target.value) }}
+                                placeholder="Buscar departamento..."
+                            />
+                            <ul className='lista-recomendaciones'>
+                                {resultadosDepartamentos?.map((departamento, index) => (
+                                    <li className='opcion-recomendada' key={index} onClick={() => {
+                                        setInputValueDepartamento(departamento.nombre)
+                                        setResultadosDepartamentos([])
+                                        cargarLocalidades(departamento.id)
+
+                                    }}>
+                                        {departamento.nombre}
+                                    </li>))}
+                            </ul>
+
+                            <br />
+                            <h2>Localidad</h2>
+                            <input
+                                type="text"
+                                value={inputValueLocalidad}
+                                onChange={(e) => { handleInputLocalidadChange(e.target.value) }}
+                                placeholder="Buscar localidad..."
+                            />
+                            <ul className='lista-recomendaciones'>
+                                {resultadosLocalidades?.map((localidad, index) => (
+                                    <li className='opcion-recomendada' key={index} onClick={() => {
+                                        setInputValueLocalidad(localidad.nombre)
+                                        setResultadosLocalidades([])
+                                        setLocalidadId(localidad.id)
+
+                                    }}>
+                                        {localidad.nombre}
+                                    </li>
                                 ))}
-                            </select>
-                            <select
-                                name="localidad"
-                                onChange={(e) => { setLocalidadId(parseInt(e.target.value)) }}
-                                required
-                            >
-                                <option value=''>Selecciona una localidad</option>
-                                {localidades?.map((localidad, index) => (
-                                    <option key={index} value={localidad.id}>{localidad.nombre}</option>
-                                ))}
-                            </select>
+                            </ul>
+
                             <div className="input-box">
                                 <label>
                                     <input required type="number" className='input-control' placeholder="Codigo postal" onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />

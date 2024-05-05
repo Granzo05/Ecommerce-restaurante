@@ -18,5 +18,4 @@ import java.util.Set;
 public class ProvinciaDTO {
     private Long id;
     private String nombre;
-    private Pais pais;
 }
