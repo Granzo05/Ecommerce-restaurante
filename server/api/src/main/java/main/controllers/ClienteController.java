@@ -47,7 +47,6 @@ public class ClienteController {
             clienteDTO.setTelefono(clienteDetails.getTelefono());
             clienteDTO.setEmail(clienteDetails.getEmail());
 
-            System.out.println(clienteDTO);
             return clienteDTO;
         } else {
             return null;

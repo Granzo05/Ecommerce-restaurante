@@ -30,12 +30,12 @@
 [] Mercadopago
 [x] Carga de provincias y localidades de argentina
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
-[] Select provincia, departamento y localidad en ambos registros
 [] Opcion para seleccionar que localidades abarcaria el local, para asi cargar la db con los datos de esa provincia y no de todo el pais
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Crear modal para mostrar opciones extra al interactuar con las opciones
-[] Probar el plugin Toaster Sonner para los mensajes en pantalla buenardos
-[] Input con lista de posibles resultados debajo
+[x] Probar el plugin Toaster Sonner para los mensajes en pantalla buenardos
+[x] Input con lista de posibles resultados debajo
+[] Ver tema del auth para privilegios y esas cosas
 
     Pruebas
 [] Carga sucursal

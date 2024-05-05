@@ -1,5 +1,6 @@
 package main;
 
+import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Departamento;
 import main.entities.Domicilio.Localidad;
 import main.entities.Domicilio.Pais;
@@ -63,11 +64,11 @@ public class Main {
     CommandLineRunner init() {
         return args -> {
 
-            Optional<Empresa> empresaOp = empresaRepository.findByCuit(201234560l);
+            Optional<Empresa> empresaOp = empresaRepository.findByCuit(201234566l);
 
             if (empresaOp.isEmpty()) {
                 Empresa empresa = new Empresa();
-                empresa.setCuit(201234560);
+                empresa.setCuit(201234566);
                 empresa.setRazonSocial("El buen sabor");
 
                 Sucursal sucursal = new Sucursal();
@@ -76,6 +77,7 @@ public class Main {
                 sucursal.setHorarioCierre(LocalTime.of(23,0));
                 sucursal.setEmail("a@gmail.com");
                 sucursal.setPrivilegios("negocio");
+                sucursal.setContraseña(Encrypt.cifrarPassword("123"));
 
                 empresa.getSucursales().add(sucursal);
 

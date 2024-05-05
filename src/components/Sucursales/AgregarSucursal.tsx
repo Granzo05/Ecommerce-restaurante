@@ -31,6 +31,8 @@ function AgregarSucursal() {
   const [numeroCalle, setNumeroCalle] = useState(0);
   const [codigoPostal, setCodigoPostal] = useState(0);
   const [telefono, setTelefono] = useState(0);
+  const [horarioApertura, setHorarioApertura] = useState('');
+  const [horarioCierre, setHorarioCierre] = useState('');
 
   // Cargamos los departamentos de la provincia elegida en el select
   const [departamentos, setDepartamentos] = useState<Departamento[] | null>([]);
@@ -163,21 +165,36 @@ function AgregarSucursal() {
     let sucursal: Sucursal = new Sucursal();
 
     const domicilio = new Domicilio();
-
     domicilio.calle = calle;
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
     const localidad = localidades?.find(localidad => localidad.id === idLocalidadDomicilioSucursal);
     domicilio.localidad = localidad
-
     sucursal.domicilio = domicilio;
 
-    //sucursal.localidadesDisponiblesDelivery = localidadesDisponibles;
-
     sucursal.contraseña = contraseña;
+
     sucursal.telefono = telefono;
+
     sucursal.email = email;
 
+    sucursal.horarioApertura = horarioApertura;
+
+    sucursal.horarioCierre = horarioCierre;
+
+    let localidadesDisponiblesDelivery: Localidad[] = [];
+
+    idDepartamentosElegidos.forEach(id => {
+      const localidad = localidades?.find(localidad => localidad.id === id);
+
+      if (localidad) localidadesDisponiblesDelivery.push(localidad);
+    });
+
+    sucursal.localidadesDisponiblesDelivery = localidadesDisponiblesDelivery;
+    
+    console.log(sucursal)
+
+    /*
     toast.promise(SucursalService.createRestaurant(sucursal), {
       loading: 'Guardando sucursal...',
       success: () => {
@@ -185,6 +202,7 @@ function AgregarSucursal() {
       },
       error: 'Error',
     });
+    */
   };
 
   return (
@@ -239,6 +257,14 @@ function AgregarSucursal() {
               placeholder="Codigo Postal"
             />
             <br />
+            <input
+              type="time"
+              onChange={(e) => { setHorarioApertura(e.target.value) }}
+            />
+            <input
+              type="time"
+              onChange={(e) => { setHorarioCierre(e.target.value) }}
+            />
             <h2>Provincia</h2>
             <input
               value={inputValueProvincia}

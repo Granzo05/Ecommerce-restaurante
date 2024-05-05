@@ -1,6 +1,5 @@
 import { Domicilio } from "../Domicilio/Domicilio";
 import { Localidad } from "../Domicilio/Localidad";
-import { Empleado } from "./Empleado";
 
 export class Sucursal {
     id: number = 0;
@@ -9,10 +8,10 @@ export class Sucursal {
     telefono: number = 0;
     email: string = '';
     privilegios: string = '';
-    horarioApertura: Date | null = null;
-    horarioCierre: Date | null = null;
-    empleados: Empleado[] = [];
+    horarioApertura: string = '';
+    horarioCierre: string = '';
     localidadesDisponiblesDelivery: Localidad[] = [];
+
     constructor() {
 
     }

@@ -33,8 +33,7 @@ public class SucursalController {
     @GetMapping("/sucursal/login/{email}/{password}")
     public Object loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         // Busco por email y clave encriptada, si se encuentra devuelvo el objeto
-        //Todo: volver a activar -> Sucursal sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-        Sucursal sucursal = sucursalRepository.findByEmailAndPassword(email, password);
+        Sucursal sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
         // Utilizo la misma funcion tanto para empleados como para el sucursale
         if (sucursal == null) {
             return empleadoRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
@@ -97,6 +96,8 @@ public class SucursalController {
 
         if (sucursalDB != null) {
             sucursalDetails.getDomicilio().setSucursal(sucursalDetails);
+
+            sucursalDetails.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
 
             Sucursal sucursal = sucursalRepository.save(sucursalDetails);
 
