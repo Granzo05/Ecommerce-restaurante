@@ -14,7 +14,6 @@ import { DepartamentoService } from '../services/DepartamentoService';
 import { Cliente } from '../types/Cliente/Cliente';
 import { Toaster, toast } from 'sonner'
 import { useDebounce } from '@uidotdev/usehooks';
-import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
 
 const LoginCliente = () => {
     const [inputValue, setInputValue] = useState('');
