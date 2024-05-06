@@ -1,30 +1,23 @@
 import '../styles/footer.css'
+import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
 
 const Footer = () => {
     return (
         <footer className="footer">
         <div className="footer-container">
-          <div className="footer-newsletter">
-            <h1 className="footer-newsletter__header">
-              Want us to email you with the latest blockbuster news?
-            </h1>
-            <div className="footer-newsletter__form">
-              <input type="email" name="email" placeholder="example@xyz.com"/>
-              <button type="submit" className="submit-btn">Subscribe</button>
-            </div>
-          </div>
+          
           <div className="footer-body">
             <div className="footer-body__content">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis
-                esse illo culpa aperiam minima odit? Nihil quod illo pariatur
-                libero.
+              
+              <p style={{color: 'white'}}>
+                <img id='logo-footer' src={Logo} /><hr />
+                Donde la magia de las estrellas llega a tu puerta con cada entrega. Descubre nuestros sabores y déjate llevar por la excelencia culinaria. ¡Sabor, calidad y comodidad, todo en un solo lugar!
               </p>
             </div>
             <nav className="footer-body__nav">
               <ul className="footer-body__nav-list">
                 <li className="footer-body__nav-item">
-                  Services
+                  Servicios
                   <ul className="footer-body__nav-sublist">
                     <li className="footer-body__nav-subitem">
                       <a href="" className="footer-body__nav-link">Marketing</a>
@@ -41,7 +34,7 @@ const Footer = () => {
                   </ul>
                 </li>
                 <li className="footer-body__nav-item">
-                  About
+                  Sobre nosotros
                   <ul className="footer-body__nav-sublist">
                     <li className="footer-body__nav-subitem">
                       <a href="" className="footer-body__nav-link">About</a>
@@ -58,7 +51,7 @@ const Footer = () => {
                   </ul>
                 </li>
                 <li className="footer-body__nav-item">
-                  Support
+                  Soporte
                   <ul className="footer-body__nav-sublist">
                     <li className="footer-body__nav-subitem">
                       <a href="" className="footer-body__nav-link">FAQs</a>
@@ -75,7 +68,7 @@ const Footer = () => {
             </nav>
           </div>
           <div className="footer-attribute">
-              <p>&copy; Company 2024. All right reserved.</p>
+              <p>&copy; Copyright 2024. All right reserved.</p>
           </div>
         </div>
       </footer>
