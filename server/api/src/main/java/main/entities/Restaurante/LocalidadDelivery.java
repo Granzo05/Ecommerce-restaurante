@@ -21,5 +21,8 @@ public class LocalidadDelivery {
     @ManyToOne
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
+    @OneToOne
+    @JoinColumn(name = "id_localidad")
+    private Localidad localidad;
 
 }

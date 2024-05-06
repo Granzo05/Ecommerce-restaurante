@@ -1,10 +1,11 @@
 package main.controllers;
 
+import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
-import main.entities.Cliente.ClienteDTO;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Restaurante.Empleado;
+import main.entities.Restaurante.LocalidadDelivery;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.ClienteRepository;
 import main.repositories.EmpleadoRepository;
@@ -12,6 +13,7 @@ import main.repositories.SucursalRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -91,19 +93,43 @@ public class SucursalController {
     }
 
     @PostMapping("/sucursal/create")
-    public Sucursal crearSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
+    @Transactional
+    public ResponseEntity<String> crearSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
         Sucursal sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
-        if (sucursalDB != null) {
-            sucursalDetails.getDomicilio().setSucursal(sucursalDetails);
+        if (sucursalDB == null) {
+            Domicilio domicilio = new Domicilio();
+
+            domicilio.setCalle(sucursalDetails.getDomicilio().getCalle());
+            domicilio.setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
+            domicilio.setNumero(sucursalDetails.getDomicilio().getNumero());
+            domicilio.setSucursal(sucursalDetails);
+            domicilio.setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
+
+            sucursalDetails.setDomicilio(domicilio);
 
             sucursalDetails.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
 
-            Sucursal sucursal = sucursalRepository.save(sucursalDetails);
+            sucursalDetails.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
+            sucursalDetails.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
+            sucursalDetails.setPrivilegios("negocio");
 
-            return sucursal;
+            Set<LocalidadDelivery> localidades = new HashSet<>();
+
+            for(LocalidadDelivery localidadDelivery: sucursalDetails.getLocalidadesDisponiblesDelivery()) {
+                LocalidadDelivery newLocalidad = new LocalidadDelivery();
+                newLocalidad.setSucursal(sucursalDetails);
+                newLocalidad.setLocalidad(localidadDelivery.getLocalidad());
+                localidades.add(newLocalidad);
+            }
+
+            sucursalDetails.setLocalidadesDisponiblesDelivery(localidades);
+
+            sucursalRepository.save(sucursalDetails);
+
+            return ResponseEntity.ok("Ok");
         } else {
-            return null;
+            return ResponseEntity.ofNullable("Mal");
         }
     }
 

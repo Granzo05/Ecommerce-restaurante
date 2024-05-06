@@ -11,6 +11,7 @@ import { LocalidadService } from '../../services/LocalidadService';
 import { Toaster, toast } from 'sonner'
 import { useDebounce } from '@uidotdev/usehooks';
 import './agregarSucursal.css'
+import { LocalidadDelivery } from '../../types/Restaurante/LocalidadDelivery';
 
 function AgregarSucursal() {
   const [inputValue, setInputValue] = useState('');
@@ -48,7 +49,7 @@ function AgregarSucursal() {
   // Array que va guardando las checkboxes con las localidades donde la sucursal hace delivery
   const [idLocalidadesElegidas, setLocalidadesDisponibles] = useState<Set<number>>(new Set<number>());
 
-  const [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<Set<Localidad>>(new Set<Localidad>());
+  let [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<Localidad[] | null>([]);
 
   useEffect(() => {
     cargarProvincias();
@@ -61,21 +62,29 @@ function AgregarSucursal() {
     setResultadosProvincias([])
   }, [debouncedInputValue]);
 
-  const handleDepartamentosCheckboxChange = (departamentoId: number) => {
+  const handleDepartamentosCheckboxChange = async (departamentoId: number) => {
+    // Obtener una copia del conjunto de departamentos seleccionados
     const updatedSelectedDepartamentos = new Set<number>(idDepartamentosElegidos);
 
+    // Alternar el estado del departamento
     if (updatedSelectedDepartamentos.has(departamentoId)) {
       updatedSelectedDepartamentos.delete(departamentoId);
     } else {
       updatedSelectedDepartamentos.add(departamentoId);
     }
-    console.log(updatedSelectedDepartamentos)
-    Array.from(updatedSelectedDepartamentos).forEach(idDepartamentos => {
-      cargarLocalidadesCheckBox(idDepartamentos);
-    });
 
+    // Actualizar el conjunto de departamentos seleccionados
     setDepartamentosDisponibles(updatedSelectedDepartamentos);
+
+    let nuevasLocalidades: Localidad[] = [];
+    // Iterar sobre los departamentos seleccionados y cargar las localidades correspondientes
+    for (const idDepartamento of updatedSelectedDepartamentos) {
+      nuevasLocalidades.push(...await cargarLocalidadesCheckBox(idDepartamento));
+    }
+
+    setLocalidadesMostrables(nuevasLocalidades);
   };
+
 
 
   const handleLocalidadesCheckboxChange = (localidadId: number) => {
@@ -120,16 +129,13 @@ function AgregarSucursal() {
       })
   }
 
-  async function cargarLocalidadesCheckBox(idDepartamento: number) {
+  async function cargarLocalidadesCheckBox(idDepartamento: number): Promise<Localidad[]> {
     try {
-      const localidades = await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento);
-
-      const localidadesSet = new Set(localidades);
-
-      setLocalidadesMostrables(localidadesSet);
+      return await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento);
     } catch (error) {
       console.error('Error:', error);
     }
+    return [];
   }
 
 
@@ -202,20 +208,21 @@ function AgregarSucursal() {
     sucursal.horarioApertura = horarioApertura;
 
     sucursal.horarioCierre = horarioCierre;
+    let localidadesDelivery: LocalidadDelivery[] = [];
 
-    let localidadesDisponiblesDelivery: Localidad[] = [];
+    idLocalidadesElegidas.forEach(id => {
+      let localidadBuscada = localidadesMostrablesCheckbox?.find(localidad => localidad.id === id);
+      let localidadNueva: LocalidadDelivery = new LocalidadDelivery();
 
-    idDepartamentosElegidos.forEach(id => {
-      const localidad = localidades?.find(localidad => localidad.id === id);
-
-      if (localidad) localidadesDisponiblesDelivery.push(localidad);
+      if (localidadBuscada) {
+        localidadNueva.localidad = localidadBuscada;
+        localidadesDelivery.push(localidadNueva);
+      }
     });
 
-    sucursal.localidadesDisponiblesDelivery = localidadesDisponiblesDelivery;
+    sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
 
-    console.log(sucursal)
 
-    /*
     toast.promise(SucursalService.createRestaurant(sucursal), {
       loading: 'Guardando sucursal...',
       success: () => {
@@ -223,7 +230,7 @@ function AgregarSucursal() {
       },
       error: 'Error',
     });
-    */
+
   };
 
   return (
@@ -342,6 +349,7 @@ function AgregarSucursal() {
                 <li className='opcion-recomendada' key={index} onClick={() => {
                   setInputValueLocalidad(localidad.nombre)
                   setResultadosLocalidades([])
+                  setLocalidadDomicilioSucursal(localidad.id)
                 }}>
                   {localidad.nombre}
                 </li>
@@ -369,11 +377,10 @@ function AgregarSucursal() {
             <h3>Localidades disponibles para delivery: </h3>
             {localidadesMostrablesCheckbox && (
               <div>
-                {Array.from(localidadesMostrablesCheckbox).map((localidad, index) => (
+                {localidadesMostrablesCheckbox.map((localidad, index) => (
                   <div key={index}>
                     <input
                       type="checkbox"
-                      id={`localidad-${index}`}
                       value={localidad.id}
                       checked={idLocalidadesElegidas.has(localidad.id)}
                       onChange={() => handleLocalidadesCheckboxChange(localidad.id)}
