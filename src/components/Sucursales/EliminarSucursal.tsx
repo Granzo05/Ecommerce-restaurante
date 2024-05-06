@@ -20,7 +20,6 @@ const EliminarMenu: React.FC<EliminarSucursalProps> = ({ idSucursal }) => {
       error: 'Error',
     });
     navigate('/opciones');
-
   };
 
   const onCancel = () => {

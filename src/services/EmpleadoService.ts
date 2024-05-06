@@ -95,9 +95,9 @@ export const EmpleadoService = {
 
     },
 
-    deleteEmpleado: async (cuitEmpleado: number): Promise<string> => {
+    deleteEmpleado: async (cuilEmpleado: string): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/' + cuitEmpleado + '/delete', {
+            const response = await fetch(URL_API + 'empleado/' + cuilEmpleado + '/delete', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

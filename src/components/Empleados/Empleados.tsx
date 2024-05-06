@@ -16,7 +16,7 @@ const Empleados = () => {
     const [showEditarEmpleadoModal, setShowEditarEmpleadoModal] = useState(false);
     const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
 
-    const [selectedCuit, setSelectedCuit] = useState<number | null>(0);
+    const [selectedCuit, setSelectedCuit] = useState<string>('');
 
     useEffect(() => {
         fetchData();
@@ -43,19 +43,24 @@ const Empleados = () => {
 
     const handleAgregarEmpleado = () => {
         setShowAgregarEmpleadoModal(true);
+        setShowEditarEmpleadoModal(false);
+        setShowEliminarEmpleadoModal(false);
         setMostrarEmpleados(false);
     };
 
     const handleEditarEmpleado = () => {
+        setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(true);
-        setMostrarEmpleados(true);
+        setShowEliminarEmpleadoModal(false);
+        setMostrarEmpleados(false);
     };
 
-    const handleEliminarEmpleado = (cuit: number) => {
-        setSelectedCuit(cuit);
+    const handleEliminarEmpleado = (cuil: string) => {
+        setSelectedCuit(cuil);
+        setShowAgregarEmpleadoModal(false);
+        setShowEditarEmpleadoModal(false);
         setShowEliminarEmpleadoModal(true);
-        setMostrarEmpleados(true);
-
+        setMostrarEmpleados(false);
     };
 
     const handleModalClose = () => {
@@ -82,7 +87,7 @@ const Empleados = () => {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Cuit</th>
+                                <th>Cuil</th>
                                 <th>Telefono</th>
                                 <th>Email</th>
                                 <th>Fecha de ingreso</th>
@@ -93,13 +98,18 @@ const Empleados = () => {
                             {empleados.map(empleado => (
                                 <tr key={empleado.id}>
                                     <td>{empleado.nombre}</td>
-                                    <td>{empleado.cuit}</td>
+                                    <td>{empleado.cuil}</td>
                                     <td>{empleado.telefono}</td>
                                     <td>{empleado.email}</td>
-                                    <td>{new Date(empleado.fechaIngreso).toLocaleDateString('es-ES', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
+
+                                    {empleado.fechaContratacion && empleado.fechaContratacion.map((fecha, index) => (
+                                        <tr key={index}>
+                                            <td>{fecha.toUTCString()}</td>
+                                        </tr>
+                                    ))}
 
                                     <td>
-                                        <button onClick={() => handleEliminarEmpleado(empleado.cuit)}>ELIMINAR</button>
+                                        <button onClick={() => handleEliminarEmpleado(empleado.cuil)}>ELIMINAR</button>
                                         <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
                                     </td>
                                     <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
@@ -110,11 +120,10 @@ const Empleados = () => {
                         </tbody>
                     </table>
                     <ModalFlotante isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
-                        {selectedCuit && <EliminarEmpleado cuitEmpleado={selectedCuit} />}
+                        {selectedCuit && <EliminarEmpleado cuilEmpleado={selectedCuit} />}
                     </ModalFlotante>
                 </div>
             )}
-
         </div>
     )
 }

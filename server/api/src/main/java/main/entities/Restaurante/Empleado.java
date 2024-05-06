@@ -1,5 +1,6 @@
 package main.entities.Restaurante;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
@@ -31,18 +32,21 @@ public class Empleado {
     private String cuil;
     @Column(name = "telefono")
     private Long telefono;
+    @JsonIgnoreProperties(value = "empleado")
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
     private Set<Domicilio> domicilios = new HashSet<>();
+    @JsonIgnoreProperties(value = "empleado")
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
-    public Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
+    private Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
     @Column(name = "fecha_nacimiento", updatable = false, nullable = false)
-    public Date fechaNacimiento;
+    private Date fechaNacimiento;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
     @JsonIgnore
     @Column(name = "privilegios")
     private String privilegios;
+    @JsonIgnoreProperties(value = "empleados")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;

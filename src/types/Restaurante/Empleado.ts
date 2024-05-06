@@ -9,8 +9,8 @@ export class Empleado {
     cuil: string = '';
     telefono: number = 0;
     domicilios: Domicilio[] = [];
-    fechaContratacion: Date | null = null;
-    fechaNacimiento: Date | null = null;
+    fechaContratacion: Date[] = [];
+    fechaNacimiento: Date = new Date();
     privilegios: string = '';
     sucursal: Sucursal | null = null;
 

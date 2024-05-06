@@ -144,46 +144,42 @@ public class SucursalController {
     }
 
     @PostMapping("/empleado/create")
-    public Empleado crearEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
-        Optional<Empleado> empleadoDB = empleadoRepository.findByEmail(empleadoDetails.getEmail());
+    public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
+        Optional<Empleado> empleadoDB = empleadoRepository.findByCuil(empleadoDetails.getCuil());
 
         if (empleadoDB.isEmpty()) {
-            Empleado empleado = Empleado.builder()
-                    .contraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()))
-                    .borrado("NO")
-                    .privilegios("empleado")
-                    .cuil(Encrypt.encriptarString(empleadoDetails.getCuil()))
-                    .sucursal(empleadoDetails.getSucursal())
-                    .build();
 
+            empleadoDetails.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
             for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
                 domicilio.setEmpleado(empleadoDetails);
             }
 
-            empleadoRepository.save(empleado);
+            empleadoDetails.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
 
-            return empleado;
+            empleadoRepository.save(empleadoDetails);
+
+            return ResponseEntity.ok("Carga con exito");
         } else {
-            return null;
+            return ResponseEntity.ofNullable("Ya existe un empleado con ese cuil");
         }
     }
 
     @GetMapping("/empleados")
-    public List<Empleado> getEmpleados() {
-        return empleadoRepository.findAll();
+    public Set<EmpleadoDTO> getEmpleados() {
+        return new HashSet<>(empleadoRepository.findAllDTO());
     }
 
     @PutMapping("/empleado/update")
     public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
-        Empleado empleado = empleadoRepository.findByCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
-        if (empleado != null) {
-            empleado.setNombre(empleadoDetails.getNombre());
-            empleado.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
-            empleado.setCuil(empleadoDetails.getCuil());
-            empleado.setEmail(empleadoDetails.getEmail());
-            empleado.setTelefono(empleadoDetails.getTelefono());
+        Optional<Empleado> empleado = empleadoRepository.findByCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
+        if (!empleado.isEmpty()) {
+            empleado.get().setNombre(empleadoDetails.getNombre());
+            empleado.get().setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
+            empleado.get().setCuil(empleadoDetails.getCuil());
+            empleado.get().setEmail(empleadoDetails.getEmail());
+            empleado.get().setTelefono(empleadoDetails.getTelefono());
 
-            empleadoRepository.save(empleado);
+            empleadoRepository.save(empleado.get());
             return ResponseEntity.ok("El empleado se modificó correctamente");
         } else {
             return ResponseEntity.ok("El empleado no se encontró");
@@ -192,11 +188,11 @@ public class SucursalController {
 
     @PutMapping("/empleado/{cuit}/delete")
     public ResponseEntity<String> deleteEmpleado(@PathVariable("cuit") String cuit) throws Exception {
-        Empleado empleado = empleadoRepository.findByCuil(Encrypt.encriptarString(cuit));
+        Optional<Empleado> empleado = empleadoRepository.findByCuil(Encrypt.encriptarString(cuit));
 
-        if (empleado != null) {
-            empleado.setBorrado("SI");
-            empleadoRepository.save(empleado);
+        if (empleado.isPresent()) {
+            empleado.get().setBorrado("SI");
+            empleadoRepository.save(empleado.get());
             return ResponseEntity.ok("El empleado se eliminó correctamente");
         } else {
             return ResponseEntity.ok("El empleado no se encontró");
@@ -237,7 +233,7 @@ public class SucursalController {
                 localidadDelivery.setSucursal(sucursal); // Establecer la sucursal para la nueva localidad
                 localidades.add(localidadDelivery);
             }
-            
+
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidades));
 
             sucursal.setEmail(sucursalDetails.getEmail());

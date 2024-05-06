@@ -12,42 +12,21 @@ import java.util.Set;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Builder
-@Table(name = "empleados", schema = "buen_sabor")
-public class Empleado {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class EmpleadoDTO {
     private Long id;
-    @Column(name = "nombre")
     private String nombre;
-    @Column(name = "email")
     private String email;
-    @JsonIgnore
-    @Column(name = "contraseña")
-    private String contraseña;
-    @Column(name = "cuil")
     private String cuil;
-    @Column(name = "telefono")
     private Long telefono;
-    @JsonIgnoreProperties(value = "empleado")
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
-    private Set<Domicilio> domicilios = new HashSet<>();
-    @JsonIgnoreProperties(value = "empleado")
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
-    public Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
-    @Column(name = "fecha_nacimiento", updatable = false, nullable = false)
-    public Date fechaNacimiento;
-    @JsonIgnore
-    @Column(name = "borrado")
-    private String borrado = "NO";
-    @JsonIgnore
-    @Column(name = "privilegios")
-    private String privilegios;
-    @JsonIgnoreProperties(value = "empleados")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_sucursal")
-    private Sucursal sucursal;
+
+    public EmpleadoDTO() {
+    }
+
+    public EmpleadoDTO(Long id, String nombre, String email, String cuil, Long telefono) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.cuil = cuil;
+        this.telefono = telefono;
+    }
 }
