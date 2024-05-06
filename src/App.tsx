@@ -24,11 +24,12 @@ function App() {
         <div>
           <Header />
           <AppRoutes />
-          <Footer />
         </div>
       ) : (
         <div>
           <AppRoutes />
+          
+          <Footer />
         </div>
       )}
     </Router>
