@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties(value = "localidades")
 @Table(name = "departamentos", schema = "buen_sabor")
 public class Departamento {
     @Id

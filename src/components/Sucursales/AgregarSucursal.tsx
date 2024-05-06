@@ -44,10 +44,11 @@ function AgregarSucursal() {
   // Id de la localidad para el domicilio de la sucursal
   const [idLocalidadDomicilioSucursal, setLocalidadDomicilioSucursal] = useState<number>(0)
   // Array que va guardando las checkboxes con los departamentos donde la sucursal hace delivery
-  const [idDepartamentosElegidos, setDepartamentosDisponibles] = useState(new Set());
+  const [idDepartamentosElegidos, setDepartamentosDisponibles] = useState<Set<number>>(new Set<number>());
   // Array que va guardando las checkboxes con las localidades donde la sucursal hace delivery
-  const [idLocalidadesElegidas, setLocalidadesDisponibles] = useState(new Set());
+  const [idLocalidadesElegidas, setLocalidadesDisponibles] = useState<Set<number>>(new Set<number>());
 
+  const [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<Set<Localidad>>(new Set<Localidad>());
 
   useEffect(() => {
     cargarProvincias();
@@ -61,14 +62,21 @@ function AgregarSucursal() {
   }, [debouncedInputValue]);
 
   const handleDepartamentosCheckboxChange = (departamentoId: number) => {
-    const updatedSelectedDepartamentos = new Set(idDepartamentosElegidos);
+    const updatedSelectedDepartamentos = new Set<number>(idDepartamentosElegidos);
+
     if (updatedSelectedDepartamentos.has(departamentoId)) {
       updatedSelectedDepartamentos.delete(departamentoId);
     } else {
       updatedSelectedDepartamentos.add(departamentoId);
     }
+    console.log(updatedSelectedDepartamentos)
+    Array.from(updatedSelectedDepartamentos).forEach(idDepartamentos => {
+      cargarLocalidadesCheckBox(idDepartamentos);
+    });
+
     setDepartamentosDisponibles(updatedSelectedDepartamentos);
   };
+
 
   const handleLocalidadesCheckboxChange = (localidadId: number) => {
     const updatedSelectedLocalidades = new Set(idLocalidadesElegidas);
@@ -111,6 +119,19 @@ function AgregarSucursal() {
         console.error('Error:', error);
       })
   }
+
+  async function cargarLocalidadesCheckBox(idDepartamento: number) {
+    try {
+      const localidades = await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento);
+
+      const localidadesSet = new Set(localidades);
+
+      setLocalidadesMostrables(localidadesSet);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
 
   const handleInputProvinciaChange = (value: string) => {
     setInputValue(value);
@@ -191,7 +212,7 @@ function AgregarSucursal() {
     });
 
     sucursal.localidadesDisponiblesDelivery = localidadesDisponiblesDelivery;
-    
+
     console.log(sucursal)
 
     /*
@@ -239,22 +260,29 @@ function AgregarSucursal() {
               placeholder="Nombre de calle"
             />
             <br />
-
             <input
               type="text"
               name="numeroCalle"
               onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }}
               required
-              placeholder="Número de calle"
+              placeholder="Número de domicilio"
             />
             <br />
-
             <input
               type="text"
               name="codigoPostal"
               onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }}
               required
               placeholder="Codigo Postal"
+            />
+            <br />
+            <input
+              type="number"
+              name="telefono"
+
+              onChange={(e) => { setTelefono(parseInt(e.target.value)) }}
+              required
+              placeholder="Telefono"
             />
             <br />
             <input
@@ -295,6 +323,7 @@ function AgregarSucursal() {
                 <li className='opcion-recomendada' key={index} onClick={() => {
                   setInputValueDepartamento(departamento.nombre)
                   setResultadosDepartamentos([])
+                  cargarLocalidades(departamento.id)
                 }}>
                   {departamento.nombre}
                 </li>))}
@@ -338,9 +367,9 @@ function AgregarSucursal() {
             )}
 
             <h3>Localidades disponibles para delivery: </h3>
-            {localidades && (
+            {localidadesMostrablesCheckbox && (
               <div>
-                {localidades.map((localidad, index) => (
+                {Array.from(localidadesMostrablesCheckbox).map((localidad, index) => (
                   <div key={index}>
                     <input
                       type="checkbox"
@@ -354,15 +383,6 @@ function AgregarSucursal() {
                 ))}
               </div>
             )}
-
-            <input
-              type="number"
-              name="telefono"
-
-              onChange={(e) => { setTelefono(parseInt(e.target.value)) }}
-              required
-              placeholder="Telefono"
-            />
             <button type="button" onClick={handleCargarNegocio}>Registrarse</button>
           </form>
         </div>
