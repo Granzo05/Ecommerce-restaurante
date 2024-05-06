@@ -20,12 +20,14 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Table(name = "sucursales", schema = "buen_sabor")
 public class Sucursal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @OneToOne(mappedBy = "sucursal", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToOne(mappedBy = "sucursal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Domicilio domicilio;
     @Column(name = "contraseña")
     private String contraseña;
@@ -59,6 +61,6 @@ public class Sucursal {
     @ManyToMany(mappedBy = "sucursales")
     private Set<Promocion> promociones = new HashSet<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "sucursal")
+    @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
 }

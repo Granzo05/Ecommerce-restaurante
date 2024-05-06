@@ -1,5 +1,5 @@
 import { Domicilio } from "../Domicilio/Domicilio";
-import { Localidad } from "../Domicilio/Localidad";
+import { LocalidadDelivery } from "./LocalidadDelivery";
 
 export class Sucursal {
     id: number = 0;
@@ -10,7 +10,7 @@ export class Sucursal {
     privilegios: string = '';
     horarioApertura: string = '';
     horarioCierre: string = '';
-    localidadesDisponiblesDelivery: Localidad[] = [];
+    localidadesDisponiblesDelivery: LocalidadDelivery[] | null = [];
 
     constructor() {
 

@@ -4,7 +4,7 @@ import { URL_API } from '../utils/global_variables/const';
 export const SucursalService = {
     createRestaurant: async (sucursal: Sucursal) => {
         // Creamos el restaurante en la db
-        await fetch(URL_API + 'restaurante/create', {
+        await fetch(URL_API + 'sucursal/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -15,19 +15,7 @@ export const SucursalService = {
                 if (!response.ok) {
                     throw new Error(await response.text())
                 }
-                return await response.json()
-            })
-            .then(data => {
-                let restaurante = {
-                    id: data.id,
-                    email: data.email,
-                    telefono: data.telefono,
-                    privilegios: data.privilegios
-                }
-                localStorage.setItem('usuario', JSON.stringify(restaurante));
-
-                // Redirige al usuario al menú principal
-                window.location.href = '/'
+                return await response.text()
             })
             .catch(error => {
                 console.error('Error:', error)

@@ -10,7 +10,6 @@ function App() {
 
   useEffect(() => {
     const ruta = window.location.href.split('/').pop(); 
-    console.log(ruta)
     if (ruta === 'login-cliente') {
       setMostrarHeader(false);
     }
