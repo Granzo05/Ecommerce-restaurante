@@ -5,12 +5,8 @@ import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
-import main.entities.Domicilio.LocalidadDTO;
 import main.entities.Restaurante.*;
-import main.repositories.ClienteRepository;
-import main.repositories.EmpleadoRepository;
-import main.repositories.EmpresaRepository;
-import main.repositories.SucursalRepository;
+import main.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +22,14 @@ public class SucursalController {
     private final EmpleadoRepository empleadoRepository;
     private final ClienteRepository clienteRepository;
     private final EmpresaRepository empresaRepository;
+    private final LocalidadDeliveryRepository localidadDeliveryRepository;
 
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository) {
+    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
         this.empresaRepository = empresaRepository;
+        this.localidadDeliveryRepository = localidadDeliveryRepository;
     }
 
     @CrossOrigin
@@ -72,20 +70,6 @@ public class SucursalController {
         List<LocalidadDelivery> localidades = sucursalRepository.findLocalidadesByIdSucursal(id);
 
         return new HashSet<>(localidades);
-    }
-
-    @PutMapping("/sucursal/update")
-    public ResponseEntity<Sucursal> actualizarSucursal(@PathVariable Long id, @RequestBody Sucursal sucursal) {
-        Optional<Sucursal> sucursaleEncontrado = sucursalRepository.findById(id);
-        if (sucursaleEncontrado.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        //Todo: Setters
-
-        Sucursal sucursalFinal = sucursalRepository.save(sucursal);
-
-        return ResponseEntity.ok(sucursalFinal);
     }
 
     @CrossOrigin
@@ -216,6 +200,54 @@ public class SucursalController {
             return ResponseEntity.ok("El empleado se eliminó correctamente");
         } else {
             return ResponseEntity.ok("El empleado no se encontró");
+        }
+    }
+
+    @PutMapping("/sucursal/update")
+    public ResponseEntity<String> updateSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
+        Sucursal sucursal = sucursalRepository.findByIdNotBorrado(sucursalDetails.getId());
+
+        if (sucursal != null) {
+            // Update domicilio
+            sucursal.getDomicilio().setCalle(sucursalDetails.getDomicilio().getCalle());
+            sucursal.getDomicilio().setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
+            sucursal.getDomicilio().setNumero(sucursalDetails.getDomicilio().getNumero());
+            sucursal.getDomicilio().setSucursal(sucursalDetails);
+            sucursal.getDomicilio().setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
+
+            // Update contraseña
+
+            if (sucursalDetails.getContraseña().length() > 1)
+                sucursal.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
+
+            // Update horarios
+
+            sucursal.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
+            sucursal.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
+
+            // Borramos todas las localidades
+            List<LocalidadDelivery> localidades = localidadDeliveryRepository.findByIdSucursal(sucursal.getId());
+            localidadDeliveryRepository.deleteAll(localidades);
+
+            // Limpiar la lista de localidades existentes
+            localidades.clear();
+
+            // Agregar las nuevas localidades proporcionadas en sucursalDetails
+            for (LocalidadDelivery localidadDelivery : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
+                localidadDelivery.setSucursal(sucursal); // Establecer la sucursal para la nueva localidad
+                localidades.add(localidadDelivery);
+            }
+            
+            sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidades));
+
+            sucursal.setEmail(sucursalDetails.getEmail());
+            sucursal.setTelefono(sucursalDetails.getTelefono());
+
+            sucursalRepository.save(sucursal);
+
+            return ResponseEntity.ok("La sucursal se eliminó correctamente");
+        } else {
+            return ResponseEntity.ok("La sucursal no se encontró");
         }
     }
 

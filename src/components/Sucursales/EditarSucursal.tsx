@@ -51,8 +51,6 @@ const EditarEmpleado: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   // Array que va guardando las checkboxes con las localidades donde la sucursal hace delivery
   const [idLocalidadesElegidas, setLocalidadesDisponibles] = useState<Set<number>>(new Set<number>());
 
-  let [localidadesMostrablesCheckbox,] = useState<Localidad[] | null>([]);
-
   const [loadingLocalidadesDelivery, setLoadingLocalidadesDelivery] = useState(false);
 
   useEffect(() => {
@@ -105,9 +103,7 @@ const EditarEmpleado: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
     // Alternar el estado del departamento
     if (updatedSelectedDepartamentos.has(departamentoId)) {
-      updatedSelectedDepartamentos.delete(departamentoId);
-
-      
+      updatedSelectedDepartamentos.delete(departamentoId);      
       if (localidades) {
         localidades.forEach(localidad => {
           if (localidad.departamento?.id === departamentoId) {
@@ -128,7 +124,6 @@ const EditarEmpleado: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     for (const idDepartamento of updatedSelectedDepartamentos) {
       nuevasLocalidades.push(...await cargarLocalidadesCheckBox(idDepartamento));
     }
-    console.log(nuevasLocalidades)
     setLocalidades(nuevasLocalidades);
   };
 
@@ -172,7 +167,6 @@ const EditarEmpleado: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       const nuevasLocalidades = localidadesDB.filter(localidadDB => {
         return !localidades.some(localidad => localidad.id === localidadDB.id);
       });
-      console.log(nuevasLocalidades)
 
       // Agregar las nuevas localidades al estado localidades
       setLocalidades(prevLocalidades => [...prevLocalidades, ...nuevasLocalidades]);
@@ -261,23 +255,24 @@ const EditarEmpleado: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
     sucursalActualizada.horarioApertura = horarioApertura;
 
+    sucursalActualizada.contraseña = contraseña;
+
     sucursalActualizada.horarioCierre = horarioCierre;
     let localidadesDelivery: LocalidadDelivery[] = [];
 
     idLocalidadesElegidas.forEach(id => {
-      let localidadBuscada = localidadesMostrablesCheckbox?.find(localidad => localidad.id === id);
+      let localidadBuscada = localidades?.find(localidad => localidad.id === id);
       let localidadNueva: LocalidadDelivery = new LocalidadDelivery();
 
-      if (localidadBuscada && localidadBuscada instanceof LocalidadDelivery) {
-        localidadNueva = localidadBuscada;
+      if (localidadBuscada) {
+        localidadNueva.localidad = localidadBuscada;
         localidadesDelivery.push(localidadNueva);
       }
     });
 
     sucursalActualizada.localidadesDisponiblesDelivery = localidadesDelivery;
 
-
-    toast.promise(await SucursalService.updateRestaurant(sucursalActualizada), {
+    toast.promise(SucursalService.updateRestaurant(sucursalActualizada), {
       loading: 'Guardando sucursal...',
       success: () => {
         return `Sucursal añadida correctamente`;

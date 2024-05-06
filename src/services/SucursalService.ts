@@ -74,21 +74,20 @@ export const SucursalService = {
         }
     },
 
-    updateRestaurant: async (restaurante: Sucursal) => {
+    updateRestaurant: async (sucursal: Sucursal) => {
         try {
-            const response = await fetch(URL_API + 'restaurant/update', {
+            const response = await fetch(URL_API + 'sucursal/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(restaurante)
+                body: JSON.stringify(sucursal)
             })
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
 
-            return await response.json();
-
+            return await response.text();
 
         } catch (error) {
             console.error('Error:', error);
