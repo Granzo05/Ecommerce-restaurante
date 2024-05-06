@@ -14,6 +14,7 @@ import { DepartamentoService } from '../services/DepartamentoService';
 import { Cliente } from '../types/Cliente/Cliente';
 import { Toaster, toast } from 'sonner'
 import { useDebounce } from '@uidotdev/usehooks';
+import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
 
 const LoginCliente = () => {
     const [inputValue, setInputValue] = useState('');
@@ -200,6 +201,7 @@ const LoginCliente = () => {
     };
 
     return (
+        
         <div className='body'>
             <Toaster />
             {/*INICIAR SESION*/}
@@ -221,7 +223,7 @@ const LoginCliente = () => {
                                 </label>
                                 <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
                                 <div className="input-link">
-                                    <p>¿Has olvidado tu contraseña?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('reestablecerContraseña')}>Click aquí</a></p>
+                                    <p id='pass-forg'>¿Has olvidado tu contraseña?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('reestablecerContraseña')}>Click aquí</a></p>
                                 </div>
                             </div>
                             <input type="button" className='btn' value="INICIAR SESIÓN" onClick={handleIniciarSesionUsuario} />

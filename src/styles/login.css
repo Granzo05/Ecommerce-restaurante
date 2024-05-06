@@ -17,8 +17,14 @@
     overflow-x: hidden;
 }
 
+#pass-forg{
+    color: white;
+    
+}
+
 #create-account {
     text-align: center;
+    color: white;
 }
 
 #icon-lock {
@@ -106,9 +112,8 @@ a {
     font-weight: 500;
 }
 
-p {
-    color: white;
-}
+
+
 
 .form-content #subtitle {
     color: white;
@@ -167,7 +172,7 @@ p {
     user-select: none;
     background-color: #840196;
     border: none;
-    color: black;
+    color: white;
     z-index: 1;
     position: relative;
     overflow: hidden;
