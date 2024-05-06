@@ -170,7 +170,7 @@ a {
     font-family: inherit;
     border-radius: 25px;
     user-select: none;
-    background-color: #840196;
+    background-color: #3cff7d93;
     border: none;
     color: white;
     z-index: 1;
@@ -181,7 +181,7 @@ a {
 
 .form-content .btn:hover {
     cursor: pointer;
-    background-color: #d009eb;
+    background-color: #a6b335e7;
     transition: .8s;
 }
 
