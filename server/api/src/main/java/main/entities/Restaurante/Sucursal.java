@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Domicilio.Localidad;
 import main.entities.Productos.Promocion;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockEntrante;
@@ -60,7 +59,8 @@ public class Sucursal {
     @JsonIgnore
     @ManyToMany(mappedBy = "sucursales")
     private Set<Promocion> promociones = new HashSet<>();
-    @JsonIgnore
+    @JsonIgnoreProperties(value = "sucursal")
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
+
 }

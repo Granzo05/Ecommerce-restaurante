@@ -10,6 +10,7 @@ import { EmpleadoService } from "../../services/EmpleadoService";
 
 const Sucursales = () => {
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+    const [selectedSucursal, setSelectedSucursal] = useState<Sucursal>(new Sucursal());
     const [mostrarSucursales, setMostrarSucursales] = useState(true);
 
     const [showAgregarSucursalModal, setShowAgregarSucursalModal] = useState(false);
@@ -19,9 +20,8 @@ const Sucursales = () => {
     const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
-        //fetchData();
-        fetchSucursales();
-    }, []);
+        if (sucursales.length === 0) fetchSucursales();
+    }, [sucursales]);
 
     const fetchData = async () => {
         try {
@@ -55,7 +55,8 @@ const Sucursales = () => {
         setMostrarSucursales(false);
     };
 
-    const handleEditarSucursal = () => {
+    const handleEditarSucursal = (sucursal: Sucursal) => {
+        setSelectedSucursal(sucursal);
         setShowEditarSucursalModal(true);
         setMostrarSucursales(true);
     };
@@ -64,7 +65,6 @@ const Sucursales = () => {
         setSelectedId(idSucursal);
         setShowEliminarSucursalModal(true);
         setMostrarSucursales(true);
-
     };
 
     const handleModalClose = () => {
@@ -90,31 +90,33 @@ const Sucursales = () => {
                     <table>
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Cuit</th>
+                                <th>Domicilio</th>
                                 <th>Telefono</th>
-                                <th>Email</th>
-                                <th>Fecha de ingreso</th>
+                                <th>Horario apertura</th>
+                                <th>Horario cierre</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {sucursales.map(sucursal => (
                                 <tr key={sucursal.id}>
-                                    <td>{sucursal.domicilio?.localidad?.nombre}, {sucursal.domicilio?.localidad?.departamento?.provincia?.nombre}</td>
-
+                                    <td>Buen sabor de {sucursal.domicilio?.localidad?.nombre}, {sucursal.domicilio?.localidad?.departamento?.provincia?.nombre}</td>
+                                    <td>{sucursal.telefono}</td>
+                                    <td>{sucursal.horarioApertura}</td>
+                                    <td>{sucursal.horarioCierre}</td>
                                     <td>
                                         <button onClick={() => handleEliminarSucursal(sucursal.id)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarSucursal()}>EDITAR</button>
+                                        <button onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
                                         <button onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
                                     </td>
-                                    <ModalCrud isOpen={showEditarSucursalModal} onClose={handleModalClose}>
-                                        <EditarSucursal sucursalOriginal={sucursal} />
-                                    </ModalCrud>
+
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    <ModalCrud isOpen={showEditarSucursalModal} onClose={handleModalClose}>
+                        <EditarSucursal sucursalOriginal={selectedSucursal} />
+                    </ModalCrud>
                     <ModalFlotante isOpen={showEliminarSucursalModal} onClose={handleModalClose}>
                         {selectedId && <EliminarSucursal idSucursal={selectedId} />}
                     </ModalFlotante>

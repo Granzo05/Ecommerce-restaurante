@@ -17,13 +17,13 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "provincias", schema = "buen_sabor")
-@JsonIgnoreProperties
 public class Provincia {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "nombre")
     private String nombre;
+    @JsonIgnoreProperties(value="provincias")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_pais")
     private Pais pais;

@@ -4,11 +4,12 @@ import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Restaurante.Empleado;
-import main.entities.Restaurante.LocalidadDelivery;
-import main.entities.Restaurante.Sucursal;
+import main.entities.Domicilio.DomicilioDTO;
+import main.entities.Domicilio.LocalidadDTO;
+import main.entities.Restaurante.*;
 import main.repositories.ClienteRepository;
 import main.repositories.EmpleadoRepository;
+import main.repositories.EmpresaRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,18 +25,20 @@ public class SucursalController {
     private final SucursalRepository sucursalRepository;
     private final EmpleadoRepository empleadoRepository;
     private final ClienteRepository clienteRepository;
+    private final EmpresaRepository empresaRepository;
 
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository) {
+    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
+        this.empresaRepository = empresaRepository;
     }
 
     @CrossOrigin
     @GetMapping("/sucursal/login/{email}/{password}")
     public Object loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         // Busco por email y clave encriptada, si se encuentra devuelvo el objeto
-        Sucursal sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+        SucursalDTO sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
         // Utilizo la misma funcion tanto para empleados como para el sucursale
         if (sucursal == null) {
             return empleadoRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
@@ -46,10 +49,29 @@ public class SucursalController {
 
     @CrossOrigin
     @GetMapping("/sucursales")
-    public Set<Sucursal> getSucursales() throws Exception {
-        Set sucursales = new HashSet<>(sucursalRepository.findAllNoBorrado());
+    public Set<SucursalDTO> getSucursales() throws Exception {
+        List<SucursalDTO> sucursales = sucursalRepository.findAllNoBorrado();
 
-        return sucursales;
+        for (SucursalDTO sucursalDTO : sucursales) {
+            DomicilioDTO domicilioDTO = new DomicilioDTO();
+
+            domicilioDTO.setCalle(sucursalDTO.getDomicilio().getCalle());
+            domicilioDTO.setLocalidad(sucursalDTO.getDomicilio().getLocalidad());
+            domicilioDTO.setNumero(sucursalDTO.getDomicilio().getNumero());
+            domicilioDTO.setCodigoPostal(sucursalDTO.getDomicilio().getCodigoPostal());
+
+            sucursalDTO.setDomicilio(domicilioDTO);
+        }
+
+        return new HashSet<>(sucursales);
+    }
+
+    @CrossOrigin
+    @GetMapping("/localidades/delivery/sucursal/{id}")
+    public Set<LocalidadDelivery> getLocalidadesDeliverySucursal(@PathVariable("id") Long id) throws Exception {
+        List<LocalidadDelivery> localidades = sucursalRepository.findLocalidadesByIdSucursal(id);
+
+        return new HashSet<>(localidades);
     }
 
     @PutMapping("/sucursal/update")
@@ -116,7 +138,7 @@ public class SucursalController {
 
             Set<LocalidadDelivery> localidades = new HashSet<>();
 
-            for(LocalidadDelivery localidadDelivery: sucursalDetails.getLocalidadesDisponiblesDelivery()) {
+            for (LocalidadDelivery localidadDelivery : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
                 LocalidadDelivery newLocalidad = new LocalidadDelivery();
                 newLocalidad.setSucursal(sucursalDetails);
                 newLocalidad.setLocalidad(localidadDelivery.getLocalidad());
@@ -124,6 +146,10 @@ public class SucursalController {
             }
 
             sucursalDetails.setLocalidadesDisponiblesDelivery(localidades);
+
+            Empresa empresa = empresaRepository.findById(2l).get();
+
+            sucursalDetails.setEmpresa(empresa);
 
             sucursalRepository.save(sucursalDetails);
 
@@ -190,6 +216,19 @@ public class SucursalController {
             return ResponseEntity.ok("El empleado se eliminó correctamente");
         } else {
             return ResponseEntity.ok("El empleado no se encontró");
+        }
+    }
+
+    @PutMapping("/sucursal/{id}/delete")
+    public ResponseEntity<String> deleteSucursal(@PathVariable("id") Long id) throws Exception {
+        Sucursal sucursal = sucursalRepository.findByIdNotBorrado(id);
+
+        if (sucursal != null) {
+            sucursal.setBorrado("SI");
+            sucursalRepository.save(sucursal);
+            return ResponseEntity.ok("La sucursal se eliminó correctamente");
+        } else {
+            return ResponseEntity.ok("La sucursal no se encontró");
         }
     }
 }

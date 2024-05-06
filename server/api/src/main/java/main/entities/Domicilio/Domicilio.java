@@ -16,7 +16,7 @@ import net.minidev.json.annotate.JsonIgnore;
 @Entity
 @ToString
 @Table(name = "domicilios", schema = "buen_sabor")
-public class Domicilio {
+public class Domicilio extends DomicilioDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -29,7 +29,7 @@ public class Domicilio {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_localidad")
     private Localidad localidad;
-    @JsonIgnore
+    @JsonIgnoreProperties(value="domicilios")
     @ManyToOne
     @JoinTable(
             name = "clientes_domicilio",
@@ -37,7 +37,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_cliente")
     )
     private Cliente cliente;
-    @JsonIgnore
+    @JsonIgnoreProperties(value="domicilio")
     @OneToOne
     @JoinTable(
             name = "sucursales_domicilio",
@@ -45,7 +45,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Sucursal sucursal;
-    @JsonIgnore
+    @JsonIgnoreProperties(value="domicilios")
     @ManyToOne
     @JoinTable(
             name = "empleados_domicilio",
@@ -53,4 +53,5 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_empleado")
     )
     private Empleado empleado;
+
 }

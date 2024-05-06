@@ -74,7 +74,7 @@ export const SucursalService = {
         }
     },
 
-    updateRestaurant: async (restaurante: Sucursal): Promise<string> => {
+    updateRestaurant: async (restaurante: Sucursal) => {
         try {
             const response = await fetch(URL_API + 'restaurant/update', {
                 method: 'PUT',
