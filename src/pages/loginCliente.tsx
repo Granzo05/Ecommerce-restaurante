@@ -210,6 +210,7 @@ const LoginCliente = () => {
                     <div className="box">
                         <h3>- BIENVENIDO -</h3>
                         <p id='subtitle'>¡Si ya tienes una cuenta, inicia sesión con tus datos!</p>
+                        <p id='subtitle'>o inicia sesión con: <img id='icon-gmail' src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new" /></p>
                         <form action="">
                             <div className="input-box">
                                 <label>
