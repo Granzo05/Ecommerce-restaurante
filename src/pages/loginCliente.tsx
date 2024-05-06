@@ -202,7 +202,7 @@ const LoginCliente = () => {
 
     return (
         
-        <div className='body'>
+        <body>
             <Toaster />
             {/*INICIAR SESION*/}
             <section className="form-main" style={{ display: mostrarIniciarSesion ? '' : 'none' }}>
@@ -371,7 +371,7 @@ const LoginCliente = () => {
                     </div>
                 </div>
             </section>
-        </div>
+        </body>
     )
 }
 

@@ -7,14 +7,14 @@
     box-sizing: border-box;
 }
 
-.body {
-    background-color: #840196;
+body {
+    background-color: #a6b335e7;
     color: black;
     font-family: Inter, sans-serif;
     font-weight: 300;
     font-size: 16px;
     line-height: 1.5;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 #pass-forg{
@@ -78,7 +78,6 @@ a {
 }
 
 .form-main {
-    min-height: 100vh;
     padding: 60px 15px;
     display: flex;
     align-items: center;
