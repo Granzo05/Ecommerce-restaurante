@@ -10,7 +10,8 @@ import { useDebounce } from '@uidotdev/usehooks';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { Localidad } from '../../types/Domicilio/Localidad';
-import { Domicilio } from '../../types/Domicilio/Domicilio';
+import { SucursalService } from '../../services/SucursalService';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -18,14 +19,14 @@ interface EditarEmpleadoProps {
 
 const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => {
   const [nombre, setNombre] = useState(empleadoOriginal.nombre);
-  const [email, setEmail] = useState(empleadoOriginal.nombre);
-  const [cuil, setCuit] = useState(empleadoOriginal.nombre);
-  const [contraseña, setContraseña] = useState(empleadoOriginal.nombre);
-  const [telefono, setTelefono] = useState(empleadoOriginal.nombre);
-  const [fechaNacimiento, setFechaNacimiento] = useState(empleadoOriginal.nombre);
-  const [calle, setCalle] = useState(empleadoOriginal.nombre);
-  const [numeroCalle, setNumeroCalle] = useState(empleadoOriginal.nombre);
-  const [codigoPostal, setCodigoPostal] = useState(empleadoOriginal.nombre);
+  const [email, setEmail] = useState(empleadoOriginal.email);
+  const [cuil, setCuit] = useState(empleadoOriginal.cuil);
+  const [contraseña, setContraseña] = useState('');
+  const [telefono, setTelefono] = useState(empleadoOriginal.telefono);
+  const [fechaNacimiento, setFechaNacimiento] = useState(new Date(empleadoOriginal.fechaNacimiento));
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+  const [sucursalId, setSucursalId] = useState(empleadoOriginal.sucursal?.id);
+  const [domicilios,] = useState(empleadoOriginal.domicilios);
 
   const [inputValue, setInputValue] = useState('');
   const debouncedInputValue = useDebounce(inputValue, 5000);
@@ -45,11 +46,11 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
   const [provincias, setProvincias] = useState<Provincia[] | null>([]);
   //Select que nos permite filtrar para las localidades de la sucursal asi no cargamos de más innecesariamente
   const [localidades, setLocalidades] = useState<Localidad[] | null>([]);
-  // Id de la localidad para el domicilio de la sucursal
-  const [idLocalidadDomicilioSucursal, setLocalidadDomicilioSucursal] = useState<number>(0)
 
   useEffect(() => {
     cargarProvincias();
+    cargarSucursales();
+    console.log(empleadoOriginal)
   }, []);
 
   useEffect(() => {
@@ -64,6 +65,17 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     await ProvinciaService.getProvincias()
       .then(data => {
         setProvincias(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  async function cargarSucursales() {
+    await SucursalService.getSucursales()
+      .then(data => {
+        setSucursales(data);
+        console.log(data)
       })
       .catch(error => {
         console.error('Error:', error);
@@ -135,20 +147,37 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       setResultadosLocalidades(localidadesFiltradas);
     } else if (localidadesFiltradas && localidadesFiltradas.length === 1) {
       setResultadosLocalidades(localidadesFiltradas);
-      setLocalidadDomicilioSucursal(localidadesFiltradas[0].id)
     }
   };
 
+  function handleChangeCalle(calle: string, index: number) {
+    domicilios[index].calle = calle;
+  }
+
+  function handleChangeNumeroCasa(numero: number, index: number) {
+    domicilios[index].numero = numero;
+  }
+
+  function handleChangeCodigoPostal(codigo: number, index: number) {
+    domicilios[index].codigoPostal = codigo;
+  }
+
+  function handleChangeLocalidad(idLocalidad: number, index: number) {
+    let localidad = localidades?.find(localidad => localidad.id === idLocalidad);
+    if (localidad) domicilios[index].localidad = localidad;
+  }
+
+  function handleChangeProvincia(idProvincia: number, index: number) {
+    let provincia = provincias?.find(provincia => provincia.id === idProvincia);
+    if (provincia && domicilios[index].localidad) domicilios[index].localidad.departamento.provincia = provincia;
+  }
+
+  function handleChangeDepartamento(idDepartamento: number, index: number) {
+    let departamento = departamentos?.find(departamento => departamento.id === idDepartamento);
+    if (departamento && domicilios[index].localidad) domicilios[index].localidad.departamento = departamento;
+  }
+
   async function editarEmpleado() {
-    let domicilios: Domicilio[] = empleadoOriginal.domicilios;
-
-    let domicilio: Domicilio = domicilios[0];
-    domicilio.calle = calle;
-    domicilio.numero = parseInt(numeroCalle);
-    domicilio.codigoPostal = parseInt(codigoPostal);
-
-    let localidad = localidades?.find(localidades => localidades.id === idLocalidadDomicilioSucursal);
-    domicilio.localidad = localidad;
 
     const empleadoActualizado: Empleado = {
       ...empleadoOriginal,
@@ -157,10 +186,12 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       cuil,
       contraseña,
       fechaNacimiento: new Date(fechaNacimiento),
-      telefono: parseInt(telefono),
-      domicilios: domicilios
+      telefono,
+      domicilios
     };
 
+    console.log(empleadoOriginal)
+    console.log(empleadoActualizado)
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
       loading: 'Actualizando empleado...',
       success: () => {
@@ -176,17 +207,17 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       <br />
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Nombre del empleado" value={empleadoOriginal.nombre} onChange={(e) => { setNombre(e.target.value) }} />
+        <input type="text" placeholder="Nombre del empleado" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
       </label>
       <br />
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Email del empleado" value={empleadoOriginal.email} onChange={(e) => { setEmail(e.target.value) }} />
+        <input type="text" placeholder="Email del empleado" value={email} onChange={(e) => { setEmail(e.target.value) }} />
       </label>
       <br />
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Cuil del empleado" value={empleadoOriginal.cuil} onChange={(e) => { setCuit(e.target.value) }} />
+        <input type="text" placeholder="Cuil del empleado" value={cuil} onChange={(e) => { setCuit(e.target.value) }} />
       </label>
       <br />
       <label>
@@ -196,7 +227,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       <br />
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Telefono del empleado" value={empleadoOriginal.telefono} onChange={(e) => { setTelefono(e.target.value) }} />
+        <input type="text" placeholder="Telefono del empleado" value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
       </label>
       <br />
       <label>
@@ -204,97 +235,106 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
         <input
           type="date"
           placeholder="Fecha de nacimiento"
-          value={fechaNacimiento ? fechaNacimiento.toString() : ''}
+          value={fechaNacimiento.toISOString().split('T')[0]}
           onChange={(e) => {
-            setFechaNacimiento(e.target.value)
+            setFechaNacimiento(new Date(e.target.value))
           }}
         />
       </label>
       <br />
 
-      <input
-        type="text"
-        name="calle"
-        onChange={(e) => { setCalle(e.target.value) }}
-        required
-        value={empleadoOriginal.domicilios[0].calle}
-        placeholder="Nombre de calle"
-      />
-      <br />
-      <input
-        type="text"
-        name="numeroCalle"
-        onChange={(e) => { setNumeroCalle(e.target.value) }}
-        required
-        value={empleadoOriginal.domicilios[0].numero}
-        placeholder="Número de domicilio"
-      />
-      <br />
-      <input
-        type="text"
-        name="codigoPostal"
-        onChange={(e) => { setCodigoPostal(e.target.value) }}
-        required
-        value={empleadoOriginal.domicilios[0].codigoPostal}
-        placeholder="Codigo Postal"
-      />
-      <br />
-      <h2>Provincia</h2>
-      <input
-        value={empleadoOriginal.domicilios[0].localidad?.departamento.provincia?.nombre}
-        type="text"
-        onChange={(e) => { handleInputProvinciaChange(e.target.value) }}
-        placeholder="Buscar provincia..."
-      />
-      <ul className='lista-recomendaciones'>
-        {resultadosProvincias?.map((provincia, index) => (
-          <li className='opcion-recomendada' key={index} onClick={() => {
-            setInputValueProvincia(provincia.nombre)
-            setResultadosProvincias([])
-          }}>
-            {provincia.nombre}
-          </li>
-        ))}
-      </ul>
-      <br />
-      <h2>Departamento</h2>
-      <input
-        type="text"
-        value={empleadoOriginal.domicilios[0].localidad?.departamento.nombre}
-        onChange={(e) => { handleInputDepartamentoChange(e.target.value) }}
-        placeholder="Buscar departamento..."
-      />
-      <ul className='lista-recomendaciones'>
-        {resultadosDepartamentos?.map((departamento, index) => (
-          <li className='opcion-recomendada' key={index} onClick={() => {
-            setInputValueDepartamento(departamento.nombre)
-            setResultadosDepartamentos([])
-            cargarLocalidades(departamento.id)
-          }}>
-            {departamento.nombre}
-          </li>))}
-      </ul>
+      {empleadoOriginal.domicilios && empleadoOriginal.domicilios.map((domicilio, index) => (
+        <div key={index}>
+          <h3>Domicilio {index + 1}</h3>
+          <input
+            value={domicilio.localidad?.departamento.provincia?.nombre}
+            type="text"
+            onChange={(e) => { handleInputProvinciaChange(e.target.value) }}
+            placeholder="Buscar provincia..."
+          />
+          <ul className='lista-recomendaciones'>
+            {resultadosProvincias?.map((provincia, index) => (
+              <li className='opcion-recomendada' key={index} onClick={() => {
+                setInputValueProvincia(provincia.nombre)
+                setResultadosProvincias([])
+                handleChangeProvincia(provincia.id, index)
 
-      <br />
-      <h2>Localidad</h2>
-      <input
-        type="text"
-        value={empleadoOriginal.domicilios[0].localidad?.nombre}
-        onChange={(e) => { handleInputLocalidadChange(e.target.value) }}
-        placeholder="Buscar localidad..."
-      />
-      <ul className='lista-recomendaciones'>
-        {resultadosLocalidades?.map((localidad, index) => (
-          <li className='opcion-recomendada' key={index} onClick={() => {
-            setInputValueLocalidad(localidad.nombre)
-            setResultadosLocalidades([])
-            setLocalidadDomicilioSucursal(localidad.id)
-          }}>
-            {localidad.nombre}
-          </li>
+              }}>
+                {provincia.nombre}
+              </li>
+            ))}
+          </ul>
+          <input
+            type="text"
+            value={domicilio.localidad?.departamento.nombre}
+            onChange={(e) => { handleInputDepartamentoChange(e.target.value) }}
+            placeholder="Buscar departamento..."
+          />
+          <ul className='lista-recomendaciones'>
+            {resultadosDepartamentos?.map((departamento, index) => (
+              <li className='opcion-recomendada' key={index} onClick={() => {
+                setInputValueDepartamento(departamento.nombre)
+                setResultadosDepartamentos([])
+                cargarLocalidades(departamento.id)
+                handleChangeDepartamento(departamento.id, index)
+              }}>
+                {departamento.nombre}
+              </li>))}
+          </ul>
+          <input
+            type="text"
+            value={domicilio.localidad?.nombre}
+            onChange={(e) => { handleInputLocalidadChange(e.target.value) }}
+            placeholder="Buscar localidad..."
+          />
+          <ul className='lista-recomendaciones'>
+            {resultadosLocalidades?.map((localidad, index) => (
+              <li className='opcion-recomendada' key={index} onClick={() => {
+                setInputValueLocalidad(localidad.nombre)
+                setResultadosLocalidades([])
+                handleChangeLocalidad(localidad.id, index)
+              }}>
+                {localidad.nombre}
+              </li>
+            ))}
+          </ul>
+          <input
+            type="text"
+            name="calle"
+            onChange={(e) => { handleChangeCalle(e.target.value, index) }}
+            required
+            value={domicilio.calle}
+            placeholder="Nombre de calle"
+          />
+          <br />
+          <input
+            type="number"
+            name="numeroCalle"
+            onChange={(e) => { handleChangeNumeroCasa(parseInt(e.target.value), index) }}
+            required
+            value={domicilio.numero}
+            placeholder="Número de domicilio"
+          />
+          <br />
+          <input
+            type="number"
+            name="codigoPostal"
+            onChange={(e) => { handleChangeCodigoPostal(parseInt(e.target.value), index) }}
+            required
+            value={domicilio.codigoPostal}
+            placeholder="Codigo Postal"
+          />
+          <br />
+        </div>
+      ))}
+      <select name="sucursal" id="sucursal" value={sucursalId} onChange={(e) => setSucursalId(parseInt(e.target.value))}>
+        {sucursales && sucursales.map(sucursal => (
+          <option key={sucursal.id} value={sucursal.id}>{sucursal.domicilio?.localidad?.nombre}</option>
         ))}
-      </ul>
-      <input type="button" value="Editar empleado" onClick={editarEmpleado} />
+      </select>
+
+
+      <button className='button-form' onClick={editarEmpleado}>Editar empleado</button>
     </div>
   )
 }

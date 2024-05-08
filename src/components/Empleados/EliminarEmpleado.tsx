@@ -4,22 +4,22 @@ import { EmpleadoService } from '../../services/EmpleadoService';
 import '../../styles/empleados.css';
 import { Toaster, toast } from 'sonner'
 
-interface EliminarMenuProps {
+interface EliminarEmpleadoProps {
   cuilEmpleado: string;
 }
 
-const EliminarMenu: React.FC<EliminarMenuProps> = ({ cuilEmpleado }) => {
+const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ cuilEmpleado }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
     toast.promise(EmpleadoService.deleteEmpleado(cuilEmpleado), {
       loading: 'Eliminando empleado...',
       success: () => {
+        navigate('/opciones');
         return `Empleado eliminado correctamente`;
       },
       error: 'Error',
     });
-    navigate('/opciones');
   };
 
   const onCancel = () => {
@@ -38,4 +38,4 @@ const EliminarMenu: React.FC<EliminarMenuProps> = ({ cuilEmpleado }) => {
   );
 }
 
-export default EliminarMenu;
+export default EliminarEmpleado;

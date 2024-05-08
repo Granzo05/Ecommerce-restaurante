@@ -13,7 +13,6 @@ import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,7 +24,7 @@ public class Sucursal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @JsonIgnore
+    @JsonIgnoreProperties({"departamentos", "sucursal", "empleado", "cliente"})
     @OneToOne(mappedBy = "sucursal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Domicilio domicilio;
     @Column(name = "contraseña")
@@ -43,11 +42,10 @@ public class Sucursal {
     @JsonIgnore
     @OneToMany(mappedBy = "sucursal")
     private Set<Empleado> empleados = new HashSet<>();
-    @JsonIgnore
+    @JsonIgnoreProperties({"sucursales"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empresa")
     private Empresa empresa;
-    @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
     @JsonIgnore
@@ -63,4 +61,35 @@ public class Sucursal {
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
 
+    public long getId() {
+        return id;
+    }
+
+    public Domicilio getDomicilio() {
+        return domicilio;
+    }
+
+    public long getTelefono() {
+        return telefono;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public LocalTime getHorarioApertura() {
+        return horarioApertura;
+    }
+
+    public LocalTime getHorarioCierre() {
+        return horarioCierre;
+    }
+
+    public Set<LocalidadDelivery> getLocalidadesDisponiblesDelivery() {
+        return localidadesDisponiblesDelivery;
+    }
+
+    public String getContraseña() {
+        return contraseña;
+    }
 }

@@ -10,11 +10,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Builder
 @Table(name = "empleados", schema = "buen_sabor")
 public class Empleado {
@@ -32,11 +33,11 @@ public class Empleado {
     private String cuil;
     @Column(name = "telefono")
     private Long telefono;
-    @JsonIgnoreProperties(value = "empleado")
+    @JsonIgnoreProperties({"empleado", "sucursal", "cliente"})
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
     private Set<Domicilio> domicilios = new HashSet<>();
-    @JsonIgnoreProperties(value = "empleado")
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"empleado"})
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
     @Column(name = "fecha_nacimiento", updatable = false, nullable = false)
     private Date fechaNacimiento;
@@ -46,8 +47,8 @@ public class Empleado {
     @JsonIgnore
     @Column(name = "privilegios")
     private String privilegios;
-    @JsonIgnoreProperties(value = "empleados")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"empleados", "empresa"})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
 }

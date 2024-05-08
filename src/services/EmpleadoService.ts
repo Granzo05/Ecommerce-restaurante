@@ -12,11 +12,16 @@ export const EmpleadoService = {
                 body: JSON.stringify(empleado)
             })
 
-            return await response.text();
+            if (response.ok) {
+                const message = await response.text();
+                return message;
+            } else {
+                const errorMessage = await response.text();
+                return errorMessage;
+            }
 
         } catch (error) {
-            console.error('Error:', error);
-            throw error;
+            return 'Error al intentar cargar el empleado';
         }
     },
 
@@ -109,6 +114,7 @@ export const EmpleadoService = {
             }
 
             return await response.text();
+
         } catch (error) {
             console.error('Error:', error);
             throw error;

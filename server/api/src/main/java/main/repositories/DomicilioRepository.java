@@ -15,4 +15,10 @@ import java.util.Optional;
 public interface DomicilioRepository extends JpaRepository<Domicilio, Long> {
     @Query("SELECT NEW main.entities.Domicilio.DomicilioDTO(d.calle, d.codigoPostal, d.numero, d.localidad) FROM Domicilio d WHERE d.cliente.id = :id")
     List<DomicilioDTO> findByIdClienteDTO(@Param("id") Long id);
+
+    @Query("SELECT NEW main.entities.Domicilio.DomicilioDTO(d.calle, d.numero, d.codigoPostal, d.localidad) FROM Domicilio d WHERE d.empleado.id = :id")
+    List<DomicilioDTO> findByIdEmpleadoDTO(@Param("id") Long id);
+
+    @Query("SELECT NEW main.entities.Domicilio.DomicilioDTO(d.calle, d.numero, d.codigoPostal, d.localidad) FROM Domicilio d WHERE d.sucursal.id = :id")
+    DomicilioDTO findByIdSucursal(@Param("id") Long id);
 }

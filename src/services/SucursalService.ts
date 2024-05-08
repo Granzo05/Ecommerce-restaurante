@@ -22,37 +22,42 @@ export const SucursalService = {
             })
     },
 
-    getSucursal: async (email: string, contraseña: string) => {
-        await fetch(URL_API + 'sucursal/login/' + email + '/' + contraseña, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error('Usuario existente')
+    getSucursal: async (email: string, contraseña: string): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'sucursal/login/' + email + '/' + contraseña, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-
-                return await response.json()
-            })
-            .then(data => {
+            });
+    
+            if (!response.ok) {
+                throw new Error('Usuario no encontrado');
+            }
+    
+            const data = await response.json();
+    
+            if (data.id === null) {
+                throw new Error('Credenciales inválidas');
+            } else {
                 let restaurante = {
                     id: data.id,
                     email: data.email,
                     telefono: data.telefono,
                     privilegios: data.privilegios
                 }
-
+    
                 localStorage.setItem('usuario', JSON.stringify(restaurante));
-
-                // Redirige al usuario al menú principal
-                window.location.href = '/'
-            })
-            .catch(error => {
-                console.error('Error:', error)
-            })
+    
+                return 'Sesión iniciada correctamente';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            throw new Error('Credenciales inválidas');
+        }
     },
+    
+    
 
     getSucursales: async (): Promise<Sucursal[]> => {
         try {

@@ -1,4 +1,5 @@
 import { Domicilio } from "../Domicilio/Domicilio";
+import { FechaContratacionEmpleado } from "./FechaContratacionEmpleado";
 import { Sucursal } from "./Sucursal";
 
 export class Empleado {
@@ -9,7 +10,7 @@ export class Empleado {
     cuil: string = '';
     telefono: number = 0;
     domicilios: Domicilio[] = [];
-    fechaContratacion: Date[] = [];
+    fechaContratacionEmpleado: FechaContratacionEmpleado[] = [];
     fechaNacimiento: Date = new Date();
     privilegios: string = '';
     sucursal: Sucursal | null = null;

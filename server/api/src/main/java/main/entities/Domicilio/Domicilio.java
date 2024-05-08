@@ -8,15 +8,15 @@ import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @ToString
 @Table(name = "domicilios", schema = "buen_sabor")
-public class Domicilio extends DomicilioDTO {
+public class Domicilio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

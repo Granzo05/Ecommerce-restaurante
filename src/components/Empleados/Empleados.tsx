@@ -3,13 +3,14 @@ import { EmpleadoService } from "../../services/EmpleadoService";
 import AgregarEmpleado from "./AgregarEmpleado";
 import ModalCrud from "../ModalCrud";
 import { Empleado } from "../../types/Restaurante/Empleado";
-import EliminarEmpleado from "./EliminarEmpleado";
 import EditarEmpleado from "./EditarEmpleado";
 import '../../styles/empleados.css';
 import ModalFlotante from "../ModalFlotante";
+import EliminarEmpleado from "./EliminarEmpleado";
 
 const Empleados = () => {
     const [empleados, setEmpleados] = useState<Empleado[]>([]);
+    const [empleadoEditar, setEmpleadoEditar] = useState<Empleado>(new Empleado);
     const [mostrarEmpleados, setMostrarEmpleados] = useState(true);
 
     const [showAgregarEmpleadoModal, setShowAgregarEmpleadoModal] = useState(false);
@@ -32,14 +33,15 @@ const Empleados = () => {
     };
 
     const fetchEmpleados = async () => {
-        EmpleadoService.getEmpleados()
-            .then(data => {
-                setEmpleados(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
+        try {
+
+            let data = await EmpleadoService.getEmpleados();
+            setEmpleados(data);
+        } catch (error) {
+            console.error('Error al obtener empleados:', error);
+        }
+    };
+
 
     const handleAgregarEmpleado = () => {
         setShowAgregarEmpleadoModal(true);
@@ -48,7 +50,8 @@ const Empleados = () => {
         setMostrarEmpleados(false);
     };
 
-    const handleEditarEmpleado = () => {
+    const handleEditarEmpleado = (empleado: Empleado) => {
+        setEmpleadoEditar(empleado);
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(true);
         setShowEliminarEmpleadoModal(false);
@@ -67,9 +70,7 @@ const Empleados = () => {
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(false);
         setShowEliminarEmpleadoModal(false);
-
         setMostrarEmpleados(true);
-
         fetchEmpleados();
     };
 
@@ -81,6 +82,7 @@ const Empleados = () => {
             <ModalCrud isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
                 <AgregarEmpleado />
             </ModalCrud>
+
             {mostrarEmpleados && (
                 <div id="empleados">
                     <table>
@@ -90,6 +92,7 @@ const Empleados = () => {
                                 <th>Cuil</th>
                                 <th>Telefono</th>
                                 <th>Email</th>
+                                <th>Domicilios</th>
                                 <th>Fecha de ingreso</th>
                                 <th>Acciones</th>
                             </tr>
@@ -101,29 +104,36 @@ const Empleados = () => {
                                     <td>{empleado.cuil}</td>
                                     <td>{empleado.telefono}</td>
                                     <td>{empleado.email}</td>
-
-                                    {empleado.fechaContratacion && empleado.fechaContratacion.map((fecha, index) => (
-                                        <tr key={index}>
-                                            <td>{fecha.toUTCString()}</td>
-                                        </tr>
-                                    ))}
+                                    <td>
+                                        {empleado.domicilios && empleado.domicilios.map((domicilio, index) => (
+                                            <div key={index}>{domicilio.calle}, {domicilio.localidad?.nombre}</div>
+                                        ))}
+                                    </td>
+                                    <td>
+                                        {empleado.fechaContratacionEmpleado && empleado.fechaContratacionEmpleado.map((fecha, index) => (
+                                            <div key={index}>{new Date(fecha.fechaContratacion).toLocaleString('es-AR')}</div>
+                                        ))}
+                                    </td>
 
                                     <td>
                                         <button onClick={() => handleEliminarEmpleado(empleado.cuil)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarEmpleado()}>EDITAR</button>
+                                        <button onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
                                     </td>
-                                    <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
-                                        <EditarEmpleado empleadoOriginal={empleado} />
-                                    </ModalCrud>
                                 </tr>
                             ))}
                         </tbody>
+
                     </table>
-                    <ModalFlotante isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
-                        {selectedCuit && <EliminarEmpleado cuilEmpleado={selectedCuit} />}
-                    </ModalFlotante>
                 </div>
             )}
+
+            <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
+                <EditarEmpleado empleadoOriginal={empleadoEditar} />
+            </ModalCrud>
+
+            <ModalFlotante isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
+                {selectedCuit && <EliminarEmpleado cuilEmpleado={selectedCuit} />}
+            </ModalFlotante>
         </div>
     )
 }

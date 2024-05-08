@@ -21,7 +21,7 @@
 [x] Mejorar la toma de privilegios para no estar haciendo mil llamadas a la db
 [x] Arreglar  privilegios en caso de tener el mismo correo tanto en restaurante como en cliente (Puedo ser empleado y trabajador queriendo encargar comida)
 [] Crear los DTOS para enviar los datos necesarios desde la api y no todos
-[] Solicitar localidad, provincia al pedir domicilio
+[x] Solicitar localidad, provincia al pedir domicilio
 [] Boton en pedidos del cliente para poder repetir un pedido anterior
 [] Descontar stock al comprar
 [x] Probar envio de correos
@@ -30,12 +30,13 @@
 [] Mercadopago
 [x] Carga de provincias y localidades de argentina
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
-[] Opcion para seleccionar que localidades abarcaria el local, para asi cargar la db con los datos de esa provincia y no de todo el pais
+[x] Opcion para seleccionar que localidades abarcaria el local, para asi cargar la db con los datos de esa provincia y no de todo el pais
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Crear modal para mostrar opciones extra al interactuar con las opciones
 [x] Probar el plugin Toaster Sonner para los mensajes en pantalla buenardos
 [x] Input con lista de posibles resultados debajo
 [] Ver tema del auth para privilegios y esas cosas
+[] Acomodar mensajes de los toast que se devuelven del back, ej base loginRestaurante.tsx
 
     Pruebas
 [x] Carga sucursal
@@ -44,7 +45,7 @@
 
 [x] Carga empleado
 [] Actualizacion empleado
-[] Eliminacion empleado
+[x] Eliminacion empleado
 
 [x] Carga cliente
 [] Actualizacion cliente
@@ -69,6 +70,12 @@
 [] Carga pedido
 [] Actualizacion pedido
 [] Eliminacion pedido
+
+[] Carga pedido stock
+[] Actualizacion pedido stock
+[] Eliminacion pedido stock
+
+[] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle, localidad, departamento, provincia), telefono)
 
 Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

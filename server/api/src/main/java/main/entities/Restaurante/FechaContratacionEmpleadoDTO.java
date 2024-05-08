@@ -8,28 +8,12 @@ import lombok.Setter;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "fecha_contratacion_empleado")
-public class FechaContratacionEmpleado {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
+public class FechaContratacionEmpleadoDTO {
     private LocalDateTime fechaContratacion;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_empleado")
-    private Empleado empleado;
-
 }

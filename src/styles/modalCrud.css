@@ -20,3 +20,13 @@
 input {
   margin-bottom: 10px;
 }
+
+.modal-close {
+  width: 90%;
+}
+
+.button-form {
+  padding: 15px;
+  color: white;
+  margin-bottom: 15px;
+}

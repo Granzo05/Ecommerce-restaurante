@@ -1,10 +1,7 @@
 package main;
 
 import main.controllers.EncryptMD5.Encrypt;
-import main.entities.Domicilio.Departamento;
-import main.entities.Domicilio.Localidad;
-import main.entities.Domicilio.Pais;
-import main.entities.Domicilio.Provincia;
+import main.entities.Domicilio.*;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
@@ -13,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -50,12 +48,14 @@ public class Main {
             }
         };
     }
-
-    @Autowired
+    @Autowired(required=true)
     private PaisRepository paisRepository;
-    @Autowired
+    @Autowired(required=true)
     private ProvinciaRepository provinciaRepository;
-    @Autowired
+    @Autowired(required=true)
+    private LocalidadRepository localidadRepository;
+
+    @Autowired(required=true)
     private EmpresaRepository empresaRepository;
     private final String RUTACSV = "D://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
     private final String SEPARACIONCSV = ";";
@@ -63,6 +63,31 @@ public class Main {
     @Bean
     CommandLineRunner init() {
         return args -> {
+
+            int cantidadProvincias = provinciaRepository.getCantidadProvincias();
+            System.out.println("Provincias listas para usar");
+
+            if (cantidadProvincias < 24) {
+                System.out.println("No se han encontrado provincias. Creandolas...");
+                try (BufferedReader br = new BufferedReader(new FileReader(RUTACSV))) {
+                    Pais pais = crearPais("Argentina");
+                    String line;
+
+                    while ((line = br.readLine()) != null) {
+                        String[] data = line.split(SEPARACIONCSV);
+                        String localidadNombre = Encrypt.encriptarString(data[0]);
+                        String departamentoNombre = Encrypt.encriptarString(data[1]);
+                        String provinciaNombre = Encrypt.encriptarString(data[2]);
+
+                        cargarDatos(localidadNombre, departamentoNombre, provinciaNombre, pais);
+                    }
+
+                    paisRepository.save(pais);
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             Optional<Empresa> empresaOp = empresaRepository.findByCuit(201234566l);
 
@@ -79,34 +104,19 @@ public class Main {
                 sucursal.setPrivilegios("negocio");
                 sucursal.setContraseña(Encrypt.cifrarPassword("123"));
 
+                Domicilio domicilio = new Domicilio();
+                domicilio.setNumero(774);
+                domicilio.setCalle("San martin");
+                domicilio.setCodigoPostal(4441);
+                Optional<Localidad> localidad = localidadRepository.findById(5906l);
+                domicilio.setLocalidad(localidad.get());
+                domicilio.setSucursal(sucursal);
+
+                sucursal.setDomicilio(domicilio);
+
                 empresa.getSucursales().add(sucursal);
 
                 empresaRepository.save(empresa);
-            }
-
-            int cantidadProvincias = provinciaRepository.getCantidadProvincias();
-            System.out.println("Provincias listas para usar");
-
-            if (cantidadProvincias < 24) {
-                System.out.println("No se han encontrado provincias. Creandolas...");
-                try (BufferedReader br = new BufferedReader(new FileReader(RUTACSV))) {
-                    Pais pais = crearPais("Argentina");
-                    String line;
-
-                    while ((line = br.readLine()) != null) {
-                        String[] data = line.split(SEPARACIONCSV);
-                        String localidadNombre = data[0];
-                        String departamentoNombre = data[1];
-                        String provinciaNombre = data[2];
-
-                        cargarDatos(localidadNombre, departamentoNombre, provinciaNombre, pais);
-                    }
-
-                    paisRepository.save(pais);
-
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
             }
         };
     }

@@ -11,11 +11,10 @@ import net.minidev.json.annotate.JsonIgnore;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class DomicilioDTO {
     private String calle;
     private int numero;
     private int codigoPostal;
     private Localidad localidad;
-
-
 }
