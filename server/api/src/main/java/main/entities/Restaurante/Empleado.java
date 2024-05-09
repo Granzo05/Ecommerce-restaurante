@@ -15,7 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@ToString
 @Builder
 @Table(name = "empleados", schema = "buen_sabor")
 public class Empleado {

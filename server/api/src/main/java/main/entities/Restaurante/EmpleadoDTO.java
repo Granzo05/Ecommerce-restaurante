@@ -23,6 +23,7 @@ public class EmpleadoDTO {
     private Set<DomicilioDTO> domicilios;
     private Long telefono;
     private Date fechaNacimiento;
+    private Sucursal sucursal;
 
     public EmpleadoDTO() {
     }

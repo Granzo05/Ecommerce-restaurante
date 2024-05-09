@@ -234,6 +234,11 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       domicilios
     };
 
+
+    let sucursal = sucursales.find(sucursal => sucursal.id === sucursalId);
+
+    if (sucursal) empleadoActualizado.sucursal = sucursal;
+
     console.log(empleadoOriginal)
     console.log(empleadoActualizado)
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {

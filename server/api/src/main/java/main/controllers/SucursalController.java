@@ -10,7 +10,6 @@ import main.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -53,7 +52,7 @@ public class SucursalController {
     public Set<SucursalDTO> getSucursales() throws Exception {
         List<SucursalDTO> sucursales = sucursalRepository.findAllNoBorrado();
 
-        for (SucursalDTO sucursal: sucursales) {
+        for (SucursalDTO sucursal : sucursales) {
             DomicilioDTO domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
 
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
@@ -165,7 +164,9 @@ public class SucursalController {
 
             empleadoDetails.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
 
-            encriptarDomicilio(empleadoDetails);
+            for (Domicilio domicilio: empleadoDetails.getDomicilios()) {
+                encriptarDomicilio(domicilio, empleadoDetails);
+            }
 
             empleadoDetails.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
             empleadoDetails.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
@@ -189,7 +190,7 @@ public class SucursalController {
 
         List<EmpleadoDTO> empleadosDTO = new ArrayList<>();
 
-        for (Empleado empleado: empleados) {
+        for (Empleado empleado : empleados) {
             EmpleadoDTO empleadoDTO = new EmpleadoDTO();
 
             List<FechaContratacionEmpleadoDTO> fechasContratacion = fechaContratacionRepository.findByIdEmpleado(empleado.getId());
@@ -203,7 +204,8 @@ public class SucursalController {
             empleadoDTO.setFechaNacimiento(empleado.getFechaNacimiento());
 
             Set<DomicilioDTO> domicilios = new HashSet<>(domicilioRepository.findByIdEmpleadoDTO(empleado.getId()));
-            empleadoDTO.setDomicilios(desencriptarDomicilio(domicilios));
+            empleadoDTO.setDomicilios(desencriptarDomicilioDTO(domicilios));
+            empleadoDTO.setSucursal(sucursalRepository.findById(empleado.getId()).get());
 
             empleadosDTO.add(empleadoDTO);
         }
@@ -212,42 +214,76 @@ public class SucursalController {
     }
 
 
-
     @PutMapping("/empleado/update")
     public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
-        System.out.println(empleadoDetails);
-        Optional<Empleado> empleado = empleadoRepository.findByCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
-        if (!empleado.isEmpty()) {
-            // Si la contraseña se ha modificado la encriptamos y guardamos
-            if (empleadoDetails.getContraseña().length() > 1) {
-                empleadoDetails.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
-            } else {
-                // Si no se guardó le almacenamos la anterior
-                empleadoDetails.setContraseña(empleado.get().getContraseña());
+        Optional<Empleado> empleadoOptional = empleadoRepository.findByCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
+
+        if (empleadoOptional.isPresent()) {
+            // Comparo cada uno de los datos a ver si ha cambiado, ya que clienteDetails viene de un DTO y no contiene los mismos datos del empleadoDB entonces hay valores nulos
+            Empleado empleadoDb = empleadoOptional.get();
+
+            String contraseña = empleadoDetails.getContraseña();
+            if (contraseña != null && !contraseña.isEmpty() && !Encrypt.cifrarPassword(contraseña).equals(empleadoDb.getContraseña())) {
+                empleadoDb.setContraseña(Encrypt.cifrarPassword(contraseña));
             }
 
-            empleadoDetails.setNombre(Encrypt.encriptarString(empleadoDetails.getNombre()));
-            empleadoDetails.setEmail(Encrypt.encriptarString(empleadoDetails.getEmail()));
+            String nombre = empleadoDetails.getNombre();
+            if (nombre != null && !nombre.isEmpty() && !Encrypt.encriptarString(nombre).equals(empleadoDb.getNombre())) {
+                empleadoDb.setNombre(Encrypt.encriptarString(nombre));
+            }
 
-            encriptarDomicilio(empleadoDetails);
+            String email = empleadoDetails.getEmail();
+            if (email != null && !email.isEmpty() && !Encrypt.encriptarString(email).equals(empleadoDb.getEmail())) {
+                empleadoDb.setEmail(Encrypt.encriptarString(email));
+            }
 
-            empleadoDetails.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
-            empleadoDetails.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
+            // Actualizar sucursal y cuil
+            if (empleadoDb.getSucursal().getId() == empleadoDetails.getSucursal().getId()) {
+                empleadoDb.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
+            }
 
-            empleadoRepository.save(empleadoDetails);
+            if (!Encrypt.desencriptarString(empleadoDb.getCuil()).contains(empleadoDetails.getCuil())) {
+                empleadoDb.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
+            }
+
+            Set<Domicilio> domiciliosEmpleadoDb = new HashSet<>(empleadoDb.getDomicilios());
+
+            for (int i = 0; i < domiciliosEmpleadoDb.size(); i++) {
+                Domicilio domicilioDb = domiciliosEmpleadoDb.stream().toList().get(i);
+                Domicilio domicilioCliente = empleadoDetails.getDomicilios().stream().toList().get(i);
+
+                if (!domicilioDb.getCalle().equals(domicilioCliente.getCalle())
+                        || domicilioDb.getNumero() != domicilioCliente.getNumero()
+                        || domicilioDb.getCodigoPostal() != domicilioCliente.getCodigoPostal()) {
+                    // Si no coinciden los datos, almacenamos el nuevo domicilio encriptado
+                    domiciliosEmpleadoDb.stream().toList().set(i, encriptarDomicilio(domicilioCliente, empleadoDb));
+                }
+            }
+
+            empleadoDb.setDomicilios(domiciliosEmpleadoDb);
+
+            empleadoRepository.save(empleadoDb);
             return ResponseEntity.ok("El empleado se modificó correctamente");
         } else {
             return ResponseEntity.ok("El empleado no se encontró");
         }
     }
 
-    private void encriptarDomicilio(Empleado empleadoDetails) throws Exception {
-        for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
-            domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
-            domicilio.setNumero(domicilio.getNumero());
-            domicilio.setEmpleado(empleadoDetails);
-            domicilio.setLocalidad(domicilio.getLocalidad());
+
+    private Domicilio encriptarDomicilio(Domicilio domicilio, Object persona) throws Exception {
+
+        domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
+        domicilio.setLocalidad(domicilio.getLocalidad());
+
+        if (persona instanceof Empleado) {
+            domicilio.setEmpleado((Empleado) persona);
+        } else if (persona instanceof Sucursal) {
+            domicilio.setSucursal((Sucursal) persona);
+        } else if (persona instanceof Cliente) {
+            domicilio.setCliente((Cliente) persona);
         }
+
+        return domicilio;
     }
 
     @PutMapping("/empleado/{cuil}/delete")
@@ -325,18 +361,39 @@ public class SucursalController {
     }
 
 
-    private Set<DomicilioDTO> desencriptarDomicilio(Set<DomicilioDTO> domicilios) throws Exception {
-        for (DomicilioDTO domicilio: domicilios) {
-            // Desencriptar calle
-            domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-            // Desencriptar localidad
-            domicilio.getLocalidad().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getNombre()));
-            // Desencriptar departamento
-            domicilio.getLocalidad().getDepartamento().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getNombre()));
-            // Desencriptar provincia
-            domicilio.getLocalidad().getDepartamento().getProvincia().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getProvincia().getNombre()));
+    private Set<Domicilio> desencriptarDomicilio(Set<Domicilio> domicilios) throws Exception {
+        for (Domicilio domicilio : domicilios) {
+            try {
+                // Desencriptar calle
+                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+                // Desencriptar localidad
+                domicilio.getLocalidad().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getNombre()));
+                // Desencriptar departamento
+                domicilio.getLocalidad().getDepartamento().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getNombre()));
+                // Desencriptar provincia
+                domicilio.getLocalidad().getDepartamento().getProvincia().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getProvincia().getNombre()));
+            } catch (IllegalArgumentException e) {
+                System.out.println(e);
+            }
         }
+        return domicilios;
+    }
 
+    private Set<DomicilioDTO> desencriptarDomicilioDTO(Set<DomicilioDTO> domicilios) throws Exception {
+        for (DomicilioDTO domicilio : domicilios) {
+            try {
+                // Desencriptar calle
+                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+                // Desencriptar localidad
+                domicilio.getLocalidad().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getNombre()));
+                // Desencriptar departamento
+                domicilio.getLocalidad().getDepartamento().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getNombre()));
+                // Desencriptar provincia
+                domicilio.getLocalidad().getDepartamento().getProvincia().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getProvincia().getNombre()));
+            } catch (IllegalArgumentException e) {
+                System.out.println(e);
+            }
+        }
         return domicilios;
     }
 }
