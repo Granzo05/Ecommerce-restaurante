@@ -10,7 +10,7 @@ const Footer = () => {
             <div className="footer-body__content">
               
               <p style={{color: 'white'}}>
-                <img id='logo-footer' src={Logo} /><hr />
+                <img id='logo-footer' src={Logo} />
                 Donde la magia de las estrellas llega a tu puerta con cada entrega. Descubre nuestros sabores y déjate llevar por la excelencia culinaria. ¡Sabor, calidad y comodidad, todo en un solo lugar!
               </p>
             </div>

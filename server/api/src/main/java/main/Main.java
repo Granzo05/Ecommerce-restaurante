@@ -106,7 +106,7 @@ public class Main {
 
                 Domicilio domicilio = new Domicilio();
                 domicilio.setNumero(774);
-                domicilio.setCalle("San martin");
+                domicilio.setCalle(Encrypt.encriptarString("San martin"));
                 domicilio.setCodigoPostal(4441);
                 Optional<Localidad> localidad = localidadRepository.findById(5906l);
                 domicilio.setLocalidad(localidad.get());

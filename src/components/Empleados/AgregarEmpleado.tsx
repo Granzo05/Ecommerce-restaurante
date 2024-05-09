@@ -150,7 +150,6 @@ function AgregarEmpleado() {
 
     const sucursalStr: string | null = localStorage.getItem('usuario');
     const sucursal: Sucursal = sucursalStr ? JSON.parse(sucursalStr) : new Sucursal();
-    console.log(sucursal)
     empleado.sucursal = sucursal;
 
     const domicilio = new Domicilio();
@@ -165,7 +164,7 @@ function AgregarEmpleado() {
     toast.promise(EmpleadoService.createEmpleado(empleado), {
       loading: 'Creando empleado...',
       success: (message: string) => {
-        //clearInputs();
+        clearInputs();
         return message;
       },
       error: (message: string) => {
@@ -245,6 +244,7 @@ function AgregarEmpleado() {
           <li className='opcion-recomendada' key={index} onClick={() => {
             setInputValueProvincia(provincia.nombre)
             setResultadosProvincias([])
+            cargarDepartamentos(provincia.id)
           }}>
             {provincia.nombre}
           </li>
