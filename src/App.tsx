@@ -15,6 +15,10 @@ function App() {
       setMostrarHeader(false);
     }else if (ruta === 'login-cliente#'){
       setMostrarHeader(false);
+    }else if (ruta === 'login-negocio'){
+      setMostrarHeader(false);
+    }else if (ruta === 'login-negocio#'){
+      setMostrarHeader(false);
     }
   }, []);
 
