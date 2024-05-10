@@ -118,6 +118,7 @@ body {
     height: 100%;
     width: 100%;
     padding-top: 113px;
+    background-color: black;
 }
 
 .form-side {
@@ -148,7 +149,7 @@ body {
     background-color: white;
     border-radius: 2rem;
     padding: 19px;
-    box-shadow: 0 0 50px black;
+    box-shadow: 0 0 14px white;
 }
 
 .my-form__button {
@@ -263,6 +264,7 @@ body {
     background-position: cover;
     max-height: 90rem;
     margin: 10px;
+    box-shadow: 0 0 14px white;
 }
 
 .info-side .blockquote-wrapper {
