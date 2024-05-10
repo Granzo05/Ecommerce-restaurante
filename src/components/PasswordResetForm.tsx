@@ -11,12 +11,12 @@ const PasswordResetForm = () => {
 
 
     return (
-        <div className="password-reset-container">
-            <div className="password-reset-form">
+        <div className="password-change-container">
+            <div className="password-change-form">
                 <h2>Restablecer contraseña</h2>
                 <p>Por favor, ingresa tu nueva contraseña.</p>
                 <form>
-                    <div className="text-field">
+                    <div className="form-field-pf">
                         <label htmlFor="password">Nueva contraseña:</label>
                         <input
                             type="password"
@@ -31,7 +31,7 @@ const PasswordResetForm = () => {
                         <div className="error-message">Mínimo 6 caracteres. 1 letra y 1 número.</div>
                     </div>
 
-                    <div className="text-field">
+                    <div className="form-field-pf">
                         <label htmlFor="confirmPassword">Confirmar contraseña:</label>
                         <input
                             type="password"

@@ -313,11 +313,16 @@ body {
     .info-side {
         display: none;
     }
+
+    #modal-pass-forget{
+        width: auto;
+        height: auto;
+    }
 }
 
 #modal-pass-forget{
-    width: 650px;
-    height: 390px;
+    width: auto;
+    height: auto;
 }
 
 .modal-content {
@@ -325,7 +330,7 @@ body {
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.1);
   }
   
   .password-reset-form {

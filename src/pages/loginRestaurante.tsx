@@ -100,14 +100,24 @@ const LoginNegocio = () => {
     setAutorImg(frases[randomIndex].autorImg);
   }, []); // Se ejecutará una vez al cargar la página
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpenP, setModalIsOpenP] = useState(false);
 
-  const openModal = () => {
-    setModalIsOpen(true);
+  const openModalP = () => {
+    setModalIsOpenP(true);
   };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
+  const closeModalP = () => {
+    setModalIsOpenP(false);
+  };
+
+  const [modalIsOpenC, setModalIsOpenC] = useState(false);
+
+  const openModalC = () => {
+    setModalIsOpenC(true);
+  };
+
+  const closeModalC = () => {
+    setModalIsOpenC(false);
   };
 
 
@@ -162,13 +172,13 @@ const LoginNegocio = () => {
           </div>
           <div className="my-form__actions">
             <div className="my-form__row_contra">
-              <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={openModal}>
+              <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={openModalP}>
                 Reestablecela
               </a></span>
               <div>
                 <Modal
-                  isOpen={modalIsOpen}
-                  onRequestClose={closeModal}
+                  isOpen={modalIsOpenP}
+                  onRequestClose={closeModalP}
                   id='modal-pass-forget'
                   style={{
                     content: {
@@ -178,17 +188,18 @@ const LoginNegocio = () => {
                       bottom: 'auto',
                       marginRight: '-50%',
                       transform: 'translate(-50%, -50%)',
+                      boxShadow: '0 0 200px black'
                     },
                   }}
                   shouldCloseOnOverlayClick={false}
                 >
                   <div className="modal-content">
-                    <button className="close-button" onClick={closeModal}><a href=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBUlEQVR4nO3ZTQqDMBAF4HeKPOkV2+MWbE9jKXUhRcQk8xeZt3Il8xFNZgiQyWQyV8odwORdBH41fGtpygPAAmB2xkxrDctaU3UKgOf6gjeAG+zDTQ2vnho8MZRCeGIojfDAUAthiaE2wgJjhtDEmCM0MG4ISYw7QgITBtGDCYdowYRF1GDCI85ghkEcYYZD7M0Q899zhEGteWWGW4lttp+T53DWlUt8Wtz5sSOMzVU52p2GwfDEFhsew4pzIiyGDYddOAw7TuwwGAq0He4YCvZObhgqNIDmGCp2sWYYi1a8aGMs54mihfEYioo0xnOyK1KYCONpkcBc5urtMpehmUwmg3D5AAklyc9YEtl/AAAAAElFTkSuQmCC" /></a></button>
+                    <button className="close-button" onClick={closeModalP}><a href=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBUlEQVR4nO3ZTQqDMBAF4HeKPOkV2+MWbE9jKXUhRcQk8xeZt3Il8xFNZgiQyWQyV8odwORdBH41fGtpygPAAmB2xkxrDctaU3UKgOf6gjeAG+zDTQ2vnho8MZRCeGIojfDAUAthiaE2wgJjhtDEmCM0MG4ISYw7QgITBtGDCYdowYRF1GDCI85ghkEcYYZD7M0Q899zhEGteWWGW4lttp+T53DWlUt8Wtz5sSOMzVU52p2GwfDEFhsew4pzIiyGDYddOAw7TuwwGAq0He4YCvZObhgqNIDmGCp2sWYYi1a8aGMs54mihfEYioo0xnOyK1KYCONpkcBc5urtMpehmUwmg3D5AAklyc9YEtl/AAAAAElFTkSuQmCC" /></a></button>
                     <h2>Restablecer Contraseña</h2>
                     <p>Por favor, ingresa tu correo electrónico para restablecer tu contraseña.</p>
                     <form className="password-reset-form">
                       <div className="text-field">
-                        <label htmlFor="email" style={{display: 'flex'}}>E-mail:</label>
+                        <label htmlFor="email" style={{ display: 'flex' }}>E-mail:</label>
                         <input
                           type="email"
                           id="email"
@@ -213,10 +224,97 @@ const LoginNegocio = () => {
           </button>
           <div className="my-form__actions">
             <div className="my-form__row">
-              <span>¿No tienes cuenta? <a href="#" title="Reset Password">
+              <span>¿No tienes cuenta? <a href="#" title="Create account" onClick={openModalC}>
                 Crea una ahora
               </a></span>
+              <div>
+                <Modal
+                  isOpen={modalIsOpenC}
+                  onRequestClose={closeModalC}
+                  id='modal-pass-forget'
+                  style={{
+                    content: {
+                      top: '50%',
+                      left: '50%',
+                      right: 'auto',
+                      bottom: 'auto',
+                      marginRight: '-50%',
+                      transform: 'translate(-50%, -50%)',
+                      boxShadow: '0 0 200px black'
+                    },
+                  }}
+                  shouldCloseOnOverlayClick={false}
+                >
+                  <div className="modal-content">
+                    <button className="close-button" onClick={closeModalC}><a href=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBUlEQVR4nO3ZTQqDMBAF4HeKPOkV2+MWbE9jKXUhRcQk8xeZt3Il8xFNZgiQyWQyV8odwORdBH41fGtpygPAAmB2xkxrDctaU3UKgOf6gjeAG+zDTQ2vnho8MZRCeGIojfDAUAthiaE2wgJjhtDEmCM0MG4ISYw7QgITBtGDCYdowYRF1GDCI85ghkEcYYZD7M0Q899zhEGteWWGW4lttp+T53DWlUt8Wtz5sSOMzVU52p2GwfDEFhsew4pzIiyGDYddOAw7TuwwGAq0He4YCvZObhgqNIDmGCp2sWYYi1a8aGMs54mihfEYioo0xnOyK1KYCONpkcBc5urtMpehmUwmg3D5AAklyc9YEtl/AAAAAElFTkSuQmCC" /></a></button>
+                    <h2>Crear cuenta</h2>
+                    <p>Por favor, completa los siguientes campos para crear una nueva cuenta:</p>
+                    <form className="password-reset-form">
+                      <div className="text-field">
+                        <label htmlFor="email" style={{ display: 'flex' }}>E-mail:</label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          autoComplete="off"
+                          placeholder="tu@ejemplo.com"
+                          required
+                        />
+                        <div className="error-message">Formato incorrecto de e-mail.</div>
+                      </div>
+                      <div className="text-field">
+                        <label htmlFor="password" style={{ display: 'flex' }}>Contraseña:</label>
+                        <input
+                          type="password"
+                          id="password"
+                          name="password"
+                          placeholder="Tu contraseña"
+                          pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+                          title="Mínimo 6 caracteres. Al menos 1 letra y 1 número."
+                          required
+                        />
+                        <div className="error-message">Mínimo 6 caracteres. Al menos 1 letra y 1 número.</div>
+                      </div>
+                      <div className="text-field">
+                        <label htmlFor="phone" style={{ display: 'flex' }}>Número de Teléfono:</label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          placeholder="Tu número de teléfono"
+                          pattern="[0-9]{10}"
+                          title="Por favor, ingresa un número de teléfono válido (10 dígitos)."
+                          required
+                        />
+                        <div className="error-message">Por favor, ingresa un número de teléfono válido (10 dígitos).</div>
+                      </div>
+                      <div className="text-field">
+                        <label htmlFor="address" style={{ display: 'flex' }}>Domicilio:</label>
+                        <input
+                          type="text"
+                          id="address"
+                          name="address"
+                          placeholder="Tu domicilio"
+                          required
+                        />
+                        <div className="error-message">Por favor, ingresa tu domicilio.</div>
+                      </div>
+                      <div className="text-field">
+                        <label htmlFor="birthdate" style={{ display: 'flex' }}>Fecha de Nacimiento:</label>
+                        <input
+                          type="date"
+                          id="birthdate"
+                          name="birthdate"
+                          required
+                        />
+                        <div className="error-message">Por favor, ingresa tu fecha de nacimiento.</div>
+                      </div>
+                      <button type="submit">Crear cuenta</button>
+                    </form>
 
+                  </div>
+                </Modal>
+              </div>
             </div>
           </div>
         </form>
