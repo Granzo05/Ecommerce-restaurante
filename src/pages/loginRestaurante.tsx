@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import '../styles/loginRestaurante.css'
 import { SucursalService } from '../services/SucursalService';
-import { Toaster, toast } from 'sonner'
+import { Toaster, toast } from 'sonner';
+import Modal from 'react-modal';
+import HeaderLogin from '../components/headerLogin';
 
 const LoginNegocio = () => {
   const [email, setEmail] = useState('');
@@ -98,77 +100,128 @@ const LoginNegocio = () => {
     setAutorImg(frases[randomIndex].autorImg);
   }, []); // Se ejecutará una vez al cargar la página
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+
   return (
     <div className="form-wrapper">
-    <aside className="info-side">
-      <div className="blockquote-wrapper">
-        <img id='comida-img'
-          src={comidaImg}
-          alt="Returns"
-          className="returns"
-        />
-        <blockquote id='frase'>~&nbsp;
-        {frase}&nbsp;~
-        </blockquote>
-        <div className="author">
-          <img id='autor-img' src={autorImg} alt="Avatar" className="avatar" />
-          <span className="author-name" id='nombre-autor'>{autor}</span>
-        </div>
-      </div>
-    </aside>
-    <main className="form-side">
-      <form className="my-form">
-        <div className="form-welcome-row">
-          <h1>¡Bienvenido, otra vez! &#128079;</h1>
-          <h2>- Ingresa a tu cuenta -</h2>
-        </div>
-        <div className="text-field">
-          <label htmlFor="email">E-mail:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            autoComplete="off"
-            placeholder="tu@ejemplo.com"
-            required
+      <aside className="info-side">
+        <div className="blockquote-wrapper">
+          <img id='comida-img'
+            src={comidaImg}
+            alt="Returns"
+            className="returns"
           />
-          <div className="error-message">Formato incorrecto de e-mail.</div>
-        </div>
-        <div className="text-field">
-          <label htmlFor="password">Contraseña:</label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="tu contraseña"
-            title="Minimum 6 characters at least 1 Alphabet and 1 Number"
-            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
-            required
-          />
-          <div className="error-message">Mínimo 6 caracteres. 1 letra y 1 número.</div>
-        </div>
-        <div className="my-form__actions">
-          <div className="my-form__row_contra">
-            <span>¿Has olvidado tu contraseña? <a href="#" title="Reset Password">
-              Reestablecela
-            </a></span>
-            
+          <blockquote id='frase'>~&nbsp;
+            {frase}&nbsp;~
+          </blockquote>
+          <div className="author">
+            <img id='autor-img' src={autorImg} alt="Avatar" className="avatar" />
+            <span className="author-name" id='nombre-autor'>{autor}</span>
           </div>
         </div>
-        <button className="my-form__button" type="submit">
-          Ingresar
-        </button>
-        <div className="my-form__actions">
-          <div className="my-form__row">
-            <span>¿No tienes cuenta? <a href="#" title="Reset Password">
-              Crea una ahora
-            </a></span>
-            
+      </aside>
+      <main className="form-side">
+        <form className="my-form">
+          <div className="form-welcome-row">
+            <h1>¡Bienvenido, otra vez! &#128079;</h1>
+            <h2>- Ingresa a tu cuenta -</h2>
           </div>
-        </div>
-      </form>
-    </main>
-  </div>
+          <div className="text-field">
+            <label htmlFor="email">E-mail:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autoComplete="off"
+              placeholder="tu@ejemplo.com"
+              required
+            />
+            <div className="error-message">Formato incorrecto de e-mail.</div>
+          </div>
+          <div className="text-field">
+            <label htmlFor="password">Contraseña:</label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="tu contraseña"
+              title="Minimum 6 characters at least 1 Alphabet and 1 Number"
+              pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+              required
+            />
+            <div className="error-message">Mínimo 6 caracteres. 1 letra y 1 número.</div>
+          </div>
+          <div className="my-form__actions">
+            <div className="my-form__row_contra">
+              <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={openModal}>
+                Reestablecela
+              </a></span>
+              <div>
+                <Modal
+                  isOpen={modalIsOpen}
+                  onRequestClose={closeModal}
+                  id='modal-pass-forget'
+                  style={{
+                    content: {
+                      top: '50%',
+                      left: '50%',
+                      right: 'auto',
+                      bottom: 'auto',
+                      marginRight: '-50%',
+                      transform: 'translate(-50%, -50%)',
+                    },
+                  }}
+                  shouldCloseOnOverlayClick={false}
+                >
+                  <div className="modal-content">
+                    <button className="close-button" onClick={closeModal}><a href=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBUlEQVR4nO3ZTQqDMBAF4HeKPOkV2+MWbE9jKXUhRcQk8xeZt3Il8xFNZgiQyWQyV8odwORdBH41fGtpygPAAmB2xkxrDctaU3UKgOf6gjeAG+zDTQ2vnho8MZRCeGIojfDAUAthiaE2wgJjhtDEmCM0MG4ISYw7QgITBtGDCYdowYRF1GDCI85ghkEcYYZD7M0Q899zhEGteWWGW4lttp+T53DWlUt8Wtz5sSOMzVU52p2GwfDEFhsew4pzIiyGDYddOAw7TuwwGAq0He4YCvZObhgqNIDmGCp2sWYYi1a8aGMs54mihfEYioo0xnOyK1KYCONpkcBc5urtMpehmUwmg3D5AAklyc9YEtl/AAAAAElFTkSuQmCC" /></a></button>
+                    <h2>Restablecer Contraseña</h2>
+                    <p>Por favor, ingresa tu correo electrónico para restablecer tu contraseña.</p>
+                    <form className="password-reset-form">
+                      <div className="text-field">
+                        <label htmlFor="email" style={{display: 'flex'}}>E-mail:</label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          autoComplete="off"
+                          placeholder="tu@ejemplo.com"
+                          required
+                        />
+                        <div className="error-message">Formato incorrecto de e-mail.</div>
+                      </div>
+                      <button type="submit">Enviar</button>
+                    </form>
+
+                  </div>
+                </Modal>
+              </div>
+
+            </div>
+          </div>
+          <button className="my-form__button" type="submit">
+            Ingresar
+          </button>
+          <div className="my-form__actions">
+            <div className="my-form__row">
+              <span>¿No tienes cuenta? <a href="#" title="Reset Password">
+                Crea una ahora
+              </a></span>
+
+            </div>
+          </div>
+        </form>
+      </main>
+    </div>
   )
 }
 

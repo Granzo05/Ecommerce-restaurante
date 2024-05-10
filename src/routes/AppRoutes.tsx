@@ -7,6 +7,7 @@ import Opciones from "../pages/opciones"
 import AccesoDenegado from "../pages/accesoDenegado"
 import MainMenu from "../pages/HomePage"
 import PedidosCliente from "../pages/pedidosCliente"
+import CambioContra from '../components/PasswordResetForm'
 
 
 const AppRoutes: React.FC = () => {
@@ -34,6 +35,9 @@ const AppRoutes: React.FC = () => {
       </Route>
 
       <Route path="/pedidos" element={<PedidosCliente />}>
+      </Route>
+
+      <Route path="/cambio-contra" element={<CambioContra />}>
       </Route>
 
     </Routes>
