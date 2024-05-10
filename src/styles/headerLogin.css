@@ -19,3 +19,14 @@
     filter: drop-shadow(10px 8px 6px #a6b335e7);
     transition: 0.4s;
 }
+
+@media (max-width: 720px) {
+    #header-login {
+        position: relative;
+        margin-bottom: -107px;
+    }
+
+    .info-side {
+        display: none;
+    }
+}

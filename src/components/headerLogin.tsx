@@ -6,7 +6,7 @@ const HeaderLogin = () => {
 
     return (
             <header id='header-login'>
-                <img id='logo-header-login' src={Logo} />
+                <a href=""><img id='logo-header-login' src={Logo} /></a>
             </header>
 
     )
