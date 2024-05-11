@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface ImagenesProductoRepository extends JpaRepository<ImagenesProducto, Long> {
-    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.ruta = :nombre")
+    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.ruta = :nombre AND i.borrado = 'NO'")
     ImagenesProductoDTO findByRuta(@Param("nombre") String nombre);
 
-    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.articuloMenu.id = :id")
+    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.articuloMenu.id = :id AND i.borrado = 'NO'")
     List<ImagenesProductoDTO> findByIdMenu(@Param("id") Long id);
 }

@@ -1,5 +1,6 @@
 import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
+import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
 import { URL_API } from '../utils/global_variables/const';
 
 export const MenuService = {
@@ -78,7 +79,7 @@ export const MenuService = {
         }
     },
 
-    updateMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[]): Promise<string> => {
+    updateMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'menu/update', {
                 method: 'PUT',
@@ -118,10 +119,24 @@ export const MenuService = {
                         }
                     }
                 }));
+
+                if (imagenesEliminadas) {
+                    await Promise.all(imagenesEliminadas.map(async (imagen) => {
+                        const imagenResponse = await fetch(URL_API + 'menu/imagen/' + imagen.id + '/delete', {
+                            method: 'PUT',
+                        });
+
+                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
+                            imagenCargadaExitosamente = false
+                        } else {
+                            imagenCargadaExitosamente = true;
+                        }
+                    }));
+                }
             }
 
             if (imagenCargadaExitosamente) {
-                return 'ArticuloMenu creado con éxito';
+                return 'Menu actualizado con éxito';
             } else {
                 return 'Ocurrió un error';
             }

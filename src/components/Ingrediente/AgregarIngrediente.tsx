@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { Toaster, toast } from 'sonner'
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { IngredienteService } from '../../services/IngredienteService';
@@ -16,7 +15,6 @@ function AgregarIngrediente() {
     toast.promise(IngredienteService.createIngrediente(ingrediente), {
       loading: 'Creando Ingrediente...',
       success: (message) => {
-        clearInputs();
         return message;
       },
       error: (message) => {

@@ -11,6 +11,7 @@ import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloCo
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
 import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { Toaster, toast } from 'sonner'
+import './editarMenu.css'
 
 interface EditarMenuProps {
   menuOriginal: ArticuloMenu;
@@ -19,7 +20,8 @@ interface EditarMenuProps {
 const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [ingredientesSelect, setIngredientesSelect] = useState<Ingrediente[]>([]);
-  const [imagenesMuestra] = useState<ImagenesProductoDTO[]>(menuOriginal.imagenes);
+  const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(menuOriginal.imagenesDTO);
+  const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
   const [imagenes, setImagenes] = useState<ImagenesProducto[]>(menuOriginal.imagenes);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
@@ -29,6 +31,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
   const [nombre, setNombre] = useState(menuOriginal.nombre);
   const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
+
+  const [mostrarDatos, setMostrarDatos] = useState(true);
+
 
   function cargarSelectsIngredientes() {
     IngredienteService.getIngredientes()
@@ -52,6 +57,25 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     let imagenNueva = new ImagenesProducto();
     imagenNueva.index = imagenes.length;
     setImagenes([...imagenes, imagenNueva]);
+  };
+
+  const quitarCampoImagen = () => {
+    if (imagenes.length > 0) {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+
+      if (selectIndex > 0) {
+        setSelectIndex(prevIndex => prevIndex - 1);
+      }
+    }
+  };
+
+  const handleEliminarImagen = (index: number) => {
+    const nuevasImagenes = [...imagenesMuestra];
+    const imagenEliminada = nuevasImagenes.splice(index, 1)[0];
+    setImagenesMuestra(nuevasImagenes);
+    setImagenesEliminadas([...imagenesEliminadas, imagenEliminada]);
   };
 
   ///////// INGREDIENTES
@@ -103,6 +127,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
   const handleModalClose = () => {
     setShowAgregarStockModal(false);
+    setMostrarDatos(true);
     cargarSelectsIngredientes();
   };
 
@@ -122,9 +147,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       descripcion,
       ingredientesMenu: ingredientes
     };
+    
     console.log(menuActualizado)
     console.log(imagenes)
-    toast.promise(MenuService.updateMenu(menuActualizado, imagenes), {
+    toast.promise(MenuService.updateMenu(menuActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando menu...',
       success: (message) => {
         return message;
@@ -137,113 +163,121 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
   return (
     <div className="modal-info">
-      <Toaster/>
+      <Toaster />
       <div id="inputs-imagenes">
         {imagenesMuestra.map((imagen, index) => (
           <div key={index}>
-            <input
-              type="file"
-              accept="image/*"
-              maxLength={10048576}
-              disabled
-            />
-            {imagen && <img src={imagen.ruta} alt={`Imagen ${index}`} />}
+            {imagen && (
+              <img
+                className='imagen-muestra-menu'
+                src={imagen.ruta}
+                alt={`Imagen ${index}`}
+              />
+            )}
+            <button className='button-form' type='button' onClick={() => handleEliminarImagen(index)}>X</button>
           </div>
         ))}
         {imagenes.map((imagen, index) => (
-          <div key={index}>
+          <div key={index} style={{ display: 'flex', flexDirection: 'row' }}>
             <input
               type="file"
               accept="image/*"
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+              style={{ width: '400px' }}
             />
-            {imagen && <img src={imagen.ruta} alt={`Imagen ${index}`} />}
+            <p style={{ cursor: 'pointer', marginTop: '13px' }} onClick={quitarCampoImagen}>X</p>
           </div>
         ))}
         <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
-      <input type="text" placeholder="Nombre del menu" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
 
-      <br />
-      <input type="text" placeholder="Descripción del menu" value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
+      {mostrarDatos && (
+        <div>
+          <input type="text" placeholder="Nombre del menu" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
 
-      <br />
-      <input type="text" placeholder="Minutos de coccion" value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+          <br />
+          <input type="text" placeholder="Descripción del menu" value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
 
-      <br />
-      <label>
-        <select
-          id="tipoMenu"
-          value={tipo ? tipo.toString() : ""}
-          name="tipoMenu"
-          onChange={(e) => {
-            setTipo(parseInt(e.target.value));
-          }}
-        >
-          <option value={EnumTipoArticuloComida.HAMBURGUESAS}>Hamburguesas</option>
-          <option value={EnumTipoArticuloComida.PANCHOS}>Panchos</option>
-          <option value={EnumTipoArticuloComida.EMPANADAS}>Empanadas</option>
-          <option value={EnumTipoArticuloComida.PIZZAS}>Pizzas</option>
-          <option value={EnumTipoArticuloComida.LOMOS}>Lomos</option>
-          <option value={EnumTipoArticuloComida.HELADO}>Helado</option>
-          <option value={EnumTipoArticuloComida.PARRILLA}>Parrilla</option>
-          <option value={EnumTipoArticuloComida.PASTAS}>Pastas</option>
-          <option value={EnumTipoArticuloComida.SUSHI}>Sushi</option>
-          <option value={EnumTipoArticuloComida.MILANESAS}>Milanesas</option>
-        </select>
+          <br />
+          <input type="text" placeholder="Minutos de coccion" value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
 
-      </label>
-      <br />
-      <div>
-        <h2>Ingredientes</h2>
-        <button onClick={() => handleAgregarStock()}>Cargar nuevo ingrediente</button>
-        <ModalFlotante isOpen={showAgregarStockModal} onClose={handleModalClose}>
-          <AgregarStock />
-        </ModalFlotante>
-        {ingredientes.map((ingredienteMenu, index) => (
-          <div key={index} className='div-ingrediente-menu'>
+          <br />
+          <label>
             <select
-              id={`select-ingredientes-${index}`}
-              value={ingredienteMenu.ingrediente?.nombre}
-              onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
+              id="tipoMenu"
+              value={tipo ? tipo.toString() : ""}
+              name="tipoMenu"
+              onChange={(e) => {
+                setTipo(parseInt(e.target.value));
+              }}
             >
-              <option value="">Seleccionar ingrediente</option>
-              {ingredientesSelect.map((ingrediente, index) => (
-                <option key={index} value={ingrediente.nombre}>{ingrediente.nombre}</option>
-              ))}
+              <option value={EnumTipoArticuloComida.HAMBURGUESAS}>Hamburguesas</option>
+              <option value={EnumTipoArticuloComida.PANCHOS}>Panchos</option>
+              <option value={EnumTipoArticuloComida.EMPANADAS}>Empanadas</option>
+              <option value={EnumTipoArticuloComida.PIZZAS}>Pizzas</option>
+              <option value={EnumTipoArticuloComida.LOMOS}>Lomos</option>
+              <option value={EnumTipoArticuloComida.HELADO}>Helado</option>
+              <option value={EnumTipoArticuloComida.PARRILLA}>Parrilla</option>
+              <option value={EnumTipoArticuloComida.PASTAS}>Pastas</option>
+              <option value={EnumTipoArticuloComida.SUSHI}>Sushi</option>
+              <option value={EnumTipoArticuloComida.MILANESAS}>Milanesas</option>
             </select>
-            <input
-              type="number"
-              value={ingredienteMenu.cantidad}
-              placeholder="Cantidad necesaria"
-              onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))}
-            />
-            <select
-              id={`select-medidas-${index}`}
-              value={ingredienteMenu.ingrediente?.medida?.toString()}
-              onChange={(e) => handleMedidaIngredienteChange(index, parseInt(e.target.value))}
-            >
-              <option value="">Seleccionar medida ingrediente</option>
-              <option value={EnumMedida.KILOGRAMOS}>Kilogramos</option>
-              <option value={EnumMedida.GRAMOS}>Gramos</option>
-              <option value={EnumMedida.LITROS}>Litros</option>
-              <option value={EnumMedida.CENTIMETROS_CUBICOS}>Centimetros cúbicos</option>
-              <option value={EnumMedida.UNIDADES}>Unidades</option>
-            </select>
-            <p onClick={quitarCampoIngrediente}>X</p>
+
+          </label>
+          <br />
+          <div>
+            <h2>Ingredientes</h2>
+            <button onClick={() => handleAgregarStock()}>Cargar nuevo ingrediente</button>
+            <ModalFlotante isOpen={showAgregarStockModal} onClose={handleModalClose}>
+              <AgregarStock />
+            </ModalFlotante>
+            {ingredientes.map((ingredienteMenu, index) => (
+              <div key={index} className='div-ingrediente-menu'>
+                <select
+                  id={`select-ingredientes-${index}`}
+                  value={ingredienteMenu.ingrediente?.nombre}
+                  onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
+                >
+                  <option value="">Seleccionar ingrediente</option>
+                  {ingredientesSelect.map((ingrediente, index) => (
+                    <option key={index} value={ingrediente.nombre}>{ingrediente.nombre}</option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  value={ingredienteMenu.cantidad}
+                  placeholder="Cantidad necesaria"
+                  onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))}
+                />
+                <select
+                  id={`select-medidas-${index}`}
+                  value={ingredienteMenu.ingrediente?.medida?.toString()}
+                  onChange={(e) => handleMedidaIngredienteChange(index, parseInt(e.target.value))}
+                >
+                  <option value="">Seleccionar medida ingrediente</option>
+                  <option value={EnumMedida.KILOGRAMOS}>Kilogramos</option>
+                  <option value={EnumMedida.GRAMOS}>Gramos</option>
+                  <option value={EnumMedida.LITROS}>Litros</option>
+                  <option value={EnumMedida.CENTIMETROS_CUBICOS}>Centimetros cúbicos</option>
+                  <option value={EnumMedida.UNIDADES}>Unidades</option>
+                </select>
+                <p onClick={quitarCampoIngrediente}>X</p>
+              </div>
+            ))}
+            <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
           </div>
-        ))}
-        <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
-      </div>
-      <br />
-      <input type="number" placeholder="Precio" value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+          <br />
+          <input type="number" placeholder="Precio" value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
 
-      <br />
-      <input type="number" placeholder="Comensales" value={comensales} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
+          <br />
+          <input type="number" placeholder="Comensales" value={comensales} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
 
-      <br />
-      <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
+          <br />
+          <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
+        </div>
+      )}
+
     </div >
   )
 }

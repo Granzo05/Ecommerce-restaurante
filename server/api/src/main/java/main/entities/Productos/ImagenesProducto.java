@@ -21,6 +21,8 @@ public class ImagenesProducto {
     private String ruta;
     @Column(name = "formato")
     private String formato;
+    @Column(name = "borrado")
+    private String borrado = "NO";
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "imagenes_menu",

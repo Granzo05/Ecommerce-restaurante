@@ -59,7 +59,6 @@ public class MenuController {
     @PostMapping("/menu/create")
     public ResponseEntity<String> crearMenu(@RequestBody ArticuloMenu articuloMenu) {
         Optional<ArticuloMenu> menuDB = articuloMenuRepository.findByName(articuloMenu.getNombre());
-        System.out.println(articuloMenu);
         if (menuDB.isEmpty()) {
             for (IngredienteMenu ingredienteMenu : articuloMenu.getIngredientesMenu()) {
                 Ingrediente ingredienteDB = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get();
@@ -79,7 +78,7 @@ public class MenuController {
     }
 
     @PostMapping("/menu/imagenes")
-    public ResponseEntity<String> handleMultipleFilesUpload(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
+    public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
         HashSet<ImagenesProducto> listaImagenes = new HashSet<>();
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
@@ -131,6 +130,22 @@ public class MenuController {
             System.out.println("Error al crear la imagen: " + e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("/menu/imagen/{id}/delete")
+    public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
+        Optional<ImagenesProducto> imagen = imagenesProductoRepository.findById(id);
+
+        if(imagen.isPresent()) {
+            try {
+                imagen.get().setBorrado("SI");
+                imagenesProductoRepository.save(imagen.get());
+                return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
+            } catch (Exception e) {
+                System.out.println("Error al crear la imagen: " + e);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/menu/tipo/{tipoMenu}")

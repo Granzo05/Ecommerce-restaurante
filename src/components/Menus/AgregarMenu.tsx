@@ -107,7 +107,7 @@ function AgregarMenu() {
   const [descripcion, setDescripcion] = useState('');
 
   async function agregarMenu() {
-    if (!nombre || !tiempoCoccion || !tipo || !comensales || !precio || !descripcion) {
+    if (!nombre || !tiempoCoccion || !comensales || !precio || !descripcion) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
     }
