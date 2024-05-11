@@ -1,20 +1,19 @@
 package main.controllers;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import main.controllers.EncryptMD5.Encrypt;
-import main.entities.Domicilio.*;
+import main.entities.Domicilio.DepartamentoDTO;
+import main.entities.Domicilio.DomicilioDTO;
+import main.entities.Domicilio.LocalidadDTO;
+import main.entities.Domicilio.ProvinciaDTO;
 import main.repositories.*;
-import org.springframework.cglib.core.Local;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.crypto.IllegalBlockSizeException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -24,7 +23,6 @@ public class PaisController {
     private final ProvinciaRepository provinciaRepository;
     private final PaisRepository paisRepository;
     private final DomicilioRepository domicilioRepository;
-
 
 
     public PaisController(LocalidadRepository localidadRepository, DepartamentoRepository departamentoRepository, ProvinciaRepository provinciaRepository, PaisRepository paisRepository, DomicilioRepository domicilioRepository) {
@@ -40,9 +38,14 @@ public class PaisController {
     public Set<ProvinciaDTO> getProvincias() throws Exception {
         List<ProvinciaDTO> provincias = provinciaRepository.findAllDTO();
 
-        for (ProvinciaDTO provincia: provincias) {
-            provincia.setNombre(Encrypt.desencriptarString(provincia.getNombre()));
+        try {
+            for (ProvinciaDTO provincia : provincias) {
+                provincia.setNombre(Encrypt.desencriptarString(provincia.getNombre()));
+            }
+        } catch (IllegalBlockSizeException e) {
+            System.out.println(e);
         }
+
 
         return new HashSet<>(provincias);
     }
@@ -52,8 +55,12 @@ public class PaisController {
     public Set<LocalidadDTO> getLocalidades() throws Exception {
         List<LocalidadDTO> localidades = localidadRepository.findAllDTO();
 
-        for (LocalidadDTO localidad: localidades) {
-            localidad.setNombre(Encrypt.desencriptarString(localidad.getNombre()));
+        try {
+            for (LocalidadDTO localidad : localidades) {
+                localidad.setNombre(Encrypt.desencriptarString(localidad.getNombre()));
+            }
+        } catch (IllegalBlockSizeException e) {
+            System.out.println(e);
         }
 
         return new HashSet<>(localidades);
@@ -64,7 +71,7 @@ public class PaisController {
     public Set<LocalidadDTO> getLocalidadesByDepartamentoId(@PathVariable("departamentoId") Long id) throws Exception {
         List<LocalidadDTO> localidades = localidadRepository.findByIdDepartamento(id);
 
-        for (LocalidadDTO localidad: localidades) {
+        for (LocalidadDTO localidad : localidades) {
             localidad.setNombre(Encrypt.desencriptarString(localidad.getNombre()));
         }
 
@@ -76,8 +83,12 @@ public class PaisController {
     public Set<DepartamentoDTO> getDepartamentosByProvinciaId(@PathVariable("provinciaId") Long id) throws Exception {
         List<DepartamentoDTO> departamentos = departamentoRepository.findByProvinciaId(id);
 
-        for (DepartamentoDTO departamento: departamentos) {
-            departamento.setNombre(Encrypt.desencriptarString(departamento.getNombre()));
+        try {
+            for (DepartamentoDTO departamento : departamentos) {
+                departamento.setNombre(Encrypt.desencriptarString(departamento.getNombre()));
+            }
+        } catch (IllegalBlockSizeException e) {
+            System.out.println(e);
         }
 
         return new HashSet<>(departamentos);
@@ -88,11 +99,16 @@ public class PaisController {
     public Set<DomicilioDTO> getDomiciliosByEmpleadoId(@PathVariable("empleadoId") Long id) throws Exception {
         List<DomicilioDTO> domicilios = domicilioRepository.findByIdEmpleadoDTO(id);
 
-        for (DomicilioDTO domicilio: domicilios) {
-            domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-            domicilio.getLocalidad().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getNombre()));
-            domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+        try {
+            for (DomicilioDTO domicilio : domicilios) {
+                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+                domicilio.getLocalidad().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getNombre()));
+                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+            }
+        } catch (IllegalBlockSizeException e) {
+            System.out.println(e);
         }
+
 
         return new HashSet<>(domicilios);
     }

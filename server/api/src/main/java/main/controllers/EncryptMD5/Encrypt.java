@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public class Encrypt {
-    private static final String clave = "claveSecreta12345";
+    private static final String clave = "clavesecretade16caracteresminimo";
 
     public static String cifrarPassword(String texto) {
         try {
@@ -31,31 +31,25 @@ public class Encrypt {
     }
 
     public static String encriptarString(String texto) throws Exception {
-        // Asegúrate de que la clave tenga al menos 8 caracteres
-        if (clave.length() < 8) {
-            throw new IllegalArgumentException("La clave debe tener al menos 8 caracteres.");
-        }
+        // Asegúrate de que la clave tenga al menos 16 caracteres para AES-128
 
-        // Toma los primeros 8 bytes de la clave como la clave AES
-        byte[] claveAES = clave.substring(0, 8).getBytes();
+        // Toma los primeros 16 bytes de la clave como la clave AES
+        byte[] claveAES = clave.substring(0, 16).getBytes();
 
-        SecretKeySpec key = new SecretKeySpec(claveAES, "DES");
-        Cipher cifrador = Cipher.getInstance("DES");
+        SecretKeySpec key = new SecretKeySpec(claveAES, "AES");
+        Cipher cifrador = Cipher.getInstance("AES");
         cifrador.init(Cipher.ENCRYPT_MODE, key);
         byte[] textoCifrado = cifrador.doFinal(texto.getBytes());
         return Base64.getEncoder().encodeToString(textoCifrado);
     }
 
     public static String desencriptarString(String textoCifrado) throws Exception {
-        if (clave.length() < 8) {
-            throw new IllegalArgumentException("La clave debe tener al menos 8 caracteres.");
-        }
 
-        // Toma los primeros 8 bytes de la clave como la clave AES
-        byte[] claveAES = clave.substring(0, 8).getBytes();
+        // Toma los primeros 16 bytes de la clave como la clave AES
+        byte[] claveAES = clave.substring(0, 16).getBytes();
 
-        SecretKeySpec key = new SecretKeySpec(claveAES, "DES");
-        Cipher descifrador = Cipher.getInstance("DES");
+        SecretKeySpec key = new SecretKeySpec(claveAES, "AES");
+        Cipher descifrador = Cipher.getInstance("AES");
         descifrador.init(Cipher.DECRYPT_MODE, key);
         byte[] textoBytes = Base64.getDecoder().decode(textoCifrado);
         byte[] textoDescifrado = descifrador.doFinal(textoBytes);

@@ -1,9 +1,12 @@
 package main.controllers;
 
+import main.entities.Ingredientes.EnumMedida;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.EnumTipoArticuloComida;
 import main.entities.Productos.ImagenesProducto;
 import main.repositories.ArticuloMenuRepository;
 import main.repositories.ImagenesProductoRepository;
@@ -20,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,7 +46,13 @@ public class MenuController {
     // Busca por id de menu
     @GetMapping("/menus")
     public Set<ArticuloMenu> getMenusDisponibles() {
-        return new HashSet<>(articuloMenuRepository.findAllByNotBorrado()) ;
+        List<ArticuloMenu> menus = articuloMenuRepository.findAllByNotBorrado();
+
+        for(ArticuloMenu menu: menus) {
+            menu.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdMenu(menu.getId())));
+        }
+
+        return new HashSet<>(menus);
     }
 
     @Transactional
@@ -50,25 +60,18 @@ public class MenuController {
     public ResponseEntity<String> crearMenu(@RequestBody ArticuloMenu articuloMenu) {
         Optional<ArticuloMenu> menuDB = articuloMenuRepository.findByName(articuloMenu.getNombre());
         System.out.println(articuloMenu);
-
         if (menuDB.isEmpty()) {
-            ArticuloMenu articuloMenuSaved = articuloMenuRepository.save(articuloMenu);
-
-            Set<IngredienteMenu> ingredientesMenu = articuloMenu.getIngredientesMenu();
-
-            for (IngredienteMenu ingredienteMenu : ingredientesMenu) {
-                Ingrediente ingredienteDB = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre());
-
+            for (IngredienteMenu ingredienteMenu : articuloMenu.getIngredientesMenu()) {
+                Ingrediente ingredienteDB = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get();
                 ingredienteMenu.setIngrediente(ingredienteDB);
                 ingredienteMenu.setCantidad(ingredienteMenu.getCantidad());
-                ingredienteMenu.setArticuloMenu(articuloMenuSaved);
+                ingredienteMenu.setArticuloMenu(articuloMenu);
                 ingredienteMenu.setMedida(ingredienteMenu.getMedida());
-                System.out.println(ingredienteMenu);
-
-                ingredienteMenuRepository.save(ingredienteMenu);
             }
 
-            return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.ACCEPTED);
+            articuloMenuRepository.save(articuloMenu);
+
+            return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.OK);
 
         } else {
             return new ResponseEntity<>("Hay un menú creado con ese nombre", HttpStatus.FOUND);
@@ -77,7 +80,7 @@ public class MenuController {
 
     @PostMapping("/menu/imagenes")
     public ResponseEntity<String> handleMultipleFilesUpload(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
-        HashSet<ImagenesProducto> responseList = new HashSet<>();
+        HashSet<ImagenesProducto> listaImagenes = new HashSet<>();
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
@@ -94,34 +97,35 @@ public class MenuController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/download/")
+                    .path(nombreMenu.replaceAll(" ", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();
-            ImagenesProducto response = ImagenesProducto.builder()
-                    .nombre(fileName.replaceAll(" ", ""))
-                    .ruta(downloadUrl)
-                    .formato(file.getContentType())
-                    .build();
 
-            responseList.add(response);
+            ImagenesProducto imagen = new ImagenesProducto();
+            imagen.setNombre(fileName.replaceAll(" ", ""));
+            imagen.setRuta(downloadUrl);
+            imagen.setFormato(file.getContentType());
+
+            listaImagenes.add(imagen);
 
             try {
-                ImagenesProducto imagen = new ImagenesProducto();
-                // Asignamos el menu a la imagen
-                Optional<ArticuloMenu> menu = articuloMenuRepository.findByName(nombreMenu);
-                if (menu.isEmpty()) {
-                    return new ResponseEntity<>("Menu vacio", HttpStatus.NOT_FOUND);
-                }
-                imagen.setArticuloMenu(menu.get());
+                for (ImagenesProducto imagenProducto : listaImagenes) {
+                    // Asignamos el menu a la imagen
+                    Optional<ArticuloMenu> menu = articuloMenuRepository.findByName(nombreMenu);
+                    if (menu.isEmpty()) {
+                        return new ResponseEntity<>("Menu vacio", HttpStatus.NOT_FOUND);
+                    }
+                    imagenProducto.setArticuloMenu(menu.get());
 
-                imagenesProductoRepository.save(imagen);
+                    imagenesProductoRepository.save(imagen);
+                }
 
             } catch (Exception e) {
                 System.out.println("Error al insertar la ruta en el menu: " + e);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
 
         } catch (Exception e) {
             System.out.println("Error al crear la imagen: " + e);
@@ -130,8 +134,11 @@ public class MenuController {
     }
 
     @GetMapping("/menu/tipo/{tipoMenu}")
-    public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("tipoMenu") EnumTipoEnvio tipo) {
-        Set<ArticuloMenu> articuloMenus = (new HashSet<>(articuloMenuRepository.findByType(tipo)));
+    public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("tipoMenu") String tipo) {
+        String tipoMenu = tipo.toUpperCase().replace(" ", "_");
+        System.out.println(tipoMenu);
+        System.out.println(EnumTipoArticuloComida.valueOf(tipoMenu));
+        Set<ArticuloMenu> articuloMenus = (new HashSet<>(articuloMenuRepository.findByType(EnumTipoArticuloComida.valueOf(tipoMenu))));
 
         for (ArticuloMenu articuloMenu : articuloMenus) {
             HashSet<IngredienteMenu> ingredientes = ingredienteMenuRepository.findByMenuId(articuloMenu.getId());

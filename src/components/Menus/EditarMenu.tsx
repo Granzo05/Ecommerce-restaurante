@@ -7,9 +7,10 @@ import { IngredienteService } from '../../services/IngredienteService';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
-import { stringToEnumMedidas, stringToEnumTipoComida } from '../../utils/global_variables/functions';
-import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
+import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
+import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
+import { Toaster, toast } from 'sonner'
 
 interface EditarMenuProps {
   menuOriginal: ArticuloMenu;
@@ -18,8 +19,16 @@ interface EditarMenuProps {
 const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [ingredientesSelect, setIngredientesSelect] = useState<Ingrediente[]>([]);
-  const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
+  const [imagenesMuestra] = useState<ImagenesProductoDTO[]>(menuOriginal.imagenes);
+  const [imagenes, setImagenes] = useState<ImagenesProducto[]>(menuOriginal.imagenes);
   const [selectIndex, setSelectIndex] = useState<number>(0);
+
+  const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
+  const [tipo, setTipo] = useState<EnumTipoArticuloComida | null>(menuOriginal.tipo);
+  const [comensales, setComensales] = useState(menuOriginal.comensales);
+  const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
+  const [nombre, setNombre] = useState(menuOriginal.nombre);
+  const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
 
   function cargarSelectsIngredientes() {
     IngredienteService.getIngredientes()
@@ -40,7 +49,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   };
 
   const añadirCampoImagen = () => {
-    setImagenes([...imagenes, { index: imagenes.length, file: null } as ImagenesProducto]);
+    let imagenNueva = new ImagenesProducto();
+    imagenNueva.index = imagenes.length;
+    setImagenes([...imagenes, imagenNueva]);
   };
 
   ///////// INGREDIENTES
@@ -59,9 +70,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     setIngredientes(nuevosIngredientes);
   };
 
-  const handleMedidaIngredienteChange = (index: number, medida: string) => {
+  const handleMedidaIngredienteChange = (index: number, medida: EnumMedida) => {
     const nuevosIngredientes = [...ingredientes];
-    nuevosIngredientes[index].medida = stringToEnumMedidas(medida);
+    nuevosIngredientes[index].medida = medida;
     setIngredientes(nuevosIngredientes);
   };
 
@@ -83,26 +94,24 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     }
   };
 
-    // Modal flotante de ingrediente
-    const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
+  // Modal flotante de ingrediente
+  const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
 
-    const handleAgregarStock = () => {
-      setShowAgregarStockModal(true);
-    };
-  
-    const handleModalClose = () => {
-      setShowAgregarStockModal(false);
-      cargarSelectsIngredientes();
-    };
+  const handleAgregarStock = () => {
+    setShowAgregarStockModal(true);
+  };
 
-  const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
-  const [tipo, setTipo] = useState<EnumTipoArticuloComida | null>(null);
-  const [comensales, setComensales] = useState(menuOriginal.comensales);
-  const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
-  const [nombre, setNombre] = useState(menuOriginal.nombre);
-  const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
+  const handleModalClose = () => {
+    setShowAgregarStockModal(false);
+    cargarSelectsIngredientes();
+  };
 
   function editarMenu() {
+    if (!nombre || !tiempoCoccion || !tipo || !comensales || !precioVenta || !descripcion) {
+      toast.info("Por favor, complete todos los campos requeridos.");
+      return;
+    }
+
     const menuActualizado: ArticuloMenu = {
       ...menuOriginal,
       nombre,
@@ -113,13 +122,34 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       descripcion,
       ingredientesMenu: ingredientes
     };
-
-    MenuService.updateMenu(menuActualizado, imagenes);
+    console.log(menuActualizado)
+    console.log(imagenes)
+    toast.promise(MenuService.updateMenu(menuActualizado, imagenes), {
+      loading: 'Editando menu...',
+      success: (message) => {
+        return message;
+      },
+      error: (message) => {
+        return message;
+      },
+    });
   }
 
   return (
     <div className="modal-info">
+      <Toaster/>
       <div id="inputs-imagenes">
+        {imagenesMuestra.map((imagen, index) => (
+          <div key={index}>
+            <input
+              type="file"
+              accept="image/*"
+              maxLength={10048576}
+              disabled
+            />
+            {imagen && <img src={imagen.ruta} alt={`Imagen ${index}`} />}
+          </div>
+        ))}
         {imagenes.map((imagen, index) => (
           <div key={index}>
             <input
@@ -128,39 +158,41 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
             />
+            {imagen && <img src={imagen.ruta} alt={`Imagen ${index}`} />}
           </div>
         ))}
         <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Nombre del menu" id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
-      </label>
+      <input type="text" placeholder="Nombre del menu" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+
+      <br />
+      <input type="text" placeholder="Descripción del menu" value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
+
+      <br />
+      <input type="text" placeholder="Minutos de coccion" value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+
       <br />
       <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Descripción del menu" id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
-      </label>
-      <br />
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Minutos de coccion" id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
-      </label>
-      <br />
-      <label>
-        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(stringToEnumTipoComida(e.target.value.toUpperCase())) }}>
-          <option value="">Seleccionar tipo de menú</option>
-          <option value="hamburguesas">Hamburguesas</option>
-          <option value="panchos">Panchos</option>
-          <option value="empanadas">Empanadas</option>
-          <option value="pizzas">Pizzas</option>
-          <option value="lomos">Lomos</option>
-          <option value="helados">Helado</option>
-          <option value="parrilla">Parrilla</option>
-          <option value="pastas">Pastas</option>
-          <option value="sushi">Sushi</option>
-          <option value="milanesas">Milanesas</option>
+        <select
+          id="tipoMenu"
+          value={tipo ? tipo.toString() : ""}
+          name="tipoMenu"
+          onChange={(e) => {
+            setTipo(parseInt(e.target.value));
+          }}
+        >
+          <option value={EnumTipoArticuloComida.HAMBURGUESAS}>Hamburguesas</option>
+          <option value={EnumTipoArticuloComida.PANCHOS}>Panchos</option>
+          <option value={EnumTipoArticuloComida.EMPANADAS}>Empanadas</option>
+          <option value={EnumTipoArticuloComida.PIZZAS}>Pizzas</option>
+          <option value={EnumTipoArticuloComida.LOMOS}>Lomos</option>
+          <option value={EnumTipoArticuloComida.HELADO}>Helado</option>
+          <option value={EnumTipoArticuloComida.PARRILLA}>Parrilla</option>
+          <option value={EnumTipoArticuloComida.PASTAS}>Pastas</option>
+          <option value={EnumTipoArticuloComida.SUSHI}>Sushi</option>
+          <option value={EnumTipoArticuloComida.MILANESAS}>Milanesas</option>
         </select>
+
       </label>
       <br />
       <div>
@@ -190,14 +222,14 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             <select
               id={`select-medidas-${index}`}
               value={ingredienteMenu.ingrediente?.medida?.toString()}
-              onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
+              onChange={(e) => handleMedidaIngredienteChange(index, parseInt(e.target.value))}
             >
               <option value="">Seleccionar medida ingrediente</option>
-              <option value="Kilogramos">Kilogramos</option>
-              <option value="Gramos">Gramos</option>
-              <option value="Centimetros cubicos">Centimetros cúbicos</option>
-              <option value="Litros">Litros</option>
-              <option value="Unidades">Unidades</option>
+              <option value={EnumMedida.KILOGRAMOS}>Kilogramos</option>
+              <option value={EnumMedida.GRAMOS}>Gramos</option>
+              <option value={EnumMedida.LITROS}>Litros</option>
+              <option value={EnumMedida.CENTIMETROS_CUBICOS}>Centimetros cúbicos</option>
+              <option value={EnumMedida.UNIDADES}>Unidades</option>
             </select>
             <p onClick={quitarCampoIngrediente}>X</p>
           </div>
@@ -205,17 +237,13 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
         <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
       </div>
       <br />
-      <label>
-        <i className='bx bx-price'></i>
-        <input type="number" placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-      </label>
+      <input type="number" placeholder="Precio" value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+
       <br />
-      <label>
-        <i className='bx bx-price'></i>
-        <input type="number" placeholder="Comensales" id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
-      </label>
+      <input type="number" placeholder="Comensales" value={comensales} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
+
       <br />
-      <input type="button" value="editarMenu" id="editarMenu" onClick={editarMenu} />
+      <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
     </div >
   )
 }

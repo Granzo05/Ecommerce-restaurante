@@ -112,9 +112,9 @@ public class StockIngredientesController {
     @PostMapping("sucursal/{idSucursal}/stockIngredientes/create")
     public ResponseEntity<String> crearStock(@RequestBody StockIngredientes stockDetail, @PathVariable("idSucursal") long id) {
         // Busco el ingrediente en la base de datos
-        Ingrediente ingredienteDB = ingredienteRepository.findByName(stockDetail.getIngrediente().getNombre());
+        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(stockDetail.getIngrediente().getId(), id);
 
-        if (ingredienteDB != null) {
+        if (stockIngrediente.isPresent()) {
             // Si no existe stockIngredientes de ese producto se crea un nuevo objeto
             StockIngredientes stock = new StockIngredientes();
 
@@ -130,25 +130,25 @@ public class StockIngredientesController {
 
             stockIngredientesRepository.save(stock);
 
-            return new ResponseEntity<>("El stockIngredientes ha sido añadido correctamente", HttpStatus.CREATED);
+            return new ResponseEntity<>("El stock del ingrediente ha sido añadido correctamente", HttpStatus.CREATED);
         }
 
-        return new ResponseEntity<>("El ingrediente no existe", HttpStatus.FOUND);
+        return new ResponseEntity<>("El stock ya existe", HttpStatus.FOUND);
     }
 
     @PutMapping("sucursal/{idSucursal}/stockIngredientes/update")
     public ResponseEntity<String> actualizarStock(@RequestBody StockIngredientes stockIngredientes, @PathVariable("idSucursal") long id) {
-        Ingrediente ingredienteDB = ingredienteRepository.findByName(stockIngredientes.getIngrediente().getNombre());
+        Optional<Ingrediente> ingredienteDB = Optional.of(ingredienteRepository.findByIdNotBorrado(stockIngredientes.getIngrediente().getId()).get());
 
         // Busco el stockIngredientes de ese ingrediente
-        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingredienteDB.getId(), id);
+        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingredienteDB.get().getId(), id);
 
         if (stockEncontrado.isEmpty()) {
             return new ResponseEntity<>("El stockIngredientes no existe", HttpStatus.FOUND);
+        } else {
+            stockIngredientesRepository.save(stockEncontrado.get());
+            return new ResponseEntity<>("El stockIngredientes ha sido añadido correctamente", HttpStatus.CREATED);
         }
-
-        stockIngredientesRepository.save(stockEncontrado.get());
-        return new ResponseEntity<>("El stockIngredientes ha sido añadido correctamente", HttpStatus.CREATED);
     }
 
     @DeleteMapping("sucursal/{idSucursal}/stockIngredientes/delete")

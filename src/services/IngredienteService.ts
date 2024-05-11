@@ -14,13 +14,34 @@ export const IngredienteService = {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
             return await response.json();
+
         } catch (error) {
             console.error('Error:', error);
             throw error;
         }
     },
 
-    updateIngrediente: async (ingrediente: Ingrediente): Promise<Ingrediente> => {
+    createIngrediente: async (ingrediente: Ingrediente): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'ingrediente/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ingrediente)
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
+    updateIngrediente: async (ingrediente: Ingrediente): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'ingrediente/update', {
                 method: 'PUT',
@@ -33,7 +54,7 @@ export const IngredienteService = {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
 
-            return await response.json();
+            return await response.text();
 
 
         } catch (error) {
@@ -42,9 +63,9 @@ export const IngredienteService = {
         }
     },
 
-    deleteStock: async (ingredienteId: number): Promise<string> => {
+    deleteIngrediente: async (ingredienteId: number): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'ingrediente/' + ingredienteId + 'delete', {
+            const response = await fetch(URL_API + 'ingrediente/' + ingredienteId + '/delete', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -55,7 +76,6 @@ export const IngredienteService = {
             }
 
             return await response.text();
-
 
         } catch (error) {
             console.error('Error:', error);

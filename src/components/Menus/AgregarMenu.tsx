@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
-import AgregarStock from '../Stock/AgregarStockArticulo';
 import ModalFlotante from '../ModalFlotante';
 import { IngredienteService } from '../../services/IngredienteService';
 import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
-import { clearInputs, stringToEnumMedidas, stringToEnumTipoComida } from '../../utils/global_variables/functions';
 import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
+import { Toaster, toast } from 'sonner'
+import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
+import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
@@ -66,9 +67,9 @@ function AgregarMenu() {
     setIngredientes(nuevosIngredientes);
   };
 
-  const handleMedidaIngredienteChange = (index: number, medida: string) => {
+  const handleMedidaIngredienteChange = (index: number, medida: EnumMedida) => {
     const nuevosIngredientes = [...ingredientes];
-    nuevosIngredientes[index].medida = stringToEnumMedidas(medida);
+    nuevosIngredientes[index].medida = medida;
     setIngredientes(nuevosIngredientes);
   };
 
@@ -87,9 +88,9 @@ function AgregarMenu() {
   };
 
   // Modal flotante de ingrediente
-  const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
+  const [showAgregarIngredienteModal, setShowAgregarStockModal] = useState(false);
 
-  const handleAgregarStock = () => {
+  const handleAgregarIngrediente = () => {
     setShowAgregarStockModal(true);
   };
 
@@ -99,30 +100,44 @@ function AgregarMenu() {
   };
 
   const [tiempoCoccion, setTiempo] = useState(0);
-  const [tipo, setTipo] = useState('hamburguesas');
+  const [tipo, setTipo] = useState<EnumTipoArticuloComida>(0);
   const [comensales, setComensales] = useState(0);
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
   async function agregarMenu() {
+    if (!nombre || !tiempoCoccion || !tipo || !comensales || !precio || !descripcion) {
+      toast.info("Por favor, complete todos los campos requeridos.");
+      return;
+    }
+
     const menu: ArticuloMenu = new ArticuloMenu();
+
     menu.nombre = nombre;
     menu.tiempoCoccion = tiempoCoccion;
-    menu.tipo = stringToEnumTipoComida(tipo);
+    menu.tipo = tipo;
     menu.comensales = comensales;
     menu.precioVenta = precio;
     menu.descripcion = descripcion;
     menu.ingredientesMenu = ingredientes;
 
-    let response = await MenuService.createMenu(menu, imagenes);
-    alert(response);
+    toast.promise(MenuService.createMenu(menu, imagenes), {
+      loading: 'Creando menu...',
+      success: (message) => {
+        return message;
+      },
+      error: (message) => {
+        return message;
+      },
+    });
+    //clearInputs();
 
-    clearInputs();
   }
 
   return (
     <div className="modal-info">
+      <Toaster />
       <div id="inputs-imagenes">
         {imagenes.map((imagen, index) => (
           <div key={index} style={{ display: 'flex', flexDirection: 'row' }}>
@@ -138,48 +153,41 @@ function AgregarMenu() {
         ))}
         <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Nombre del menu" id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
-      </label>
+      <input type="text" placeholder="Nombre del menu" id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
+
+      <br />
+      <input type="text" placeholder="Descripción del menu" id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
+
+      <br />
+      <input type="text" placeholder="Minutos de coccion" id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+
       <br />
       <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Descripción del menu" id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
-      </label>
-      <br />
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Minutos de coccion" id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
-      </label>
-      <br />
-      <label>
-        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
-          <option value="">Seleccionar tipo de menú</option>
-          <option value="hamburguesas">Hamburguesas</option>
-          <option value="panchos">Panchos</option>
-          <option value="empanadas">Empanadas</option>
-          <option value="pizzas">Pizzas</option>
-          <option value="lomos">Lomos</option>
-          <option value="helados">Helado</option>
-          <option value="parrilla">Parrilla</option>
-          <option value="pastas">Pastas</option>
-          <option value="sushi">Sushi</option>
-          <option value="milanesas">Milanesas</option>
+        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(parseInt(e.target.value)) }}>
+          <option>Seleccionar tipo de menú</option>
+          <option value={EnumTipoArticuloComida.HAMBURGUESAS}>Hamburguesas</option>
+          <option value={EnumTipoArticuloComida.PANCHOS}>Panchos</option>
+          <option value={EnumTipoArticuloComida.EMPANADAS}>Empanadas</option>
+          <option value={EnumTipoArticuloComida.PIZZAS}>Pizzas</option>
+          <option value={EnumTipoArticuloComida.LOMOS}>Lomos</option>
+          <option value={EnumTipoArticuloComida.HELADO}>Helado</option>
+          <option value={EnumTipoArticuloComida.PARRILLA}>Parrilla</option>
+          <option value={EnumTipoArticuloComida.PASTAS}>Pastas</option>
+          <option value={EnumTipoArticuloComida.SUSHI}>Sushi</option>
+          <option value={EnumTipoArticuloComida.MILANESAS}>Milanesas</option>
         </select>
       </label>
       <br />
       <div>
         <h2>Ingredientes</h2>
-        <button onClick={() => handleAgregarStock()}>Cargar nuevo ingrediente</button>
-        <ModalFlotante isOpen={showAgregarStockModal} onClose={handleModalClose}>
-          <AgregarStock />
+        <button onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente</button>
+        <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
+          <AgregarIngrediente />
         </ModalFlotante>
         {ingredientes.map((ingredienteMenu, index) => (
           <div key={index} className='div-ingrediente-menu'>
             <select
               id={`select-ingredientes-${index}`}
-              value={ingredienteMenu.ingrediente?.nombre}
               onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
             >
               <option value="">Seleccionar ingrediente</option>
@@ -189,39 +197,34 @@ function AgregarMenu() {
             </select>
             <input
               type="number"
-              value={ingredienteMenu.cantidad}
               placeholder="Cantidad necesaria"
               onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))}
             />
             <select
               id={`select-medidas-${index}`}
-              value={ingredienteMenu.medida?.toString()}
-              onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
+              onChange={(e) => handleMedidaIngredienteChange(index, parseInt(e.target.value))}
             >
               <option value="">Seleccionar medida ingrediente</option>
-              <option value="Kilogramos">Kilogramos</option>
-              <option value="Gramos">Gramos</option>
-              <option value="Litros">Litros</option>
-              <option value="Centimetros cubicos">Centimetros cúbicos</option>
-              <option value="Unidades">Unidades</option>
+              <option value={EnumMedida.KILOGRAMOS}>Kilogramos</option>
+              <option value={EnumMedida.GRAMOS}>Gramos</option>
+              <option value={EnumMedida.LITROS}>Litros</option>
+              <option value={EnumMedida.CENTIMETROS_CUBICOS}>Centimetros cúbicos</option>
+              <option value={EnumMedida.UNIDADES}>Unidades</option>
             </select>
+
             <p onClick={quitarCampoIngrediente}>X</p>
           </div>
         ))}
         <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
       </div>
       <br />
-      <label>
-        <i className='bx bx-price'></i>
-        <input type="number" placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-      </label>
+      <input type="number" placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+
       <br />
-      <label>
-        <i className='bx bx-price'></i>
-        <input type="number" placeholder="Comensales" id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
-      </label>
+      <input type="number" placeholder="Comensales" id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
+
       <br />
-      <input type="button" value="Agregar menu" id="agregarMenu" onClick={agregarMenu} />
+      <button type="button" onClick={agregarMenu}>Agregar menu</button>
     </div >
   )
 }

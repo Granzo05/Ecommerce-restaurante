@@ -11,6 +11,7 @@ import net.minidev.json.annotate.JsonIgnore;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Table(name = "ingredientes", schema = "buen_sabor")
 public class Ingrediente {
     @Id

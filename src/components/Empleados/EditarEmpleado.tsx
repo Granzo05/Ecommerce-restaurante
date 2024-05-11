@@ -55,6 +55,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     handleDomilicio(indexDomicilio)
     cargarProvincias();
     cargarSucursales();
+    console.log(empleadoOriginal)
   }, []);
 
   useEffect(() => {
@@ -75,17 +76,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       });
   }
 
-  async function cargarSucursales() {
-    await SucursalService.getSucursales()
-      .then(data => {
-        setSucursales(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-
-  // Al seleccionar una provincia cargo los departamentos asociados
   async function cargarDepartamentos(idProvincia: number) {
     await DepartamentoService.getDepartamentosByProvinciaId(idProvincia)
       .then(async departamentos => {
@@ -106,6 +96,17 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       })
   }
 
+  async function cargarSucursales() {
+    await SucursalService.getSucursales()
+      .then(data => {
+        setSucursales(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+
   function handleChangeLocalidad(nombreLocalidad: string, index: number) {
     setInputValueLocalidad(nombreLocalidad);
     let localidad = localidades?.find(localidad => localidad.nombre === nombreLocalidad);
@@ -123,6 +124,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     if (value.length === 0) {
       setInputValueDepartamento('');
       setInputValueLocalidad('')
+      setDepartamentos([]);
+      setLocalidades([])
     }
 
     setInputValue(value);
@@ -138,12 +141,19 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       // Si solamente tengo un resultado entonces actualizo el valor del Input a ese
       setResultadosProvincias([]);
       cargarDepartamentos(provinciasFiltradas[0].id)
+    } else {
+      if (provincias) setResultadosProvincias(provincias);
     }
   };
 
   const handleInputDepartamentoChange = (value: string) => {
+    // Carga los departamentos en caso de solo editar un departamento y no empezar por la provincia
+    let provincia = provincias?.find(provincia => provincia.nombre === inputValueProvincia);
+    if (provincia && departamentos?.length === 0) cargarDepartamentos(provincia?.id);
+
     if (value.length === 0) {
       setInputValueLocalidad('')
+      setLocalidades([])
     }
 
     setInputValue(value);
@@ -155,13 +165,18 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
 
     if (departamentosFiltrados && departamentosFiltrados.length > 1) {
       setResultadosDepartamentos(departamentosFiltrados);
-    } else if (departamentosFiltrados && [departamentosFiltrados].length === 1) {
+    } else if (departamentosFiltrados && departamentosFiltrados.length === 1) {
       setResultadosDepartamentos([]);
       cargarLocalidades(departamentosFiltrados[0].id)
+    } else {
+      if (departamentos) setResultadosDepartamentos(departamentos);
     }
   };
 
   const handleInputLocalidadChange = (value: string) => {
+    let departamento = departamentos?.find(departamento => departamento.nombre === inputValueDepartamento);
+    if (departamento && localidades?.length === 0) cargarLocalidades(departamento?.id);
+
     setInputValue(value);
     setInputValueLocalidad(value);
 
@@ -220,8 +235,12 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     });
   }
 
-
   async function editarEmpleado() {
+
+    if (!nombre || !email || !telefono || !cuil || !fechaNacimiento) {
+      toast.info("Por favor, complete todos los campos requeridos.");
+      return;
+    }
 
     const empleadoActualizado: Empleado = {
       ...empleadoOriginal,
@@ -239,8 +258,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
 
     if (sucursal) empleadoActualizado.sucursal = sucursal;
 
-    console.log(empleadoOriginal)
-    console.log(empleadoActualizado)
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
       loading: 'Actualizando empleado...',
       success: () => {
@@ -254,181 +271,166 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     <div className="modal-info">
       <Toaster />
       <br />
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Nombre del empleado" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-      </label>
-      <br />
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Email del empleado" value={email} onChange={(e) => { setEmail(e.target.value) }} />
-      </label>
-      <br />
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Cuil del empleado" value={cuil} onChange={(e) => { setCuit(e.target.value) }} />
-      </label>
-      <br />
-      <label>
-        <i className='bx bx-lock'></i>
+      <form action="">
+        <input required type="text" placeholder="Nombre del empleado" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+        <br />
+        <input required type="text" placeholder="Email del empleado" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+        <br />
+        <input required type="text" placeholder="Cuil del empleado" value={cuil} onChange={(e) => { setCuit(e.target.value) }} />
+        <br />
         <input type="text" placeholder="Contraseña del empleado" onChange={(e) => { setContraseña(e.target.value) }} />
-      </label>
-      <br />
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Telefono del empleado" value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-      </label>
-      <br />
-      <label>
-        <i className='bx bx-lock'></i>
+        <br />
+        <input type="text" required placeholder="Telefono del empleado" value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+        <br />
         <input
           type="date"
+          required
           placeholder="Fecha de nacimiento"
           value={fechaNacimiento.toISOString().split('T')[0]}
           onChange={(e) => {
             setFechaNacimiento(new Date(e.target.value))
           }}
         />
-      </label>
-      <br />
-
-      <select
-        name="domicilio"
-        id=""
-        onChange={(e) => handleDomilicio(parseInt(e.target.value))}
-        value={indexDomicilio}
-      >
-        {empleadoOriginal.domicilios &&
-          empleadoOriginal.domicilios.map((domicilio, index) => (
-            <option key={index} value={index}>
-              Domicilio {domicilio.calle}, {domicilio.localidad?.nombre}
-            </option>
-          ))}
-      </select>
-
-      <div>
-        <h3>Domicilio {indexDomicilio + 1}</h3>
-        <input
-          value={inputValueProvincia}
-          type="text"
-          onChange={(e) => {
-            handleInputProvinciaChange(e.target.value);
-          }}
-          placeholder="Buscar provincia..."
-        />
-        <ul className="lista-recomendaciones">
-          {resultadosProvincias?.map((provincia, index) => (
-            <li
-              className="opcion-recomendada"
-              key={index}
-              onClick={() => {
-                setInputValueProvincia(provincia.nombre);
-                setResultadosProvincias([]);
-                cargarDepartamentos(provincia.id)
-                handleInputProvinciaChange(provincia.nombre);
-              }}
-            >
-              {provincia.nombre}
-            </li>
-          ))}
-        </ul>
-        <input
-          type="text"
-          value={inputValueDepartamento}
-          onClick={() => {
-            handleInputDepartamentoChange('');
-          }}
-          onChange={(e) => {
-            handleInputDepartamentoChange(e.target.value);
-          }}
-          placeholder="Buscar departamento..."
-        />
-        <ul className="lista-recomendaciones">
-          {resultadosDepartamentos?.map((departamento, index) => (
-            <li
-              className="opcion-recomendada"
-              key={index}
-              onClick={() => {
-                setInputValueDepartamento(departamento.nombre);
-                setResultadosDepartamentos([]);
-                cargarLocalidades(departamento.id);
-                handleInputDepartamentoChange(departamento.nombre);
-              }}
-            >
-              {departamento.nombre}
-            </li>
-          ))}
-        </ul>
-        <input
-          type="text"
-          value={inputValueLocalidad}
-          onClick={() => {
-            handleInputLocalidadChange('');
-          }}
-          onChange={(e) => {
-            handleInputLocalidadChange(e.target.value);
-          }}
-          placeholder="Buscar localidad..."
-        />
-        <ul className="lista-recomendaciones">
-          {resultadosLocalidades?.map((localidad, index) => (
-            <li
-              className="opcion-recomendada"
-              key={index}
-              onClick={() => {
-                setResultadosLocalidades([]);
-                handleChangeLocalidad(localidad.nombre, indexDomicilio);
-              }}
-            >
-              {localidad.nombre}
-            </li>
-          ))}
-        </ul>
-        <input
-          type="text"
-          name="calle"
-          onChange={(e) => {
-            handleChangeCalle(e.target.value, indexDomicilio);
-          }}
-          required
-          value={domicilioModificable?.calle}
-          placeholder="Nombre de calle"
-        />
         <br />
-        <input
-          type="number"
-          name="numeroCalle"
-          onChange={(e) => {
-            handleChangeNumeroCasa(parseInt(e.target.value), indexDomicilio);
-          }}
-          required
-          value={domicilioModificable?.numero}
-          placeholder="Número de domicilio"
-        />
+        <select
+          name="domicilio"
+          id=""
+          onChange={(e) => handleDomilicio(parseInt(e.target.value))}
+          value={indexDomicilio}
+        >
+          {empleadoOriginal.domicilios &&
+            empleadoOriginal.domicilios.map((domicilio, index) => (
+              <option key={index} value={index}>
+                Domicilio {domicilio.calle}, {domicilio.localidad?.nombre}
+              </option>
+            ))}
+        </select>
+        <div>
+          <h3>Domicilio {indexDomicilio + 1}</h3>
+          <input
+            value={inputValueProvincia}
+            required
+            type="text"
+            onChange={(e) => {
+              handleInputProvinciaChange(e.target.value);
+            }}
+            placeholder="Buscar provincia..."
+          />
+          <ul className="lista-recomendaciones">
+            {resultadosProvincias?.map((provincia, index) => (
+              <li
+                className="opcion-recomendada"
+                key={index}
+                onClick={() => {
+                  setInputValueProvincia(provincia.nombre);
+                  setResultadosProvincias([]);
+                  cargarDepartamentos(provincia.id)
+                  handleInputProvinciaChange(provincia.nombre);
+                }}
+              >
+                {provincia.nombre}
+              </li>
+            ))}
+          </ul>
+          <input
+            type="text"
+            value={inputValueDepartamento}
+            required
+            onClick={() => {
+              handleInputDepartamentoChange('');
+            }}
+            onChange={(e) => {
+              handleInputDepartamentoChange(e.target.value);
+            }}
+            placeholder="Buscar departamento..."
+          />
+          <ul className="lista-recomendaciones">
+            {resultadosDepartamentos?.map((departamento, index) => (
+              <li
+                className="opcion-recomendada"
+                key={index}
+                onClick={() => {
+                  setInputValueDepartamento(departamento.nombre);
+                  setResultadosDepartamentos([]);
+                  cargarLocalidades(departamento.id);
+                  handleInputDepartamentoChange(departamento.nombre);
+                }}
+              >
+                {departamento.nombre}
+              </li>
+            ))}
+          </ul>
+          <input
+            type="text"
+            value={inputValueLocalidad}
+            required
+            onClick={() => {
+              handleInputLocalidadChange('');
+            }}
+            onChange={(e) => {
+              handleInputLocalidadChange(e.target.value);
+            }}
+            placeholder="Buscar localidad..."
+          />
+          <ul className="lista-recomendaciones">
+            {resultadosLocalidades?.map((localidad, index) => (
+              <li
+                className="opcion-recomendada"
+                key={index}
+                onClick={() => {
+                  setResultadosLocalidades([]);
+                  handleChangeLocalidad(localidad.nombre, indexDomicilio);
+                }}
+              >
+                {localidad.nombre}
+              </li>
+            ))}
+          </ul>
+          <input
+            type="text"
+            name="calle"
+            onChange={(e) => {
+              handleChangeCalle(e.target.value, indexDomicilio);
+            }}
+            required
+            value={domicilioModificable?.calle}
+            placeholder="Nombre de calle"
+          />
+          <br />
+          <input
+            type="number"
+            name="numeroCalle"
+            onChange={(e) => {
+              handleChangeNumeroCasa(parseInt(e.target.value), indexDomicilio);
+            }}
+            required
+            value={domicilioModificable?.numero}
+            placeholder="Número de domicilio"
+          />
+          <br />
+          <input
+            type="number"
+            name="codigoPostal"
+            onChange={(e) => {
+              handleChangeCodigoPostal(parseInt(e.target.value), indexDomicilio);
+            }}
+            required
+            value={domicilioModificable?.codigoPostal}
+            placeholder="Codigo Postal"
+          />
+          <br />
+        </div>
         <br />
-        <input
-          type="number"
-          name="codigoPostal"
-          onChange={(e) => {
-            handleChangeCodigoPostal(parseInt(e.target.value), indexDomicilio);
-          }}
-          required
-          value={domicilioModificable?.codigoPostal}
-          placeholder="Codigo Postal"
-        />
+        <label htmlFor="sucursal">Sucursal: </label>
+        <select name="sucursal" id="sucursal" value={sucursalId} onChange={(e) => setSucursalId(parseInt(e.target.value))}>
+          {sucursales && sucursales.map(sucursal => (
+            <option key={sucursal.id} value={sucursal.id}>{sucursal.domicilio?.localidad?.nombre}</option>
+          ))}
+        </select>
         <br />
-      </div>
-
-      <br />
-      <label htmlFor="sucursal">Sucursal: </label>
-      <select name="sucursal" id="sucursal" value={sucursalId} onChange={(e) => setSucursalId(parseInt(e.target.value))}>
-        {sucursales && sucursales.map(sucursal => (
-          <option key={sucursal.id} value={sucursal.id}>{sucursal.domicilio?.localidad?.nombre}</option>
-        ))}
-      </select>
-      <br />
-      <br />
-      <button className='button-form' onClick={editarEmpleado}>Editar empleado</button>
+        <br />
+        <button className='button-form' type='button' onClick={editarEmpleado}>Editar empleado</button>
+      </form>
     </div>
   )
 }

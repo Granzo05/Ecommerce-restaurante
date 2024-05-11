@@ -37,6 +37,8 @@
 [x] Input con lista de posibles resultados debajo
 [] Ver tema del auth para privilegios y esas cosas
 [] Acomodar mensajes de los toast que se devuelven del back, ej base loginRestaurante.tsx
+[] Validaciones
+[] Mostrar receta de cada menu
 
     Pruebas
 [x] Carga sucursal
@@ -44,16 +46,17 @@
 [x] Eliminacion sucursal
 
 [x] Carga empleado
-[] Actualizacion empleado
+[x] Actualizacion empleado
 [x] Eliminacion empleado
 
 [x] Carga cliente
 [] Actualizacion cliente
 [] Eliminacion cliente
 
-[] Carga articuloMenu
+[x] Muestra articuloMenu
+[x] Carga articuloMenu
 [] Actualizacion articuloMenu
-[] Eliminacion articuloMenu
+[x] Eliminacion articuloMenu
 
 [] Carga articuloVenta
 [] Actualizacion articuloVenta
@@ -74,6 +77,10 @@
 [] Carga pedido stock
 [] Actualizacion pedido stock
 [] Eliminacion pedido stock
+
+[x] Carga ingredientes
+[x] Actualizacion ingredientes
+[x] Eliminacion ingredientes
 
 [] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle, localidad, departamento, provincia), telefono)
 

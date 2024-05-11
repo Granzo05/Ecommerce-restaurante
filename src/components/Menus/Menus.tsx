@@ -7,8 +7,9 @@ import EliminarMenu from "./EliminarMenu";
 import '../../styles/menuPorTipo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
-import { EmpleadoService } from "../../services/EmpleadoService";
 import { ArticuloMenu } from "../../types/Productos/ArticuloMenu";
+import { EmpleadoService } from "../../services/EmpleadoService";
+import ModalFlotante from "../ModalFlotante";
 
 const Menus = () => {
     const [menus, setMenus] = useState<ArticuloMenu[]>([]);
@@ -22,39 +23,53 @@ const Menus = () => {
     const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
         fetchData();
 
-        MenuService.getMenus()
-            .then(data => {
-                setMenus(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        fetchMenu();
     }, []);
 
+    const fetchData = async () => {
+        try {
+            await EmpleadoService.checkUser();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const fetchMenu = async () => {
+        try {
+            MenuService.getMenus()
+                .then(data => {
+                    setMenus(data);
+                    console.log(data)
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } catch (error) {
+            console.error('Error al obtener empleados:', error);
+        }
+    };
 
     const handleAgregarMenu = () => {
         setShowAgregarMenuModal(true);
+        setShowEditarMenuModal(false);
+        setShowEliminarMenuModal(false);
         setMostrarMenus(false);
     };
 
     const handleEditarMenu = (menu: ArticuloMenu) => {
         setSelectedMenu(menu);
+        setShowAgregarMenuModal(false);
         setShowEditarMenuModal(true);
+        setShowEliminarMenuModal(false);
         setMostrarMenus(false);
     };
 
-    const handleEliminarMenu = (menuId: number) => {
-        setSelectedId(menuId);
+    const handleEliminarMenu = (id: number) => {
+        setSelectedId(id);
+        setShowAgregarMenuModal(false);
+        setShowEditarMenuModal(false);
         setShowEliminarMenuModal(true);
         setMostrarMenus(false);
     };
@@ -64,16 +79,13 @@ const Menus = () => {
         setShowEditarMenuModal(false);
         setShowEliminarMenuModal(false);
         setMostrarMenus(true);
+        fetchMenu();
     };
 
     return (
         <div className="opciones-pantallas">
             <h1>Menus</h1>
             <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
-
-            <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
-                <AgregarMenu />
-            </ModalCrud>
             {mostrarMenus && (
                 <div id="menus">
                     <table>
@@ -94,27 +106,33 @@ const Menus = () => {
                                     <td>{menu.comensales}</td>
                                     <td>{menu.descripcion}</td>
                                     {menu.ingredientesMenu?.map(ingrediente => (
-                                        <td>{ingrediente.ingrediente?.nombre}</td>
+                                        <td key={ingrediente.id}>{ingrediente.ingrediente?.nombre}</td>
                                     ))}
                                     <td>{menu.precioVenta}</td>
 
                                     <td>
                                         <button onClick={() => handleEliminarMenu(menu.id)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarMenu}>EDITAR</button>
+                                        <button onClick={() => handleEditarMenu(menu)}>EDITAR</button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    <ModalCrud isOpen={showEliminarMenuModal} onClose={handleModalClose}>
-                        {selectedId && <EliminarMenu menuId={selectedId} />}
-                    </ModalCrud>
-                    <ModalCrud isOpen={showEditarMenuModal} onClose={handleModalClose}>
-                        {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
-                    </ModalCrud>
                 </div>
             )}
+
+            <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
+                <AgregarMenu />
+            </ModalCrud>
+            <ModalFlotante isOpen={showEditarMenuModal} onClose={handleModalClose}>
+                {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
+            </ModalFlotante>
+            <ModalFlotante isOpen={showEliminarMenuModal} onClose={handleModalClose}>
+                {selectedId && <EliminarMenu menuId={selectedId} />}
+            </ModalFlotante>
+       
         </div>
+
     )
 }
 

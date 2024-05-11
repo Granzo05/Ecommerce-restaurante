@@ -10,6 +10,7 @@ import main.entities.Productos.ArticuloMenu;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Table(name = "ingredientes_menu", schema = "buen_sabor")
 public class IngredienteMenu {
     @Id
@@ -19,10 +20,10 @@ public class IngredienteMenu {
     private int cantidad;
     @Column(name = "medida")
     private EnumMedida medida;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_menu")
     private ArticuloMenu articuloMenu;
 

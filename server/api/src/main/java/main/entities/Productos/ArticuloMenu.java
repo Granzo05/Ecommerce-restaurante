@@ -1,10 +1,8 @@
 package main.entities.Productos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main.entities.Ingredientes.IngredienteMenu;
 
 import java.util.HashSet;
@@ -15,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "articulos_menu", schema = "buen_sabor")
 public class ArticuloMenu extends Articulo {
     @Id
@@ -28,7 +27,10 @@ public class ArticuloMenu extends Articulo {
     private int comensales;
     @Column(name = "descripcion")
     private String descripcion;
+    @JsonIgnoreProperties(value = {"articuloMenu"})
     @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
+    @Transient
+    private Set<ImagenesProductoDTO> imagenesDTO = new HashSet<>();
 
 }
