@@ -147,9 +147,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       descripcion,
       ingredientesMenu: ingredientes
     };
-    
-    console.log(menuActualizado)
-    console.log(imagenes)
+
     toast.promise(MenuService.updateMenu(menuActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando menu...',
       success: (message) => {
@@ -159,6 +157,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
         return message;
       },
     });
+
+    if (imagenes.length === 0) {
+      toast.info('No se añadieron imagenes al menú');
+    }
   }
 
   return (

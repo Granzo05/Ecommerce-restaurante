@@ -99,7 +99,7 @@ export const MenuService = {
             let imagenCargadaExitosamente = false;
 
             // Cargar imágenes solo si se debe hacer
-            if (cargarImagenes) {
+            if (cargarImagenes && (imagenes || imagenesEliminadas)) {
                 await Promise.all(imagenes.map(async (imagen) => {
                     if (imagen.file) {
                         // Crear objeto FormData para las imágenes
