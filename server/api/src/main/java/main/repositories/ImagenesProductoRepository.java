@@ -16,4 +16,7 @@ public interface ImagenesProductoRepository extends JpaRepository<ImagenesProduc
 
     @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.articuloMenu.id = :id AND i.borrado = 'NO'")
     List<ImagenesProductoDTO> findByIdMenu(@Param("id") Long id);
+
+    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.articuloVenta.id = :id AND i.borrado = 'NO'")
+    List<ImagenesProductoDTO> findByIdArticulo(@Param("id") Long id);
 }

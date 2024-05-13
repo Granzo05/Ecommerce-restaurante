@@ -1,10 +1,7 @@
 package main.controllers;
 
-import main.entities.Ingredientes.EnumMedida;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
-import main.entities.Pedidos.EnumEstadoPedido;
-import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.EnumTipoArticuloComida;
 import main.entities.Productos.ImagenesProducto;
@@ -28,7 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-public class MenuController {
+public class ArticuloMenuController {
     private final ArticuloMenuRepository articuloMenuRepository;
 
     private final IngredienteMenuRepository ingredienteMenuRepository;
@@ -36,7 +33,7 @@ public class MenuController {
 
     private final ImagenesProductoRepository imagenesProductoRepository;
 
-    public MenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesProductoRepository imagenesProductoRepository) {
+    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesProductoRepository imagenesProductoRepository) {
         this.articuloMenuRepository = articuloMenuRepository;
         this.ingredienteMenuRepository = ingredienteMenuRepository;
         this.ingredienteRepository = ingredienteRepository;

@@ -7,6 +7,9 @@ import main.entities.Stock.Stock;
 import main.entities.Stock.StockArticuloVenta;
 import net.minidev.json.annotate.JsonIgnore;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,4 +29,6 @@ public class ArticuloVenta extends Articulo {
     @JsonIgnore
     @OneToOne
     private StockArticuloVenta stock;
+    @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<ImagenesProducto> imagenes = new HashSet<>();
 }

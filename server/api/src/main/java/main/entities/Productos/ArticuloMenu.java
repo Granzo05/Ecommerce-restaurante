@@ -30,7 +30,7 @@ public class ArticuloMenu extends Articulo {
     @JsonIgnoreProperties(value = {"articuloMenu"})
     @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
-    @Transient
-    private Set<ImagenesProductoDTO> imagenesDTO = new HashSet<>();
+    @OneToMany(mappedBy = "articuloMenu", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<ImagenesProducto> imagenes = new HashSet<>();
 
 }

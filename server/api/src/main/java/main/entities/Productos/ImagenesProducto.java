@@ -36,7 +36,7 @@ public class ImagenesProducto {
             joinColumns = @JoinColumn(name = "id_imagen"),
             inverseJoinColumns = @JoinColumn(name = "id_articulo")
     )
-    private Articulo articulo;
+    private ArticuloVenta articuloVenta;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
             name = "imagenes_promocion",

@@ -1,4 +1,5 @@
 import { ImagenesProducto } from "./ImagenesProducto";
+import { ImagenesProductoDTO } from "./ImagenesProductoDTO";
 import { Promocion } from "./Promocion";
 
 export class Articulo {
@@ -8,6 +9,7 @@ export class Articulo {
     imagenes: ImagenesProducto[] = [];
     promociones: Promocion[] = [];
     cantidad: number = 0;
+    imagenesDTO: ImagenesProductoDTO[] = [];
     
     constructor(){}
 }

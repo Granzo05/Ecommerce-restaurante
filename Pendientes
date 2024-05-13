@@ -39,6 +39,7 @@
 [] Acomodar mensajes de los toast que se devuelven del back, ej base loginRestaurante.tsx
 [] Validaciones
 [] Mostrar receta de cada menu
+[] Cambio de select a input con resultados
 
     Pruebas
 [x] Carga sucursal

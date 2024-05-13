@@ -1,39 +1,39 @@
-import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
-import { EnumTipoArticuloComida } from '../types/Productos/EnumTipoArticuloComida';
+import { ArticuloVenta } from '../types/Productos/ArticuloVenta';
+import { EnumTipoArticuloVenta } from '../types/Productos/EnumTipoArticuloVenta';
 import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
 import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
 import { URL_API } from '../utils/global_variables/const';
 
-export const MenuService = {
+export const ArticuloVentaService = {
 
-    getMenus: async (): Promise<ArticuloMenu[]> => {
-        const response = await fetch(URL_API + 'menus')
-
-        return await response.json();
-    },
-
-    getMenusPorTipo: async (tipoComida: EnumTipoArticuloComida): Promise<ArticuloMenu[]> => {
-        const response = await fetch(URL_API + 'menu/tipo/' + tipoComida);
+    getArticulos: async (): Promise<ArticuloVenta[]> => {
+        const response = await fetch(URL_API + 'articuloVenta')
 
         return await response.json();
     },
 
+    getArticulosPorTipo: async (tipoArticulo: EnumTipoArticuloVenta): Promise<ArticuloVenta[]> => {
+        const response = await fetch(URL_API + 'articuloVenta/tipo/' + tipoArticulo);
 
-    createMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[]): Promise<string> => {
+        return await response.json();
+    },
+
+
+    createArticulo: async (articuloVenta: ArticuloVenta, imagenes: ImagenesProducto[]): Promise<string> => {
         try {
-            const menuResponse = await fetch(URL_API + 'menu/create', {
+            const menuResponse = await fetch(URL_API + 'articuloVenta/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(menu)
+                body: JSON.stringify(articuloVenta)
             });
 
             let cargarImagenes = true;
 
-            if (menuResponse.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
+            if (menuResponse.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
                 cargarImagenes = false;
-                return 'ArticuloMenu existente';
+                return 'ArticuloVenta existente';
             }
 
             let imagenCargadaExitosamente = false;
@@ -45,9 +45,9 @@ export const MenuService = {
                         // Crear objeto FormData para las imágenes
                         const formData = new FormData();
                         formData.append('file', imagen.file);
-                        formData.append('nombreMenu', menu.nombre);
+                        formData.append('nombreMenu', articuloVenta.nombre);
 
-                        const imagenResponse = await fetch(URL_API + 'menu/imagenes', {
+                        const imagenResponse = await fetch(URL_API + 'articuloVenta/imagenes', {
                             method: 'POST',
                             body: formData
                         });
@@ -62,7 +62,7 @@ export const MenuService = {
             }
 
             if (imagenCargadaExitosamente && imagenes.length > 0) {
-                return 'ArticuloMenu creado con éxito';
+                return 'ArticuloVenta creado con éxito';
             } else {
                 return 'Ocurrió un error con la imagen';
             }
@@ -72,21 +72,21 @@ export const MenuService = {
         }
     },
 
-    updateMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
+    updateArticulo: async (articuloVenta: ArticuloVenta, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'menu/update', {
+            const response = await fetch(URL_API + 'articuloVenta/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(menu)
+                body: JSON.stringify(articuloVenta)
             })
 
             let cargarImagenes = true;
 
-            if (response.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
+            if (response.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
                 cargarImagenes = false;
-                return 'ArticuloMenu existente';
+                return 'ArticuloVenta existente';
             }
 
             let imagenCargadaExitosamente = false;
@@ -98,9 +98,9 @@ export const MenuService = {
                         // Crear objeto FormData para las imágenes
                         const formData = new FormData();
                         formData.append('file', imagen.file);
-                        formData.append('nombreMenu', menu.nombre);
+                        formData.append('nombreMenu', articuloVenta.nombre);
 
-                        const imagenResponse = await fetch(URL_API + 'menu/imagenes', {
+                        const imagenResponse = await fetch(URL_API + 'articuloVenta/imagenes', {
                             method: 'POST',
                             body: formData
                         });
@@ -115,7 +115,7 @@ export const MenuService = {
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        const imagenResponse = await fetch(URL_API + 'menu/imagen/' + imagen.id + '/delete', {
+                        const imagenResponse = await fetch(URL_API + 'articuloVenta/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
 
@@ -129,7 +129,7 @@ export const MenuService = {
             }
 
             if (imagenCargadaExitosamente) {
-                return 'Menu actualizado con éxito';
+                return 'Articulo actualizado con éxito';
             } else {
                 return 'Ocurrió un error';
             }
@@ -142,9 +142,9 @@ export const MenuService = {
 
     },
 
-    deleteMenu: async (id: number): Promise<string> => {
+    deleteArticulo: async (id: number): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `menu/${id}/delete`, {
+            const response = await fetch(URL_API + `articuloVenta/${id}/delete`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
