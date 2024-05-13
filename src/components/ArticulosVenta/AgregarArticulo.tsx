@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { Toaster, toast } from 'sonner'
-import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { EnumTipoArticuloVenta } from '../../types/Productos/EnumTipoArticuloVenta';
+import { clearInputs } from '../../utils/global_variables/functions';
 
 function AgregarArticuloVenta() {
   const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
@@ -35,15 +35,14 @@ function AgregarArticuloVenta() {
     }
   };
 
-  const [tipo, setTipo] = useState<EnumTipoArticuloComida>(0);
+  const [tipo, setTipo] = useState<EnumTipoArticuloVenta | string>('');
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
-  const [descripcion, setDescripcion] = useState('');
-  const [medidaCantidad, setMedidaCantidad] = useState<EnumMedida>(0);
+  const [medida, setMedida] = useState<EnumMedida | string>('');
   const [cantidad, setCantidad] = useState(0);
 
   async function agregarArticulo() {
-    if (!nombre || !cantidad || !medidaCantidad || !precio || !descripcion) {
+    if (!nombre || !cantidad || !medida || !precio) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
     }
@@ -53,19 +52,20 @@ function AgregarArticuloVenta() {
     articulo.nombre = nombre;
     articulo.tipo = tipo;
     articulo.precioVenta = precio;
-    articulo.medida = medidaCantidad;
+    articulo.medida = medida;
     articulo.cantidadMedida = cantidad;
+
 
     toast.promise(ArticuloVentaService.createArticulo(articulo, imagenes), {
       loading: 'Creando articulo...',
       success: (message) => {
+        clearInputs();
         return message;
       },
       error: (message) => {
         return message;
       },
     });
-    //clearInputs();
 
   }
 
@@ -88,16 +88,12 @@ function AgregarArticuloVenta() {
         <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
       <input type="text" placeholder="Nombre del articulo" id="nombreArticulo" onChange={(e) => { setNombre(e.target.value) }} />
-
-      <br />
-      <input type="text" placeholder="Descripción del articulo" id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
-
       <br />
       <label>
-        <select name="tipoArticulo" onChange={(e) => { setTipo(parseInt(e.target.value)) }}>
+        <select name="tipoArticulo" onChange={(e) => { setTipo(e.target.value) }}>
           <option>Seleccionar tipo de articulo</option>
-          <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL}>Bebida sin alcohol</option>
-          <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL}>Bebida con alcohol</option>
+          <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida sin alcohol</option>
+          <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida con alcohol</option>
         </select>
       </label>
       <br />
@@ -108,14 +104,13 @@ function AgregarArticuloVenta() {
       <input type="number" placeholder="Cantidad" onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
       <br />
       <select
-        onChange={(e) => setMedidaCantidad(parseInt(e.target.value))}
+        onChange={(e) => setMedida(e.target.value)}
       >
-        <option value="">Seleccionar medida ingrediente</option>
-        <option value={EnumMedida.KILOGRAMOS}>Kilogramos</option>
-        <option value={EnumMedida.GRAMOS}>Gramos</option>
-        <option value={EnumMedida.LITROS}>Litros</option>
-        <option value={EnumMedida.CENTIMETROS_CUBICOS}>Centimetros cúbicos</option>
-        <option value={EnumMedida.UNIDADES}>Unidades</option>
+        <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+        <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+        <option value={EnumMedida.LITROS.toString()}>Litros</option>
+        <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+        <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
       </select>
       <br />
       <button type="button" onClick={agregarArticulo}>Agregar articulo</button>

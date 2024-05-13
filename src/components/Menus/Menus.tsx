@@ -100,7 +100,7 @@ const Menus = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {menus.map(menu => (
+                            {menus.length > 0 && menus.map(menu => (
                                 <tr key={menu.id}>
                                     <td>{menu.nombre}</td>
                                     <td>{menu.comensales}</td>

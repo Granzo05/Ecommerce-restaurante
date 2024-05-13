@@ -1,5 +1,6 @@
 package main.entities.Productos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
@@ -26,9 +27,10 @@ public class ArticuloVenta extends Articulo {
     private EnumMedida medida;
     @Column(name = "cantidad_medida")
     private int cantidadMedida;
-    @JsonIgnore
-    @OneToOne
+    @JsonIgnoreProperties(value = {"articuloVenta"})
+    @OneToOne(mappedBy = "articuloVenta")
     private StockArticuloVenta stock;
+    @JsonIgnoreProperties(value = {"articuloVenta"})
     @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<ImagenesProducto> imagenes = new HashSet<>();
 }

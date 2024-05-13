@@ -6,7 +6,7 @@ export class ArticuloMenu extends Articulo{
     id: number = 0;
     nombre: string = '';
     tiempoCoccion: number = 0;
-    tipo: EnumTipoArticuloComida | null = null;
+    tipo: EnumTipoArticuloComida = EnumTipoArticuloComida.HAMBURGUESAS;
     comensales: number = 0;
     descripcion: string = '';
     ingredientesMenu: IngredienteMenu[] | null = [];

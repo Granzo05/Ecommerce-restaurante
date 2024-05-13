@@ -13,6 +13,7 @@ import '../styles/opcionesRestaurante.css'
 import StocksEntrantes from '../components/StockEntrante/StockEntrante';
 import Sucursales from '../components/Sucursales/Sucursales';
 import Ingredientes from '../components/Ingrediente/Ingredientes';
+import ArticuloVentas from '../components/ArticulosVenta/ArticulosVenta';
 
 //const navItems = ["home", "settings", "build", "cloud", "mail", "bookmark"];
 
@@ -46,6 +47,8 @@ const Opciones = () => {
             return <Sucursales />;
         } else if (opcionSeleccionada === 10) {
             return <Ingredientes />;
+        } else if (opcionSeleccionada === 11) {
+            return <ArticuloVentas />;
         }
     };
 
@@ -78,6 +81,7 @@ const Opciones = () => {
                     <p onClick={() => handleOpcionClick(5)}>Stock</p>
                     <p onClick={() => handleOpcionClick(6)}>Stock entrante</p>
                     <p onClick={() => handleOpcionClick(7)}>Menus</p>
+                    <p onClick={() => handleOpcionClick(11)}>Articulos</p>
                     <p onClick={() => handleOpcionClick(8)}>Empleados</p>
                     <p onClick={() => handleOpcionClick(9)}>Sucursales</p>
                     <p onClick={() => handleOpcionClick(10)}>Ingredientes</p>
@@ -88,6 +92,7 @@ const Opciones = () => {
                     <p onClick={() => handleOpcionClick(5)}>Stock</p>
                     <p onClick={() => handleOpcionClick(6)}>Stock entrante</p>
                     <p onClick={() => handleOpcionClick(7)}>Menus</p>
+                    <p onClick={() => handleOpcionClick(11)}>Articulos</p>
                     <p onClick={() => handleOpcionClick(10)}>Ingredientes</p>
                 </div >
             )}

@@ -16,9 +16,9 @@ public interface ArticuloVentaRepository extends JpaRepository<ArticuloVenta, Lo
     @Query("SELECT a FROM ArticuloVenta a WHERE a.nombre = :nombre AND a.borrado = 'NO'")
     Optional<ArticuloVenta> findByName(@Param("nombre") String nombre);
 
-    @Query("SELECT a FROM ArticuloMenu a WHERE a.borrado = 'NO'")
+    @Query("SELECT a FROM ArticuloVenta a WHERE a.borrado = 'NO'")
     List<ArticuloVenta> findAllByNotBorrado();
 
-    @Query("SELECT a FROM ArticuloMenu a WHERE a.borrado = 'NO' AND a.tipo = :tipo")
+    @Query("SELECT a FROM ArticuloVenta a WHERE a.borrado = 'NO' AND a.tipo = :tipo")
     List<ArticuloVenta> findByType(EnumTipoArticuloComida tipo);
 }

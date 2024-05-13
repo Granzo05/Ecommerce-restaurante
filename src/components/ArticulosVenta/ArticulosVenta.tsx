@@ -97,7 +97,7 @@ const ArticuloVentas = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {articulosVenta.map(articulo => (
+                            {articulosVenta.length > 0 && articulosVenta.map(articulo => (
                                 <tr key={articulo.id}>
                                     <td>{articulo.nombre}</td>
                                     <td>{articulo.cantidadMedida} {articulo.medida?.toString()}</td>
@@ -123,7 +123,7 @@ const ArticuloVentas = () => {
             <ModalFlotante isOpen={showEliminarArticuloVentaModal} onClose={handleModalClose}>
                 {selectedId && <EliminarArticuloVenta articuloId={selectedId} />}
             </ModalFlotante>
-       
+
         </div>
 
     )

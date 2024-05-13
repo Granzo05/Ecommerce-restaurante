@@ -39,7 +39,7 @@ public class ArticuloVentaController {
     @GetMapping("/articulos")
     public Set<ArticuloVenta> getArticulosDisponibles() {
         List<ArticuloVenta> articulos = articuloVentaRepository.findAllByNotBorrado();
-
+        System.out.println(articulos);
         for(ArticuloVenta articulo: articulos) {
             articulo.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdArticulo(articulo.getId())));
         }

@@ -7,13 +7,13 @@ import { URL_API } from '../utils/global_variables/const';
 export const ArticuloVentaService = {
 
     getArticulos: async (): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + 'articuloVenta')
+        const response = await fetch(URL_API + 'articulos')
 
         return await response.json();
     },
 
     getArticulosPorTipo: async (tipoArticulo: EnumTipoArticuloVenta): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + 'articuloVenta/tipo/' + tipoArticulo);
+        const response = await fetch(URL_API + 'articulo/tipo/' + tipoArticulo);
 
         return await response.json();
     },
@@ -21,7 +21,7 @@ export const ArticuloVentaService = {
 
     createArticulo: async (articuloVenta: ArticuloVenta, imagenes: ImagenesProducto[]): Promise<string> => {
         try {
-            const menuResponse = await fetch(URL_API + 'articuloVenta/create', {
+            const menuResponse = await fetch(URL_API + 'articulo/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -45,9 +45,9 @@ export const ArticuloVentaService = {
                         // Crear objeto FormData para las imágenes
                         const formData = new FormData();
                         formData.append('file', imagen.file);
-                        formData.append('nombreMenu', articuloVenta.nombre);
+                        formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        const imagenResponse = await fetch(URL_API + 'articuloVenta/imagenes', {
+                        const imagenResponse = await fetch(URL_API + 'articulo/imagenes', {
                             method: 'POST',
                             body: formData
                         });
@@ -64,7 +64,7 @@ export const ArticuloVentaService = {
             if (imagenCargadaExitosamente && imagenes.length > 0) {
                 return 'ArticuloVenta creado con éxito';
             } else {
-                return 'Ocurrió un error con la imagen';
+                return 'ArticuloVenta creado con éxito pero sin imágen asociada';
             }
         } catch (error) {
             console.error('Error:', error);
@@ -74,7 +74,7 @@ export const ArticuloVentaService = {
 
     updateArticulo: async (articuloVenta: ArticuloVenta, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'articuloVenta/update', {
+            const response = await fetch(URL_API + 'articulo/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -98,9 +98,9 @@ export const ArticuloVentaService = {
                         // Crear objeto FormData para las imágenes
                         const formData = new FormData();
                         formData.append('file', imagen.file);
-                        formData.append('nombreMenu', articuloVenta.nombre);
+                        formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        const imagenResponse = await fetch(URL_API + 'articuloVenta/imagenes', {
+                        const imagenResponse = await fetch(URL_API + 'articulo/imagenes', {
                             method: 'POST',
                             body: formData
                         });
@@ -115,7 +115,7 @@ export const ArticuloVentaService = {
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        const imagenResponse = await fetch(URL_API + 'articuloVenta/imagen/' + imagen.id + '/delete', {
+                        const imagenResponse = await fetch(URL_API + 'articulo/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
 
@@ -128,12 +128,7 @@ export const ArticuloVentaService = {
                 }
             }
 
-            if (imagenCargadaExitosamente) {
-                return 'Articulo actualizado con éxito';
-            } else {
-                return 'Ocurrió un error';
-            }
-
+            return 'Articulo actualizado con éxito';
 
         } catch (error) {
             console.error('Error:', error);
@@ -144,7 +139,7 @@ export const ArticuloVentaService = {
 
     deleteArticulo: async (id: number): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `articuloVenta/${id}/delete`, {
+            const response = await fetch(URL_API + `articulo/${id}/delete`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -155,7 +150,6 @@ export const ArticuloVentaService = {
             }
 
             return await response.text();
-
 
         } catch (error) {
             console.error('Error:', error);

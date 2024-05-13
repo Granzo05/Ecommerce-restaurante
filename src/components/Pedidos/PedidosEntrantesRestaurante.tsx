@@ -10,21 +10,22 @@ const PedidosEntrantes = () => {
     const [pedidosEntrantes, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
+        //fetchData();
 
-        fetchData();
-
+        /*
         setInterval(() => {
             buscarPedidos();
-        }, 15000);
+        }, 30000);
+        */
+    }, [pedidosEntrantes]);
 
-    }, []);
+    const fetchData = async () => {
+        try {
+            await EmpleadoService.checkUser();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     const buscarPedidos = async () => {
         PedidoService.getPedidos(EnumEstadoPedido.ENTRANTES)

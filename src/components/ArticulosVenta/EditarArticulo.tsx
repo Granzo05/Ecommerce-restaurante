@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
-import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
 import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { Toaster, toast } from 'sonner'
@@ -16,15 +15,18 @@ interface EditarArticuloVentaProps {
 const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOriginal }) => {
   const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(articuloOriginal.imagenesDTO);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
-  const [imagenes, setImagenes] = useState<ImagenesProducto[]>(articuloOriginal.imagenes);
+  const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
-  const [tipo, setTipo] = useState<EnumTipoArticuloComida>(0);
-  const [precioVenta, setPrecio] = useState(0);
-  const [nombre, setNombre] = useState('');
-  const [descripcion, setDescripcion] = useState('');
-  const [medida, setMedidaCantidad] = useState<EnumMedida>(0);
-  const [cantidad, setCantidad] = useState(0);
+  const [tipo, setTipo] = useState<EnumTipoArticuloVenta | string>(articuloOriginal.tipo.toString());
+  const [precioVenta, setPrecio] = useState(articuloOriginal.precioVenta);
+  const [nombre, setNombre] = useState(articuloOriginal.nombre);
+  const [medida, setMedida] = useState<EnumMedida | string>(articuloOriginal.medida.toString());
+  const [cantidad, setCantidad] = useState(articuloOriginal.cantidadMedida);
+
+  useEffect(() => {
+    console.log(EnumMedida.KILOGRAMOS.toString());
+  }, [articuloOriginal])
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -60,7 +62,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   };
 
   function editarArticuloVenta() {
-    if (!nombre || !cantidad || !medida || !precioVenta || !descripcion) {
+    if (!nombre || !cantidad || !precioVenta) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
     }
@@ -85,7 +87,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     });
 
     if (imagenes.length === 0) {
-      toast.info('No se añadieron imagenes al menú');
+      toast.info('No se añadieron imagenes al articulo');
     }
   }
 
@@ -123,29 +125,28 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       <div>
         <input type="text" placeholder="Nombre del articulo" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
         <br />
-        <input type="text" placeholder="Descripción del articulo" value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
-        <br />
         <label>
-          <select name="tipoArticulo" onChange={(e) => { setTipo(parseInt(e.target.value)) }}>
+          <select value={tipo} name="tipoArticulo" onChange={(e) => { setTipo(e.target.value) }}>
             <option>Seleccionar tipo de articulo</option>
-            <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL}>Bebida sin alcohol</option>
-            <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL}>Bebida con alcohol</option>
+            <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida sin alcohol</option>
+            <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida con alcohol</option>
           </select>
         </label>
         <br />
         <input type="number" placeholder="Precio" value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
         <br />
-        <input type="number" placeholder="Cantidad" onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+        <input type="number" placeholder="Cantidad" value={cantidad} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
         <br />
         <select
-          onChange={(e) => setMedidaCantidad(parseInt(e.target.value))}
+          value={medida}
+          onChange={(e) => setMedida(e.target.value)}
         >
           <option value="">Seleccionar medida ingrediente</option>
-          <option value={EnumMedida.KILOGRAMOS}>Kilogramos</option>
-          <option value={EnumMedida.GRAMOS}>Gramos</option>
-          <option value={EnumMedida.LITROS}>Litros</option>
-          <option value={EnumMedida.CENTIMETROS_CUBICOS}>Centimetros cúbicos</option>
-          <option value={EnumMedida.UNIDADES}>Unidades</option>
+          <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+          <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+          <option value={EnumMedida.LITROS.toString()}>Litros</option>
+          <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+          <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
         </select>
         <br />
         <button className='button-form' type='button' onClick={editarArticuloVenta}>Editar articulo</button>

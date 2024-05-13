@@ -59,9 +59,9 @@
 [x] Actualizacion articuloMenu
 [x] Eliminacion articuloMenu
 
-[] Carga articuloVenta
-[] Actualizacion articuloVenta
-[] Eliminacion articuloVenta
+[x] Carga articuloVenta
+[x] Actualizacion articuloVenta
+[x] Eliminacion articuloVenta
 
 [] Carga stockIngrediente
 [] Actualizacion stockIngrediente
@@ -71,13 +71,13 @@
 [] Actualizacion stockArticulo
 [] Eliminacion stockArticulo
 
-[] Carga pedido
-[] Actualizacion pedido
-[] Eliminacion pedido
-
 [] Carga pedido stock
 [] Actualizacion pedido stock
 [] Eliminacion pedido stock
+
+[] Carga pedido
+[] Actualizacion pedido
+[] Eliminacion pedido
 
 [x] Carga ingredientes
 [x] Actualizacion ingredientes
