@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockArticuloVentaDTO;
 import main.repositories.ArticuloMenuRepository;
 import main.repositories.IngredienteRepository;
 import main.repositories.StockArticuloVentaRepository;
@@ -32,13 +33,13 @@ public class StockArticulosController {
     }
 
     @GetMapping("/sucursal/{idSucursal}/stockArticuloVenta")
-    public Set<StockArticuloVenta> getStock(@PathVariable("idSucursal") long id) {
-        List<StockArticuloVenta> stockArticuloVenta = stockArticuloRepository.findAllByIdSucursal(id);
+    public Set<StockArticuloVentaDTO> getStock(@PathVariable("idSucursal") long id) {
+        List<StockArticuloVentaDTO> stockArticuloVenta = stockArticuloRepository.findAllByIdSucursal(id);
         if (stockArticuloVenta.isEmpty()) {
             return null;
         }
 
-        return (HashSet<StockArticuloVenta>) stockArticuloVenta;
+        return new HashSet<>(stockArticuloVenta);
     }
 
     @GetMapping("/sucursal/{idSucursal}/stockArticuloVenta/check")

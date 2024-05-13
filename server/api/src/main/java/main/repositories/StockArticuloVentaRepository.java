@@ -1,6 +1,7 @@
 package main.repositories;
 
 import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockArticuloVentaDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +19,6 @@ public interface StockArticuloVentaRepository extends JpaRepository<StockArticul
     @Query("SELECT s FROM StockArticuloVenta s WHERE s.articuloVenta.id = :id AND s.sucursal.id = :idSucursal")
     Optional<StockArticuloVenta> findByIdArticuloAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT s FROM StockArticuloVenta s WHERE s.sucursal.id = :id AND s.borrado = 'NO'")
-    List<StockArticuloVenta> findAllByIdSucursal(@Param("id") Long id);
+    @Query("SELECT NEW main.entities.Stock.StockIngredientesDTO(s.precioCompra, s.cantidadActual, s.cantidadMinima, s.cantidadMaxima, s.medida, s.id, s.articuloVenta.nombre) FROM StockArticuloVenta s WHERE s.sucursal.id = :id AND s.borrado = 'NO'")
+    List<StockArticuloVentaDTO> findAllByIdSucursal(@Param("id") Long id);
 }

@@ -1,6 +1,7 @@
 package main.repositories;
 
 import main.entities.Stock.StockIngredientes;
+import main.entities.Stock.StockIngredientesDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface StockIngredientesRepository extends JpaRepository<StockIngredientes, Long> {
-    @Query("SELECT s FROM StockIngredientes s WHERE s.sucursal.id = :id AND s.borrado = 'NO'")
-    List<StockIngredientes> findAllByIdSucursal(@Param("id") Long id);
+    @Query("SELECT NEW main.entities.Stock.StockIngredientesDTO(s.precioCompra, s.cantidadActual, s.cantidadMinima, s.cantidadMaxima, s.medida, s.id, s.ingrediente.nombre) FROM StockIngredientes s WHERE s.sucursal.id = :id AND s.borrado = 'NO'")
+    List<StockIngredientesDTO> findAllByIdSucursal(@Param("id") Long id);
 
     @Query("SELECT s FROM StockIngredientes s WHERE s.ingrediente.nombre = :nombre AND s.borrado = 'NO'")
     Optional<StockIngredientes> findStockByProductName(@Param("nombre") String nombre);

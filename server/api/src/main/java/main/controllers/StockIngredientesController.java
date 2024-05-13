@@ -6,6 +6,7 @@ import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockIngredientes;
+import main.entities.Stock.StockIngredientesDTO;
 import main.repositories.ArticuloMenuRepository;
 import main.repositories.IngredienteRepository;
 import main.repositories.StockIngredientesRepository;
@@ -34,13 +35,13 @@ public class StockIngredientesController {
     }
 
     @GetMapping("/stockIngredientes/{idSucursal}")
-    public Set<StockIngredientes> getStock(@PathVariable("idSucursal") long id) {
-        Set<StockIngredientes> stockIngredientes = (HashSet<StockIngredientes>) stockIngredientesRepository.findAllByIdSucursal(id);
+    public Set<StockIngredientesDTO> getStock(@PathVariable("idSucursal") long id) {
+        List<StockIngredientesDTO> stockIngredientes = stockIngredientesRepository.findAllByIdSucursal(id);
         if (stockIngredientes.isEmpty()) {
             return null;
         }
 
-        return stockIngredientes;
+        return new HashSet<>(stockIngredientes);
     }
 
 
@@ -111,10 +112,27 @@ public class StockIngredientesController {
     @Transactional
     @PostMapping("sucursal/{idSucursal}/stockIngredientes/create")
     public ResponseEntity<String> crearStock(@RequestBody StockIngredientes stockDetail, @PathVariable("idSucursal") long id) {
-        // Busco el ingrediente en la base de datos
-        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(stockDetail.getIngrediente().getId(), id);
+        Optional<Ingrediente> ingredienteDb = ingredienteRepository.findByNombreNotBorrado(stockDetail.getIngrediente().getNombre());
 
-        if (stockIngrediente.isPresent()) {
+        Long idIngrediente = 0L;
+        // Si el cliente no se ha creado en su sección lo creamos para evitar trabajar doble
+        if (ingredienteDb.isEmpty()) {
+            Ingrediente ingrediente = new Ingrediente();
+            ingrediente.setNombre(stockDetail.getIngrediente().getNombre());
+
+            ingrediente = ingredienteRepository.save(ingrediente);
+            idIngrediente = ingrediente.getId();
+        } else {
+            idIngrediente = ingredienteDb.get().getId();
+        }
+
+        // Busco el ingrediente en la base de datos
+        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(idIngrediente, id);
+
+        // Si no hay stock creado entonces necesitamos recuperar el ingrediente creado
+        if (stockIngrediente.isEmpty()) {
+            Ingrediente ingrediente = ingredienteRepository.findByIdNotBorrado(idIngrediente).get();
+
             // Si no existe stockIngredientes de ese producto se crea un nuevo objeto
             StockIngredientes stock = new StockIngredientes();
 
@@ -123,17 +141,17 @@ public class StockIngredientesController {
             stock.setCantidadActual(stockDetail.getCantidadActual());
             stock.setPrecioCompra(stockDetail.getPrecioCompra());
             stock.setMedida(stockDetail.getMedida());
-            stock.setIngrediente(stockDetail.getIngrediente());
+            stock.setIngrediente(ingrediente);
 
             Sucursal sucursal = sucursalRepository.findById(id).get();
             stock.setSucursal(sucursal);
 
             stockIngredientesRepository.save(stock);
 
-            return new ResponseEntity<>("El stock del ingrediente ha sido añadido correctamente", HttpStatus.CREATED);
+            return ResponseEntity.ok("El stock del ingrediente ha sido añadido correctamente");
         }
 
-        return new ResponseEntity<>("El stock ya existe", HttpStatus.FOUND);
+        return ResponseEntity.ofNullable("El stock ya existe");
     }
 
     @PutMapping("sucursal/{idSucursal}/stockIngredientes/update")

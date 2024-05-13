@@ -1,5 +1,6 @@
 package main.entities.Stock;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,4 +36,12 @@ public abstract class Stock {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
+
+    public Stock(double precioCompra, int cantidadActual, int cantidadMinima, int cantidadMaxima, EnumMedida medida) {
+        this.precioCompra = precioCompra;
+        this.cantidadActual = cantidadActual;
+        this.cantidadMinima = cantidadMinima;
+        this.cantidadMaxima = cantidadMaxima;
+        this.medida = medida;
+    }
 }

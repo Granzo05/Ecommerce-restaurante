@@ -5,9 +5,11 @@ import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
 import { clearInputs } from '../../utils/global_variables/functions';
+import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
+import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 
 interface EditarStockProps {
-  stockOriginal: StockArticuloVenta | StockIngredientes;
+  stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
 }
 
 const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
@@ -19,8 +21,8 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
   const [costoIngrediente, setCostoIngrediente] = useState(0);
 
   function editarStock() {
-    if (stockOriginal instanceof StockIngredientes) {
-      const stock: StockIngredientes = stockOriginal;
+    if (stockOriginal instanceof StockIngredientesDTO) {
+      const stock: StockIngredientesDTO = stockOriginal;
 
       let medidaEnum: EnumMedida | undefined = undefined;
       if (Object.values(EnumMedida).includes(medida as EnumMedida)) {
@@ -34,8 +36,8 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
       stock.precioCompra = costoIngrediente;
       StockIngredientesService.updateStock(stock);
 
-    } else if (stockOriginal instanceof StockArticuloVenta) {
-      const stock: StockArticuloVenta = stockOriginal;
+    } else if (stockOriginal instanceof StockArticuloVentaDTO) {
+      const stock: StockArticuloVentaDTO = stockOriginal;
 
       let medidaEnum: EnumMedida | undefined = undefined;
       if (Object.values(EnumMedida).includes(medida as EnumMedida)) {

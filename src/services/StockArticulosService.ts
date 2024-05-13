@@ -1,5 +1,6 @@
-import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
+import { ArticuloVenta } from '../types/Productos/ArticuloVenta';
 import { StockArticuloVenta } from '../types/Stock/StockArticuloVenta';
+import { StockArticuloVentaDTO } from '../types/Stock/StockArticuloVentaDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const StockArticuloVentaService = {
@@ -23,9 +24,9 @@ export const StockArticuloVentaService = {
         }
     },
 
-    getStock: async (): Promise<StockArticuloVenta[]> => {
+    getStock: async (): Promise<StockArticuloVentaDTO[]> => {
         try {
-            const response = await fetch(URL_API + 'stock', {
+            const response = await fetch(URL_API + 'stockArticulos/' + sucursalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -65,17 +66,17 @@ export const StockArticuloVentaService = {
         }
     },
 
-    checkStock: async (menus: ArticuloMenu[]): Promise<string> => {
+    checkStock: async (articulo: ArticuloVenta): Promise<string> => {
         try {
-            const queryString = menus.map(menu => `id=${menu.id}`).join('&');
 
             // Construir la URL con los parámetros de consulta
-            const url = `${URL_API}sucursal/${sucursalId}/StockArticuloVenta/check?${queryString}`;
+            const url = `${URL_API}sucursal/${sucursalId}/StockArticuloVenta/check?`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(articulo)
             });
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
@@ -90,7 +91,7 @@ export const StockArticuloVentaService = {
         }
     },
 
-    updateStock: async (stock: StockArticuloVenta): Promise<string> => {
+    updateStock: async (stock: StockArticuloVentaDTO): Promise<string> => {
         try {
             const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/update`, {
                 method: 'PUT',

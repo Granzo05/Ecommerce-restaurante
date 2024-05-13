@@ -2,23 +2,21 @@ package main.entities.Stock;
 
 import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Ingredientes.EnumMedida;
 import main.entities.Productos.ArticuloVenta;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Builder
-@Table(name = "stock_articulos", schema = "buen_sabor")
-public class StockArticuloVenta extends Stock {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
+public class StockArticuloVentaDTO extends Stock {
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "id_articulo")
-    private ArticuloVenta articuloVenta;
+    private String nombreArticulo;
+
+    public StockArticuloVentaDTO(double precioCompra, int cantidadActual, int cantidadMinima, int cantidadMaxima, EnumMedida medida, Long id1, String nombreArticulo) {
+        super(precioCompra, cantidadActual, cantidadMinima, cantidadMaxima, medida);
+        this.id = id1;
+        this.nombreArticulo = nombreArticulo;
+    }
 }

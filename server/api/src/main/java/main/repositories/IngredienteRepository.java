@@ -20,4 +20,7 @@ public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> 
 
     @Query("SELECT i FROM Ingrediente i WHERE i.id = :id AND i.borrado = 'NO'")
     Optional<Ingrediente> findByIdNotBorrado(@Param("id") Long id);
+
+    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre AND i.borrado = 'NO'")
+    Optional<Ingrediente> findByNombreNotBorrado(@Param("nombre") String nombre);
 }

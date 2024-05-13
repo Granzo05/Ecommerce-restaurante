@@ -1,41 +1,36 @@
 import { useState } from 'react';
 import { clearInputs } from '../../utils/global_variables/functions';
-import { StockArticuloVentaService } from '../../services/StockArticulosService';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
-import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
-import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { Toaster, toast } from 'sonner'
+import { StockIngredientesService } from '../../services/StockIngredientesService';
+import { StockIngredientes } from '../../types/Stock/StockIngredientes';
+import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 
 function AgregarStockIngrediente() {
 
   const [cantidadActual, setCantidadActual] = useState(0);
   const [cantidadMinima, setCantidadMinima] = useState(0);
   const [cantidadMaxima, setCantidadMaxima] = useState(0);
-  const [medida, setMedida] = useState('');
+  const [medida, setMedida] = useState<EnumMedida | string>('');
   const [costoIngrediente, setCostoIngrediente] = useState(0);
-  const [nombreArticuloVenta, setArticuloVenta] = useState('');
+  const [nombreIngrediente, setArticuloVenta] = useState('');
 
-  async function agregarIngrediente() {
-    const stock: StockArticuloVenta = new StockArticuloVenta();
-
-    let medidaEnum: EnumMedida | undefined = undefined;
-    if (Object.values(EnumMedida).includes(medida as EnumMedida)) {
-      medidaEnum = EnumMedida[medida as keyof typeof EnumMedida];
-      stock.medida = medidaEnum;
-    }
-
+  async function crearStockIngrediente() {
+    const stock: StockIngredientes = new StockIngredientes();
     stock.cantidadActual = cantidadActual;
     stock.cantidadMinima = cantidadMinima;
     stock.cantidadMaxima = cantidadMaxima;
     stock.precioCompra = costoIngrediente;
 
-    const articuloVenta: ArticuloVenta = new ArticuloVenta();
-    
-    articuloVenta.nombre = nombreArticuloVenta;
-    stock.articuloVenta = articuloVenta;
+    if (medida) stock.medida = medida;
 
-    toast.promise(StockArticuloVentaService.createStock(stock), {
-      loading: 'Creando menu...',
+    const ingrediente: Ingrediente = new Ingrediente();
+
+    ingrediente.nombre = nombreIngrediente;
+    stock.ingrediente = ingrediente;
+
+    toast.promise(StockIngredientesService.createStock(stock), {
+      loading: 'Creando stock...',
       success: (message) => {
         clearInputs();
         return message;
@@ -48,7 +43,7 @@ function AgregarStockIngrediente() {
 
   return (
     <div className="modal-info">
-      <Toaster/>
+      <Toaster />
       <br />
       <label>
         <i className='bx bx-lock'></i>
@@ -56,26 +51,27 @@ function AgregarStockIngrediente() {
       </label>
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Cantidad mínima del ingrediente (opcional)" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+        <input type="text" placeholder="Cantidad mínima del ingrediente" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
       </label>
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Cantidad máxima del ingrediente (opcional)" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+        <input type="text" placeholder="Cantidad máxima del ingrediente" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
       </label>
       <label>
         <i className='bx bx-lock'></i>
-        <input type="text" placeholder="Cantidad actual del ingrediente (opcional)" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+        <input type="text" placeholder="Cantidad actual del ingrediente" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
       </label>
       <br />
       <label>
         <i className='bx bx-lock'></i>
-        <select id="medidaStock" onChange={(e) => { setMedida(e.target.value) }}>
-          <option value="">Seleccionar medida ingrediente</option>
-          <option value="Kilogramos">Kilogramos</option>
-          <option value="Gramos">Gramos</option>
-          <option value="Litros">Litros</option>
-          <option value="Centimetros cubicos">Centimetros cúbicos</option>
-          <option value="Unidades">Unidades</option>
+        <select
+          onChange={(e) => setMedida(e.target.value)}
+        >
+          <option value={0}>Kilogramos</option>
+          <option value={1}>Gramos</option>
+          <option value={2}>Litros</option>
+          <option value={3}>Centimetros cúbicos</option>
+          <option value={4}>Unidades</option>
         </select>
       </label>
       <br />
@@ -83,7 +79,7 @@ function AgregarStockIngrediente() {
         <i className='bx bx-lock'></i>
         <input type="text" placeholder="Costo del ingrediente por una unidad de medida (opcional)" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
       </label>
-      <input type="button" value="agregarStock" id="agregarIngrediente" onClick={agregarIngrediente} />
+      <button onClick={crearStockIngrediente}>Crear stock</button>
     </div>
   )
 }

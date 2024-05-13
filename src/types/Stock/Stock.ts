@@ -1,5 +1,4 @@
 import { EnumMedida } from "../Ingredientes/EnumMedida";
-import { FechaStock } from "./DetalleStock";
 
 export class Stock {
     id: number = 0;
@@ -7,8 +6,7 @@ export class Stock {
     cantidadActual: number = 0;
     cantidadMinima: number = 0;
     cantidadMaxima: number = 0;
-    medida: EnumMedida | null = null;
-    fechaIngreso: FechaStock[] = [];
+    medida: EnumMedida | string = '';
 
     constructor() {
         

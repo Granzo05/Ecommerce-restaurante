@@ -1,9 +1,11 @@
 import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 import { StockIngredientes } from '../types/Stock/StockIngredientes';
+import { StockIngredientesDTO } from '../types/Stock/StockIngredientesDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const StockIngredientesService = {
     createStock: async (stock: StockIngredientes): Promise<string> => {
+        console.log(stock)
         try {
             const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngredientes/create`, {
                 method: 'POST',
@@ -23,9 +25,9 @@ export const StockIngredientesService = {
         }
     },
 
-    getStock: async (): Promise<StockIngredientes[]> => {
+    getStock: async (): Promise<StockIngredientesDTO[]> => {
         try {
-            const response = await fetch(URL_API + 'stock', {
+            const response = await fetch(URL_API + 'stockIngredientes/' + sucursalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -90,7 +92,8 @@ export const StockIngredientesService = {
         }
     },
 
-    updateStock: async (stock: StockIngredientes): Promise<string> => {
+    updateStock: async (stock: StockIngredientesDTO): Promise<string> => {
+        // Hacer la busqueda del ingrediente en caso de cambiar el nombre
         try {
             const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/update`, {
                 method: 'PUT',

@@ -6,23 +6,23 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import main.entities.Ingredientes.EnumMedida;
 import main.entities.Ingredientes.Ingrediente;
-
-import java.util.HashSet;
-import java.util.Set;
+import main.entities.Restaurante.Sucursal;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "stock_ingredientes", schema = "buen_sabor")
-public class StockIngredientes extends Stock {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class StockIngredientesDTO extends Stock {
     private Long id;
-    @JsonIgnoreProperties(value = {"stock"})
-    @OneToOne
-    @JoinColumn(name = "id_ingrediente")
-    private Ingrediente ingrediente;
+    private String nombreIngrediente;
+
+    public StockIngredientesDTO(double precioCompra, int cantidadActual, int cantidadMinima, int cantidadMaxima, EnumMedida medida, Long id1, String nombreIngrediente) {
+        super(precioCompra, cantidadActual, cantidadMinima, cantidadMaxima, medida);
+        this.id = id1;
+        this.nombreIngrediente = nombreIngrediente;
+    }
+
+
 }

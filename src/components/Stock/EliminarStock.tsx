@@ -1,19 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
-import { StockIngredientes } from '../../types/Stock/StockIngredientes';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
+import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
+import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 
 interface EliminarStockProps {
-  stockOriginal: StockArticuloVenta | StockIngredientes;
+  stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
 }
 
 const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
-    if (stockOriginal instanceof StockIngredientes) {
+    if (stockOriginal instanceof StockIngredientesDTO) {
       StockIngredientesService.deleteStock(stockOriginal.id)
         .then(() => {
           navigate('/opciones');
@@ -21,7 +21,7 @@ const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal }) => {
         .catch(error => {
           console.error('Error:', error);
         });
-    } else if (stockOriginal instanceof StockArticuloVenta) {
+    } else if (stockOriginal instanceof StockArticuloVentaDTO) {
       StockArticuloVentaService.deleteStock(stockOriginal.id)
         .then(() => {
           navigate('/opciones');
