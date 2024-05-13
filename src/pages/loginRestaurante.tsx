@@ -222,7 +222,38 @@ const LoginNegocio = () => {
           <button className="my-form__button" type="submit">
             Ingresar
           </button>
-          <div className="my-form__actions">
+        </form>
+      </main>
+    </div>
+  )
+}
+
+export default LoginNegocio
+
+
+/*<div>
+      <Toaster />
+      <div className={styles.containerForm}>
+        <div className={styles.formInfo}>
+          <div>
+            <h2>Iniciar sesión</h2>
+            <form className={styles.form}>
+              <label>
+                <input required type="text" placeholder="Correo electrónico" id="emailLogin"
+                  onChange={(e) => { setEmail(e.target.value) }} />
+              </label>
+              <label>
+                <input required type="password" placeholder="Contraseña" id="contraseñaLogin"
+                  onChange={(e) => { setContraseña(e.target.value) }} />
+              </label>
+              <input type="button" onClick={handleIniciarSesionNegocio} />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>*/
+
+/*<div className="my-form__actions">
             <div className="my-form__row">
               <span>¿No tienes cuenta? <a href="#" title="Create account" onClick={openModalC}>
                 Crea una ahora
@@ -316,34 +347,4 @@ const LoginNegocio = () => {
                 </Modal>
               </div>
             </div>
-          </div>
-        </form>
-      </main>
-    </div>
-  )
-}
-
-export default LoginNegocio
-
-
-/*<div>
-      <Toaster />
-      <div className={styles.containerForm}>
-        <div className={styles.formInfo}>
-          <div>
-            <h2>Iniciar sesión</h2>
-            <form className={styles.form}>
-              <label>
-                <input required type="text" placeholder="Correo electrónico" id="emailLogin"
-                  onChange={(e) => { setEmail(e.target.value) }} />
-              </label>
-              <label>
-                <input required type="password" placeholder="Contraseña" id="contraseñaLogin"
-                  onChange={(e) => { setContraseña(e.target.value) }} />
-              </label>
-              <input type="button" onClick={handleIniciarSesionNegocio} />
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>*/
+          </div>*/
