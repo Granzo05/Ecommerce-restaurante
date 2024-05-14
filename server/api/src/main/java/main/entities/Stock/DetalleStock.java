@@ -1,5 +1,7 @@
 package main.entities.Stock;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
@@ -29,12 +31,15 @@ public class DetalleStock {
     @Column(name = "subtotal")
     private double subTotal;
     @OneToOne
+    @JsonIgnoreProperties(value={"stock"})
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
     @OneToOne
+    @JsonIgnoreProperties(value={"stock"})
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "id_stock_entrante")
     private StockEntrante stockEntrante;
 

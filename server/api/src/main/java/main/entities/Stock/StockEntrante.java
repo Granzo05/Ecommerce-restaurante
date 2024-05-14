@@ -1,5 +1,6 @@
 package main.entities.Stock;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Cliente.Cliente;
@@ -34,6 +35,7 @@ public class StockEntrante {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
+    @JsonIgnoreProperties(value = {"stockEntrante"})
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "stockEntrante", cascade = CascadeType.ALL)
     private Set<DetalleStock> detallesStock = new HashSet<>();
 }

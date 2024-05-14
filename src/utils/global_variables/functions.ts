@@ -16,7 +16,6 @@ export function clearInputs() {
 
 
 export function convertirStringAEnumMedida(medida: string) {
-  console.log(medida)
   switch (medida.toUpperCase()) {
     case "KILOGRAMOS":
       return EnumMedida.KILOGRAMOS;
