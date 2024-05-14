@@ -13,9 +13,4 @@ public enum EnumTipoArticuloComida {
     PASTAS,
     SUSHI,
     MILANESAS;
-
-    public static EnumTipoArticuloComida fromIndex(int index) {
-        return EnumTipoArticuloComida.values()[index];
-    }
-
 }

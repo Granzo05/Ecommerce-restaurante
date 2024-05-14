@@ -5,6 +5,7 @@ import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockDTO;
 import main.entities.Stock.StockIngredientes;
 import main.entities.Stock.StockIngredientesDTO;
 import main.repositories.ArticuloMenuRepository;
@@ -36,12 +37,7 @@ public class StockIngredientesController {
 
     @GetMapping("/stockIngredientes/{idSucursal}")
     public Set<StockIngredientesDTO> getStock(@PathVariable("idSucursal") long id) {
-        List<StockIngredientesDTO> stockIngredientes = stockIngredientesRepository.findAllByIdSucursal(id);
-        if (stockIngredientes.isEmpty()) {
-            return null;
-        }
-
-        return new HashSet<>(stockIngredientes);
+        return new HashSet<>(stockIngredientesRepository.findAllByIdSucursal(id));
     }
 
 
@@ -131,16 +127,18 @@ public class StockIngredientesController {
 
         // Si no hay stock creado entonces necesitamos recuperar el ingrediente creado
         if (stockIngrediente.isEmpty()) {
-            Ingrediente ingrediente = ingredienteRepository.findByIdNotBorrado(idIngrediente).get();
-
-            // Si no existe stockIngredientes de ese producto se crea un nuevo objeto
             StockIngredientes stock = new StockIngredientes();
 
-            stock.setCantidadMaxima(stockDetail.getCantidadMaxima());
+            Ingrediente ingrediente = ingredienteRepository.findByIdNotBorrado(idIngrediente).get();
+
+            stockDetail.setIngrediente(ingrediente);
+
             stock.setCantidadMinima(stockDetail.getCantidadMinima());
+            stock.setCantidadMaxima(stockDetail.getCantidadMaxima());
             stock.setCantidadActual(stockDetail.getCantidadActual());
             stock.setPrecioCompra(stockDetail.getPrecioCompra());
             stock.setMedida(stockDetail.getMedida());
+
             stock.setIngrediente(ingrediente);
 
             Sucursal sucursal = sucursalRepository.findById(id).get();
@@ -154,30 +152,36 @@ public class StockIngredientesController {
         return ResponseEntity.ofNullable("El stock ya existe");
     }
 
-    @PutMapping("sucursal/{idSucursal}/stockIngredientes/update")
-    public ResponseEntity<String> actualizarStock(@RequestBody StockIngredientes stockIngredientes, @PathVariable("idSucursal") long id) {
-        Optional<Ingrediente> ingredienteDB = Optional.of(ingredienteRepository.findByIdNotBorrado(stockIngredientes.getIngrediente().getId()).get());
-
+    @PutMapping("sucursal/{idSucursal}/stockIngrediente/update")
+    public ResponseEntity<String> actualizarStock(@RequestBody StockDTO stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
-        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingredienteDB.get().getId(), id);
+        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
+        System.out.println(stockIngredientes.getId());
+        if (stockEncontrado.isPresent()) {
+            StockIngredientes stock = stockEncontrado.get();
 
-        if (stockEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El stockIngredientes no existe", HttpStatus.FOUND);
+            stock.setCantidadMinima(stockIngredientes.getCantidadMinima());
+            stock.setCantidadMaxima(stockIngredientes.getCantidadMaxima());
+            stock.setCantidadActual(stockIngredientes.getCantidadActual());
+            stock.setPrecioCompra(stockIngredientes.getPrecioCompra());
+            stock.setMedida(stockIngredientes.getMedida());
+
+            stockIngredientesRepository.save(stock);
+            return ResponseEntity.ok("El stock ha sido actualizado correctamente");
         } else {
-            stockIngredientesRepository.save(stockEncontrado.get());
-            return new ResponseEntity<>("El stockIngredientes ha sido añadido correctamente", HttpStatus.CREATED);
+            return ResponseEntity.ofNullable("El stock no existe");
         }
     }
 
-    @DeleteMapping("sucursal/{idSucursal}/stockIngredientes/delete")
-    public ResponseEntity<String> borrarStock(@RequestBody StockIngredientes stockIngredientes, @PathVariable("idSucursal") long id) {
-        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(stockIngredientes.getId(), id);
+    @PutMapping("sucursal/{idSucursal}/stockIngrediente/{stockId}/delete")
+    public ResponseEntity<String> borrarStock(@PathVariable("stockId") long idStock, @PathVariable("idSucursal") long idSucursal) {
+        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(idStock, idSucursal);
         if (stockEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El stockIngredientes ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ofNullable("El stock del ingrediente ya ha sido borrado previamente");
         }
 
         stockEncontrado.get().setBorrado("SI");
         stockIngredientesRepository.save(stockEncontrado.get());
-        return new ResponseEntity<>("El stockIngredientes ha sido borrado correctamente", HttpStatus.ACCEPTED);
+        return ResponseEntity.ok("El stock del ingrediente ha sido borrado correctamente");
     }
 }

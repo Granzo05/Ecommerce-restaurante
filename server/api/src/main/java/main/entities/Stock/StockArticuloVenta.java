@@ -1,5 +1,6 @@
 package main.entities.Stock;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.ArticuloVenta;
@@ -18,6 +19,7 @@ public class StockArticuloVenta extends Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @JsonIgnoreProperties(value = {"stock"})
     @OneToOne
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;

@@ -2,10 +2,7 @@ package main.entities.Stock;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Restaurante.Sucursal;
@@ -14,6 +11,7 @@ import main.entities.Restaurante.Sucursal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class StockIngredientesDTO extends Stock {
     private Long id;
     private String nombreIngrediente;

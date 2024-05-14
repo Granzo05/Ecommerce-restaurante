@@ -2,10 +2,7 @@ package main.entities.Stock;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main.entities.Ingredientes.Ingrediente;
 
 import java.util.HashSet;
@@ -16,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "stock_ingredientes", schema = "buen_sabor")
 public class StockIngredientes extends Stock {
     @Id

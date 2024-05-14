@@ -6,9 +6,9 @@ export class Stock {
     cantidadActual: number = 0;
     cantidadMinima: number = 0;
     cantidadMaxima: number = 0;
-    medida: EnumMedida | string = '';
+    medida: EnumMedida | number | null | string = null;
 
     constructor() {
-        
+
     }
 }

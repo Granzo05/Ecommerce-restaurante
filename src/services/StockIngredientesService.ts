@@ -93,8 +93,8 @@ export const StockIngredientesService = {
     },
 
     updateStock: async (stock: StockIngredientesDTO): Promise<string> => {
-        // Hacer la busqueda del ingrediente en caso de cambiar el nombre
-        try {
+      console.log(stock);
+      try {
             const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/update`, {
                 method: 'PUT',
                 headers: {

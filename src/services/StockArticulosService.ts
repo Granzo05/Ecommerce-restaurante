@@ -6,7 +6,7 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 export const StockArticuloVentaService = {
     createStock: async (stock: StockArticuloVenta): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId}/StockArticuloVenta/create`, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockArticuloVenta/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ export const StockArticuloVentaService = {
 
     updateStock: async (stock: StockArticuloVentaDTO): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/update`, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockArticulo/update`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -106,7 +106,6 @@ export const StockArticuloVentaService = {
 
             return await response.text();
 
-
         } catch (error) {
             console.error('Error:', error);
             throw error;
@@ -115,7 +114,7 @@ export const StockArticuloVentaService = {
 
     deleteStock: async (stockId: number): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/${stockId}/delete`, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockArticuloVenta/${stockId}/delete`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

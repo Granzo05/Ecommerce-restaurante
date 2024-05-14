@@ -1,8 +1,8 @@
 export enum EnumMedida {
-    KILOGRAMOS = 'KILOGRAMOS',
-    GRAMOS = 'GRAMOS',
-    LITROS = 'LITROS',
-    CENTIMETROS_CUBICOS = 'CENTIMETROS_CUBICOS',
-    PAQUETES = 'PAQUETES',
-    UNIDADES = 'UNIDADES'
+    KILOGRAMOS = "0",
+    GRAMOS = "1",
+    LITROS = "2",
+    CENTIMETROS_CUBICOS = "3",
+    PAQUETES = "4",
+    UNIDADES = "5",
 }

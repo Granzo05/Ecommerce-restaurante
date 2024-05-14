@@ -2,10 +2,7 @@ package main.entities.Stock;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
 import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
@@ -14,6 +11,7 @@ import net.minidev.json.annotate.JsonIgnore;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Stock {

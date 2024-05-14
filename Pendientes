@@ -40,6 +40,8 @@
 [] Validaciones
 [] Mostrar receta de cada menu
 [] Cambio de select a input con resultados
+[] Agregar como medidas paquetes x3,x6,x10,x12 unidades
+
 
     Pruebas
 [x] Carga sucursal
@@ -64,12 +66,12 @@
 [x] Eliminacion articuloVenta
 
 [x] Carga stockIngrediente
-[] Actualizacion stockIngrediente
-[] Eliminacion stockIngrediente
+[x] Actualizacion stockIngrediente
+[x] Eliminacion stockIngrediente
 
-[] Carga stockArticulo
-[] Actualizacion stockArticulo
-[] Eliminacion stockArticulo
+[x] Carga stockArticulo
+[x] Actualizacion stockArticulo
+[x] Eliminacion stockArticulo
 
 [] Carga pedido stock
 [] Actualizacion pedido stock

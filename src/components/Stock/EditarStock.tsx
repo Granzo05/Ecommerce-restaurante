@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { StockIngredientes } from '../../types/Stock/StockIngredientes';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
-import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
-import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
 import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
+import { toast, Toaster } from 'sonner';
+import { convertirStringAEnumMedida } from '../../utils/global_variables/functions';
 
 interface EditarStockProps {
   stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
@@ -14,83 +12,78 @@ interface EditarStockProps {
 
 const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
 
-  const [cantidadActual, setCantidadActual] = useState(0);
-  const [cantidadMinima, setCantidadMinima] = useState(0);
-  const [cantidadMaxima, setCantidadMaxima] = useState(0);
-  const [medida, setMedida] = useState('');
-  const [costoIngrediente, setCostoIngrediente] = useState(0);
+  const [cantidadActual, setCantidadActual] = useState(stockOriginal.cantidadActual);
+  const [cantidadMinima, setCantidadMinima] = useState(stockOriginal.cantidadMinima);
+  const [cantidadMaxima, setCantidadMaxima] = useState(stockOriginal.cantidadMaxima);
+  const [medida, setMedida] = useState(stockOriginal.medida);
+  const [costo, setCosto] = useState(stockOriginal.precioCompra);
 
   function editarStock() {
-    if (stockOriginal instanceof StockIngredientesDTO) {
-      const stock: StockIngredientesDTO = stockOriginal;
+    if (stockOriginal.tipo === 'ingrediente') {
+      const stock: StockIngredientesDTO = new StockIngredientesDTO();
 
-      let medidaEnum: EnumMedida | undefined = undefined;
-      if (Object.values(EnumMedida).includes(medida as EnumMedida)) {
-        medidaEnum = EnumMedida[medida as keyof typeof EnumMedida];
-        stock.medida = medidaEnum;
-      }
-
+      if (medida) stock.medida = medida;
+      stock.id = stockOriginal.id;
       stock.cantidadActual = cantidadActual;
       stock.cantidadMinima = cantidadMinima;
       stock.cantidadMaxima = cantidadMaxima;
-      stock.precioCompra = costoIngrediente;
-      StockIngredientesService.updateStock(stock);
+      stock.precioCompra = costo;
+      toast.promise(StockIngredientesService.updateStock(stock), {
+        loading: 'Creando stock del ingrediente...',
+        success: (message) => {
+          return message;
+        },
+        error: (message) => {
+          return message;
+        },
+      });
 
-    } else if (stockOriginal instanceof StockArticuloVentaDTO) {
-      const stock: StockArticuloVentaDTO = stockOriginal;
-
-      let medidaEnum: EnumMedida | undefined = undefined;
-      if (Object.values(EnumMedida).includes(medida as EnumMedida)) {
-        medidaEnum = EnumMedida[medida as keyof typeof EnumMedida];
-        stock.medida = medidaEnum;
-      }
-
-      stock.cantidadActual = cantidadActual;
-      stock.cantidadMinima = cantidadMinima;
-      stock.cantidadMaxima = cantidadMaxima;
-      stock.precioCompra = costoIngrediente;
-      StockArticuloVentaService.updateStock(stock);
     } else {
-      console.error('Tipo de stock no reconocido');
+      const stock: StockArticuloVentaDTO = new StockArticuloVentaDTO();
+
+      if (medida) stock.medida = medida;
+      stock.cantidadActual = cantidadActual;
+      stock.cantidadMinima = cantidadMinima;
+      stock.cantidadMaxima = cantidadMaxima;
+      stock.precioCompra = costo;
+      stock.id = stockOriginal.id;
+
+      console.log(stock)
+      toast.promise(StockArticuloVentaService.updateStock(stock), {
+        loading: 'Creando stock del artículo...',
+        success: (message) => {
+          return message;
+        },
+        error: (message) => {
+          return message;
+        },
+      });
     }
 
-    clearInputs();
   }
 
   return (
-    <div id="miModal" className="modal">
-      <div className="modal-content">
-        <br />
-        <label>
-          <i className='bx bx-lock'></i>
-          <input type="text" value={stockOriginal.cantidadMinima} placeholder="Cantidad mínima del ingrediente" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
-        </label>
-        <label>
-          <i className='bx bx-lock'></i>
-          <input type="text" value={stockOriginal.cantidadMaxima} placeholder="Cantidad máxima del ingrediente" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
-        </label>
-        <label>
-          <i className='bx bx-lock'></i>
-          <input type="text" value={stockOriginal.cantidadActual} placeholder="Cantidad actual del ingrediente" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
-        </label>
-        <br />
-        <label>
-          <i className='bx bx-lock'></i>
-          <select id="medidaStock" onChange={(e) => { setMedida(e.target.value) }}>
-            <option value="Kg">Kilogramos</option>
-            <option value="Gramos">Gramos</option>
-            <option value="Litros">Litros</option>
-            <option value="Unidades">Unidades</option>
-            <option value="Docenas">Docenas</option>
-          </select>
-        </label>
-        <br />
-        <label>
-          <i className='bx bx-lock'></i>
-          <input type="text" placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-        </label>
-        <input type="button" value="editarStock" id="editarStock" onClick={editarStock} />
-      </div>
+    <div className="modal-info">
+      <Toaster />
+      <br />
+      <input type="text" value={cantidadMinima | 0} placeholder="Cantidad mínima del ingrediente" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+      <br />
+      <input type="text" value={cantidadMaxima | 0} placeholder="Cantidad máxima del ingrediente" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+      <br />
+      <input type="text" value={cantidadActual | 0} placeholder="Cantidad actual del ingrediente" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+      <br />
+      <select value={medida?.toString()} onChange={(e) => { setMedida(convertirStringAEnumMedida(e.target.value)) }}>
+        <option>Seleccionar medida ingrediente</option>
+        <option value="KILOGRAMOS">Kilogramos</option>
+        <option value="GRAMOS">Gramos</option>
+        <option value="LITROS">Litros</option>
+        <option value="CENTIMETROS_CUBICOS">Centimetros cúbicos</option>
+        <option value="PAQUETES">Paquetes</option>
+        <option value="UNIDADES">Unidades</option>
+      </select>
+      <br />
+      <input type="text" value={costo | 0} placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCosto(parseFloat(e.target.value)) }} />
+      <button type="button" onClick={editarStock}>Editar stock</button>
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ModalCrud from "../ModalCrud";
 import EliminarStock from "./EliminarStock";
 import EditarStock from "./EditarStock";
 import { EmpleadoService } from "../../services/EmpleadoService";
@@ -10,6 +9,7 @@ import AgregarStockArticulo from "./AgregarStockArticulo";
 import AgregarStockIngrediente from "./AgregarStockIngrediente";
 import { StockIngredientesDTO } from "../../types/Stock/StockIngredientesDTO";
 import { StockArticuloVentaDTO } from "../../types/Stock/StockArticuloVentaDTO";
+import ModalFlotante from "../ModalFlotante";
 
 const Stocks = () => {
     const [stockIngredientes, setStockIngredientes] = useState<StockIngredientesDTO[]>([]);
@@ -21,23 +21,24 @@ const Stocks = () => {
     const [showEditarStockModal, setShowEditarStockModal] = useState(false);
     const [showEliminarStockModal, setShowEliminarStockModal] = useState(false);
 
-    const [selectedStock, setSelectedStock] = useState<StockArticuloVentaDTO | StockIngredientesDTO | null>(null);
+    const [selectedStock, setSelectedStock] = useState<StockArticuloVentaDTO | StockIngredientesDTO>();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Esto retorna true o false
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
         fetchData();
+        fetchStocks();
+    }, []);
 
+    const fetchData = async () => {
+        try {
+            await EmpleadoService.checkUser();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const fetchStocks = async () => {
         StockIngredientesService.getStock()
             .then(data => {
-                console.log(data);
                 setStockIngredientes(data);
             })
             .catch(error => {
@@ -51,8 +52,7 @@ const Stocks = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
-
-    }, []);
+    };
 
     const handleAgregarIngrediente = () => {
         setShowAgregarStockModalIngrediente(true);
@@ -64,14 +64,16 @@ const Stocks = () => {
         setMostrarStocks(false);
     };
 
-    const handleEditarStock = (stock: StockArticuloVentaDTO | StockIngredientesDTO) => {
+    const handleEditarStock = (stock: StockArticuloVentaDTO | StockIngredientesDTO, tipo: string) => {
+        stock.tipo = tipo;
         setSelectedStock(stock);
+
         setShowEditarStockModal(true);
         setMostrarStocks(false);
-
     };
 
-    const handleEliminarStock = (stock: StockArticuloVentaDTO | StockIngredientesDTO) => {
+    const handleEliminarStock = (stock: StockArticuloVentaDTO | StockIngredientesDTO, tipo: string) => {
+        stock.tipo = tipo;
         setSelectedStock(stock);
         setShowEliminarStockModal(true);
         setMostrarStocks(false);
@@ -84,7 +86,7 @@ const Stocks = () => {
         setShowEliminarStockModal(false);
 
         setMostrarStocks(true);
-
+        fetchStocks();
     };
 
     return (
@@ -94,28 +96,30 @@ const Stocks = () => {
             <button onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
             <button onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
 
-            <ModalCrud isOpen={showAgregarStockModalArticulo} onClose={handleModalClose}>
+            <ModalFlotante isOpen={showAgregarStockModalArticulo} onClose={handleModalClose}>
                 <AgregarStockArticulo />
-            </ModalCrud>
+            </ModalFlotante>
 
-            <ModalCrud isOpen={showAgregarStockModalIngrediente} onClose={handleModalClose}>
+            <ModalFlotante isOpen={showAgregarStockModalIngrediente} onClose={handleModalClose}>
                 <AgregarStockIngrediente />
-            </ModalCrud>
-            
-            <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EliminarStock stockOriginal={selectedStock} />}
-            </ModalCrud>
+            </ModalFlotante>
 
-            <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
+            <ModalFlotante isOpen={showEliminarStockModal} onClose={handleModalClose}>
+                {selectedStock && <EliminarStock stockOriginal={selectedStock} />}
+            </ModalFlotante>
+
+            <ModalFlotante isOpen={showEditarStockModal} onClose={handleModalClose}>
                 {selectedStock && <EditarStock stockOriginal={selectedStock} />}
-            </ModalCrud>
+            </ModalFlotante>
             {mostrarStocks && (
                 <div id="stocks">
                     <table>
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Cantidad</th>
+                                <th>Cantidad actual</th>
+                                <th>Cantidad minima</th>
+                                <th>Cantidad máxima</th>
                                 <th>Costo</th>
                                 <th>Fecha próximo ingreso</th>
                                 <th>Acciones</th>
@@ -126,11 +130,13 @@ const Stocks = () => {
                                 <tr key={stock.id}>
                                     <td>{stock.nombreIngrediente}</td>
                                     <td>{stock.cantidadActual}</td>
+                                    <td>{stock.cantidadMinima}</td>
+                                    <td>{stock.cantidadMaxima}</td>
                                     <td>{stock.precioCompra}</td>
                                     <td>{"Aca la fecha"}</td>
                                     <td>
-                                        <button onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                        <button onClick={() => handleEliminarStock(stock, 'ingrediente')}>ELIMINAR</button>
+                                        <button onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
                                     </td>
                                 </tr>
                             ))}
@@ -138,12 +144,13 @@ const Stocks = () => {
                                 <tr key={stock.id}>
                                     <td>{stock.nombreArticuloVenta}</td>
                                     <td>{stock.cantidadActual}</td>
+                                    <td>{stock.cantidadMinima}</td>
                                     <td>{stock.cantidadMaxima}</td>
                                     <td>{stock.precioCompra}</td>
                                     <td>{"Aca la fecha"}</td>
                                     <td>
-                                        <button onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                        <button onClick={() => handleEliminarStock(stock, 'articulo')}>ELIMINAR</button>
+                                        <button onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
                                     </td>
                                 </tr>
                             ))}
