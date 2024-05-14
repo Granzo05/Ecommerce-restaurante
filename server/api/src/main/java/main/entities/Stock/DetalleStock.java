@@ -28,6 +28,8 @@ public class DetalleStock {
     private int cantidad;
     @Column(name = "medida")
     private EnumMedida medida;
+    @Column(name = "costo_unitario")
+    private double costoUnitario;
     @Column(name = "subtotal")
     private double subTotal;
     @OneToOne

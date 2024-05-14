@@ -23,9 +23,9 @@ const LoginCliente = () => {
     const [inputValueDepartamento, setInputValueDepartamento] = useState('');
     const [inputValueLocalidad, setInputValueLocalidad] = useState('');
 
-    const [resultadosProvincias, setResultadosProvincias] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
-    const [resultadosDepartamentos, setResultadosDepartamentos] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
-    const [resultadosLocalidades, setResultadosLocalidades] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
+    const [resultadosProvincias, setResultadosProvincias] = useState<Provincia[]>([]);
+    const [resultadosDepartamentos, setResultadosDepartamentos] = useState<Departamento[]>([]);
+    const [resultadosLocalidades, setResultadosLocalidades] = useState<Localidad[]>([]);
 
     const [nombre, setNombre] = useState('');
     const [email, setEmail] = useState('');
@@ -200,7 +200,7 @@ const LoginCliente = () => {
     };
 
     return (
-        
+
         <body>
             <Toaster />
             {/*INICIAR SESION*/}
@@ -256,7 +256,7 @@ const LoginCliente = () => {
             <section className="form-main" style={{ display: mostrarCrearCuenta ? '' : 'none' }}>
                 <div className="form-content">
                     <div className="box">
-                    <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></h2>
+                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></h2>
                         <h3>- CREAR UNA CUENTA -</h3>
                         <p id='subtitle'>o registrate con: <img id='icon-gmail' src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new" /></p>
                         <form action="">

@@ -21,13 +21,15 @@ public class StockEntranteController {
     private final ArticuloVentaRepository articuloVentaRepository;
     private final SucursalRepository sucursalRepository;
     private final StockEntranteRepository stockEntranteRepository;
+    private final DetalleStockRepository detalleStockRepository;
 
-    public StockEntranteController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, StockEntranteRepository stockEntranteRepository) {
+    public StockEntranteController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, StockEntranteRepository stockEntranteRepository, DetalleStockRepository detalleStockRepository) {
         this.stockArticuloRepository = stockArticuloRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.articuloVentaRepository = articuloVentaRepository;
         this.sucursalRepository = sucursalRepository;
         this.stockEntranteRepository = stockEntranteRepository;
+        this.detalleStockRepository = detalleStockRepository;
     }
 
     @GetMapping("/stockEntrante/{idSucursal}")
@@ -35,9 +37,8 @@ public class StockEntranteController {
         return new HashSet<>(stockEntranteRepository.findAllByIdSucursal(id));
     }
 
-
     @Transactional
-    @PostMapping("/sucursal/{idSucursal}/stockArticuloVenta/create")
+    @PostMapping("/sucursal/{idSucursal}/StockEntrante/create")
     public ResponseEntity<String> crearStock(@RequestBody StockEntrante stockDetail, @PathVariable("idSucursal") long id) {
         Optional<StockEntrante> stockArticuloDB = stockEntranteRepository.findByIdAndIdSucursalAndFecha(stockDetail.getId(), id, stockDetail.getFechaLlegada());
         // Si no existe lo creamos
@@ -77,6 +78,16 @@ public class StockEntranteController {
             List<DetalleStock> detallesStockDB = stock.getDetallesStock().stream().toList();
 
             List<DetalleStock> detallesStockEntrante = stockEntrante.getDetallesStock().stream().toList();
+
+            // Si los detalles no coinciden a los ya guardados los borramos y volvemos a asignarlos al stock almacenado
+            if (detallesStockDB.size() != detallesStockEntrante.size()) {
+                detalleStockRepository.deleteAll(detallesStockDB);
+
+                stock.setDetallesStock(stockEntrante.getDetallesStock());
+            }
+            /*
+            Posible forma, el problema es que revisar uno por uno es un quilombo de lógica, para algo que no va a interactuar con nada más, es más sencillo
+            Eliminar los valores anteriores y sobreescribirlos
 
             // Comparamos el largo de ambos arrays para ver si vienen mas o menos detalles de la edicion y asi evitamos un out of bounds
             int sizeArrayMasLargo = 0;
@@ -122,7 +133,7 @@ public class StockEntranteController {
                     System.out.println(e);
                 }
             }
-
+            */
             stockEntranteRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
         } else {

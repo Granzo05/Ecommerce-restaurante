@@ -10,6 +10,7 @@ import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { Toaster, toast } from 'sonner'
 import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
+import { convertirStringAEnumMedida } from '../../utils/global_variables/functions';
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
@@ -67,7 +68,7 @@ function AgregarMenu() {
     setIngredientes(nuevosIngredientes);
   };
 
-  const handleMedidaIngredienteChange = (index: number, medida: EnumMedida) => {
+  const handleMedidaIngredienteChange = (index: number, medida: EnumMedida | null) => {
     const nuevosIngredientes = [...ingredientes];
     nuevosIngredientes[index].medida = medida;
     setIngredientes(nuevosIngredientes);
@@ -202,14 +203,13 @@ function AgregarMenu() {
             />
             <select
               id={`select-medidas-${index}`}
-              onChange={(e) => handleMedidaIngredienteChange(index, parseInt(e.target.value))}
+              onChange={(e) => handleMedidaIngredienteChange(index, convertirStringAEnumMedida(e.target.value))}
             >
-              <option value="">Seleccionar medida ingrediente</option>
-              <option value={EnumMedida.KILOGRAMOS}>Kilogramos</option>
-              <option value={EnumMedida.GRAMOS}>Gramos</option>
-              <option value={EnumMedida.LITROS}>Litros</option>
-              <option value={EnumMedida.CENTIMETROS_CUBICOS}>Centimetros cúbicos</option>
-              <option value={EnumMedida.UNIDADES}>Unidades</option>
+              <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+              <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+              <option value={EnumMedida.LITROS.toString()}>Litros</option>
+              <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+              <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
             </select>
 
             <p onClick={quitarCampoIngrediente}>X</p>
