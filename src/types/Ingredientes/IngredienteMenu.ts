@@ -5,7 +5,7 @@ import { EnumMedida } from "./EnumMedida";
 export class IngredienteMenu {
     id: number = 0;
     cantidad: number = 0;
-    medida: EnumMedida | null = null;
+    medida: EnumMedida | string = '';
     ingrediente: Ingrediente | null = null;
     articuloMenu: ArticuloMenu | null = null;
 

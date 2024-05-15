@@ -33,10 +33,8 @@ export const ArticuloVentaService = {
 
             if (menuResponse.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
                 cargarImagenes = false;
-                return 'ArticuloVenta existente';
+                return 'Articulo existente';
             }
-
-            let imagenCargadaExitosamente = false;
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes) {
@@ -47,25 +45,16 @@ export const ArticuloVentaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        const imagenResponse = await fetch(URL_API + 'articulo/imagenes', {
+                        await fetch(URL_API + 'articulo/imagenes', {
                             method: 'POST',
                             body: formData
-                        });
-
-                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
-                            imagenCargadaExitosamente = false
-                        } else {
-                            imagenCargadaExitosamente = true;
-                        }
+                        });        
                     }
                 }));
             }
 
-            if (imagenCargadaExitosamente && imagenes.length > 0) {
-                return 'ArticuloVenta creado con éxito';
-            } else {
-                return 'ArticuloVenta creado con éxito pero sin imágen asociada';
-            }
+            return 'Menú actualizado con éxito';
+
         } catch (error) {
             console.error('Error:', error);
             throw error;
@@ -89,8 +78,6 @@ export const ArticuloVentaService = {
                 return 'ArticuloVenta existente';
             }
 
-            let imagenCargadaExitosamente = false;
-
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes && (imagenes || imagenesEliminadas)) {
                 await Promise.all(imagenes.map(async (imagen) => {
@@ -100,35 +87,23 @@ export const ArticuloVentaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        const imagenResponse = await fetch(URL_API + 'articulo/imagenes', {
+                        await fetch(URL_API + 'articulo/imagenes', {
                             method: 'POST',
                             body: formData
                         });
-
-                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
-                            imagenCargadaExitosamente = false
-                        } else {
-                            imagenCargadaExitosamente = true;
-                        }
                     }
                 }));
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        const imagenResponse = await fetch(URL_API + 'articulo/imagen/' + imagen.id + '/delete', {
+                        await fetch(URL_API + 'articulo/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
-
-                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
-                            imagenCargadaExitosamente = false
-                        } else {
-                            imagenCargadaExitosamente = true;
-                        }
                     }));
                 }
             }
 
-            return 'Articulo actualizado con éxito';
+            return 'Menú actualizado con éxito';
 
         } catch (error) {
             console.error('Error:', error);

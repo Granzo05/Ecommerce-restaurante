@@ -1,22 +1,25 @@
 import React from 'react';
 import { MenuService } from '../../services/MenuService';
 import { useNavigate } from 'react-router-dom';
+import { toast, Toaster } from 'sonner';
 
 interface EliminarMenuProps {
-  menuId: number;
+  menuNombre: string;
 }
 
-const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuId }) => {
+const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuNombre }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
-    MenuService.deleteMenu(menuId)
-      .then(() => {
-        navigate('/opciones');
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    toast.promise(MenuService.deleteMenu(menuNombre), {
+      loading: 'Eliminando articulo...',
+      success: (message) => {
+        return message;
+      },
+      error: (message) => {
+        return message;
+      },
+    });
   };
 
   const onCancel = () => {
@@ -25,6 +28,7 @@ const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuId }) => {
 
   return (
       <div className="modal-info">
+        <Toaster/>
         <p>¿Seguro que quieres eliminar el menú?</p>
         <button onClick={onConfirm}>Confirmar</button>
         <button onClick={onCancel}>Cancelar</button>

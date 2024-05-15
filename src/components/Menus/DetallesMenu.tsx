@@ -2,18 +2,18 @@ import Carousel from 'react-bootstrap/Carousel';
 import '../../styles/modalFlotante.css';
 import { useState } from 'react';
 import { CarritoService } from '../../services/CarritoService';
-import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
+import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
 
 interface Props {
-  menuActual: ArticuloMenu;
+  menuActual: ArticuloMenuDTO;
 }
 
 export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
-  const imagenesInvertidas = [...menuActual.imagenes].reverse();
+  const imagenesInvertidas = [...menuActual.imagenesDTO].reverse();
   const [cantidadMenu, setCantidadMenu] = useState<number>(0);
 
 
-  async function handleAñadirCarrito(menu: ArticuloMenu) {
+  async function handleAñadirCarrito(menu: ArticuloMenuDTO) {
     await CarritoService.agregarAlCarrito(menu, cantidadMenu);
   }
 
@@ -34,12 +34,13 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
         <p>Ingredientes:</p>
         <ul>
           {menuActual.ingredientesMenu?.map((ingredienteMenu, index) => (
-            <li key={index}>* {ingredienteMenu.ingrediente?.nombre}</li>
+            <li key={index}>* {ingredienteMenu.ingredienteNombre}</li>
           ))}
         </ul>
-        <p>Tiempo de cocción: {menuActual.tiempoCoccion}</p>
+        <p>Tiempo de cocción: {menuActual.tiempoCoccion} minutos</p>
 
-        <input type="number" onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
+        <label htmlFor="cantidad">Cantidad:</label>
+        <input type="number" id='cantidad' onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
         <button type='submit' onClick={() => handleAñadirCarrito(menuActual)}>Añadir al carrito</button>
       </div>
     </div>

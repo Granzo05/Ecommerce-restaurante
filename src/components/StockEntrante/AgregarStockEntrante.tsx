@@ -17,6 +17,8 @@ function AgregarStockEntrante() {
   const [articulosVentaRecomendados, setArticulosVentaRecomendados] = useState<ArticuloVenta[]>([]);
   const [ingredientesInputs, setIngredientesInputs] = useState<Ingrediente[]>([]);
   const [ingredientesRecomendados, setIngredientesRecomendados] = useState<Ingrediente[]>([]);
+  const [inputIngrediente] = useState<string[]>([]);
+  const [inputArticulo] = useState<string[]>([]);
 
   // Estos index sirven para colocar el nombre del articulo al index correcto en caso de hacer clic en la recomendacion de ingrediente o articulo
   // Ya que puedo acceder al index actual de detalles
@@ -55,7 +57,7 @@ function AgregarStockEntrante() {
   }
 
   // Almacenaje de cada detalle por ingrediente
-  const almacenarIngrediente = (index: number, nombre: string) => {
+  const almacenarIngrediente = (indexDetalle: number, indexInput: number, nombre: string) => {
     // Busco todos los articulos que de nombre se parezcan
     const ingredientesRecomendados = ingredientes?.filter(ingrediente =>
       ingrediente.nombre.toLowerCase().includes(nombre.toLowerCase())
@@ -66,8 +68,10 @@ function AgregarStockEntrante() {
     let ingrediente = ingredientes.find(ingrediente => ingrediente.nombre === nombre);
 
     if (ingrediente) {
-      detallesStock[index].ingrediente = ingrediente;
+      detallesStock[indexDetalle].ingrediente = ingrediente;
+      inputIngrediente[indexInput] = ingrediente.nombre;
     }
+
   };
 
   const almacenarCantidad = (index: number, cantidad: number) => {
@@ -98,7 +102,7 @@ function AgregarStockEntrante() {
   };
 
   // Almacenaje de cada detalle por articulo
-  const almacenarArticulo = (index: number, nombre: string) => {
+  const almacenarArticulo = (indexDetalle: number, indexInput: number, nombre: string) => {
     // Busco todos los articulos que de nombre se parezcan
     const articulosRecomendados = articulosVenta?.filter(articulo =>
       articulo.nombre.toLowerCase().includes(nombre.toLowerCase())
@@ -109,7 +113,8 @@ function AgregarStockEntrante() {
     let articulo = articulosVenta.find(articulo => articulo.nombre === nombre);
 
     if (articulo) {
-      detallesStock[index].articuloVenta = articulo;
+      detallesStock[indexDetalle].articuloVenta = articulo;
+      inputArticulo[indexInput] = articulo.nombre;
     }
   };
 
@@ -156,23 +161,29 @@ function AgregarStockEntrante() {
       <br />
       <input type="date" placeholder="Fecha" onChange={(e) => { setFecha(new Date(e.target.value)) }} />
       <br />
-      {ingredientesInputs.map(() => (
-        <div className='div-ingrediente-menu'>
-          <input
-            type="text"
-            placeholder="Nombre ingrediente"
-            onChange={(e) => almacenarIngrediente(lastIndexDetalle, e.target.value)}
-          />
-          <ul className='lista-recomendaciones'>
-            {ingredientesRecomendados?.map((ingrediente, index) => (
-              <li className='opcion-recomendada' key={index} onClick={() => {
-                almacenarIngrediente(lastIndexDetalle, ingrediente.nombre)
-                setIngredientesRecomendados([])
-              }}>
-                {ingrediente.nombre}
-              </li>
-            ))}
-          </ul>
+      {ingredientesInputs.map((ingrediente, index) => (
+        <div className='div-ingrediente-menu' key={index}>
+          <div>
+            <input
+              type="text"
+              placeholder="Nombre ingrediente"
+              value={inputIngrediente[index]}
+              onChange={(e) => almacenarIngrediente(lastIndexDetalle, index, e.target.value)}
+              onClick={() => setIngredientesRecomendados(ingredientes)}
+            />
+            <br />
+            <ul className='lista-recomendaciones'>
+              {ingredientesRecomendados?.map((ingrediente, index) => (
+                <li className='opcion-recomendada' key={index} onClick={() => {
+                  almacenarIngrediente(lastIndexDetalle, index, ingrediente.nombre);
+                  setIngredientesRecomendados([])
+                }}>
+                  {ingrediente.nombre}
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <input
             type="number"
             placeholder="Cantidad del ingrediente"
@@ -191,23 +202,27 @@ function AgregarStockEntrante() {
 
       <br />
 
-      {articulosVentaInputs.map(() => (
-        <div className='div-ingrediente-menu'>
-          <input
-            type="text"
-            placeholder="Nombre articulo"
-            onChange={(e) => almacenarArticulo(lastIndexDetalle, e.target.value)}
-          />
-          <ul className='lista-recomendaciones'>
-            {articulosVentaRecomendados?.map((articulo, index) => (
-              <li className='opcion-recomendada' key={index} onClick={() => {
-                almacenarArticulo(lastIndexDetalle, articulo.nombre)
-                setArticulosVentaRecomendados([])
-              }}>
-                {articulo.nombre}
-              </li>
-            ))}
-          </ul>
+      {articulosVentaInputs.map((articulo, index) => (
+        <div className='div-ingrediente-menu' key={index}>
+          <div>
+            <input
+              type="text"
+              value={inputArticulo[index]}
+              placeholder="Nombre articulo"
+              onClick={() => setArticulosVentaRecomendados(articulosVenta)}
+              onChange={(e) => almacenarArticulo(lastIndexDetalle, index, e.target.value)}
+            />
+            <ul className='lista-recomendaciones'>
+              {articulosVentaRecomendados?.map((articulo, index) => (
+                <li className='opcion-recomendada' key={index} onClick={() => {
+                  almacenarArticulo(lastIndexDetalle, index, articulo.nombre)
+                  setArticulosVentaRecomendados([])
+                }}>
+                  {articulo.nombre}
+                </li>
+              ))}
+            </ul>
+          </div>
           <input
             type="number"
             placeholder="Cantidad del articulo"

@@ -25,7 +25,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const [cantidad, setCantidad] = useState(articuloOriginal.cantidadMedida);
 
   useEffect(() => {
-    console.log(EnumMedida.KILOGRAMOS.toString());
+    console.log(articuloOriginal.tipo.toString());
   }, [articuloOriginal])
 
   const handleImagen = (index: number, file: File | null) => {

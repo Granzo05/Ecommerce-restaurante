@@ -1,12 +1,12 @@
 export enum EnumTipoArticuloComida {
-    HAMBURGUESAS,
-    PANCHOS,
-    EMPANADAS,
-    PIZZAS,
-    LOMOS,
-    HELADO,
-    PARRILLA,
-    PASTAS,
-    SUSHI,
-    MILANESAS
+    HAMBURGUESAS = "HAMBURGUESAS",
+    PANCHOS = "PANCHOS",
+    EMPANADAS = "EMPANADAS",
+    PIZZAS = "PIZZAS",
+    LOMOS = "LOMOS",
+    HELADO = "HELADO",
+    PARRILLA = "PARRILLA",
+    PASTAS = "PASTAS",
+    SUSHI = "SUSHI",
+    MILANESAS = "MILANESAS"
 }

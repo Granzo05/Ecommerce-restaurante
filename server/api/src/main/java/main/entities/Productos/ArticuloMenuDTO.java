@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Ingredientes.IngredienteMenuDTO;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,25 +13,21 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@ToString
-@Table(name = "articulos_menu", schema = "buen_sabor")
-public class ArticuloMenu extends Articulo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ArticuloMenuDTO extends Articulo {
     private Long id;
-    @Column(name = "tiempo")
     private int tiempoCoccion;
-    @Column(name = "tipo")
     private EnumTipoArticuloComida tipo;
-    @Column(name = "comensales")
     private int comensales;
-    @Column(name = "descripcion")
     private String descripcion;
-    @JsonIgnoreProperties(value = {"articuloMenu"})
-    @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
-    private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
-    @OneToMany(mappedBy = "articuloMenu", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<ImagenesProducto> imagenes = new HashSet<>();
+    private Set<IngredienteMenuDTO> ingredientesMenu = new HashSet<>();
+    private Set<ImagenesProductoDTO> imagenes = new HashSet<>();
 
+    public ArticuloMenuDTO(Long id, String nombre, double precioVenta, int tiempoCoccion, EnumTipoArticuloComida tipo, int comensales, String descripcion) {
+        super(nombre, precioVenta);
+        this.id = id;
+        this.tiempoCoccion = tiempoCoccion;
+        this.tipo = tipo;
+        this.comensales = comensales;
+        this.descripcion = descripcion;
+    }
 }

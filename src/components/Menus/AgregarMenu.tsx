@@ -10,18 +10,17 @@ import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { Toaster, toast } from 'sonner'
 import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
-import { convertirStringAEnumMedida } from '../../utils/global_variables/functions';
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
-  const [ingredientesSelect, setIngredientesSelect] = useState<Ingrediente[]>([]);
+  const [ingredientesRecomendados, setIngredientesRecomendados] = useState<Ingrediente[]>([]);
   const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
-  function cargarSelectsIngredientes() {
+  function cargarResultadosIngredientes() {
     IngredienteService.getIngredientes()
       .then(data => {
-        setIngredientesSelect(data);
+        setIngredientesRecomendados(data);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -68,16 +67,16 @@ function AgregarMenu() {
     setIngredientes(nuevosIngredientes);
   };
 
-  const handleMedidaIngredienteChange = (index: number, medida: EnumMedida | null) => {
+  const handleMedidaIngredienteChange = (index: number, medida: EnumMedida | string) => {
     const nuevosIngredientes = [...ingredientes];
     nuevosIngredientes[index].medida = medida;
     setIngredientes(nuevosIngredientes);
   };
 
   const añadirCampoIngrediente = () => {
-    setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: EnumMedida.CENTIMETROS_CUBICOS, articuloMenu: null }]);
+    setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null }]);
     setSelectIndex(prevIndex => prevIndex + 1);
-    cargarSelectsIngredientes();
+    cargarResultadosIngredientes();
   };
 
   const quitarCampoIngrediente = () => {
@@ -97,11 +96,11 @@ function AgregarMenu() {
 
   const handleModalClose = () => {
     setShowAgregarStockModal(false);
-    cargarSelectsIngredientes();
+    cargarResultadosIngredientes();
   };
 
   const [tiempoCoccion, setTiempo] = useState(0);
-  const [tipo, setTipo] = useState<EnumTipoArticuloComida>(0);
+  const [tipo, setTipo] = useState<EnumTipoArticuloComida | string>('');
   const [comensales, setComensales] = useState(0);
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
@@ -164,18 +163,18 @@ function AgregarMenu() {
 
       <br />
       <label>
-        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(parseInt(e.target.value)) }}>
+        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
           <option>Seleccionar tipo de menú</option>
-          <option value={EnumTipoArticuloComida.HAMBURGUESAS}>Hamburguesas</option>
-          <option value={EnumTipoArticuloComida.PANCHOS}>Panchos</option>
-          <option value={EnumTipoArticuloComida.EMPANADAS}>Empanadas</option>
-          <option value={EnumTipoArticuloComida.PIZZAS}>Pizzas</option>
-          <option value={EnumTipoArticuloComida.LOMOS}>Lomos</option>
-          <option value={EnumTipoArticuloComida.HELADO}>Helado</option>
-          <option value={EnumTipoArticuloComida.PARRILLA}>Parrilla</option>
-          <option value={EnumTipoArticuloComida.PASTAS}>Pastas</option>
-          <option value={EnumTipoArticuloComida.SUSHI}>Sushi</option>
-          <option value={EnumTipoArticuloComida.MILANESAS}>Milanesas</option>
+          <option value={EnumTipoArticuloComida.HAMBURGUESAS.toString()}>Hamburguesas</option>
+          <option value={EnumTipoArticuloComida.PANCHOS.toString()}>Panchos</option>
+          <option value={EnumTipoArticuloComida.EMPANADAS.toString()}>Empanadas</option>
+          <option value={EnumTipoArticuloComida.PIZZAS.toString()}>Pizzas</option>
+          <option value={EnumTipoArticuloComida.LOMOS.toString()}>Lomos</option>
+          <option value={EnumTipoArticuloComida.HELADO.toString()}>Helado</option>
+          <option value={EnumTipoArticuloComida.PARRILLA.toString()}>Parrilla</option>
+          <option value={EnumTipoArticuloComida.PASTAS.toString()}>Pastas</option>
+          <option value={EnumTipoArticuloComida.SUSHI.toString()}>Sushi</option>
+          <option value={EnumTipoArticuloComida.MILANESAS.toString()}>Milanesas</option>
         </select>
       </label>
       <br />
@@ -187,15 +186,25 @@ function AgregarMenu() {
         </ModalFlotante>
         {ingredientes.map((ingredienteMenu, index) => (
           <div key={index} className='div-ingrediente-menu'>
-            <select
-              id={`select-ingredientes-${index}`}
-              onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
-            >
-              <option value="">Seleccionar ingrediente</option>
-              {ingredientesSelect.map((ingrediente, index) => (
-                <option key={index} value={ingrediente.nombre}>{ingrediente.nombre}</option>
-              ))}
-            </select>
+            <div>
+              <input
+                type="text"
+                placeholder="Nombre ingrediente"
+                value={ingredientes[index].ingrediente?.nombre}
+                onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
+              />
+              <br />
+              <ul className='lista-recomendaciones'>
+                {ingredientesRecomendados?.map((ingrediente, index) => (
+                  <li className='opcion-recomendada' key={index} onClick={() => {
+                    handleNombreIngredienteChange(index, ingrediente.nombre);
+                    setIngredientesRecomendados([])
+                  }}>
+                    {ingrediente.nombre}
+                  </li>
+                ))}
+              </ul>
+            </div>
             <input
               type="number"
               placeholder="Cantidad necesaria"
@@ -203,7 +212,7 @@ function AgregarMenu() {
             />
             <select
               id={`select-medidas-${index}`}
-              onChange={(e) => handleMedidaIngredienteChange(index, convertirStringAEnumMedida(e.target.value))}
+              onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
             >
               <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
               <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>

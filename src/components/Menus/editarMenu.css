@@ -11,14 +11,20 @@
     margin-bottom: 10px;
 }
 
-input, button {
+input,
+button {
     margin-bottom: 15px;
-}
-
-input[type="text"] {
-    width: 350px;
 }
 
 input[type="number"] {
     width: 75px;
+}
+
+.div-ingrediente-menu {
+    display: flex;
+    flex-direction: row;
+}
+
+.div-ingrediente-menu input {
+    width: 50px;
 }

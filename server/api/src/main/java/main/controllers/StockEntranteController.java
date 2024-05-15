@@ -34,18 +34,25 @@ public class StockEntranteController {
 
     @GetMapping("/stockEntrante/{idSucursal}")
     public Set<StockEntranteDTO> getStock(@PathVariable("idSucursal") long id) {
-        return new HashSet<>(stockEntranteRepository.findAllByIdSucursal(id));
+        List<StockEntranteDTO> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
+
+        for (StockEntranteDTO stock: stocksEntrantes) {
+            List<DetalleStockDTO> detalles = detalleStockRepository.findByIdStock(stock.getId());
+            stock.setDetallesStock(new HashSet<>(detalles));
+        }
+
+        return new HashSet<>(stocksEntrantes);
     }
 
     @Transactional
     @PostMapping("/sucursal/{idSucursal}/StockEntrante/create")
     public ResponseEntity<String> crearStock(@RequestBody StockEntrante stockDetail, @PathVariable("idSucursal") long id) {
-        Optional<StockEntrante> stockArticuloDB = stockEntranteRepository.findByIdAndIdSucursalAndFecha(stockDetail.getId(), id, stockDetail.getFechaLlegada());
+        Optional<StockEntrante> stockEntrante = stockEntranteRepository.findByIdAndIdSucursalAndFecha(stockDetail.getId(), id, stockDetail.getFechaLlegada());
         // Si no existe lo creamos
-        if (stockArticuloDB.isEmpty()) {
+        if (stockEntrante.isEmpty()) {
             for (DetalleStock detalle: stockDetail.getDetallesStock()) {
                 // Asignamos la sucursal completa
-                detalle.getStockEntrante().setSucursal(stockArticuloDB.get().getSucursal());
+                detalle.getStockEntrante().setSucursal(stockEntrante.get().getSucursal());
 
                 // Asignamos el articulo o el ingrediente completo
                 if(detalle.getArticuloVenta() != null) {

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface StockEntranteRepository extends JpaRepository<StockEntrante, Long> {
 
-    @Query("SELECT NEW main.entities.Stock.StockEntranteDTO(s.id, s.fechaLlegada, s.detallesStock) FROM StockEntrante s WHERE s.sucursal.id = :id AND s.fechaLlegada = :fecha AND s.borrado = 'NO'")
+    @Query("SELECT NEW main.entities.Stock.StockEntranteDTO(s.id, s.fechaLlegada) FROM StockEntrante s WHERE s.sucursal.id = :id AND s.borrado = 'NO'")
     List<StockEntranteDTO> findAllByIdSucursal(@Param("id") Long id);
 
     @Query("SELECT s FROM StockEntrante s WHERE s.id = :id AND s.sucursal.id = :idSucursal AND s.fechaLlegada = :fecha")

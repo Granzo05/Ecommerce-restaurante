@@ -8,23 +8,9 @@ import main.entities.Productos.ArticuloMenu;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Builder
-@ToString
-@Table(name = "ingredientes_menu", schema = "buen_sabor")
-public class IngredienteMenu {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class IngredienteMenuDTO {
     private Long id;
-    @Column(name = "cantidad_ingrediente")
     private int cantidad;
-    @Column(name = "medida")
     private EnumMedida medida;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_ingrediente")
-    private Ingrediente ingrediente;
-    @ManyToOne
-    @JoinColumn(name = "id_menu")
-    private ArticuloMenu articuloMenu;
-
+    private String ingredienteNombre;
 }

@@ -27,4 +27,9 @@ public class Articulo {
     private Set<Promocion> promociones = new HashSet<>();
     @Transient
     private Set<ImagenesProductoDTO> imagenesDTO = new HashSet<>();
+
+    public Articulo(String nombre, double precioVenta) {
+        this.nombre = nombre;
+        this.precioVenta = precioVenta;
+    }
 }

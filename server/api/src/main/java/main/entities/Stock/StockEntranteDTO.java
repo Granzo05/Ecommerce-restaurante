@@ -18,7 +18,10 @@ public class StockEntranteDTO {
     private Long id;
     public Date fechaLlegada;
     @JsonIgnoreProperties(value = {"stockEntrante"})
-    private Set<DetalleStock> detallesStock = new HashSet<>();
+    private Set<DetalleStockDTO> detallesStock = new HashSet<>();
 
-
+    public StockEntranteDTO(Long id, Date fechaLlegada) {
+        this.id = id;
+        this.fechaLlegada = fechaLlegada;
+    }
 }

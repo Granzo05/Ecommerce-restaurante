@@ -2,6 +2,7 @@ package main.repositories;
 
 import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.ArticuloMenuDTO;
 import main.entities.Productos.EnumTipoArticuloComida;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,9 +17,9 @@ public interface ArticuloMenuRepository extends JpaRepository<ArticuloMenu, Long
     @Query("SELECT m FROM ArticuloMenu m WHERE m.nombre = :nombre AND m.borrado = 'NO'")
     Optional<ArticuloMenu> findByName(@Param("nombre") String nombre);
 
-    @Query("SELECT m FROM ArticuloMenu m WHERE m.borrado = 'NO'")
-    List<ArticuloMenu> findAllByNotBorrado();
+    @Query("SELECT NEW main.entities.Productos.ArticuloMenuDTO(m.id, m.nombre,m.precioVenta ,m.tiempoCoccion, m.tipo, m.comensales, m.descripcion) FROM ArticuloMenu m WHERE m.borrado = 'NO'")
+    List<ArticuloMenuDTO> findAllByNotBorrado();
 
-    @Query("SELECT m FROM ArticuloMenu m WHERE m.borrado = 'NO' AND m.tipo = :tipo")
-    List<ArticuloMenu> findByType(EnumTipoArticuloComida tipo);
+    @Query("SELECT NEW main.entities.Productos.ArticuloMenuDTO(m.id, m.nombre,m.precioVenta ,m.tiempoCoccion, m.tipo, m.comensales, m.descripcion) FROM ArticuloMenu m WHERE m.borrado = 'NO' AND m.tipo = :tipo")
+    List<ArticuloMenuDTO> findByType(EnumTipoArticuloComida tipo);
 }

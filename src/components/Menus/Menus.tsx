@@ -7,20 +7,20 @@ import EliminarMenu from "./EliminarMenu";
 import '../../styles/menuPorTipo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
-import { ArticuloMenu } from "../../types/Productos/ArticuloMenu";
 import { EmpleadoService } from "../../services/EmpleadoService";
 import ModalFlotante from "../ModalFlotante";
+import { ArticuloMenuDTO } from "../../types/Productos/ArticuloMenuDTO";
 
 const Menus = () => {
-    const [menus, setMenus] = useState<ArticuloMenu[]>([]);
+    const [menus, setMenus] = useState<ArticuloMenuDTO[]>([]);
     const [mostrarMenus, setMostrarMenus] = useState(true);
 
     const [showAgregarMenuModal, setShowAgregarMenuModal] = useState(false);
     const [showEditarMenuModal, setShowEditarMenuModal] = useState(false);
     const [showEliminarMenuModal, setShowEliminarMenuModal] = useState(false);
 
-    const [selectedMenu, setSelectedMenu] = useState<ArticuloMenu | null>(null);
-    const [selectedId, setSelectedId] = useState<number | null>(0);
+    const [selectedMenu, setSelectedMenu] = useState<ArticuloMenuDTO | null>(null);
+    const [selectedNombre, setSelectedNombre] = useState<string>('');
 
     useEffect(() => {
         fetchData();
@@ -41,7 +41,6 @@ const Menus = () => {
             MenuService.getMenus()
                 .then(data => {
                     setMenus(data);
-                    console.log(data)
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -58,7 +57,7 @@ const Menus = () => {
         setMostrarMenus(false);
     };
 
-    const handleEditarMenu = (menu: ArticuloMenu) => {
+    const handleEditarMenu = (menu: ArticuloMenuDTO) => {
         setSelectedMenu(menu);
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(true);
@@ -66,8 +65,8 @@ const Menus = () => {
         setMostrarMenus(false);
     };
 
-    const handleEliminarMenu = (id: number) => {
-        setSelectedId(id);
+    const handleEliminarMenu = (nombre: string) => {
+        setSelectedNombre(nombre);
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(false);
         setShowEliminarMenuModal(true);
@@ -92,10 +91,12 @@ const Menus = () => {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
+                                <th>Tiempo de cocción</th>
                                 <th>Comensales</th>
                                 <th>Descripcion</th>
                                 <th>Ingredientes</th>
                                 <th>Precio</th>
+                                <th>Tipo</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -103,15 +104,20 @@ const Menus = () => {
                             {menus.length > 0 && menus.map(menu => (
                                 <tr key={menu.id}>
                                     <td>{menu.nombre}</td>
+                                    <td>{menu.tiempoCoccion}</td>
                                     <td>{menu.comensales}</td>
                                     <td>{menu.descripcion}</td>
-                                    {menu.ingredientesMenu?.map(ingrediente => (
-                                        <td key={ingrediente.id}>{ingrediente.ingrediente?.nombre}</td>
-                                    ))}
-                                    <td>{menu.precioVenta}</td>
-
                                     <td>
-                                        <button onClick={() => handleEliminarMenu(menu.id)}>ELIMINAR</button>
+                                        {menu.ingredientesMenu?.map((ingrediente, index) => (
+                                            <span key={index}>
+                                                {ingrediente.ingredienteNombre} - {ingrediente.cantidad} {ingrediente.medida}<br />
+                                            </span>
+                                        ))}
+                                    </td>
+                                    <td>{menu.precioVenta}</td>
+                                    <td>{menu.tipo}</td>
+                                    <td>
+                                        <button onClick={() => handleEliminarMenu(menu.nombre)}>ELIMINAR</button>
                                         <button onClick={() => handleEditarMenu(menu)}>EDITAR</button>
                                     </td>
                                 </tr>
@@ -128,9 +134,9 @@ const Menus = () => {
                 {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
             </ModalFlotante>
             <ModalFlotante isOpen={showEliminarMenuModal} onClose={handleModalClose}>
-                {selectedId && <EliminarMenu menuId={selectedId} />}
+                {selectedNombre && <EliminarMenu menuNombre={selectedNombre} />}
             </ModalFlotante>
-       
+
         </div>
 
     )

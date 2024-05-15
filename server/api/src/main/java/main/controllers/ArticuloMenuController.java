@@ -2,9 +2,8 @@ package main.controllers;
 
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
-import main.entities.Productos.ArticuloMenu;
-import main.entities.Productos.EnumTipoArticuloComida;
-import main.entities.Productos.ImagenesProducto;
+import main.entities.Ingredientes.IngredienteMenuDTO;
+import main.entities.Productos.*;
 import main.repositories.ArticuloMenuRepository;
 import main.repositories.ImagenesProductoRepository;
 import main.repositories.IngredienteMenuRepository;
@@ -42,11 +41,12 @@ public class ArticuloMenuController {
 
     // Busca por id de menu
     @GetMapping("/menus")
-    public Set<ArticuloMenu> getMenusDisponibles() {
-        List<ArticuloMenu> menus = articuloMenuRepository.findAllByNotBorrado();
+    public Set<ArticuloMenuDTO> getMenusDisponibles() {
+        List<ArticuloMenuDTO> menus = articuloMenuRepository.findAllByNotBorrado();
 
-        for(ArticuloMenu menu: menus) {
+        for(ArticuloMenuDTO menu: menus) {
             menu.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdMenu(menu.getId())));
+            menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
         }
 
         return new HashSet<>(menus);
@@ -146,54 +146,13 @@ public class ArticuloMenuController {
     }
 
     @GetMapping("/menu/tipo/{tipoMenu}")
-    public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("tipoMenu") String tipo) {
+    public Set<ArticuloMenuDTO> getMenusPorTipo(@PathVariable("tipoMenu") String tipo) {
         String tipoMenu = tipo.toUpperCase().replace(" ", "_");
-        System.out.println(tipoMenu);
-        System.out.println(EnumTipoArticuloComida.valueOf(tipoMenu));
-        Set<ArticuloMenu> articuloMenus = (new HashSet<>(articuloMenuRepository.findByType(EnumTipoArticuloComida.valueOf(tipoMenu))));
+        Set<ArticuloMenuDTO> articuloMenus = (new HashSet<>(articuloMenuRepository.findByType(EnumTipoArticuloComida.valueOf(tipoMenu))));
 
-        for (ArticuloMenu articuloMenu : articuloMenus) {
-            HashSet<IngredienteMenu> ingredientes = ingredienteMenuRepository.findByMenuId(articuloMenu.getId());
-
-            articuloMenu.setIngredientesMenu(ingredientes);
-
-            // Obtener la ruta de la carpeta de imágenes
-            String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + articuloMenu.getNombre().replaceAll(" ", "") + File.separator;
-            // Verificar si la carpeta existe
-            File carpeta = new File(rutaCarpeta);
-            if (!carpeta.exists()) {
-                // Si la carpeta no existe, pasamos al siguiente menu
-                continue;
-            }
-
-            // Obtener todos los archivos en la carpeta
-            File[] archivos = carpeta.listFiles();
-
-            // Recorrer los archivos y agregarlos a la lista de respuestas
-            if (archivos != null) {
-                for (File archivo : archivos) {
-                    if (archivo.isFile()) {
-                        try {
-                            // Construir la URL de descarga
-                            String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                                    .path("/menu/imagenes/")
-                                    .path(articuloMenu.getNombre().replaceAll(" ", ""))
-                                    .path("/")
-                                    .path(archivo.getName().replaceAll(" ", ""))
-                                    .toUriString();
-                            ImagenesProducto response = ImagenesProducto.builder()
-                                    .nombre(archivo.getName().replaceAll(" ", ""))
-                                    .ruta(downloadUrl)
-                                    .formato(Files.probeContentType(archivo.toPath()))
-                                    .build();
-                            articuloMenu.getImagenes().add(response);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
+        for (ArticuloMenuDTO articuloMenu : articuloMenus) {
+            articuloMenu.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdMenu(articuloMenu.getId())));
+            articuloMenu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(articuloMenu.getId())));
         }
         return articuloMenus;
     }
@@ -221,9 +180,9 @@ public class ArticuloMenuController {
         return new ResponseEntity<>("El menu ha sido actualizado correctamente", HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/menu/{id}/delete")
-    public ResponseEntity<String> borrarMenu(@PathVariable("id") Long id) {
-        Optional<ArticuloMenu> menu = articuloMenuRepository.findById(id);
+    @PutMapping("/menu/{nombre}/delete")
+    public ResponseEntity<String> borrarMenu(@PathVariable("nombre") String nombre) {
+        Optional<ArticuloMenu> menu = articuloMenuRepository.findByName(nombre);
         if (menu.isEmpty()) {
             return new ResponseEntity<>("El menu ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
         }

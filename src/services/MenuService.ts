@@ -1,4 +1,5 @@
 import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
+import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
 import { EnumTipoArticuloComida } from '../types/Productos/EnumTipoArticuloComida';
 import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
 import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
@@ -6,13 +7,13 @@ import { URL_API } from '../utils/global_variables/const';
 
 export const MenuService = {
 
-    getMenus: async (): Promise<ArticuloMenu[]> => {
+    getMenus: async (): Promise<ArticuloMenuDTO[]> => {
         const response = await fetch(URL_API + 'menus')
 
         return await response.json();
     },
 
-    getMenusPorTipo: async (tipoComida: EnumTipoArticuloComida): Promise<ArticuloMenu[]> => {
+    getMenusPorTipo: async (tipoComida: EnumTipoArticuloComida | null): Promise<ArticuloMenuDTO[]> => {
         const response = await fetch(URL_API + 'menu/tipo/' + tipoComida);
 
         return await response.json();
@@ -33,10 +34,8 @@ export const MenuService = {
 
             if (menuResponse.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
                 cargarImagenes = false;
-                return 'ArticuloMenu existente';
+                return 'Menu existente';
             }
-
-            let imagenCargadaExitosamente = false;
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes) {
@@ -47,25 +46,15 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        const imagenResponse = await fetch(URL_API + 'menu/imagenes', {
+                        await fetch(URL_API + 'menu/imagenes', {
                             method: 'POST',
                             body: formData
                         });
-
-                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
-                            imagenCargadaExitosamente = false
-                        } else {
-                            imagenCargadaExitosamente = true;
-                        }
                     }
                 }));
             }
+            return 'Articulo actualizado con éxito';
 
-            if (imagenCargadaExitosamente && imagenes.length > 0) {
-                return 'ArticuloMenu creado con éxito';
-            } else {
-                return 'Ocurrió un error con la imagen';
-            }
         } catch (error) {
             console.error('Error:', error);
             throw error;
@@ -84,12 +73,11 @@ export const MenuService = {
 
             let cargarImagenes = true;
 
+
             if (response.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
                 cargarImagenes = false;
-                return 'ArticuloMenu existente';
+                return 'Menu existente';
             }
-
-            let imagenCargadaExitosamente = false;
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes && (imagenes || imagenesEliminadas)) {
@@ -100,40 +88,24 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        const imagenResponse = await fetch(URL_API + 'menu/imagenes', {
+                        await fetch(URL_API + 'menu/imagenes', {
                             method: 'POST',
                             body: formData
                         });
 
-                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
-                            imagenCargadaExitosamente = false
-                        } else {
-                            imagenCargadaExitosamente = true;
-                        }
                     }
                 }));
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        const imagenResponse = await fetch(URL_API + 'menu/imagen/' + imagen.id + '/delete', {
+                        await fetch(URL_API + 'menu/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
 
-                        if (imagenResponse.status === 404 || imagenResponse.status === 400) {
-                            imagenCargadaExitosamente = false
-                        } else {
-                            imagenCargadaExitosamente = true;
-                        }
                     }));
                 }
             }
-
-            if (imagenCargadaExitosamente) {
-                return 'Menu actualizado con éxito';
-            } else {
-                return 'Ocurrió un error';
-            }
-
+            return 'Articulo actualizado con éxito';
 
         } catch (error) {
             console.error('Error:', error);
@@ -142,9 +114,9 @@ export const MenuService = {
 
     },
 
-    deleteMenu: async (id: number): Promise<string> => {
+    deleteMenu: async (nombre: string): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `menu/${id}/delete`, {
+            const response = await fetch(URL_API + `menu/${nombre}/delete`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
