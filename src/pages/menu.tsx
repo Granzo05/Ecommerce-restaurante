@@ -38,7 +38,9 @@ function RestaurantesPorComida() {
     <div id="grid-container">
       {menus.length > 0 && menus.map((menu) => (
         <div key={menu.id} className="grid-item" onClick={handleMostrarMenu} style={{ width: '300px' }}>
-          <img key={menu.imagenesDTO[0].nombre} src={menu.imagenesDTO[0].ruta} alt={menu.imagenesDTO[0].nombre} />
+          {menu.imagenesDTO.length > 0 && (
+            <img key={menu.imagenesDTO[0].nombre} src={menu.imagenesDTO[0].ruta} alt={menu.imagenesDTO[0].nombre} />
+          )}
           <h2>{menu.nombre}</h2>
           <h2>${menu.precioVenta}</h2>
           <h2>Descripción: {menu.descripcion}</h2>

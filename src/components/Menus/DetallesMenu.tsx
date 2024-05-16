@@ -10,7 +10,7 @@ interface Props {
 
 export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
   const imagenesInvertidas = [...menuActual.imagenesDTO].reverse();
-  const [cantidadMenu, setCantidadMenu] = useState<number>(0);
+  const [cantidadMenu, setCantidadMenu] = useState<number>(1);
 
 
   async function handleAñadirCarrito(menu: ArticuloMenuDTO) {
@@ -40,7 +40,7 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
         <p>Tiempo de cocción: {menuActual.tiempoCoccion} minutos</p>
 
         <label htmlFor="cantidad">Cantidad:</label>
-        <input type="number" id='cantidad' onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
+        <input type="number" value={cantidadMenu} id='cantidad' onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
         <button type='submit' onClick={() => handleAñadirCarrito(menuActual)}>Añadir al carrito</button>
       </div>
     </div>

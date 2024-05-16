@@ -17,6 +17,9 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+!**/src/main/webapp/
+**/src/main/webapp/WEB-INF/images/
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
