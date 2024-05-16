@@ -2,7 +2,7 @@ import { Provincia } from '../types/Domicilio/Provincia';
 import { URL_API } from '../utils/global_variables/const';
 
 export const ProvinciaService = {
-    getProvincias: async (): Promise<Provincia[] | null> => {
+    getProvincias: async (): Promise<Provincia[] | []> => {
         try {
             const response = await fetch(URL_API + `provincias`, {
                 method: 'GET',

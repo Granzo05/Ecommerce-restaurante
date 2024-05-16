@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import ModalFlotante from '../ModalFlotante';
-import { IngredienteService } from '../../services/IngredienteService';
 import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
 import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
@@ -10,22 +9,14 @@ import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { Toaster, toast } from 'sonner'
 import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
+import InputComponent from '../InputComponent';
+import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
-  const [ingredientesRecomendados, setIngredientesRecomendados] = useState<Ingrediente[]>([]);
   const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
-  const [selectIndex, setSelectIndex] = useState<number>(0);
-
-  function cargarResultadosIngredientes() {
-    IngredienteService.getIngredientes()
-      .then(data => {
-        setIngredientesRecomendados(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
+  let [selectIndexImagenes, setSelectIndexImagenes] = useState<number>(0);
+  let [selectIndexIngredientes, setSelectIndexIngredientes] = useState<number>(0);
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -45,8 +36,8 @@ function AgregarMenu() {
       nuevasImagenes.pop();
       setImagenes(nuevasImagenes);
 
-      if (selectIndex > 0) {
-        setSelectIndex(prevIndex => prevIndex - 1);
+      if (selectIndexImagenes > 0) {
+        setSelectIndexImagenes(prevIndex => prevIndex - 1);
       }
     }
   };
@@ -54,6 +45,7 @@ function AgregarMenu() {
   // Ingredientes
 
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
+    console.log(ingredientes)
     const nuevosIngredientes = [...ingredientes];
     if (nuevosIngredientes && nuevosIngredientes[index].ingrediente) {
       nuevosIngredientes[index].ingrediente.nombre = nombre;
@@ -74,21 +66,37 @@ function AgregarMenu() {
   };
 
   const añadirCampoIngrediente = () => {
-    setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null }]);
-    setSelectIndex(prevIndex => prevIndex + 1);
-    cargarResultadosIngredientes();
-  };
-
-  const quitarCampoIngrediente = () => {
-    if (ingredientes.length > 0) {
-      const nuevosIngredientes = [...ingredientes];
-      nuevosIngredientes.pop();
-      setIngredientes(nuevosIngredientes);
+    // SI no hay ingredientes que genere en valor 0 de index
+    if (ingredientes.length === 0) {
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null }]);
+    } else {
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null }]);
+      setSelectIndexIngredientes(prevIndex => prevIndex + 1);
     }
   };
 
+  const quitarCampoIngrediente = () => {
+    const nuevosIngredientes = [...ingredientes];
+    nuevosIngredientes.pop();
+    setIngredientes(nuevosIngredientes);
+    selectIndexIngredientes--;
+  };
+
+
   // Modal flotante de ingrediente
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>('');
+  const [elementosABuscar, setElementosABuscar] = useState<string>('');
   const [showAgregarIngredienteModal, setShowAgregarStockModal] = useState(false);
+
+  const handleSelectProduct = (product: string) => {
+    setSelectedProduct(product);
+  };
+
+  const handleAbrirRecomendaciones = (busqueda: string) => {
+    setElementosABuscar(busqueda)
+    setModalBusqueda(true);
+  };
 
   const handleAgregarIngrediente = () => {
     setShowAgregarStockModal(true);
@@ -96,7 +104,10 @@ function AgregarMenu() {
 
   const handleModalClose = () => {
     setShowAgregarStockModal(false);
-    cargarResultadosIngredientes();
+    setModalBusqueda(false)
+    if (selectedProduct) {
+      handleNombreIngredienteChange(selectIndexIngredientes, selectedProduct);
+    }
   };
 
   const [tiempoCoccion, setTiempo] = useState(0);
@@ -187,23 +198,9 @@ function AgregarMenu() {
         {ingredientes.map((ingredienteMenu, index) => (
           <div key={index} className='div-ingrediente-menu'>
             <div>
-              <input
-                type="text"
-                placeholder="Nombre ingrediente"
-                value={ingredientes[index].ingrediente?.nombre}
-                onChange={(e) => handleNombreIngredienteChange(index, e.target.value)}
-              />
+              <InputComponent onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
+              {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={0} />}
               <br />
-              <ul className='lista-recomendaciones'>
-                {ingredientesRecomendados?.map((ingrediente, index) => (
-                  <li className='opcion-recomendada' key={index} onClick={() => {
-                    handleNombreIngredienteChange(index, ingrediente.nombre);
-                    setIngredientesRecomendados([])
-                  }}>
-                    {ingrediente.nombre}
-                  </li>
-                ))}
-              </ul>
             </div>
             <input
               type="number"

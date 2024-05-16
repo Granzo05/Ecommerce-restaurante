@@ -79,7 +79,6 @@ const LoginCliente = () => {
     }
 
     async function cargarLocalidades(idDepartamento: number) {
-        console.log(idDepartamento)
         await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento)
             .then(async localidades => {
                 setLocalidades(localidades);

@@ -63,7 +63,7 @@ export const LocalidadService = {
         }
     },
 
-    getLocalidadesByDepartamentoId: async (departamentoId: number): Promise<Localidad[]> => {
+    getLocalidadesByDepartamentoId: async (departamentoId: number): Promise<Localidad[] | []> => {
         try {
             const response = await fetch(URL_API + `localidades/${departamentoId}`, {
                 method: 'GET',

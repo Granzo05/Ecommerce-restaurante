@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
 import ModalFlotante from '../ModalFlotante';
@@ -21,7 +21,7 @@ interface EditarMenuProps {
 
 const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
-  const [ingredientesMuestra] = useState<IngredienteMenuDTO[]>(menuOriginal.ingredientesMenu);
+  const [ingredientesMuestra, setIngredientesMuestra] = useState<IngredienteMenuDTO[]>(menuOriginal.ingredientesMenu);
   const [ingredientesRecomendados, setIngredientesRecomendados] = useState<Ingrediente[]>([]);
   const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(menuOriginal.imagenesDTO);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
@@ -36,6 +36,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
 
   const [mostrarDatos, setMostrarDatos] = useState(true);
+
+  useEffect(() => {
+    console.log(menuOriginal)
+  }, [menuOriginal]);
 
   function cargarResultadosIngredientes() {
     IngredienteService.getIngredientes()
@@ -79,6 +83,20 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     const imagenEliminada = nuevasImagenes.splice(index, 1)[0];
     setImagenesMuestra(nuevasImagenes);
     setImagenesEliminadas([...imagenesEliminadas, imagenEliminada]);
+  };
+
+  // Ingredientes viejos
+
+  const handleCantidadIngredienteMostrableChange = (index: number, cantidad: number) => {
+    const nuevosIngredientes = [...ingredientesMuestra];
+    nuevosIngredientes[index].cantidad = cantidad;
+    setIngredientesMuestra(nuevosIngredientes);
+  };
+
+  const handleMedidaIngredienteMostrableChange = (index: number, medida: EnumMedida | string) => {
+    const nuevosIngredientes = [...ingredientesMuestra];
+    nuevosIngredientes[index].medida = medida;
+    setIngredientesMuestra(nuevosIngredientes);
   };
 
   ///////// INGREDIENTES
@@ -249,12 +267,12 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
                   type="number"
                   value={ingredienteMenu.cantidad}
                   placeholder="Cantidad necesaria"
-                  onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))}
+                  onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))}
                 />
                 <select
                   id={`select-medidas-${index}`}
                   value={ingredienteMenu?.medida?.toString()}
-                  onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
+                  onChange={(e) => handleMedidaIngredienteMostrableChange(index, e.target.value)}
                 >
                   <option value="">Seleccionar medida ingrediente</option>
                   <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>

@@ -42,7 +42,7 @@ export const DepartamentoService = {
         }
     },
 
-    getDepartamentosByProvinciaId: async (provinciaId: number): Promise<Departamento[] | null> => {
+    getDepartamentosByProvinciaId: async (provinciaId: number): Promise<Departamento[] | []> => {
         try {
             const response = await fetch(URL_API + `departamentos/${provinciaId}`, {
                 method: 'GET',
