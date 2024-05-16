@@ -16,6 +16,7 @@
 
 html {
     height: 100%;
+    
 }
 
 body {
@@ -31,6 +32,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
 }
 
 *::selection {
@@ -117,8 +119,8 @@ body {
     max-height: 200rem;
     height: 100%;
     width: 100%;
-    padding-top: 113px;
     background-color: black;
+    padding: 60px
 }
 
 .form-side {
@@ -129,6 +131,7 @@ body {
     position: relative;
     margin: 10px;
     border-radius: 2rem;
+    
 }
 
 .logo {
