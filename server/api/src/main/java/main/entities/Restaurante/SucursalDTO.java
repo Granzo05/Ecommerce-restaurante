@@ -1,18 +1,10 @@
 package main.entities.Restaurante;
 
-import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
-import main.entities.Productos.Promocion;
-import main.entities.Stock.Stock;
-import main.entities.Stock.StockEntrante;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter

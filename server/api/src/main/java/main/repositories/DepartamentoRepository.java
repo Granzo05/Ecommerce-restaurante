@@ -2,8 +2,6 @@ package main.repositories;
 
 import main.entities.Domicilio.Departamento;
 import main.entities.Domicilio.DepartamentoDTO;
-import main.entities.Domicilio.Pais;
-import main.entities.Domicilio.Provincia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +14,7 @@ import java.util.Optional;
 public interface DepartamentoRepository extends JpaRepository<Departamento, Long> {
     @Query("SELECT NEW main.entities.Domicilio.DepartamentoDTO(d.id, d.nombre) FROM Departamento d WHERE d.nombre = :nombre")
     Optional<DepartamentoDTO> findByNombre(@Param("nombre") String nombre);
+
     @Query("SELECT NEW main.entities.Domicilio.DepartamentoDTO(d.id, d.nombre) FROM Departamento d")
     List<DepartamentoDTO> findAllDTO();
 

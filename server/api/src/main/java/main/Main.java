@@ -4,13 +4,15 @@ import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Domicilio.*;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.Sucursal;
-import main.repositories.*;
+import main.repositories.EmpresaRepository;
+import main.repositories.LocalidadRepository;
+import main.repositories.PaisRepository;
+import main.repositories.ProvinciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -22,9 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @SpringBootApplication
 @EntityScan("main.entities")
@@ -48,14 +48,15 @@ public class Main {
             }
         };
     }
-    @Autowired(required=true)
+
+    @Autowired(required = true)
     private PaisRepository paisRepository;
-    @Autowired(required=true)
+    @Autowired(required = true)
     private ProvinciaRepository provinciaRepository;
-    @Autowired(required=true)
+    @Autowired(required = true)
     private LocalidadRepository localidadRepository;
 
-    @Autowired(required=true)
+    @Autowired(required = true)
     private EmpresaRepository empresaRepository;
     private final String RUTACSV = "D://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
     private final String SEPARACIONCSV = ";";
@@ -98,8 +99,8 @@ public class Main {
 
                 Sucursal sucursal = new Sucursal();
                 sucursal.setEmpresa(empresa);
-                sucursal.setHorarioApertura(LocalTime.of(18,0));
-                sucursal.setHorarioCierre(LocalTime.of(23,0));
+                sucursal.setHorarioApertura(LocalTime.of(18, 0));
+                sucursal.setHorarioCierre(LocalTime.of(23, 0));
                 sucursal.setEmail("a@gmail.com");
                 sucursal.setPrivilegios("negocio");
                 sucursal.setContraseña(Encrypt.cifrarPassword("123"));

@@ -1,16 +1,15 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Ingredientes.Ingrediente;
-import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
-import main.entities.Productos.EnumTipoArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockArticuloVentaDTO;
 import main.entities.Stock.StockDTO;
-import main.entities.Stock.StockIngredientes;
-import main.repositories.*;
+import main.repositories.ArticuloVentaRepository;
+import main.repositories.IngredienteRepository;
+import main.repositories.StockArticuloVentaRepository;
+import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

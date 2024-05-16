@@ -1,11 +1,7 @@
 package main.entities.Stock;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
-import main.entities.Ingredientes.Ingrediente;
-import main.entities.Restaurante.Sucursal;
 
 @Getter
 @Setter

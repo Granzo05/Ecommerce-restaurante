@@ -1,10 +1,7 @@
 package main.entities.Stock;
 
-import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
-import main.entities.Restaurante.Sucursal;
-import net.minidev.json.annotate.JsonIgnore;
 
 @Getter
 @Setter

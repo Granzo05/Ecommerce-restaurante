@@ -1,9 +1,10 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Productos.ArticuloVenta;
-import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.*;
+import main.entities.Stock.DetalleStock;
+import main.entities.Stock.DetalleStockDTO;
+import main.entities.Stock.StockEntrante;
+import main.entities.Stock.StockEntranteDTO;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class StockEntranteController {
     public Set<StockEntranteDTO> getStock(@PathVariable("idSucursal") long id) {
         List<StockEntranteDTO> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
 
-        for (StockEntranteDTO stock: stocksEntrantes) {
+        for (StockEntranteDTO stock : stocksEntrantes) {
             List<DetalleStockDTO> detalles = detalleStockRepository.findByIdStock(stock.getId());
             stock.setDetallesStock(new HashSet<>(detalles));
         }
@@ -50,12 +51,12 @@ public class StockEntranteController {
         Optional<StockEntrante> stockEntrante = stockEntranteRepository.findByIdAndIdSucursalAndFecha(stockDetail.getId(), id, stockDetail.getFechaLlegada());
         // Si no existe lo creamos
         if (stockEntrante.isEmpty()) {
-            for (DetalleStock detalle: stockDetail.getDetallesStock()) {
+            for (DetalleStock detalle : stockDetail.getDetallesStock()) {
                 // Asignamos la sucursal completa
                 detalle.getStockEntrante().setSucursal(stockEntrante.get().getSucursal());
 
                 // Asignamos el articulo o el ingrediente completo
-                if(detalle.getArticuloVenta() != null) {
+                if (detalle.getArticuloVenta() != null) {
                     detalle.setArticuloVenta(articuloVentaRepository.findByName(detalle.getArticuloVenta().getNombre()).get());
                 } else if (detalle.getIngrediente() != null) {
                     detalle.setIngrediente(ingredienteRepository.findByName(detalle.getIngrediente().getNombre()).get());

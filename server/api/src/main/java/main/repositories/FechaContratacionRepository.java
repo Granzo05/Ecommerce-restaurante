@@ -1,7 +1,5 @@
 package main.repositories;
 
-import main.entities.Domicilio.Domicilio;
-import main.entities.Domicilio.DomicilioDTO;
 import main.entities.Restaurante.FechaContratacionEmpleado;
 import main.entities.Restaurante.FechaContratacionEmpleadoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;

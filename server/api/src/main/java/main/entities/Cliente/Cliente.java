@@ -3,7 +3,6 @@ package main.entities.Cliente;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Pedidos.Pedido;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 

@@ -1,15 +1,10 @@
 package main.entities.Restaurante;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.*;
-import main.entities.Domicilio.Domicilio;
+import lombok.Getter;
+import lombok.Setter;
 import main.entities.Domicilio.DomicilioDTO;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter

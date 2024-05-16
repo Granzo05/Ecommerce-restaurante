@@ -6,7 +6,6 @@ import lombok.*;
 import main.entities.Cliente.Cliente;
 import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Sucursal;
-import net.minidev.json.annotate.JsonIgnore;
 
 @Setter
 @Getter
@@ -28,7 +27,7 @@ public class Domicilio {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_localidad")
     private Localidad localidad;
-    @JsonIgnoreProperties(value="domicilios")
+    @JsonIgnoreProperties(value = "domicilios")
     @ManyToOne
     @JoinTable(
             name = "clientes_domicilio",
@@ -36,7 +35,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_cliente")
     )
     private Cliente cliente;
-    @JsonIgnoreProperties(value="domicilio")
+    @JsonIgnoreProperties(value = "domicilio")
     @OneToOne
     @JoinTable(
             name = "sucursales_domicilio",
@@ -44,7 +43,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Sucursal sucursal;
-    @JsonIgnoreProperties(value="domicilios")
+    @JsonIgnoreProperties(value = "domicilios")
     @ManyToOne
     @JoinTable(
             name = "empleados_domicilio",

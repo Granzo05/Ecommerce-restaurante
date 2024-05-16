@@ -442,15 +442,15 @@ public class SucursalController {
             // Encriptar los nombres de la localidad, el departamento y la provincia
             Localidad localidad = domicilio.getLocalidad();
 
-            if(esNecesarioEncriptar(localidad.getNombre())) {
+            if (esNecesarioEncriptar(localidad.getNombre())) {
                 localidad.setNombre(Encrypt.encriptarString(localidad.getNombre()));
             }
 
-            if(esNecesarioEncriptar(localidad.getDepartamento().getNombre())) {
+            if (esNecesarioEncriptar(localidad.getDepartamento().getNombre())) {
                 localidad.getDepartamento().setNombre(Encrypt.encriptarString(localidad.getDepartamento().getNombre()));
             }
 
-            if(esNecesarioEncriptar(localidad.getDepartamento().getProvincia().getNombre())) {
+            if (esNecesarioEncriptar(localidad.getDepartamento().getProvincia().getNombre())) {
                 localidad.getDepartamento().getProvincia().setNombre(Encrypt.encriptarString(localidad.getDepartamento().getProvincia().getNombre()));
             }
 
@@ -483,7 +483,7 @@ public class SucursalController {
             if (Character.isDigit(c)) {
                 contadorNumeros++;
                 // Si el texto contiene 3 o mas numeros
-                if(contadorNumeros == 3) return false;
+                if (contadorNumeros == 3) return false;
             }
         }
 

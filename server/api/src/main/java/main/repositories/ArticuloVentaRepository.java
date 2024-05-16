@@ -1,6 +1,5 @@
 package main.repositories;
 
-import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.EnumTipoArticuloComida;
 import org.springframework.data.jpa.repository.JpaRepository;

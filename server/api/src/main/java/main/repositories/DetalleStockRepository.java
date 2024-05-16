@@ -1,6 +1,5 @@
 package main.repositories;
 
-import main.entities.Domicilio.DepartamentoDTO;
 import main.entities.Stock.DetalleStock;
 import main.entities.Stock.DetalleStockDTO;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,6 +1,5 @@
 package main.entities.Productos;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 @Getter

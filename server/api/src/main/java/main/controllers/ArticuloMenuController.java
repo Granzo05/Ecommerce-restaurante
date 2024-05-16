@@ -2,8 +2,10 @@ package main.controllers;
 
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
-import main.entities.Ingredientes.IngredienteMenuDTO;
-import main.entities.Productos.*;
+import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.ArticuloMenuDTO;
+import main.entities.Productos.EnumTipoArticuloComida;
+import main.entities.Productos.ImagenesProducto;
 import main.repositories.ArticuloMenuRepository;
 import main.repositories.ImagenesProductoRepository;
 import main.repositories.IngredienteMenuRepository;
@@ -16,8 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +44,7 @@ public class ArticuloMenuController {
     public Set<ArticuloMenuDTO> getMenusDisponibles() {
         List<ArticuloMenuDTO> menus = articuloMenuRepository.findAllByNotBorrado();
 
-        for(ArticuloMenuDTO menu: menus) {
+        for (ArticuloMenuDTO menu : menus) {
             menu.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdMenu(menu.getId())));
             menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
         }
@@ -135,7 +135,7 @@ public class ArticuloMenuController {
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
         Optional<ImagenesProducto> imagen = imagenesProductoRepository.findById(id);
 
-        if(imagen.isPresent()) {
+        if (imagen.isPresent()) {
             try {
                 imagen.get().setBorrado("SI");
                 imagenesProductoRepository.save(imagen.get());
@@ -174,7 +174,7 @@ public class ArticuloMenuController {
 
         articuloMenu.setPrecioVenta(articuloMenuDetail.getPrecioVenta());
 
-        for (IngredienteMenu ingredienteMenu: articuloMenuDetail.getIngredientesMenu()) {
+        for (IngredienteMenu ingredienteMenu : articuloMenuDetail.getIngredientesMenu()) {
             ingredienteMenu.setArticuloMenu(articuloMenu);
 
             ingredienteMenu.setIngrediente(ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get());

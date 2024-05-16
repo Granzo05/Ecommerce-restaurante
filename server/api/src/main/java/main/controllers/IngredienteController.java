@@ -2,15 +2,12 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Ingrediente;
-import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockIngredientes;
 import main.repositories.IngredienteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -44,6 +41,7 @@ public class IngredienteController {
 
         return new ResponseEntity<>("El ingrediente ya existe", HttpStatus.FOUND);
     }
+
     @PutMapping("/ingrediente/update")
     public ResponseEntity<String> actualizarIngrediente(@RequestBody Ingrediente ingrediente) {
         System.out.println(ingrediente);

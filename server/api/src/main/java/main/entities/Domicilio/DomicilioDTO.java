@@ -1,11 +1,6 @@
 package main.entities.Domicilio;
 
-import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Cliente.Cliente;
-import main.entities.Restaurante.Empleado;
-import main.entities.Restaurante.Sucursal;
-import net.minidev.json.annotate.JsonIgnore;
 
 @Getter
 @Setter

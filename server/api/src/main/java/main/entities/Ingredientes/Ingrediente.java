@@ -3,7 +3,6 @@ package main.entities.Ingredientes;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Stock.StockIngredientes;
-import net.minidev.json.annotate.JsonIgnore;
 
 @Getter
 @Setter

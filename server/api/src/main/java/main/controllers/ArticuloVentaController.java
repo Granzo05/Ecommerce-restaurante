@@ -1,6 +1,5 @@
 package main.controllers;
 
-import main.entities.Ingredientes.Ingrediente;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.EnumTipoArticuloComida;
 import main.entities.Productos.ImagenesProducto;
@@ -40,7 +39,7 @@ public class ArticuloVentaController {
     public Set<ArticuloVenta> getArticulosDisponibles() {
         List<ArticuloVenta> articulos = articuloVentaRepository.findAllByNotBorrado();
         System.out.println(articulos);
-        for(ArticuloVenta articulo: articulos) {
+        for (ArticuloVenta articulo : articulos) {
             articulo.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdArticulo(articulo.getId())));
         }
 
@@ -118,7 +117,7 @@ public class ArticuloVentaController {
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
         Optional<ImagenesProducto> imagen = imagenesProductoRepository.findById(id);
 
-        if(imagen.isPresent()) {
+        if (imagen.isPresent()) {
             try {
                 imagen.get().setBorrado("SI");
                 imagenesProductoRepository.save(imagen.get());

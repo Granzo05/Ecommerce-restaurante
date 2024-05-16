@@ -1,11 +1,7 @@
 package main.entities.Cliente;
 
-import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
-import net.minidev.json.annotate.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.HashSet;

@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.ArticuloVenta;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor

@@ -1,8 +1,6 @@
 package main.repositories;
 
-import main.entities.Domicilio.Localidad;
 import main.entities.Domicilio.Pais;
-import main.entities.Restaurante.Empleado;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

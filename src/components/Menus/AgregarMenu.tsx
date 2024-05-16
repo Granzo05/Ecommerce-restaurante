@@ -48,10 +48,8 @@ function AgregarMenu() {
   };
 
   // Ingredientes
-
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
     const nuevosIngredientes = [...ingredientes];
-    console.log(nuevosIngredientes)
     if (nuevosIngredientes && nuevosIngredientes[index].ingrediente) {
       nuevosIngredientes[index].ingrediente.nombre = nombre;
       setIngredientes(nuevosIngredientes);

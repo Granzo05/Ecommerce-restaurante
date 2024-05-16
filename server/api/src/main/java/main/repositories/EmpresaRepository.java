@@ -1,6 +1,5 @@
 package main.repositories;
 
-import main.entities.Cliente.Cliente;
 import main.entities.Restaurante.Empresa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

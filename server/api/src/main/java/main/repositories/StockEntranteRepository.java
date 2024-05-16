@@ -1,6 +1,7 @@
 package main.repositories;
 
-import main.entities.Stock.*;
+import main.entities.Stock.StockEntrante;
+import main.entities.Stock.StockEntranteDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

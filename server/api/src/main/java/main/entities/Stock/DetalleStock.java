@@ -6,11 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
 import main.entities.Ingredientes.Ingrediente;
-import main.entities.Pedidos.Pedido;
-import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
-
-import java.util.Date;
 
 @Getter
 @Setter
@@ -33,11 +29,11 @@ public class DetalleStock {
     @Column(name = "subtotal")
     private double subTotal;
     @OneToOne
-    @JsonIgnoreProperties(value={"stock"})
+    @JsonIgnoreProperties(value = {"stock"})
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
     @OneToOne
-    @JsonIgnoreProperties(value={"stock"})
+    @JsonIgnoreProperties(value = {"stock"})
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
     @ManyToOne(fetch = FetchType.LAZY)

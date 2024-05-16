@@ -3,14 +3,8 @@ package main.entities.Stock;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Cliente.Cliente;
-import main.entities.Factura.Factura;
-import main.entities.Pedidos.DetallesPedido;
-import main.entities.Pedidos.EnumEstadoPedido;
-import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.HashSet;

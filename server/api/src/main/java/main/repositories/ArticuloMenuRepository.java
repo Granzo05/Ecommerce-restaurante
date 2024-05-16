@@ -1,6 +1,5 @@
 package main.repositories;
 
-import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloMenuDTO;
 import main.entities.Productos.EnumTipoArticuloComida;

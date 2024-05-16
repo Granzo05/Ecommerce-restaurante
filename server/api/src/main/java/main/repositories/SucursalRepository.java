@@ -1,7 +1,5 @@
 package main.repositories;
 
-import main.entities.Domicilio.Localidad;
-import main.entities.Domicilio.LocalidadDTO;
 import main.entities.Restaurante.LocalidadDelivery;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Restaurante.SucursalDTO;
