@@ -74,6 +74,7 @@ public class ArticuloMenuController {
         }
     }
 
+    @Transactional
     @PostMapping("/menu/imagenes")
     public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
         HashSet<ImagenesProducto> listaImagenes = new HashSet<>();
@@ -129,6 +130,7 @@ public class ArticuloMenuController {
         }
     }
 
+    @Transactional
     @PutMapping("/menu/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
         Optional<ImagenesProducto> imagen = imagenesProductoRepository.findById(id);
@@ -157,6 +159,7 @@ public class ArticuloMenuController {
         return articuloMenus;
     }
 
+    @Transactional
     @PutMapping("/menu/update")
     public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenu articuloMenuDetail) {
         Optional<ArticuloMenu> menuEncontrado = articuloMenuRepository.findById(articuloMenuDetail.getId());
@@ -167,7 +170,16 @@ public class ArticuloMenuController {
 
         ArticuloMenu articuloMenu = menuEncontrado.get();
 
+        ingredienteMenuRepository.deleteAllByIdArticuloMenu(articuloMenu.getId());
+
         articuloMenu.setPrecioVenta(articuloMenuDetail.getPrecioVenta());
+
+        for (IngredienteMenu ingredienteMenu: articuloMenuDetail.getIngredientesMenu()) {
+            ingredienteMenu.setArticuloMenu(articuloMenu);
+
+            ingredienteMenu.setIngrediente(ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get());
+        }
+
         articuloMenu.setIngredientesMenu(articuloMenuDetail.getIngredientesMenu());
         articuloMenu.setTiempoCoccion(articuloMenuDetail.getTiempoCoccion());
         articuloMenu.setDescripcion(articuloMenuDetail.getDescripcion());

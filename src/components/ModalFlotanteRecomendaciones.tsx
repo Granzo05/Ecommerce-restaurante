@@ -14,20 +14,23 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
   };
 
   const [recomendaciones, setRecomendaciones] = useState<Ingrediente[] | Localidad[] | Departamento[] | Provincia[]>([]);
+  const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Ingrediente[] | Localidad[] | Departamento[] | Provincia[]>([]);
 
   useEffect(() => {
     if (elementoBuscado === 'INGREDIENTES') {
       IngredienteService.getIngredientes()
-        .then(data => {
-          setRecomendaciones(data);
+        .then(ingredientes => {
+          setRecomendaciones(ingredientes);
+          setRecomendacionesFiltradas(ingredientes);
         })
         .catch(error => {
           console.error('Error:', error);
         });
     } else if (elementoBuscado === 'PROVINCIAS') {
       ProvinciaService.getProvincias()
-        .then(data => {
-          setRecomendaciones(data);
+        .then(provincias => {
+          setRecomendaciones(provincias);
+          setRecomendacionesFiltradas(provincias);
         })
         .catch(error => {
           console.error('Error:', error);
@@ -36,6 +39,7 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
       DepartamentoService.getDepartamentosByProvinciaId(datoNecesario)
         .then(async departamentos => {
           setRecomendaciones(departamentos);
+          setRecomendacionesFiltradas(departamentos);
         })
         .catch(error => {
           console.error('Error:', error);
@@ -44,6 +48,7 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
       LocalidadService.getLocalidadesByDepartamentoId(datoNecesario)
         .then(async localidades => {
           setRecomendaciones(localidades);
+          setRecomendacionesFiltradas(localidades);
         })
         .catch(error => {
           console.error('Error:', error);
@@ -51,14 +56,22 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
     }
   }, []);
 
+  function filtrarRecomendaciones(filtro: string) {
+    if (filtro.length > 0) {
+      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.includes(filtro)));
+    } else {
+      setRecomendacionesFiltradas(recomendaciones);
+    }
+  }
+
   return (
     <div>
       <div className="modal-overlay" onClick={handleModalClose}>
         <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
-          {recomendaciones.map(recomendacion => (
-            <li key={recomendacion.id} onClick={() => {             
+          <input type="text" onChange={(e) => filtrarRecomendaciones(e.target.value)} placeholder="Filtrar" />
+          {recomendacionesFiltradas.map(recomendacion => (
+            <li key={recomendacion.id} style={{ cursor: 'pointer', padding: '10px', marginBottom: '5px' }} onClick={() => {
               onSelectProduct(recomendacion.nombre)
-              handleModalClose();
             }
             }>{recomendacion.nombre}</li>
           ))}

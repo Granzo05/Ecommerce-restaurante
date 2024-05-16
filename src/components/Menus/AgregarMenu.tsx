@@ -39,14 +39,19 @@ function AgregarMenu() {
       if (selectIndexImagenes > 0) {
         setSelectIndexImagenes(prevIndex => prevIndex - 1);
       }
+    } else {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+      setSelectIndexImagenes(0);
     }
   };
 
   // Ingredientes
 
   const handleNombreIngredienteChange = (index: number, nombre: string) => {
-    console.log(ingredientes)
     const nuevosIngredientes = [...ingredientes];
+    console.log(nuevosIngredientes)
     if (nuevosIngredientes && nuevosIngredientes[index].ingrediente) {
       nuevosIngredientes[index].ingrediente.nombre = nombre;
       setIngredientes(nuevosIngredientes);
@@ -75,11 +80,22 @@ function AgregarMenu() {
     }
   };
 
-  const quitarCampoIngrediente = () => {
-    const nuevosIngredientes = [...ingredientes];
-    nuevosIngredientes.pop();
-    setIngredientes(nuevosIngredientes);
-    selectIndexIngredientes--;
+  const quitarCampoIngrediente = (index: number) => {
+    if (imagenes.length > 0) {
+
+      const nuevosIngredientes = [...ingredientes];
+      nuevosIngredientes.splice(index, 1);
+      setIngredientes(ingredientes);
+
+      if (selectIndexIngredientes > 0) {
+        selectIndexIngredientes--;
+      }
+    } else {
+      const nuevosIngredientes = [...ingredientes];
+      nuevosIngredientes.pop();
+      setIngredientes(nuevosIngredientes);
+      selectIndexIngredientes = 0;
+    }
   };
 
 
@@ -87,7 +103,7 @@ function AgregarMenu() {
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [elementosABuscar, setElementosABuscar] = useState<string>('');
-  const [showAgregarIngredienteModal, setShowAgregarStockModal] = useState(false);
+  const [showAgregarIngredienteModal, setShowAgregarIngredienteModal] = useState(false);
 
   const handleSelectProduct = (product: string) => {
     setSelectedProduct(product);
@@ -99,11 +115,11 @@ function AgregarMenu() {
   };
 
   const handleAgregarIngrediente = () => {
-    setShowAgregarStockModal(true);
+    setShowAgregarIngredienteModal(true);
   };
 
   const handleModalClose = () => {
-    setShowAgregarStockModal(false);
+    setShowAgregarIngredienteModal(false);
     setModalBusqueda(false)
     if (selectedProduct) {
       handleNombreIngredienteChange(selectIndexIngredientes, selectedProduct);
@@ -218,7 +234,7 @@ function AgregarMenu() {
               <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
             </select>
 
-            <p onClick={quitarCampoIngrediente}>X</p>
+            <p onClick={() => quitarCampoIngrediente(index)}>X</p>
           </div>
         ))}
         <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
