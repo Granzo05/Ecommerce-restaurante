@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface LocalidadRepository extends JpaRepository<Localidad, Long> {
 
-    @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.departamento.id = :id")
-    List<LocalidadDTO> findByIdDepartamento(@Param("id") Long id);
+    @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.departamento.nombre = :nombre")
+    List<LocalidadDTO> findByNombreDepartamento(@Param("nombre") String nombre);
 
     @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l")
     List<LocalidadDTO> findAllDTO();
@@ -22,5 +22,6 @@ public interface LocalidadRepository extends JpaRepository<Localidad, Long> {
     @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.nombre = :nombre")
     Optional<LocalidadDTO> findByNombre(@Param("nombre") String nombre);
 
-
+    @Query("SELECT l FROM Localidad l WHERE l.nombre = :nombre")
+    Optional<Localidad> findByName(@Param("nombre") String nombre);
 }

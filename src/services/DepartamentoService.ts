@@ -42,9 +42,9 @@ export const DepartamentoService = {
         }
     },
 
-    getDepartamentosByProvinciaId: async (provinciaId: number): Promise<Departamento[] | []> => {
+    getDepartamentosByNombreProvincia: async (nombreProvincia: string): Promise<Departamento[] | []> => {
         try {
-            const response = await fetch(URL_API + `departamentos/${provinciaId}`, {
+            const response = await fetch(URL_API + `departamentos/${nombreProvincia}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

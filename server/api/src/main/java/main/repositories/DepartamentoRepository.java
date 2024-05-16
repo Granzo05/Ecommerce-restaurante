@@ -18,6 +18,6 @@ public interface DepartamentoRepository extends JpaRepository<Departamento, Long
     @Query("SELECT NEW main.entities.Domicilio.DepartamentoDTO(d.id, d.nombre) FROM Departamento d")
     List<DepartamentoDTO> findAllDTO();
 
-    @Query("SELECT NEW main.entities.Domicilio.DepartamentoDTO(d.id, d.nombre) FROM Departamento d WHERE d.provincia.id = :id")
-    List<DepartamentoDTO> findByProvinciaId(@Param("id") Long id);
+    @Query("SELECT NEW main.entities.Domicilio.DepartamentoDTO(d.id, d.nombre) FROM Departamento d WHERE d.provincia.nombre = :nombre")
+    List<DepartamentoDTO> findByNombreProvincia(@Param("nombre") String nombre);
 }

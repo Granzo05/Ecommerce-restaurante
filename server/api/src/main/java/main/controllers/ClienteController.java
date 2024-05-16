@@ -8,6 +8,7 @@ import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
 import main.repositories.ClienteRepository;
 import main.repositories.DomicilioRepository;
+import main.repositories.LocalidadRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +22,12 @@ import java.util.Set;
 public class ClienteController {
     private final ClienteRepository clienteRepository;
     private final DomicilioRepository domicilioRepository;
+    private final LocalidadRepository localidadRepository;
 
-    public ClienteController(ClienteRepository clienteRepository, DomicilioRepository domicilioRepository) {
+    public ClienteController(ClienteRepository clienteRepository, DomicilioRepository domicilioRepository, LocalidadRepository localidadRepository) {
         this.clienteRepository = clienteRepository;
         this.domicilioRepository = domicilioRepository;
+        this.localidadRepository = localidadRepository;
     }
 
     @Transactional
@@ -35,6 +38,8 @@ public class ClienteController {
         if (cliente.isEmpty()) {
             clienteDetails.setContraseña(Encrypt.cifrarPassword(clienteDetails.getContraseña()));
             for (Domicilio domicilio : clienteDetails.getDomicilios()) {
+                domicilio.setLocalidad(localidadRepository.findByName(Encrypt.encriptarString(domicilio.getLocalidad().getNombre())).get());
+                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setCliente(clienteDetails);
             }
 

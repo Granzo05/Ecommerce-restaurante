@@ -8,8 +8,10 @@ import { ProvinciaService } from "../services/ProvinciaService";
 import { LocalidadService } from "../services/LocalidadService";
 import { DepartamentoService } from "../services/DepartamentoService";
 
-const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelectProduct: (product: string) => void, elementoBuscado: string, datoNecesario: number }> = ({ onCloseModal, onSelectProduct, elementoBuscado, datoNecesario }) => {
+const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelectProduct: (product: string) => void, elementoBuscado: string, datoNecesario: string }> = ({ onCloseModal, onSelectProduct, elementoBuscado, datoNecesario }) => {
   const handleModalClose = () => {
+    setRecomendaciones([])
+    setRecomendacionesFiltradas([])
     onCloseModal();
   };
 
@@ -35,8 +37,8 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         .catch(error => {
           console.error('Error:', error);
         });
-    } else if (elementoBuscado === 'DEPARTAMENTOS') {
-      DepartamentoService.getDepartamentosByProvinciaId(datoNecesario)
+    } else if (elementoBuscado === 'DEPARTAMENTOS' && datoNecesario.length > 0) {
+      DepartamentoService.getDepartamentosByNombreProvincia(datoNecesario)
         .then(async departamentos => {
           setRecomendaciones(departamentos);
           setRecomendacionesFiltradas(departamentos);
@@ -44,8 +46,8 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         .catch(error => {
           console.error('Error:', error);
         })
-    } else if (elementoBuscado === 'LOCALIDADES') {
-      LocalidadService.getLocalidadesByDepartamentoId(datoNecesario)
+    } else if (elementoBuscado === 'LOCALIDADES' && datoNecesario.length > 0) {
+      LocalidadService.getLocalidadesByNombreDepartamento(datoNecesario)
         .then(async localidades => {
           setRecomendaciones(localidades);
           setRecomendacionesFiltradas(localidades);
@@ -58,7 +60,7 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
 
   function filtrarRecomendaciones(filtro: string) {
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.includes(filtro)));
+      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
     } else {
       setRecomendacionesFiltradas(recomendaciones);
     }

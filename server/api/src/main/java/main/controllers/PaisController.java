@@ -67,9 +67,9 @@ public class PaisController {
     }
 
     @CrossOrigin
-    @GetMapping("/localidades/{departamentoId}")
-    public Set<LocalidadDTO> getLocalidadesByDepartamentoId(@PathVariable("departamentoId") Long id) throws Exception {
-        List<LocalidadDTO> localidades = localidadRepository.findByIdDepartamento(id);
+    @GetMapping("/localidades/{nombreDepartamento}")
+    public Set<LocalidadDTO> getLocalidadesByNombreDepartamento(@PathVariable("nombreDepartamento") String nombre) throws Exception {
+        List<LocalidadDTO> localidades = localidadRepository.findByNombreDepartamento(Encrypt.encriptarString(nombre));
 
         for (LocalidadDTO localidad : localidades) {
             localidad.setNombre(Encrypt.desencriptarString(localidad.getNombre()));
@@ -79,9 +79,9 @@ public class PaisController {
     }
 
     @CrossOrigin
-    @GetMapping("/departamentos/{provinciaId}")
-    public Set<DepartamentoDTO> getDepartamentosByProvinciaId(@PathVariable("provinciaId") Long id) throws Exception {
-        List<DepartamentoDTO> departamentos = departamentoRepository.findByProvinciaId(id);
+    @GetMapping("/departamentos/{nombreProvincia}")
+    public Set<DepartamentoDTO> getDepartamentosByNombreProvincia(@PathVariable("nombreProvincia") String nombre) throws Exception {
+        List<DepartamentoDTO> departamentos = departamentoRepository.findByNombreProvincia(Encrypt.encriptarString(nombre));
 
         try {
             for (DepartamentoDTO departamento : departamentos) {
