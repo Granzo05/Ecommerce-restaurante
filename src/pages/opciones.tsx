@@ -8,6 +8,8 @@ import Empleados from '../components/Empleados/Empleados';
 import Menus from '../components/Menus/Menus';
 import { EmpleadoService } from '../services/EmpleadoService';
 import '../styles/opcionesRestaurante.css'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 //import Logo from '../assets/img//HatchfulExport-All/logo_transparent.png'
 import StocksEntrantes from '../components/StockEntrante/StockEntrante';
@@ -20,6 +22,20 @@ import ArticuloVentas from '../components/ArticulosVenta/ArticulosVenta';
 const Opciones = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState(1);
     const [isVisible, setVisible] = useState<boolean>(true);
+    const [pedidosVisible, setPedidosVisible] = useState(false);
+    const [stockVisible, setStockVisible] = useState(false);
+    const [pedidosIcon, setPedidosIcon] = useState(<KeyboardArrowRightIcon />);
+    const [stockIcon, setStockIcon] = useState(<KeyboardArrowRightIcon />);
+
+    const toggleStockVisibility = () => {
+        setStockVisible(!stockVisible);
+        setStockIcon(stockVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
+    };
+
+    const togglePedidosVisibility = () => {
+        setPedidosVisible(!pedidosVisible);
+        setPedidosIcon(pedidosVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
+    };
 
     const handleOpcionClick = (opcion: number) => {
         setOpcionSeleccionada(opcion);
@@ -70,81 +86,55 @@ const Opciones = () => {
         fetchData();
     }, []);
 
+
     return (
-        <div style={{ display: 'flex' }} className='opciones'>
-            {isVisible ? (
-                <div className='opciones-menu'>
-                    <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
-                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
-                    <p onClick={() => handleOpcionClick(3)}>Pedidos cocinados</p>
-                    <p onClick={() => handleOpcionClick(4)}>Pedidos entregados</p>
-                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
-                    <p onClick={() => handleOpcionClick(6)}>Stock entrante</p>
-                    <p onClick={() => handleOpcionClick(7)}>Menus</p>
-                    <p onClick={() => handleOpcionClick(11)}>Articulos</p>
-                    <p onClick={() => handleOpcionClick(8)}>Empleados</p>
-                    <p onClick={() => handleOpcionClick(9)}>Sucursales</p>
-                    <p onClick={() => handleOpcionClick(10)}>Ingredientes</p>
-                </div >
-            ) : (
-                <div className='opciones-menu'>
-                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
-                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
-                    <p onClick={() => handleOpcionClick(6)}>Stock entrante</p>
-                    <p onClick={() => handleOpcionClick(7)}>Menus</p>
-                    <p onClick={() => handleOpcionClick(11)}>Articulos</p>
-                    <p onClick={() => handleOpcionClick(10)}>Ingredientes</p>
-                </div >
-            )}
+        <div className="sidebar">
+            <div className="opciones">
+                {isVisible ? (
+                    <div className="opciones-menu">
+                        <div className="pedidos">
+                            <h4 onClick={togglePedidosVisibility}>Pedidos{pedidosIcon}</h4>
+                            {pedidosVisible && (
+                                <>
+                                    <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
+                                    <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
+                                    <p onClick={() => handleOpcionClick(3)}>Pedidos cocinados</p>
+                                    <p onClick={() => handleOpcionClick(4)}>Pedidos entregados</p>
+                                </>
+                            )}
+                        </div>
+                        <div className="stock">
+                            <h4 onClick={toggleStockVisibility}>Stock{stockIcon}</h4>
+                            {stockVisible && (
+                                <>
+                                    <p onClick={() => handleOpcionClick(5)}>Stock</p>
+                                    <p onClick={() => handleOpcionClick(6)}>Stock entrante</p>
+                                </>
+                            )}
+                        </div>
+                        <h4 onClick={() => handleOpcionClick(7)}>Menus</h4>
+                        <h4 onClick={() => handleOpcionClick(11)}>Articulos</h4>
+                        <h4 onClick={() => handleOpcionClick(8)}>Empleados</h4>
+                        <h4 onClick={() => handleOpcionClick(9)}>Sucursales</h4>
+                        <h4 onClick={() => handleOpcionClick(10)}>Ingredientes</h4>
+                    </div>
+                ) : (
+                    <div className="opciones-menu">
+                        <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
+                        <p onClick={() => handleOpcionClick(5)}>Stock</p>
+                        <p onClick={() => handleOpcionClick(6)}>Stock entrante</p>
+                        <p onClick={() => handleOpcionClick(7)}>Menus</p>
+                        <p onClick={() => handleOpcionClick(11)}>Articulos</p>
+                        <p onClick={() => handleOpcionClick(10)}>Ingredientes</p>
+                    </div>
+                )}
 
-            <div style={{ flex: 1 }}>
-                {renderInformacion()}
+                <div style={{ flex: 1 }}>
+                    {renderInformacion()}
+                </div>
             </div>
-        </div >
-
-
+        </div>
     );
 };
 
 export default Opciones;
-
-/*<section className="page sidebar-2-page">
-            <aside className={`sidebar-2 ${isOpen ? "open" : ""}`}>
-                <div className="inner">
-                    <header>
-                        <button
-                            type="button"
-                            className="sidebar-2-burger"
-                            onClick={() => setIsOpen(!isOpen)}
-                        >
-                            <span className="material-symbols-outlined">
-                                {isOpen ? "close" : "menu"}
-                            </span>
-                        </button>
-                        <img style={{ width: '60%', height: '160px' }} src={Logo} />
-                    </header>
-                    <nav>
-                        {isVisible ? (
-                            <div className='opciones-menu'>
-                                <p onClick={() => handleOpcionClick(1)}>Pedidos entrantes</p>
-                                <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
-                                <p onClick={() => handleOpcionClick(3)}>Pedidos cocinados</p>
-                                <p onClick={() => handleOpcionClick(4)}>Pedidos entregados</p>
-                                <p onClick={() => handleOpcionClick(5)}>Stock</p>
-                                <p onClick={() => handleOpcionClick(6)}>Menus</p>
-                                <p onClick={() => handleOpcionClick(7)}>Empleados</p>
-                            </div >
-                        ) : (
-                            <div className='opciones-menu'>
-                                <p onClick={() => handleOpcionClick(2)}>Pedidos aceptados</p>
-                                <p onClick={() => handleOpcionClick(5)}>Stock</p>
-                                <p onClick={() => handleOpcionClick(6)}>Menus</p>
-                            </div >
-                        )}
-                    </nav>
-                </div>
-            </aside>
-            <div className='styled-table' style={{ flex: 1 }}>
-                {renderInformacion()}
-            </div>
-        </section>*/
