@@ -55,7 +55,6 @@ function AgregarArticuloVenta() {
     articulo.medida = medida;
     articulo.cantidadMedida = cantidad;
 
-
     toast.promise(ArticuloVentaService.createArticulo(articulo, imagenes), {
       loading: 'Creando articulo...',
       success: (message) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
@@ -23,10 +23,6 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const [nombre, setNombre] = useState(articuloOriginal.nombre);
   const [medida, setMedida] = useState<EnumMedida | string>(articuloOriginal.medida.toString());
   const [cantidad, setCantidad] = useState(articuloOriginal.cantidadMedida);
-
-  useEffect(() => {
-    console.log(articuloOriginal.tipo.toString());
-  }, [articuloOriginal])
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -72,7 +68,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       nombre,
       precioVenta,
       tipo,
-      cantidad,
+      cantidadMedida: cantidad,
       medida
     };
 

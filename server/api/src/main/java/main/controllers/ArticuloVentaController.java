@@ -52,9 +52,9 @@ public class ArticuloVentaController {
         Optional<ArticuloVenta> articuloDB = articuloVentaRepository.findByName(articuloVenta.getNombre());
         if (articuloDB.isEmpty()) {
             articuloVentaRepository.save(articuloVenta);
-            return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.OK);
+            return new ResponseEntity<>("El articulo ha sido añadido correctamente", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Hay un menú creado con ese nombre", HttpStatus.FOUND);
+            return new ResponseEntity<>("Hay un articulo creado con ese nombre", HttpStatus.FOUND);
         }
     }
 
@@ -135,44 +135,9 @@ public class ArticuloVentaController {
         Set<ArticuloVenta> articuloVentas = (new HashSet<>(articuloVentaRepository.findByType(EnumTipoArticuloComida.valueOf(tipoArticulo))));
 
         for (ArticuloVenta articuloVenta : articuloVentas) {
-            // Obtener la ruta de la carpeta de imágenes
-            String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + articuloVenta.getNombre().replaceAll(" ", "") + File.separator;
-            // Verificar si la carpeta existe
-            File carpeta = new File(rutaCarpeta);
-            if (!carpeta.exists()) {
-                // Si la carpeta no existe, pasamos al siguiente articulo
-                continue;
-            }
-
-            // Obtener todos los archivos en la carpeta
-            File[] archivos = carpeta.listFiles();
-
-            // Recorrer los archivos y agregarlos a la lista de respuestas
-            if (archivos != null) {
-                for (File archivo : archivos) {
-                    if (archivo.isFile()) {
-                        try {
-                            // Construir la URL de descarga
-                            String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                                    .path("/articulo/imagenes/")
-                                    .path(articuloVenta.getNombre().replaceAll(" ", ""))
-                                    .path("/")
-                                    .path(archivo.getName().replaceAll(" ", ""))
-                                    .toUriString();
-                            ImagenesProducto response = ImagenesProducto.builder()
-                                    .nombre(archivo.getName().replaceAll(" ", ""))
-                                    .ruta(downloadUrl)
-                                    .formato(Files.probeContentType(archivo.toPath()))
-                                    .build();
-                            articuloVenta.getImagenes().add(response);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
+            articuloVenta.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdArticulo(articuloVenta.getId())));
         }
+
         return articuloVentas;
     }
 
@@ -190,6 +155,7 @@ public class ArticuloVentaController {
         articuloVenta.setNombre(articuloVentaDetail.getNombre());
         articuloVenta.setTipo(articuloVentaDetail.getTipo());
         articuloVenta.setMedida(articuloVentaDetail.getMedida());
+        articuloVenta.setCantidadMedida(articuloVentaDetail.getCantidadMedida());
 
         articuloVentaRepository.save(articuloVenta);
 

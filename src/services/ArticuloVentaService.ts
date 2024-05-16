@@ -75,7 +75,7 @@ export const ArticuloVentaService = {
 
             if (response.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
                 cargarImagenes = false;
-                return 'ArticuloVenta existente';
+                return 'Articulo Venta existente';
             }
 
             // Cargar imágenes solo si se debe hacer
@@ -103,7 +103,7 @@ export const ArticuloVentaService = {
                 }
             }
 
-            return 'Menú actualizado con éxito';
+            return 'Articulo actualizado con éxito';
 
         } catch (error) {
             console.error('Error:', error);
