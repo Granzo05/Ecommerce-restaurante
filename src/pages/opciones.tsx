@@ -48,7 +48,6 @@ const Opciones = () => {
     const handleOpcionClick = (opcion: number) => {
         setOpcionSeleccionada(opcion);
         setSidebarBg('white'); // Cambia el fondo del sidebar a blanco
-        setPantallasBg('white'); // Cambia el fondo de opciones-pantallas a blanco
     };
 
     const renderInformacion = () => {
@@ -96,7 +95,6 @@ const Opciones = () => {
     }, []);
 
     const [sidebarBg, setSidebarBg] = useState('');
-    const [pantallasBg, setPantallasBg] = useState('');
 
     return (
         <div className={`sidebar ${sidebarBg}`}>
