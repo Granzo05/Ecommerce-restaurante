@@ -18,7 +18,7 @@ import ArticuloVentas from '../components/ArticulosVenta/ArticulosVenta';
 //const navItems = ["home", "settings", "build", "cloud", "mail", "bookmark"];
 
 const Opciones = () => {
-    const [opcionSeleccionada, setOpcionSeleccionada] = useState(1);
+    const [opcionSeleccionada, setOpcionSeleccionada] = useState<number>(0);
     const [isVisible, setVisible] = useState<boolean>(true);
 
     const handleOpcionClick = (opcion: number) => {
@@ -49,19 +49,17 @@ const Opciones = () => {
             return <Ingredientes />;
         } else if (opcionSeleccionada === 11) {
             return <ArticuloVentas />;
+        } else if (opcionSeleccionada === 0) {
+            return <div className="opciones-pantallas">
+                <h1>Inicio</h1>
+            </div >
         }
     };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const isVisible = await EmpleadoService.checkUser();
-                setVisible(isVisible)
-                if (!isVisible) {
-                    setOpcionSeleccionada(2);
-                } else {
-                    setOpcionSeleccionada(1);
-                }
+                setVisible(await EmpleadoService.checkUser());
             } catch (error) {
                 console.error('Error:', error);
             }
