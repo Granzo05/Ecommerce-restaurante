@@ -42,6 +42,10 @@ p{
   cursor: pointer;
 }
 
+.main-options{
+  margin-top: 12px;
+}
+
 .main-options p{
   margin-left: 22px;
   padding: 5px;
@@ -73,7 +77,6 @@ h4:hover{
 
 #label{
   font-size: 20px;
-  margin-bottom: 15px;
   margin-left: -10px;
   color: rgb(170, 165, 165);
 }
@@ -148,4 +151,8 @@ h4:hover{
   border-top: 2px solid white;
   border-bottom: 2px solid white;
   width: 100%;
+}
+
+.settings{
+  margin-top: 12px;
 }

@@ -26,8 +26,12 @@ const Opciones = () => {
     const [isVisible, setVisible] = useState<boolean>(true);
     const [pedidosVisible, setPedidosVisible] = useState(false);
     const [stockVisible, setStockVisible] = useState(false);
+    const [optionsVisible, setOptionsVisible] = useState(false);
+    const [settingsVisible, setSettingsVisible] = useState(false);
     const [pedidosIcon, setPedidosIcon] = useState(<KeyboardArrowRightIcon />);
     const [stockIcon, setStockIcon] = useState(<KeyboardArrowRightIcon />);
+    const [optionsIcon, setOptionsIcon] = useState(<KeyboardArrowRightIcon />);
+    const [settingsIcon, setSettingsIcon] = useState(<KeyboardArrowRightIcon />);
 
     const toggleStockVisibility = () => {
         setStockVisible(!stockVisible);
@@ -35,6 +39,16 @@ const Opciones = () => {
         if (!stockVisible && opcionSeleccionada >= 5 && opcionSeleccionada <= 6) {
             setOpcionSeleccionada(opcionSeleccionada); // Si está seleccionada una opción de Stock, mantenerla seleccionada
         }
+    };
+
+    const toggleOptionsVisibility = () => {
+        setOptionsVisible(!optionsVisible);
+        setOptionsIcon(optionsVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
+    };
+
+    const toggleSettingsVisibility = () => {
+        setSettingsVisible(!settingsVisible);
+        setSettingsIcon(settingsVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
     };
 
     const togglePedidosVisibility = () => {
@@ -104,137 +118,146 @@ const Opciones = () => {
 
                 </div>
                 <hr />
-                <label id='label'>_inicio</label>
-                {isVisible ? (
-                    <div className="main-options">
-                        <div className="pedidos">
-                            <h4 onClick={togglePedidosVisibility} className={opcionSeleccionada >= 1 && opcionSeleccionada <= 4 ? 'h4-selected' : ''}>
-                                Pedidos{pedidosIcon}
-                            </h4>
-                            {pedidosVisible && (
-                                <>
-                                    <p
-                                        className={opcionSeleccionada === 1 ? 'selected' : ''}
-                                        onClick={() => handleOpcionClick(1)}
-                                    >
-                                        Pedidos entrantes
-                                    </p>
-                                    <p
-                                        className={opcionSeleccionada === 2 ? 'selected' : ''}
-                                        onClick={() => handleOpcionClick(2)}
-                                    >
-                                        Pedidos aceptados
-                                    </p>
-                                    <p
-                                        className={opcionSeleccionada === 3 ? 'selected' : ''}
-                                        onClick={() => handleOpcionClick(3)}
-                                    >
-                                        Pedidos cocinados
-                                    </p>
-                                    <p
-                                        className={opcionSeleccionada === 4 ? 'selected' : ''}
-                                        onClick={() => handleOpcionClick(4)}
-                                    >
-                                        Pedidos entregados
-                                    </p>
-                                </>
-                            )}
-                        </div>
-                        <div className="stock">
-                            <h4 onClick={toggleStockVisibility} className={opcionSeleccionada >= 5 && opcionSeleccionada <= 6 ? 'h4-selected' : ''}>Stock{stockIcon}</h4>
-                            {stockVisible && (
-                                <>
-                                    <p
-                                        className={opcionSeleccionada === 5 ? 'selected' : ''}
-                                        onClick={() => handleOpcionClick(5)}
-                                    >
-                                        Stock
-                                    </p>
-                                    <p
-                                        className={opcionSeleccionada === 6 ? 'selected' : ''}
-                                        onClick={() => handleOpcionClick(6)}
-                                    >
-                                        Stock entrante
-                                    </p>
-                                </>
-                            )}
-                        </div>
-                        <h4
-                            className={opcionSeleccionada === 7 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(7)}
-                        >
-                            Menus
-                        </h4>
-                        <h4
-                            className={opcionSeleccionada === 11 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(11)}
-                        >
-                            Articulos
-                        </h4>
-                        <h4
-                            className={opcionSeleccionada === 8 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(8)}
-                        >
-                            Empleados
-                        </h4>
-                        <h4
-                            className={opcionSeleccionada === 9 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(9)}
-                        >
-                            Sucursales
-                        </h4>
-                        <h4
-                            className={opcionSeleccionada === 10 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(10)}
-                        >
-                            Ingredientes
-                        </h4>
-                    </div>
-                ) : (
-                    <div className="main-options">
-                        <p
-                            className={opcionSeleccionada === 2 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(2)}
-                        >
-                            Pedidos aceptados
-                        </p>
-                        <p
-                            className={opcionSeleccionada === 5 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(5)}
-                        >
-                            Stock
-                        </p>
-                        <p
-                            className={opcionSeleccionada === 6 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(6)}
-                        >
-                            Stock entrante
-                        </p>
-                        <p
-                            className={opcionSeleccionada === 7 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(7)}
-                        >
-                            Menus
-                        </p>
-                        <p
-                            className={opcionSeleccionada === 11 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(11)}
-                        >
-                            Articulos
-                        </p>
-                        <p
-                            className={opcionSeleccionada === 10 ? 'selected' : ''}
-                            onClick={() => handleOpcionClick(10)}
-                        >
-                            Ingredientes
-                        </p>
+                <label id='label' onClick={toggleOptionsVisibility}>_opciones{optionsIcon}</label>
+
+                {optionsVisible && (
+                    <>
+                        {isVisible ? (
+                            <div className="main-options">
+                                <div className="pedidos">
+                                    <h4 onClick={togglePedidosVisibility} className={opcionSeleccionada >= 1 && opcionSeleccionada <= 4 ? 'h4-selected' : ''}>
+                                        Pedidos{pedidosIcon}
+                                    </h4>
+                                    {pedidosVisible && (
+                                        <>
+                                            <p
+                                                className={opcionSeleccionada === 1 ? 'selected' : ''}
+                                                onClick={() => handleOpcionClick(1)}
+                                            >
+                                                Pedidos entrantes
+                                            </p>
+                                            <p
+                                                className={opcionSeleccionada === 2 ? 'selected' : ''}
+                                                onClick={() => handleOpcionClick(2)}
+                                            >
+                                                Pedidos aceptados
+                                            </p>
+                                            <p
+                                                className={opcionSeleccionada === 3 ? 'selected' : ''}
+                                                onClick={() => handleOpcionClick(3)}
+                                            >
+                                                Pedidos cocinados
+                                            </p>
+                                            <p
+                                                className={opcionSeleccionada === 4 ? 'selected' : ''}
+                                                onClick={() => handleOpcionClick(4)}
+                                            >
+                                                Pedidos entregados
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
+                                <div className="stock">
+                                    <h4 onClick={toggleStockVisibility} className={opcionSeleccionada >= 5 && opcionSeleccionada <= 6 ? 'h4-selected' : ''}>Stock{stockIcon}</h4>
+                                    {stockVisible && (
+                                        <>
+                                            <p
+                                                className={opcionSeleccionada === 5 ? 'selected' : ''}
+                                                onClick={() => handleOpcionClick(5)}
+                                            >
+                                                Stock
+                                            </p>
+                                            <p
+                                                className={opcionSeleccionada === 6 ? 'selected' : ''}
+                                                onClick={() => handleOpcionClick(6)}
+                                            >
+                                                Stock entrante
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
+                                <h4
+                                    className={opcionSeleccionada === 7 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(7)}
+                                >
+                                    Menus
+                                </h4>
+                                <h4
+                                    className={opcionSeleccionada === 11 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(11)}
+                                >
+                                    Articulos
+                                </h4>
+                                <h4
+                                    className={opcionSeleccionada === 8 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(8)}
+                                >
+                                    Empleados
+                                </h4>
+                                <h4
+                                    className={opcionSeleccionada === 9 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(9)}
+                                >
+                                    Sucursales
+                                </h4>
+                                <h4
+                                    className={opcionSeleccionada === 10 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(10)}
+                                >
+                                    Ingredientes
+                                </h4>
+                            </div>
+                        ) : (
+                            <div className="main-options">
+                                <p
+                                    className={opcionSeleccionada === 2 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(2)}
+                                >
+                                    Pedidos aceptados
+                                </p>
+                                <p
+                                    className={opcionSeleccionada === 5 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(5)}
+                                >
+                                    Stock
+                                </p>
+                                <p
+                                    className={opcionSeleccionada === 6 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(6)}
+                                >
+                                    Stock entrante
+                                </p>
+                                <p
+                                    className={opcionSeleccionada === 7 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(7)}
+                                >
+                                    Menus
+                                </p>
+                                <p
+                                    className={opcionSeleccionada === 11 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(11)}
+                                >
+                                    Articulos
+                                </p>
+                                <p
+                                    className={opcionSeleccionada === 10 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(10)}
+                                >
+                                    Ingredientes
+                                </p>
+                            </div>
+                        )}
+                    </>
+                )}
+
+                <hr />
+                <label id='label' onClick={toggleSettingsVisibility}>_ajustes de cuenta{settingsIcon}</label>
+                {settingsVisible && (
+                    <div className="settings">
+                        <h4><a href="">Preferencias</a></h4>
                     </div>
                 )}
-                <hr />
-                <label id='label'>_ajustes</label>
-                <div className="settings">
-                    <h4><a href="">Preferencias</a></h4>
-                </div>
+
                 <hr />
                 <div className="perfil-employee">
                     <PersonIcon style={{ fontSize: '38px', display: 'inline' }} />
