@@ -10,6 +10,8 @@ import { EmpleadoService } from '../services/EmpleadoService';
 import '../styles/opcionesRestaurante.css'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 //import Logo from '../assets/img//HatchfulExport-All/logo_transparent.png'
 import StocksEntrantes from '../components/StockEntrante/StockEntrante';
@@ -45,6 +47,8 @@ const Opciones = () => {
 
     const handleOpcionClick = (opcion: number) => {
         setOpcionSeleccionada(opcion);
+        setSidebarBg('white'); // Cambia el fondo del sidebar a blanco
+        setPantallasBg('white'); // Cambia el fondo de opciones-pantallas a blanco
     };
 
     const renderInformacion = () => {
@@ -73,7 +77,8 @@ const Opciones = () => {
             return <ArticuloVentas />;
         } else if (opcionSeleccionada === 0) {
             return <div className="opciones-pantallas">
-                <h1>Inicio</h1>
+                <img id='main-employee' src="../src/assets/img/HatchfulExport-All/logo_transparent.png" alt="" />
+                <h1 id='welcome'>¡BIENVENIDO, AUGUSTO!</h1>
             </div >
         }
     };
@@ -90,9 +95,11 @@ const Opciones = () => {
         fetchData();
     }, []);
 
+    const [sidebarBg, setSidebarBg] = useState('');
+    const [pantallasBg, setPantallasBg] = useState('');
 
     return (
-        <div className="sidebar">
+        <div className={`sidebar ${sidebarBg}`}>
             <div className="opciones-menu">
                 <div className="title">
                     <h3 className='title'><img src="../src/assets/img/HatchfulExport-All/logo-simple.png" alt="Logo" className='logo-opciones' />EL BUEN SABOR</h3>
@@ -225,7 +232,21 @@ const Opciones = () => {
                         </p>
                     </div>
                 )}
+                <hr />
                 <label id='label'>_ajustes</label>
+                <div className="settings">
+                    <h4><a href="">Preferencias</a></h4>
+                </div>
+                <hr />
+                <div className="perfil-employee">
+                    <PersonIcon style={{ fontSize: '38px', display: 'inline' }} />
+                    <div className="account-info">
+                        <label className='name-account'>Augusto David Ficara Vargas</label>
+                    </div>
+
+                    <LogoutIcon className='logout-icon' style={{ fontSize: '38px', display: 'inline' }} />
+
+                </div>
             </div>
 
 
