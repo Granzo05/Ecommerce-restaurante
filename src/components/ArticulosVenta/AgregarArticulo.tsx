@@ -42,7 +42,7 @@ function AgregarArticuloVenta() {
   const [cantidad, setCantidad] = useState(0);
 
   async function agregarArticulo() {
-    if (!nombre || !cantidad || !medida || !precio) {
+    if (!nombre || !cantidad || !medida || !precio || !tipo) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
     }

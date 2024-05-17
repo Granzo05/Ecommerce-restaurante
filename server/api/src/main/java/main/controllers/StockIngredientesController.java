@@ -110,26 +110,23 @@ public class StockIngredientesController {
     public ResponseEntity<String> crearStock(@RequestBody StockIngredientes stockDetail, @PathVariable("idSucursal") long id) {
         Optional<Ingrediente> ingredienteDb = ingredienteRepository.findByNombreNotBorrado(stockDetail.getIngrediente().getNombre());
 
-        Long idIngrediente = 0L;
         // Si el cliente no se ha creado en su sección lo creamos para evitar trabajar doble
         if (ingredienteDb.isEmpty()) {
             Ingrediente ingrediente = new Ingrediente();
             ingrediente.setNombre(stockDetail.getIngrediente().getNombre());
 
             ingrediente = ingredienteRepository.save(ingrediente);
-            idIngrediente = ingrediente.getId();
-        } else {
-            idIngrediente = ingredienteDb.get().getId();
+            ingrediente.getId();
         }
 
         // Busco el ingrediente en la base de datos
-        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(idIngrediente, id);
+        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(stockDetail.getIngrediente().getNombre(), id);
 
         // Si no hay stock creado entonces necesitamos recuperar el ingrediente creado
         if (stockIngrediente.isEmpty()) {
             StockIngredientes stock = new StockIngredientes();
 
-            Ingrediente ingrediente = ingredienteRepository.findByIdNotBorrado(idIngrediente).get();
+            Ingrediente ingrediente = ingredienteRepository.findByNombreNotBorrado(stockDetail.getIngrediente().getNombre()).get();
 
             stockDetail.setIngrediente(ingrediente);
 

@@ -15,6 +15,11 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
   function editarIngrediente() {
     const ingrediente: Ingrediente = ingredienteOriginal;
 
+    if (!nombre) {
+      toast.info("Por favor, complete todos los campos requeridos.");
+      return;
+    }
+
     ingrediente.nombre = nombre;
     toast.promise(IngredienteService.updateIngrediente(ingrediente), {
       loading: 'Creando Ingrediente...',

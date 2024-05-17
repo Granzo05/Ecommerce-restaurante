@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { clearInputs } from '../../utils/global_variables/functions';
 import { StockEntrante } from '../../types/Stock/StockEntrante';
 import { StockEntranteService } from '../../services/StockEntranteService';
+import { toast, Toaster } from 'sonner';
 
 interface EditarStockProps {
   stockEntrante: StockEntrante;
@@ -12,6 +13,11 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
   const [fecha, setFecha] = useState(new Date());
 
   function editarStock() {
+    if (!fecha) {
+      toast.info("Por favor, coloque una fecha");
+      return;
+    }
+
     stockEntrante.fechaLlegada = fecha;
 
     StockEntranteService.updateStock(stockEntrante);
@@ -21,6 +27,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
 
   return (
     <div id="miModal" className="modal">
+      <Toaster />
       <div className="modal-content">
         <br />
         <label>

@@ -134,7 +134,7 @@ function AgregarStockEntrante() {
   };
 
   async function agregarStockEntrante() {
-    if (!fecha || detallesStock.length === 0) {
+    if (!fecha || (detallesStock.length === 0 && detallesStock[0].ingrediente?.nombre.match(''))) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
     }

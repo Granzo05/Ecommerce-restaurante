@@ -1,6 +1,7 @@
 package main.repositories;
 
 import main.entities.Ingredientes.Ingrediente;
+import main.entities.Ingredientes.IngredienteDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,8 +16,8 @@ public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> 
     @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre AND i.borrado = 'NO'")
     Optional<Ingrediente> findByName(@Param("nombre") String nombre);
 
-    @Query("SELECT i FROM Ingrediente i WHERE i.borrado = 'NO'")
-    List<Ingrediente> findAllByNotBorrado();
+    @Query("SELECT NEW main.entities.Ingredientes.IngredienteDTO(i.id, i.nombre) FROM Ingrediente i WHERE i.borrado = 'NO'")
+    List<IngredienteDTO> findAllByNotBorrado();
 
     @Query("SELECT i FROM Ingrediente i WHERE i.id = :id AND i.borrado = 'NO'")
     Optional<Ingrediente> findByIdNotBorrado(@Param("id") Long id);

@@ -180,6 +180,13 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       return;
     }
 
+    ingredientes.forEach(ingrediente => {
+      if (!ingrediente.ingrediente?.nombre.match('')) {
+        toast.info("Por favor, los ingredientes deben tener nombre");
+        return;
+      }
+    });
+
     let menuActualizado: ArticuloMenu = new ArticuloMenu();
 
     menuActualizado.nombre = nombre;
@@ -230,7 +237,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   return (
     <div className="modal-info">
       <Toaster />
-      {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={0} />}
+      {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
 
       {mostrarDatos && (
         <div>

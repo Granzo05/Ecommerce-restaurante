@@ -58,7 +58,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   };
 
   function editarArticuloVenta() {
-    if (!nombre || !cantidad || !precioVenta) {
+    if (!nombre || !cantidad || !medida || !precioVenta || !tipo) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
     }

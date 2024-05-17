@@ -2,6 +2,7 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Ingrediente;
+import main.entities.Ingredientes.IngredienteDTO;
 import main.repositories.IngredienteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class IngredienteController {
     }
 
     @GetMapping("/ingredientes")
-    public Set<Ingrediente> getIngredientes() {
+    public Set<IngredienteDTO> getIngredientes() {
         return new HashSet<>(ingredienteRepository.findAllByNotBorrado());
     }
 
@@ -39,7 +40,7 @@ public class IngredienteController {
             return new ResponseEntity<>("El ingrediente ha sido añadido correctamente", HttpStatus.CREATED);
         }
 
-        return new ResponseEntity<>("El ingrediente ya existe", HttpStatus.FOUND);
+        return ResponseEntity.ofNullable("El ingrediente ya existe");
     }
 
     @PutMapping("/ingrediente/update")
@@ -49,11 +50,11 @@ public class IngredienteController {
         System.out.println(ingredienteEncontrado);
 
         if (ingredienteEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El ingrediente no existe", HttpStatus.NOT_FOUND);
+            return ResponseEntity.ofNullable("El ingrediente no existe");
         } else {
             ingredienteEncontrado.get().setNombre(ingrediente.getNombre());
             ingredienteRepository.save(ingredienteEncontrado.get());
-            return new ResponseEntity<>("Ingrediente actualizado correctamente", HttpStatus.OK);
+            return ResponseEntity.ok("El ingrediente ya existe");
         }
     }
 

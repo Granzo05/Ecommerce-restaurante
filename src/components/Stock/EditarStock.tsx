@@ -19,6 +19,11 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
   const [costo, setCosto] = useState(stockOriginal.precioCompra);
 
   function editarStock() {
+    if (!cantidadActual || !cantidadMinima || !costo || !cantidadMaxima || !medida) {
+      toast.info("Por favor, complete todos los campos requeridos.");
+      return;
+    }
+
     if (stockOriginal.tipo === 'ingrediente') {
       const stock: StockIngredientesDTO = new StockIngredientesDTO();
 

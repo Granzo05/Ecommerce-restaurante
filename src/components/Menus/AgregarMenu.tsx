@@ -132,10 +132,17 @@ function AgregarMenu() {
   const [descripcion, setDescripcion] = useState('');
 
   async function agregarMenu() {
-    if (!nombre || !tiempoCoccion || !comensales || !precio || !descripcion) {
+    if (!nombre || !tiempoCoccion || !comensales || !precio || !descripcion || ingredientes.length === 0) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
     }
+
+    ingredientes.forEach(ingrediente => {
+      if (!ingrediente.ingrediente?.nombre.match('')) {
+        toast.info("Por favor, los ingredientes deben tener nombre");
+        return;
+      }
+    });
 
     const menu: ArticuloMenu = new ArticuloMenu();
 

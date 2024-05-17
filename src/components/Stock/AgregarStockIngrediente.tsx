@@ -16,6 +16,11 @@ function AgregarStockIngrediente() {
   const [nombreIngrediente, setArticuloVenta] = useState('0');
 
   async function crearStockIngrediente() {
+    if (!nombreIngrediente || !cantidadActual || !cantidadMinima || !costoIngrediente || !cantidadMaxima || !medida) {
+      toast.info("Por favor, complete todos los campos requeridos.");
+      return;
+    }
+
     const stock: StockIngredientes = new StockIngredientes();
     stock.cantidadActual = cantidadActual;
     stock.cantidadMinima = cantidadMinima;
@@ -67,12 +72,11 @@ function AgregarStockIngrediente() {
         <select
           onChange={(e) => setMedida(e.target.value)}
         >
-          <option value={"0"}>Kilogramos</option>
-          <option value={"1"}>Gramos</option>
-          <option value={"2"}>Litros</option>
-          <option value={"3"}>Centimetros cúbicos</option>
-          <option value={"4"}>Paquetes</option>
-          <option value={"5"}>Unidades</option>
+          <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+          <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+          <option value={EnumMedida.LITROS.toString()}>Litros</option>
+          <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+          <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
         </select>
       </label>
       <br />
