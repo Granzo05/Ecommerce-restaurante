@@ -8,26 +8,72 @@
   height: auto;
 }
 
-.sidebar{
-  height: 100%;
-}
-
-.opciones {
+.sidebar {
   height: 100%;
   display: flex;
+  color: white;
 }
 
 .opciones-menu {
   height: auto;
   width: 300px;
-  background-color: rgb(240, 240, 240);
+  background-color: black;
   padding: 20px;
+  border-radius: 0 2rem 2rem 0;
 }
+
 
 .opciones-menu h4{
   cursor: pointer;
 }
 
 .opciones-menu p{
+  color: white;
   cursor: pointer;
+}
+
+.main-options p{
+  margin-left: 22px;
+}
+
+.main-options h4:hover{
+  text-decoration: underline;
+}
+
+.main-options p:hover{
+  text-decoration: underline;
+}
+
+.title{
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.logo-opciones{
+  height: 48px;
+  width: 60px;
+  display: inline;
+}
+
+#label{
+  font-size: 20px;
+  margin-bottom: 15px;
+  margin-left: -10px;
+  color: rgb(170, 165, 165);
+}
+
+.pedidos .selected{
+  color: red;
+}
+
+.stock .selected{
+  color: red;
+}
+
+.selected{
+  color: red;
+}
+
+.h4-selected{
+  color: red;
 }
