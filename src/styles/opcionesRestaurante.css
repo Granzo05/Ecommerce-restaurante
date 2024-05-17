@@ -1,4 +1,4 @@
-.opciones-pantallas {
+.welcome-employee {
   color: black;
   display: flex;
   flex-direction: column;
@@ -31,6 +31,8 @@ h4{
   cursor: pointer;
   padding: 5px;
   font-size: 20px;
+  
+  border-radius: 7px;
 }
 
 p{
@@ -49,18 +51,18 @@ p{
 .main-options p{
   margin-left: 22px;
   padding: 5px;
+  
+  border-radius: 7px;
 }
 
 h4:hover{
   background-color: grey;
   transition: .3s;
-  border-radius: 7px;
 }
 
 .main-options p:hover{
   background-color: grey;
   transition: .3s;
-  border-radius: 7px;
 }
 
 .title{
@@ -79,6 +81,12 @@ h4:hover{
   font-size: 20px;
   margin-left: -10px;
   color: rgb(170, 165, 165);
+}
+
+#label:hover{
+  color: white;
+  cursor: pointer;
+  transition: .3s;
 }
 
 .pedidos .selected{

@@ -89,7 +89,7 @@ const Opciones = () => {
         } else if (opcionSeleccionada === 11) {
             return <ArticuloVentas />;
         } else if (opcionSeleccionada === 0) {
-            return <div className="opciones-pantallas">
+            return <div className="welcome-employee">
                 <img id='main-employee' src="../src/assets/img/HatchfulExport-All/logo_transparent.png" alt="" />
                 <h1 id='welcome'>¡BIENVENIDO, AUGUSTO!</h1>
             </div >
