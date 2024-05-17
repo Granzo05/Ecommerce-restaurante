@@ -10,6 +10,9 @@ import AgregarStockIngrediente from "./AgregarStockIngrediente";
 import { StockIngredientesDTO } from "../../types/Stock/StockIngredientesDTO";
 import { StockArticuloVentaDTO } from "../../types/Stock/StockArticuloVentaDTO";
 import ModalFlotante from "../ModalFlotante";
+import InputComponent from "../InputComponent";
+import ModalFlotanteRecomendaciones from "../ModalFlotanteRecomendaciones";
+import SearchIcon from '@mui/icons-material/Search';
 
 const Stocks = () => {
     const [stockIngredientes, setStockIngredientes] = useState<StockIngredientesDTO[]>([]);
@@ -87,15 +90,46 @@ const Stocks = () => {
 
         setMostrarStocks(true);
         fetchStocks();
+        setModalBusqueda(false);
+
+        
     };
+
+    // Modal flotante de ingrediente
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>('');
+  const [elementosABuscar, setElementosABuscar] = useState<string>('');
+  const [showAgregarIngredienteModal, setShowAgregarIngredienteModal] = useState(false);
+  const [inputFiltrado, setInputFiltrado] = useState<string>('');
+
+    const handleAbrirRecomendaciones = (busqueda: string) => {
+        setElementosABuscar(busqueda)
+        setModalBusqueda(true);
+      };
+
+      const handleSelectProduct = (product: string) => {
+        setSelectedProduct(product);
+      };
+
+      const [placeHolder, setPlaceHolder] = useState<string>('Filtrar...'); 
+    
 
     return (
         <div className="opciones-pantallas">
 
-            <h1>Stocks</h1>
-            <button onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
-            <button onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
-
+            <h1>- Stock -</h1>
+            <div className="btns-stock">
+                <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
+                <button className="btn-agregar" onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
+            </div>
+            
+            <hr />
+            <div className="input-filtrado">
+                <SearchIcon className="search-icono"/>
+                <InputComponent placeHolder={placeHolder} onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={inputFiltrado ?? ''} />
+                {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
+                
+            </div>
             <ModalFlotante isOpen={showAgregarStockModalArticulo} onClose={handleModalClose}>
                 <AgregarStockArticulo />
             </ModalFlotante>
@@ -135,8 +169,11 @@ const Stocks = () => {
                                     <td>{stock.precioCompra}</td>
                                     <td>{"Aca la fecha"}</td>
                                     <td>
-                                        <button onClick={() => handleEliminarStock(stock, 'ingrediente')}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
+                                        <div className="btns-acciones-stock">
+                                            
+                                            <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
+                                            <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'ingrediente')}>ELIMINAR</button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

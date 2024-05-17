@@ -5,34 +5,143 @@
 }
 
 
+.opciones-pantallas {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+#stocks {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-th {
-    background-color: #f2f2f2;
-    padding: 8px;
+table th, table td {
+    border: 1px solid #000000;
+    padding: 12px;
     text-align: left;
 }
 
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
+table th {
+    background-color: #f4f4f4;
+    color: #333;
 }
 
-tr:nth-child(odd) {
+table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-button {
-    padding: 6px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
+table tr:hover {
+    background-color: #cccccc;
 }
 
-button:hover {
+.search-icono {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.input-filtrado{
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+.btns-acciones-stock{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-accion-1, .btn-accion-2{
+    width: 150px;
+    color: black;
+    margin: 5px;
+}
+
+.btn-accion-1{
+    background-color: #e4e000;
+}
+
+.btn-accion-2{
+    background-color: #ad0000;
+}
+
+.btn-accion-1:hover{
+    background-color: #fffb1b;
+}
+
+.btn-accion-2:hover{
+    background-color: #ff0000;
+}
+
+.btns-stock{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-agregar {
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    margin: 5px;
+}
+
+.btn-agregar:hover {
     background-color: #0056b3;
+}
+
+.btn-agregar:focus {
+    outline: none;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header, .modal-footer {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-title {
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
 }

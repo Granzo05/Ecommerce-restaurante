@@ -11,7 +11,6 @@
 .sidebar {
   height: 100%;
   display: flex;
-  color: white;
   background-color: #2b86c4;
 }
 
@@ -26,6 +25,7 @@
   padding: 20px;
   border-radius: 0 2rem 2rem 0;
   box-shadow: 0 0 14px black;
+  color: white;
 }
 h4{
   cursor: pointer;

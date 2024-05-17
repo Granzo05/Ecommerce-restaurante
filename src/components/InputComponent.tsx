@@ -1,6 +1,6 @@
-const InputComponent: React.FC<{ onInputClick: () => void, selectedProduct: string }> = ({ onInputClick, selectedProduct }) => {
+const InputComponent: React.FC<{ onInputClick: () => void, selectedProduct: string, placeHolder: string }> = ({ onInputClick, selectedProduct, placeHolder }) => {
   return (
-    <input type="text" onClick={onInputClick} defaultValue={selectedProduct}  />
+    <input type="text" placeholder={placeHolder} onClick={onInputClick} defaultValue={selectedProduct}  />
   );
 };
 export default InputComponent;

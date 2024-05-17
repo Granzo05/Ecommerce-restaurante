@@ -1,3 +1,8 @@
+.opciones-pantalla{
+  color: black;
+  border: 2px solid black;
+}
+
 #grid-container {
   margin-top: 80px;
   padding: 25px;

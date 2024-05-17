@@ -45,7 +45,7 @@ const PasswordResetForm = () => {
                         <div className="error-message">Las contraseñas no coinciden.</div>
                     </div>
                     
-                    <button type="submit">Guardar Contraseña</button>
+                    <button id='btn-save-pass' type="submit">Guardar Contraseña</button>
                 </form>
             </div>
         </div>
