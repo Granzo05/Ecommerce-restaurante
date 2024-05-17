@@ -39,6 +39,7 @@ const CarritoComponent = () => {
     function cargarCarrito() {
         const carritoString = localStorage.getItem('carrito');
         let carrito: Carrito = carritoString ? JSON.parse(carritoString) : new Carrito();
+        console.log(carrito);
         setCarrito(carrito);
     }
 
@@ -65,7 +66,7 @@ const CarritoComponent = () => {
                         <label id='contador-carrito'>{carrito?.totalProductos}</label>
                     </button>
                     <button style={{ background: 'none', border: 'none', color: 'black', marginLeft: '300px', padding: '15px' }} className='icon-close' onClick={() => setCarritoAbierto(false)}><CloseIcon /></button>
-                    {carrito && (carrito.articuloMenu && carrito.articuloMenu.length === 0 || carrito.articuloVenta && carrito.articuloVenta.length === 0) && (
+                    {carrito && (carrito.articuloMenu && carrito.articuloMenu.length === 0 && carrito.articuloVenta && carrito.articuloVenta.length === 0) && (
                         <div className="container-empty-cart">
                             <p>El carrito está vacío</p>
                         </div>
@@ -73,7 +74,9 @@ const CarritoComponent = () => {
                     {carrito && carrito.articuloMenu && carrito.articuloMenu.map((producto, index) => (
                         <div className="cart-product" key={index}>
                             <div className="info-cart-product">
-                                <img src={producto.imagenes[0].ruta} alt="" />
+                                {producto.imagenesDTO[0] && (
+                                    <img src={producto.imagenesDTO[0].ruta} alt="" />
+                                )}
                                 <span className='cantidad-producto-carrito'>{carrito.articuloMenu[index].cantidad}</span>
                                 <span className='titulo-producto-carrito'>{producto.nombre}</span>
                                 <span className='precio-producto-carrito'>{producto.precioVenta * producto.cantidad}</span>
@@ -85,7 +88,9 @@ const CarritoComponent = () => {
                     {carrito && carrito.articuloVenta && carrito.articuloVenta.map((producto, index) => (
                         <div className="cart-product" key={index}>
                             <div className="info-cart-product">
-                                <img src={producto.imagenes[0].ruta} alt="" />
+                                {producto.imagenesDTO[0] && (
+                                    <img src={producto.imagenesDTO[0].ruta} alt="" />
+                                )}
                                 <span className='cantidad-producto-carrito'>{carrito.articuloVenta[index].cantidad}</span>
                                 <span className='titulo-producto-carrito'>{producto.nombre}</span>
                                 <span className='precio-producto-carrito'>{producto.precioVenta * producto.cantidad}</span>

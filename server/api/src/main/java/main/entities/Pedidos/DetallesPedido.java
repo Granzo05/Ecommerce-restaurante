@@ -11,6 +11,7 @@ import main.entities.Productos.ArticuloVenta;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Table(name = "detalles_pedido", schema = "buen_sabor")
 public class DetallesPedido {
     @Id

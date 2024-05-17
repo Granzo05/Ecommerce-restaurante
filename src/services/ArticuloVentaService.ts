@@ -53,7 +53,7 @@ export const ArticuloVentaService = {
                 }));
             }
 
-            return 'Menú actualizado con éxito';
+            return 'Articulo actualizado con éxito';
 
         } catch (error) {
             console.error('Error:', error);

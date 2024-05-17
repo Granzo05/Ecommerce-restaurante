@@ -10,30 +10,41 @@ import { DetallesPedido } from "../types/Pedidos/Detalles_pedido";
 import { EnumEstadoPedido } from "../types/Pedidos/EnumEstadoPedido";
 import { StockIngredientesService } from "../services/StockIngredientesService";
 import { StockArticuloVentaService } from "../services/StockArticulosService";
+import { toast, Toaster } from "sonner";
+import { Domicilio } from "../types/Domicilio/Domicilio";
 
 const Pago = () => {
 
     const [carrito, setCarrito] = useState<Carrito | null>(null);
     const [cliente, setCliente] = useState<Cliente | null>(null);
-    const [domicilio, setDomicilio] = useState<string | null>('');
+    const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
     const [envio, setTipoEnvio] = useState<string>('DELIVERY');
 
     useEffect(() => {
         cargarPedido();
+        buscarDomicilio();
+    }, []);
 
-        const buscarDomicilio = async () => {
-            const clienteString = localStorage.getItem('usuario');
-            let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+    const buscarDomicilio = async () => {
+        const clienteString = localStorage.getItem('usuario');
+        let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
 
-            setCliente(clienteMem);
+        setCliente(clienteMem);
 
-            if (cliente) {
-                setDomicilio(await ClienteService.getDomicilio(cliente.email));
+        if (cliente) {
+            try {
+                ClienteService.getDomicilios(cliente?.id)
+                    .then(data => {
+                        setDomicilios(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } catch (error) {
+                console.error('Error al obtener empleados:', error);
             }
         }
-
-        buscarDomicilio();
-    }, [cliente]);
+    }
 
     function cargarPedido() {
         const carritoString = localStorage.getItem('carrito');
@@ -47,6 +58,7 @@ const Pago = () => {
 
         let hayStock = true;
 
+        /*
         for (const producto of carrito?.articuloMenu || []) {
             // Esta funcion devuelve un booleano, true en caso de haber stock y false caso contrario
             const stockProducto = await StockIngredientesService.getStockProduct(producto.nombre, producto.cantidad);
@@ -70,7 +82,7 @@ const Pago = () => {
                 break;
             }
         }
-
+        */
         if (hayStock) {
             let pedido = new Pedido();
             // Asignamos el cliente
@@ -81,16 +93,15 @@ const Pago = () => {
 
             // Creamos los detalles
             let detalles: DetallesPedido[] = [];
-
             carrito?.articuloMenu.forEach(producto => {
                 let detalle = new DetallesPedido();
                 detalle.articuloMenu = producto;
                 detalle.cantidad = producto.cantidad;
                 detalle.subTotal = producto.cantidad * producto.precioVenta;
-
                 detalles.push(detalle);
             });
 
+            /*
             carrito?.articuloVenta.forEach(producto => {
                 let detalle = new DetallesPedido();
                 detalle.articuloVenta = producto;
@@ -99,18 +110,23 @@ const Pago = () => {
 
                 detalles.push(detalle);
             });
-
+            */
             pedido.factura = null;
 
             pedido.detallesPedido = detalles;
             pedido.estado = EnumEstadoPedido.ENTRANTES;
 
             // Realizar el envío del pedido
-            let response = await PedidoService.crearPedido(pedido);
-
-            alert(response);
-
-            localStorage.removeItem('carrito');
+            toast.promise(PedidoService.crearPedido(pedido), {
+                loading: 'Creando pedido...',
+                success: (message) => {
+                    localStorage.removeItem('carrito');
+                    return message;
+                },
+                error: (message) => {
+                    return message;
+                },
+            });
 
             //window.location.href = Pagina de muestra de tiempo y eso
 
@@ -126,6 +142,7 @@ const Pago = () => {
 
     return (
         <div className="container-pago">
+            <Toaster />
             <div className="div-pago">
                 <div id="detalle-producto"></div>
                 <select name="tipoEnvio" id="tipoEnvio" onChange={e => setTipoEnvio(e.target.value)}>
@@ -135,31 +152,34 @@ const Pago = () => {
 
                 <h2>Detalles del domicilio</h2>
 
-                {domicilio ? (
-                    <p>Domicilio: {domicilio}</p>
-                ) : (
-                    <input
-                        type="text"
-                        id="domicilioCliente"
-                        name="domicilioCliente"
-                        required
-                        placeholder="Ingresa tu domicilio"
-                    />
+                {envio === 'DELIVERY' && (
+                    domicilios && domicilios.length > 0 && (
+                        <select id="domicilioSeleccionado" name="domicilioSeleccionado">
+                            {domicilios.map((domicilio, index) => (
+                                <option key={index} value={domicilio.calle}>
+                                    {domicilio.calle}
+                                </option>
+                            ))}
+                        </select>
+                    )
                 )}
+
 
                 <div className="productos">
                     {carrito && carrito.articuloMenu.map((producto, index) => (
                         <div className="item-pago" key={index}>
-                            <img src={producto.imagenes[0].ruta} alt="" />
-                            <p>{producto.nombre}</p>
+                            {producto.imagenesDTO[0] && (
+                                <img src={producto.imagenesDTO[0].ruta} alt="" />
+                            )}                            <p>{producto.nombre}</p>
                             <p>{carrito.articuloMenu[index].cantidad}</p>
                             <p>{carrito.articuloMenu[index].cantidad * carrito.articuloMenu[index].precioVenta}</p>
                         </div>
                     ))}
                     {carrito && carrito.articuloVenta.map((producto, index) => (
                         <div className="item-pago" key={index}>
-                            <img src={producto.imagenes[0].ruta} alt="" />
-                            <p>{producto.nombre}</p>
+                            {producto.imagenesDTO[0] && (
+                                <img src={producto.imagenesDTO[0].ruta} alt="" />
+                            )}                            <p>{producto.nombre}</p>
                             <p>{carrito.articuloVenta[index].cantidad}</p>
                             <p>{carrito.articuloVenta[index].cantidad * carrito.articuloVenta[index].precioVenta}</p>
                         </div>
@@ -196,7 +216,7 @@ const Pago = () => {
 
                 )}
             </div>
-        </div>
+        </div >
     )
 }
 

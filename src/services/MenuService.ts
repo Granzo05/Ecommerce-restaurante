@@ -53,7 +53,9 @@ export const MenuService = {
                     }
                 }));
             }
-            return 'Articulo actualizado con éxito';
+
+            
+            return 'Menú creado con éxito';
 
         } catch (error) {
             console.error('Error:', error);

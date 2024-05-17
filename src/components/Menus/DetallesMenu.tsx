@@ -14,7 +14,7 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
 
 
   async function handleAñadirCarrito(menu: ArticuloMenuDTO) {
-    await CarritoService.agregarAlCarrito(menu, cantidadMenu);
+    await CarritoService.agregarAlCarrito(menu, null, cantidadMenu);
   }
 
   return (

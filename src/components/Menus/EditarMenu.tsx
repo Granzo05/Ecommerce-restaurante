@@ -180,12 +180,16 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       return;
     }
 
-    ingredientes.forEach(ingrediente => {
-      if (!ingrediente.ingrediente?.nombre.match('')) {
-        toast.info("Por favor, los ingredientes deben tener nombre");
+    for (let i = 0; i < ingredientes.length; i++) {
+      const ingrediente = ingredientes[i].ingrediente;
+      const cantidad = ingredientes[i].cantidad;
+      const medida = ingredientes[i].medida;
+
+      if (!ingrediente?.nombre || cantidad === 0 || !medida) {
+        toast.info("Por favor, los ingredientes deben contener todos los campos");
         return;
       }
-    });
+    }
 
     let menuActualizado: ArticuloMenu = new ArticuloMenu();
 
@@ -338,7 +342,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             {ingredientes.map((ingredienteMenu, index) => (
               <div key={index} className='div-ingrediente-menu'>
                 <div>
-                  <InputComponent onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
+                  <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
                   <br />
                 </div>
                 <input

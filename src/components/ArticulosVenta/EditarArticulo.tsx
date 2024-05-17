@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
@@ -23,6 +23,11 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const [nombre, setNombre] = useState(articuloOriginal.nombre);
   const [medida, setMedida] = useState<EnumMedida | string>(articuloOriginal.medida.toString());
   const [cantidad, setCantidad] = useState(articuloOriginal.cantidadMedida);
+
+
+  useEffect(() => {
+    console.log(articuloOriginal)
+  }, []);
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -71,6 +76,8 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       cantidadMedida: cantidad,
       medida
     };
+
+    console.log(articuloActualizado)
 
     toast.promise(ArticuloVentaService.updateArticulo(articuloActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando articulo...',
@@ -123,9 +130,9 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
         <br />
         <label>
           <select value={tipo} name="tipoArticulo" onChange={(e) => { setTipo(e.target.value) }}>
-            <option>Seleccionar tipo de articulo</option>
-            <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida sin alcohol</option>
-            <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida con alcohol</option>
+            <option value="">Seleccionar tipo de articulo</option>
+            <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida sin alcohol</option>
+            <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida con alcohol</option>
           </select>
         </label>
         <br />

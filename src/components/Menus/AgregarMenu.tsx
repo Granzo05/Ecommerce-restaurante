@@ -11,6 +11,7 @@ import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloCo
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
 import InputComponent from '../InputComponent';
 import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
+import { clearInputs } from '../../utils/global_variables/functions';
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
@@ -132,17 +133,21 @@ function AgregarMenu() {
   const [descripcion, setDescripcion] = useState('');
 
   async function agregarMenu() {
-    if (!nombre || !tiempoCoccion || !comensales || !precio || !descripcion || ingredientes.length === 0) {
+    if (!nombre || !tiempoCoccion || !comensales || !precio || !descripcion || !tipo || imagenes.length === 0) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
     }
 
-    ingredientes.forEach(ingrediente => {
-      if (!ingrediente.ingrediente?.nombre.match('')) {
-        toast.info("Por favor, los ingredientes deben tener nombre");
+    for (let i = 0; i < ingredientes.length; i++) {
+      const ingrediente = ingredientes[i].ingrediente;
+      const cantidad = ingredientes[i].cantidad;
+      const medida = ingredientes[i].medida;
+
+      if (!ingrediente?.nombre || cantidad === 0 || !medida) {
+        toast.info("Por favor, los ingredientes deben contener todos los campos");
         return;
       }
-    });
+    }
 
     const menu: ArticuloMenu = new ArticuloMenu();
 
@@ -157,14 +162,13 @@ function AgregarMenu() {
     toast.promise(MenuService.createMenu(menu, imagenes), {
       loading: 'Creando menu...',
       success: (message) => {
+        clearInputs();
         return message;
       },
       error: (message) => {
         return message;
       },
     });
-    //clearInputs();
-
   }
 
   return (
@@ -219,7 +223,7 @@ function AgregarMenu() {
         {ingredientes.map((ingredienteMenu, index) => (
           <div key={index} className='div-ingrediente-menu'>
             <div>
-              <InputComponent onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
+              <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
               {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
               <br />
             </div>
@@ -232,6 +236,7 @@ function AgregarMenu() {
               id={`select-medidas-${index}`}
               onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
             >
+              <option value="">Seleccionar medida ingrediente</option>
               <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
               <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
               <option value={EnumMedida.LITROS.toString()}>Litros</option>

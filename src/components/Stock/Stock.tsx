@@ -99,8 +99,6 @@ const Stocks = () => {
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [elementosABuscar, setElementosABuscar] = useState<string>('');
-  const [showAgregarIngredienteModal, setShowAgregarIngredienteModal] = useState(false);
-  const [inputFiltrado, setInputFiltrado] = useState<string>('');
 
     const handleAbrirRecomendaciones = (busqueda: string) => {
         setElementosABuscar(busqueda)
@@ -110,9 +108,6 @@ const Stocks = () => {
       const handleSelectProduct = (product: string) => {
         setSelectedProduct(product);
       };
-
-      const [placeHolder, setPlaceHolder] = useState<string>('Filtrar...'); 
-    
 
     return (
         <div className="opciones-pantallas">
@@ -126,7 +121,7 @@ const Stocks = () => {
             <hr />
             <div className="input-filtrado">
                 <SearchIcon className="search-icono"/>
-                <InputComponent placeHolder={placeHolder} onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={inputFiltrado ?? ''} />
+                <InputComponent placeHolder={'Filtrar...'} onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={selectedProduct ?? ''} />
                 {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
                 
             </div>

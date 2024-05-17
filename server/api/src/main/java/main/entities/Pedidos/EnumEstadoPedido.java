@@ -8,8 +8,5 @@ public enum EnumEstadoPedido {
     RECHAZADOS,
     EN_CAMINO;
 
-    public static EnumEstadoPedido fromIndex(int index) {
-        return EnumEstadoPedido.values()[index];
-    }
 }
 

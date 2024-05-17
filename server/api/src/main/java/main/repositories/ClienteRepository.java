@@ -14,7 +14,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     @Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.borrado = 'NO'")
     Optional<Cliente> findByEmail(@Param("email") String email);
-
+    @Query("SELECT NEW main.entities.Cliente.ClienteDTO(c.id, c.nombre, c.email, c.telefono) FROM Cliente c WHERE c.id = :id AND c.borrado = 'NO'")
+    ClienteDTO findByIdDTO(@Param("id") Long id);
 
     @Query("SELECT NEW main.entities.Cliente.ClienteDTO(c.id, c.nombre, c.email, c.telefono) FROM Cliente c WHERE c.email = :email AND c.contraseña = :contraseña AND c.borrado = 'NO'")
     ClienteDTO findByEmailAndPasswordDTO(@Param("email") String email, @Param("contraseña") String contraseña);

@@ -6,12 +6,12 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
+import main.entities.Factura.FacturaDTO;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.Pedido;
-import main.repositories.ClienteRepository;
-import main.repositories.PedidoRepository;
-import main.repositories.SucursalRepository;
+import main.entities.Pedidos.PedidoDTO;
+import main.repositories.*;
 import main.utility.gmail.Gmail;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,34 +33,57 @@ public class PedidoController {
     private final PedidoRepository pedidoRepository;
     private final ClienteRepository clienteRepository;
     private final SucursalRepository sucursalRepository;
+    private final FacturaRepository facturaRepository;
+    private final DetallePedidoRepository detallePedidoRepository;
 
     public PedidoController(PedidoRepository pedidoRepository,
                             ClienteRepository clienteRepository,
-                            SucursalRepository sucursalRepository) {
+                            SucursalRepository sucursalRepository, FacturaRepository facturaRepository, DetallePedidoRepository detallePedidoRepository) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
         this.sucursalRepository = sucursalRepository;
+        this.facturaRepository = facturaRepository;
+        this.detallePedidoRepository = detallePedidoRepository;
     }
 
     @GetMapping("/cliente/{id}/pedidos")
-    public Set<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
-        System.out.println(idCliente);
-        List<Pedido> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
-        System.out.println(pedidos);
+    public Set<PedidoDTO> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
+        List<PedidoDTO> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
+
+        cargarPedidos(pedidos);
+
         return new HashSet<>(pedidos);
     }
 
     @GetMapping("/pedidos")
-    public Set<Pedido> getPedidosPorNegocio() {
-        List<Pedido> pedidos = pedidoRepository.findOrders();
+    public Set<PedidoDTO> getPedidosPorNegocio() {
+        List<PedidoDTO> pedidos = pedidoRepository.findOrders();
+
+        cargarPedidos(pedidos);
+
         return new HashSet<>(pedidos);
     }
 
     @GetMapping("/pedidos/{estado}")
-    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") int estado) {
-        EnumEstadoPedido enumEstado = EnumEstadoPedido.fromIndex(estado);
-        List<Pedido> pedidos = pedidoRepository.findPedidos(enumEstado);
+    public Set<PedidoDTO> getPedidosPorEstado(@PathVariable("estado") EnumEstadoPedido estado) {
+        List<PedidoDTO> pedidos = pedidoRepository.findPedidos(estado);
+        System.out.println(pedidos);
+        for (PedidoDTO pedido : pedidos) {
+            pedido.setCliente(clienteRepository.findByIdDTO(pedido.getIdCliente()));
+
+
+            pedido.setDetallesPedido(new HashSet<>(detallePedidoRepository.findByIdDTO(pedido.getId())));
+        }
+
         return new HashSet<>(pedidos);
+    }
+
+    private void cargarPedidos(List<PedidoDTO> pedidos) {
+        for (PedidoDTO pedido : pedidos) {
+            pedido.setCliente(clienteRepository.findByIdDTO(pedido.getIdCliente()));
+
+            pedido.setDetallesPedido(new HashSet<>(detallePedidoRepository.findByIdDTO(pedido.getId())));
+        }
     }
 
     //Funcion para cargar pdfs
@@ -112,7 +135,11 @@ public class PedidoController {
     @Transactional
     @PostMapping("/pedido/create")
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido) {
-        pedido.setFactura(null);
+        System.out.println(pedido);
+
+        for (DetallesPedido detallesPedido: pedido.getDetallesPedido()) {
+            detallesPedido.setPedido(pedido);
+        }
 
         pedidoRepository.save(pedido);
 

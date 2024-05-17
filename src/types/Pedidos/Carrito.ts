@@ -1,8 +1,8 @@
-import { ArticuloMenu } from "../Productos/ArticuloMenu";
+import { ArticuloMenuDTO } from "../Productos/ArticuloMenuDTO";
 import { ArticuloVenta } from "../Productos/ArticuloVenta";
 
 export class Carrito {
-    articuloMenu: ArticuloMenu[] = [];
+    articuloMenu: ArticuloMenuDTO[] = [];
     articuloVenta: ArticuloVenta[] = [];
     totalProductos: number = 0;
     totalPrecio: number = 0;

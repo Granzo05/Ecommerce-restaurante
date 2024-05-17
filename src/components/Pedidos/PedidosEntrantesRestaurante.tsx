@@ -4,6 +4,7 @@ import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
+import { toast, Toaster } from 'sonner';
 
 
 const PedidosEntrantes = () => {
@@ -11,13 +12,14 @@ const PedidosEntrantes = () => {
 
     useEffect(() => {
         //fetchData();
-
         /*
         setInterval(() => {
             buscarPedidos();
-        }, 30000);
+        }, 25000);
         */
-    }, [pedidosEntrantes]);
+        buscarPedidos();
+
+    }, []);
 
     const fetchData = async () => {
         try {
@@ -58,7 +60,15 @@ const PedidosEntrantes = () => {
 
         pedido.horaFinalizacion = horaFinalizacionFormateada;
 
-        await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ACEPTADOS);
+        toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ACEPTADOS), {
+            loading: 'Enviando pedido a cocina...',
+            success: (message) => {
+                return message;
+            },
+            error: (message) => {
+                return message;
+            },
+        });
 
         buscarPedidos();
     }
@@ -78,14 +88,23 @@ const PedidosEntrantes = () => {
     }
 
     async function handleRechazarPedido(pedido: Pedido) {
-        let response = await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS);
-        alert(await response);
+        toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
+            loading: 'Rechazando pedido...',
+            success: (message) => {
+                return message;
+            },
+            error: (message) => {
+                return message;
+            },
+        });
+
         buscarPedidos();
     }
 
     return (
 
         <div className="opciones-pantallas">
+            <Toaster />
             <h1>Pedidos entrantes</h1>
             <div id="pedidos">
                 <table>

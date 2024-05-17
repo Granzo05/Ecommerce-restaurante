@@ -34,7 +34,6 @@ public class StockIngredientesController {
         this.articuloMenuRepository = articuloMenuRepository;
         this.sucursalRepository = sucursalRepository;
     }
-
     @GetMapping("/stockIngredientes/{idSucursal}")
     public Set<StockIngredientesDTO> getStock(@PathVariable("idSucursal") long id) {
         return new HashSet<>(stockIngredientesRepository.findAllByIdSucursal(id));
@@ -115,18 +114,17 @@ public class StockIngredientesController {
             Ingrediente ingrediente = new Ingrediente();
             ingrediente.setNombre(stockDetail.getIngrediente().getNombre());
 
-            ingrediente = ingredienteRepository.save(ingrediente);
-            ingrediente.getId();
+            ingredienteRepository.save(ingrediente);
         }
 
+        Ingrediente ingrediente = ingredienteRepository.findByNombreNotBorrado(stockDetail.getIngrediente().getNombre()).get();
+
         // Busco el ingrediente en la base de datos
-        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(stockDetail.getIngrediente().getNombre(), id);
+        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), id);
 
         // Si no hay stock creado entonces necesitamos recuperar el ingrediente creado
         if (stockIngrediente.isEmpty()) {
             StockIngredientes stock = new StockIngredientes();
-
-            Ingrediente ingrediente = ingredienteRepository.findByNombreNotBorrado(stockDetail.getIngrediente().getNombre()).get();
 
             stockDetail.setIngrediente(ingrediente);
 

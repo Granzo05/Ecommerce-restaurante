@@ -150,7 +150,7 @@ public class ArticuloVentaController {
         }
 
         ArticuloVenta articuloVenta = articuloEncontrado.get();
-
+        System.out.println(articuloVentaDetail);
         articuloVenta.setPrecioVenta(articuloVentaDetail.getPrecioVenta());
         articuloVenta.setNombre(articuloVentaDetail.getNombre());
         articuloVenta.setTipo(articuloVentaDetail.getTipo());

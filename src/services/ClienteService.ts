@@ -1,4 +1,5 @@
 import { Cliente } from '../types/Cliente/Cliente'
+import { Domicilio } from '../types/Domicilio/Domicilio';
 import { URL_API } from '../utils/global_variables/const';
 
 export const ClienteService = {
@@ -64,9 +65,9 @@ export const ClienteService = {
             })
     },
 
-    getDomicilio: async (email: string): Promise<string> => {
+    getDomicilios: async (id: number): Promise<Domicilio[]> => {
         try {
-            const response = await fetch(URL_API + 'cliente/domicilio/' + email, {
+            const response = await fetch(URL_API + 'cliente/domicilio/' + id, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -76,7 +77,8 @@ export const ClienteService = {
             if (!response.ok) {
                 throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
             }
-            return await response.text();
+
+            return await response.json();
 
         } catch (error) {
             console.error('Error:', error);

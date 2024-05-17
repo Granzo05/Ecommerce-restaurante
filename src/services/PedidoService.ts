@@ -8,7 +8,7 @@ export const PedidoService = {
     getPedidosClientes: async (): Promise<Pedido[] | null> => {
         const clienteString = localStorage.getItem('usuario');
         let cliente: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
-        
+
         if (!cliente) {
             window.location.href = '/acceso-denegado';
         } else {
@@ -75,7 +75,6 @@ export const PedidoService = {
 
             return await response.text();
 
-
         } catch (error) {
             console.error('Error:', error);
             throw error;
@@ -115,7 +114,7 @@ export const PedidoService = {
         if (pedido.estado.toString().match('entregados')) {
             pedido = await FacturaService.crearFactura(pedido);
         }
-        
+
         try {
             const response = await fetch(URL_API + 'pedido/update/estado', {
                 method: 'PUT',
@@ -130,7 +129,6 @@ export const PedidoService = {
             }
 
             return await response.text();
-
 
         } catch (error) {
             console.error('Error:', error);

@@ -1,7 +1,6 @@
-import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 import { Carrito } from "../types/Pedidos/Carrito";
-import { Articulo } from "../types/Productos/Articulo";
 import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
+import { ArticuloMenuDTO } from "../types/Productos/ArticuloMenuDTO";
 
 export const CarritoService = {
     getCarrito: async (): Promise<Carrito> => {
@@ -11,18 +10,16 @@ export const CarritoService = {
         return carrito;
     },
 
-    agregarAlCarrito: async (articulo: Articulo, cantidad = 1) => {
-        const nombre: string = articulo.nombre;
-
+    agregarAlCarrito: async (articuloMenu: ArticuloMenuDTO | null, articuloVenta: ArticuloVenta | null, cantidad = 1) => {
         // Busco el carrito existente
         let carrito = await CarritoService.getCarrito();
 
         let productoEnCarrito = false;
 
-        if (articulo instanceof ArticuloMenu) {
+        if (articuloMenu) {
             // Veo si el articulo entrante ya está cargado en el carrito
             carrito.articuloMenu.forEach((producto, index) => {
-                if (producto.nombre === nombre) {
+                if (producto.nombre === articuloMenu.nombre) {
                     // Si existe, simplemente sumamos la cantidad
                     carrito.articuloMenu[index].cantidad += cantidad;
                     productoEnCarrito = true;
@@ -30,18 +27,15 @@ export const CarritoService = {
             });
 
             if (!productoEnCarrito) {
-                const articuloMenu = new ArticuloMenu();
-
                 articuloMenu.cantidad = cantidad;
 
                 carrito.totalProductos += cantidad;
 
                 carrito.articuloMenu.push(articuloMenu);
             }
-
-        } else if (articulo instanceof ArticuloVenta) {
+        } else if (articuloVenta) {
             carrito.articuloVenta.forEach((producto, index) => {
-                if (producto.nombre === nombre) {
+                if (producto.nombre === articuloVenta.nombre) {
                     // Si existe, simplemente sumamos la cantidad
                     carrito.articuloVenta[index].cantidad += cantidad;
                     productoEnCarrito = true;
@@ -49,7 +43,6 @@ export const CarritoService = {
             });
 
             if (!productoEnCarrito) {
-                const articuloVenta = new ArticuloVenta();
 
                 articuloVenta.cantidad = cantidad;
 
@@ -59,6 +52,7 @@ export const CarritoService = {
             }
         }
 
+        console.log(carrito)
         CarritoService.actualizarCarrito(carrito);
     },
 
