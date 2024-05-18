@@ -67,17 +67,33 @@ function AgregarStockArticulo() {
       <Toaster />
       <h2>Agregar artículo</h2>
       <br />
-      <input type="text" placeholder="Nombre del articulo" onChange={(e) => { setNombre(e.target.value) }} />
+      <div className="inputBox">
+        <input type="text" required onChange={(e) => { setNombre(e.target.value) }} />
+        <span>Nombre del articulo</span>
+      </div>
       <br />
-      <input type="number" placeholder="Cantidad mínima del articulo" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+      <div className="inputBox">
+        <input type="number" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+        <span>Cantidad mínima del articulo</span>
+      </div>
       <br />
-      <input type="number" placeholder="Cantidad máxima del articulo" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+      <div className="inputBox">
+        <input type="number" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+        <span>Cantidad máxima del articulo</span>
+      </div>
       <br />
-      <input type="number" placeholder="Cantidad actual del articulo" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+      <div className="inputBox">
+        <input type="number" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+        <span>Cantidad actual del articulo</span>
+      </div>
       <br />
-      <input type="number" placeholder="Costo" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-
+      <div className="inputBox">
+        <input type="number" required onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+        <span>Costo ($)</span>
+      </div>
+      
       <br />
+      <label className='span-unidad'>Unidad de medida:</label>
       <select
         onChange={(e) => setMedida(e.target.value)}
       >

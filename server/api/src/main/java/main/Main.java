@@ -58,7 +58,7 @@ public class Main {
 
     @Autowired(required = true)
     private EmpresaRepository empresaRepository;
-    private final String RUTACSV = "D://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
+    private final String RUTACSV = "E://Facultad//2do Año//4to Semestre//Proyecto Final//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
     private final String SEPARACIONCSV = ";";
 
     @Bean

@@ -45,6 +45,7 @@
     width: 400px;
   }
 
+
   
   .modal-info input:focus,
   .modal-info select:focus {
@@ -61,7 +62,7 @@
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 100px;
+    width: 150px;
     margin: 10px;
   }
   
@@ -107,4 +108,46 @@
     overflow-y: auto;
     margin: 50px 0px 2000px 150px;
   }
+
+  .modal-flotante-recom-content {
+    width: auto;
+    height: auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    justify-content: center;
+    overflow-y: auto;
+    margin: 50px 0px 2000px 150px;
+  }
+
+  .modal-flotante-recom-content h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 150px 20px 150px;
+  }
+
+
+  .modal-flotante-recom-content span{
+    margin-left: 30%;
+  }
+
+  .tabla-recomendaciones {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .modal-flotante-recom-content .inputBox{
+    display: flex;
+    justify-content: end;
+    height: 60px;
+  }
+
+  .modal-flotante-recom-content .search-icono{
+    margin: 10px 5px 10px 0;
+  }
   
+  
+  
+  
+ 

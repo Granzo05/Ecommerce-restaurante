@@ -182,8 +182,12 @@ const Stocks = () => {
                                     <td>{stock.precioCompra}</td>
                                     <td>{"Aca la fecha"}</td>
                                     <td>
-                                        <button onClick={() => handleEliminarStock(stock, 'articulo')}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
+                                        <div className="btns-acciones-stock">
+                                        <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
+                                    
+                                        <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'articulo')}>ELIMINAR</button>
+                                        
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

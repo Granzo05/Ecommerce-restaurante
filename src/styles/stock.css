@@ -57,22 +57,20 @@ table tr:hover {
     background-color: #cccccc;
 }
 
-.search-icono {
+.input-filtrado .search-icono {
     margin-right: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #666;
-    margin-top: auto;
-    margin-bottom: auto;
+    margin-bottom: 25px;
     color: black;
 }
 
 .input-filtrado{
     display: flex;
-    justify-content: start;
-    align-items: start;
-    height: 50px;
+    justify-content: end;
+    align-items: end;
 }
 
 .btns-acciones-stock{
