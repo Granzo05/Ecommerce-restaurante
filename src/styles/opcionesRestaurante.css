@@ -124,11 +124,13 @@ h4:hover {
 }
 
 .account-info {
-  margin-left: 10px; /* Ajusta el margen entre el icono y la información de la cuenta */
+  margin-left: 10px;
+  /* Ajusta el margen entre el icono y la información de la cuenta */
 }
 
 .logout-icon {
-  margin-left: auto; /* Empuja el ícono de Logout completamente a la derecha */
+  margin-left: auto;
+  /* Empuja el ícono de Logout completamente a la derecha */
 }
 
 .name-account {
@@ -174,15 +176,11 @@ h4:hover {
   margin-top: 12px;
 }
 
-<<<<<<< HEAD
-
-
-=======
-.icon-sidebar{
+.icon-sidebar {
   display: none;
 }
 
-.icon-topbar{
+.icon-topbar {
   display: none;
 }
 
@@ -192,7 +190,7 @@ h4:hover {
 /* Media Queries */
 @media (min-width: 1026px) {
   .opciones-menu {
-      transform: translateX(0) !important;
+    transform: translateX(0) !important;
   }
 }
 
@@ -201,7 +199,8 @@ h4:hover {
     width: 250px;
   }
 
-  h4, .main-options p {
+  h4,
+  .main-options p {
     font-size: 18px;
   }
 
@@ -217,11 +216,11 @@ h4:hover {
 
 @media (max-width: 1025px) {
 
-  .table-info{
+  .table-info {
     transition: .3s;
   }
 
-  .icon-sidebar{
+  .icon-sidebar {
     display: flex;
     position: absolute;
     margin-left: 165px;
@@ -231,29 +230,31 @@ h4:hover {
     cursor: pointer;
   }
 
-  .opciones-menu.hidden .icon-sidebar{
+  .opciones-menu.hidden .icon-sidebar {
     margin-left: 180px;
     border-radius: 0 20px 20px 0;
     transition: .3s;
   }
 
-  .icon-sidebar:hover{
+  .icon-sidebar:hover {
     background-color: rgb(59, 59, 59);
     transition: .3s;
   }
-  
 
-  .title-header{
+
+  .title-header {
     display: flex;
     flex-direction: row;
   }
+
   .opciones-menu {
     width: 200px;
     padding: 15px;
     z-index: 1000;
   }
 
-  h4, .main-options p {
+  h4,
+  .main-options p {
     font-size: 16px;
   }
 
@@ -272,7 +273,7 @@ h4:hover {
 }
 
 @media (max-width: 882px) and (min-width: 648px) {
-  .icon-sidebar{
+  .icon-sidebar {
     display: flex;
     position: absolute;
     margin-left: 120px;
@@ -282,22 +283,24 @@ h4:hover {
     cursor: pointer;
   }
 
-  .opciones-menu.hidden .icon-sidebar{
+  .opciones-menu.hidden .icon-sidebar {
     margin-left: 140px;
     border-radius: 0 20px 20px 0;
     transition: .3s;
   }
 
-  .icon-sidebar:hover{
+  .icon-sidebar:hover {
     background-color: rgb(59, 59, 59);
     transition: .3s;
   }
+
   .opciones-menu {
     width: 150px;
     padding: 10px;
   }
 
-  h4, .main-options p {
+  h4,
+  .main-options p {
     font-size: 14px;
   }
 
@@ -306,7 +309,7 @@ h4:hover {
     width: 40px;
   }
 
-  .name-account{
+  .name-account {
     display: none;
   }
 
@@ -321,7 +324,7 @@ h4:hover {
 }
 
 @media (max-width: 648px) {
-  .icon-topbar{
+  .icon-topbar {
     display: flex;
     position: absolute;
     left: 50%;
@@ -331,27 +334,30 @@ h4:hover {
     cursor: pointer;
   }
 
-  .icon-topbar:hover{
+  .icon-topbar:hover {
     background-color: rgb(59, 59, 59);
     transition: .3s;
   }
+
   .opciones-menu {
-    transform: translateX(0) ;
-}
+    transform: translateX(0);
+  }
 
-.opciones-menu.hidden{
-  transform: translateY(-100%);
-}
+  .opciones-menu.hidden {
+    transform: translateY(-100%);
+  }
 
 
 
-  .opciones-menu.hidden .icon-topbar{
+  .opciones-menu.hidden .icon-topbar {
     border-radius: 0 0 20px 20px;
     transition: .3s;
   }
-  .icon-sidebar{
+
+  .icon-sidebar {
     display: none;
   }
+
   .sidebar {
     flex-direction: column;
     align-items: center;
@@ -363,7 +369,8 @@ h4:hover {
     border-radius: 0;
   }
 
-  h4, .main-options p {
+  h4,
+  .main-options p {
     font-size: 12px;
   }
 
@@ -372,7 +379,7 @@ h4:hover {
     width: 35px;
   }
 
-  .welcome-employee img{
+  .welcome-employee img {
     display: none;
   }
 
@@ -399,7 +406,8 @@ h4:hover {
     border-radius: 0;
   }
 
-  h4, .main-options p {
+  h4,
+  .main-options p {
     font-size: 12px;
   }
 
@@ -424,7 +432,7 @@ h4:hover {
     align-items: center;
   }
 
-  .name-account{
+  .name-account {
     display: none;
   }
 
@@ -434,7 +442,8 @@ h4:hover {
     border-radius: 0;
   }
 
-  h4, .main-options p {
+  h4,
+  .main-options p {
     font-size: 12px;
   }
 
@@ -453,4 +462,3 @@ h4:hover {
     margin-top: 500px;
   }
 }
->>>>>>> 6dd3070f0cfd4a4c9e04fe576bb8e14eea2b4ca2
