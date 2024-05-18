@@ -214,7 +214,6 @@ h4:hover {
 @media (max-width: 1025px) {
 
   .table-info{
-    position: absolute;
     transition: .3s;
   }
 
