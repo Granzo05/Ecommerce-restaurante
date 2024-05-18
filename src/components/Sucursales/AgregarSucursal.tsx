@@ -1,32 +1,18 @@
 import { useEffect, useState } from 'react';
-import { ProvinciaService } from '../../services/ProvinciaService';
-import { DepartamentoService } from '../../services/DepartamentoService';
 import { Domicilio } from '../../types/Domicilio/Domicilio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Localidad } from '../../types/Domicilio/Localidad';
 import { SucursalService } from '../../services/SucursalService';
-import { Departamento } from '../../types/Domicilio/Departamento';
-import { Provincia } from '../../types/Domicilio/Provincia';
-import { LocalidadService } from '../../services/LocalidadService';
 import { Toaster, toast } from 'sonner'
-import { useDebounce } from '@uidotdev/usehooks';
 import './agregarSucursal.css'
 import { LocalidadDelivery } from '../../types/Restaurante/LocalidadDelivery';
 import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
+import { DepartamentoService } from '../../services/DepartamentoService';
+import { LocalidadService } from '../../services/LocalidadService';
+import { Departamento } from '../../types/Domicilio/Departamento';
 
 function AgregarSucursal() {
-  const [inputValue, setInputValue] = useState('');
-  const debouncedInputValue = useDebounce(inputValue, 5000);
-
-  const [inputValueProvincia, setInputValueProvincia] = useState('');
-  const [inputValueDepartamento, setInputValueDepartamento] = useState('');
-  const [inputValueLocalidad, setInputValueLocalidad] = useState('');
-
-  const [resultadosProvincias, setResultadosProvincias] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
-  const [resultadosDepartamentos, setResultadosDepartamentos] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
-  const [resultadosLocalidades, setResultadosLocalidades] = useState<Departamento[] | Localidad[] | Provincia[]>([]);
-
   // Atributos necesarios para Sucursal
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
@@ -37,32 +23,73 @@ function AgregarSucursal() {
   const [horarioApertura, setHorarioApertura] = useState('');
   const [horarioCierre, setHorarioCierre] = useState('');
 
-  // Cargamos los departamentos de la provincia elegida en el select
-  const [departamentos, setDepartamentos] = useState<Departamento[] | null>([]);
-  // Cargamos las localidades disponibles, tanto para el domicilio de la sucursal como para los disponibles para el delivery
-  //Select que nos permite filtrar para los departamentos de la sucursal asi no cargamos de más innecesariamente
-  const [provincias, setProvincias] = useState<Provincia[] | null>([]);
   //Select que nos permite filtrar para las localidades de la sucursal asi no cargamos de más innecesariamente
-  const [localidades, setLocalidades] = useState<Localidad[] | null>([]);
-  // Id de la localidad para el domicilio de la sucursal
-  const [idLocalidadDomicilioSucursal, setLocalidadDomicilioSucursal] = useState<number>(0)
-  // Array que va guardando las checkboxes con los departamentos donde la sucursal hace delivery
-  const [idDepartamentosElegidos, setDepartamentosDisponibles] = useState<Set<number>>(new Set<number>());
-  // Array que va guardando las checkboxes con las localidades donde la sucursal hace delivery
-  const [idLocalidadesElegidas, setLocalidadesDisponibles] = useState<Set<number>>(new Set<number>());
+  const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
+  const [localidades, setLocalidades] = useState<Localidad[]>([]);
 
-  let [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<Localidad[] | null>([]);
+  const [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<Localidad[]>([]);
+
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [elementosABuscar, setElementosABuscar] = useState<string>('');
+  const [inputProvincia, setInputProvincia] = useState<string>('');
+  const [inputDepartamento, setInputDepartamento] = useState<string>('');
+  const [inputLocalidad, setInputLocalidad] = useState<string>('');
+
+  const [idDepartamentosElegidos, setIdDepartamentosElegidos] = useState<Set<number>>(new Set<number>());
+
+  const [idLocalidadesElegidas, setIdLocalidadesElegidas] = useState<Set<number>>(new Set<number>());
 
   useEffect(() => {
-    cargarProvincias();
-  }, []);
+    buscarDepartamentos(inputProvincia)
+  }, [inputProvincia]);
 
   useEffect(() => {
-    // Si se deja de escribir de borran todas las recomendaciones
-    setResultadosDepartamentos([])
-    setResultadosLocalidades([])
-    setResultadosProvincias([])
-  }, [debouncedInputValue]);
+    buscarLocalidades(inputDepartamento);
+  }, [inputDepartamento]);
+
+  function buscarDepartamentos(inputProvincia: string) {
+    DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
+      .then(async departamentos => {
+        setDepartamentos(departamentos);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+  }
+
+  function buscarLocalidades(inputDepartamento: string) {
+    LocalidadService.getLocalidadesByNombreDepartamento(inputDepartamento)
+      .then(async localidades => {
+        setLocalidades(localidades);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+  }
+
+  const handleSelectProduct = (option: string) => {
+    setSelectedOption(option);
+  };
+
+  const handleAbrirRecomendaciones = (busqueda: string) => {
+    setElementosABuscar(busqueda)
+    setModalBusqueda(true);
+  };
+
+  const handleModalClose = () => {
+    setModalBusqueda(false)
+    if (elementosABuscar === 'PROVINCIAS') {
+      setInputProvincia(selectedOption);
+      setInputDepartamento('')
+      setInputLocalidad('')
+    } else if (elementosABuscar === 'DEPARTAMENTOS') {
+      setInputDepartamento(selectedOption);
+      setInputLocalidad('')
+    } else if (elementosABuscar === 'LOCALIDADES') {
+      setInputLocalidad(selectedOption);
+    }
+  };
 
   const handleDepartamentosCheckboxChange = async (departamentoId: number) => {
     // Obtener una copia del conjunto de departamentos seleccionados
@@ -76,18 +103,18 @@ function AgregarSucursal() {
     }
 
     // Actualizar el conjunto de departamentos seleccionados
-    setDepartamentosDisponibles(updatedSelectedDepartamentos);
+    setIdDepartamentosElegidos(updatedSelectedDepartamentos);
 
     let nuevasLocalidades: Localidad[] = [];
     // Iterar sobre los departamentos seleccionados y cargar las localidades correspondientes
     for (const idDepartamento of updatedSelectedDepartamentos) {
-      nuevasLocalidades.push(...await cargarLocalidadesCheckBox(idDepartamento));
+      let localidad = localidades.find(localidad => localidad.departamento.id === idDepartamento)
+
+      if (localidad) nuevasLocalidades.push();
     }
 
     setLocalidadesMostrables(nuevasLocalidades);
   };
-
-
 
   const handleLocalidadesCheckboxChange = (localidadId: number) => {
     const updatedSelectedLocalidades = new Set(idLocalidadesElegidas);
@@ -96,19 +123,8 @@ function AgregarSucursal() {
     } else {
       updatedSelectedLocalidades.add(localidadId);
     }
-    setLocalidadesDisponibles(updatedSelectedLocalidades);
+    setIdLocalidadesElegidas(updatedSelectedLocalidades);
   };
-
-  // Una vez cargadas las provincias vuelvo a cargar el select
-  async function cargarProvincias() {
-    await ProvinciaService.getProvincias()
-      .then(data => {
-        setProvincias(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
 
   const handleCargarNegocio = async () => {
     let sucursal: Sucursal = new Sucursal();
@@ -117,7 +133,7 @@ function AgregarSucursal() {
     domicilio.calle = calle;
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
-    const localidad = localidades?.find(localidad => localidad.id === idLocalidadDomicilioSucursal);
+    const localidad = localidades?.find(localidad => localidad.nombre === inputLocalidad);
     domicilio.localidad = localidad
     sucursal.domicilio = domicilio;
 
@@ -143,7 +159,6 @@ function AgregarSucursal() {
     });
 
     sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
-
 
     toast.promise(SucursalService.createRestaurant(sucursal), {
       loading: 'Guardando sucursal...',
@@ -194,6 +209,18 @@ function AgregarSucursal() {
             <div className="inputBox">
               <input type="time" required={true} onChange={(e) => { setHorarioCierre(e.target.value) }} />
               <span>Horario de cierre</span>
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
+              <span>Nombre de calle</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
+              <span>Número de domicilio</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+              <span>Código Postal</span>
             </div>
             <h2>Provincia</h2>
             <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
