@@ -20,9 +20,16 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
 
     stockEntrante.fechaLlegada = fecha;
 
-    StockEntranteService.updateStock(stockEntrante);
-
-    clearInputs();
+    toast.promise(StockEntranteService.updateStock(stockEntrante), {
+      loading: 'Editando stock entrante...',
+      success: (message) => {
+        clearInputs();
+        return message;
+      },
+      error: (message) => {
+        return message;
+      },
+    });
   }
 
   return (

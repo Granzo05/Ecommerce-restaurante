@@ -133,8 +133,26 @@ function AgregarMenu() {
   const [descripcion, setDescripcion] = useState('');
 
   async function agregarMenu() {
-    if (!nombre || !tiempoCoccion || !comensales || !precio || !descripcion || !tipo || imagenes.length === 0) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!tiempoCoccion) {
+      toast.error("Por favor, es necesaria el tiempo de cocción");
+      return;
+    } else if (!comensales) {
+      toast.error("Por favor, es necesaria la cantidad de comensales comensales");
+      return;
+    } else if (!precio) {
+      toast.error("Por favor, es necesario el precio");
+      return;
+    } else if (!tipo) {
+      toast.error("Por favor, es necesario el tipo");
+      return;
+    } else if (imagenes.length === 0) {
+      toast.info("No se asignó ninguna imagen");
+      return;
+    } else if (!descripcion) {
+      toast.error("Por favor, es necesario la descripción");
       return;
     }
 
@@ -253,7 +271,7 @@ function AgregarMenu() {
         ))}
         <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
       </div>
-      
+
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
         <span>Precio</span>

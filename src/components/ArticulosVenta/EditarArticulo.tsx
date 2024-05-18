@@ -63,8 +63,23 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   };
 
   function editarArticuloVenta() {
-    if (!nombre || !cantidad || !medida || !precioVenta || !tipo) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!cantidad) {
+      toast.error("Por favor, es necesaria la cantidad");
+      return;
+    } else if (!medida) {
+      toast.error("Por favor, es necesaria la medida");
+      return;
+    } else if (!precioVenta) {
+      toast.error("Por favor, es necesario el precio");
+      return;
+    } else if (!tipo) {
+      toast.error("Por favor, es necesario el tipo");
+      return;
+    } else if (imagenes.length === 0) {
+      toast.info("No se asignó ninguna imagen");
       return;
     }
 

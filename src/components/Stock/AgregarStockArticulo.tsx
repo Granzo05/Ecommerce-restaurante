@@ -17,8 +17,23 @@ function AgregarStockArticulo() {
   const [medida, setMedida] = useState<EnumMedida | string>('0');
 
   async function agregarStock() {
-    if (!nombre || !cantidadActual || !cantidadMinima || !precio || !cantidadMaxima || !medida) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!cantidadActual) {
+      toast.error("Por favor, es necesaria la cantidad actual");
+      return;
+    } else if (!cantidadMinima) {
+      toast.error("Por favor, es necesaria la cantidad mínima");
+      return;
+    } else if (!precio) {
+      toast.error("Por favor, es necesario el precio");
+      return;
+    } else if (!cantidadMaxima) {
+      toast.error("Por favor, es necesaria la cantidad máxima");
+      return;
+    } else if (!medida) {
+      toast.error("Por favor, es necesario la medida");
       return;
     }
 
@@ -48,7 +63,7 @@ function AgregarStockArticulo() {
 
   return (
     <div className="modal-info">
-      
+
       <Toaster />
       <h2>Agregar artículo</h2>
       <br />

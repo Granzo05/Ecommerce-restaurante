@@ -50,7 +50,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
   useEffect(() => {
     if (inputDepartamento)
-    buscarLocalidades(inputDepartamento);
+      buscarLocalidades(inputDepartamento);
   }, [inputDepartamento]);
 
   function buscarDepartamentos(inputProvincia: string) {
@@ -132,6 +132,38 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   };
 
   const handleEditarNegocio = async () => {
+    if (!email) {
+      toast.error("Por favor, es necesaria el email");
+      return;
+    } else if (!contraseña) {
+      toast.error("Por favor, es necesaria la contraseña");
+      return;
+    } else if (!telefono) {
+      toast.error("Por favor, es necesario el telefono");
+      return;
+    } else if (!calle) {
+      toast.error("Por favor, es necesario la calle para el domicilio");
+      return;
+    } else if (!numeroCalle) {
+      toast.error("Por favor, es necesario el numero del domicilio");
+      return;
+    } else if (!codigoPostal) {
+      toast.error("Por favor, es necesario el código postal del domicilio");
+      return;
+    } else if (!inputLocalidad) {
+      toast.error("Por favor, es necesario la localidad para asignar el domicilio");
+      return;
+    } else if (!horarioApertura) {
+      toast.error("Por favor, es necesaria la hora de apertura");
+      return;
+    } else if (!horarioCierre) {
+      toast.error("Por favor, es necesaria la hora de cierre");
+      return;
+    } else if (localidadesMostrablesCheckbox?.length === 0) {
+      toast.error("Por favor, es necesaria aunque sea una localidad donde alcance el delivery");
+      return;
+    }
+
     let sucursal: Sucursal = new Sucursal();
 
     const domicilio = new Domicilio();

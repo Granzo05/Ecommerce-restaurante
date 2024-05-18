@@ -16,7 +16,7 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
     const ingrediente: Ingrediente = ingredienteOriginal;
 
     if (!nombre) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+      toast.info("Por favor, asigne el nombre");
       return;
     }
 

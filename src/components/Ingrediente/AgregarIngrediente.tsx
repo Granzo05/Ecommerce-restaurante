@@ -11,7 +11,7 @@ function AgregarIngrediente() {
     const ingrediente: Ingrediente = new Ingrediente();
 
     if (!nombre) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+      toast.info("Por favor, asigne el nombre");
       return;
     }
 

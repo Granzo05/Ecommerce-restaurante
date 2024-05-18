@@ -17,8 +17,23 @@ function AgregarStockIngrediente() {
   const [nombreIngrediente, setArticuloVenta] = useState('0');
 
   async function crearStockIngrediente() {
-    if (!nombreIngrediente || !cantidadActual || !cantidadMinima || !costoIngrediente || !cantidadMaxima || !medida) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+    if (!nombreIngrediente) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!cantidadActual) {
+      toast.error("Por favor, es necesaria la cantidad actual");
+      return;
+    } else if (!cantidadMinima) {
+      toast.error("Por favor, es necesaria la cantidad mínima");
+      return;
+    } else if (!costoIngrediente) {
+      toast.error("Por favor, es necesario el precio del ingrediente");
+      return;
+    } else if (!cantidadMaxima) {
+      toast.error("Por favor, es necesaria la cantidad máxima");
+      return;
+    } else if (!medida) {
+      toast.error("Por favor, es necesario la medida");
       return;
     }
 

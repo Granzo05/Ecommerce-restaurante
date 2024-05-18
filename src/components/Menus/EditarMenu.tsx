@@ -175,8 +175,26 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   };
 
   function editarMenu() {
-    if (!nombre || !tiempoCoccion || !tipo || !comensales || !precioVenta || !descripcion) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!tiempoCoccion) {
+      toast.error("Por favor, es necesaria el tiempo de cocción");
+      return;
+    } else if (!comensales) {
+      toast.error("Por favor, es necesaria la cantidad de comensales comensales");
+      return;
+    } else if (!precioVenta) {
+      toast.error("Por favor, es necesario el precio");
+      return;
+    } else if (!tipo) {
+      toast.error("Por favor, es necesario el tipo");
+      return;
+    } else if (imagenes.length === 0) {
+      toast.info("No se asignó ninguna imagen");
+      return;
+    } else if (!descripcion) {
+      toast.error("Por favor, es necesario la descripción");
       return;
     }
 
@@ -185,8 +203,14 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       const cantidad = ingredientes[i].cantidad;
       const medida = ingredientes[i].medida;
 
-      if (!ingrediente?.nombre || cantidad === 0 || !medida) {
-        toast.info("Por favor, los ingredientes deben contener todos los campos");
+      if (!ingrediente?.nombre) {
+        toast.info(`Por favor, el ingrediente ${i} debe contener el nombre`);
+        return;
+      } else if (cantidad === 0) {
+        toast.info(`Por favor, la cantidad de ${ingrediente.nombre} debe ser mayor a 0`);
+        return;
+      } else if (!medida) {
+        toast.info(`Por favor, la cantidad asignada a ${ingrediente.nombre} debe contener la medida`);
         return;
       }
     }
