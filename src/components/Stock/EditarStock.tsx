@@ -19,8 +19,20 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
   const [costo, setCosto] = useState(stockOriginal.precioCompra);
 
   function editarStock() {
-    if (!cantidadActual || !cantidadMinima || !costo || !cantidadMaxima || !medida) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+    if (!cantidadActual) {
+      toast.error("Por favor, es necesaria la cantidad actual");
+      return;
+    } else if (!cantidadMinima) {
+      toast.error("Por favor, es necesaria la cantidad mínima");
+      return;
+    } else if (!costo) {
+      toast.error("Por favor, es necesario el precio del ingrediente");
+      return;
+    } else if (!cantidadMaxima) {
+      toast.error("Por favor, es necesaria la cantidad máxima");
+      return;
+    } else if (!medida) {
+      toast.error("Por favor, es necesario la medida");
       return;
     }
 

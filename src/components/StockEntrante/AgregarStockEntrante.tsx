@@ -126,8 +126,11 @@ function AgregarStockEntrante() {
   };
 
   async function agregarStockEntrante() {
-    if (!fecha || (detallesStock.length === 0 && detallesStock[0].ingrediente?.nombre.match(''))) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+    if (!fecha) {
+      toast.error("Por favor, la fecha es necesaria");
+      return;
+    } else if (detallesStock.length === 0 && (detallesStock[0].ingrediente?.nombre.match('') || (detallesStock[0].articuloVenta?.nombre.match('')))) {
+      toast.error("Por favor, es necesario asignar un producto de venta o un ingrediente");
       return;
     }
 

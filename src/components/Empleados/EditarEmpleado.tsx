@@ -137,9 +137,26 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
   };
 
   async function editarEmpleado() {
-
-    if (!nombre || !email || !telefono || !cuil || !fechaNacimiento) {
-      toast.info("Por favor, complete todos los campos requeridos.");
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!email) {
+      toast.error("Por favor, es necesaria el email");
+      return;
+    } else if (!contraseña) {
+      toast.error("Por favor, es necesaria la contraseña");
+      return;
+    } else if (!telefono) {
+      toast.error("Por favor, es necesario el telefono");
+      return;
+    } else if (!cuil) {
+      toast.error("Por favor, es necesario el cuil");
+      return;
+    } else if (!fechaNacimiento) {
+      toast.error("Por favor, es necesaria la fecha de nacimiento");
+      return;
+    } else if (!inputLocalidad) {
+      toast.error("Por favor, es necesario la localidad para asignar el domicilio");
       return;
     }
 

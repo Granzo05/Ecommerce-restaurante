@@ -58,6 +58,38 @@ const LoginCliente = () => {
     };
 
     const handleCargarUsuario = () => {
+        if (!nombre) {
+            toast.error("Por favor, es necesario el nombre");
+            return;
+        } else if (!email) {
+            toast.error("Por favor, es necesaria el email");
+            return;
+        } else if (!contraseña) {
+            toast.error("Por favor, es necesaria la contraseña");
+            return;
+        } else if (!telefono) {
+            toast.error("Por favor, es necesario el telefono");
+            return;
+        } else if (!fechaNacimiento) {
+            toast.error("Por favor, es necesaria la fecha de nacimiento");
+            return;
+        } else if (!inputLocalidad) {
+            toast.error("Por favor, es necesario la localidad para asignar el domicilio");
+            return;
+        } else if (!calle) {
+            toast.error("Por favor, es necesario la calle para el domicilio");
+            return;
+        } else if (!numeroCasa) {
+            toast.error("Por favor, es necesario el número del domicilio");
+            return;
+        } else if (!codigoPostal) {
+            toast.error("Por favor, es necesario el código postal del domicilio");
+            return;
+        } else if (!apellido) {
+            toast.error("Por favor, es necesario el apellido");
+            return;
+        }
+
         const cliente = new Cliente();
 
         let domicilio = new Domicilio();
