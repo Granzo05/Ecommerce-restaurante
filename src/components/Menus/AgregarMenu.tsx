@@ -253,6 +253,7 @@ function AgregarMenu() {
         ))}
         <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
       </div>
+      
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
         <span>Precio</span>

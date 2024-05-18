@@ -25,8 +25,7 @@ const LoginCliente = () => {
     const handleIniciarSesionUsuario = () => {
         ClienteService.getUser(email, contraseña);
     };
-
-
+    
     // Modal flotante de ingrediente
     const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<string>('');
