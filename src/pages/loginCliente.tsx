@@ -25,7 +25,7 @@ const LoginCliente = () => {
     const handleIniciarSesionUsuario = () => {
         ClienteService.getUser(email, contraseña);
     };
-    
+
     // Modal flotante de ingrediente
     const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<string>('');
@@ -272,8 +272,8 @@ const LoginCliente = () => {
                                     <div className="inputBox">
                                         <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
                                         <span>Código postal</span>
-                                    </div>                                </label>
-
+                                    </div>
+                                </label>
                             </div>
 
                             <input style={{ marginTop: '1px' }} type="button" className='btn' value="REGISTRARSE" onClick={handleCargarUsuario} />
