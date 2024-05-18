@@ -212,6 +212,12 @@ h4:hover {
 }
 
 @media (max-width: 1025px) {
+
+  .table-info{
+    position: absolute;
+    transition: .3s;
+  }
+
   .icon-sidebar{
     display: flex;
     position: absolute;
@@ -241,6 +247,7 @@ h4:hover {
   .opciones-menu {
     width: 200px;
     padding: 15px;
+    z-index: 1000;
   }
 
   h4, .main-options p {
@@ -440,6 +447,6 @@ h4:hover {
 
   #welcome {
     font-size: 14px;
-    margin-top: 60px;
+    margin-top: 500px;
   }
 }
