@@ -12,6 +12,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 
 //import Logo from '../assets/img//HatchfulExport-All/logo_transparent.png'
 import StocksEntrantes from '../components/StockEntrante/StockEntrante';
@@ -32,6 +36,11 @@ const Opciones = () => {
     const [stockIcon, setStockIcon] = useState(<KeyboardArrowRightIcon />);
     const [optionsIcon, setOptionsIcon] = useState(<KeyboardArrowRightIcon />);
     const [settingsIcon, setSettingsIcon] = useState(<KeyboardArrowRightIcon />);
+    const [sidebarIcon, setSidebarIcon] = useState(<ArrowForwardIosIcon />);
+    const [topIcon, setTopIcon] = useState(<KeyboardArrowDownIcon />);
+    const [menuVisible, setMenuVisible] = useState(true);
+
+
 
     const toggleStockVisibility = () => {
         setStockVisible(!stockVisible);
@@ -58,6 +67,13 @@ const Opciones = () => {
             setOpcionSeleccionada(opcionSeleccionada); // Si está seleccionada una opción de Pedidos, mantenerla seleccionada
         }
     };
+
+    const toggleMenuVisibility = () => {
+        setMenuVisible(!menuVisible);
+        setSidebarIcon(menuVisible ? <ArrowBackIosNewIcon/> : <ArrowForwardIosIcon />);
+        setTopIcon(menuVisible ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />);
+    };
+
 
     const handleOpcionClick = (opcion: number) => {
         setOpcionSeleccionada(opcion);
@@ -112,11 +128,16 @@ const Opciones = () => {
 
     return (
         <div className={`sidebar ${sidebarBg}`}>
-            <div className="opciones-menu">
-                <div className="title">
-                    <h3 onClick={() => window.location.href = 'http://localhost:5173/'} className='title'><img src="../src/assets/img/HatchfulExport-All/logo-simple.png" alt="Logo" className='logo-opciones' />EL BUEN SABOR</h3>
-
+            <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
+                <div className="title-header">
+                    <h3 onClick={() => window.location.href = ''} className='title'><img src="../src/assets/img/HatchfulExport-All/logo-simple.png" alt="Logo" className='logo-opciones' />EL BUEN SABOR</h3>
+                    
+                    <div className='icon-sidebar' onClick={toggleMenuVisibility}>
+                        {sidebarIcon}
+                    </div>
+                    
                 </div>
+                
                 <hr />
                 <label id='label' onClick={toggleOptionsVisibility}>_opciones{optionsIcon}</label>
 
@@ -268,10 +289,13 @@ const Opciones = () => {
                     <LogoutIcon className='logout-icon' style={{ fontSize: '38px', display: 'inline' }} />
 
                 </div>
+                <div className="icon-topbar" onClick={toggleMenuVisibility}>
+                        {topIcon}
+                </div>
             </div>
 
 
-            <div style={{ flex: 1 }}>
+            <div className={`table-info ${menuVisible ? '' : 'expanded'}`}  style={{ flex: 1 }}>
                 {renderInformacion()}
             </div>
         </div>

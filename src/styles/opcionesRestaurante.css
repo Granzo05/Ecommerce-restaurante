@@ -5,11 +5,12 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: auto;
 }
 
+
 .sidebar {
-  height: 100%;
+  min-height: 100%;
+  height: auto;
   display: flex;
   background-color: #2b86c4;
 }
@@ -19,92 +20,100 @@
 }
 
 .opciones-menu {
-  height: auto;
+  min-height: 100%;
   width: 300px;
   background-color: black;
   padding: 20px;
   border-radius: 0 2rem 2rem 0;
   box-shadow: 0 0 14px black;
   color: white;
+  transition: transform 0.3s ease;
 }
-h4{
+
+.opciones-menu.hidden {
+  transform: translateX(-100%);
+}
+
+.opciones-menu.visible {
+  transform: translateX(0);
+}
+
+h4 {
   cursor: pointer;
   padding: 5px;
   font-size: 20px;
-  
   border-radius: 7px;
 }
 
-p{
+p {
   font-size: 15px;
 }
 
-.opciones-menu p{
+.opciones-menu p {
   color: white;
   cursor: pointer;
 }
 
-.main-options{
+.main-options {
   margin-top: 12px;
 }
 
-.main-options p{
+.main-options p {
   margin-left: 22px;
   padding: 5px;
-  
   border-radius: 7px;
 }
 
-h4:hover{
+h4:hover {
   background-color: grey;
   transition: .3s;
 }
 
-.main-options p:hover{
+.main-options p:hover {
   background-color: grey;
   transition: .3s;
 }
 
-.title{
+.title {
   margin-top: 0;
   font-size: 24px;
   cursor: pointer;
 }
 
-.logo-opciones{
+.logo-opciones {
   height: 48px;
   width: 60px;
   display: inline;
 }
 
-#label{
+#label {
   font-size: 20px;
   margin-left: -10px;
   color: rgb(170, 165, 165);
 }
 
-#label:hover{
+#label:hover {
   color: white;
   cursor: pointer;
   transition: .3s;
 }
 
-.pedidos .selected{
+.pedidos .selected {
   background-color: grey;
   border-radius: 7px;
 }
 
-.stock .selected{
+.stock .selected {
   background-color: grey;
   border-radius: 7px;
 }
 
-.selected{
+.selected {
   background-color: grey;
   border-radius: 7px;
 }
 
-.h4-selected{
+.h4-selected {
   background-color: grey;
   border-radius: 7px;
 }
@@ -122,22 +131,22 @@ h4:hover{
   margin-left: auto; /* Empuja el ícono de Logout completamente a la derecha */
 }
 
-.name-account{
+.name-account {
   font-size: 22.9px;
 }
 
-.email-account{
+.email-account {
   font-size: 12px;
 }
 
-.logout-icon:hover{
+.logout-icon:hover {
   background-color: rgb(145, 1, 1);
   border-radius: 5px;
   transition: .3s;
   cursor: pointer;
 }
 
-#main-employee{
+#main-employee {
   display: flex;
   align-self: center;
   justify-content: center;
@@ -147,13 +156,13 @@ h4:hover{
   margin-top: 0;
 }
 
-#welcome{
+#welcome {
   display: flex;
   align-content: center;
   justify-content: center;
   font-weight: bold;
   color: white;
-  margin-top: -180px;
+  margin-top: -150px;
   padding: 6px;
   background-color: black;
   border-top: 2px solid white;
@@ -161,9 +170,287 @@ h4:hover{
   width: 100%;
 }
 
-.settings{
+.settings {
   margin-top: 12px;
+}
+
+<<<<<<< HEAD
+
+
+=======
+.icon-sidebar{
+  display: none;
+}
+
+.icon-topbar{
+  display: none;
 }
 
 
 
+
+/* Media Queries */
+@media (min-width: 1026px) {
+  .opciones-menu {
+      transform: translateX(0) !important;
+  }
+}
+
+@media (max-width: 1382px) {
+  .opciones-menu {
+    width: 250px;
+  }
+
+  h4, .main-options p {
+    font-size: 18px;
+  }
+
+  .logo-opciones {
+    height: 40px;
+    width: 50px;
+  }
+
+  #main-employee {
+    width: 70%;
+  }
+}
+
+@media (max-width: 1025px) {
+
+  .table-info{
+    transition: .3s;
+  }
+
+  .icon-sidebar{
+    display: flex;
+    position: absolute;
+    margin-left: 165px;
+    background-color: gray;
+    padding: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .opciones-menu.hidden .icon-sidebar{
+    margin-left: 180px;
+    border-radius: 0 20px 20px 0;
+    transition: .3s;
+  }
+
+  .icon-sidebar:hover{
+    background-color: rgb(59, 59, 59);
+    transition: .3s;
+  }
+  
+
+  .title-header{
+    display: flex;
+    flex-direction: row;
+  }
+  .opciones-menu {
+    width: 200px;
+    padding: 15px;
+    z-index: 1000;
+  }
+
+  h4, .main-options p {
+    font-size: 16px;
+  }
+
+  .logo-opciones {
+    height: 35px;
+    width: 45px;
+  }
+
+  #main-employee {
+    width: 80%;
+  }
+
+  #welcome {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 882px) and (min-width: 648px) {
+  .icon-sidebar{
+    display: flex;
+    position: absolute;
+    margin-left: 120px;
+    background-color: gray;
+    padding: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .opciones-menu.hidden .icon-sidebar{
+    margin-left: 140px;
+    border-radius: 0 20px 20px 0;
+    transition: .3s;
+  }
+
+  .icon-sidebar:hover{
+    background-color: rgb(59, 59, 59);
+    transition: .3s;
+  }
+  .opciones-menu {
+    width: 150px;
+    padding: 10px;
+  }
+
+  h4, .main-options p {
+    font-size: 14px;
+  }
+
+  .logo-opciones {
+    height: 30px;
+    width: 40px;
+  }
+
+  .name-account{
+    display: none;
+  }
+
+  #main-employee {
+    width: 90%;
+  }
+
+  #welcome {
+    font-size: 16px;
+    margin-top: -150px;
+  }
+}
+
+@media (max-width: 648px) {
+  .icon-topbar{
+    display: flex;
+    position: absolute;
+    left: 50%;
+    padding: 5px;
+    border-radius: 20px;
+    background-color: gray;
+    cursor: pointer;
+  }
+
+  .icon-topbar:hover{
+    background-color: rgb(59, 59, 59);
+    transition: .3s;
+  }
+  .opciones-menu {
+    transform: translateX(0) ;
+}
+
+.opciones-menu.hidden{
+  transform: translateY(-100%);
+}
+
+
+
+  .opciones-menu.hidden .icon-topbar{
+    border-radius: 0 0 20px 20px;
+    transition: .3s;
+  }
+  .icon-sidebar{
+    display: none;
+  }
+  .sidebar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .opciones-menu {
+    width: 100%;
+    padding: 5px;
+    border-radius: 0;
+  }
+
+  h4, .main-options p {
+    font-size: 12px;
+  }
+
+  .logo-opciones {
+    height: 25px;
+    width: 35px;
+  }
+
+  .welcome-employee img{
+    display: none;
+  }
+
+  #main-employee {
+    width: 100%;
+    height: 100%;
+  }
+
+  #welcome {
+    font-size: 14px;
+    margin-top: -120px;
+  }
+}
+
+@media (max-width: 360px) {
+  .sidebar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .opciones-menu {
+    width: 100%;
+    padding: 5px;
+    border-radius: 0;
+  }
+
+  h4, .main-options p {
+    font-size: 12px;
+  }
+
+  .logo-opciones {
+    height: 25px;
+    width: 35px;
+  }
+
+  #main-employee {
+    width: 100%;
+  }
+
+  #welcome {
+    font-size: 14px;
+    margin-top: -60px;
+  }
+}
+
+@media (max-width: 180px) {
+  .sidebar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .name-account{
+    display: none;
+  }
+
+  .opciones-menu {
+    width: 100%;
+    padding: 5px;
+    border-radius: 0;
+  }
+
+  h4, .main-options p {
+    font-size: 12px;
+  }
+
+  .logo-opciones {
+    height: 25px;
+    width: 35px;
+  }
+
+  #main-employee {
+    width: 100%;
+    display: none;
+  }
+
+  #welcome {
+    font-size: 14px;
+    margin-top: 500px;
+  }
+}
+>>>>>>> 6dd3070f0cfd4a4c9e04fe576bb8e14eea2b4ca2
