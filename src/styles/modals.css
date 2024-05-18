@@ -7,11 +7,23 @@
     margin: auto;
     width: auto;
   }
+
+  .modal-info .select{
+    margin-top: 0;
+  }
+
+  .span-unidad{
+    display: flex;
+    margin-right: auto;
+    margin-bottom: 0;
+    margin-left: 31px;
+    font-weight: bold;
+    padding: 0;
+  }
   
   .modal-info label {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
     font-size: 14px;
     color: #333;
   }
@@ -30,16 +42,13 @@
     font-size: 14px;
     color: #333;
     transition: border-color 0.3s;
-    width: 500px;
+    width: 400px;
   }
 
-  .modal-info select{
-    width: 500px;
-  }
   
   .modal-info input:focus,
   .modal-info select:focus {
-    border-color: #007bff;
+    border-color: #2b86c4;
     outline: none;
   }
   
@@ -52,6 +61,8 @@
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 100px;
+    margin: 10px;
   }
   
   .modal-info button:hover {
@@ -94,6 +105,6 @@
     border-radius: 12px;
     justify-content: center;
     overflow-y: auto;
-    margin: 50px 150px 2000px 150px;
+    margin: 50px 0px 2000px 150px;
   }
   

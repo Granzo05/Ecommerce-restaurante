@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import '../styles/modals.css'
 
 interface ModalProps {
   isOpen: boolean;

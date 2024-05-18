@@ -12,6 +12,8 @@
     border-left: 1px solid black;
     border-right: 1px solid black;
     padding: 0 5px 0 5px;
+    box-shadow: 0 0 14px black;
+    min-height: 100%;
 }
 
 h1 {
@@ -157,3 +159,4 @@ table tr:hover {
     font-size: 1.5rem;
     cursor: pointer;
 }
+

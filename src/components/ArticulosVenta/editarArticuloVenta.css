@@ -10,15 +10,3 @@
     flex-direction: row;
     margin-bottom: 10px;
 }
-
-input, button {
-    margin-bottom: 15px;
-}
-
-input[type="text"] {
-    width: 350px;
-}
-
-input[type="number"] {
-    width: 75px;
-}
