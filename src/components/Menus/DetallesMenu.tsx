@@ -39,8 +39,10 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
         </ul>
         <p>Tiempo de cocción: {menuActual.tiempoCoccion} minutos</p>
 
-        <label htmlFor="cantidad">Cantidad:</label>
-        <input type="number" value={cantidadMenu} id='cantidad' onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
+        <div className="inputBox">
+          <input type="number" required={true} value={cantidadMenu} onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
+          <span>Cantidad</span>
+        </div>
         <button type='submit' onClick={() => handleAñadirCarrito(menuActual)}>Añadir al carrito</button>
       </div>
     </div>

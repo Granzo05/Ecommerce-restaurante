@@ -1,0 +1,74 @@
+.modal-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputBox {
+    position: relative;
+}
+
+.inputBox input {
+    width: 350px;
+    padding: 10px;
+    border: 1px solid (255, 255, 255, 0.25);
+    background: #fff;
+    border-radius: 5px;
+    outline: none;
+    color: black;
+}
+
+.inputBox input[type="number"] {
+    width: 350px;
+    padding: 10px;
+    border: 1px solid (255, 255, 255, 0.25);
+    background: #fff;
+    border-radius: 5px;
+    outline: none;
+    color: black;
+}
+
+select {
+    width: 350px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: black;
+}
+
+.inputBox span {
+    position: absolute;
+    left: 0;
+    padding: 10px;
+    pointer-events: none;
+    color: 1px solid (255, 255, 255, 0.25);
+    text-transform: uppercase;
+    transition: 0.5s;
+}
+
+.inputBox input:valid~span,
+.inputBox input:focus~span {
+    color: #1d2b3a;
+    transform: translateX(10px) translateY(-7px);
+    font-size: 0.65em;
+    padding: 0 10px;
+    background: #fff;
+    border-left: #2b86c4;
+    border-right: #2b86c4;
+}
+
+.inputBox:nth-child(2) input:valid~span,
+.inputBox:nth-child(2) input:focus~span {
+    color: #1d2b3a;
+    border-radius: 2px;
+}
+
+
+.inputBox input:valid,
+.inputBox input:focus {
+    border: 1px solid #2b86c4;
+}
+
+select:focus {
+    border: 1px solid #2b86c4;
+}

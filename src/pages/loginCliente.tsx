@@ -7,7 +7,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { Domicilio } from '../types/Domicilio/Domicilio';
 import { Cliente } from '../types/Cliente/Cliente';
 import { Toaster, toast } from 'sonner'
-import InputComponent from '../components/InputComponent';
+import InputComponent from '../components/InputFiltroComponent';
 import ModalFlotanteRecomendaciones from '../components/ModalFlotanteRecomendaciones';
 import { Localidad } from '../types/Domicilio/Localidad';
 
@@ -134,13 +134,18 @@ const LoginCliente = () => {
                         <form action="">
                             <div className="input-box">
                                 <label>
-                                    <input required type="email" className='input-control' placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
+                                    <div className="inputBox">
+                                        <input type="email" required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                                        <span>Correo electrónico</span>
+                                    </div>
                                 </label>
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type={tipoInput} className='input-control' placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
-
+                                    <div className="inputBox">
+                                        <input type={tipoInput} required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+                                        <span>Contraseña</span>
+                                    </div>
                                 </label>
                                 <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
                                 <div className="input-link">
@@ -164,7 +169,10 @@ const LoginCliente = () => {
                         <form action="">
                             <div className="input-box">
                                 <label>
-                                    <input required type="email" className='input-control' placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
+                                    <div className="inputBox">
+                                        <input type='email' required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                                        <span>Correo electrónico</span>
+                                    </div>
                                 </label>
                             </div>
                             <input type="button" className='btn' value="ENVIAR CORREO DE RECUPERACIÓN" onClick={handleIniciarSesionUsuario} style={{ marginTop: '0.5px' }} />
@@ -183,44 +191,68 @@ const LoginCliente = () => {
                         <form action="">
                             <div className="input-box">
                                 <label>
-                                    <input required type="text" className='input-control' placeholder="Nombre" onChange={(e) => { setNombre(e.target.value) }} />
+                                    <div className="inputBox">
+                                        <input type='text' required={true} onChange={(e) => { setNombre(e.target.value) }} />
+                                        <span>Nombre</span>
+                                    </div>
                                 </label>
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type="text" className='input-control' placeholder="Apellido" onChange={(e) => { setApellido(e.target.value) }} />
+                                    <div className="inputBox">
+                                        <input type='text' required={true} onChange={(e) => { setApellido(e.target.value) }} />
+                                        <span>Apellido</span>
+                                    </div>
                                 </label>
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type="email" className='input-control' placeholder="Correo electrónico" onChange={(e) => { setEmail(e.target.value) }} />
+                                    <div className="inputBox">
+                                        <input type='email' required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                                        <span>Correo electrónico</span>
+                                    </div>
                                 </label>
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type="date" className='input-control' onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+                                    <div className="inputBox">
+                                        <input type='date' required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+                                        <span>Fecha de nacimiento</span>
+                                    </div>
                                 </label>
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type="phone" className='input-control' placeholder="Telefono" onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+                                    <div className="inputBox">
+                                        <input type='phone' required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+                                        <span>Teléfono</span>
+                                    </div>
                                 </label>
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type={tipoInput} className='input-control' placeholder="Contraseña" onChange={(e) => { setContraseña(e.target.value) }} />
+                                    <div className="inputBox">
+                                        <input type={tipoInput} required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+                                        <span>Contraseña</span>
+                                    </div>
                                 </label>
                                 <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
 
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type="text" className='input-control' placeholder="Nombre de la calle" onChange={(e) => { setCalle(e.target.value) }} />
+                                    <div className="inputBox">
+                                        <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
+                                        <span>Nombre de la calle</span>
+                                    </div>
                                 </label>
                             </div>
                             <div className="input-box">
                                 <label>
-                                    <input required type="number" className='input-control' placeholder="Número de la casa" onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
+                                    <div className="inputBox">
+                                        <input type="number" required={true} onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
+                                        <span>Número de la casa</span>
+                                    </div>
                                 </label>
                             </div>
                             <h2>Provincia</h2>
@@ -238,8 +270,11 @@ const LoginCliente = () => {
 
                             <div className="input-box">
                                 <label>
-                                    <input required type="number" className='input-control' placeholder="Codigo postal" onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
-                                </label>
+                                    <div className="inputBox">
+                                        <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+                                        <span>Código postal</span>
+                                    </div>                                </label>
+
                             </div>
 
                             <input style={{ marginTop: '1px' }} type="button" className='btn' value="REGISTRARSE" onClick={handleCargarUsuario} />

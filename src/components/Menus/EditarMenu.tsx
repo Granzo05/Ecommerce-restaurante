@@ -13,7 +13,7 @@ import './editarMenu.css'
 import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
 import { IngredienteMenuDTO } from '../../types/Ingredientes/IngredienteMenuDTO';
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
-import InputComponent from '../InputComponent';
+import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 
 interface EditarMenuProps {
@@ -272,14 +272,18 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             ))}
             <button onClick={añadirCampoImagen}>Añadir imagen</button>
           </div>
-          <input type="text" placeholder="Nombre del menu" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-
-          <br />
-          <input type="text" placeholder="Descripción del menu" value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
-
-          <br />
-          <input type="text" placeholder="Minutos de coccion" value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
-
+          <div className="inputBox">
+            <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+            <span>Nombre del menu</span>
+          </div>
+          <div className="inputBox">
+            <input type="text" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
+            <span>Descripción del menu</span>
+          </div>
+          <div className="inputBox">
+            <input type="number" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+            <span>Minutos de coccion</span>
+          </div>
           <br />
           <label>
             <select
@@ -311,19 +315,14 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             </ModalFlotante>
             {ingredientesMuestra.map((ingredienteMenu, index) => (
               <div key={index} className='div-ingrediente-menu'>
-                <input
-                  type="text"
-                  placeholder="Nombre ingrediente"
-                  value={ingredienteMenu.ingredienteNombre}
-                  disabled
-                />
-                <br />
-                <input
-                  type="number"
-                  value={ingredienteMenu.cantidad}
-                  placeholder="Cantidad necesaria"
-                  onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))}
-                />
+                <div className="inputBox">
+                  <input type="text" required={true} disabled value={ingredienteMenu.ingredienteNombre} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+                  <span>Nombre del ingrediente</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))} />
+                  <span>Cantidad necesaria</span>
+                </div>
                 <select
                   id={`select-medidas-${index}`}
                   value={ingredienteMenu?.medida?.toString()}
@@ -345,11 +344,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
                   <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
                   <br />
                 </div>
-                <input
-                  type="number"
-                  placeholder="Cantidad necesaria"
-                  onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))}
-                />
+                <div className="inputBox">
+                  <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
+                  <span>Cantidad necesaria</span>
+                </div>
                 <select
                   id={`select-medidas-${index}`}
                   onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
@@ -366,13 +364,14 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             ))}
             <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
           </div>
-          <br />
-          <input type="number" placeholder="Precio" value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-
-          <br />
-          <input type="number" placeholder="Comensales" value={comensales} onChange={(e) => { setComensales(parseInt(e.target.value)) }} />
-
-          <br />
+          <div className="inputBox">
+            <input type="number" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+            <span>Precio</span>
+          </div>
+          <div className="inputBox">
+            <input type="number" required={true} value={comensales} onChange={(e) => { setComensales(parseInt(e.target.value)) }} />
+            <span>Comensales</span>
+          </div>
           <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
         </div>
       )}

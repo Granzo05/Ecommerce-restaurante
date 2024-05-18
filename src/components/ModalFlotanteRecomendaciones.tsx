@@ -7,6 +7,8 @@ import { Provincia } from "../types/Domicilio/Provincia";
 import { ProvinciaService } from "../services/ProvinciaService";
 import { LocalidadService } from "../services/LocalidadService";
 import { DepartamentoService } from "../services/DepartamentoService";
+import { ArticuloVentaService } from "../services/ArticuloVentaService";
+import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 
 const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelectProduct: (product: string) => void, elementoBuscado: string, datoNecesario: string }> = ({ onCloseModal, onSelectProduct, elementoBuscado, datoNecesario }) => {
   const handleModalClose = () => {
@@ -15,8 +17,8 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
     onCloseModal();
   };
 
-  const [recomendaciones, setRecomendaciones] = useState<Ingrediente[] | Localidad[] | Departamento[] | Provincia[]>([]);
-  const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Ingrediente[] | Localidad[] | Departamento[] | Provincia[]>([]);
+  const [recomendaciones, setRecomendaciones] = useState<Ingrediente[] | ArticuloVenta[] | Localidad[] | Departamento[] | Provincia[]>([]);
+  const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Ingrediente[] | ArticuloVenta[] | Localidad[] | Departamento[] | Provincia[]>([]);
 
   useEffect(() => {
     if (elementoBuscado === 'INGREDIENTES') {
@@ -24,6 +26,15 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         .then(ingredientes => {
           setRecomendaciones(ingredientes);
           setRecomendacionesFiltradas(ingredientes);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } else if (elementoBuscado === 'ARTICULOS') {
+      ArticuloVentaService.getArticulos()
+        .then(articulos => {
+          setRecomendaciones(articulos);
+          setRecomendacionesFiltradas(articulos);
         })
         .catch(error => {
           console.error('Error:', error);

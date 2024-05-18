@@ -12,6 +12,8 @@ import { Toaster, toast } from 'sonner'
 import { useDebounce } from '@uidotdev/usehooks';
 import './agregarSucursal.css'
 import { LocalidadDelivery } from '../../types/Restaurante/LocalidadDelivery';
+import InputComponent from '../InputFiltroComponent';
+import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 
 function AgregarSucursal() {
   const [inputValue, setInputValue] = useState('');
@@ -108,86 +110,6 @@ function AgregarSucursal() {
       });
   }
 
-  // Al seleccionar una provincia cargo los departamentos asociados
-  async function cargarDepartamentos(idProvincia: number) {
-    await DepartamentoService.getDepartamentosByProvinciaId(idProvincia)
-      .then(async departamentos => {
-        setDepartamentos(departamentos);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-  }
-
-  async function cargarLocalidades(idDepartamento: number) {
-    await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento)
-      .then(async localidades => {
-        setLocalidades(localidades);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-  }
-
-  async function cargarLocalidadesCheckBox(idDepartamento: number): Promise<Localidad[]> {
-    try {
-      return await LocalidadService.getLocalidadesByDepartamentoId(idDepartamento);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-    return [];
-  }
-
-
-  const handleInputProvinciaChange = (value: string) => {
-    setInputValue(value);
-    setInputValueProvincia(value);
-
-    const provinciasFiltradas = provincias?.filter(provincia =>
-      provincia.nombre.toLowerCase().includes(value.toLowerCase())
-    );
-
-    if (provinciasFiltradas && provinciasFiltradas.length > 1) {
-      setResultadosProvincias(provinciasFiltradas);
-    } else if (provinciasFiltradas && provinciasFiltradas.length === 1) {
-      // Si solamente tengo un resultado entonces actualizo el valor del Input a ese
-      setResultadosProvincias(provinciasFiltradas);
-      cargarDepartamentos(provinciasFiltradas[0].id)
-    }
-  };
-
-  const handleInputDepartamentoChange = (value: string) => {
-    setInputValue(value);
-    setInputValueDepartamento(value);
-    const departamentosFiltrados = departamentos?.filter(departamento =>
-      departamento.nombre.toLowerCase().includes(value.toLowerCase())
-    );
-
-    if (departamentosFiltrados && departamentosFiltrados.length > 1) {
-      setResultadosDepartamentos(departamentosFiltrados);
-    } else if (departamentosFiltrados && departamentosFiltrados.length === 1) {
-      setResultadosDepartamentos(departamentosFiltrados);
-      cargarLocalidades(departamentosFiltrados[0].id)
-    }
-  };
-
-  const handleInputLocalidadChange = (value: string) => {
-    setInputValue(value);
-    setInputValueLocalidad(value);
-
-    const localidadesFiltradas = localidades?.filter(localidad =>
-      localidad.nombre.toLowerCase().includes(value.toLowerCase())
-    );
-
-    if (localidadesFiltradas && localidadesFiltradas.length > 1) {
-      setResultadosLocalidades(localidadesFiltradas);
-    } else if (localidadesFiltradas && localidadesFiltradas.length === 1) {
-      setResultadosLocalidades(localidadesFiltradas);
-      setLocalidadDomicilioSucursal(localidadesFiltradas[0].id)
-    }
-  };
-
-
   const handleCargarNegocio = async () => {
     let sucursal: Sucursal = new Sucursal();
 
@@ -236,125 +158,56 @@ function AgregarSucursal() {
   return (
     <div className='form-info'>
       <Toaster />
-
       <div>
         <h2>Crear una sucursal</h2>
         <div>
           <form>
-            <input
-              type="email"
-              name="email"
-              onChange={(e) => { setEmail(e.target.value) }}
-              required
-              placeholder="Correo electrónico"
-            />
-            <br />
-            <input
-              type="password"
-              name="contraseña"
+            <div className="inputBox">
+              <input type="email" required={true} onChange={(e) => { setEmail(e.target.value) }} />
+              <span>Correo electrónico</span>
+            </div>
+            <div className="inputBox">
+              <input type="password" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+              <span>Contraseña</span>
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
+              <span>Nombre de calle</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
+              <span>Número de domicilio</span>
+            </div>
 
-              onChange={(e) => { setContraseña(e.target.value) }}
-              required
-              placeholder="Contraseña"
-            />
-            <br />
-
-            <input
-              type="text"
-              name="calle"
-              onChange={(e) => { setCalle(e.target.value) }}
-              required
-              placeholder="Nombre de calle"
-            />
-            <br />
-            <input
-              type="text"
-              name="numeroCalle"
-              onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }}
-              required
-              placeholder="Número de domicilio"
-            />
-            <br />
-            <input
-              type="text"
-              name="codigoPostal"
-              onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }}
-              required
-              placeholder="Codigo Postal"
-            />
-            <br />
-            <input
-              type="number"
-              name="telefono"
-
-              onChange={(e) => { setTelefono(parseInt(e.target.value)) }}
-              required
-              placeholder="Telefono"
-            />
-            <br />
-            <input
-              type="time"
-              onChange={(e) => { setHorarioApertura(e.target.value) }}
-            />
-            <input
-              type="time"
-              onChange={(e) => { setHorarioCierre(e.target.value) }}
-            />
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+              <span>Código Postal</span>
+            </div>
+            <div className="inputBox">
+              <input type="phone" required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+              <span>Telefono</span>
+            </div>
+            <div className="inputBox">
+              <input type="time" required={true} onChange={(e) => { setHorarioApertura(e.target.value) }} />
+              <span>Horario de apertura</span>
+            </div>
+            <div className="inputBox">
+              <input type="time" required={true} onChange={(e) => { setHorarioCierre(e.target.value) }} />
+              <span>Horario de cierre</span>
+            </div>
             <h2>Provincia</h2>
-            <input
-              value={inputValueProvincia}
-              type="text"
-              onChange={(e) => { handleInputProvinciaChange(e.target.value) }}
-              placeholder="Buscar provincia..."
-            />
-            <ul className='lista-recomendaciones'>
-              {resultadosProvincias?.map((provincia, index) => (
-                <li className='opcion-recomendada' key={index} onClick={() => {
-                  setInputValueProvincia(provincia.nombre)
-                  setResultadosProvincias([])
-                }}>
-                  {provincia.nombre}
-                </li>
-              ))}
-            </ul>
+            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
             <br />
             <h2>Departamento</h2>
-            <input
-              type="text"
-              value={inputValueDepartamento}
-              onChange={(e) => { handleInputDepartamentoChange(e.target.value) }}
-              placeholder="Buscar departamento..."
-            />
-            <ul className='lista-recomendaciones'>
-              {resultadosDepartamentos?.map((departamento, index) => (
-                <li className='opcion-recomendada' key={index} onClick={() => {
-                  setInputValueDepartamento(departamento.nombre)
-                  setResultadosDepartamentos([])
-                  cargarLocalidades(departamento.id)
-                }}>
-                  {departamento.nombre}
-                </li>))}
-            </ul>
+            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
 
             <br />
             <h2>Localidad</h2>
-            <input
-              type="text"
-              value={inputValueLocalidad}
-              onChange={(e) => { handleInputLocalidadChange(e.target.value) }}
-              placeholder="Buscar localidad..."
-            />
-            <ul className='lista-recomendaciones'>
-              {resultadosLocalidades?.map((localidad, index) => (
-                <li className='opcion-recomendada' key={index} onClick={() => {
-                  setInputValueLocalidad(localidad.nombre)
-                  setResultadosLocalidades([])
-                  setLocalidadDomicilioSucursal(localidad.id)
-                }}>
-                  {localidad.nombre}
-                </li>
-              ))}
-            </ul>
+            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
+
 
             <h3>Departamentos disponibles para delivery: </h3>
             {departamentos && (

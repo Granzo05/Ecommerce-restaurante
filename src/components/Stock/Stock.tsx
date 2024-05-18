@@ -10,7 +10,7 @@ import AgregarStockIngrediente from "./AgregarStockIngrediente";
 import { StockIngredientesDTO } from "../../types/Stock/StockIngredientesDTO";
 import { StockArticuloVentaDTO } from "../../types/Stock/StockArticuloVentaDTO";
 import ModalFlotante from "../ModalFlotante";
-import InputComponent from "../InputComponent";
+import InputComponent from "../InputFiltroComponent";
 import ModalFlotanteRecomendaciones from "../ModalFlotanteRecomendaciones";
 import SearchIcon from '@mui/icons-material/Search';
 

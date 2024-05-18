@@ -9,7 +9,7 @@ import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { Toaster, toast } from 'sonner'
 import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
-import InputComponent from '../InputComponent';
+import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import { clearInputs } from '../../utils/global_variables/functions';
 
@@ -189,15 +189,20 @@ function AgregarMenu() {
         ))}
         <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
-      <input type="text" placeholder="Nombre del menu" id="nombreMenu" onChange={(e) => { setNombre(e.target.value) }} />
+      <div className="inputBox">
+        <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+        <span>Nombre del menu</span>
+      </div>
+      <div className="inputBox">
+        <input type="text" required={true} onChange={(e) => { setDescripcion(e.target.value) }} />
+        <span>Descripción del menu</span>
+      </div>
 
-      <br />
-      <input type="text" placeholder="Descripción del menu" id="descripcion" onChange={(e) => { setDescripcion(e.target.value) }} />
+      <div className="inputBox">
+        <input type="number" required={true} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+        <span>Minutos de coccion</span>
+      </div>
 
-      <br />
-      <input type="text" placeholder="Minutos de coccion" id="coccionMenu" onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
-
-      <br />
       <label>
         <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
           <option>Seleccionar tipo de menú</option>
@@ -227,11 +232,10 @@ function AgregarMenu() {
               {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
               <br />
             </div>
-            <input
-              type="number"
-              placeholder="Cantidad necesaria"
-              onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))}
-            />
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
+              <span>Cantidad necesaria</span>
+            </div>
             <select
               id={`select-medidas-${index}`}
               onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
@@ -249,13 +253,15 @@ function AgregarMenu() {
         ))}
         <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
       </div>
-      <br />
-      <input type="number" placeholder="Precio" id="precioMenu" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+      <div className="inputBox">
+        <input type="number" required={true} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+        <span>Precio</span>
+      </div>
+      <div className="inputBox">
+        <input type="number" required={true} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
+        <span>Comensales</span>
+      </div>
 
-      <br />
-      <input type="number" placeholder="Comensales" id="comensales" onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
-
-      <br />
       <button type="button" onClick={agregarMenu}>Agregar menu</button>
     </div >
   )

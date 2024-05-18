@@ -155,6 +155,7 @@ const LoginNegocio = () => {
               placeholder="tu@ejemplo.com"
               required
             />
+            
             <div className="error-message">Formato incorrecto de e-mail.</div>
           </div>
           <div className="text-field">

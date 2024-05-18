@@ -4,9 +4,11 @@ import { StockEntranteService } from '../../services/StockEntranteService';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { DetalleStock } from '../../types/Stock/DetalleStock';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
+import { toast, Toaster } from 'sonner';
+import InputComponent from '../InputFiltroComponent';
+import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import { IngredienteService } from '../../services/IngredienteService';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
-import { toast, Toaster } from 'sonner';
 
 function AgregarStockEntrante() {
 
@@ -14,16 +16,10 @@ function AgregarStockEntrante() {
 
   // Con estos inputs voy rellenando en caso de ser necesario agregar más campos
   const [articulosVentaInputs, setArticulosVentaInputs] = useState<ArticuloVenta[]>([]);
-  const [articulosVentaRecomendados, setArticulosVentaRecomendados] = useState<ArticuloVenta[]>([]);
   const [ingredientesInputs, setIngredientesInputs] = useState<Ingrediente[]>([]);
-  const [ingredientesRecomendados, setIngredientesRecomendados] = useState<Ingrediente[]>([]);
-  const [inputIngrediente] = useState<string[]>([]);
-  const [inputArticulo] = useState<string[]>([]);
 
-  // Estos index sirven para colocar el nombre del articulo al index correcto en caso de hacer clic en la recomendacion de ingrediente o articulo
-  // Ya que puedo acceder al index actual de detalles
   let [lastIndexDetalle] = useState<number>(0);
-  // Estos datos traigo de la db para mostrar los posibles resultados
+
   const [articulosVenta, setArticulosVenta] = useState<ArticuloVenta[]>([]);
   const [ingredientes, setIngredientes] = useState<Ingrediente[]>([]);
 
@@ -31,47 +27,32 @@ function AgregarStockEntrante() {
   const [detallesStock] = useState<DetalleStock[]>([])
 
   useEffect(() => {
-    // Con estos cargos los resultados mostrados en los inputs como recomendación
-    cargarResultadosIngredientes();
-    cargarResultadosArticulos();
+    IngredienteService.getIngredientes()
+      .then(ingredientes => {
+        setIngredientes(ingredientes)
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+    ArticuloVentaService.getArticulos()
+      .then(articulos => {
+        setArticulosVenta(articulos)
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }, []);
 
-  function cargarResultadosIngredientes() {
-    IngredienteService.getIngredientes()
-      .then(data => {
-        setIngredientes(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-
-  function cargarResultadosArticulos() {
-    ArticuloVentaService.getArticulos()
-      .then(data => {
-        setArticulosVenta(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
 
   // Almacenaje de cada detalle por ingrediente
-  const almacenarIngrediente = (indexDetalle: number, indexInput: number, nombre: string) => {
+  const handleNombreIngredienteChange = (index: number, ingrediente: Ingrediente) => {
+    detallesStock[index].ingrediente = ingrediente;
+  };
+
+  const handleNombreArticuloChange = (index: number, articulo: ArticuloVenta) => {
     // Busco todos los articulos que de nombre se parezcan
-    const ingredientesRecomendados = ingredientes?.filter(ingrediente =>
-      ingrediente.nombre.toLowerCase().includes(nombre.toLowerCase())
-    );
-
-    setIngredientesRecomendados(ingredientesRecomendados);
-
-    let ingrediente = ingredientes.find(ingrediente => ingrediente.nombre === nombre);
-
-    if (ingrediente) {
-      detallesStock[indexDetalle].ingrediente = ingrediente;
-      inputIngrediente[indexInput] = ingrediente.nombre;
-    }
-
+    detallesStock[index].articuloVenta = articulo;
   };
 
   const almacenarCantidad = (index: number, cantidad: number) => {
@@ -101,22 +82,6 @@ function AgregarStockEntrante() {
     }
   };
 
-  // Almacenaje de cada detalle por articulo
-  const almacenarArticulo = (indexDetalle: number, indexInput: number, nombre: string) => {
-    // Busco todos los articulos que de nombre se parezcan
-    const articulosRecomendados = articulosVenta?.filter(articulo =>
-      articulo.nombre.toLowerCase().includes(nombre.toLowerCase())
-    );
-
-    setArticulosVentaRecomendados(articulosRecomendados);
-
-    let articulo = articulosVenta.find(articulo => articulo.nombre === nombre);
-
-    if (articulo) {
-      detallesStock[indexDetalle].articuloVenta = articulo;
-      inputArticulo[indexInput] = articulo.nombre;
-    }
-  };
 
   const añadirCampoArticulo = () => {
     setArticulosVentaInputs([...articulosVentaInputs, {
@@ -130,6 +95,33 @@ function AgregarStockEntrante() {
       const nuevosArticulos = [...articulosVentaInputs];
       nuevosArticulos.pop();
       setArticulosVentaInputs(nuevosArticulos);
+    }
+  };
+
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>('');
+  const [elementosABuscar, setElementosABuscar] = useState<string>('');
+
+  const handleSelectProduct = (product: string) => {
+    setSelectedProduct(product);
+  };
+
+  const handleAbrirRecomendaciones = (busqueda: string) => {
+    setElementosABuscar(busqueda)
+    setModalBusqueda(true);
+  };
+
+  const handleModalClose = () => {
+    setModalBusqueda(false)
+
+    let articulo = articulosVenta.find(articulo => articulo.nombre === selectedProduct);
+
+    let ingrediente = ingredientes.find(ingrediente => ingrediente.nombre === selectedProduct);
+
+    if (selectedProduct && ingrediente) {
+      handleNombreIngredienteChange(lastIndexDetalle, ingrediente);
+    } else if (selectedProduct && articulo) {
+      handleNombreArticuloChange(lastIndexDetalle, articulo);
     }
   };
 
@@ -158,43 +150,24 @@ function AgregarStockEntrante() {
   return (
     <div className="modal-info">
       <Toaster />
-      <br />
-      <input type="date" placeholder="Fecha" onChange={(e) => { setFecha(new Date(e.target.value)) }} />
-      <br />
+      <div className="inputBox">
+        <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
+        <span>Fecha de entrada</span>
+      </div>
       {ingredientesInputs.map((ingrediente, index) => (
         <div className='div-ingrediente-menu' key={index}>
           <div>
-            <input
-              type="text"
-              placeholder="Nombre ingrediente"
-              value={inputIngrediente[index]}
-              onChange={(e) => almacenarIngrediente(lastIndexDetalle, index, e.target.value)}
-              onClick={() => setIngredientesRecomendados(ingredientes)}
-            />
-            <br />
-            <ul className='lista-recomendaciones'>
-              {ingredientesRecomendados?.map((ingrediente, index) => (
-                <li className='opcion-recomendada' key={index} onClick={() => {
-                  almacenarIngrediente(lastIndexDetalle, index, ingrediente.nombre);
-                  setIngredientesRecomendados([])
-                }}>
-                  {ingrediente.nombre}
-                </li>
-              ))}
-            </ul>
+            <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingrediente?.nombre ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
           </div>
-
-          <input
-            type="number"
-            placeholder="Cantidad del ingrediente"
-            onChange={(e) => almacenarCantidad(lastIndexDetalle, parseFloat(e.target.value))}
-          />
-          <input
-            type="number"
-            placeholder="Costo unitario"
-            onChange={(e) => almacenarSubTotal(lastIndexDetalle, parseFloat(e.target.value))}
-          />
-
+          <div className="inputBox">
+            <input type="number" required={true} onChange={(e) => almacenarCantidad(lastIndexDetalle, parseFloat(e.target.value))} />
+            <span>Cantidad del ingrediente</span>
+          </div>
+          <div className="inputBox">
+            <input type="number" required={true} onChange={(e) => almacenarSubTotal(lastIndexDetalle, parseFloat(e.target.value))} />
+            <span>Costo unitario</span>
+          </div>
           <p onClick={quitarCampoIngrediente}>X</p>
         </div>
       ))}
@@ -205,35 +178,17 @@ function AgregarStockEntrante() {
       {articulosVentaInputs.map((articulo, index) => (
         <div className='div-ingrediente-menu' key={index}>
           <div>
-            <input
-              type="text"
-              value={inputArticulo[index]}
-              placeholder="Nombre articulo"
-              onClick={() => setArticulosVentaRecomendados(articulosVenta)}
-              onChange={(e) => almacenarArticulo(lastIndexDetalle, index, e.target.value)}
-            />
-            <ul className='lista-recomendaciones'>
-              {articulosVentaRecomendados?.map((articulo, index) => (
-                <li className='opcion-recomendada' key={index} onClick={() => {
-                  almacenarArticulo(lastIndexDetalle, index, articulo.nombre)
-                  setArticulosVentaRecomendados([])
-                }}>
-                  {articulo.nombre}
-                </li>
-              ))}
-            </ul>
+            <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={articulo?.nombre ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
           </div>
-          <input
-            type="number"
-            placeholder="Cantidad del articulo"
-            onChange={(e) => almacenarCantidad(lastIndexDetalle, parseFloat(e.target.value))}
-          />
-          <input
-            type="number"
-            placeholder="Costo unitario"
-            onChange={(e) => almacenarSubTotal(lastIndexDetalle, parseFloat(e.target.value))}
-          />
-
+          <div className="inputBox">
+            <input type="number" required={true} onChange={(e) => almacenarCantidad(lastIndexDetalle, parseFloat(e.target.value))} />
+            <span>Cantidad del articulo</span>
+          </div>
+          <div className="inputBox">
+            <input type="number" required={true} onChange={(e) => almacenarSubTotal(lastIndexDetalle, parseFloat(e.target.value))} />
+            <span>Costo unitario</span>
+          </div>
           <p onClick={quitarCampoArticulo}>X</p>
         </div>
       ))}

@@ -6,8 +6,10 @@ import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { EnumTipoArticuloVenta } from '../../types/Productos/EnumTipoArticuloVenta';
 import { clearInputs } from '../../utils/global_variables/functions';
+import '../../styles/inputLabel.css'
 
 function AgregarArticuloVenta() {
+
   const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
@@ -86,25 +88,32 @@ function AgregarArticuloVenta() {
         ))}
         <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
-      <input type="text" placeholder="Nombre del articulo" id="nombreArticulo" onChange={(e) => { setNombre(e.target.value) }} />
+      <div className="inputBox">
+        <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+        <span>Nombre del articulo</span>
+      </div>
+      <div className="inputBox">
+        <input type="number" required={true} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
+        <span>Precio</span>
+      </div>
       <br />
+      <div className="inputBox">
+        <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
+        <span>Cantidad</span>
+      </div>
       <label>
-        <select name="tipoArticulo" onChange={(e) => { setTipo(e.target.value) }}>
+        <select name="tipoArticulo" required={true} onChange={(e) => { setTipo(e.target.value) }}>
           <option>Seleccionar tipo de articulo</option>
           <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida sin alcohol</option>
           <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida con alcohol</option>
         </select>
       </label>
       <br />
-      <br />
-      <input type="number" placeholder="Precio" id="precioArticulo" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
 
-      <br />
-      <input type="number" placeholder="Cantidad" onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
-      <br />
       <select
         onChange={(e) => setMedida(e.target.value)}
       >
+        <option>Seleccionar medida</option>
         <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
         <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
         <option value={EnumMedida.LITROS.toString()}>Litros</option>

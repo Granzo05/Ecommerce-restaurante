@@ -9,7 +9,7 @@ function AgregarIngrediente() {
 
   async function agregarIngrediente() {
     const ingrediente: Ingrediente = new Ingrediente();
-    
+
     if (!nombre) {
       toast.info("Por favor, complete todos los campos requeridos.");
       return;
@@ -30,13 +30,11 @@ function AgregarIngrediente() {
 
   return (
     <div className="modal-info">
-      <Toaster/>
-      <br />
-      <label>
-        <i className='bx bx-lock'></i>
-        <input type="text" required placeholder="Nombre del ingrediente" onChange={(e) => { setNombre(e.target.value) }} />
-      </label>
-      <br />
+      <Toaster />
+      <div className="inputBox">
+        <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+        <span>Nombre del ingrediente</span>
+      </div>
       <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Agregar ingrediente</button>
     </div>
   )

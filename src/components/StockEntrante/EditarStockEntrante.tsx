@@ -29,12 +29,11 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
     <div id="miModal" className="modal">
       <Toaster />
       <div className="modal-content">
-        <br />
-        <label>
-          <i className='bx bx-lock'></i>
-          <input type="date" placeholder="Fecha" onChange={(e) => { setFecha(new Date(e.target.value)) }} />
-        </label>
-        <input type="button" value="editarStock" id="editarStock" onClick={editarStock} />
+        <div className="inputBox">
+          <input type="date" required={true} value={fecha.toLocaleDateString()} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
+          <span>Fecha de entrada</span>
+        </div>
+        <button type="button" onClick={editarStock}>Editar stock entrante</button>
       </div>
     </div>
   )

@@ -70,13 +70,18 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
   return (
     <div className="modal-info">
       <Toaster />
-      <br />
-      <input type="text" value={cantidadMinima | 0} placeholder="Cantidad mínima del ingrediente" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
-      <br />
-      <input type="text" value={cantidadMaxima | 0} placeholder="Cantidad máxima del ingrediente" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
-      <br />
-      <input type="text" value={cantidadActual | 0} placeholder="Cantidad actual del ingrediente" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
-      <br />
+      <div className="inputBox">
+        <input type="number" required={true} value={cantidadMinima | 0} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+        <span>Cantidad mínima del ingrediente</span>
+      </div>
+      <div className="inputBox">
+        <input type="number" required={true} value={cantidadMaxima | 0} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+        <span>Cantidad máxima del ingrediente</span>
+      </div>
+      <div className="inputBox">
+        <input type="number" required={true} value={cantidadActual | 0} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+        <span>Cantidad actual del ingrediente</span>
+      </div>
       <select value={medida?.toString()} onChange={(e) => { setMedida(convertirStringAEnumMedida(e.target.value)) }}>
         <option>Seleccionar medida ingrediente</option>
         <option value="KILOGRAMOS">Kilogramos</option>
@@ -86,8 +91,10 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <option value="PAQUETES">Paquetes</option>
         <option value="UNIDADES">Unidades</option>
       </select>
-      <br />
-      <input type="text" value={costo | 0} placeholder="Costo del ingrediente" id="costoStock" onChange={(e) => { setCosto(parseFloat(e.target.value)) }} />
+      <div className="inputBox">
+        <input type="text" required={true} value={costo | 0} onChange={(e) => { setCosto(parseFloat(e.target.value)) }} />
+        <span>Costo del ingrediente por unidad de medida</span>
+      </div>
       <button type="button" onClick={editarStock}>Editar stock</button>
     </div>
   )

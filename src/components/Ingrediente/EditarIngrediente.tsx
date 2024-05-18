@@ -36,9 +36,10 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
   return (
     <div className="modal-info">
       <Toaster />
-      <br />
-      <input type="text" value={nombre} placeholder="Nombre del ingrediente" onChange={(e) => { setNombre(e.target.value) }} />
-      <br />
+      <div className="inputBox">
+        <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+        <span>Nombre del ingrediente</span>
+      </div>
       <button onClick={editarIngrediente}>Editar ingrediente</button>
     </div>
   )

@@ -126,7 +126,21 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       </div>
 
       <div>
-        <input type="text" placeholder="Nombre del articulo" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+        <div className="inputBox">
+          <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+          <span>Nombre del articulo</span>
+        </div>
+        <br />
+
+        <div className="inputBox">
+          <input type="text" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+          <span>Precio del articulo</span>
+        </div>
+        <br />
+        <div className="inputBox">
+          <input type="text" required={true} value={cantidad} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+          <span>Cantidad</span>
+        </div>
         <br />
         <label>
           <select value={tipo} name="tipoArticulo" onChange={(e) => { setTipo(e.target.value) }}>
@@ -135,10 +149,6 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
             <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida con alcohol</option>
           </select>
         </label>
-        <br />
-        <input type="number" placeholder="Precio" value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-        <br />
-        <input type="number" placeholder="Cantidad" value={cantidad} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
         <br />
         <select
           value={medida}
