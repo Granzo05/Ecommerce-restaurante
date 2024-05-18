@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalProps {
   isOpen: boolean;
@@ -16,8 +17,9 @@ const ModalFlotante: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       {isOpen && (
         <div className="modal-overlay" onClick={handleModalClose}>
           <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={handleModalClose}><CloseIcon/></button>
             {children}
-            <button className="modal-close" onClick={handleModalClose}>Cerrar</button>
+            
           </div>
         </div>
       )}

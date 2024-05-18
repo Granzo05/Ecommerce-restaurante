@@ -5,6 +5,7 @@ import { Toaster, toast } from 'sonner'
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockIngredientes } from '../../types/Stock/StockIngredientes';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
+import '../../styles/modals.css'
 
 function AgregarStockIngrediente() {
 
@@ -49,22 +50,24 @@ function AgregarStockIngrediente() {
   return (
     <div className="modal-info">
       <Toaster />
-      <div className="inputBox">
-        <input type="text" required={true} onChange={(e) => { setArticuloVenta(e.target.value) }} />
-        <span>Nombre del ingrediente</span>
-      </div>
-      <div className="inputBox">
-        <input type="text" required={true} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
-        <span>Cantidad mínima del ingrediente</span>
-      </div>
-      <div className="inputBox">
-        <input type="text" required={true} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
-        <span>Cantidad máxima del ingrediente</span>
-      </div>
-      <div className="inputBox">
-        <input type="text" required={true} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
-        <span>Cantidad actual del ingrediente</span>
-      </div>
+      <h2>Agregar ingrediente</h2>
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" required placeholder="Nombre del ingrediente" onChange={(e) => { setArticuloVenta(e.target.value) }} />
+      </label>
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" placeholder="Cantidad mínima del ingrediente" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+      </label>
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" placeholder="Cantidad máxima del ingrediente" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+      </label>
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" placeholder="Cantidad actual del ingrediente" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+      </label>
+      <br />
       <label>
         <i className='bx bx-lock'></i>
         <select
@@ -78,10 +81,10 @@ function AgregarStockIngrediente() {
         </select>
       </label>
       <br />
-      <div className="inputBox">
-        <input type="number" required={true} onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-        <span>Costo del ingrediente por unidad de medida</span>
-      </div>
+      <label>
+        <i className='bx bx-lock'></i>
+        <input type="text" placeholder="Costo del ingrediente por una unidad de medida (opcional)" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+      </label>
       <button onClick={crearStockIngrediente}>Crear stock</button>
     </div>
   )

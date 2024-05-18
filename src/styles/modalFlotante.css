@@ -9,17 +9,7 @@
   align-items: center;
 }
 
-.modal-flotante-content {
-  width: 50%;
-  height: 80vh;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  justify-content: center;
-  overflow-y: auto;
-  margin-bottom: 200px;
-  margin-top: 150px;
-}
+
 
 .modal-flotante-content div {
   display: flex;

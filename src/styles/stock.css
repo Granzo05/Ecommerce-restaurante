@@ -6,15 +6,22 @@
 
 
 .opciones-pantallas {
-    max-width: 1200px;
+    max-width: 90%;
     margin: 0 auto;
-    padding: 20px;
     font-family: Arial, sans-serif;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    padding: 0 5px 0 5px;
 }
 
 h1 {
+    padding: 5px;
     text-align: center;
-    color: #333;
+    color: white;
+    background-color: #2b86c4;
+    margin-right: -150px;
+    margin-left: -150px;
+    font-family: "Roboto Slab", serif;
 }
 
 #stocks {
@@ -35,8 +42,9 @@ table th, table td {
 }
 
 table th {
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: black;
+    color: white;
+    border: 1px solid rgb(107, 107, 107);
 }
 
 table tr:nth-child(even) {
@@ -55,12 +63,14 @@ table tr:hover {
     color: #666;
     margin-top: auto;
     margin-bottom: auto;
+    color: black;
 }
 
 .input-filtrado{
     display: flex;
-    justify-content: end;
-    align-items: end;
+    justify-content: start;
+    align-items: start;
+    height: 50px;
 }
 
 .btns-acciones-stock{
@@ -74,6 +84,7 @@ table tr:hover {
     width: 150px;
     color: black;
     margin: 5px;
+    border: 1px solid black;
 }
 
 .btn-accion-1{
@@ -81,15 +92,15 @@ table tr:hover {
 }
 
 .btn-accion-2{
-    background-color: #ad0000;
+    background-color: #ff0000;
 }
 
 .btn-accion-1:hover{
-    background-color: #fffb1b;
+    background-color: #aca900;
 }
 
 .btn-accion-2:hover{
-    background-color: #ff0000;
+    background-color: #ad0000;
 }
 
 .btns-stock{
@@ -109,6 +120,7 @@ table tr:hover {
     align-items: center;
     width: 200px;
     margin: 5px;
+    background-color: #2b86c4;
 }
 
 .btn-agregar:hover {

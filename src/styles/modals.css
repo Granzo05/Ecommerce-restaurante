@@ -1,0 +1,99 @@
+.modal-info {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+    width: auto;
+  }
+  
+  .modal-info label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .modal-info label i {
+    margin-right: 10px;
+    color: #666;
+  }
+  
+  .modal-info input,
+  .modal-info select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.3s;
+    width: 500px;
+  }
+
+  .modal-info select{
+    width: 500px;
+  }
+  
+  .modal-info input:focus,
+  .modal-info select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .modal-info button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .modal-info button:hover {
+    background-color: #0056b3;
+  }
+  
+  .modal-info button:focus {
+    outline: none;
+  }
+  
+  .modal-info br {
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 600px) {
+    .modal-info {
+      padding: 15px;
+      max-width: 90%;
+    }
+  }
+
+  .modal-close{
+    color: black;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    border: none;
+    width: 25px;
+  }
+
+  .modal-close:hover{
+    background-color: red;
+  }
+
+  .modal-flotante-content {
+    width: auto;
+    height: 100%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    justify-content: center;
+    overflow-y: auto;
+    margin: 50px 150px 2000px 150px;
+  }
+  

@@ -14,6 +14,7 @@ import InputComponent from "../InputFiltroComponent";
 import ModalFlotanteRecomendaciones from "../ModalFlotanteRecomendaciones";
 import SearchIcon from '@mui/icons-material/Search';
 
+
 const Stocks = () => {
     const [stockIngredientes, setStockIngredientes] = useState<StockIngredientesDTO[]>([]);
     const [stockArticulos, setStockArticulos] = useState<StockArticuloVentaDTO[]>([]);
