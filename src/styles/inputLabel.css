@@ -8,15 +8,31 @@
     position: relative;
 }
 
-.inputBox input {
-    width: 350px;
+.inputBox input[type='number'],
+.inputBox input[type='password'],
+.inputBox input[type='text'],
+.inputBox input[type='email'],
+.inputBox input[type='time'],
+.inputBox input[type='date'],
+.inputBox input[type='phone'] {
+    width: 90%;
     padding: 10px;
     border: 1px solid (255, 255, 255, 0.25);
     background: #fff;
     border-radius: 5px;
     outline: none;
     color: black;
-    width: 400px;
+}
+
+.inputBox input[type='date'] {
+    width: 90%;
+    padding: 10px;
+    padding-top: 30px;
+    border: 1px solid (255, 255, 255, 0.25);
+    background: #fff;
+    border-radius: 5px;
+    outline: none;
+    color: black;
 }
 
 select {
@@ -30,6 +46,7 @@ select {
 .inputBox span {
     position: absolute;
     left: 0;
+    margin-left: 25px;
     padding: 10px;
     pointer-events: none;
     color: 1px solid (255, 255, 255, 0.25);

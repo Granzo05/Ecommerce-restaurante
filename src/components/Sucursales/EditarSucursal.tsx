@@ -208,96 +208,92 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   };
 
   return (
-    <div className='form-info'>
+    <div className="modal-info">
       <Toaster />
-      <div>
-        <h2>Crear una sucursal</h2>
-        <div>
-          <form>
-            <div className="inputBox">
-              <input type="email" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
-              <span>Correo electrónico</span>
-            </div>
-            <div className="inputBox">
-              <input type="password" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
-              <span>Contraseña</span>
-            </div>
-            <div className="inputBox">
-              <input type="phone" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-              <span>Telefono</span>
-            </div>
-            <div className="inputBox">
-              <input type="time" required={true} value={horarioApertura} onChange={(e) => { setHorarioApertura(e.target.value) }} />
-              <span>Horario de apertura</span>
-            </div>
-            <div className="inputBox">
-              <input type="time" required={true} value={horarioCierre} onChange={(e) => { setHorarioCierre(e.target.value) }} />
-              <span>Horario de cierre</span>
-            </div>
-            <div className="inputBox">
-              <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
-              <span>Nombre de calle</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} value={numeroCalle} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
-              <span>Número de domicilio</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
-              <span>Código Postal</span>
-            </div>
-            <h2>Provincia</h2>
-            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
-            <br />
-            <h2>Departamento</h2>
-            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
-
-            <br />
-            <h2>Localidad</h2>
-            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
-
-
-            <h3>Departamentos disponibles para delivery: </h3>
-            {departamentos && (
-              <div>
-                {departamentos.map((departamento, index) => (
-                  <div key={index}>
-                    <input
-                      type="checkbox"
-                      id={`localidad-${index}`}
-                      value={departamento.id}
-                      checked={idDepartamentosElegidos.has(departamento.id)}
-                      onChange={() => handleDepartamentosCheckboxChange(departamento.id)}
-                    />
-                    <label htmlFor={`departamento-${index}`}>{departamento.nombre}</label>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <h3>Localidades disponibles para delivery: </h3>
-            {localidadesMostrablesCheckbox && (
-              <div>
-                {localidadesMostrablesCheckbox.map((localidad, index) => (
-                  <div key={index}>
-                    <input
-                      type="checkbox"
-                      value={localidad.id}
-                      checked={idLocalidadesElegidas.has(localidad.id)}
-                      onChange={() => handleLocalidadesCheckboxChange(localidad.id)}
-                    />
-                    <label htmlFor={`localidad-${index}`}>{localidad.localidad?.nombre}</label>
-                  </div>
-                ))}
-              </div>
-            )}
-            <button type="button" onClick={handleEditarNegocio}>Registrarse</button>
-          </form>
+      <h2>Crear una sucursal</h2>
+      <form>
+        <div className="inputBox">
+          <input type="email" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
+          <span>Correo electrónico</span>
         </div>
-      </div>
+        <div className="inputBox">
+          <input type="password" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+          <span>Contraseña</span>
+        </div>
+        <div className="inputBox">
+          <input type="phone" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+          <span>Telefono</span>
+        </div>
+        <div className="inputBox">
+          <input type="time" required={true} value={horarioApertura} onChange={(e) => { setHorarioApertura(e.target.value) }} />
+          <span>Horario de apertura</span>
+        </div>
+        <div className="inputBox">
+          <input type="time" required={true} value={horarioCierre} onChange={(e) => { setHorarioCierre(e.target.value) }} />
+          <span>Horario de cierre</span>
+        </div>
+        <div className="inputBox">
+          <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
+          <span>Nombre de calle</span>
+        </div>
+        <div className="inputBox">
+          <input type="number" required={true} value={numeroCalle} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
+          <span>Número de domicilio</span>
+        </div>
+        <div className="inputBox">
+          <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+          <span>Código Postal</span>
+        </div>
+        <h2>Provincia</h2>
+        <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
+        <br />
+        <h2>Departamento</h2>
+        <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
+
+        <br />
+        <h2>Localidad</h2>
+        <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
+
+
+        <h3>Departamentos disponibles para delivery: </h3>
+        {departamentos && (
+          <div>
+            {departamentos.map((departamento, index) => (
+              <div key={index}>
+                <input
+                  type="checkbox"
+                  id={`localidad-${index}`}
+                  value={departamento.id}
+                  checked={idDepartamentosElegidos.has(departamento.id)}
+                  onChange={() => handleDepartamentosCheckboxChange(departamento.id)}
+                />
+                <label htmlFor={`departamento-${index}`}>{departamento.nombre}</label>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <h3>Localidades disponibles para delivery: </h3>
+        {localidadesMostrablesCheckbox && (
+          <div>
+            {localidadesMostrablesCheckbox.map((localidad, index) => (
+              <div key={index}>
+                <input
+                  type="checkbox"
+                  value={localidad.id}
+                  checked={idLocalidadesElegidas.has(localidad.id)}
+                  onChange={() => handleLocalidadesCheckboxChange(localidad.id)}
+                />
+                <label htmlFor={`localidad-${index}`}>{localidad.localidad?.nombre}</label>
+              </div>
+            ))}
+          </div>
+        )}
+        <button type="button" onClick={handleEditarNegocio}>Registrarse</button>
+      </form>
     </div>
   )
 }
