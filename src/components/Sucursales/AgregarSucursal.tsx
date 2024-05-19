@@ -214,19 +214,6 @@ function AgregarSucursal() {
           <span>Contraseña</span>
         </div>
         <div className="inputBox">
-          <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
-          <span>Nombre de calle</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
-          <span>Número de domicilio</span>
-        </div>
-
-        <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
-          <span>Código Postal</span>
-        </div>
-        <div className="inputBox">
           <input type="phone" required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
           <span>Telefono</span>
         </div>

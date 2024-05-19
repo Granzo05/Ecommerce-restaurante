@@ -18,6 +18,7 @@ bin/
 !**/src/test/**/bin/
 
 !**/src/main/webapp/
+!**/src/main/resources/application.properties
 **/src/main/webapp/WEB-INF/images/
 
 ### IntelliJ IDEA ###

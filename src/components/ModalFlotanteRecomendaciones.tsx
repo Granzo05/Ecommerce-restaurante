@@ -52,7 +52,7 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         .catch(error => {
           console.error('Error:', error);
         });
-    } else if (elementoBuscado === 'DEPARTAMENTOS' && datoNecesario.length > 0) {
+    } else if (elementoBuscado === 'DEPARTAMENTOS' && datoNecesario.length > 1) {
       DepartamentoService.getDepartamentosByNombreProvincia(datoNecesario)
         .then(async departamentos => {
           setRecomendaciones(departamentos);
@@ -61,7 +61,7 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         .catch(error => {
           console.error('Error:', error);
         })
-    } else if (elementoBuscado === 'LOCALIDADES' && datoNecesario.length > 0) {
+    } else if (elementoBuscado === 'LOCALIDADES' && datoNecesario.length > 1) {
       LocalidadService.getLocalidadesByNombreDepartamento(datoNecesario)
         .then(async localidades => {
           setRecomendaciones(localidades);
