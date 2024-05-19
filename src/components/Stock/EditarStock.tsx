@@ -5,6 +5,7 @@ import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
 import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 import { toast, Toaster } from 'sonner';
 import { convertirStringAEnumMedida } from '../../utils/global_variables/functions';
+import '../../styles/modals.css'
 
 interface EditarStockProps {
   stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
@@ -82,18 +83,19 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
   return (
     <div className="modal-info">
       <Toaster />
+      <h2>Editar ingrediente</h2>
       <div className="inputBox">
         <input type="number" required={true} value={cantidadMinima | 0} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
         <span>Cantidad mínima del ingrediente</span>
-      </div>
+      </div><br />
       <div className="inputBox">
         <input type="number" required={true} value={cantidadMaxima | 0} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
         <span>Cantidad máxima del ingrediente</span>
-      </div>
+      </div><br />
       <div className="inputBox">
         <input type="number" required={true} value={cantidadActual | 0} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
         <span>Cantidad actual del ingrediente</span>
-      </div>
+      </div><br />
       <select value={medida?.toString()} onChange={(e) => { setMedida(convertirStringAEnumMedida(e.target.value)) }}>
         <option>Seleccionar medida ingrediente</option>
         <option value="KILOGRAMOS">Kilogramos</option>
@@ -102,11 +104,11 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <option value="CENTIMETROS_CUBICOS">Centimetros cúbicos</option>
         <option value="PAQUETES">Paquetes</option>
         <option value="UNIDADES">Unidades</option>
-      </select>
+      </select><br /><br />
       <div className="inputBox">
         <input type="text" required={true} value={costo | 0} onChange={(e) => { setCosto(parseFloat(e.target.value)) }} />
         <span>Costo del ingrediente por unidad de medida</span>
-      </div>
+      </div><br />
       <button type="button" onClick={editarStock}>Editar stock</button>
     </div>
   )

@@ -3,9 +3,23 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+    max-width: 700px;
     margin: auto;
     width: auto;
+  }
+
+  .modal-info h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px 20px 20px;
+  }
+
+  .modal-info h3{
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .modal-info .select{
@@ -44,6 +58,7 @@
     transition: border-color 0.3s;
     width: 400px;
   }
+
 
 
   

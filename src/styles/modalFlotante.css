@@ -9,17 +9,6 @@
   align-items: center;
 }
 
-
-
-.modal-flotante-content div {
-  display: flex;
-  height: auto;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;  
-  
-}
-
 .modal-flotante-content label {
   margin-top: 25px;
 }
