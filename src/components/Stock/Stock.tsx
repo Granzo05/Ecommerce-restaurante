@@ -134,7 +134,6 @@ const Stocks = () => {
 
             <hr />
             <div className="input-filtrado">
-                <SearchIcon className="search-icono" />
                 <InputComponent placeHolder={'Filtrar...'} onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={selectedProduct ?? ''} />
                 {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
 

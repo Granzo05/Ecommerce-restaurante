@@ -28,7 +28,6 @@
 }
 
 #stocks {
-    margin-top: 20px;
     overflow-x: auto;
 }
 
@@ -59,15 +58,6 @@ table tr:hover {
     background-color: #cccccc;
 }
 
-.input-filtrado .search-icono {
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    margin-bottom: 25px;
-    color: black;
-}
 
 .input-filtrado{
     display: flex;
