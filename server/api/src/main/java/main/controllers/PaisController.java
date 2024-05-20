@@ -38,15 +38,6 @@ public class PaisController {
     public Set<ProvinciaDTO> getProvincias() throws Exception {
         List<ProvinciaDTO> provincias = provinciaRepository.findAllDTO();
 
-        try {
-            for (ProvinciaDTO provincia : provincias) {
-                provincia.setNombre(Encrypt.desencriptarString(provincia.getNombre()));
-            }
-        } catch (IllegalBlockSizeException e) {
-            System.out.println(e);
-        }
-
-
         return new HashSet<>(provincias);
     }
 
@@ -55,25 +46,29 @@ public class PaisController {
     public Set<LocalidadDTO> getLocalidades() throws Exception {
         List<LocalidadDTO> localidades = localidadRepository.findAllDTO();
 
-        try {
-            for (LocalidadDTO localidad : localidades) {
-                localidad.setNombre(Encrypt.desencriptarString(localidad.getNombre()));
-            }
-        } catch (IllegalBlockSizeException e) {
-            System.out.println(e);
-        }
+        return new HashSet<>(localidades);
+    }
+
+    @CrossOrigin
+    @GetMapping("/localidades/{nombreDepartamento}/{nombreProvincia}")
+    public Set<LocalidadDTO> getLocalidadesByNombreDepartamentoAndProvincia(@PathVariable("nombreDepartamento") String nombreDepartamento, @PathVariable("nombreProvincia") String nombreProvincia) throws Exception {
+        List<LocalidadDTO> localidades = localidadRepository.findByNombreDepartamentoAndProvincia(nombreDepartamento, nombreProvincia);
 
         return new HashSet<>(localidades);
     }
 
     @CrossOrigin
-    @GetMapping("/localidades/{nombreDepartamento}")
-    public Set<LocalidadDTO> getLocalidadesByNombreDepartamento(@PathVariable("nombreDepartamento") String nombre) throws Exception {
-        List<LocalidadDTO> localidades = localidadRepository.findByNombreDepartamento(Encrypt.encriptarString(nombre));
+    @GetMapping("/localidades/departamento/{nombreDepartamento}")
+    public Set<LocalidadDTO> getLocalidadesByNombreDepartamento(@PathVariable("nombreDepartamento") String nombreDepartamento) throws Exception {
+        List<LocalidadDTO> localidades = localidadRepository.findByNombreDepartamento(nombreDepartamento);
 
-        for (LocalidadDTO localidad : localidades) {
-            localidad.setNombre(Encrypt.desencriptarString(localidad.getNombre()));
-        }
+        return new HashSet<>(localidades);
+    }
+
+    @CrossOrigin
+    @GetMapping("/localidades/provincia/{nombreProvincia}")
+    public Set<LocalidadDTO> getLocalidadesByNombreProvincia(@PathVariable("nombreProvincia") String nombreProvincia) throws Exception {
+        List<LocalidadDTO> localidades = localidadRepository.findByNombreProvincia(nombreProvincia);
 
         return new HashSet<>(localidades);
     }
@@ -81,15 +76,7 @@ public class PaisController {
     @CrossOrigin
     @GetMapping("/departamentos/{nombreProvincia}")
     public Set<DepartamentoDTO> getDepartamentosByNombreProvincia(@PathVariable("nombreProvincia") String nombre) throws Exception {
-        List<DepartamentoDTO> departamentos = departamentoRepository.findByNombreProvincia(Encrypt.encriptarString(nombre));
-
-        try {
-            for (DepartamentoDTO departamento : departamentos) {
-                departamento.setNombre(Encrypt.desencriptarString(departamento.getNombre()));
-            }
-        } catch (IllegalBlockSizeException e) {
-            System.out.println(e);
-        }
+        List<DepartamentoDTO> departamentos = departamentoRepository.findByNombreProvincia(nombre);
 
         return new HashSet<>(departamentos);
     }
@@ -101,8 +88,6 @@ public class PaisController {
 
         try {
             for (DomicilioDTO domicilio : domicilios) {
-                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-                domicilio.getLocalidad().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getNombre()));
                 domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
             }
         } catch (IllegalBlockSizeException e) {

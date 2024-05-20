@@ -13,8 +13,13 @@ import java.util.Optional;
 @Repository
 public interface LocalidadRepository extends JpaRepository<Localidad, Long> {
 
-    @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.departamento.nombre = :nombre")
-    List<LocalidadDTO> findByNombreDepartamento(@Param("nombre") String nombre);
+    @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.departamento.nombre = :nombreDepartamento AND l.departamento.provincia.nombre = :nombreProvincia")
+    List<LocalidadDTO> findByNombreDepartamentoAndProvincia(@Param("nombreDepartamento") String nombreDepartamento, @Param("nombreProvincia") String nombreProvincia);
+
+    @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.departamento.provincia.nombre = :nombreProvincia")
+    List<LocalidadDTO> findByNombreProvincia(@Param("nombreProvincia") String nombreProvincia);
+    @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.departamento.nombre = :nombreDepartamento")
+    List<LocalidadDTO> findByNombreDepartamento(@Param("nombreDepartamento") String nombreDepartamento);
 
     @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l")
     List<LocalidadDTO> findAllDTO();

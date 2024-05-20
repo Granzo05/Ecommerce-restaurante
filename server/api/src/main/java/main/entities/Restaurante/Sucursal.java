@@ -19,6 +19,7 @@ import java.util.Set;
 @Entity
 @Builder
 @ToString
+@Getter
 @Table(name = "sucursales", schema = "buen_sabor")
 public class Sucursal {
     @Id
@@ -60,36 +61,4 @@ public class Sucursal {
     @JsonIgnoreProperties(value = "sucursal")
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
-
-    public long getId() {
-        return id;
-    }
-
-    public Domicilio getDomicilio() {
-        return domicilio;
-    }
-
-    public long getTelefono() {
-        return telefono;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public LocalTime getHorarioApertura() {
-        return horarioApertura;
-    }
-
-    public LocalTime getHorarioCierre() {
-        return horarioCierre;
-    }
-
-    public Set<LocalidadDelivery> getLocalidadesDisponiblesDelivery() {
-        return localidadesDisponiblesDelivery;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
 }

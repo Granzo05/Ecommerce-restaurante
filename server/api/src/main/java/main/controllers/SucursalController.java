@@ -44,7 +44,6 @@ public class SucursalController {
     public Object loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         // Busco por email y clave encriptada, si se encuentra devuelvo el objeto
         SucursalDTO sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-        System.out.println(sucursal);
         // Utilizo la misma funcion tanto para empleados como para el sucursale
         if (sucursal == null) {
             return empleadoRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
@@ -62,12 +61,6 @@ public class SucursalController {
             DomicilioDTO domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
 
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-            // Desencriptar localidad
-            domicilio.getLocalidad().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getNombre()));
-            // Desencriptar departamento
-            domicilio.getLocalidad().getDepartamento().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getNombre()));
-            // Desencriptar provincia
-            domicilio.getLocalidad().getDepartamento().getProvincia().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getProvincia().getNombre()));
 
             sucursal.setDomicilio(domicilio);
         }
@@ -120,35 +113,24 @@ public class SucursalController {
             domicilio.setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
             domicilio.setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
             domicilio.setNumero(sucursalDetails.getDomicilio().getNumero());
-            domicilio.setSucursal(sucursalDetails);
             domicilio.setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
-
-            domicilio.setNumero(domicilio.getNumero());
             domicilio.setSucursal(sucursalDetails);
-            domicilio.setLocalidad(domicilio.getLocalidad());
 
             sucursalDetails.setDomicilio(domicilio);
-
+            
             sucursalDetails.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
 
             sucursalDetails.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
             sucursalDetails.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
             sucursalDetails.setPrivilegios("negocio");
 
-            Set<LocalidadDelivery> localidades = new HashSet<>();
-
-            for (LocalidadDelivery localidadDelivery : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
-                LocalidadDelivery newLocalidad = new LocalidadDelivery();
-                newLocalidad.setSucursal(sucursalDetails);
-                newLocalidad.setLocalidad(localidadDelivery.getLocalidad());
-                localidades.add(newLocalidad);
-            }
-
-            sucursalDetails.setLocalidadesDisponiblesDelivery(localidades);
-
-            Empresa empresa = empresaRepository.findById(2l).get();
+            Empresa empresa = empresaRepository.findById(1l).get();
 
             sucursalDetails.setEmpresa(empresa);
+
+            for (LocalidadDelivery localidad: sucursalDetails.getLocalidadesDisponiblesDelivery()) {
+                localidad.setSucursal(sucursalDetails);
+            }
 
             sucursalRepository.save(sucursalDetails);
 
@@ -290,10 +272,6 @@ public class SucursalController {
                         domicilioDb.getLocalidad().getDepartamento().setProvincia(provincia);
                         localidad.getDepartamento().setProvincia(provincia);
 
-                        System.out.println(domicilioDb.getLocalidad().getNombre());
-                        System.out.println(domicilioDb.getLocalidad().getDepartamento().getNombre());
-                        System.out.println(domicilioDb.getLocalidad().getDepartamento().getProvincia().getNombre());
-
                         domicilioDb.setLocalidad(localidad);
                     }
                 }
@@ -386,27 +364,8 @@ public class SucursalController {
     private Set<Domicilio> desencriptarDomicilio(Set<Domicilio> domicilios) throws Exception {
         for (Domicilio domicilio : domicilios) {
             try {
-                // Desencriptar la calle solo si no ha sido desencriptada previamente
                 if (esNecesarioEncriptar(domicilio.getCalle())) {
                     domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-                }
-
-                // Desencriptar la localidad solo si no ha sido desencriptada previamente
-                Localidad localidad = domicilio.getLocalidad();
-                if (esNecesarioEncriptar(localidad.getNombre())) {
-                    localidad.setNombre(Encrypt.desencriptarString(localidad.getNombre()));
-                }
-
-                // Desencriptar el departamento solo si no ha sido desencriptado previamente
-                Departamento departamento = localidad.getDepartamento();
-                if (esNecesarioEncriptar(departamento.getNombre())) {
-                    departamento.setNombre(Encrypt.desencriptarString(departamento.getNombre()));
-                }
-
-                // Desencriptar la provincia solo si no ha sido desencriptada previamente
-                Provincia provincia = departamento.getProvincia();
-                if (esNecesarioEncriptar(provincia.getNombre())) {
-                    provincia.setNombre(Encrypt.desencriptarString(provincia.getNombre()));
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println(e);
@@ -421,12 +380,6 @@ public class SucursalController {
             try {
                 // Desencriptar calle
                 domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-                // Desencriptar localidad
-                domicilio.getLocalidad().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getNombre()));
-                // Desencriptar departamento
-                domicilio.getLocalidad().getDepartamento().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getNombre()));
-                // Desencriptar provincia
-                domicilio.getLocalidad().getDepartamento().getProvincia().setNombre(Encrypt.desencriptarString(domicilio.getLocalidad().getDepartamento().getProvincia().getNombre()));
             } catch (IllegalArgumentException e) {
                 System.out.println(e);
             }
@@ -438,24 +391,6 @@ public class SucursalController {
         try {
             // Encriptar la calle del domicilio
             domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
-
-            // Encriptar los nombres de la localidad, el departamento y la provincia
-            Localidad localidad = domicilio.getLocalidad();
-
-            if (esNecesarioEncriptar(localidad.getNombre())) {
-                localidad.setNombre(Encrypt.encriptarString(localidad.getNombre()));
-            }
-
-            if (esNecesarioEncriptar(localidad.getDepartamento().getNombre())) {
-                localidad.getDepartamento().setNombre(Encrypt.encriptarString(localidad.getDepartamento().getNombre()));
-            }
-
-            if (esNecesarioEncriptar(localidad.getDepartamento().getProvincia().getNombre())) {
-                localidad.getDepartamento().getProvincia().setNombre(Encrypt.encriptarString(localidad.getDepartamento().getProvincia().getNombre()));
-            }
-
-            // Asignar la localidad encriptada de vuelta al domicilio
-            domicilio.setLocalidad(localidad);
 
             // Asignar el objeto persona al domicilio según su tipo
             if (persona instanceof Empleado) {

@@ -2,24 +2,26 @@ import { Sucursal } from '../types/Restaurante/Sucursal';
 import { URL_API } from '../utils/global_variables/const';
 
 export const SucursalService = {
-    createRestaurant: async (sucursal: Sucursal) => {
-        // Creamos el restaurante en la db
-        await fetch(URL_API + 'sucursal/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(sucursal)
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-                return await response.text()
+    createRestaurant: async (sucursal: Sucursal): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'sucursal/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(sucursal)
             })
-            .catch(error => {
-                console.error('Error:', error)
-            })
+
+            if (!response.ok) {
+                throw new Error('Usuario no encontrado');
+            }
+
+            return response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw new Error('Credenciales inválidas');
+        }
     },
 
     getSucursal: async (email: string, contraseña: string): Promise<string> => {
@@ -30,13 +32,13 @@ export const SucursalService = {
                     'Content-Type': 'application/json'
                 }
             });
-    
+
             if (!response.ok) {
                 throw new Error('Usuario no encontrado');
             }
-    
+
             const data = await response.json();
-    
+
             if (data.id === null) {
                 throw new Error('Credenciales inválidas');
             } else {
@@ -46,9 +48,9 @@ export const SucursalService = {
                     telefono: data.telefono,
                     privilegios: data.privilegios
                 }
-    
+
                 localStorage.setItem('usuario', JSON.stringify(restaurante));
-    
+
                 return 'Sesión iniciada correctamente';
             }
         } catch (error) {
@@ -56,8 +58,8 @@ export const SucursalService = {
             throw new Error('Credenciales inválidas');
         }
     },
-    
-    
+
+
 
     getSucursales: async (): Promise<Sucursal[]> => {
         try {

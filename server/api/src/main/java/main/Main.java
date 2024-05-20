@@ -59,6 +59,7 @@ public class Main {
     @Autowired(required = true)
     private EmpresaRepository empresaRepository;
     private final String RUTACSV = "E://Facultad//2do Año//4to Semestre//Proyecto Final//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
+    private final String RUTACSV2 = "D://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
     private final String SEPARACIONCSV = ";";
 
     @Bean
@@ -76,17 +77,24 @@ public class Main {
 
                     while ((line = br.readLine()) != null) {
                         String[] data = line.split(SEPARACIONCSV);
-                        String localidadNombre = Encrypt.encriptarString(data[0]);
-                        String departamentoNombre = Encrypt.encriptarString(data[1]);
-                        String provinciaNombre = Encrypt.encriptarString(data[2]);
-
-                        cargarDatos(localidadNombre, departamentoNombre, provinciaNombre, pais);
+                        cargarDatos(data[0], data[1], data[2], pais);
                     }
 
                     paisRepository.save(pais);
 
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    try (BufferedReader br = new BufferedReader(new FileReader(RUTACSV2))) {
+                        Pais pais = crearPais("Argentina");
+                        String line;
+
+                        while ((line = br.readLine()) != null) {
+                            String[] data = line.split(SEPARACIONCSV);
+                            cargarDatos(data[0], data[1], data[2], pais);
+                        }
+
+                        paisRepository.save(pais);
+
+                    }
                 }
             }
 

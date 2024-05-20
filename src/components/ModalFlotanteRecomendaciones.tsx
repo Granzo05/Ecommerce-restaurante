@@ -14,7 +14,7 @@ import '../styles/modals.css'
 import SearchIcon from '@mui/icons-material/Search';
 import '../styles/inputLabel.css'
 
-const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelectProduct: (product: string) => void, elementoBuscado: string, datoNecesario: string }> = ({ onCloseModal, onSelectProduct, elementoBuscado, datoNecesario }) => {
+const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelectProduct: (product: string) => void, elementoBuscado: string, inputDepartamento: string, inputProvincia: string }> = ({ onCloseModal, onSelectProduct, elementoBuscado, inputDepartamento, inputProvincia }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -52,8 +52,8 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         .catch(error => {
           console.error('Error:', error);
         });
-    } else if (elementoBuscado === 'DEPARTAMENTOS' && datoNecesario.length > 1) {
-      DepartamentoService.getDepartamentosByNombreProvincia(datoNecesario)
+    } else if (elementoBuscado === 'DEPARTAMENTOS' && inputProvincia.length > 1) {
+      DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
         .then(async departamentos => {
           setRecomendaciones(departamentos);
           setRecomendacionesFiltradas(departamentos);
@@ -61,8 +61,8 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         .catch(error => {
           console.error('Error:', error);
         })
-    } else if (elementoBuscado === 'LOCALIDADES' && datoNecesario.length > 1) {
-      LocalidadService.getLocalidadesByNombreDepartamento(datoNecesario)
+    } else if (elementoBuscado === 'LOCALIDADES' && inputProvincia.length > 1 && inputDepartamento.length > 1) {
+      LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(inputDepartamento, inputProvincia)
         .then(async localidades => {
           setRecomendaciones(localidades);
           setRecomendacionesFiltradas(localidades);

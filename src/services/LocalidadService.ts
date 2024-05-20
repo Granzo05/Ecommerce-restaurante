@@ -23,26 +23,6 @@ export const LocalidadService = {
         }
     },
 
-    getLocalidadesByNombreEqual: async (nombre: string): Promise<Localidad[] | null> => {
-        try {
-            const response = await fetch(URL_API + `localidades/${nombre}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
-            }
-
-            return await response.json();
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
-
     getLocalidadesDeliveryByIdSucursal: async (id: number): Promise<LocalidadDelivery[] | []> => {
         try {
             const response = await fetch(URL_API + `localidades/delivery/sucursal/${id}`, {
@@ -65,7 +45,7 @@ export const LocalidadService = {
 
     getLocalidadesByNombreDepartamento: async (nombreDepartamento: string): Promise<Localidad[] | []> => {
         try {
-            const response = await fetch(URL_API + `localidades/${nombreDepartamento}`, {
+            const response = await fetch(URL_API + `localidades/departamento/${nombreDepartamento}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -83,9 +63,9 @@ export const LocalidadService = {
         }
     },
 
-    getLocalidadByNombreAndProvinciaId: async (nombre: string, provinciaId: number): Promise<Localidad[] | null> => {
+    getLocalidadesByNombreDepartamentoAndProvincia: async (nombreDepartamento: string, nombreProvincia: string): Promise<Localidad[] | []> => {
         try {
-            const response = await fetch(URL_API + `localidades/${nombre}/${provinciaId}`, {
+            const response = await fetch(URL_API + `localidades/${nombreDepartamento}/${nombreProvincia}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,4 +82,25 @@ export const LocalidadService = {
             throw error;
         }
     },
+
+    getLocalidadesByNombreProvincia: async (nombreProvincia: string): Promise<Localidad[] | []> => {
+        try {
+            const response = await fetch(URL_API + `localidades/provincia/${nombreProvincia}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
 }
