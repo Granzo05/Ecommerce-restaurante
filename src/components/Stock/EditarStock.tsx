@@ -5,6 +5,7 @@ import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
 import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 import { toast, Toaster } from 'sonner';
 import { convertirStringAEnumMedida } from '../../utils/global_variables/functions';
+import '../../styles/modalFlotante.css'
 
 interface EditarStockProps {
   stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
@@ -95,6 +96,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <input type="number" required={true} value={cantidadActual | 0} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
         <span>Cantidad actual del ingrediente</span>
       </div><br />
+      <div className="inputBox">
       <select value={medida?.toString()} onChange={(e) => { setMedida(convertirStringAEnumMedida(e.target.value)) }}>
         <option>Seleccionar medida ingrediente</option>
         <option value="KILOGRAMOS">Kilogramos</option>
@@ -103,10 +105,12 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <option value="CENTIMETROS_CUBICOS">Centimetros cúbicos</option>
         <option value="PAQUETES">Paquetes</option>
         <option value="UNIDADES">Unidades</option>
-      </select><br /><br />
+      </select>
+      </div>
+      <br /><br />
       <div className="inputBox">
         <input type="text" required={true} value={costo | 0} onChange={(e) => { setCosto(parseFloat(e.target.value)) }} />
-        <span>Costo del ingrediente por unidad de medida</span>
+        <span>Costo del ingrediente por unidad de medida ($)</span>
       </div><br />
       <button type="button" onClick={editarStock}>Editar stock</button>
     </div>
