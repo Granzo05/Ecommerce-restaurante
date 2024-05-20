@@ -13,79 +13,100 @@
 [x] Pagina de pedidos cliente
 [x] Mostrar tiempo
 [x] Aceptar entrega del menu
-[] Avisar que el menu está en traslado junto con el envio de la factura
-[] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
-[] Precio sugerido segun ingredientes y los costos
+
 [x] Cifrar domicilio
 [x] Limpiar carrito después de una compra
 [x] Mejorar la toma de privilegios para no estar haciendo mil llamadas a la db
 [x] Arreglar  privilegios en caso de tener el mismo correo tanto en restaurante como en cliente (Puedo ser empleado y trabajador queriendo encargar comida)
-[] Crear los DTOS para enviar los datos necesarios desde la api y no todos
-[x] Solicitar localidad, provincia al pedir domicilio
-[] Boton en pedidos del cliente para poder repetir un pedido anterior
-[] Descontar stock al comprar
-[x] Probar envio de correos
-[x] Probar envio de la factura como pdf al correo
-[] Cancelacion de pedido
-[] Mercadopago
-[x] Carga de provincias y localidades de argentina
-[] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
-[x] Opcion para seleccionar que localidades abarcaria el local, para asi cargar la db con los datos de esa provincia y no de todo el pais
-[] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
-[] Crear modal para mostrar opciones extra al interactuar con las opciones
+[x] Crear los DTOS para enviar los datos necesarios desde la api y no todos
 [x] Probar el plugin Toaster Sonner para los mensajes en pantalla buenardos
 [x] Input con lista de posibles resultados debajo
+[x] Solicitar localidad, provincia al pedir domicilio
+[x] Probar envio de correos
+[x] Probar envio de la factura como pdf al correo
+[x] Carga de provincias y localidades de argentina
+[x] Opcion para seleccionar que localidades abarcaria el local, para asi cargar la db con los datos de esa provincia y no de todo el pais
+[x] Cambio de select a input con resultados
+[x] Validaciones echas
+[] Boton en pedidos del cliente para poder repetir un pedido anterior
+[] Descontar stock al comprar
+[] Cancelacion de pedido
+[] Mercadopago
+[] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
+[] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
+[] Crear modal para mostrar opciones extra al interactuar con las opciones
 [] Ver tema del auth para privilegios y esas cosas
 [] Acomodar mensajes de los toast que se devuelven del back, ej base loginRestaurante.tsx
-[] Validaciones
 [] Mostrar receta de cada menu
-[] Cambio de select a input con resultados
 [] Agregar como medidas paquetes x3,x6,x10,x12 unidades
-
+[] Avisar que el menu está en traslado junto con el envio de la factura
+[] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
+[] Precio sugerido segun ingredientes y los costos
 
     Pruebas
-[x] Carga sucursal
-[x] Actualizacion sucursal
-[x] Eliminacion sucursal
+[] Carga sucursal
+[] Actualizacion sucursal
+[] Eliminacion sucursal
+[] Activacion sucursal
+[] Probar valicación
 
-[x] Carga empleado
-[x] Actualizacion empleado
-[x] Eliminacion empleado
+[] Carga empleado
+[] Actualizacion empleado
+[] Eliminacion empleado
+[] Activacion empleado
+[] Probar valicación
 
-[x] Carga cliente
+[] Carga cliente
 [] Actualizacion cliente
 [] Eliminacion cliente
+[] Activacion articuloMenu
+[] Probar valicación
 
-[x] Muestra articuloMenu
+[] Muestra articuloMenu
 [x] Carga articuloMenu
 [x] Actualizacion articuloMenu
 [x] Eliminacion articuloMenu
+[] Activacion articuloMenu
+[] Probar valicación
 
+[] Muestra articuloVenta
 [x] Carga articuloVenta
 [x] Actualizacion articuloVenta
 [x] Eliminacion articuloVenta
+[] Activacion articuloVenta
+[] Probar valicación
 
-[x] Carga stockIngrediente
-[x] Actualizacion stockIngrediente
-[x] Eliminacion stockIngrediente
+[] Carga stockIngrediente
+[] Actualizacion stockIngrediente
+[] Eliminacion stockIngrediente
+[] Activacion stockIngrediente
+[] Probar valicación
 
-[x] Carga stockArticulo
-[x] Actualizacion stockArticulo
-[x] Eliminacion stockArticulo
+[] Carga stockArticulo
+[] Actualizacion stockArticulo
+[] Eliminacion stockArticulo
+[] Activacion stockArticulo
+[] Probar valicación
 
 [] Carga pedido stock
 [] Actualizacion pedido stock
 [] Eliminacion pedido stock
+[] Activacion pedido stock
+[] Probar valicación
 
 [] Carga pedido
 [] Actualizacion pedido
 [] Eliminacion pedido
+[] Activacion pedido
+[] Probar valicación
 
-[x] Carga ingredientes
-[x] Actualizacion ingredientes
-[x] Eliminacion ingredientes
+[] Carga ingredientes
+[] Actualizacion ingredientes
+[] Eliminacion ingredientes
+[] Activacion ingredientes
+[] Probar valicación
 
-[] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle, localidad, departamento, provincia), telefono)
+[] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle), telefono)
 
 Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

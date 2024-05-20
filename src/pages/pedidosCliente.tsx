@@ -69,9 +69,6 @@ const PedidosCliente = () => {
 
     return (
         <div className="opciones-pantallas">
-            {/* Esto mostraría los pedidos que recién se compran y están en preparación */}
-
-            {/* Esto mostraría todos los pedidos */}
             {pedidosEntregados.length > 0 || pedidosPendientes.length > 0 && (
                 <div id="pedidos-anteriores">
                     {pedidosPendientes.length > 0 && (
