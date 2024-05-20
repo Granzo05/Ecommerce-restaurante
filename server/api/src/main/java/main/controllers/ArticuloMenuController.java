@@ -54,13 +54,21 @@ public class ArticuloMenuController {
     public ResponseEntity<String> crearMenu(@RequestBody ArticuloMenu articuloMenu, @PathVariable("idSucursal") Long idSucursal) {
         Optional<ArticuloMenu> menuDB = articuloMenuRepository.findByName(articuloMenu.getNombre());
         if (menuDB.isEmpty()) {
+            Set<IngredienteMenu> ingredientes = new HashSet<>();
+
             for (IngredienteMenu ingredienteMenu : articuloMenu.getIngredientesMenu()) {
                 Ingrediente ingredienteDB = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get();
-                ingredienteMenu.setIngrediente(ingredienteDB);
-                ingredienteMenu.setCantidad(ingredienteMenu.getCantidad());
-                ingredienteMenu.setArticuloMenu(articuloMenu);
-                ingredienteMenu.setMedida(ingredienteMenu.getMedida());
+                IngredienteMenu ingredienteMenu1 = new IngredienteMenu();
+
+                ingredienteMenu1.setIngrediente(ingredienteDB);
+                ingredienteMenu1.setCantidad(ingredienteMenu.getCantidad());
+                ingredienteMenu1.setArticuloMenu(articuloMenu);
+                ingredienteMenu1.setMedida(ingredienteMenu.getMedida());
+
+                ingredientes.add(ingredienteMenu1);
             }
+            articuloMenu.getIngredientesMenu().clear();
+            articuloMenu.setIngredientesMenu(ingredientes);
 
             // Si la sucursal coincide con los privilegios del admin o de la empresa que agregue todas las sucursales al menu
             if (idSucursal == 0) {

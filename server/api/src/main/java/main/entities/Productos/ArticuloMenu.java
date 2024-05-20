@@ -29,7 +29,7 @@ public class ArticuloMenu extends Articulo {
     @Column(name = "descripcion")
     private String descripcion;
     @JsonIgnoreProperties(value = {"articuloMenu"})
-    @OneToMany(mappedBy = "articuloMenu")
+    @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
     @JsonIgnoreProperties(value = {"articuloMenu"})
     @OneToMany(mappedBy = "articuloMenu", fetch = FetchType.LAZY)
