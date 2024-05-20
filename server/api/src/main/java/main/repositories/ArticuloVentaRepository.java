@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface ArticuloVentaRepository extends JpaRepository<ArticuloVenta, Long> {
-    @Query("SELECT a FROM ArticuloMenu a WHERE a.nombre = :nombre")
+    @Query("SELECT a FROM ArticuloVenta a WHERE a.nombre = :nombre")
     Optional<ArticuloVenta> findByName(@Param("nombre") String nombre);
 
     @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(m.id, m.nombre,m.precioVenta, m.tipo, m.borrado) FROM ArticuloVenta m JOIN m.sucursales s WHERE s.id = :idSucursal")

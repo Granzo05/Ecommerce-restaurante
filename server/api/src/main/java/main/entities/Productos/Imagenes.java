@@ -11,6 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "imagenes", schema = "buen_sabor")
 public class Imagenes implements Serializable {

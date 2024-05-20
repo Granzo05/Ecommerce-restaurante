@@ -74,6 +74,7 @@ public class ArticuloVentaController {
     }
 
     @PostMapping("/articulo/imagenes")
+    @Transactional
     public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("nombreArticulo") String nombreArticulo) {
         HashSet<Imagenes> listaImagenes = new HashSet<>();
         // Buscamos el nombre de la foto
@@ -102,7 +103,8 @@ public class ArticuloVentaController {
             imagen.setFormato(file.getContentType());
 
             listaImagenes.add(imagen);
-
+            System.out.println(listaImagenes);
+            System.out.println(nombreArticulo);
             try {
                 for (Imagenes imagenProducto : listaImagenes) {
                     // Asignamos el articulo a la imagen
@@ -110,6 +112,7 @@ public class ArticuloVentaController {
                     if (articulo.isEmpty()) {
                         return new ResponseEntity<>("Articulo vacio", HttpStatus.NOT_FOUND);
                     }
+                    articulo.get().setImagenes(listaImagenes);
                     imagenProducto.setArticuloVenta(articulo.get());
 
                     imagenesRepository.save(imagen);
