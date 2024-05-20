@@ -182,13 +182,24 @@ const Stocks = () => {
                                     <td>{stock.cantidadMaxima}</td>
                                     <td>{stock.precioCompra}</td>
                                     <td>{"Aca la fecha"}</td>
-                                    <td>
-                                        <div className="btns-acciones-stock">
+                                    {stock.borrado === 'NO' ? (
+                                        <td>
+                                            <div className="btns-acciones-stock">
+                                                <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
 
-                                            <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
-                                            <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'ingrediente')}>ELIMINAR</button>
-                                        </div>
-                                    </td>
+                                                <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'ingrediente')}>ELIMINAR</button>
+
+                                            </div>
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <div className="btns-acciones-stock">
+                                                <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
+
+                                                <button className="btn-accion-2" onClick={() => handleActivarStock(stock, 'ingrediente')}>ACTIVAR</button>
+                                            </div>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                             {stockArticulos.map(stock => (
