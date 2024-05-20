@@ -5,7 +5,6 @@ import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
 import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 import { toast, Toaster } from 'sonner';
 import { convertirStringAEnumMedida } from '../../utils/global_variables/functions';
-import '../../styles/modals.css'
 
 interface EditarStockProps {
   stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;

@@ -5,7 +5,6 @@ import { StockArticuloVentaService } from '../../services/StockArticulosService'
 import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
 import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 import { toast, Toaster } from 'sonner';
-import '../../styles/modals.css'
 
 interface EliminarStockProps {
   stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
