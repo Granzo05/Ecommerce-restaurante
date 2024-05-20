@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Ingredientes.IngredienteMenuDTO;
 import main.entities.Productos.*;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
@@ -184,7 +185,7 @@ public class ArticuloMenuController {
 
     @Transactional
     @PutMapping("/menu/update/{idSucursal}")
-    public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenu articuloMenuDetail, @PathVariable("idSucursal") Long id) {
+    public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenuDTO articuloMenuDetail, @PathVariable("idSucursal") Long id) {
         Optional<ArticuloMenu> menuEncontrado = articuloMenuRepository.findByIdMenuAndIdSucursal(articuloMenuDetail.getId(), id);
 
         if (menuEncontrado.isPresent() && menuEncontrado.get().getBorrado().equals(articuloMenuDetail.getBorrado())) {
@@ -194,13 +195,16 @@ public class ArticuloMenuController {
 
             articuloMenu.setPrecioVenta(articuloMenuDetail.getPrecioVenta());
 
-            for (IngredienteMenu ingredienteMenu : articuloMenuDetail.getIngredientesMenu()) {
+            for (IngredienteMenuDTO ingredienteMenuDTO : articuloMenuDetail.getIngredientesMenu()) {
+                IngredienteMenu ingredienteMenu = new IngredienteMenu();
                 ingredienteMenu.setArticuloMenu(articuloMenu);
+                ingredienteMenu.setMedida(ingredienteMenu.getMedida());
+                ingredienteMenu.setCantidad(ingredienteMenuDTO.getCantidad());
+                ingredienteMenu.setIngrediente(ingredienteRepository.findByName(ingredienteMenuDTO.getIngredienteNombre()).get());
 
-                ingredienteMenu.setIngrediente(ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get());
+                articuloMenu.getIngredientesMenu().add(ingredienteMenu);
             }
 
-            articuloMenu.setIngredientesMenu(articuloMenuDetail.getIngredientesMenu());
             articuloMenu.setTiempoCoccion(articuloMenuDetail.getTiempoCoccion());
             articuloMenu.setDescripcion(articuloMenuDetail.getDescripcion());
             articuloMenu.setNombre(articuloMenuDetail.getNombre());

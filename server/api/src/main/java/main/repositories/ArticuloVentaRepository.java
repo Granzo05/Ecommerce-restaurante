@@ -14,14 +14,14 @@ public interface ArticuloVentaRepository extends JpaRepository<ArticuloVenta, Lo
     @Query("SELECT a FROM ArticuloVenta a WHERE a.nombre = :nombre")
     Optional<ArticuloVenta> findByName(@Param("nombre") String nombre);
 
-    @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(m.id, m.nombre,m.precioVenta, m.tipo, m.borrado) FROM ArticuloVenta m JOIN m.sucursales s WHERE s.id = :idSucursal")
+    @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(a.id, a.nombre,a.precioVenta, a.tipo, a.borrado, a.cantidadMedida, a.medida) FROM ArticuloVenta a JOIN a.sucursales s WHERE s.id = :idSucursal ORDER BY a.borrado DESC")
     List<ArticuloVentaDTO> findAllBySucursal( @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(m.id, m.nombre,m.precioVenta, m.tipo, m.borrado) FROM ArticuloVenta m JOIN m.sucursales s WHERE m.id = :idMenu AND s.id = :idSucursal")
+    @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(a.id, a.nombre,a.precioVenta, a.tipo, a.borrado, a.cantidadMedida, a.medida) FROM ArticuloVenta a JOIN a.sucursales s WHERE a.id = :idMenu AND s.id = :idSucursal")
     Optional<ArticuloVentaDTO> findByIdArticuloAndIdSucursalDTO(@Param("idMenu") Long idMenu, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(m.id, m.nombre,m.precioVenta, m.tipo, m.borrado) FROM ArticuloVenta m JOIN m.sucursales s WHERE m.id = :idMenu AND s.id = :idSucursal")
+    @Query("SELECT a FROM ArticuloVenta a JOIN a.sucursales s WHERE a.id = :idMenu AND s.id = :idSucursal")
     Optional<ArticuloVenta> findByIdArticuloAndIdSucursal(@Param("idMenu") Long idMenu, @Param("idSucursal") Long idSucursal);
-    @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(m.id, m.nombre,m.precioVenta, m.tipo, m.borrado) FROM ArticuloVenta m JOIN m.sucursales s WHERE m.tipo = :tipo AND s.id = :idSucursal")
+    @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(a.id, a.nombre,a.precioVenta, a.tipo, a.borrado, a.cantidadMedida, a.medida) FROM ArticuloVenta a JOIN a.sucursales s WHERE a.tipo = :tipo AND s.id = :idSucursal ORDER BY a.borrado DESC")
     List<ArticuloVentaDTO> findByTipoAndIdSucursal(EnumTipoArticuloVenta tipo,@Param("idSucursal") Long idSucursal);
 }

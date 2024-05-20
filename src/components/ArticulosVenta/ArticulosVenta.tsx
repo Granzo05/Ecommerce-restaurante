@@ -116,11 +116,6 @@ const ArticuloVentas = () => {
                                     <td>{articulo.cantidadMedida} {articulo.medida?.toString()}</td>
                                     <td>{articulo.precioVenta}</td>
 
-                                    <td>
-                                        <button onClick={() => handleEliminarArticuloVenta(articulo)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
-                                    </td>
-
                                     {articulo.borrado === 'NO' ? (
                                         <td>
                                             <button onClick={() => handleEliminarArticuloVenta(articulo)}>ELIMINAR</button>

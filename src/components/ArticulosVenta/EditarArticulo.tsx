@@ -21,7 +21,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const [tipo, setTipo] = useState<EnumTipoArticuloVenta | string>(articuloOriginal.tipo.toString());
   const [precioVenta, setPrecio] = useState(articuloOriginal.precioVenta);
   const [nombre, setNombre] = useState(articuloOriginal.nombre);
-  const [medida, setMedida] = useState<EnumMedida | string>(articuloOriginal.medida.toString());
+  const [medida, setMedida] = useState<EnumMedida | string>(articuloOriginal.medida?.toString());
   const [cantidad, setCantidad] = useState(articuloOriginal.cantidadMedida);
 
 

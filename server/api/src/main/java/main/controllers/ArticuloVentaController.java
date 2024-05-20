@@ -31,7 +31,6 @@ public class ArticuloVentaController {
         this.sucursalRepository = sucursalRepository;
     }
 
-    // Busca por id de articulo
     @GetMapping("/articulos/{idSucursal}")
     public Set<ArticuloVentaDTO> getArticulosDisponibles(@PathVariable("idSucursal") Long idSucursal) {
         List<ArticuloVentaDTO> articulos = articuloVentaRepository.findAllBySucursal(idSucursal);
@@ -161,7 +160,7 @@ public class ArticuloVentaController {
     }
 
     @PutMapping("/articulo/update/{idSucursal}")
-    public ResponseEntity<String> actualizarArticulo(@RequestBody ArticuloVenta articuloVentaDetail, @PathVariable("idSucursal") Long id) {
+    public ResponseEntity<String> actualizarArticulo(@RequestBody ArticuloVentaDTO articuloVentaDetail, @PathVariable("idSucursal") Long id) {
         Optional<ArticuloVenta> articuloEncontrado = articuloVentaRepository.findByIdArticuloAndIdSucursal(articuloVentaDetail.getId(), id);
 
         if (articuloEncontrado.isPresent() && articuloEncontrado.get().getBorrado().equals(articuloVentaDetail.getBorrado())) {
