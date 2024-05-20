@@ -106,7 +106,9 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     }
   };
 
-  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
+  const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
+  const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [elementosABuscar, setElementosABuscar] = useState<string>('');
   const [inputProvincia, setInputProvincia] = useState<string>('');
@@ -119,19 +121,33 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
 
   const handleAbrirRecomendaciones = (busqueda: string) => {
     setElementosABuscar(busqueda)
-    setModalBusqueda(true);
+    if (busqueda === 'PROVINCIAS') {
+      setModalBusquedaProvincia(true)
+      setInputProvincia(selectedOption);
+      setInputDepartamento('')
+      setInputLocalidad('')
+    } else if (busqueda === 'DEPARTAMENTOS') {
+      setModalBusquedaDepartamento(true)
+      setInputDepartamento(selectedOption);
+      setInputLocalidad('')
+    } else if (busqueda === 'LOCALIDADES') {
+      setModalBusquedaLocalidad(true)
+      setInputLocalidad(selectedOption);
+    }
   };
 
   const handleModalClose = () => {
-    setModalBusqueda(false)
     if (elementosABuscar === 'PROVINCIAS') {
+      setModalBusquedaProvincia(false)
       setInputProvincia(selectedOption);
       setInputDepartamento('')
       setInputLocalidad('')
     } else if (elementosABuscar === 'DEPARTAMENTOS') {
+      setModalBusquedaDepartamento(false)
       setInputDepartamento(selectedOption);
       setInputLocalidad('')
     } else if (elementosABuscar === 'LOCALIDADES') {
+      setModalBusquedaLocalidad(false)
       setInputLocalidad(selectedOption);
     }
   };
@@ -251,16 +267,16 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
             </div>
             <h2>Provincia</h2>
             <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
+            {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
             <br />
             <h2>Departamento</h2>
             <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
+            {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
 
             <br />
             <h2>Localidad</h2>
             <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
+            {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputDepartamento} />}
             <p onClick={() => quitarCampoDomicilio(index)}>X</p>
           </div>
         ))}
