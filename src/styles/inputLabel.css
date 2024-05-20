@@ -23,6 +23,7 @@
     border-radius: 4px;
     outline: none;
     color: black;
+    margin-bottom: 10px;
 }
 
 .inputBox input[type='date'] {
