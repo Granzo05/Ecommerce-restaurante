@@ -277,7 +277,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
     sucursal.borrado = 'NO';
     sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
-    console.log(sucursal)
+    
     toast.promise(SucursalService.updateRestaurant(sucursal), {
       loading: 'Actualizando la sucursal...',
       success: (message) => {

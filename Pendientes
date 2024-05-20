@@ -45,7 +45,7 @@
 
     Pruebas
 [x] Carga sucursal [x] Probar valicación
-[] Actualizacion sucursal [] Probar valicación
+[x] Actualizacion sucursal [x] Probar valicación
 [x] Eliminacion sucursal
 [x] Activacion sucursal 
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
