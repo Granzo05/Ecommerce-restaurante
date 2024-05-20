@@ -14,6 +14,7 @@
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.678); /* Fondo gris transparente */
   display: flex;
   justify-content: center;
@@ -23,9 +24,9 @@
 
 .modal-flotante-content {
   background-color: white;
-  width: 80%; /* Ajusta según sea necesario */
+  width: 90%; /* Ajusta según sea necesario */
   height: auto;
-  max-height: 850px;
+  max-height: 100%;
   border-radius: 8px;
   padding: 20px;
   position: relative;
@@ -36,25 +37,29 @@
 
 .modal-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0px;
+  right: 0px;
   background: none;
   border: none;
   cursor: pointer;
   font-size: 1.5rem;
+  color: black;
+  padding: 5px;
 }
 
 .modal-info .inputBox{
   margin-bottom: 20px;
-  max-width: 400px;
-  width: 100vh;
+  width: 70vh;
 }
 
 .modal-flotante-content .inputBox{
-  max-width: 400px;
-  width: 100vh;
+  margin-bottom: 20px;
+  width: 70vh;
 }
+
 
 .modal-flotante-content h2{
   text-align: center;
+  margin-bottom: 20px;
 }
+
