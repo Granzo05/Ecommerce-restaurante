@@ -122,31 +122,3 @@ table tr:hover {
 .btn-agregar:focus {
     outline: none;
 }
-
-.modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.modal-header, .modal-footer {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.modal-header {
-    border-bottom: none;
-}
-
-.modal-title {
-    margin: 0;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-

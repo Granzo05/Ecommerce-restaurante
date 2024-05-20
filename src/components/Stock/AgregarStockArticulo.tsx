@@ -5,7 +5,7 @@ import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
-import '../../styles/modals.css'
+import '../../styles/modalFlotante.css'
 
 function AgregarStockArticulo() {
 
@@ -67,45 +67,53 @@ function AgregarStockArticulo() {
 
       <Toaster />
       <h2>Agregar artículo</h2>
-      <br />
+      <label>
       <div className="inputBox">
         <input type="text" required onChange={(e) => { setNombre(e.target.value) }} />
         <span>Nombre del articulo</span>
       </div>
-      <br />
+      </label>
+      <label>
       <div className="inputBox">
         <input type="number" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
         <span>Cantidad mínima del articulo</span>
       </div>
-      <br />
+      </label>
+      <label>
       <div className="inputBox">
         <input type="number" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
         <span>Cantidad máxima del articulo</span>
       </div>
-      <br />
+      </label>
+      <label>
       <div className="inputBox">
         <input type="number" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
         <span>Cantidad actual del articulo</span>
       </div>
-      <br />
+      </label>
+      <label>
       <div className="inputBox">
         <input type="number" required onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
         <span>Costo ($)</span>
       </div>
-      
+      </label>
+      <label>
+        <div className="inputBox">
+          <select
+            onChange={(e) => setMedida(e.target.value)}
+            defaultValue="" // Establece el valor por defecto
+          >
+            <option value="" disabled hidden>Seleccione la unidad de medida</option>
+            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+            <option value={EnumMedida.LITROS.toString()}>Litros</option>
+            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
+          </select>
+        </div>
+      </label>
       <br />
-      <label className='span-unidad'>Unidad de medida:</label>
-      <select
-        onChange={(e) => setMedida(e.target.value)}
-      >
-        <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-        <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-        <option value={EnumMedida.LITROS.toString()}>Litros</option>
-        <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-        <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-      </select>
-      <br />
-      <button type="button" onClick={agregarStock}>Agregar stock</button>
+      <button type="button" onClick={agregarStock}>Agregar</button>
     </div>
   )
 }

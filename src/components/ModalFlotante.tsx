@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import '../styles/modals.css'
+import '../styles/modalFlotante.css'
 
 interface ModalProps {
   isOpen: boolean;
@@ -16,7 +16,7 @@ const ModalFlotante: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <div>
       {isOpen && (
-        <div className="modal-overlay" onClick={handleModalClose}>
+        <div className="modal-overlay">
           <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={handleModalClose}><CloseIcon/></button>
             {children}
