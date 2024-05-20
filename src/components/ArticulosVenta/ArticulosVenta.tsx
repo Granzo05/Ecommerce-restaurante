@@ -96,7 +96,7 @@ const ArticuloVentas = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>ArticuloVenta</h1>
+            <h1>- Articulos para venta -</h1>
             <button onClick={() => handleAgregarArticuloVenta()}> + Agregar articulo</button>
             {mostrarArticuloVenta && (
                 <div id="menus">

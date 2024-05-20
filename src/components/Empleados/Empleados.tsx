@@ -88,7 +88,7 @@ const Empleados = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>Empleados</h1>
+            <h1>- Empleados -</h1>
             <button onClick={() => handleAgregarEmpleado()}> + Agregar empleado</button>
 
             <ModalCrud isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>

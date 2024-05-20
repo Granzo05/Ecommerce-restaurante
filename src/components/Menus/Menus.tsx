@@ -96,7 +96,7 @@ const Menus = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>Menus</h1>
+            <h1>- Menus -</h1>
             <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
             {mostrarMenus && (
                 <div id="menus">

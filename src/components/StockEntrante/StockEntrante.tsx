@@ -69,7 +69,7 @@ const StocksEntrantes = () => {
     return (
         <div className="opciones-pantallas">
 
-            <h1>Stocks</h1>
+            <h1>- Stocks -</h1>
             <button onClick={() => handleAgregarStock()}> + Agregar stock entrante</button>
 
             <ModalCrud isOpen={showAgregarStockModal} onClose={handleModalClose}>

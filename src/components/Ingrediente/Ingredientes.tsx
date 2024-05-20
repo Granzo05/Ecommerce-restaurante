@@ -94,11 +94,11 @@ const Ingredientes = () => {
 
     return (
         <div className="opciones-pantallas">
-
+            <h1>- Ingredientes -</h1>
+            <button onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
             {mostrarIngredientes && (
                 <div id="stocks">
-                    <h1>Ingredientes</h1>
-                    <button onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
+
 
                     <table>
                         <thead>

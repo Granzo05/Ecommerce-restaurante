@@ -105,7 +105,8 @@ const PedidosEntrantes = () => {
 
         <div className="opciones-pantallas">
             <Toaster />
-            <h1>Pedidos entrantes</h1>
+            <h1>- Pedidos entrantes -</h1>
+            <hr />
             <div id="pedidos">
                 <table>
                     <thead>

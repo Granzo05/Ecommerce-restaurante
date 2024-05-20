@@ -36,7 +36,8 @@ const PedidosEntregados = () => {
     return (
 
         <div className="opciones-pantallas">
-            <h1>Pedidos entregados</h1>
+            <h1>- Pedidos entregados -</h1>
+            <hr />
             <div id="pedidos">
                 <table>
                     <thead>

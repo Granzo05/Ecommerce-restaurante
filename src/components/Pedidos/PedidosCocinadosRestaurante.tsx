@@ -52,7 +52,8 @@ const PedidosEntrantes = () => {
     return (
 
         <div className="opciones-pantallas">
-            <h1>Pedidos listos</h1>
+            <h1>- Pedidos listos -</h1>
+            <hr />
             <div id="pedidos">
                 <table>
                     <thead>
