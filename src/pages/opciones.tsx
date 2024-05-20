@@ -130,7 +130,7 @@ const Opciones = () => {
         <div className={`sidebar ${sidebarBg}`}>
             <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
                 <div className="title-header">
-                    <h3 onClick={() => window.location.href = ''} className='title'><img src="../src/assets/img/HatchfulExport-All/logo-simple.png" alt="Logo" className='logo-opciones' />EL BUEN SABOR</h3>
+                    <h3 onClick={() => window.location.href = 'http://localhost:5173/'} className='title'><img src="../src/assets/img/HatchfulExport-All/logo-simple.png" alt="Logo" className='logo-opciones' />EL BUEN SABOR</h3>
                     
                     <div className='icon-sidebar' onClick={toggleMenuVisibility}>
                         {sidebarIcon}
