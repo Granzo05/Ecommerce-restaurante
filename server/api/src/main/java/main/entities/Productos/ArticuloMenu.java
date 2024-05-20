@@ -29,12 +29,12 @@ public class ArticuloMenu extends Articulo {
     @Column(name = "descripcion")
     private String descripcion;
     @JsonIgnoreProperties(value = {"articuloMenu"})
-    @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articuloMenu")
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
     @JsonIgnoreProperties(value = {"articuloMenu"})
-    @OneToMany(mappedBy = "articuloMenu", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articuloMenu", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
     @JsonIgnoreProperties(value = {"articuloMenu"})
-    @ManyToMany(mappedBy = "articulosMenu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "articulosMenu", fetch = FetchType.LAZY)
     private Set<Sucursal> sucursales = new HashSet<>();
 }

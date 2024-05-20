@@ -27,12 +27,12 @@ public class ArticuloVenta extends Articulo {
     @Column(name = "cantidad_medida")
     private int cantidadMedida;
     @JsonIgnoreProperties(value = {"articuloVenta"})
-    @OneToOne(mappedBy = "articuloVenta")
+    @OneToOne(mappedBy = "articuloVenta", fetch = FetchType.LAZY)
     private StockArticuloVenta stock;
     @JsonIgnoreProperties(value = {"articuloVenta"})
-    @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
     @JsonIgnoreProperties(value = {"articulosVenta"})
-    @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY)
     private Set<Sucursal> sucursales = new HashSet<>();
 }
