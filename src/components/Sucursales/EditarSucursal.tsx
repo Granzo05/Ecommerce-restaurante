@@ -48,24 +48,47 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   const [idLocalidadesElegidas, setIdLocalidadesElegidas] = useState<Set<number>>(new Set<number>());
 
   useEffect(() => {
-    sucursalOriginal.localidadesDisponiblesDelivery.forEach(localidadDelivery => {
-      idDepartamentosElegidos.add(localidadDelivery.localidad?.departamento.id);
-      handleDepartamentosCheckboxChange(localidadDelivery.localidad?.departamento.id);
-
-      idLocalidadesElegidas.add(localidadDelivery.localidad?.id);
-      let localidad: Localidad = new Localidad();
-      localidad.nombre = localidadDelivery.localidad?.nombre;
-      localidad.departamento = localidadDelivery.localidad?.departamento;
-      localidad.id = localidadDelivery.localidad?.id;
-
-      localidadesMostrablesCheckbox.push(localidad);
-    });
-
-    buscarDepartamentos(sucursalOriginal.domicilio?.localidad?.departamento.provincia?.nombre);
+    buscarDepartamentos();
+    buscarLocalidadesDeptoyProvincia();
+    buscarLocalidadesProvincia();
   }, []);
 
-  function buscarDepartamentos(provincia: string) {
-    DepartamentoService.getDepartamentosByNombreProvincia(provincia)
+  const [localidadesCargadas, setLocalidadesCargadas] = useState(false);
+
+  useEffect(() => {
+    if (!localidadesCargadas && sucursalOriginal.localidadesDisponiblesDelivery.length > 0) {
+      const uniqueDepartamentos = new Set<number>();
+      const uniqueLocalidades = new Set<number>();
+      const nuevasLocalidades: Localidad[] = [];
+
+      sucursalOriginal.localidadesDisponiblesDelivery.forEach(localidadDelivery => {
+        const localidadId = localidadDelivery.localidad?.id;
+        const departamentoId = localidadDelivery.localidad?.departamento?.id;
+
+        if (localidadId && departamentoId) {
+          uniqueDepartamentos.add(departamentoId);
+          uniqueLocalidades.add(localidadId);
+
+          const localidad: Localidad = {
+            nombre: localidadDelivery.localidad?.nombre,
+            departamento: localidadDelivery.localidad?.departamento,
+            id: localidadId
+          };
+
+          nuevasLocalidades.push(localidad);
+        }
+      });
+
+      setIdDepartamentosElegidos(uniqueDepartamentos);
+      setIdLocalidadesElegidas(uniqueLocalidades);
+      setLocalidadesMostrables(nuevasLocalidades);
+      setLocalidadesCargadas(true);
+    }
+  }, [localidadesCargadas, sucursalOriginal.localidadesDisponiblesDelivery]);
+
+
+  function buscarDepartamentos() {
+    DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
       .then(async departamentos => {
         setDepartamentos(departamentos);
       })
@@ -74,8 +97,8 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       })
   }
 
-  function buscarLocalidades(departamento: string) {
-    LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(departamento, inputProvincia)
+  function buscarLocalidadesDeptoyProvincia() {
+    LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(inputDepartamento, inputProvincia)
       .then(async localidades => {
         setLocalidades(localidades);
       })
@@ -88,6 +111,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     LocalidadService.getLocalidadesByNombreProvincia(inputProvincia)
       .then(async localidades => {
         setLocalidadesProvincia(localidades);
+
       })
       .catch(error => {
         console.error('Error:', error);
@@ -118,28 +142,25 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   const handleModalClose = () => {
     if (elementosABuscar === 'PROVINCIAS') {
       setInputProvincia(selectedOption);
-      buscarDepartamentos(selectedOption)
-      setInputDepartamento('')
-      setInputLocalidad('')
-      setModalBusquedaProvincia(false)
+      buscarDepartamentos();
+      setInputDepartamento('');
+      setInputLocalidad('');
+      setModalBusquedaProvincia(false);
 
     } else if (elementosABuscar === 'DEPARTAMENTOS') {
       setInputDepartamento(selectedOption);
-      buscarLocalidades(selectedOption)
-      setModalBusquedaDepartamento(false)
+      buscarLocalidadesDeptoyProvincia();
+      setModalBusquedaDepartamento(false);
 
       setInputLocalidad('')
     } else if (elementosABuscar === 'LOCALIDADES') {
       setInputLocalidad(selectedOption);
-      setModalBusquedaLocalidad(false)
+      setModalBusquedaLocalidad(false);
 
     }
   };
 
   const handleDepartamentosCheckboxChange = async (departamentoId: number) => {
-    if (localidadesProvincia.length === 0) {
-      buscarLocalidadesProvincia();
-    }
     // Obtener una copia del conjunto de departamentos seleccionados
     const updatedSelectedDepartamentos = new Set<number>(idDepartamentosElegidos);
 
@@ -152,20 +173,19 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
     // Actualizar el conjunto de departamentos seleccionados
     setIdDepartamentosElegidos(updatedSelectedDepartamentos);
+    // Inicializar el array nuevasLocalidades
 
-    // Inicializa el array nuevasLocalidades
-    let nuevasLocalidades = [];
+    const nuevasLocalidades: Localidad[] = [];
 
-    for (const localidad of localidadesProvincia) {
-      // Verifica si el idDepartamento de la localidad está en updatedSelectedDepartamentos
-      if (updatedSelectedDepartamentos.has(localidad.departamento.id)) {
-        // Añade la localidad a nuevasLocalidades
-        nuevasLocalidades.push(localidad);
-      }
-    }
+    localidadesProvincia.forEach(localidad => {
+      updatedSelectedDepartamentos.forEach(idDepartamento => {
+        if (localidad.departamento.id === idDepartamento) nuevasLocalidades.push(localidad);
 
-    // Actualiza el estado con las nuevas localidades
-    setLocalidadesMostrables(nuevasLocalidades);
+      });
+    });
+
+    // Actualizar el estado con las nuevas localidades
+    if (nuevasLocalidades.length > 0) setLocalidadesMostrables(nuevasLocalidades);
   };
 
   const handleLocalidadesCheckboxChange = (localidadId: number) => {
@@ -181,9 +201,6 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   const handleCargarNegocio = async () => {
     if (!email) {
       toast.error("Por favor, es necesario el email");
-      return;
-    } else if (!contraseña) {
-      toast.error("Por favor, es necesaria la contraseña");
       return;
     } else if (!telefono) {
       toast.error("Por favor, es necesario el telefono");
@@ -213,12 +230,14 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
     let sucursal: Sucursal = new Sucursal();
 
+    sucursal.id = sucursalOriginal.id;
+
     const domicilio = new Domicilio();
     domicilio.calle = calle;
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
-    let localidad = localidades?.find(localidad => localidad.nombre === inputLocalidad);
 
+    let localidad = localidadesProvincia?.find(localidad => localidad.nombre === inputLocalidad);
     if (localidad) domicilio.localidad = localidad;
 
     sucursal.domicilio = domicilio;
@@ -244,10 +263,23 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       }
     });
 
-    sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
+    // Usar un bucle inverso para evitar problemas al modificar el array durante la iteración
+    for (let i = localidadesDelivery.length - 1; i >= 0; i--) {
+      const localidad = localidadesDelivery[i];
+      // Verificar si la localidad pertenece a algún departamento elegido
+      const guardarLocalidad = idDepartamentosElegidos.has(localidad.localidad.departamento.id);
 
-    toast.promise(SucursalService.createRestaurant(sucursal), {
-      loading: 'Guardando sucursal...',
+      // Si no pertenece a ningún departamento elegido, eliminar la localidad del array
+      if (!guardarLocalidad) {
+        localidadesDelivery.splice(i, 1);
+      }
+    }
+
+    sucursal.borrado = 'NO';
+    sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
+    console.log(sucursal)
+    toast.promise(SucursalService.updateRestaurant(sucursal), {
+      loading: 'Actualizando la sucursal...',
       success: (message) => {
         clearInputs();
         return message;
@@ -263,7 +295,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       <Toaster />
       <form>
         <div className="inputBox">
-          <input autoComplete='false' type="email" required={true} onChange={(e) => { setEmail(e.target.value) }} />
+          <input autoComplete='false' type="email" value={email} required={true} onChange={(e) => { setEmail(e.target.value) }} />
           <span>Correo electrónico</span>
         </div>
         <div className="inputBox">
@@ -271,27 +303,27 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
           <span>Contraseña</span>
         </div>
         <div className="inputBox">
-          <input type="phone" required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+          <input type="phone" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
           <span>Telefono</span>
         </div>
         <div className="inputBox">
-          <input type="time" required={true} onChange={(e) => { setHorarioApertura(e.target.value) }} />
+          <input type="time" required={true} value={horarioApertura} onChange={(e) => { setHorarioApertura(e.target.value) }} />
           <span>Horario de apertura</span>
         </div>
         <div className="inputBox">
-          <input type="time" required={true} onChange={(e) => { setHorarioCierre(e.target.value) }} />
+          <input type="time" required={true} value={horarioCierre} onChange={(e) => { setHorarioCierre(e.target.value) }} />
           <span>Horario de cierre</span>
         </div>
         <div className="inputBox">
-          <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
+          <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
           <span>Nombre de calle</span>
         </div>
         <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
+          <input type="number" required={true} value={numeroCalle} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
           <span>Número de domicilio</span>
         </div>
         <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+          <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
           <span>Código Postal</span>
         </div>
         <h2>Provincia</h2>
@@ -305,7 +337,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
         <br />
         <h2>Localidad</h2>
         <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-        {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputDepartamento} />}
+        {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
 
         <h3>Departamentos disponibles para delivery: </h3>
@@ -353,7 +385,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
             </tbody>
           </table>
         )}
-        <button type="button" onClick={handleCargarNegocio}>Registrarse</button>
+        <button type="button" onClick={handleCargarNegocio}>Editar sucursal</button>
       </form>
     </div>
   )

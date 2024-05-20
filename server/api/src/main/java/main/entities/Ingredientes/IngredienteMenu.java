@@ -3,6 +3,7 @@ package main.entities.Ingredientes;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.ArticuloMenu;
+import org.hibernate.annotations.Cascade;
 
 @Getter
 @Setter
@@ -22,9 +23,11 @@ public class IngredienteMenu {
     private EnumMedida medida;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ingrediente")
+    @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     private Ingrediente ingrediente;
     @ManyToOne
     @JoinColumn(name = "id_menu")
+    @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     private ArticuloMenu articuloMenu;
 
 }

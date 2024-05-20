@@ -34,7 +34,6 @@ const Sucursales = () => {
     const fetchSucursales = async () => {
         SucursalService.getSucursales()
             .then(data => {
-                console.log(data);
                 setSucursales(data);
             })
             .catch(error => {
@@ -80,7 +79,7 @@ const Sucursales = () => {
         setShowAgregarSucursalModal(false);
         setShowEditarSucursalModal(false);
         setShowEliminarSucursalModal(false);
-
+        setShowActivarSucursalModal(false);
         setMostrarSucursales(true);
 
         fetchSucursales();

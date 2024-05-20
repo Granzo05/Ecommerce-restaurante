@@ -281,7 +281,7 @@ function AgregarSucursal() {
         <br />
         <h2>Localidad</h2>
         <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-        {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputDepartamento} />}
+        {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
 
         <h3>Departamentos disponibles para delivery: </h3>
@@ -329,7 +329,7 @@ function AgregarSucursal() {
             </tbody>
           </table>
         )}
-        <button type="button" onClick={handleCargarNegocio}>Registrarse</button>
+        <button type="button" onClick={handleCargarNegocio}>Agregar sucursal</button>
       </form>
     </div>
   )

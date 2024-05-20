@@ -44,67 +44,67 @@
 [] Precio sugerido segun ingredientes y los costos
 
     Pruebas
-[] Carga sucursal
-[] Actualizacion sucursal
-[] Eliminacion sucursal
-[] Activacion sucursal
-[] Probar valicación
+[x] Carga sucursal [x] Probar valicación
+[] Actualizacion sucursal [] Probar valicación
+[x] Eliminacion sucursal
+[x] Activacion sucursal 
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga empleado
-[] Actualizacion empleado
+[] Carga empleado [] Probar valicación
+[] Actualizacion empleado [] Probar valicación
 [] Eliminacion empleado
 [] Activacion empleado
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga cliente
-[] Actualizacion cliente
+[] Carga cliente [] Probar valicación
+[] Actualizacion cliente [] Probar valicación
 [] Eliminacion cliente
 [] Activacion articuloMenu
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Muestra articuloMenu
-[x] Carga articuloMenu
-[x] Actualizacion articuloMenu
-[x] Eliminacion articuloMenu
+[] Carga articuloMenu [] Probar valicación
+[] Actualizacion articuloMenu [] Probar valicación
+[] Eliminacion articuloMenu
 [] Activacion articuloMenu
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Muestra articuloVenta
-[x] Carga articuloVenta
-[x] Actualizacion articuloVenta
-[x] Eliminacion articuloVenta
+[] Carga articuloVenta [] Probar valicación
+[] Actualizacion articuloVenta[] Probar valicación
+[] Eliminacion articuloVenta
 [] Activacion articuloVenta
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga stockIngrediente
-[] Actualizacion stockIngrediente
+[] Carga stockIngrediente [] Probar valicación
+[] Actualizacion stockIngrediente [] Probar valicación
 [] Eliminacion stockIngrediente
 [] Activacion stockIngrediente
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga stockArticulo
-[] Actualizacion stockArticulo
-[] Eliminacion stockArticulo
+[] Carga stockArticulo [] Probar valicación
+[] Actualizacion stockArticulo [] Probar valicación
+[] Eliminacion stockArticulo 
 [] Activacion stockArticulo
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga pedido stock
-[] Actualizacion pedido stock
+[] Carga pedido stock [] Probar valicación
+[] Actualizacion pedido stock [] Probar valicación
 [] Eliminacion pedido stock
 [] Activacion pedido stock
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga pedido
-[] Actualizacion pedido
+[] Carga pedido [] Probar valicación
+[] Actualizacion pedido [] Probar valicación
 [] Eliminacion pedido
 [] Activacion pedido
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga ingredientes
-[] Actualizacion ingredientes
+[] Carga ingredientes [] Probar valicación
+[] Actualizacion ingredientes [] Probar valicación
 [] Eliminacion ingredientes
 [] Activacion ingredientes
-[] Probar valicación
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle), telefono)
 

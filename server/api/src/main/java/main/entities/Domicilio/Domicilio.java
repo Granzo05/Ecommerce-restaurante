@@ -6,6 +6,7 @@ import lombok.*;
 import main.entities.Cliente.Cliente;
 import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Sucursal;
+import org.hibernate.annotations.Cascade;
 
 @Setter
 @Getter
@@ -24,6 +25,7 @@ public class Domicilio {
     private int numero;
     @Column(name = "codigo_postal")
     private int codigoPostal;
+    @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_localidad")
     private Localidad localidad;

@@ -134,9 +134,9 @@ public class SucursalController {
 
             sucursalRepository.save(sucursalDetails);
 
-            return ResponseEntity.ok("Ok");
+            return ResponseEntity.ok("Carga con éxito");
         } else {
-            return ResponseEntity.ofNullable("Mal");
+            return ResponseEntity.ofNullable("Hay una sucursal cargada con ese correo");
         }
     }
 
@@ -153,7 +153,7 @@ public class SucursalController {
             empleadoDetails.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
 
             for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
-                encriptarDomicilio(domicilio, empleadoDetails);
+                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
             }
 
             empleadoDetails.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
@@ -192,7 +192,11 @@ public class SucursalController {
             empleadoDTO.setFechaNacimiento(empleado.getFechaNacimiento());
 
             Set<DomicilioDTO> domicilios = new HashSet<>(domicilioRepository.findByIdEmpleadoDTO(empleado.getId()));
-            empleadoDTO.setDomicilios(desencriptarDomiciliosDTO(domicilios));
+
+            for (DomicilioDTO domicilioDTO: domicilios) {
+                domicilioDTO.setCalle(Encrypt.desencriptarString(domicilioDTO.getCalle()));
+            }
+            empleadoDTO.setDomicilios(domicilios);
             empleadoDTO.setSucursal(sucursalRepository.findById(empleado.getId()).get());
 
             empleadosDTO.add(empleadoDTO);
@@ -207,7 +211,7 @@ public class SucursalController {
     public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
         Optional<Empleado> empleadoOptional = empleadoRepository.findById(empleadoDetails.getId());
 
-        if (empleadoOptional.isPresent()) {
+        if (empleadoOptional.isPresent() && empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
             // Comparo cada uno de los datos a ver si ha cambiado, ya que clienteDetails viene de un DTO y no contiene los mismos datos del empleadoDB entonces hay valores nulos
             Empleado empleadoDb = empleadoOptional.get();
 
@@ -246,15 +250,13 @@ public class SucursalController {
 
             Set<Domicilio> domiciliosEmpleadoDb = new HashSet<>(domicilioRepository.findByIdEmpleado(empleadoDb.getId()));
 
-            // Los desencripto
-            desencriptarDomicilio(domiciliosEmpleadoDb);
             // Iterar sobre los domicilios originales
             for (Domicilio domicilioDb : domiciliosEmpleadoDb) {
                 // Buscar el domicilio correspondiente en los nuevos datos
                 for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
                     // Si se encuentra el domicilio correspondiente
                     // Comparar los campos para ver si han cambiado
-                    if (!domicilioDb.getCalle().equals(domicilio.getCalle())
+                    if (!Encrypt.desencriptarString(domicilioDb.getCalle()).equals(domicilio.getCalle())
                             || domicilioDb.getNumero() != domicilio.getNumero()
                             || domicilioDb.getCodigoPostal() != domicilio.getCodigoPostal()
                             || !domicilioDb.getLocalidad().getId().equals(domicilio.getLocalidad().getId())) {
@@ -281,139 +283,69 @@ public class SucursalController {
 
 
             return ResponseEntity.ok("El empleado se modificó correctamente");
-        } else {
-            return ResponseEntity.ok("El empleado no se encontró");
-        }
-    }
+        } else if(empleadoOptional.isPresent() && !empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
+            empleadoOptional.get().setBorrado(empleadoDetails.getBorrado());
 
-    @PutMapping("/empleado/{cuil}/delete")
-    public ResponseEntity<String> deleteEmpleado(@PathVariable("cuil") String cuil) throws Exception {
-        Optional<Empleado> empleado = empleadoRepository.findByCuil(Encrypt.encriptarString(cuil));
+            empleadoRepository.save(empleadoOptional.get());
 
-        if (empleado.isPresent()) {
-            empleado.get().setBorrado("SI");
-            empleadoRepository.save(empleado.get());
-            return ResponseEntity.ok("El empleado se eliminó correctamente");
-        } else {
-            return ResponseEntity.ok("El empleado no se encontró");
+            return ResponseEntity.ok("El empleado se modificó correctamente");
         }
+
+        return ResponseEntity.ok("El empleado no se encontró");
+
     }
 
     @Transactional
     @PutMapping("/sucursal/update")
     public ResponseEntity<String> updateSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
-        Sucursal sucursal = sucursalRepository.findByIdNotBorrado(sucursalDetails.getId());
+        Optional<Sucursal> sucursalDb = sucursalRepository.findById(sucursalDetails.getId());
+        System.out.println(sucursalDetails.getId());
 
-        // Si la sucursal existe y no se ha borrado o activado se actualizan los datos
-        if (sucursal != null && sucursal.getBorrado().equals(sucursalDetails.getBorrado())) {
-            // Update domicilio
-            sucursal.getDomicilio().setCalle(sucursalDetails.getDomicilio().getCalle());
-            sucursal.getDomicilio().setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
-            sucursal.getDomicilio().setNumero(sucursalDetails.getDomicilio().getNumero());
-            sucursal.getDomicilio().setSucursal(sucursalDetails);
-            sucursal.getDomicilio().setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
+        if (sucursalDb.isPresent()) {
+            Sucursal sucursal = sucursalDb.get();
 
-            // Update contraseña
-            if (sucursalDetails.getContraseña().length() > 1)
-                sucursal.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
+            if (sucursal.getBorrado().equals(sucursalDetails.getBorrado())) {
+                // Actualizar domicilio
+                sucursal.getDomicilio().setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
+                sucursal.getDomicilio().setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
+                sucursal.getDomicilio().setNumero(sucursalDetails.getDomicilio().getNumero());
+                sucursal.getDomicilio().setSucursal(sucursalDetails);
+                sucursal.getDomicilio().setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
 
-            // Update horarios
-            sucursal.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
-            sucursal.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
-
-            // Borramos todas las localidades
-            List<LocalidadDelivery> localidades = localidadDeliveryRepository.findByIdSucursal(sucursal.getId());
-            localidadDeliveryRepository.deleteAll(localidades);
-
-            // Limpiar la lista de localidades existentes
-            localidades.clear();
-
-            // Agregar las nuevas localidades proporcionadas en sucursalDetails
-            for (LocalidadDelivery localidadDelivery : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
-                localidadDelivery.setSucursal(sucursal);
-                localidades.add(localidadDelivery);
-            }
-
-            sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidades));
-
-            sucursal.setEmail(sucursalDetails.getEmail());
-            sucursal.setTelefono(sucursalDetails.getTelefono());
-
-            sucursalRepository.save(sucursal);
-
-            return ResponseEntity.ok("La sucursal se actualizó correctamente");
-
-        } else if(sucursal != null && !sucursal.getBorrado().equals(sucursalDetails.getBorrado())) {
-            sucursal.setBorrado(sucursal.getBorrado());
-
-            sucursalRepository.save(sucursal);
-
-            return ResponseEntity.ok("La sucursal se eliminó correctamente");
-        }
-        return ResponseEntity.ok("La sucursal no se encontró");
-    }
-
-    private Set<Domicilio> desencriptarDomicilio(Set<Domicilio> domicilios) throws Exception {
-        for (Domicilio domicilio : domicilios) {
-            try {
-                if (esNecesarioEncriptar(domicilio.getCalle())) {
-                    domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+                // Actualizar contraseña
+                if (sucursalDetails.getContraseña().length() > 1) {
+                    sucursal.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
                 }
-            } catch (IllegalArgumentException e) {
-                System.out.println(e);
+
+                // Actualizar horarios
+                sucursal.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
+                sucursal.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
+
+                // Borrar todas las localidades
+                localidadDeliveryRepository.deleteAllBySucursalId(sucursal.getId());
+
+                // Agregar nuevas localidades
+                Set<LocalidadDelivery> nuevasLocalidades = new HashSet<>();
+                for (LocalidadDelivery localidad : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
+                    localidad.setSucursal(sucursal);
+                    nuevasLocalidades.add(localidad);
+                }
+                sucursal.setLocalidadesDisponiblesDelivery(nuevasLocalidades);
+
+                // Actualizar otros campos
+                sucursal.setEmail(sucursalDetails.getEmail());
+                sucursal.setTelefono(sucursalDetails.getTelefono());
+
+                sucursalRepository.save(sucursal);
+
+                return ResponseEntity.ok("La sucursal se actualizó correctamente");
+            } else {
+                sucursal.setBorrado(sucursalDetails.getBorrado());
+                sucursalRepository.save(sucursal);
+                return ResponseEntity.ok("La sucursal se actualizó correctamente");
             }
+        } else {
+            return ResponseEntity.ok("La sucursal no se encontró");
         }
-        return domicilios;
-    }
-
-
-    private Set<DomicilioDTO> desencriptarDomiciliosDTO(Set<DomicilioDTO> domicilios) throws Exception {
-        for (DomicilioDTO domicilio : domicilios) {
-            try {
-                // Desencriptar calle
-                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-            } catch (IllegalArgumentException e) {
-                System.out.println(e);
-            }
-        }
-        return domicilios;
-    }
-
-    private void encriptarDomicilio(Domicilio domicilio, Object persona) throws Exception {
-        try {
-            // Encriptar la calle del domicilio
-            domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
-
-            // Asignar el objeto persona al domicilio según su tipo
-            if (persona instanceof Empleado) {
-                domicilio.setEmpleado((Empleado) persona);
-            } else if (persona instanceof Sucursal) {
-                domicilio.setSucursal((Sucursal) persona);
-            } else if (persona instanceof Cliente) {
-                domicilio.setCliente((Cliente) persona);
-            }
-        } catch (IllegalBlockSizeException e) {
-            throw e;
-        }
-    }
-
-    public static boolean esNecesarioEncriptar(String texto) {
-        if (texto == null || texto.isEmpty()) {
-            return false;
-        }
-
-        if (texto.contains("=") || texto.contains("+") || texto.contains("/")) return false;
-
-        int contadorNumeros = 0;
-        // Verificar si el texto contiene al menos un dígito
-        for (char c : texto.toCharArray()) {
-            if (Character.isDigit(c)) {
-                contadorNumeros++;
-                // Si el texto contiene 3 o mas numeros
-                if (contadorNumeros == 3) return false;
-            }
-        }
-
-        return true;
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Localidad;
+import org.hibernate.annotations.Cascade;
 
 @Getter
 @Setter
@@ -12,16 +13,19 @@ import main.entities.Domicilio.Localidad;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString(exclude = {"sucursal"})
 @Table(name = "localidades_delivery", schema = "buen_sabor")
 public class LocalidadDelivery {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"localidadesDisponiblesDelivery"})
     @ManyToOne
+    @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
     @OneToOne
+    @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     @JoinColumn(name = "id_localidad")
     private Localidad localidad;
 
