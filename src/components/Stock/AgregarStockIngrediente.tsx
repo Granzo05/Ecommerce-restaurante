@@ -46,6 +46,7 @@ function AgregarStockIngrediente() {
     if (medida) stock.medida = medida;
 
     const ingrediente: Ingrediente = new Ingrediente();
+    stock.borrado = 'NO';
 
     ingrediente.nombre = nombreIngrediente;
     stock.ingrediente = ingrediente;

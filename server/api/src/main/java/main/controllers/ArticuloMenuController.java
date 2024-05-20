@@ -2,14 +2,9 @@ package main.controllers;
 
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
-import main.entities.Productos.ArticuloMenu;
-import main.entities.Productos.ArticuloMenuDTO;
-import main.entities.Productos.EnumTipoArticuloComida;
-import main.entities.Productos.ImagenesProducto;
-import main.repositories.ArticuloMenuRepository;
-import main.repositories.ImagenesProductoRepository;
-import main.repositories.IngredienteMenuRepository;
-import main.repositories.IngredienteRepository;
+import main.entities.Productos.*;
+import main.entities.Restaurante.Sucursal;
+import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,23 +24,25 @@ public class ArticuloMenuController {
 
     private final IngredienteMenuRepository ingredienteMenuRepository;
     private final IngredienteRepository ingredienteRepository;
+    private final ImagenesRepository imagenesRepository;
+    private final SucursalRepository sucursalRepository;
 
-    private final ImagenesProductoRepository imagenesProductoRepository;
 
-    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesProductoRepository imagenesProductoRepository) {
+    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository) {
         this.articuloMenuRepository = articuloMenuRepository;
         this.ingredienteMenuRepository = ingredienteMenuRepository;
         this.ingredienteRepository = ingredienteRepository;
-        this.imagenesProductoRepository = imagenesProductoRepository;
+        this.imagenesRepository = imagenesRepository;
+        this.sucursalRepository = sucursalRepository;
     }
 
     // Busca por id de menu
-    @GetMapping("/menus")
-    public Set<ArticuloMenuDTO> getMenusDisponibles() {
-        List<ArticuloMenuDTO> menus = articuloMenuRepository.findAllByNotBorrado();
+    @GetMapping("/menus/{idSucursal}")
+    public Set<ArticuloMenuDTO> getMenusDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloMenuDTO> menus = articuloMenuRepository.findAllBySucursal(idSucursal);
 
         for (ArticuloMenuDTO menu : menus) {
-            menu.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdMenu(menu.getId())));
+            menu.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdMenuDTO(menu.getId())));
             menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
         }
 
@@ -53,8 +50,8 @@ public class ArticuloMenuController {
     }
 
     @Transactional
-    @PostMapping("/menu/create")
-    public ResponseEntity<String> crearMenu(@RequestBody ArticuloMenu articuloMenu) {
+    @PostMapping("/menu/create/{idSucursal}")
+    public ResponseEntity<String> crearMenu(@RequestBody ArticuloMenu articuloMenu, @PathVariable("idSucursal") Long idSucursal) {
         Optional<ArticuloMenu> menuDB = articuloMenuRepository.findByName(articuloMenu.getNombre());
         if (menuDB.isEmpty()) {
             for (IngredienteMenu ingredienteMenu : articuloMenu.getIngredientesMenu()) {
@@ -63,6 +60,22 @@ public class ArticuloMenuController {
                 ingredienteMenu.setCantidad(ingredienteMenu.getCantidad());
                 ingredienteMenu.setArticuloMenu(articuloMenu);
                 ingredienteMenu.setMedida(ingredienteMenu.getMedida());
+            }
+
+            // Si la sucursal coincide con los privilegios del admin o de la empresa que agregue todas las sucursales al menu
+            if (idSucursal == 0) {
+                List<Sucursal> sucursales = sucursalRepository.findAll();
+                for (Sucursal sucursal : sucursales) {
+                    sucursal.getArticulosMenu().add(articuloMenu);
+                }
+            } else {
+                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                if (sucursalOpt.isPresent()) {
+                    Sucursal sucursal = sucursalOpt.get();
+                    sucursal.getArticulosMenu().add(articuloMenu);
+                } else {
+                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                }
             }
 
             articuloMenuRepository.save(articuloMenu);
@@ -77,7 +90,7 @@ public class ArticuloMenuController {
     @Transactional
     @PostMapping("/menu/imagenes")
     public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
-        HashSet<ImagenesProducto> listaImagenes = new HashSet<>();
+        HashSet<Imagenes> listaImagenes = new HashSet<>();
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
@@ -98,7 +111,7 @@ public class ArticuloMenuController {
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();
 
-            ImagenesProducto imagen = new ImagenesProducto();
+            Imagenes imagen = new Imagenes();
             imagen.setNombre(fileName.replaceAll(" ", ""));
             imagen.setRuta(downloadUrl);
             imagen.setFormato(file.getContentType());
@@ -106,7 +119,7 @@ public class ArticuloMenuController {
             listaImagenes.add(imagen);
 
             try {
-                for (ImagenesProducto imagenProducto : listaImagenes) {
+                for (Imagenes imagenProducto : listaImagenes) {
                     // Asignamos el menu a la imagen
                     Optional<ArticuloMenu> menu = articuloMenuRepository.findByName(nombreMenu);
                     if (menu.isEmpty()) {
@@ -114,7 +127,7 @@ public class ArticuloMenuController {
                     }
                     imagenProducto.setArticuloMenu(menu.get());
 
-                    imagenesProductoRepository.save(imagen);
+                    imagenesRepository.save(imagen);
                 }
 
             } catch (Exception e) {
@@ -133,12 +146,14 @@ public class ArticuloMenuController {
     @Transactional
     @PutMapping("/menu/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
-        Optional<ImagenesProducto> imagen = imagenesProductoRepository.findById(id);
+        List<Imagenes> imagenes = imagenesRepository.findByIdMenu(id);
 
-        if (imagen.isPresent()) {
+        for (Imagenes imagen: imagenes) {
             try {
-                imagen.get().setBorrado("SI");
-                imagenesProductoRepository.save(imagen.get());
+                imagen.setBorrado("SI");
+
+                imagenesRepository.save(imagen);
+
                 return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
             } catch (Exception e) {
                 System.out.println("Error al crear la imagen: " + e);
@@ -147,60 +162,57 @@ public class ArticuloMenuController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/menu/tipo/{tipoMenu}")
-    public Set<ArticuloMenuDTO> getMenusPorTipo(@PathVariable("tipoMenu") String tipo) {
+    @GetMapping("/menu/tipo/{tipoMenu}/{idSucursal}")
+    public Set<ArticuloMenuDTO> getMenusPorTipo(@PathVariable("tipoMenu") String tipo, @PathVariable("idSucursal") Long idSucursal) {
         String tipoMenu = tipo.toUpperCase().replace(" ", "_");
-        Set<ArticuloMenuDTO> articuloMenus = (new HashSet<>(articuloMenuRepository.findByType(EnumTipoArticuloComida.valueOf(tipoMenu))));
+        Set<ArticuloMenuDTO> articuloMenus = (new HashSet<>(articuloMenuRepository.findByTipoAndIdSucursal(EnumTipoArticuloComida.valueOf(tipoMenu), idSucursal)));
 
         for (ArticuloMenuDTO articuloMenu : articuloMenus) {
-            articuloMenu.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdMenu(articuloMenu.getId())));
+            articuloMenu.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdMenuDTO(articuloMenu.getId())));
             articuloMenu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(articuloMenu.getId())));
         }
         return articuloMenus;
     }
 
     @Transactional
-    @PutMapping("/menu/update")
-    public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenu articuloMenuDetail) {
-        Optional<ArticuloMenu> menuEncontrado = articuloMenuRepository.findById(articuloMenuDetail.getId());
+    @PutMapping("/menu/update/{idSucursal}")
+    public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenu articuloMenuDetail, @PathVariable("idSucursal") Long id) {
+        Optional<ArticuloMenu> menuEncontrado = articuloMenuRepository.findByIdMenuAndIdSucursal(articuloMenuDetail.getId(), id);
 
-        if (menuEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El menu no se encuentra", HttpStatus.NOT_FOUND);
+        if (menuEncontrado.isPresent() && menuEncontrado.get().getBorrado().equals(articuloMenuDetail.getBorrado())) {
+            ArticuloMenu articuloMenu = menuEncontrado.get();
+
+            ingredienteMenuRepository.deleteAllByIdArticuloMenu(articuloMenu.getId());
+
+            articuloMenu.setPrecioVenta(articuloMenuDetail.getPrecioVenta());
+
+            for (IngredienteMenu ingredienteMenu : articuloMenuDetail.getIngredientesMenu()) {
+                ingredienteMenu.setArticuloMenu(articuloMenu);
+
+                ingredienteMenu.setIngrediente(ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get());
+            }
+
+            articuloMenu.setIngredientesMenu(articuloMenuDetail.getIngredientesMenu());
+            articuloMenu.setTiempoCoccion(articuloMenuDetail.getTiempoCoccion());
+            articuloMenu.setDescripcion(articuloMenuDetail.getDescripcion());
+            articuloMenu.setNombre(articuloMenuDetail.getNombre());
+            articuloMenu.setTipo(articuloMenuDetail.getTipo());
+            articuloMenu.setComensales(articuloMenuDetail.getComensales());
+
+            articuloMenuRepository.save(articuloMenu);
+
+            return ResponseEntity.ok("El menu ha sido actualizado correctamente");
+
+        } else if (menuEncontrado.isPresent() && !menuEncontrado.get().getBorrado().equals(articuloMenuDetail.getBorrado())) {
+            ArticuloMenu articuloMenu = menuEncontrado.get();
+            articuloMenu.setBorrado(articuloMenuDetail.getBorrado());
+
+            articuloMenuRepository.save(articuloMenu);
+
+            return ResponseEntity.ok("El menu ha sido actualizado correctamente");
         }
 
-        ArticuloMenu articuloMenu = menuEncontrado.get();
-
-        ingredienteMenuRepository.deleteAllByIdArticuloMenu(articuloMenu.getId());
-
-        articuloMenu.setPrecioVenta(articuloMenuDetail.getPrecioVenta());
-
-        for (IngredienteMenu ingredienteMenu : articuloMenuDetail.getIngredientesMenu()) {
-            ingredienteMenu.setArticuloMenu(articuloMenu);
-
-            ingredienteMenu.setIngrediente(ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get());
-        }
-
-        articuloMenu.setIngredientesMenu(articuloMenuDetail.getIngredientesMenu());
-        articuloMenu.setTiempoCoccion(articuloMenuDetail.getTiempoCoccion());
-        articuloMenu.setDescripcion(articuloMenuDetail.getDescripcion());
-        articuloMenu.setNombre(articuloMenuDetail.getNombre());
-        articuloMenu.setTipo(articuloMenuDetail.getTipo());
-        articuloMenu.setComensales(articuloMenuDetail.getComensales());
-
-        articuloMenuRepository.save(articuloMenu);
-
-        return new ResponseEntity<>("El menu ha sido actualizado correctamente", HttpStatus.ACCEPTED);
+        return ResponseEntity.ofNullable("El articulo no se ha encontrado");
     }
 
-    @PutMapping("/menu/{nombre}/delete")
-    public ResponseEntity<String> borrarMenu(@PathVariable("nombre") String nombre) {
-        Optional<ArticuloMenu> menu = articuloMenuRepository.findByName(nombre);
-        if (menu.isEmpty()) {
-            return new ResponseEntity<>("El menu ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
-        }
-
-        menu.get().setBorrado("SI");
-        articuloMenuRepository.save(menu.get());
-        return new ResponseEntity<>("El menu ha sido borrado correctamente", HttpStatus.ACCEPTED);
-    }
 }

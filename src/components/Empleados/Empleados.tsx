@@ -7,17 +7,17 @@ import EditarEmpleado from "./EditarEmpleado";
 import '../../styles/empleados.css';
 import ModalFlotante from "../ModalFlotante";
 import EliminarEmpleado from "./EliminarEmpleado";
+import ActivarEmpleado from "./ActivarEmpleado";
 
 const Empleados = () => {
     const [empleados, setEmpleados] = useState<Empleado[]>([]);
-    const [empleadoEditar, setEmpleadoEditar] = useState<Empleado>(new Empleado);
+    const [selectedEmpleado, setSelectedEmpleado] = useState<Empleado>();
     const [mostrarEmpleados, setMostrarEmpleados] = useState(true);
 
     const [showAgregarEmpleadoModal, setShowAgregarEmpleadoModal] = useState(false);
     const [showEditarEmpleadoModal, setShowEditarEmpleadoModal] = useState(false);
     const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
-
-    const [selectedCuit, setSelectedCuit] = useState<string>('');
+    const [showActivarEmpleadoModal, setShowActivarEmpleadoModal] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -51,18 +51,30 @@ const Empleados = () => {
     };
 
     const handleEditarEmpleado = (empleado: Empleado) => {
-        setEmpleadoEditar(empleado);
+        setSelectedEmpleado(empleado);
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(true);
         setShowEliminarEmpleadoModal(false);
         setMostrarEmpleados(false);
     };
 
-    const handleEliminarEmpleado = (cuil: string) => {
-        setSelectedCuit(cuil);
+    const handleEliminarEmpleado = (empleado: Empleado) => {
+        empleado.borrado = 'SI';
+        setSelectedEmpleado(empleado);
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(false);
+        setShowActivarEmpleadoModal(false);
         setShowEliminarEmpleadoModal(true);
+        setMostrarEmpleados(false);
+    };
+
+    const handleActivarEmpleado = (empleado: Empleado) => {
+        empleado.borrado = 'NO';
+        setSelectedEmpleado(empleado);
+        setShowAgregarEmpleadoModal(false);
+        setShowEditarEmpleadoModal(false);
+        setShowEliminarEmpleadoModal(false);
+        setShowActivarEmpleadoModal(true);
         setMostrarEmpleados(false);
     };
 
@@ -115,10 +127,17 @@ const Empleados = () => {
                                         ))}
                                     </td>
 
-                                    <td>
-                                        <button onClick={() => handleEliminarEmpleado(empleado.cuil)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
-                                    </td>
+                                    {empleado.borrado === 'NO' ? (
+                                        <td>
+                                            <button onClick={() => handleEliminarEmpleado(empleado)}>ELIMINAR</button>
+                                            <button onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <button onClick={() => handleActivarEmpleado(empleado)}>ACTIVAR</button>
+                                            <button onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
@@ -128,11 +147,15 @@ const Empleados = () => {
             )}
 
             <ModalCrud isOpen={showEditarEmpleadoModal} onClose={handleModalClose}>
-                <EditarEmpleado empleadoOriginal={empleadoEditar} />
+                {selectedEmpleado && <EditarEmpleado empleadoOriginal={selectedEmpleado} />}
             </ModalCrud>
 
             <ModalFlotante isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
-                {selectedCuit && <EliminarEmpleado cuilEmpleado={selectedCuit} />}
+                {selectedEmpleado && <EliminarEmpleado empleadoOriginal={selectedEmpleado} />}
+            </ModalFlotante>
+
+            <ModalFlotante isOpen={showActivarEmpleadoModal} onClose={handleModalClose}>
+                {selectedEmpleado && <ActivarEmpleado empleadoOriginal={selectedEmpleado} />}
             </ModalFlotante>
         </div>
     )

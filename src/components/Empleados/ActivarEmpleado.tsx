@@ -5,16 +5,16 @@ import '../../styles/empleados.css';
 import { Toaster, toast } from 'sonner'
 import { Empleado } from '../../types/Restaurante/Empleado';
 
-interface EliminarEmpleadoProps {
+interface ActivarEmpleadoProps {
   empleadoOriginal: Empleado;
 }
 
-const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal }) => {
+const ActivarEmpleado: React.FC<ActivarEmpleadoProps> = ({ empleadoOriginal }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
     toast.promise(EmpleadoService.updateEmpleado(empleadoOriginal), {
-      loading: 'Eliminando empleado...',
+      loading: 'Activando empleado...',
       success: (message) => {
         return message;
       },
@@ -31,7 +31,7 @@ const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal })
   return (
     <div>
       <Toaster />
-      <p>¿Seguro que quieres eliminar el empleado?</p>
+      <p>¿Seguro que quieres activar el empleado?</p>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <button onClick={onConfirm}>Confirmar</button>
         <button onClick={onCancel}>Cancelar</button>
@@ -40,4 +40,4 @@ const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal })
   );
 }
 
-export default EliminarEmpleado;
+export default ActivarEmpleado;

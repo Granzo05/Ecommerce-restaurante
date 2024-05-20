@@ -48,8 +48,9 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   useEffect(() => {
     sucursalOriginal.localidadesDisponiblesDelivery.forEach(localidadDelivery => {
       idDepartamentosElegidos.add(localidadDelivery.localidad?.departamento.id);
+      handleDepartamentosCheckboxChange(localidadDelivery.localidad?.departamento.id);
+      
       idLocalidadesElegidas.add(localidadDelivery.localidad?.id);
-
       let localidad: Localidad = new Localidad();
       localidad.nombre = localidadDelivery.localidad?.nombre;
       localidad.departamento = localidadDelivery.localidad?.departamento;

@@ -22,7 +22,7 @@ public class IngredienteController {
 
     @GetMapping("/ingredientes")
     public Set<IngredienteDTO> getIngredientes() {
-        return new HashSet<>(ingredienteRepository.findAllByNotBorrado());
+        return new HashSet<>(ingredienteRepository.findAllDTO());
     }
 
     @Transactional

@@ -13,6 +13,7 @@ import ModalFlotante from "../ModalFlotante";
 import InputComponent from "../InputFiltroComponent";
 import ModalFlotanteRecomendaciones from "../ModalFlotanteRecomendaciones";
 import SearchIcon from '@mui/icons-material/Search';
+import ActivarStock from "./ActivarStock";
 
 
 const Stocks = () => {
@@ -24,6 +25,7 @@ const Stocks = () => {
     const [showAgregarStockModalArticulo, setShowAgregarStockModalArticulo] = useState(false);
     const [showEditarStockModal, setShowEditarStockModal] = useState(false);
     const [showEliminarStockModal, setShowEliminarStockModal] = useState(false);
+    const [showActivarStockModal, setShowActivarStockModal] = useState(false);
 
     const [selectedStock, setSelectedStock] = useState<StockArticuloVentaDTO | StockIngredientesDTO>();
 
@@ -78,8 +80,19 @@ const Stocks = () => {
 
     const handleEliminarStock = (stock: StockArticuloVentaDTO | StockIngredientesDTO, tipo: string) => {
         stock.tipo = tipo;
+        stock.borrado = 'SI';
         setSelectedStock(stock);
         setShowEliminarStockModal(true);
+        setShowActivarStockModal(false);
+        setMostrarStocks(false);
+    };
+
+    const handleActivarStock = (stock: StockArticuloVentaDTO | StockIngredientesDTO, tipo: string) => {
+        stock.tipo = tipo;
+        stock.borrado = 'NO';
+        setSelectedStock(stock);
+        setShowEliminarStockModal(false);
+        setShowActivarStockModal(true);
         setMostrarStocks(false);
     };
 
@@ -93,22 +106,22 @@ const Stocks = () => {
         fetchStocks();
         setModalBusqueda(false);
 
-        
+
     };
 
     // Modal flotante de ingrediente
-  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<string>('');
-  const [elementosABuscar, setElementosABuscar] = useState<string>('');
+    const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+    const [selectedProduct, setSelectedProduct] = useState<string>('');
+    const [elementosABuscar, setElementosABuscar] = useState<string>('');
 
     const handleAbrirRecomendaciones = (busqueda: string) => {
         setElementosABuscar(busqueda)
         setModalBusqueda(true);
-      };
+    };
 
-      const handleSelectProduct = (product: string) => {
+    const handleSelectProduct = (product: string) => {
         setSelectedProduct(product);
-      };
+    };
 
     return (
         <div className="opciones-pantallas">
@@ -118,13 +131,13 @@ const Stocks = () => {
                 <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
                 <button className="btn-agregar" onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
             </div>
-            
+
             <hr />
             <div className="input-filtrado">
-                <SearchIcon className="search-icono"/>
+                <SearchIcon className="search-icono" />
                 <InputComponent placeHolder={'Filtrar...'} onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={selectedProduct ?? ''} />
-                {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
-                
+                {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
+
             </div>
             <ModalFlotante isOpen={showAgregarStockModalArticulo} onClose={handleModalClose}>
                 <AgregarStockArticulo />
@@ -138,9 +151,15 @@ const Stocks = () => {
                 {selectedStock && <EliminarStock stockOriginal={selectedStock} />}
             </ModalFlotante>
 
+            <ModalFlotante isOpen={showActivarStockModal} onClose={handleModalClose}>
+                {selectedStock && <ActivarStock stockOriginal={selectedStock} />}
+            </ModalFlotante>
+
             <ModalFlotante isOpen={showEditarStockModal} onClose={handleModalClose}>
                 {selectedStock && <EditarStock stockOriginal={selectedStock} />}
             </ModalFlotante>
+
+
             {mostrarStocks && (
                 <div id="stocks">
                     <table>
@@ -166,7 +185,7 @@ const Stocks = () => {
                                     <td>{"Aca la fecha"}</td>
                                     <td>
                                         <div className="btns-acciones-stock">
-                                            
+
                                             <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
                                             <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'ingrediente')}>ELIMINAR</button>
                                         </div>
@@ -182,13 +201,26 @@ const Stocks = () => {
                                     <td>{stock.precioCompra}</td>
                                     <td>{"Aca la fecha"}</td>
                                     <td>
-                                        <div className="btns-acciones-stock">
-                                        <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
-                                    
-                                        <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'articulo')}>ELIMINAR</button>
-                                        
-                                        </div>
+
                                     </td>
+                                    {stock.borrado === 'NO' ? (
+                                        <td>
+                                            <div className="btns-acciones-stock">
+                                                <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
+
+                                                <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'articulo')}>ELIMINAR</button>
+
+                                            </div>
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <div className="btns-acciones-stock">
+                                                <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
+
+                                                <button className="btn-accion-2" onClick={() => handleActivarStock(stock, 'articulo')}>ACTIVAR</button>
+                                            </div>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>

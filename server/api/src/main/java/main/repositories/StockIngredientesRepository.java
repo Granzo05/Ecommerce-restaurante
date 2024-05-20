@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface StockIngredientesRepository extends JpaRepository<StockIngredientes, Long> {
-    @Query("SELECT NEW main.entities.Stock.StockIngredientesDTO(s.precioCompra, s.cantidadActual, s.cantidadMinima, s.cantidadMaxima, s.medida, s.id, s.ingrediente.nombre) FROM StockIngredientes s WHERE s.sucursal.id = :id AND s.borrado = 'NO'")
+    @Query("SELECT NEW main.entities.Stock.StockIngredientesDTO(s.precioCompra, s.cantidadActual, s.cantidadMinima, s.cantidadMaxima, s.medida, s.id, s.ingrediente.nombre, s.borrado) FROM StockIngredientes s WHERE s.sucursal.id = :id")
     List<StockIngredientesDTO> findAllByIdSucursal(@Param("id") Long id);
 
     @Query("SELECT s FROM StockIngredientes s WHERE s.ingrediente.nombre = :nombre AND s.borrado = 'NO'")

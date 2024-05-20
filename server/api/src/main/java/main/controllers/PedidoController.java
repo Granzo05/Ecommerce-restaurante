@@ -57,7 +57,7 @@ public class PedidoController {
 
     @GetMapping("/pedidos")
     public Set<PedidoDTO> getPedidosPorNegocio() {
-        List<PedidoDTO> pedidos = pedidoRepository.findOrders();
+        List<PedidoDTO> pedidos = pedidoRepository.findPedidos();
 
         cargarPedidos(pedidos);
 
@@ -66,7 +66,7 @@ public class PedidoController {
 
     @GetMapping("/pedidos/{estado}")
     public Set<PedidoDTO> getPedidosPorEstado(@PathVariable("estado") EnumEstadoPedido estado) {
-        List<PedidoDTO> pedidos = pedidoRepository.findPedidos(estado);
+        List<PedidoDTO> pedidos = pedidoRepository.findPedidosByEstado(estado);
         System.out.println(pedidos);
         for (PedidoDTO pedido : pedidos) {
             pedido.setCliente(clienteRepository.findByIdDTO(pedido.getIdCliente()));

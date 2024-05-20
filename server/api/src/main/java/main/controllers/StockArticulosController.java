@@ -99,7 +99,7 @@ public class StockArticulosController {
         // Busco el stockIngredientes de ese ingrediente
         Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
 
-        if (stockEncontrado.isPresent()) {
+        if (stockEncontrado.isPresent() && stockEncontrado.get().getBorrado().equals(stockIngredientes.getBorrado())) {
             StockArticuloVenta stock = stockEncontrado.get();
 
             stock.setCantidadMinima(stockIngredientes.getCantidadMinima());
@@ -110,20 +110,15 @@ public class StockArticulosController {
 
             stockArticuloRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
-        } else {
-            return ResponseEntity.ofNullable("El stock no existe");
-        }
-    }
+        } else if (stockEncontrado.isPresent() && !stockEncontrado.get().getBorrado().equals(stockIngredientes.getBorrado())){
+            StockArticuloVenta stock = stockEncontrado.get();
 
-    @PutMapping("/sucursal/{idSucursal}/stockArticuloVenta/{stockId}/delete")
-    public ResponseEntity<String> borrarStock(@PathVariable("stockId") Long idStock, @PathVariable("idSucursal") Long idSucursal) {
-        Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findByIdAndIdSucursal(idStock, idSucursal);
-        if (stockEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El stockArticuloVenta ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
+            stock.setBorrado(stockIngredientes.getBorrado());
+
+            stockArticuloRepository.save(stock);
         }
 
-        stockEncontrado.get().setBorrado("SI");
-        stockArticuloRepository.save(stockEncontrado.get());
-        return new ResponseEntity<>("El stockArticuloVenta ha sido borrado correctamente", HttpStatus.ACCEPTED);
+        return ResponseEntity.ofNullable("El stock no existe");
     }
+
 }

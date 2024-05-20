@@ -1,20 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { EmpleadoService } from '../../services/EmpleadoService';
 import '../../styles/empleados.css';
 import { Toaster, toast } from 'sonner'
-import { Empleado } from '../../types/Restaurante/Empleado';
+import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
+import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 
-interface EliminarEmpleadoProps {
-  empleadoOriginal: Empleado;
+interface ActivarArticuloProps {
+  articuloOriginal: ArticuloVenta;
 }
 
-const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal }) => {
+const ActivarArticuloVenta: React.FC<ActivarArticuloProps> = ({ articuloOriginal }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
-    toast.promise(EmpleadoService.updateEmpleado(empleadoOriginal), {
-      loading: 'Eliminando empleado...',
+    toast.promise(ArticuloVentaService.updateBorradoArticulo(articuloOriginal), {
+      loading: 'Activando articulo...',
       success: (message) => {
         return message;
       },
@@ -22,6 +22,7 @@ const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal })
         return message;
       },
     });
+    navigate('/opciones');
   };
 
   const onCancel = () => {
@@ -31,7 +32,7 @@ const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal })
   return (
     <div>
       <Toaster />
-      <p>¿Seguro que quieres eliminar el empleado?</p>
+      <p>¿Seguro que quieres activar el articulo?</p>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <button onClick={onConfirm}>Confirmar</button>
         <button onClick={onCancel}>Cancelar</button>
@@ -40,4 +41,4 @@ const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal })
   );
 }
 
-export default EliminarEmpleado;
+export default ActivarArticuloVenta;

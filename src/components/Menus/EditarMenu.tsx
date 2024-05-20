@@ -109,9 +109,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const añadirCampoIngrediente = () => {
     // SI no hay ingredientes que genere en valor 0 de index
     if (ingredientes.length === 0) {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null, borrado: 'NO' }]);
     } else {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null, borrado: 'NO' }]);
       setSelectIndexIngredientes(prevIndex => prevIndex + 1);
     }
   };
@@ -265,7 +265,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   return (
     <div className="modal-info">
       <Toaster />
-      {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
+      {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
 
       {mostrarDatos && (
         <div>

@@ -1,11 +1,8 @@
 package main.entities.Productos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.EnumMedida;
-import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockArticuloVenta;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,23 +12,18 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@ToString
-@Table(name = "articulos_venta", schema = "buen_sabor")
-public class ArticuloVenta extends Articulo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ArticuloVentaDTO extends Articulo {
     private Long id;
     private EnumTipoArticuloVenta tipo;
-    @Column(name = "medida")
     private EnumMedida medida;
-    @Column(name = "cantidad_medida")
+    private String borrado;
     private int cantidadMedida;
-    @JsonIgnoreProperties(value = {"articuloVenta"})
-    @OneToOne(mappedBy = "articuloVenta")
-    private StockArticuloVenta stock;
-    @JsonIgnoreProperties(value = {"articuloVenta"})
-    @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<ImagenesProducto> imagenes = new HashSet<>();
-    @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Sucursal> sucursales = new HashSet<>();
+    private Set<Imagenes> imagenes = new HashSet<>();
+
+    public ArticuloVentaDTO(Long id, String nombre, double precioVenta, EnumTipoArticuloVenta tipo, String borrado) {
+        super(nombre, precioVenta);
+        this.id = id;
+        this.tipo = tipo;
+        this.borrado = borrado;
+    }
 }

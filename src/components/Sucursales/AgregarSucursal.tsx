@@ -178,7 +178,8 @@ function AgregarSucursal() {
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
     let localidad = localidades?.find(localidad => localidad.nombre === inputLocalidad);
-    domicilio.localidad = localidad
+
+    if (localidad) domicilio.localidad = localidad
     sucursal.domicilio = domicilio;
 
     sucursal.contraseña = contraseña;
@@ -203,7 +204,7 @@ function AgregarSucursal() {
     });
 
     sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
-
+    sucursal.borrado = 'NO';
     toast.promise(SucursalService.createRestaurant(sucursal), {
       loading: 'Guardando sucursal...',
       success: (message) => {

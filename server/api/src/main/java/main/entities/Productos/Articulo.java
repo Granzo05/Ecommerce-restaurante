@@ -10,10 +10,9 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Builder
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Articulo {
+@Entity
+public abstract class Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -26,8 +25,7 @@ public class Articulo {
     @ManyToMany(mappedBy = "articulos", fetch = FetchType.LAZY)
     private Set<Promocion> promociones = new HashSet<>();
     @Transient
-    private Set<ImagenesProductoDTO> imagenesDTO = new HashSet<>();
-
+    private Set<ImagenesDTO> imagenesDTO = new HashSet<>();
     public Articulo(String nombre, double precioVenta) {
         this.nombre = nombre;
         this.precioVenta = precioVenta;

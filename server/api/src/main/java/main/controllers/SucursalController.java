@@ -304,7 +304,8 @@ public class SucursalController {
     public ResponseEntity<String> updateSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
         Sucursal sucursal = sucursalRepository.findByIdNotBorrado(sucursalDetails.getId());
 
-        if (sucursal != null) {
+        // Si la sucursal existe y no se ha borrado o activado se actualizan los datos
+        if (sucursal != null && sucursal.getBorrado().equals(sucursalDetails.getBorrado())) {
             // Update domicilio
             sucursal.getDomicilio().setCalle(sucursalDetails.getDomicilio().getCalle());
             sucursal.getDomicilio().setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
@@ -340,26 +341,17 @@ public class SucursalController {
 
             sucursalRepository.save(sucursal);
 
-            return ResponseEntity.ok("La sucursal se eliminó correctamente");
-        } else {
-            return ResponseEntity.ok("La sucursal no se encontró");
-        }
-    }
+            return ResponseEntity.ok("La sucursal se actualizó correctamente");
 
-    @Transactional
-    @PutMapping("/sucursal/{id}/delete")
-    public ResponseEntity<String> deleteSucursal(@PathVariable("id") Long id) throws Exception {
-        Sucursal sucursal = sucursalRepository.findByIdNotBorrado(id);
+        } else if(sucursal != null && !sucursal.getBorrado().equals(sucursalDetails.getBorrado())) {
+            sucursal.setBorrado(sucursal.getBorrado());
 
-        if (sucursal != null) {
-            sucursal.setBorrado("SI");
             sucursalRepository.save(sucursal);
-            return ResponseEntity.ok("La sucursal se eliminó correctamente");
-        } else {
-            return ResponseEntity.ok("La sucursal no se encontró");
-        }
-    }
 
+            return ResponseEntity.ok("La sucursal se eliminó correctamente");
+        }
+        return ResponseEntity.ok("La sucursal no se encontró");
+    }
 
     private Set<Domicilio> desencriptarDomicilio(Set<Domicilio> domicilios) throws Exception {
         for (Domicilio domicilio : domicilios) {

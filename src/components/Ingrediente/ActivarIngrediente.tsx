@@ -1,20 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArticuloVentaService } from '../../services/ArticuloVentaService';
+import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
+import { IngredienteService } from '../../services/IngredienteService';
 import { Toaster, toast } from 'sonner'
-import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 
-interface EliminarArticuloProps {
-  articuloOriginal: ArticuloVenta;
+interface ActivarIngredienteProps {
+  ingredienteOriginal: Ingrediente;
 }
 
-const EliminarArticuloVenta: React.FC<EliminarArticuloProps> = ({ articuloOriginal }) => {
+const ActivarIngrediente: React.FC<ActivarIngredienteProps> = ({ ingredienteOriginal }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
-    toast.promise(ArticuloVentaService.updateBorradoArticulo(articuloOriginal), {
-      loading: 'Eliminando articulo...',
+    toast.promise(IngredienteService.deleteIngrediente(ingredienteOriginal.id), {
+      loading: 'Activando Ingrediente...',
       success: (message) => {
+        navigate('/opciones');
         return message;
       },
       error: (message) => {
@@ -30,11 +31,11 @@ const EliminarArticuloVenta: React.FC<EliminarArticuloProps> = ({ articuloOrigin
   return (
     <div className="modal-info">
       <Toaster />
-      <p>¿Seguro que quieres eliminar el articulo?</p>
+      <p>¿Seguro que quieres activar el ingrediente?</p>
       <button onClick={onConfirm}>Confirmar</button>
       <button onClick={onCancel}>Cancelar</button>
     </div>
   );
 }
 
-export default EliminarArticuloVenta;
+export default ActivarIngrediente;

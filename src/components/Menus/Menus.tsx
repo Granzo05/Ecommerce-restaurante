@@ -10,6 +10,7 @@ import '../../styles/modalFlotante.css';
 import { EmpleadoService } from "../../services/EmpleadoService";
 import ModalFlotante from "../ModalFlotante";
 import { ArticuloMenuDTO } from "../../types/Productos/ArticuloMenuDTO";
+import ActivarMenu from "./ActivarMenu";
 
 const Menus = () => {
     const [menus, setMenus] = useState<ArticuloMenuDTO[]>([]);
@@ -18,9 +19,9 @@ const Menus = () => {
     const [showAgregarMenuModal, setShowAgregarMenuModal] = useState(false);
     const [showEditarMenuModal, setShowEditarMenuModal] = useState(false);
     const [showEliminarMenuModal, setShowEliminarMenuModal] = useState(false);
+    const [showActivarMenuModal, setShowActivarMenuModal] = useState(false);
 
     const [selectedMenu, setSelectedMenu] = useState<ArticuloMenuDTO | null>(null);
-    const [selectedNombre, setSelectedNombre] = useState<string>('');
 
     useEffect(() => {
         fetchData();
@@ -65,11 +66,23 @@ const Menus = () => {
         setMostrarMenus(false);
     };
 
-    const handleEliminarMenu = (nombre: string) => {
-        setSelectedNombre(nombre);
+    const handleEliminarMenu = (menu: ArticuloMenuDTO) => {
+        menu.borrado = 'SI';
+        setSelectedMenu(menu);
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(false);
         setShowEliminarMenuModal(true);
+        setShowActivarMenuModal(false);
+        setMostrarMenus(false);
+    };
+
+    const handleActivarMenu = (menu: ArticuloMenuDTO) => {
+        menu.borrado = 'NO';
+        setSelectedMenu(menu);
+        setShowAgregarMenuModal(false);
+        setShowEditarMenuModal(false);
+        setShowEliminarMenuModal(false);
+        setShowActivarMenuModal(true);
         setMostrarMenus(false);
     };
 
@@ -116,10 +129,18 @@ const Menus = () => {
                                     </td>
                                     <td>{menu.precioVenta}</td>
                                     <td>{menu.tipo}</td>
-                                    <td>
-                                        <button onClick={() => handleEliminarMenu(menu.nombre)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarMenu(menu)}>EDITAR</button>
-                                    </td>
+
+                                    {menu.borrado === 'NO' ? (
+                                        <td>
+                                            <button onClick={() => handleEliminarMenu(menu)}>ELIMINAR</button>
+                                            <button onClick={() => handleEditarMenu(menu)}>EDITAR</button>
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <button onClick={() => handleActivarMenu(menu)}>ELIMINAR</button>
+                                            <button onClick={() => handleEditarMenu(menu)}>EDITAR</button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
@@ -134,9 +155,11 @@ const Menus = () => {
                 {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
             </ModalFlotante>
             <ModalFlotante isOpen={showEliminarMenuModal} onClose={handleModalClose}>
-                {selectedNombre && <EliminarMenu menuNombre={selectedNombre} />}
+                {selectedMenu && <EliminarMenu menuOriginal={selectedMenu} />}
             </ModalFlotante>
-
+            <ModalFlotante isOpen={showActivarMenuModal} onClose={handleModalClose}>
+                {selectedMenu && <ActivarMenu menuOriginal={selectedMenu} />}
+            </ModalFlotante>
         </div>
 
     )

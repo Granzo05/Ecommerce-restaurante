@@ -72,9 +72,9 @@ function AgregarMenu() {
   const añadirCampoIngrediente = () => {
     // SI no hay ingredientes que genere en valor 0 de index
     if (ingredientes.length === 0) {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null, borrado: 'NO' }]);
     } else {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null, borrado: 'NO' }]);
       setSelectIndexIngredientes(prevIndex => prevIndex + 1);
     }
   };
@@ -176,7 +176,7 @@ function AgregarMenu() {
     menu.precioVenta = precio;
     menu.descripcion = descripcion;
     menu.ingredientesMenu = ingredientes;
-
+    menu.borrado = 'NO';
     toast.promise(MenuService.createMenu(menu, imagenes), {
       loading: 'Creando menu...',
       success: (message) => {

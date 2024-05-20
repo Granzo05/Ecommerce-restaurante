@@ -16,11 +16,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query("SELECT NEW main.entities.Pedidos.PedidoDTO(p.id, p.tipoEnvio, p.estado, p.fechaPedido, p.horaFinalizacion, p.cliente.id) FROM Pedido p WHERE p.cliente.id = :id AND p.borrado = 'NO'")
     List<PedidoDTO> findOrderByIdCliente(@Param("id") long id);
 
-    @Query("SELECT NEW main.entities.Pedidos.PedidoDTO(p.id, p.tipoEnvio, p.estado, p.fechaPedido, p.horaFinalizacion, p.cliente.id) FROM Pedido p WHERE p.borrado = 'NO'")
-    List<PedidoDTO> findOrders();
+    @Query("SELECT NEW main.entities.Pedidos.PedidoDTO(p.id, p.tipoEnvio, p.estado, p.fechaPedido, p.horaFinalizacion, p.cliente.id, p.borrado) FROM Pedido p")
+    List<PedidoDTO> findPedidos();
 
     @Query("SELECT NEW main.entities.Pedidos.PedidoDTO(p.id, p.tipoEnvio, p.estado, p.fechaPedido, p.horaFinalizacion, p.cliente.id) FROM Pedido p WHERE p.estado = :estado AND p.borrado = 'NO'")
-    List<PedidoDTO> findPedidos(EnumEstadoPedido estado);
+    List<PedidoDTO> findPedidosByEstado(EnumEstadoPedido estado);
 
 }
 

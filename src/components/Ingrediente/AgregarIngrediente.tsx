@@ -16,6 +16,7 @@ function AgregarIngrediente() {
     }
 
     ingrediente.nombre = nombre;
+    ingrediente.borrado = 'NO';
 
     toast.promise(IngredienteService.createIngrediente(ingrediente), {
       loading: 'Creando Ingrediente...',

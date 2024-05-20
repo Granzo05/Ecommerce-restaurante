@@ -2,18 +2,18 @@ import { ArticuloVenta } from '../types/Productos/ArticuloVenta';
 import { EnumTipoArticuloVenta } from '../types/Productos/EnumTipoArticuloVenta';
 import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
 import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
-import { URL_API } from '../utils/global_variables/const';
+import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const ArticuloVentaService = {
 
     getArticulos: async (): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + 'articulos')
+        const response = await fetch(URL_API + `articulos/${sucursalId}`)
 
         return await response.json();
     },
 
     getArticulosPorTipo: async (tipoArticulo: EnumTipoArticuloVenta): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + 'articulo/tipo/' + tipoArticulo);
+        const response = await fetch(URL_API + `articulo/tipo/${tipoArticulo}/${sucursalId}`);
 
         return await response.json();
     },
@@ -21,7 +21,7 @@ export const ArticuloVentaService = {
 
     createArticulo: async (articuloVenta: ArticuloVenta, imagenes: ImagenesProducto[]): Promise<string> => {
         try {
-            const menuResponse = await fetch(URL_API + 'articulo/create', {
+            const menuResponse = await fetch(URL_API + 'articulo/create/' + sucursalId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ export const ArticuloVentaService = {
 
             if (menuResponse.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
                 cargarImagenes = false;
-                return 'Articulo existente';
+                return menuResponse.text();
             }
 
             // Cargar imágenes solo si se debe hacer
@@ -48,12 +48,12 @@ export const ArticuloVentaService = {
                         await fetch(URL_API + 'articulo/imagenes', {
                             method: 'POST',
                             body: formData
-                        });        
+                        });
                     }
                 }));
             }
 
-            return 'Articulo actualizado con éxito';
+            return menuResponse.text();
 
         } catch (error) {
             console.error('Error:', error);
@@ -63,7 +63,7 @@ export const ArticuloVentaService = {
 
     updateArticulo: async (articuloVenta: ArticuloVenta, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'articulo/update', {
+            const response = await fetch(URL_API + 'articulo/update/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -72,11 +72,6 @@ export const ArticuloVentaService = {
             })
 
             let cargarImagenes = true;
-
-            if (response.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
-                cargarImagenes = false;
-                return 'Articulo Venta existente';
-            }
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes && (imagenes || imagenesEliminadas)) {
@@ -103,7 +98,7 @@ export const ArticuloVentaService = {
                 }
             }
 
-            return 'Articulo actualizado con éxito';
+            return response.text();
 
         } catch (error) {
             console.error('Error:', error);
@@ -112,24 +107,23 @@ export const ArticuloVentaService = {
 
     },
 
-    deleteArticulo: async (id: number): Promise<string> => {
+    updateBorradoArticulo: async (articuloVenta: ArticuloVenta): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `articulo/${id}/delete`, {
+            const response = await fetch(URL_API + 'articulo/update/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(articuloVenta)
             })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
-            }
 
-            return await response.text();
+            return response.text();
 
         } catch (error) {
             console.error('Error:', error);
             throw error;
         }
+
     },
 
 }

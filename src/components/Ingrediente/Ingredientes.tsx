@@ -7,6 +7,7 @@ import { Ingrediente } from "../../types/Ingredientes/Ingrediente";
 import EliminarIngrediente from "./EliminarIngrediente";
 import EditarIngrediente from "./EditarIngrediente";
 import AgregarIngrediente from "./AgregarIngrediente";
+import ActivarIngrediente from "./ActivarIngrediente";
 
 const Ingredientes = () => {
     const [ingredientes, setIngredientes] = useState<Ingrediente[]>([]);
@@ -15,6 +16,7 @@ const Ingredientes = () => {
     const [showAgregarModalIngrediente, setShowAgregarModalIngrediente] = useState(false);
     const [showEditarIngredienteModal, setShowEditarIngredienteModal] = useState(false);
     const [showEliminarIngredienteModal, setShowEliminarIngredienteModal] = useState(false);
+    const [showActivarIngredienteModal, setShowActivarIngredienteModal] = useState(false);
 
     const [selectedIngrediente, setSelectedIngrediente] = useState<Ingrediente>();
 
@@ -63,11 +65,23 @@ const Ingredientes = () => {
     };
 
     const handleEliminarIngrediente = (ingrediente: Ingrediente) => {
+        ingrediente.borrado = 'SI';
         setSelectedIngrediente(ingrediente);
         setShowAgregarModalIngrediente(false);
         setShowEditarIngredienteModal(false);
         setMostrarIngredientes(false);
+        setShowActivarIngredienteModal(false);
         setShowEliminarIngredienteModal(true);
+    };
+
+    const handleActivarIngrediente = (ingrediente: Ingrediente) => {
+        ingrediente.borrado = 'NO';
+        setSelectedIngrediente(ingrediente);
+        setShowAgregarModalIngrediente(false);
+        setShowEditarIngredienteModal(false);
+        setMostrarIngredientes(false);
+        setShowActivarIngredienteModal(true);
+        setShowEliminarIngredienteModal(false);
     };
 
     const handleModalClose = () => {
@@ -97,10 +111,18 @@ const Ingredientes = () => {
                             {ingredientes.map(ingrediente => (
                                 <tr key={ingrediente.id}>
                                     <td>{ingrediente.nombre}</td>
-                                    <td>
-                                        <button onClick={() => handleEliminarIngrediente(ingrediente)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
-                                    </td>
+
+                                    {ingrediente.borrado === 'NO' ? (
+                                        <td>
+                                            <button onClick={() => handleEliminarIngrediente(ingrediente)}>ELIMINAR</button>
+                                            <button onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <button onClick={() => handleActivarIngrediente(ingrediente)}>ELIMINAR</button>
+                                            <button onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
@@ -113,6 +135,10 @@ const Ingredientes = () => {
 
             <ModalCrud isOpen={showEliminarIngredienteModal} onClose={handleModalClose}>
                 {selectedIngrediente && <EliminarIngrediente ingredienteOriginal={selectedIngrediente} />}
+            </ModalCrud>
+
+            <ModalCrud isOpen={showActivarIngredienteModal} onClose={handleModalClose}>
+                {selectedIngrediente && <ActivarIngrediente ingredienteOriginal={selectedIngrediente} />}
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarIngredienteModal} onClose={handleModalClose}>

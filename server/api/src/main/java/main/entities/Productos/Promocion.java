@@ -43,7 +43,7 @@ public class Promocion {
     )
     private Set<ArticuloMenu> articulosMenu = new HashSet<>();
     @OneToMany(mappedBy = "promocion")
-    private Set<ImagenesProducto> imagenes = new HashSet<>();
+    private Set<Imagenes> imagenes = new HashSet<>();
     @Column(name = "precio_promocion")
     private double precio;
     @JsonIgnore

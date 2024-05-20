@@ -11,6 +11,7 @@ import main.entities.Ingredientes.EnumMedida;
 public class StockDTO {
     private Long id;
     private String nombre;
+    private String borrado;
     private double precioCompra;
     private int cantidadActual;
     private int cantidadMinima;

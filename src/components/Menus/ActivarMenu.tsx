@@ -4,16 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { toast, Toaster } from 'sonner';
 import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
 
-interface EliminarMenuProps {
+interface ActivarMenuProps {
   menuOriginal: ArticuloMenuDTO;
 }
 
-const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuOriginal }) => {
+const ActivarMenu: React.FC<ActivarMenuProps> = ({ menuOriginal }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
     toast.promise(MenuService.updateBorradoMenu(menuOriginal), {
-      loading: 'Eliminando articulo...',
+      loading: 'Activando articulo...',
       success: (message) => {
         return message;
       },
@@ -28,13 +28,13 @@ const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuOriginal }) => {
   };
 
   return (
-      <div className="modal-info">
-        <Toaster/>
-        <p>¿Seguro que quieres eliminar el menú?</p>
-        <button onClick={onConfirm}>Confirmar</button>
-        <button onClick={onCancel}>Cancelar</button>
-      </div>
+    <div className="modal-info">
+      <Toaster />
+      <p>¿Seguro que quieres activar el menú?</p>
+      <button onClick={onConfirm}>Confirmar</button>
+      <button onClick={onCancel}>Cancelar</button>
+    </div>
   );
 }
 
-export default EliminarMenu;
+export default ActivarMenu;

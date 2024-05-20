@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Restaurante.Sucursal;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +31,10 @@ public class ArticuloMenu extends Articulo {
     @JsonIgnoreProperties(value = {"articuloMenu"})
     @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
+    @JsonIgnoreProperties(value = {"articuloMenu"})
     @OneToMany(mappedBy = "articuloMenu", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<ImagenesProducto> imagenes = new HashSet<>();
-
+    private Set<Imagenes> imagenes = new HashSet<>();
+    @JsonIgnoreProperties(value = {"articuloMenu"})
+    @ManyToMany(mappedBy = "articulosMenu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Sucursal> sucursales = new HashSet<>();
 }

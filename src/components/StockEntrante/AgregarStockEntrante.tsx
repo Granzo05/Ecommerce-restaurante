@@ -69,7 +69,7 @@ function AgregarStockEntrante() {
   };
 
   const añadirCampoIngrediente = () => {
-    setIngredientesInputs([...ingredientesInputs, { id: 0, nombre: '', stock: null, medida: '' }]);
+    setIngredientesInputs([...ingredientesInputs, { id: 0, nombre: '', stock: null, medida: '', borrado: 'NO' }]);
 
     if (lastIndexDetalle !== 0) lastIndexDetalle++;
   };
@@ -86,7 +86,7 @@ function AgregarStockEntrante() {
   const añadirCampoArticulo = () => {
     setArticulosVentaInputs([...articulosVentaInputs, {
       id: 0, tipo: '', medida: '', cantidad: 0, cantidadMedida: 0, nombre: '', precioVenta: 0,
-      imagenes: [], imagenesDTO: [], promociones: []
+      imagenes: [], imagenesDTO: [], promociones: [], borrado: 'NO'
     }]);
   };
 
@@ -138,6 +138,7 @@ function AgregarStockEntrante() {
 
     stockEntrante.fechaLlegada = fecha;
     stockEntrante.detallesStock = detallesStock;
+    stockEntrante.borrado = 'NO';
 
     toast.promise(StockEntranteService.createStock(stockEntrante), {
       loading: 'Creando stock entrante...',
@@ -161,7 +162,7 @@ function AgregarStockEntrante() {
         <div className='div-ingrediente-menu' key={index}>
           <div>
             <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingrediente?.nombre ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
+            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
           </div>
           <div className="inputBox">
             <input type="number" required={true} onChange={(e) => almacenarCantidad(lastIndexDetalle, parseFloat(e.target.value))} />
@@ -182,7 +183,7 @@ function AgregarStockEntrante() {
         <div className='div-ingrediente-menu' key={index}>
           <div>
             <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={articulo?.nombre ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
+            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
           </div>
           <div className="inputBox">
             <input type="number" required={true} onChange={(e) => almacenarCantidad(lastIndexDetalle, parseFloat(e.target.value))} />

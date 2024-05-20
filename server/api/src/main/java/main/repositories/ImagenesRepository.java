@@ -1,7 +1,7 @@
 package main.repositories;
 
-import main.entities.Productos.ImagenesProducto;
-import main.entities.Productos.ImagenesProductoDTO;
+import main.entities.Productos.Imagenes;
+import main.entities.Productos.ImagenesDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,13 +10,17 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ImagenesProductoRepository extends JpaRepository<ImagenesProducto, Long> {
-    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato, i.borrado) FROM ImagenesProducto i WHERE i.ruta = :nombre")
-    ImagenesProductoDTO findByRuta(@Param("nombre") String nombre);
+public interface ImagenesRepository extends JpaRepository<Imagenes, Long> {
 
-    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato, i.borrado) FROM ImagenesProducto i WHERE i.articuloMenu.id = :id ")
-    List<ImagenesProductoDTO> findByIdMenu(@Param("id") Long id);
+    @Query("SELECT i FROM Imagenes i WHERE i.articuloMenu.id = :id ")
+    List<Imagenes> findByIdMenu(@Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato, i.borrado) FROM ImagenesProducto i WHERE i.articuloVenta.id = :id")
-    List<ImagenesProductoDTO> findByIdArticulo(@Param("id") Long id);
+    @Query("SELECT NEW main.entities.Productos.ImagenesDTO(i.id, i.nombre, i.ruta, i.formato, i.borrado) FROM Imagenes i WHERE i.articuloMenu.id = :id ")
+    List<ImagenesDTO> findByIdMenuDTO(@Param("id") Long id);
+
+    @Query("SELECT i FROM Imagenes i WHERE i.articuloVenta.id = :id")
+    List<Imagenes> findByIdArticulo(@Param("id") Long id);
+
+    @Query("SELECT NEW main.entities.Productos.ImagenesDTO(i.id, i.nombre, i.ruta, i.formato, i.borrado) FROM Imagenes i WHERE i.articuloVenta.id = :id")
+    List<ImagenesDTO> findByIdArticuloDTO(@Param("id") Long id);
 }

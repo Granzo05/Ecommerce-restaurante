@@ -16,9 +16,15 @@ public interface ArticuloMenuRepository extends JpaRepository<ArticuloMenu, Long
     @Query("SELECT m FROM ArticuloMenu m WHERE m.nombre = :nombre")
     Optional<ArticuloMenu> findByName(@Param("nombre") String nombre);
 
-    @Query("SELECT NEW main.entities.Productos.ArticuloMenuDTO(m.id, m.nombre,m.precioVenta ,m.tiempoCoccion, m.tipo, m.comensales, m.descripcion) FROM ArticuloMenu m WHERE m.borrado = 'NO'")
-    List<ArticuloMenuDTO> findAllByNotBorrado();
+    @Query("SELECT NEW main.entities.Productos.ArticuloMenuDTO(m.id, m.nombre,m.precioVenta ,m.tiempoCoccion, m.tipo, m.comensales, m.descripcion, m.borrado) FROM ArticuloMenu m JOIN m.sucursales s WHERE s.id = :idSucursal")
+    List<ArticuloMenuDTO> findAllBySucursal( @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT NEW main.entities.Productos.ArticuloMenuDTO(m.id, m.nombre,m.precioVenta ,m.tiempoCoccion, m.tipo, m.comensales, m.descripcion) FROM ArticuloMenu m WHERE m.borrado = 'NO' AND m.tipo = :tipo")
-    List<ArticuloMenuDTO> findByType(EnumTipoArticuloComida tipo);
+    @Query("SELECT NEW main.entities.Productos.ArticuloMenuDTO(m.id, m.nombre,m.precioVenta ,m.tiempoCoccion, m.tipo, m.comensales, m.descripcion, m.borrado) FROM ArticuloMenu m JOIN m.sucursales s WHERE m.id = :idMenu AND s.id = :idSucursal")
+    Optional<ArticuloMenu> findByIdMenuAndIdSucursal(@Param("idMenu") Long idMenu, @Param("idSucursal") Long idSucursal);
+
+    @Query("SELECT NEW main.entities.Productos.ArticuloMenuDTO(m.id, m.nombre,m.precioVenta ,m.tiempoCoccion, m.tipo, m.comensales, m.descripcion, m.borrado) FROM ArticuloMenu m JOIN m.sucursales s WHERE m.id = :idMenu AND s.id = :idSucursal")
+    Optional<ArticuloMenuDTO> findByIdMenuAndIdSucursalDTO(@Param("idMenu") Long idMenu, @Param("idSucursal") Long idSucursal);
+
+    @Query("SELECT NEW main.entities.Productos.ArticuloMenuDTO(m.id, m.nombre,m.precioVenta ,m.tiempoCoccion, m.tipo, m.comensales, m.descripcion, m.borrado) FROM ArticuloMenu m JOIN m.sucursales s WHERE m.tipo = :tipo AND s.id = :idSucursal")
+    List<ArticuloMenuDTO> findByTipoAndIdSucursal(EnumTipoArticuloComida tipo,@Param("idSucursal") Long idSucursal);
 }

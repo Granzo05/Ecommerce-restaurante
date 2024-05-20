@@ -10,6 +10,7 @@ import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import AgregarArticuloVenta from './AgregarArticulo';
 import EditarArticuloVenta from './EditarArticulo';
 import EliminarArticuloVenta from './EliminarArticulo';
+import ActivarArticuloVenta from './ActivarArticulo';
 
 const ArticuloVentas = () => {
     const [articulosVenta, setArticulosVenta] = useState<ArticuloVenta[]>([]);
@@ -18,9 +19,9 @@ const ArticuloVentas = () => {
     const [showAgregarArticuloVentaModal, setShowAgregarArticuloVentaModal] = useState(false);
     const [showEditarArticuloVentaModal, setShowEditarArticuloVentaModal] = useState(false);
     const [showEliminarArticuloVentaModal, setShowEliminarArticuloVentaModal] = useState(false);
+    const [showActivarArticuloVentaModal, setShowActivarArticuloVentaModal] = useState(false);
 
     const [selectedArticuloVenta, setSelectedArticuloVenta] = useState<ArticuloVenta | null>(null);
-    const [selectedId, setSelectedId] = useState<number | null>(0);
 
     useEffect(() => {
         fetchData();
@@ -65,11 +66,23 @@ const ArticuloVentas = () => {
         setMostrarArticuloVenta(false);
     };
 
-    const handleEliminarArticuloVenta = (id: number) => {
-        setSelectedId(id);
+    const handleEliminarArticuloVenta = (articulo: ArticuloVenta) => {
+        articulo.borrado = 'SI';
+        setSelectedArticuloVenta(articulo);
         setShowAgregarArticuloVentaModal(false);
         setShowEditarArticuloVentaModal(false);
+        setShowActivarArticuloVentaModal(false);
         setShowEliminarArticuloVentaModal(true);
+        setMostrarArticuloVenta(false);
+    };
+
+    const handleActivarArticuloVenta = (articulo: ArticuloVenta) => {
+        articulo.borrado = 'NO';
+        setSelectedArticuloVenta(articulo);
+        setShowAgregarArticuloVentaModal(false);
+        setShowEditarArticuloVentaModal(false);
+        setShowEliminarArticuloVentaModal(false);
+        setShowActivarArticuloVentaModal(true);
         setMostrarArticuloVenta(false);
     };
 
@@ -104,9 +117,21 @@ const ArticuloVentas = () => {
                                     <td>{articulo.precioVenta}</td>
 
                                     <td>
-                                        <button onClick={() => handleEliminarArticuloVenta(articulo.id)}>ELIMINAR</button>
+                                        <button onClick={() => handleEliminarArticuloVenta(articulo)}>ELIMINAR</button>
                                         <button onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
                                     </td>
+
+                                    {articulo.borrado === 'NO' ? (
+                                        <td>
+                                            <button onClick={() => handleEliminarArticuloVenta(articulo)}>ELIMINAR</button>
+                                            <button onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <button onClick={() => handleActivarArticuloVenta(articulo)}>ACTIVAR</button>
+                                            <button onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
@@ -121,9 +146,11 @@ const ArticuloVentas = () => {
                 {selectedArticuloVenta && <EditarArticuloVenta articuloOriginal={selectedArticuloVenta} />}
             </ModalFlotante>
             <ModalFlotante isOpen={showEliminarArticuloVentaModal} onClose={handleModalClose}>
-                {selectedId && <EliminarArticuloVenta articuloId={selectedId} />}
+                {selectedArticuloVenta && <EliminarArticuloVenta articuloOriginal={selectedArticuloVenta} />}
             </ModalFlotante>
-
+            <ModalFlotante isOpen={showActivarArticuloVentaModal} onClose={handleModalClose}>
+                {selectedArticuloVenta && <ActivarArticuloVenta articuloOriginal={selectedArticuloVenta} />}
+            </ModalFlotante>
         </div>
 
     )

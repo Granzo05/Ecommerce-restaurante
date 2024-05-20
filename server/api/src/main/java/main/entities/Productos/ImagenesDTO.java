@@ -6,8 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ImagenesProductoDTO {
+public class ImagenesDTO {
     private Long id;
     private String nombre;
     private String ruta;

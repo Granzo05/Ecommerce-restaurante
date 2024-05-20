@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
+import main.entities.Productos.Articulo;
+import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Promocion;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockEntrante;
@@ -62,4 +65,19 @@ public class Sucursal {
     @JsonIgnoreProperties(value = "sucursal")
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "articulos_menu_sucursal",
+            joinColumns = @JoinColumn(name = "id_sucursal"),
+            inverseJoinColumns = @JoinColumn(name = "id_articulo_menu")
+    )
+    private Set<ArticuloMenu> articulosMenu = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "articulos_venta_sucursal",
+            joinColumns = @JoinColumn(name = "id_sucursal"),
+            inverseJoinColumns = @JoinColumn(name = "id_articulo_venta")
+    )
+    private Set<ArticuloVenta> articulosVenta = new HashSet<>();
 }

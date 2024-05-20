@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
-import EliminarStock from "./EliminarStockEntrante";
 import EditarStock from "./EditarStockEntrante";
 import '../../styles/stock.css';
 import { StockEntranteService } from "../../services/StockEntranteService";
 import { StockEntrante } from "../../types/Stock/StockEntrante";
 import AgregarStockEntrante from "./AgregarStockEntrante";
+import ActivarStockEntrante from "./ActivarStockEntrante";
+import EliminarStockEntrante from "./EliminarStockEntrante";
 
 const StocksEntrantes = () => {
     const [stockEntrante, setStockEntrante] = useState<StockEntrante[]>([]);
@@ -14,6 +15,7 @@ const StocksEntrantes = () => {
     const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
     const [showEditarStockModal, setShowEditarStockModal] = useState(false);
     const [showEliminarStockModal, setShowEliminarStockModal] = useState(false);
+    const [showActivarStockModal, setShowActivarStockModal] = useState(false);
 
     const [selectedStock, setSelectedStock] = useState<StockEntrante | null>(null);
 
@@ -41,8 +43,18 @@ const StocksEntrantes = () => {
     };
 
     const handleEliminarStock = (stock: StockEntrante) => {
+        stock.borrado = 'SI';
         setSelectedStock(stock);
         setShowEliminarStockModal(true);
+        setShowActivarStockModal(false);
+        setMostrarStocks(false);
+    };
+
+    const handleActivarStock = (stock: StockEntrante) => {
+        stock.borrado = 'NO';
+        setSelectedStock(stock);
+        setShowEliminarStockModal(false);
+        setShowActivarStockModal(true);
         setMostrarStocks(false);
     };
 
@@ -80,17 +92,30 @@ const StocksEntrantes = () => {
                                     <td>{stock?.sucursal?.id}</td>
                                     <td>{stock.fechaLlegada?.toDateString()}</td>
                                     <td>{stock.costo}</td>
-                                    <td>
-                                        <button onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
-                                    </td>
+
+                                    {stock.borrado === 'NO' ? (
+                                        <td>
+                                            <button onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
+                                            <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <button onClick={() => handleActivarStock(stock)}>ACTIVAR</button>
+                                            <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                        </td>
+                                    )}
+
                                 </tr>
                             ))}
                         </tbody>
                     </table>
 
                     <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                        {selectedStock && <EliminarStock stockEntrante={selectedStock} />}
+                        {selectedStock && <EliminarStockEntrante stockEntrante={selectedStock} />}
+                    </ModalCrud>
+
+                    <ModalCrud isOpen={showActivarStockModal} onClose={handleModalClose}>
+                        {selectedStock && <ActivarStockEntrante stockEntrante={selectedStock} />}
                     </ModalCrud>
 
                     <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>

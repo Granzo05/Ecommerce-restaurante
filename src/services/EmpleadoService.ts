@@ -97,7 +97,6 @@ export const EmpleadoService = {
             console.error('Error:', error);
             throw error;
         }
-
     },
 
     deleteEmpleado: async (cuilEmpleado: string): Promise<string> => {

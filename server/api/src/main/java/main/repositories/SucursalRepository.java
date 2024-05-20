@@ -25,7 +25,7 @@ public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
     @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id, s.telefono, s.email, s.horarioApertura, s.horarioCierre, s.borrado) FROM Sucursal s")
     List<SucursalDTO> findAllDTO();
 
-    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id) FROM Sucursal s WHERE s.email = :email AND s.contraseña = :contraseña")
+    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id) FROM Sucursal s WHERE s.email = :email AND s.contraseña = :contraseña AND s.borrado = 'NO'")
     SucursalDTO findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String password);
 
 }

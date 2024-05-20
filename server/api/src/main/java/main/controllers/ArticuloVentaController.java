@@ -1,11 +1,9 @@
 package main.controllers;
 
-import main.entities.Productos.ArticuloVenta;
-import main.entities.Productos.EnumTipoArticuloComida;
-import main.entities.Productos.ImagenesProducto;
-import main.repositories.ArticuloVentaRepository;
-import main.repositories.ImagenesProductoRepository;
-import main.repositories.IngredienteRepository;
+import main.entities.Productos.*;
+import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockArticuloVenta;
+import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -23,35 +19,54 @@ import java.util.Set;
 
 @RestController
 public class ArticuloVentaController {
-    private final IngredienteRepository ingredienteRepository;
-
-    private final ImagenesProductoRepository imagenesProductoRepository;
+    private final StockArticuloVentaRepository stockArticuloVentaRepository;
+    private final ImagenesRepository imagenesRepository;
     private final ArticuloVentaRepository articuloVentaRepository;
+    private final SucursalRepository sucursalRepository;
 
-    public ArticuloVentaController(IngredienteRepository ingredienteRepository, ImagenesProductoRepository imagenesProductoRepository, ArticuloVentaRepository articuloVentaRepository) {
-        this.ingredienteRepository = ingredienteRepository;
-        this.imagenesProductoRepository = imagenesProductoRepository;
+    public ArticuloVentaController(StockArticuloVentaRepository stockArticuloVentaRepository, ImagenesRepository imagenesRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository) {
+        this.stockArticuloVentaRepository = stockArticuloVentaRepository;
+        this.imagenesRepository = imagenesRepository;
         this.articuloVentaRepository = articuloVentaRepository;
+        this.sucursalRepository = sucursalRepository;
     }
 
     // Busca por id de articulo
-    @GetMapping("/articulos")
-    public Set<ArticuloVenta> getArticulosDisponibles() {
-        List<ArticuloVenta> articulos = articuloVentaRepository.findAllByNotBorrado();
-        System.out.println(articulos);
-        for (ArticuloVenta articulo : articulos) {
-            articulo.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdArticulo(articulo.getId())));
+    @GetMapping("/articulos/{idSucursal}")
+    public Set<ArticuloVentaDTO> getArticulosDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloVentaDTO> articulos = articuloVentaRepository.findAllBySucursal(idSucursal);
+
+        for (ArticuloVentaDTO articulo : articulos) {
+            articulo.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdArticuloDTO(articulo.getId())));
         }
 
         return new HashSet<>(articulos);
     }
 
     @Transactional
-    @PostMapping("/articulo/create")
-    public ResponseEntity<String> crearArticulo(@RequestBody ArticuloVenta articuloVenta) {
+    @PostMapping("/articulo/create/{idSucursal}")
+    public ResponseEntity<String> crearArticulo(@RequestBody ArticuloVenta articuloVenta, @PathVariable("idSucursal") Long idSucursal) {
         Optional<ArticuloVenta> articuloDB = articuloVentaRepository.findByName(articuloVenta.getNombre());
         if (articuloDB.isEmpty()) {
+            // Si la sucursal coincide con los privilegios del admin o de la empresa que agregue todas las sucursales al menu
+            if (idSucursal == 0) {
+                List<Sucursal> sucursales = sucursalRepository.findAll();
+                for (Sucursal sucursal : sucursales) {
+                    sucursal.getArticulosVenta().add(articuloVenta);
+                    articuloVenta.getSucursales().add(sucursal);
+                }
+            } else {
+                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                if (sucursalOpt.isPresent()) {
+                    Sucursal sucursal = sucursalOpt.get();
+                    sucursal.getArticulosVenta().add(articuloVenta);
+                    articuloVenta.getSucursales().add(sucursal);
+                } else {
+                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                }
+            }
             articuloVentaRepository.save(articuloVenta);
+
             return new ResponseEntity<>("El articulo ha sido añadido correctamente", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Hay un articulo creado con ese nombre", HttpStatus.FOUND);
@@ -60,7 +75,7 @@ public class ArticuloVentaController {
 
     @PostMapping("/articulo/imagenes")
     public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("nombreArticulo") String nombreArticulo) {
-        HashSet<ImagenesProducto> listaImagenes = new HashSet<>();
+        HashSet<Imagenes> listaImagenes = new HashSet<>();
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
@@ -81,7 +96,7 @@ public class ArticuloVentaController {
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();
 
-            ImagenesProducto imagen = new ImagenesProducto();
+            Imagenes imagen = new Imagenes();
             imagen.setNombre(fileName.replaceAll(" ", ""));
             imagen.setRuta(downloadUrl);
             imagen.setFormato(file.getContentType());
@@ -89,7 +104,7 @@ public class ArticuloVentaController {
             listaImagenes.add(imagen);
 
             try {
-                for (ImagenesProducto imagenProducto : listaImagenes) {
+                for (Imagenes imagenProducto : listaImagenes) {
                     // Asignamos el articulo a la imagen
                     Optional<ArticuloVenta> articulo = articuloVentaRepository.findByName(nombreArticulo);
                     if (articulo.isEmpty()) {
@@ -97,7 +112,7 @@ public class ArticuloVentaController {
                     }
                     imagenProducto.setArticuloVenta(articulo.get());
 
-                    imagenesProductoRepository.save(imagen);
+                    imagenesRepository.save(imagen);
                 }
 
             } catch (Exception e) {
@@ -115,62 +130,66 @@ public class ArticuloVentaController {
 
     @PutMapping("/articulo/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
-        Optional<ImagenesProducto> imagen = imagenesProductoRepository.findById(id);
+        List<Imagenes> imagenes = imagenesRepository.findByIdArticulo(id);
 
-        if (imagen.isPresent()) {
+        for (Imagenes imagen: imagenes) {
             try {
-                imagen.get().setBorrado("SI");
-                imagenesProductoRepository.save(imagen.get());
+                imagen.setBorrado("SI");
+                imagenesRepository.save(imagen);
                 return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
             } catch (Exception e) {
                 System.out.println("Error al crear la imagen: " + e);
             }
         }
+
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/articulo/tipo/{tipoArticulo}")
-    public Set<ArticuloVenta> getArticulosPorTipo(@PathVariable("tipoArticulo") String tipo) {
+    @GetMapping("/articulo/tipo/{tipoArticulo}/{idSucursal}")
+    public Set<ArticuloVentaDTO> getArticulosPorTipo(@PathVariable("tipoArticulo") String tipo, @PathVariable("idSucursal") Long id) {
         String tipoArticulo = tipo.toUpperCase().replace(" ", "_");
-        Set<ArticuloVenta> articuloVentas = (new HashSet<>(articuloVentaRepository.findByType(EnumTipoArticuloComida.valueOf(tipoArticulo))));
+        Set<ArticuloVentaDTO> articuloVentas = (new HashSet<>(articuloVentaRepository.findByTipoAndIdSucursal(EnumTipoArticuloVenta.valueOf(tipoArticulo), id)));
 
-        for (ArticuloVenta articuloVenta : articuloVentas) {
-            articuloVenta.setImagenesDTO(new HashSet<>(imagenesProductoRepository.findByIdArticulo(articuloVenta.getId())));
+        for (ArticuloVentaDTO articuloVenta : articuloVentas) {
+            articuloVenta.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdArticuloDTO(articuloVenta.getId())));
         }
 
         return articuloVentas;
     }
 
-    @PutMapping("/articulo/update")
-    public ResponseEntity<String> actualizarArticulo(@RequestBody ArticuloVenta articuloVentaDetail) {
-        Optional<ArticuloVenta> articuloEncontrado = articuloVentaRepository.findById(articuloVentaDetail.getId());
+    @PutMapping("/articulo/update/{idSucursal}")
+    public ResponseEntity<String> actualizarArticulo(@RequestBody ArticuloVenta articuloVentaDetail, @PathVariable("idSucursal") Long id) {
+        Optional<ArticuloVenta> articuloEncontrado = articuloVentaRepository.findByIdArticuloAndIdSucursal(articuloVentaDetail.getId(), id);
 
-        if (articuloEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El articulo no se encuentra", HttpStatus.NOT_FOUND);
+        if (articuloEncontrado.isPresent() && articuloEncontrado.get().getBorrado().equals(articuloVentaDetail.getBorrado())) {
+            ArticuloVenta articuloVenta = articuloEncontrado.get();
+            articuloVenta.setPrecioVenta(articuloVentaDetail.getPrecioVenta());
+            articuloVenta.setNombre(articuloVentaDetail.getNombre());
+            articuloVenta.setTipo(articuloVentaDetail.getTipo());
+            articuloVenta.setMedida(articuloVentaDetail.getMedida());
+            articuloVenta.setCantidadMedida(articuloVentaDetail.getCantidadMedida());
+
+            articuloVentaRepository.save(articuloVenta);
+
+            return ResponseEntity.ok("El articulo ha sido actualizado correctamente");
+
+        } else if (articuloEncontrado.isPresent() && !articuloEncontrado.get().getBorrado().equals(articuloVentaDetail.getBorrado())) {
+            ArticuloVenta articuloVenta = articuloEncontrado.get();
+
+            articuloVenta.setBorrado(articuloVentaDetail.getBorrado());
+
+            articuloVentaRepository.save(articuloVenta);
+
+            Optional<StockArticuloVenta> stock = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(articuloVenta.getId(), id);
+
+            if (stock.isPresent()) {
+                stock.get().setBorrado("SI");
+            }
+
+            return ResponseEntity.ok("El articulo ha sido actualizado correctamente");
         }
 
-        ArticuloVenta articuloVenta = articuloEncontrado.get();
-        System.out.println(articuloVentaDetail);
-        articuloVenta.setPrecioVenta(articuloVentaDetail.getPrecioVenta());
-        articuloVenta.setNombre(articuloVentaDetail.getNombre());
-        articuloVenta.setTipo(articuloVentaDetail.getTipo());
-        articuloVenta.setMedida(articuloVentaDetail.getMedida());
-        articuloVenta.setCantidadMedida(articuloVentaDetail.getCantidadMedida());
-
-        articuloVentaRepository.save(articuloVenta);
-
-        return new ResponseEntity<>("El articulo ha sido actualizado correctamente", HttpStatus.ACCEPTED);
+        return ResponseEntity.ofNullable("El articulo no se ha encontrado");
     }
 
-    @PutMapping("/articulo/{id}/delete")
-    public ResponseEntity<String> borrarArticulo(@PathVariable("id") Long id) {
-        Optional<ArticuloVenta> articulo = articuloVentaRepository.findById(id);
-        if (articulo.isEmpty()) {
-            return new ResponseEntity<>("El articulo ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
-        }
-
-        articulo.get().setBorrado("SI");
-        articuloVentaRepository.save(articulo.get());
-        return new ResponseEntity<>("El articulo ha sido borrado correctamente", HttpStatus.ACCEPTED);
-    }
 }

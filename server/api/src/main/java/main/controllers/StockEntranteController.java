@@ -93,55 +93,7 @@ public class StockEntranteController {
 
                 stock.setDetallesStock(stockEntrante.getDetallesStock());
             }
-            /*
-            Posible forma, el problema es que revisar uno por uno es un quilombo de lógica, para algo que no va a interactuar con nada más, es más sencillo
-            Eliminar los valores anteriores y sobreescribirlos
 
-            // Comparamos el largo de ambos arrays para ver si vienen mas o menos detalles de la edicion y asi evitamos un out of bounds
-            int sizeArrayMasLargo = 0;
-            boolean stockEntranteMayor = false;
-            if (detallesStockDB.size() < detallesStockEntrante.size()) {
-                // Si es menor el de la db vamos a tener que crear un nuevo detalle
-                sizeArrayMasLargo = detallesStockEntrante.size();
-                stockEntranteMayor = true;
-            } else {
-                // Si es mayor el de la db vamos a tener que elimianar un detalle
-                sizeArrayMasLargo = detallesStockDB.size();
-            }
-
-            for (int i = 0; i < sizeArrayMasLargo; i++) {
-                try {
-                    // Al trabajar con un articulo o un ingrediente por fila(i) hay que comparar ambos
-                    boolean encontrado = false;
-                    if (detallesStockEntrante.get(i).getIngrediente() != null && !detallesStockDB.stream().toList().get(i).getIngrediente().getNombre().equals(detallesStockEntrante.stream().toList().get(i).getIngrediente().getNombre())) {
-                        // Si el ingrediente ingresado no es nulo pero es distinto al almacenado lo modificamos
-                        stock.getDetallesStock().stream().toList().get(i).setIngrediente(detallesStockEntrante.stream().toList().get(i).getIngrediente());
-                        encontrado = true;
-                    }
-
-                    if (detallesStockEntrante.get(i).getArticuloVenta() != null && !detallesStockDB.stream().toList().get(i).getArticuloVenta().getNombre().equals(detallesStockEntrante.stream().toList().get(i).getArticuloVenta().getNombre())) {
-                        // Si el articulo ingresado no es nulo pero es distinto al almacenado lo modificamos
-                        stock.getDetallesStock().stream().toList().get(i).setArticuloVenta(detallesStockEntrante.stream().toList().get(i).getArticuloVenta());
-                        encontrado = true;
-                    }
-
-                    if (!encontrado && stockEntranteMayor) {
-                        DetalleStock detalle = new DetalleStock();
-
-                        detalle.setStockEntrante(stock);
-                        detalle.setMedida(detallesStockEntrante.get(i).getMedida());
-                        detalle.setSubTotal(detallesStockEntrante.get(i).getSubTotal());
-                        detalle.setCantidad(detallesStockEntrante.get(i).getCantidad());
-                        detalle.setIngrediente(detallesStockEntrante.get(i).getIngrediente());
-                        detalle.setArticuloVenta(detallesStockEntrante.get(i).getArticuloVenta());
-
-                        stock.getDetallesStock().add(detalle);
-                    }
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println(e);
-                }
-            }
-            */
             stockEntranteRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
         } else {

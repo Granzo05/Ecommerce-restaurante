@@ -19,15 +19,17 @@ public class ArticuloMenuDTO extends Articulo {
     private EnumTipoArticuloComida tipo;
     private int comensales;
     private String descripcion;
+    private String borrado;
     private Set<IngredienteMenuDTO> ingredientesMenu = new HashSet<>();
-    private Set<ImagenesProductoDTO> imagenes = new HashSet<>();
+    private Set<ImagenesDTO> imagenes = new HashSet<>();
 
-    public ArticuloMenuDTO(Long id, String nombre, double precioVenta, int tiempoCoccion, EnumTipoArticuloComida tipo, int comensales, String descripcion) {
+    public ArticuloMenuDTO(Long id, String nombre, double precioVenta, int tiempoCoccion, EnumTipoArticuloComida tipo, int comensales, String descripcion, String borrado) {
         super(nombre, precioVenta);
         this.id = id;
         this.tiempoCoccion = tiempoCoccion;
         this.tipo = tipo;
         this.comensales = comensales;
         this.descripcion = descripcion;
+        this.borrado = borrado;
     }
 }

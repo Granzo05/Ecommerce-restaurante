@@ -71,6 +71,7 @@ function AgregarArticuloVenta() {
     articulo.precioVenta = precio;
     articulo.medida = medida;
     articulo.cantidadMedida = cantidad;
+    articulo.borrado = 'NO';
 
     toast.promise(ArticuloVentaService.createArticulo(articulo, imagenes), {
       loading: 'Creando articulo...',
@@ -112,10 +113,6 @@ function AgregarArticuloVenta() {
         <span>Precio</span>
       </div>
       <br />
-      <div className="inputBox">
-        <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
-        <span>Cantidad</span>
-      </div>
       <label>
         <select name="tipoArticulo" required={true} onChange={(e) => { setTipo(e.target.value) }}>
           <option>Seleccionar tipo de articulo</option>
@@ -136,6 +133,10 @@ function AgregarArticuloVenta() {
         <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
       </select>
       <br />
+      <div className="inputBox">
+        <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
+        <span>Cantidad de la medida</span>
+      </div>
       <button type="button" onClick={agregarArticulo}>Agregar articulo</button>
     </div >
   )

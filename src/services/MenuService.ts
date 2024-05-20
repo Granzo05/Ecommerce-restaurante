@@ -54,7 +54,7 @@ export const MenuService = {
                 }));
             }
 
-            
+
             return 'Menú creado con éxito';
 
         } catch (error) {
@@ -108,6 +108,25 @@ export const MenuService = {
                 }
             }
             return 'Articulo actualizado con éxito';
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
+    },
+
+    updateBorradoMenu: async (menu: ArticuloMenuDTO): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'menu/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(menu)
+            })
+
+            return response.text();
 
         } catch (error) {
             console.error('Error:', error);

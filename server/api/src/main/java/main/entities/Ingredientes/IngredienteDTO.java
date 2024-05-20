@@ -11,4 +11,5 @@ import main.entities.Stock.StockIngredientes;
 public class IngredienteDTO {
     private Long id;
     private String nombre;
+    private String borrado;
 }
