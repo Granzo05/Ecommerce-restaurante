@@ -10,8 +10,7 @@ import { DepartamentoService } from "../services/DepartamentoService";
 import { ArticuloVentaService } from "../services/ArticuloVentaService";
 import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 import CloseIcon from '@mui/icons-material/Close';
-import '../styles/modals.css'
-import SearchIcon from '@mui/icons-material/Search';
+import '../styles/modalFlotante.css'
 import '../styles/inputLabel.css'
 
 const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelectProduct: (product: string) => void, elementoBuscado: string, inputDepartamento: string, inputProvincia: string }> = ({ onCloseModal, onSelectProduct, elementoBuscado, inputDepartamento, inputProvincia }) => {
@@ -83,13 +82,12 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
 
   return (
     <div>
-      <div className="modal-overlay" onClick={handleModalClose}>
+      <div className="modal-overlay">
 
-        <div className="modal-flotante-recom-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>Filtrar ingredientes</h2>
           <div className="inputBox">
-            <SearchIcon className="search-icono" />
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>

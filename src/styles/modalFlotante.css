@@ -49,3 +49,12 @@
   max-width: 400px;
   width: 100vh;
 }
+
+.modal-flotante-content .inputBox{
+  max-width: 400px;
+  width: 100vh;
+}
+
+.modal-flotante-content h2{
+  text-align: center;
+}
