@@ -5,7 +5,7 @@ import { Toaster, toast } from 'sonner'
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockIngredientes } from '../../types/Stock/StockIngredientes';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
-import '../../styles/modals.css'
+import '../../styles/modalFlotante.css'
 
 function AgregarStockIngrediente() {
 
@@ -17,7 +17,10 @@ function AgregarStockIngrediente() {
   const [nombreIngrediente, setArticuloVenta] = useState('0');
 
   async function crearStockIngrediente() {
-    if (!nombreIngrediente) {
+    if (!medida && !cantidadMaxima && !costoIngrediente && !cantidadMinima && !cantidadActual && !nombreIngrediente) {
+      toast.error("Por favor, llene todos los campos");
+      return;
+    } else if (!nombreIngrediente) {
       toast.error("Por favor, es necesario el nombre");
       return;
     } else if (!cantidadActual) {
@@ -95,18 +98,20 @@ function AgregarStockIngrediente() {
         </div>
 
       </label>
-      <label className='span-unidad'>Unidad de medida:</label>
-      <label className='select'>
-        <select 
-          onChange={(e) => setMedida(e.target.value)}
-        >
-          <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-          <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-          <option value={EnumMedida.LITROS.toString()}>Litros</option>
-          <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-          <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-        </select>
-        
+      <label>
+        <div className="inputBox">
+          <select
+            onChange={(e) => setMedida(e.target.value)}
+            defaultValue="" // Establece el valor por defecto
+          >
+            <option value="" disabled hidden>Seleccione la unidad de medida</option>
+            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+            <option value={EnumMedida.LITROS.toString()}>Litros</option>
+            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
+          </select>
+        </div>
       </label>
       <br />
       <label>
