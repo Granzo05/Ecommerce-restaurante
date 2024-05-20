@@ -6,6 +6,7 @@ export class ClienteDTO {
     email: string = '';
     domicilios: Domicilio[] = [];
     telefono: number = 0;
+    borrado: string = '';
 
     constructor(){
     }

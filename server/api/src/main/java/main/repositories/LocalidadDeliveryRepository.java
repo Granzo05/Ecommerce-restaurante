@@ -13,6 +13,4 @@ public interface LocalidadDeliveryRepository extends JpaRepository<LocalidadDeli
 
     @Query("SELECT l FROM LocalidadDelivery l WHERE l.sucursal.id = :id")
     List<LocalidadDelivery> findByIdSucursal(@Param("id") Long id);
-
-
 }

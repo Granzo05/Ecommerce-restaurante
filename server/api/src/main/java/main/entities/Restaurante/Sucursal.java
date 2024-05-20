@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
+import main.entities.Domicilio.DomicilioDTO;
 import main.entities.Productos.Promocion;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockEntrante;

@@ -6,6 +6,7 @@ export class Ingrediente {
     nombre: string = '';
     stock: StockIngredientes | null = null;
     medida: EnumMedida | string = '';
+    borrado: string = '';
     
     constructor() {
     }

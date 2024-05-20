@@ -12,6 +12,7 @@ export class DetalleStock {
     ingrediente: Ingrediente | null = null;
     articuloVenta: ArticuloVenta | null = null;
     stockEntrante: StockEntrante | null = null;
+    borrado: string = '';
 
     constructor() {
 

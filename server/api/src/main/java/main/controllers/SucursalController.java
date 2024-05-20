@@ -55,7 +55,7 @@ public class SucursalController {
     @CrossOrigin
     @GetMapping("/sucursales")
     public Set<SucursalDTO> getSucursales() throws Exception {
-        List<SucursalDTO> sucursales = sucursalRepository.findAllNoBorrado();
+        List<SucursalDTO> sucursales = sucursalRepository.findAllDTO();
 
         for (SucursalDTO sucursal : sucursales) {
             DomicilioDTO domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
@@ -63,8 +63,8 @@ public class SucursalController {
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
 
             sucursal.setDomicilio(domicilio);
+            sucursal.setLocalidadesDisponiblesDelivery(localidadDeliveryRepository.findByIdSucursal(sucursal.getId()));
         }
-
 
         return new HashSet<>(sucursales);
     }
@@ -117,7 +117,7 @@ public class SucursalController {
             domicilio.setSucursal(sucursalDetails);
 
             sucursalDetails.setDomicilio(domicilio);
-            
+
             sucursalDetails.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
 
             sucursalDetails.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));

@@ -5,18 +5,18 @@ import { SucursalService } from '../../services/SucursalService';
 import { Toaster, toast } from 'sonner'
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 
-interface EliminarSucursalProps {
+interface ActivarSucursalProps {
   sucursal: Sucursal;
 }
 
-const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ sucursal }) => {
+const ActivarSucursal: React.FC<ActivarSucursalProps> = ({ sucursal }) => {
   const navigate = useNavigate();
 
   const onConfirm = () => {
     toast.promise(SucursalService.updateRestaurant(sucursal), {
-      loading: 'Eliminando sucursal...',
+      loading: 'Activando sucursal...',
       success: () => {
-        return `Sucursal eliminada correctamente`;
+        return `Sucursal activada correctamente`;
       },
       error: 'Error',
     });
@@ -30,7 +30,7 @@ const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ sucursal }) => {
   return (
     <div>
       <Toaster />
-      <p>¿Seguro que quieres eliminar la sucursal?</p>
+      <p>¿Seguro que quieres activar la sucursal?</p>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <button onClick={onConfirm}>Confirmar</button>
         <button onClick={onCancel}>Cancelar</button>
@@ -39,4 +39,4 @@ const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ sucursal }) => {
   );
 }
 
-export default EliminarSucursal;
+export default ActivarSucursal;

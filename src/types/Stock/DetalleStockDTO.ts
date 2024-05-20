@@ -8,6 +8,7 @@ export class DetalleStock {
     medida: EnumMedida | null = null;
     ingredienteNombre: string = '';
     articuloVentaNombre: string = '';
+    borrado: string = '';
 
     constructor() {
 

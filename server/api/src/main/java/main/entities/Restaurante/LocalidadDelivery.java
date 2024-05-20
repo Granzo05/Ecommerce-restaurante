@@ -1,5 +1,7 @@
 package main.entities.Restaurante;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Localidad;
@@ -15,6 +17,7 @@ public class LocalidadDelivery {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;

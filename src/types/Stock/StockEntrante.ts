@@ -7,6 +7,7 @@ export class StockEntrante {
     costo: number = 0;
     detallesStock: DetalleStock[] = [];
     sucursal: Sucursal | null = null;
+    borrado: string = '';
 
     constructor() {
 

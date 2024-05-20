@@ -7,6 +7,7 @@ import EditarSucursal from "./EditarSucursal";
 import ModalFlotante from "../ModalFlotante";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 import { EmpleadoService } from "../../services/EmpleadoService";
+import ActivarSucursal from "./ActivarSucursal";
 
 const Sucursales = () => {
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
@@ -16,8 +17,7 @@ const Sucursales = () => {
     const [showAgregarSucursalModal, setShowAgregarSucursalModal] = useState(false);
     const [showEditarSucursalModal, setShowEditarSucursalModal] = useState(false);
     const [showEliminarSucursalModal, setShowEliminarSucursalModal] = useState(false);
-
-    const [selectedId, setSelectedId] = useState<number | null>(0);
+    const [showActivarSucursalModal, setShowActivarSucursalModal] = useState(false);
 
     useEffect(() => {
         if (sucursales.length === 0) fetchSucursales();
@@ -34,6 +34,7 @@ const Sucursales = () => {
     const fetchSucursales = async () => {
         SucursalService.getSucursales()
             .then(data => {
+                console.log(data);
                 setSucursales(data);
             })
             .catch(error => {
@@ -61,9 +62,17 @@ const Sucursales = () => {
         setMostrarSucursales(true);
     };
 
-    const handleEliminarSucursal = (idSucursal: number) => {
-        setSelectedId(idSucursal);
+    const handleEliminarSucursal = (sucursal: Sucursal) => {
+        sucursal.borrado = 'SI';
+        setSelectedSucursal(sucursal);
         setShowEliminarSucursalModal(true);
+        setMostrarSucursales(true);
+    };
+
+    const handleActivarSucursal = (sucursal: Sucursal) => {
+        sucursal.borrado = 'NO';
+        setSelectedSucursal(sucursal);
+        setShowActivarSucursalModal(true);
         setMostrarSucursales(true);
     };
 
@@ -104,12 +113,19 @@ const Sucursales = () => {
                                     <td>{sucursal.telefono}</td>
                                     <td>{sucursal.horarioApertura}</td>
                                     <td>{sucursal.horarioCierre}</td>
-                                    <td>
-                                        <button onClick={() => handleEliminarSucursal(sucursal.id)}>ELIMINAR</button>
-                                        <button onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
-                                        <button onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
-                                    </td>
-
+                                    {sucursal.borrado === 'NO' ? (
+                                        <td>
+                                            <button onClick={() => handleEliminarSucursal(sucursal)}>ELIMINAR</button>
+                                            <button onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
+                                            <button onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <button onClick={() => handleActivarSucursal(sucursal)}>ACTIVAR</button>
+                                            <button onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
+                                            <button onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
@@ -118,7 +134,10 @@ const Sucursales = () => {
                         <EditarSucursal sucursalOriginal={selectedSucursal} />
                     </ModalCrud>
                     <ModalFlotante isOpen={showEliminarSucursalModal} onClose={handleModalClose}>
-                        {selectedId && <EliminarSucursal idSucursal={selectedId} />}
+                        {selectedSucursal && <EliminarSucursal sucursal={selectedSucursal} />}
+                    </ModalFlotante>
+                    <ModalFlotante isOpen={showActivarSucursalModal} onClose={handleModalClose}>
+                        {selectedSucursal && <ActivarSucursal sucursal={selectedSucursal} />}
                     </ModalFlotante>
                 </div>
             )}

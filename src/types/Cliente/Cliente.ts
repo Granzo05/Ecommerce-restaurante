@@ -11,6 +11,7 @@ export class Cliente {
     telefono: number = 0;
     privilegios: string = '';
     pedidos: Pedido[] = [];
+    borrado: string = '';
 
     constructor(){
 

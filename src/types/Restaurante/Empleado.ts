@@ -14,6 +14,7 @@ export class Empleado {
     fechaNacimiento: Date = new Date();
     privilegios: string = '';
     sucursal: Sucursal | null = null;
+    borrado: string = '';
 
     constructor() {
 

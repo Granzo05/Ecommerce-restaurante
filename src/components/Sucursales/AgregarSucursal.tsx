@@ -207,6 +207,7 @@ function AgregarSucursal() {
     toast.promise(SucursalService.createRestaurant(sucursal), {
       loading: 'Guardando sucursal...',
       success: (message) => {
+        clearInputs();
         return message;
       },
       error: (message) => {

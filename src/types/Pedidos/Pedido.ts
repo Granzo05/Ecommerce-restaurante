@@ -15,6 +15,7 @@ export class Pedido {
     cliente: Cliente | null = null;
     domicilioEnvio: Domicilio | null = null;
     detallesPedido: DetallesPedido[] = [];
+    borrado: string = '';
 
     constructor() {
 

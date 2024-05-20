@@ -12,6 +12,7 @@ export class Promocion {
     articulosMenu: ArticuloMenu[] = [];
     imagenes: ImagenesProducto[] = [];
     precio: number = 0;
+    borrado: string = '';
 
     constructor() {
     }

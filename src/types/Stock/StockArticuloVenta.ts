@@ -4,6 +4,7 @@ import { Stock } from "./Stock";
 export class StockArticuloVenta extends Stock {
     id: number = 0;
     articuloVenta: ArticuloVenta | null = null;
+    borrado: string = '';
 
     constructor() {
         super();

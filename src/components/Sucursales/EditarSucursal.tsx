@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
-import { DepartamentoService } from '../../services/DepartamentoService';
 import { Domicilio } from '../../types/Domicilio/Domicilio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Localidad } from '../../types/Domicilio/Localidad';
 import { SucursalService } from '../../services/SucursalService';
-import { Departamento } from '../../types/Domicilio/Departamento';
 import { Toaster, toast } from 'sonner'
-import { LocalidadService } from '../../services/LocalidadService';
 import { LocalidadDelivery } from '../../types/Restaurante/LocalidadDelivery';
 import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
+import { DepartamentoService } from '../../services/DepartamentoService';
+import { LocalidadService } from '../../services/LocalidadService';
+import { Departamento } from '../../types/Domicilio/Departamento';
+import { clearInputs } from '../../utils/global_variables/functions';
 
 interface EditarSucursalProps {
   sucursalOriginal: Sucursal;
@@ -29,32 +30,39 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   //Select que nos permite filtrar para las localidades de la sucursal asi no cargamos de más innecesariamente
   const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
   const [localidades, setLocalidades] = useState<Localidad[]>([]);
+  const [localidadesProvincia, setLocalidadesProvincia] = useState<Localidad[]>([]);
 
-  const [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<LocalidadDelivery[] | null>(sucursalOriginal.localidadesDisponiblesDelivery);
+  const [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<Localidad[]>([]);
 
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [elementosABuscar, setElementosABuscar] = useState<string>('');
-  const [inputProvincia, setInputProvincia] = useState<string | undefined>(sucursalOriginal.domicilio?.localidad?.departamento.provincia?.nombre);
-  const [inputDepartamento, setInputDepartamento] = useState<string | undefined>(sucursalOriginal.domicilio?.localidad?.departamento?.nombre);
-  const [inputLocalidad, setInputLocalidad] = useState<string | undefined>(sucursalOriginal.domicilio?.localidad?.nombre);
+  const [inputProvincia, setInputProvincia] = useState<string>(sucursalOriginal.domicilio?.localidad?.departamento.provincia?.nombre);
+  const [inputDepartamento, setInputDepartamento] = useState<string>(sucursalOriginal.domicilio?.localidad?.departamento.provincia?.nombre);
+  const [inputLocalidad, setInputLocalidad] = useState<string>(sucursalOriginal.domicilio?.localidad?.nombre);
 
   const [idDepartamentosElegidos, setIdDepartamentosElegidos] = useState<Set<number>>(new Set<number>());
 
   const [idLocalidadesElegidas, setIdLocalidadesElegidas] = useState<Set<number>>(new Set<number>());
 
   useEffect(() => {
-    if (inputProvincia)
-      buscarDepartamentos(inputProvincia)
-  }, [inputProvincia]);
+    sucursalOriginal.localidadesDisponiblesDelivery.forEach(localidadDelivery => {
+      idDepartamentosElegidos.add(localidadDelivery.localidad?.departamento.id);
+      idLocalidadesElegidas.add(localidadDelivery.localidad?.id);
 
-  useEffect(() => {
-    if (inputDepartamento)
-      buscarLocalidades(inputDepartamento);
-  }, [inputDepartamento]);
+      let localidad: Localidad = new Localidad();
+      localidad.nombre = localidadDelivery.localidad?.nombre;
+      localidad.departamento = localidadDelivery.localidad?.departamento;
+      localidad.id = localidadDelivery.localidad?.id;
 
-  function buscarDepartamentos(inputProvincia: string) {
-    DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
+      localidadesMostrablesCheckbox.push(localidad);
+    });
+
+    buscarDepartamentos(sucursalOriginal.domicilio?.localidad?.departamento.provincia?.nombre);
+  }, []);
+
+  function buscarDepartamentos(provincia: string) {
+    DepartamentoService.getDepartamentosByNombreProvincia(provincia)
       .then(async departamentos => {
         setDepartamentos(departamentos);
       })
@@ -63,10 +71,20 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       })
   }
 
-  function buscarLocalidades(inputDepartamento: string) {
-    LocalidadService.getLocalidadesByNombreDepartamento(inputDepartamento)
+  function buscarLocalidades(departamento: string) {
+    LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(departamento, inputProvincia)
       .then(async localidades => {
         setLocalidades(localidades);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+  }
+
+  function buscarLocalidadesProvincia() {
+    LocalidadService.getLocalidadesByNombreProvincia(inputProvincia)
+      .then(async localidades => {
+        setLocalidadesProvincia(localidades);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -86,10 +104,12 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     setModalBusqueda(false)
     if (elementosABuscar === 'PROVINCIAS') {
       setInputProvincia(selectedOption);
+      buscarDepartamentos(selectedOption)
       setInputDepartamento('')
       setInputLocalidad('')
     } else if (elementosABuscar === 'DEPARTAMENTOS') {
       setInputDepartamento(selectedOption);
+      buscarLocalidades(selectedOption)
       setInputLocalidad('')
     } else if (elementosABuscar === 'LOCALIDADES') {
       setInputLocalidad(selectedOption);
@@ -97,6 +117,9 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   };
 
   const handleDepartamentosCheckboxChange = async (departamentoId: number) => {
+    if (localidadesProvincia.length === 0) {
+      buscarLocalidadesProvincia();
+    }
     // Obtener una copia del conjunto de departamentos seleccionados
     const updatedSelectedDepartamentos = new Set<number>(idDepartamentosElegidos);
 
@@ -110,14 +133,18 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     // Actualizar el conjunto de departamentos seleccionados
     setIdDepartamentosElegidos(updatedSelectedDepartamentos);
 
-    let nuevasLocalidades: LocalidadDelivery[] = [];
-    // Iterar sobre los departamentos seleccionados y cargar las localidades correspondientes
-    for (const idDepartamento of updatedSelectedDepartamentos) {
-      let localidad = localidades.find(localidad => localidad.departamento.id === idDepartamento)
+    // Inicializa el array nuevasLocalidades
+    let nuevasLocalidades = [];
 
-      if (localidad) nuevasLocalidades.push();
+    for (const localidad of localidadesProvincia) {
+      // Verifica si el idDepartamento de la localidad está en updatedSelectedDepartamentos
+      if (updatedSelectedDepartamentos.has(localidad.departamento.id)) {
+        // Añade la localidad a nuevasLocalidades
+        nuevasLocalidades.push(localidad);
+      }
     }
 
+    // Actualiza el estado con las nuevas localidades
     setLocalidadesMostrables(nuevasLocalidades);
   };
 
@@ -131,9 +158,9 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     setIdLocalidadesElegidas(updatedSelectedLocalidades);
   };
 
-  const handleEditarNegocio = async () => {
+  const handleCargarNegocio = async () => {
     if (!email) {
-      toast.error("Por favor, es necesaria el email");
+      toast.error("Por favor, es necesario el email");
       return;
     } else if (!contraseña) {
       toast.error("Por favor, es necesaria la contraseña");
@@ -159,7 +186,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     } else if (!horarioCierre) {
       toast.error("Por favor, es necesaria la hora de cierre");
       return;
-    } else if (localidadesMostrablesCheckbox?.length === 0) {
+    } else if (localidadesMostrablesCheckbox.length === 0) {
       toast.error("Por favor, es necesaria aunque sea una localidad donde alcance el delivery");
       return;
     }
@@ -167,11 +194,13 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     let sucursal: Sucursal = new Sucursal();
 
     const domicilio = new Domicilio();
-    if (calle) domicilio.calle = calle;
-    if (numeroCalle) domicilio.numero = numeroCalle;
-    if (codigoPostal) domicilio.codigoPostal = codigoPostal;
-    const localidad = localidades?.find(localidad => localidad.nombre === inputLocalidad);
-    domicilio.localidad = localidad
+    domicilio.calle = calle;
+    domicilio.numero = numeroCalle;
+    domicilio.codigoPostal = codigoPostal;
+    let localidad = localidades?.find(localidad => localidad.nombre === inputLocalidad);
+
+    if (localidad) domicilio.localidad = localidad;
+
     sucursal.domicilio = domicilio;
 
     sucursal.contraseña = contraseña;
@@ -190,7 +219,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       let localidadNueva: LocalidadDelivery = new LocalidadDelivery();
 
       if (localidadBuscada) {
-        localidadNueva.localidad = localidadBuscada.localidad;
+        localidadNueva.localidad = localidadBuscada;
         localidadesDelivery.push(localidadNueva);
       }
     });
@@ -199,21 +228,22 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
     toast.promise(SucursalService.createRestaurant(sucursal), {
       loading: 'Guardando sucursal...',
-      success: () => {
-        return `Sucursal añadida correctamente`;
+      success: (message) => {
+        clearInputs();
+        return message;
       },
-      error: 'Error',
+      error: (message) => {
+        return message;
+      },
     });
-
   };
 
   return (
-    <div className="modal-info">
+    <div className='modal-info'>
       <Toaster />
-      <h2>Crear una sucursal</h2>
       <form>
         <div className="inputBox">
-          <input type="email" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
+          <input autoComplete='false' type="email" required={true} onChange={(e) => { setEmail(e.target.value) }} />
           <span>Correo electrónico</span>
         </div>
         <div className="inputBox">
@@ -221,78 +251,89 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
           <span>Contraseña</span>
         </div>
         <div className="inputBox">
-          <input type="phone" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+          <input type="phone" required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
           <span>Telefono</span>
         </div>
         <div className="inputBox">
-          <input type="time" required={true} value={horarioApertura} onChange={(e) => { setHorarioApertura(e.target.value) }} />
+          <input type="time" required={true} onChange={(e) => { setHorarioApertura(e.target.value) }} />
           <span>Horario de apertura</span>
         </div>
         <div className="inputBox">
-          <input type="time" required={true} value={horarioCierre} onChange={(e) => { setHorarioCierre(e.target.value) }} />
+          <input type="time" required={true} onChange={(e) => { setHorarioCierre(e.target.value) }} />
           <span>Horario de cierre</span>
         </div>
         <div className="inputBox">
-          <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
+          <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
           <span>Nombre de calle</span>
         </div>
         <div className="inputBox">
-          <input type="number" required={true} value={numeroCalle} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
+          <input type="number" required={true} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
           <span>Número de domicilio</span>
         </div>
         <div className="inputBox">
-          <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+          <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
           <span>Código Postal</span>
         </div>
         <h2>Provincia</h2>
         <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
-        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={''} />}
+        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={''} inputProvincia={''} />}
         <br />
         <h2>Departamento</h2>
         <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
-        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
+        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={''} inputProvincia={inputProvincia} />}
 
         <br />
         <h2>Localidad</h2>
         <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} datoNecesario={selectedOption} />}
+        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
 
         <h3>Departamentos disponibles para delivery: </h3>
         {departamentos && (
-          <div>
-            {departamentos.map((departamento, index) => (
-              <div key={index}>
-                <input
-                  type="checkbox"
-                  id={`localidad-${index}`}
-                  value={departamento.id}
-                  checked={idDepartamentosElegidos.has(departamento.id)}
-                  onChange={() => handleDepartamentosCheckboxChange(departamento.id)}
-                />
-                <label htmlFor={`departamento-${index}`}>{departamento.nombre}</label>
-              </div>
-            ))}
-          </div>
+          <table>
+            <tbody>
+
+              {departamentos.map((departamento, index) => (
+                <tr key={index}>
+                  <td>{departamento.nombre}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id={`localidad-${index}`}
+                      value={departamento.id}
+                      checked={idDepartamentosElegidos.has(departamento.id)}
+                      onChange={() => handleDepartamentosCheckboxChange(departamento.id)}
+                    />
+                  </td>
+                </tr>
+
+              ))}
+            </tbody>
+          </table>
         )}
 
         <h3>Localidades disponibles para delivery: </h3>
         {localidadesMostrablesCheckbox && (
-          <div>
-            {localidadesMostrablesCheckbox.map((localidad, index) => (
-              <div key={index}>
-                <input
-                  type="checkbox"
-                  value={localidad.id}
-                  checked={idLocalidadesElegidas.has(localidad.id)}
-                  onChange={() => handleLocalidadesCheckboxChange(localidad.id)}
-                />
-                <label htmlFor={`localidad-${index}`}>{localidad.localidad?.nombre}</label>
-              </div>
-            ))}
-          </div>
+          <table>
+            <tbody>
+              {localidadesMostrablesCheckbox.map((localidad, index) => (
+                <tr key={index}>
+                  <td>{localidad.nombre}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      value={localidad.id}
+                      checked={idLocalidadesElegidas.has(localidad.id)}
+                      onChange={() => handleLocalidadesCheckboxChange(localidad.id)}
+                    />
+                  </td>
+                </tr>
+
+              ))}
+            </tbody>
+          </table>
         )}
-        <button type="button" onClick={handleEditarNegocio}>Registrarse</button>
+        <button type="button" onClick={handleCargarNegocio}>Registrarse</button>
       </form>
     </div>
   )

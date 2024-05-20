@@ -8,6 +8,7 @@ export class IngredienteMenu {
     medida: EnumMedida | string = '';
     ingrediente: Ingrediente | null = null;
     articuloMenu: ArticuloMenu | null = null;
+    borrado: string = '';
 
     constructor() {
     }

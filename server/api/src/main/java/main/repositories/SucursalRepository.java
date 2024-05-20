@@ -22,10 +22,10 @@ public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
     @Query("SELECT s.localidadesDisponiblesDelivery FROM Sucursal s WHERE s.id = :id AND s.borrado = 'NO'")
     List<LocalidadDelivery> findLocalidadesByIdSucursal(@Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id) FROM Sucursal s WHERE s.borrado = 'NO'")
-    List<SucursalDTO> findAllNoBorrado();
+    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id, s.telefono, s.email, s.horarioApertura, s.horarioCierre, s.borrado) FROM Sucursal s")
+    List<SucursalDTO> findAllDTO();
 
-    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id, s.telefono, s.email, s.privilegios) FROM Sucursal s WHERE s.email = :email AND s.contraseña = :contraseña")
+    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id) FROM Sucursal s WHERE s.email = :email AND s.contraseña = :contraseña")
     SucursalDTO findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String password);
 
 }

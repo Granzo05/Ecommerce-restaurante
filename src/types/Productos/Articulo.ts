@@ -10,6 +10,7 @@ export class Articulo {
     promociones: Promocion[] = [];
     cantidad: number = 0;
     imagenesDTO: ImagenesProductoDTO[] = [];
+    borrado: string = '';
     
     constructor(){}
 }

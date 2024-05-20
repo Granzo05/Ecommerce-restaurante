@@ -1,5 +1,6 @@
 package main.entities.Restaurante;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import main.entities.Domicilio.DomicilioDTO;
 
@@ -10,7 +11,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class SucursalDTO {
     private long id;
     private DomicilioDTO domicilio;
@@ -19,13 +19,17 @@ public class SucursalDTO {
     private String privilegios;
     private LocalTime horarioApertura;
     private LocalTime horarioCierre;
+    @JsonIgnoreProperties(value = {"sucursal"})
     private List<LocalidadDelivery> localidadesDisponiblesDelivery;
+    private String borrado;
 
-    public SucursalDTO(long id, long telefono, String email, String privilegios) {
+    public SucursalDTO(long id, long telefono, String email, LocalTime horarioApertura, LocalTime horarioCierre, String borrado) {
         this.id = id;
         this.telefono = telefono;
         this.email = email;
-        this.privilegios = privilegios;
+        this.horarioApertura = horarioApertura;
+        this.horarioCierre = horarioCierre;
+        this.borrado = borrado;
     }
 
     public SucursalDTO(long id) {
