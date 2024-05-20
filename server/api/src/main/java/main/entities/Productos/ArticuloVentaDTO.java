@@ -11,7 +11,6 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class ArticuloVentaDTO extends Articulo {
     private Long id;
     private EnumTipoArticuloVenta tipo;

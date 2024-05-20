@@ -3,18 +3,18 @@ import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
 import { EnumTipoArticuloComida } from '../types/Productos/EnumTipoArticuloComida';
 import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
 import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
-import { URL_API } from '../utils/global_variables/const';
+import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const MenuService = {
 
     getMenus: async (): Promise<ArticuloMenuDTO[]> => {
-        const response = await fetch(URL_API + 'menus')
+        const response = await fetch(URL_API + 'menus/' + sucursalId)
 
         return await response.json();
     },
 
     getMenusPorTipo: async (tipoComida: EnumTipoArticuloComida | null): Promise<ArticuloMenuDTO[]> => {
-        const response = await fetch(URL_API + 'menu/tipo/' + tipoComida);
+        const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + sucursalId);
 
         return await response.json();
     },
@@ -22,7 +22,7 @@ export const MenuService = {
 
     createMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[]): Promise<string> => {
         try {
-            const menuResponse = await fetch(URL_API + 'menu/create', {
+            const menuResponse = await fetch(URL_API + 'menu/create/' + sucursalId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -65,7 +65,7 @@ export const MenuService = {
 
     updateMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'menu/update', {
+            const response = await fetch(URL_API + 'menu/update/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
