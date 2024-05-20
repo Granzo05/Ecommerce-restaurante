@@ -11,12 +11,12 @@ import java.util.List;
 
 @Repository
 public interface ImagenesProductoRepository extends JpaRepository<ImagenesProducto, Long> {
-    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.ruta = :nombre AND i.borrado = 'NO'")
+    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato, i.borrado) FROM ImagenesProducto i WHERE i.ruta = :nombre")
     ImagenesProductoDTO findByRuta(@Param("nombre") String nombre);
 
-    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.articuloMenu.id = :id AND i.borrado = 'NO'")
+    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato, i.borrado) FROM ImagenesProducto i WHERE i.articuloMenu.id = :id ")
     List<ImagenesProductoDTO> findByIdMenu(@Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato) FROM ImagenesProducto i WHERE i.articuloVenta.id = :id AND i.borrado = 'NO'")
+    @Query("SELECT NEW main.entities.Productos.ImagenesProductoDTO(i.id, i.nombre, i.ruta, i.formato, i.borrado) FROM ImagenesProducto i WHERE i.articuloVenta.id = :id")
     List<ImagenesProductoDTO> findByIdArticulo(@Param("id") Long id);
 }

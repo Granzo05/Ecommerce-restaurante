@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "imagenes", schema = "buen_sabor")
 public class ImagenesProducto {
@@ -44,5 +43,4 @@ public class ImagenesProducto {
             inverseJoinColumns = @JoinColumn(name = "id_promocion")
     )
     private Promocion promocion;
-
 }
