@@ -35,6 +35,10 @@
   box-shadow: 0 0 20px black;
 }
 
+.modal-content button{
+  width: 15%;
+}
+
 .modal-close {
   position: absolute;
   top: 0;
@@ -70,4 +74,18 @@
 
 .modal-div .btns-eliminar-stock button {
   margin: 10px 50px 0 50px;
+}
+
+.modal-info .cierre-ingrediente{
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  padding: 2px;
+  border-radius: 4px;
+  width: 17px;
+}
+
+.modal-info .cierre-ingrediente:hover{
+  background-color: gray;
+  cursor: pointer;
 }

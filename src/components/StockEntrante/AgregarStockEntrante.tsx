@@ -9,6 +9,7 @@ import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import { IngredienteService } from '../../services/IngredienteService';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
+import '../../styles/modalCrud.css'
 
 function AgregarStockEntrante() {
 
@@ -156,13 +157,16 @@ function AgregarStockEntrante() {
       <h2>Agregar stock entrante</h2>
       <Toaster />
       <div className="inputBox">
+        <label style={{display: 'flex', fontWeight: 'bold'}}>Fecha de entrada:</label>
         <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
-        <span>Fecha de entrada</span>
+        
       </div>
       {ingredientesInputs.map((ingrediente, index) => (
-        <div className='div-ingrediente-menu' key={index}>
-          <div>
-            <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingrediente?.nombre ?? ''} />
+        <div key={index}>
+          <hr />
+          <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
+          <div className='inputBox'>
+            <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingrediente?.nombre ?? ''} />
             {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
           </div>
           <div className="inputBox">
@@ -171,17 +175,14 @@ function AgregarStockEntrante() {
           </div>
           <div className="inputBox">
             <input type="number" required={true} onChange={(e) => almacenarSubTotal(lastIndexDetalle, parseFloat(e.target.value))} />
-            <span>Costo unitario</span>
+            <span>Costo unitario ($)</span>
           </div>
-          <p onClick={quitarCampoIngrediente}>X</p>
         </div>
       ))}
       <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
-
       <br />
-
       {articulosVentaInputs.map((articulo, index) => (
-        <div className='div-ingrediente-menu' key={index}>
+        <div key={index}>
           <div>
             <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={articulo?.nombre ?? ''} />
             {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
@@ -198,6 +199,7 @@ function AgregarStockEntrante() {
         </div>
       ))}
       <button onClick={añadirCampoArticulo}>Añadir articulo</button>
+      <br />
 
       <button type="button" onClick={agregarStockEntrante}>Agregar stock entrante</button>
     </div >

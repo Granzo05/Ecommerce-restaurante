@@ -26,17 +26,6 @@
     margin-bottom: 10px;
 }
 
-.inputBox input[type='date'] {
-    width: 100%;
-    padding: 10px;
-    padding-top: 30px;
-    border: 1px solid (255, 255, 255, 0.25);
-    background: #fff;
-    border-radius: 5px;
-    outline: none;
-    color: black;
-}
-
 .inputBox select {
     width: 100%;
     padding: 10px;
