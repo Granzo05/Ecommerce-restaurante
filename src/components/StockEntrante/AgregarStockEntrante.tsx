@@ -153,6 +153,7 @@ function AgregarStockEntrante() {
 
   return (
     <div className="modal-info">
+      <h2>Agregar stock entrante</h2>
       <Toaster />
       <div className="inputBox">
         <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />

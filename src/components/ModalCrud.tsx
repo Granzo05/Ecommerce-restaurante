@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
 import '../styles/modalCrud.css'
+import CloseIcon from '@mui/icons-material/Close';
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,10 +16,10 @@ const ModalCrud: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <div>
       {isOpen && (
-        <div className="modal-div" onClick={handleModalClose}>
+        <div className="modal-div">
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={handleModalClose}><CloseIcon/></button>
             {children}
-            <button className="modal-close" onClick={handleModalClose}>Cerrar</button>
           </div>
         </div>
       )}
