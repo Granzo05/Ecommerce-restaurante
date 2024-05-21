@@ -179,12 +179,14 @@ function AgregarStockEntrante() {
           </div>
         </div>
       ))}
-      <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
+      <button onClick={añadirCampoIngrediente}>+ Añadir ingrediente</button>
       <br />
       {articulosVentaInputs.map((articulo, index) => (
         <div key={index}>
+          <hr />
+          <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
           <div>
-            <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={articulo?.nombre ?? ''} />
+            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={articulo?.nombre ?? ''} />
             {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
           </div>
           <div className="inputBox">
@@ -193,14 +195,13 @@ function AgregarStockEntrante() {
           </div>
           <div className="inputBox">
             <input type="number" required={true} onChange={(e) => almacenarSubTotal(lastIndexDetalle, parseFloat(e.target.value))} />
-            <span>Costo unitario</span>
+            <span>Costo unitario ($)</span>
           </div>
-          <p onClick={quitarCampoArticulo}>X</p>
+          
         </div>
       ))}
-      <button onClick={añadirCampoArticulo}>Añadir articulo</button>
-      <br />
-
+      <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
+      <hr />
       <button type="button" onClick={agregarStockEntrante}>Agregar stock entrante</button>
     </div >
   )
