@@ -70,7 +70,7 @@ const Opciones = () => {
 
     const toggleMenuVisibility = () => {
         setMenuVisible(!menuVisible);
-        setSidebarIcon(menuVisible ? <ArrowBackIosNewIcon/> : <ArrowForwardIosIcon />);
+        setSidebarIcon(menuVisible ? <ArrowBackIosNewIcon /> : <ArrowForwardIosIcon />);
         setTopIcon(menuVisible ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />);
     };
 
@@ -131,13 +131,13 @@ const Opciones = () => {
             <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
                 <div className="title-header">
                     <h3 onClick={() => window.location.href = 'http://localhost:5173/'} className='title'><img src="../src/assets/img/HatchfulExport-All/logo-simple.png" alt="Logo" className='logo-opciones' />EL BUEN SABOR</h3>
-                    
+
                     <div className='icon-sidebar' onClick={toggleMenuVisibility}>
                         {sidebarIcon}
                     </div>
-                    
+
                 </div>
-                
+
                 <hr />
                 <label id='label' onClick={toggleOptionsVisibility}>_opciones{optionsIcon}</label>
 
@@ -270,32 +270,35 @@ const Opciones = () => {
                         )}
                     </>
                 )}
+                <div className="spacer"></div>
+                <div className="bottom-section">
+                    <hr />
+                    <label id='label' onClick={toggleSettingsVisibility}>_ajustes de cuenta{settingsIcon}</label>
+                    {settingsVisible && (
+                        <div className="settings">
+                            <h4><a href="">Preferencias</a></h4>
+                        </div>
+                    )}
 
-                <hr />
-                <label id='label' onClick={toggleSettingsVisibility}>_ajustes de cuenta{settingsIcon}</label>
-                {settingsVisible && (
-                    <div className="settings">
-                        <h4><a href="">Preferencias</a></h4>
+                    <hr />
+                    <div className="perfil-employee">
+                        <PersonIcon style={{ fontSize: '38px', display: 'inline' }} />
+                        <div className="account-info">
+                            <label className='name-account'>Augusto David Ficara Vargas</label>
+                        </div>
+
+                        <LogoutIcon className='logout-icon' style={{ fontSize: '38px', display: 'inline' }} />
+
                     </div>
-                )}
-
-                <hr />
-                <div className="perfil-employee">
-                    <PersonIcon style={{ fontSize: '38px', display: 'inline' }} />
-                    <div className="account-info">
-                        <label className='name-account'>Augusto David Ficara Vargas</label>
-                    </div>
-
-                    <LogoutIcon className='logout-icon' style={{ fontSize: '38px', display: 'inline' }} />
-
-                </div>
-                <div className="icon-topbar" onClick={toggleMenuVisibility}>
+                    <div className="icon-topbar" onClick={toggleMenuVisibility}>
                         {topIcon}
+                    </div>
                 </div>
+
             </div>
 
 
-            <div className={`table-info ${menuVisible ? '' : 'expanded'}`}  style={{ flex: 1 }}>
+            <div className={`table-info ${menuVisible ? '' : 'expanded'}`} style={{ flex: 1 }}>
                 {renderInformacion()}
             </div>
         </div>
