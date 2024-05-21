@@ -38,8 +38,6 @@ function AgregarEmpleado() {
   };
 
   function buscarLocalidades() {
-    console.log(inputDepartamento)
-    console.log(inputProvincia)
     LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(inputDepartamento, inputProvincia)
       .then(async localidades => {
         console.log(localidades)
@@ -103,7 +101,6 @@ function AgregarEmpleado() {
 
   const handleChangeLocalidad = (index: number, nombre: string) => {
     const nuevosDomicilios = [...domicilios];
-    console.log(localidades)
     let localidad = localidades.find(localidad => localidad.nombre === nombre);
 
     if (localidad) {
@@ -132,9 +129,7 @@ function AgregarEmpleado() {
         setIndexDomicilio(indexDomicilio - 1);
       }
     } else {
-      const nuevosDomicilios = [...domicilios];
-      nuevosDomicilios.pop();
-      setDomicilios(nuevosDomicilios);
+      setDomicilios([]);
       setIndexDomicilio(0);
     }
   };
@@ -234,16 +229,16 @@ function AgregarEmpleado() {
           <span>Telefono del empleado</span>
         </div>
         <div className="inputBox">
-        <label style={{display: 'flex', fontWeight: 'bold'}}>Fecha de nacimiento:</label>
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
           <input type="date" required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
           <hr />
         </div>
-        
+
         {domicilios && domicilios.map((domicilio, index) => (
           <div key={index}>
             <h2>Domicilio {index + 1}</h2>
             <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
-            
+
             <div className="inputBox">
               <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
               <span>Nombre de calle</span>
@@ -258,22 +253,22 @@ function AgregarEmpleado() {
             </div>
             <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
             {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-           
+
             <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
             {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
 
             <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
             {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
             <hr />
-            
+
           </div>
         ))}
-        
+
       </form>
       <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
       <hr />
       <button className='button-form' type='button' onClick={agregarEmpleado}>Agregar empleado</button>
-      
+
     </div>
   )
 }

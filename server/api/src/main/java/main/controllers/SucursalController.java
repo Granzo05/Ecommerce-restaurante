@@ -192,7 +192,15 @@ public class SucursalController {
             empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
             empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
 
-            empleado.setDomicilios(new HashSet<>(domicilioRepository.findByIdEmpleadoDTO(empleado.getId())));
+            List<DomicilioDTO> domicilios = domicilioRepository.findByIdEmpleadoDTO(empleado.getId());
+
+            for(DomicilioDTO domicilio: domicilios) {
+                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+            }
+
+            empleado.setDomicilios(new HashSet<>(domicilios));
+
+            empleado.setFechaContratacionEmpleado(new HashSet<>(fechaContratacionRepository.findByIdEmpleado(empleado.getId())));
         }
 
         return new HashSet<>(empleados);
@@ -209,71 +217,38 @@ public class SucursalController {
             Empleado empleadoDb = empleadoOptional.get();
 
             String contraseña = empleadoDetails.getContraseña();
-            if (contraseña != null && !contraseña.isEmpty() && !Encrypt.cifrarPassword(contraseña).equals(empleadoDb.getContraseña())) {
+            if (contraseña != null && !contraseña.isEmpty()) {
                 empleadoDb.setContraseña(Encrypt.cifrarPassword(contraseña));
             }
 
             String nombre = empleadoDetails.getNombre();
-            if (nombre != null && !nombre.isEmpty() && !Encrypt.encriptarString(nombre).equals(empleadoDb.getNombre())) {
-                empleadoDb.setNombre(Encrypt.encriptarString(nombre));
-            }
+            empleadoDb.setNombre(Encrypt.encriptarString(nombre));
+
 
             Long telefono = empleadoDetails.getTelefono();
-            if (telefono != null && !telefono.equals(empleadoDb.getTelefono())) {
-                empleadoDb.setTelefono(telefono);
-            }
+            empleadoDb.setTelefono(telefono);
+
 
             String email = empleadoDetails.getEmail();
-            if (email != null && !email.isEmpty() && !Encrypt.encriptarString(email).equals(empleadoDb.getEmail())) {
-                empleadoDb.setEmail(Encrypt.encriptarString(email));
-            }
+            empleadoDb.setEmail(Encrypt.encriptarString(email));
+
 
             Date fechaNacimiento = empleadoDetails.getFechaNacimiento();
-            if (fechaNacimiento != null && !fechaNacimiento.equals(empleadoDb.getFechaNacimiento())) {
-                empleadoDb.setFechaNacimiento(fechaNacimiento);
-            }
+            empleadoDb.setFechaNacimiento(fechaNacimiento);
 
-            // Actualizar sucursal y cuil
-            if (empleadoDb.getSucursal().getId() == empleadoDetails.getSucursal().getId()) {
-                empleadoDb.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
-            }
-            if (!Encrypt.desencriptarString(empleadoDb.getCuil()).equals(empleadoDetails.getCuil())) {
-                empleadoDb.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
-            }
+            empleadoDb.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
 
-            Set<Domicilio> domiciliosEmpleadoDb = new HashSet<>(domicilioRepository.findByIdEmpleado(empleadoDb.getId()));
+            empleadoDb.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
 
-            // Iterar sobre los domicilios originales
-            for (Domicilio domicilioDb : domiciliosEmpleadoDb) {
-                // Buscar el domicilio correspondiente en los nuevos datos
-                for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
-                    // Si se encuentra el domicilio correspondiente
-                    // Comparar los campos para ver si han cambiado
-                    if (!Encrypt.desencriptarString(domicilioDb.getCalle()).equals(domicilio.getCalle())
-                            || domicilioDb.getNumero() != domicilio.getNumero()
-                            || domicilioDb.getCodigoPostal() != domicilio.getCodigoPostal()
-                            || !domicilioDb.getLocalidad().getId().equals(domicilio.getLocalidad().getId())) {
-                        // Actualizar los campos del domicilio original
-                        domicilioDb.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
-                        domicilioDb.setNumero(domicilio.getNumero());
-                        domicilioDb.setCodigoPostal(domicilio.getCodigoPostal());
-                        Localidad localidad = localidadRepository.findById(domicilio.getLocalidad().getId()).get();
+            domicilioRepository.deleteAllByEmpleadoId(empleadoDb.getId());
 
-                        Departamento departamento = departamentoRepository.findById(domicilio.getLocalidad().getDepartamento().getId()).get();
-                        domicilioDb.getLocalidad().setDepartamento(departamento);
-                        localidad.setDepartamento(departamento);
-
-                        Provincia provincia = provinciaRepository.findById(domicilio.getLocalidad().getDepartamento().getProvincia().getId()).get();
-                        domicilioDb.getLocalidad().getDepartamento().setProvincia(provincia);
-                        localidad.getDepartamento().setProvincia(provincia);
-
-                        domicilioDb.setLocalidad(localidad);
-                    }
-                }
+            for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
+                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
+                domicilio.setEmpleado(empleadoDetails);
+                empleadoDb.getDomicilios().add(domicilio);
             }
 
             empleadoRepository.save(empleadoDb);
-
 
             return ResponseEntity.ok("El empleado se modificó correctamente");
         } else if(empleadoOptional.isPresent() && !empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
