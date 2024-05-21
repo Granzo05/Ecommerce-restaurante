@@ -9,6 +9,7 @@ import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import { Localidad } from '../../types/Domicilio/Localidad';
 import { LocalidadService } from '../../services/LocalidadService';
+import '../../styles/modalCrud.css'
 
 function AgregarEmpleado() {
 
@@ -209,8 +210,8 @@ function AgregarEmpleado() {
 
   return (
     <div className="modal-info">
+      <h2>Agregar empleado</h2>
       <Toaster />
-      <br />
       <form>
         <div className="inputBox">
           <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
@@ -233,11 +234,16 @@ function AgregarEmpleado() {
           <span>Telefono del empleado</span>
         </div>
         <div className="inputBox">
+        <label style={{display: 'flex', fontWeight: 'bold'}}>Fecha de nacimiento:</label>
           <input type="date" required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
-          <span>Fecha de nacimiento</span>
+          <hr />
         </div>
+        
         {domicilios && domicilios.map((domicilio, index) => (
           <div key={index}>
+            <h2>Domicilio {index + 1}</h2>
+            <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
+            
             <div className="inputBox">
               <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
               <span>Nombre de calle</span>
@@ -250,26 +256,24 @@ function AgregarEmpleado() {
               <input type="number" required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
               <span>Código Postal</span>
             </div>
-            <h2>Provincia</h2>
             <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
             {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-            <br />
-            <h2>Departamento</h2>
+           
             <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
             {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
 
-            <br />
-            <h2>Localidad</h2>
             <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
             {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
-
-            <p onClick={() => quitarCampoDomicilio(index)}>X</p>
+            <hr />
+            
           </div>
         ))}
-        <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
-
-        <button className='button-form' type='button' onClick={agregarEmpleado}>Agregar empleado</button>
+        
       </form>
+      <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
+      <hr />
+      <button className='button-form' type='button' onClick={agregarEmpleado}>Agregar empleado</button>
+      
     </div>
   )
 }
