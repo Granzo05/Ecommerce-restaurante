@@ -50,10 +50,10 @@
 [x] Activacion sucursal 
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga empleado [] Probar valicación
+[x] Carga empleado [x] Probar valicación
 [] Actualizacion empleado [] Probar valicación
-[] Eliminacion empleado
-[] Activacion empleado
+[x] Eliminacion empleado
+[x] Activacion empleado
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Carga cliente [] Probar valicación

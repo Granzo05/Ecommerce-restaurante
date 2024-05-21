@@ -34,8 +34,8 @@ const Empleados = () => {
 
     const fetchEmpleados = async () => {
         try {
-
             let data = await EmpleadoService.getEmpleados();
+            console.log(data);
             setEmpleados(data);
         } catch (error) {
             console.error('Error al obtener empleados:', error);
@@ -82,6 +82,7 @@ const Empleados = () => {
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(false);
         setShowEliminarEmpleadoModal(false);
+        setShowActivarEmpleadoModal(false);
         setMostrarEmpleados(true);
         fetchEmpleados();
     };

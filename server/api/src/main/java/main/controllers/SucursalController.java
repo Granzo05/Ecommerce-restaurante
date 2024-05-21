@@ -46,6 +46,22 @@ public class SucursalController {
     }
 
     @CrossOrigin
+    @GetMapping("/empleado/login/{email}/{password}")
+    public EmpleadoDTO loginEmpleado(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+        Optional<EmpleadoDTO> empleadoDb = empleadoRepository.findByEmailAndPassword(Encrypt.encriptarString(email), Encrypt.cifrarPassword(password));
+
+        if(empleadoDb.isPresent()) {
+            EmpleadoDTO empleado = empleadoDb.get();
+
+            empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
+            empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
+            empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
+        }
+
+        return empleadoDb.get();
+    }
+
+    @CrossOrigin
     @GetMapping("/sucursales")
     public Set<SucursalDTO> getSucursales() throws Exception {
         List<SucursalDTO> sucursales = sucursalRepository.findAllDTO();
@@ -120,7 +136,7 @@ public class SucursalController {
             Empresa empresa = empresaRepository.findById(1l).get();
 
             sucursalDetails.setEmpresa(empresa);
-
+            sucursalDetails.setBorrado("NO");
             for (LocalidadDelivery localidad: sucursalDetails.getLocalidadesDisponiblesDelivery()) {
                 localidad.setSucursal(sucursalDetails);
             }
@@ -147,6 +163,7 @@ public class SucursalController {
 
             for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
                 domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
+                domicilio.setEmpleado(empleadoDetails);
             }
 
             empleadoDetails.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
@@ -155,6 +172,7 @@ public class SucursalController {
             FechaContratacionEmpleado fecha = new FechaContratacionEmpleado();
             fecha.setEmpleado(empleadoDetails);
             empleadoDetails.getFechaContratacion().add(fecha);
+            empleadoDetails.setBorrado("NO");
 
             empleadoRepository.save(empleadoDetails);
 
@@ -167,35 +185,17 @@ public class SucursalController {
     @GetMapping("/empleados")
     public Set<EmpleadoDTO> getEmpleados() throws Exception {
 
-        List<Empleado> empleados = empleadoRepository.findAllDTO();
+        List<EmpleadoDTO> empleados = empleadoRepository.findAllDTO();
 
-        List<EmpleadoDTO> empleadosDTO = new ArrayList<>();
+        for (EmpleadoDTO empleado : empleados) {
+            empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
+            empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
+            empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
 
-        for (Empleado empleado : empleados) {
-            EmpleadoDTO empleadoDTO = new EmpleadoDTO();
-
-            List<FechaContratacionEmpleadoDTO> fechasContratacion = fechaContratacionRepository.findByIdEmpleado(empleado.getId());
-            empleadoDTO.setFechaContratacionEmpleado(new HashSet<>(fechasContratacion));
-
-            empleadoDTO.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
-            empleadoDTO.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
-            empleadoDTO.setTelefono(empleado.getTelefono());
-            empleadoDTO.setId(empleado.getId());
-            empleadoDTO.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
-            empleadoDTO.setFechaNacimiento(empleado.getFechaNacimiento());
-
-            Set<DomicilioDTO> domicilios = new HashSet<>(domicilioRepository.findByIdEmpleadoDTO(empleado.getId()));
-
-            for (DomicilioDTO domicilioDTO: domicilios) {
-                domicilioDTO.setCalle(Encrypt.desencriptarString(domicilioDTO.getCalle()));
-            }
-            empleadoDTO.setDomicilios(domicilios);
-            empleadoDTO.setSucursal(sucursalRepository.findById(empleado.getId()).get());
-
-            empleadosDTO.add(empleadoDTO);
+            empleado.setDomicilios(new HashSet<>(domicilioRepository.findByIdEmpleadoDTO(empleado.getId())));
         }
 
-        return new HashSet<>(empleadosDTO);
+        return new HashSet<>(empleados);
     }
 
 
