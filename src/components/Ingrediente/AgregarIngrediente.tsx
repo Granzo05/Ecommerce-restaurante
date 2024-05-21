@@ -31,12 +31,13 @@ function AgregarIngrediente() {
 
   return (
     <div className="modal-info">
+      <h2>Cargar nuevo ingrediente</h2>
       <Toaster />
       <div className="inputBox">
         <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
         <span>Nombre del ingrediente</span>
       </div>
-      <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Agregar ingrediente</button>
+      <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar </button>
     </div>
   )
 }

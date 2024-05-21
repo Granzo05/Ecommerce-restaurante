@@ -12,6 +12,7 @@ import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
 import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import { clearInputs } from '../../utils/global_variables/functions';
+import '../../styles/modalCrud.css'
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
@@ -191,23 +192,29 @@ function AgregarMenu() {
 
   return (
     <div className="modal-info">
+      <h2>Agregar menú</h2>
       <Toaster />
-      <div id="inputs-imagenes">
+      <div>
+        
         {imagenes.map((imagen, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'row' }}>
+          
+          <div className='inputBox' key={index}>
+            <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
             <input
               type="file"
               accept="image/*"
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-              style={{ width: '400px' }}
+              
             />
-            <p style={{ cursor: 'pointer', marginTop: '13px' }} onClick={quitarCampoImagen}>X</p>
+            
           </div>
         ))}
-        <button onClick={añadirCampoImagen}>Añadir imagen</button>
       </div>
+      <button onClick={añadirCampoImagen}>Añadir imagen</button>
+      
       <div className="inputBox">
+        <hr />
         <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
         <span>Nombre del menu</span>
       </div>
@@ -222,8 +229,9 @@ function AgregarMenu() {
       </div>
 
       <label>
-        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }}>
-          <option>Seleccionar tipo de menú</option>
+        <div className="inputBox">
+        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }} defaultValue="">
+          <option value="" disabled hidden>Seleccionar tipo de menú</option>
           <option value={EnumTipoArticuloComida.HAMBURGUESAS.toString()}>Hamburguesas</option>
           <option value={EnumTipoArticuloComida.PANCHOS.toString()}>Panchos</option>
           <option value={EnumTipoArticuloComida.EMPANADAS.toString()}>Empanadas</option>
@@ -235,43 +243,9 @@ function AgregarMenu() {
           <option value={EnumTipoArticuloComida.SUSHI.toString()}>Sushi</option>
           <option value={EnumTipoArticuloComida.MILANESAS.toString()}>Milanesas</option>
         </select>
+        
+        </div>
       </label>
-      <br />
-      <div>
-        <h2>Ingredientes</h2>
-        <button onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente</button>
-        <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
-          <AgregarIngrediente />
-        </ModalFlotante>
-        {ingredientes.map((ingredienteMenu, index) => (
-          <div key={index} className='div-ingrediente-menu'>
-            <div>
-              <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
-              {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia=''/>}
-              <br />
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
-              <span>Cantidad necesaria</span>
-            </div>
-            <select
-              id={`select-medidas-${index}`}
-              onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
-            >
-              <option value="">Seleccionar medida ingrediente</option>
-              <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-              <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-              <option value={EnumMedida.LITROS.toString()}>Litros</option>
-              <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-              <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-            </select>
-
-            <p onClick={() => quitarCampoIngrediente(index)}>X</p>
-          </div>
-        ))}
-        <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
-      </div>
-
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
         <span>Precio</span>
@@ -279,8 +253,54 @@ function AgregarMenu() {
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
         <span>Comensales</span>
+        <hr />
       </div>
+      <div>
+        <h2>Ingredientes</h2>
+        
+        <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
+          <AgregarIngrediente />
+        </ModalFlotante>
+        {ingredientes.map((ingredienteMenu, index) => (
+          <div key={index}>
+            <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
+            <div>
+              <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
+              {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia=''/>}
+              
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
+              <span>Cantidad necesaria</span>
+            </div>
+            <div className="inputBox">
+            <select
+              id={`select-medidas-${index}`}
+              onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
+              defaultValue=""
+            >
+              <option value="" disabled hidden>Seleccionar medida ingrediente</option>
+              <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+              <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+              <option value={EnumMedida.LITROS.toString()}>Litros</option>
+              <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+              <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
+            </select>
+            </div>
+            
 
+            
+          </div>
+        ))}
+        
+      </div>
+      <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
+      
+      <br />
+      <button onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente</button>
+
+      
+      <hr />
       <button type="button" onClick={agregarMenu}>Agregar menu</button>
     </div >
   )

@@ -97,7 +97,11 @@ const Menus = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Menus -</h1>
-            <button onClick={() => handleAgregarMenu()}> + Agregar menu</button>
+            <div className="btns-menu">
+                <button className="btn-agregar" onClick={() => handleAgregarMenu()}> + Agregar menu</button>
+            </div>
+            
+            <hr />
             {mostrarMenus && (
                 <div id="menus">
                     <table>
