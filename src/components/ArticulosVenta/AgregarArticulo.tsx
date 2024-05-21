@@ -88,51 +88,59 @@ function AgregarArticuloVenta() {
 
   return (
     <div className="modal-info">
+      <h2>Agregar artículo para venta</h2>
       <Toaster />
-      <div id="inputs-imagenes">
+      <div >
         {imagenes.map((imagen, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'row' }}>
+          <div key={index} className='inputBox'>
+            <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
             <input
               type="file"
               accept="image/*"
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-              style={{ width: '400px' }}
             />
-            <p style={{ cursor: 'pointer', marginTop: '13px' }} onClick={quitarCampoImagen}>X</p>
+            
           </div>
         ))}
-        <button onClick={añadirCampoImagen}>Añadir imagen</button>
+        
       </div>
+      <button onClick={añadirCampoImagen}>Añadir imagen</button>
       <div className="inputBox">
+        <hr />
         <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
         <span>Nombre del articulo</span>
       </div>
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
-        <span>Precio</span>
+        <span>Precio ($)</span>
       </div>
-      <br />
+      
       <label>
-        <select name="tipoArticulo" required={true} onChange={(e) => { setTipo(e.target.value) }}>
-          <option>Seleccionar tipo de articulo</option>
+      <div className="inputBox">
+      <select name="tipoArticulo" required={true} onChange={(e) => { setTipo(e.target.value) }}
+      defaultValue="">
+          <option value="" disabled hidden>Seleccionar tipo de articulo</option>
           <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida sin alcohol</option>
           <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida con alcohol</option>
         </select>
+        </div>
+        
       </label>
-      <br />
-
-      <select
+        <div className="inputBox">
+        <select
         onChange={(e) => setMedida(e.target.value)}
+        defaultValue=""
       >
-        <option>Seleccionar medida</option>
+        <option value="" disabled hidden>Seleccionar medida</option>
         <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
         <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
         <option value={EnumMedida.LITROS.toString()}>Litros</option>
         <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
         <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
       </select>
-      <br />
+        </div>
+      
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
         <span>Cantidad de la medida</span>

@@ -11,6 +11,7 @@ import AgregarArticuloVenta from './AgregarArticulo';
 import EditarArticuloVenta from './EditarArticulo';
 import EliminarArticuloVenta from './EliminarArticulo';
 import ActivarArticuloVenta from './ActivarArticulo';
+import '../../styles/articulosVenta.css'
 
 const ArticuloVentas = () => {
     const [articulosVenta, setArticulosVenta] = useState<ArticuloVenta[]>([]);
@@ -97,7 +98,11 @@ const ArticuloVentas = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Articulos para venta -</h1>
-            <button onClick={() => handleAgregarArticuloVenta()}> + Agregar articulo</button>
+            <div className="btns-arts">
+            <button className='btn-agregar' onClick={() => handleAgregarArticuloVenta()}> + Agregar articulo</button>
+            
+            </div>
+            <hr />
             {mostrarArticuloVenta && (
                 <div id="menus">
                     <table>
