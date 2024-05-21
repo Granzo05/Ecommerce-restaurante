@@ -13,15 +13,15 @@ const LoginNegocio = () => {
     toast.promise(SucursalService.getSucursal(email, contraseña), {
       loading: 'Iniciando sesión...',
       success: (message: string) => {
-        setInterval(() => {
-          window.location.href = '/'
-        }, 1000);
+        window.location.href = '/';
         return message;
       },
       error: (message: string) => {
         return message;
       },
     });
+
+
   };
 
   // Te movi las frases al utils/const.ts :D
@@ -79,7 +79,7 @@ const LoginNegocio = () => {
         </div>
       </aside>
       <main className="form-side">
-        <form className="my-form">
+        <div className="my-form">
           <div className="form-welcome-row">
             <h1>¡Bienvenido, otra vez! &#128079;</h1>
             <h2>- Ingresa a tu cuenta -</h2>
@@ -106,7 +106,7 @@ const LoginNegocio = () => {
               name="password"
               placeholder="tu contraseña"
               title="Minimum 6 characters at least 1 Alphabet and 1 Number"
-              pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+              //pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
               onChange={(e) => setContraseña(e.target.value)}
               required
             />
@@ -139,7 +139,7 @@ const LoginNegocio = () => {
                     <button className="close-button" onClick={closeModalP}><a href=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBUlEQVR4nO3ZTQqDMBAF4HeKPOkV2+MWbE9jKXUhRcQk8xeZt3Il8xFNZgiQyWQyV8odwORdBH41fGtpygPAAmB2xkxrDctaU3UKgOf6gjeAG+zDTQ2vnho8MZRCeGIojfDAUAthiaE2wgJjhtDEmCM0MG4ISYw7QgITBtGDCYdowYRF1GDCI85ghkEcYYZD7M0Q899zhEGteWWGW4lttp+T53DWlUt8Wtz5sSOMzVU52p2GwfDEFhsew4pzIiyGDYddOAw7TuwwGAq0He4YCvZObhgqNIDmGCp2sWYYi1a8aGMs54mihfEYioo0xnOyK1KYCONpkcBc5urtMpehmUwmg3D5AAklyc9YEtl/AAAAAElFTkSuQmCC" /></a></button>
                     <h2>Restablecer Contraseña</h2>
                     <p>Por favor, ingresa tu correo electrónico para restablecer tu contraseña.</p>
-                    <form className="password-reset-form">
+                    <div className="password-reset-form">
                       <div className="text-field">
                         <label htmlFor="email" style={{ display: 'flex' }}>E-mail:</label>
                         <input
@@ -152,8 +152,8 @@ const LoginNegocio = () => {
                         />
                         <div className="error-message">Formato incorrecto de e-mail.</div>
                       </div>
-                      <button type="submit">Enviar</button>
-                    </form>
+                      <button>Enviar</button>
+                    </div>
 
                   </div>
                 </Modal>
@@ -161,10 +161,10 @@ const LoginNegocio = () => {
 
             </div>
           </div>
-          <button className="my-form__button" onClick={handleIniciarSesionNegocio}>
+          <button type='button' className="my-form__button" onClick={handleIniciarSesionNegocio}>
             Ingresar
           </button>
-        </form>
+        </div>
       </main>
     </div>
   )
@@ -179,7 +179,7 @@ export default LoginNegocio
         <div className={styles.formInfo}>
           <div>
             <h2>Iniciar sesión</h2>
-            <form className={styles.form}>
+            <div className={styles.form}>
               <label>
                 <input required type="text" placeholder="Correo electrónico" id="emailLogin"
                   onChange={(e) => { setEmail(e.target.value) }} />
@@ -189,7 +189,7 @@ export default LoginNegocio
                   onChange={(e) => { setContraseña(e.target.value) }} />
               </label>
               <input type="button" onClick={handleIniciarSesionNegocio} />
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -222,7 +222,7 @@ export default LoginNegocio
                     <button className="close-button" onClick={closeModalC}><a href=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBUlEQVR4nO3ZTQqDMBAF4HeKPOkV2+MWbE9jKXUhRcQk8xeZt3Il8xFNZgiQyWQyV8odwORdBH41fGtpygPAAmB2xkxrDctaU3UKgOf6gjeAG+zDTQ2vnho8MZRCeGIojfDAUAthiaE2wgJjhtDEmCM0MG4ISYw7QgITBtGDCYdowYRF1GDCI85ghkEcYYZD7M0Q899zhEGteWWGW4lttp+T53DWlUt8Wtz5sSOMzVU52p2GwfDEFhsew4pzIiyGDYddOAw7TuwwGAq0He4YCvZObhgqNIDmGCp2sWYYi1a8aGMs54mihfEYioo0xnOyK1KYCONpkcBc5urtMpehmUwmg3D5AAklyc9YEtl/AAAAAElFTkSuQmCC" /></a></button>
                     <h2>Crear cuenta</h2>
                     <p>Por favor, completa los siguientes campos para crear una nueva cuenta:</p>
-                    <form className="password-reset-form">
+                    <div className="password-reset-form">
                       <div className="text-field">
                         <label htmlFor="email" style={{ display: 'flex' }}>E-mail:</label>
                         <input
@@ -283,7 +283,7 @@ export default LoginNegocio
                         <div className="error-message">Por favor, ingresa tu fecha de nacimiento.</div>
                       </div>
                       <button type="submit">Crear cuenta</button>
-                    </form>
+                    </div>
 
                   </div>
                 </Modal>

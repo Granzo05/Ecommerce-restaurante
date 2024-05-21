@@ -41,15 +41,8 @@ public class SucursalController {
 
     @CrossOrigin
     @GetMapping("/sucursal/login/{email}/{password}")
-    public Object loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        // Busco por email y clave encriptada, si se encuentra devuelvo el objeto
-        SucursalDTO sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-        // Utilizo la misma funcion tanto para empleados como para el sucursale
-        if (sucursal == null) {
-            return empleadoRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-        }
-
-        return sucursal;
+    public SucursalDTO loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+        return sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
     }
 
     @CrossOrigin
