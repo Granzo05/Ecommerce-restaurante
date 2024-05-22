@@ -25,7 +25,9 @@ const Menus = () => {
 
     useEffect(() => {
         fetchData();
+    }, []);
 
+    useEffect(() => {
         fetchMenu();
     }, []);
 
@@ -160,10 +162,10 @@ const Menus = () => {
                 {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
             </ModalFlotante>
             <ModalFlotante isOpen={showEliminarMenuModal} onClose={handleModalClose}>
-                {selectedMenu && <EliminarMenu menuOriginal={selectedMenu} />}
+                {selectedMenu && <EliminarMenu menuOriginal={selectedMenu} onCloseModal={handleModalClose} />}
             </ModalFlotante>
             <ModalFlotante isOpen={showActivarMenuModal} onClose={handleModalClose}>
-                {selectedMenu && <ActivarMenu menuOriginal={selectedMenu} />}
+                {selectedMenu && <ActivarMenu menuOriginal={selectedMenu} onCloseModal={handleModalClose} />}
             </ModalFlotante>
         </div>
 

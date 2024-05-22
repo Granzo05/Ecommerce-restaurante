@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../../styles/empleados.css';
 import { Toaster, toast } from 'sonner'
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
@@ -7,26 +6,27 @@ import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 
 interface ActivarArticuloProps {
   articuloOriginal: ArticuloVenta;
+  onCloseModal: () => void;
 }
 
-const ActivarArticuloVenta: React.FC<ActivarArticuloProps> = ({ articuloOriginal }) => {
-  const navigate = useNavigate();
-
+const ActivarArticuloVenta: React.FC<ActivarArticuloProps> = ({ articuloOriginal, onCloseModal }) => {
   const onConfirm = () => {
     toast.promise(ArticuloVentaService.updateBorradoArticulo(articuloOriginal), {
       loading: 'Activando articulo...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
         return message;
       },
     });
-    navigate('/opciones');
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (

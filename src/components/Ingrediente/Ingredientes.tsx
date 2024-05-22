@@ -134,11 +134,11 @@ const Ingredientes = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarIngredienteModal} onClose={handleModalClose}>
-                {selectedIngrediente && <EliminarIngrediente ingredienteOriginal={selectedIngrediente} />}
+                {selectedIngrediente && <EliminarIngrediente ingredienteOriginal={selectedIngrediente} onCloseModal={handleModalClose} />}
             </ModalCrud>
 
             <ModalCrud isOpen={showActivarIngredienteModal} onClose={handleModalClose}>
-                {selectedIngrediente && <ActivarIngrediente ingredienteOriginal={selectedIngrediente} />}
+                {selectedIngrediente && <ActivarIngrediente ingredienteOriginal={selectedIngrediente} onCloseModal={handleModalClose} />}
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarIngredienteModal} onClose={handleModalClose}>

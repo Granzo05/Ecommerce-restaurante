@@ -146,11 +146,11 @@ const Stocks = () => {
             </ModalFlotante>
 
             <ModalFlotante isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EliminarStock stockOriginal={selectedStock} />}
+                {selectedStock && <EliminarStock stockOriginal={selectedStock} onCloseModal={handleModalClose}/>}
             </ModalFlotante>
 
             <ModalFlotante isOpen={showActivarStockModal} onClose={handleModalClose}>
-                {selectedStock && <ActivarStock stockOriginal={selectedStock} />}
+                {selectedStock && <ActivarStock stockOriginal={selectedStock} onCloseModal={handleModalClose} />}
             </ModalFlotante>
 
             <ModalFlotante isOpen={showEditarStockModal} onClose={handleModalClose}>

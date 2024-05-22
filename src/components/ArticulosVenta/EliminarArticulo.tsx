@@ -1,20 +1,23 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { Toaster, toast } from 'sonner'
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 
 interface EliminarArticuloProps {
   articuloOriginal: ArticuloVenta;
+  onCloseModal: () => void;
+
 }
 
-const EliminarArticuloVenta: React.FC<EliminarArticuloProps> = ({ articuloOriginal }) => {
-  const navigate = useNavigate();
+const EliminarArticuloVenta: React.FC<EliminarArticuloProps> = ({ articuloOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
     toast.promise(ArticuloVentaService.updateBorradoArticulo(articuloOriginal), {
       loading: 'Eliminando articulo...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -24,7 +27,7 @@ const EliminarArticuloVenta: React.FC<EliminarArticuloProps> = ({ articuloOrigin
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (

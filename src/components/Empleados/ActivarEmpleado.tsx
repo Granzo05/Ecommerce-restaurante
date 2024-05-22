@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import '../../styles/empleados.css';
 import { Toaster, toast } from 'sonner'
@@ -7,15 +6,18 @@ import { Empleado } from '../../types/Restaurante/Empleado';
 
 interface ActivarEmpleadoProps {
   empleadoOriginal: Empleado;
+  onCloseModal: () => void;
 }
 
-const ActivarEmpleado: React.FC<ActivarEmpleadoProps> = ({ empleadoOriginal }) => {
-  const navigate = useNavigate();
+const ActivarEmpleado: React.FC<ActivarEmpleadoProps> = ({ empleadoOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
     toast.promise(EmpleadoService.updateEmpleado(empleadoOriginal), {
       loading: 'Activando empleado...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -25,7 +27,7 @@ const ActivarEmpleado: React.FC<ActivarEmpleadoProps> = ({ empleadoOriginal }) =
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (

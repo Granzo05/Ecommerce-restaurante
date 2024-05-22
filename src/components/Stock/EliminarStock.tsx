@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
 import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
@@ -9,22 +8,21 @@ import '../../styles/modalFlotante.css'
 
 interface EliminarStockProps {
   stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
+  onCloseModal: () => void;
+
 }
 
 
 
-const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal }) => {
-  const navigate = useNavigate();
-  
-
-  
-
-  const onConfirm = () => {
+const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal, onCloseModal }) => {
+    const onConfirm = () => {
     if (stockOriginal.tipo === 'ingrediente') {
       toast.promise(StockIngredientesService.updateStock(stockOriginal), {
         loading: 'Eliminando stock del ingrediente...',
         success: (message) => {
-          navigate('/opciones');
+          setTimeout(() => {
+            onCloseModal();
+          }, 800);
           return message;
         },
         error: (message) => {
@@ -35,7 +33,9 @@ const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal }) => {
       toast.promise(StockArticuloVentaService.updateStock(stockOriginal), {
         loading: 'Eliminando stock del articulo...',
         success: (message) => {
-          navigate('/opciones');
+          setTimeout(() => {
+            onCloseModal();
+          }, 800);
           return message;
         },
         error: (message) => {
@@ -46,7 +46,7 @@ const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal }) => {
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (
