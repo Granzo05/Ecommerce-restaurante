@@ -118,15 +118,22 @@ const Sucursales = () => {
                                     <td>{sucursal.horarioCierre}</td>
                                     {sucursal.borrado === 'NO' ? (
                                         <td>
-                                            <button onClick={() => handleEliminarSucursal(sucursal)}>ELIMINAR</button>
-                                            <button onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
-                                            <button onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                            <div className="btns-acciones">
+                                            <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                            <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
+                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarSucursal(sucursal)}>ELIMINAR</button>
+                                            </div>
+                                            
                                         </td>
                                     ) : (
                                         <td>
-                                            <button onClick={() => handleActivarSucursal(sucursal)}>ACTIVAR</button>
-                                            <button onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
-                                            <button onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                            <div className="btns-acciones">
+                                            <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                            <button className="btn-accion-activar" onClick={() => handleActivarSucursal(sucursal)}>ACTIVAR</button>
+                                            <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
+                                            
+                                            </div>
+                                            
                                         </td>
                                     )}
                                 </tr>

@@ -65,33 +65,33 @@ table tr:hover {
     align-items: end;
 }
 
-.btns-acciones-stock{
+.btns-acciones{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-.btn-accion-1, .btn-accion-2{
+.btn-accion-editar, .btn-accion-eliminar{
     width: 150px;
     color: black;
     margin: 5px;
     border: 1px solid black;
 }
 
-.btn-accion-1{
+.btn-accion-editar{
     background-color: #e4e000;
 }
 
-.btn-accion-2{
+.btn-accion-eliminar{
     background-color: #ff0000;
 }
 
-.btn-accion-1:hover{
+.btn-accion-editar:hover{
     background-color: #aca900;
 }
 
-.btn-accion-2:hover{
+.btn-accion-eliminar:hover{
     background-color: #ad0000;
 }
 

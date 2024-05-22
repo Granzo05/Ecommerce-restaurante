@@ -23,18 +23,12 @@ const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ sucursal }) => {
     navigate('/opciones');
   };
 
-  const onCancel = () => {
-    navigate('/opciones');
-  };
 
   return (
-    <div>
+    <div className='modal-info'>
+      <h2>¿Seguro que quieres eliminar la sucursal?</h2>
       <Toaster />
-      <p>¿Seguro que quieres eliminar la sucursal?</p>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
         <button onClick={onConfirm}>Confirmar</button>
-        <button onClick={onCancel}>Cancelar</button>
-      </div>
     </div>
   );
 }

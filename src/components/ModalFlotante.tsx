@@ -20,8 +20,10 @@ const ModalFlotante: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
             {children}
-            <button onClick={handleModalClose}>Cancelar</button>
-          </div>
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+              <button  onClick={handleModalClose}>Cancelar</button>
+            </div>
+           </div>
         </div>
       )}
     </div>

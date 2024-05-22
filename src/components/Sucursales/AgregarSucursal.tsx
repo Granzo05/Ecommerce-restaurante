@@ -308,8 +308,10 @@ function AgregarSucursal() {
             </tbody>
           </table>
         )}
+        <div className="inputBox">
 
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
+        </div>
 
         {localidadesMostrablesCheckbox && (
           <table>

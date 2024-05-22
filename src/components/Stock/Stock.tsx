@@ -183,19 +183,19 @@ const Stocks = () => {
                                     <td>{"Aca la fecha"}</td>
                                     {stock.borrado === 'NO' ? (
                                         <td>
-                                            <div className="btns-acciones-stock">
-                                                <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
+                                            <div className="btns-acciones">
+                                                <button className="btn-accion-editar" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
 
-                                                <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'ingrediente')}>ELIMINAR</button>
+                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarStock(stock, 'ingrediente')}>ELIMINAR</button>
 
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
-                                            <div className="btns-acciones-stock">
-                                                <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
+                                            <div className="btns-acciones">
+                                                <button className="btn-accion-editar" onClick={() => handleEditarStock(stock, 'ingrediente')}>EDITAR</button>
 
-                                                <button className="btn-accion-2" onClick={() => handleActivarStock(stock, 'ingrediente')}>ACTIVAR</button>
+                                                <button className="btn-accion-activar" onClick={() => handleActivarStock(stock, 'ingrediente')}>ACTIVAR</button>
                                             </div>
                                         </td>
                                     )}
