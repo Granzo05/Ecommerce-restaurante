@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import { frases } from '../utils/global_variables/const';
 import ModalFlotante from '../components/ModalFlotante';
 import ReestablecerContra from '../components/ReestablecerContra';
+import ModalCrud from '../components/ModalCrud';
 
 const LoginNegocio = () => {
 
@@ -121,9 +122,9 @@ const handleAgregarArticulo = () => {
               <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={handleAgregarArticulo}>
                 Reestablecela
               </a></span>
-              <ModalFlotante isOpen={showResetContraModal} onClose={handleModalClose}>
+              <ModalCrud isOpen={showResetContraModal} onClose={handleModalClose}>
                 <ReestablecerContra />
-              </ModalFlotante>
+              </ModalCrud>
               <div>
                 <Modal
                   isOpen={modalIsOpenP}
