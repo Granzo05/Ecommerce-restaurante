@@ -8,6 +8,7 @@ import ModalFlotante from "../ModalFlotante";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 import { EmpleadoService } from "../../services/EmpleadoService";
 import ActivarSucursal from "./ActivarSucursal";
+import '../../styles/sucursales.css'
 
 const Sucursales = () => {
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
@@ -86,9 +87,12 @@ const Sucursales = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>Sucursales</h1>
-            <button onClick={() => handleAgregarSucursal()}> + Agregar sucursal</button>
+            <h1>- Sucursales -</h1>
+            <div className="btns-sucursales">
 
+            <button className="btn-agregar" onClick={() => handleAgregarSucursal()}> + Agregar sucursal</button>
+            </div>
+            <hr />
             <ModalCrud isOpen={showAgregarSucursalModal} onClose={handleModalClose}>
                 <AgregarSucursal />
             </ModalCrud>
