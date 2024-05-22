@@ -28,6 +28,8 @@ public class ArticuloMenu extends Articulo {
     private int comensales;
     @Column(name = "descripcion")
     private String descripcion;
+    @Column(name = "borrado")
+    private String borrado = "NO";
     @JsonIgnoreProperties(value = {"articuloMenu"})
     @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();

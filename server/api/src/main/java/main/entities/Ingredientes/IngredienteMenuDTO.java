@@ -1,14 +1,12 @@
 package main.entities.Ingredientes;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class IngredienteMenuDTO {
     private Long id;
     private int cantidad;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { MenuService } from '../../services/MenuService';
-import { useNavigate } from 'react-router-dom';
 import { toast, Toaster } from 'sonner';
 import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
 
@@ -9,9 +8,8 @@ interface EliminarMenuProps {
 }
 
 const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuOriginal }) => {
-  const navigate = useNavigate();
-
   const onConfirm = () => {
+    console.log(menuOriginal)
     toast.promise(MenuService.updateBorradoMenu(menuOriginal), {
       loading: 'Eliminando articulo...',
       success: (message) => {
@@ -23,16 +21,11 @@ const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuOriginal }) => {
     });
   };
 
-  const onCancel = () => {
-    navigate('/opciones');
-  };
-
   return (
       <div className="modal-info">
         <Toaster/>
         <p>¿Seguro que quieres eliminar el menú?</p>
         <button onClick={onConfirm}>Confirmar</button>
-        <button onClick={onCancel}>Cancelar</button>
       </div>
   );
 }

@@ -197,15 +197,31 @@ public class ArticuloMenuController {
 
             articuloMenu.setPrecioVenta(articuloMenuDetail.getPrecioVenta());
 
+
             for (IngredienteMenuDTO ingredienteMenuDTO : articuloMenuDetail.getIngredientesMenu()) {
                 IngredienteMenu ingredienteMenu = new IngredienteMenu();
                 ingredienteMenu.setArticuloMenu(articuloMenu);
-                ingredienteMenu.setMedida(ingredienteMenu.getMedida());
+                ingredienteMenu.setMedida(ingredienteMenuDTO.getMedida());
                 ingredienteMenu.setCantidad(ingredienteMenuDTO.getCantidad());
                 ingredienteMenu.setIngrediente(ingredienteRepository.findByName(ingredienteMenuDTO.getIngredienteNombre()).get());
 
                 articuloMenu.getIngredientesMenu().add(ingredienteMenu);
             }
+
+            for (IngredienteMenu ingredienteMenu : articuloMenuDetail.getIngredientes()) {
+                Ingrediente ingredienteDB = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get();
+                IngredienteMenu ingredienteMenu1 = new IngredienteMenu();
+
+                ingredienteMenu1.setIngrediente(ingredienteDB);
+                ingredienteMenu1.setCantidad(ingredienteMenu.getCantidad());
+                ingredienteMenu1.setArticuloMenu(articuloMenu);
+                ingredienteMenu1.setMedida(ingredienteMenu.getMedida());
+
+                articuloMenu.getIngredientesMenu().add(ingredienteMenu1);
+            }
+
+            System.out.println(articuloMenuDetail.getIngredientesMenu());
+            System.out.println(articuloMenuDetail.getIngredientes());
 
             articuloMenu.setTiempoCoccion(articuloMenuDetail.getTiempoCoccion());
             articuloMenu.setDescripcion(articuloMenuDetail.getDescripcion());

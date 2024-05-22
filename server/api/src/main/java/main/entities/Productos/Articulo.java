@@ -20,8 +20,6 @@ public abstract class Articulo {
     private String nombre;
     @Column(name = "precio_venta")
     private double precioVenta;
-    @Column(name = "borrado")
-    private String borrado = "NO";
     @ManyToMany(mappedBy = "articulos", fetch = FetchType.LAZY)
     private Set<Promocion> promociones = new HashSet<>();
     @Transient

@@ -3,7 +3,6 @@ import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
 import ModalFlotante from '../ModalFlotante';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
-import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
@@ -202,7 +201,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       const ingrediente = ingredientes[i].ingrediente;
       const cantidad = ingredientes[i].cantidad;
       const medida = ingredientes[i].medida;
-
+      console.log(ingredientes)
       if (!ingrediente?.nombre) {
         toast.info(`Por favor, el ingrediente ${i} debe contener el nombre`);
         return;
@@ -215,7 +214,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       }
     }
 
-    let menuActualizado: ArticuloMenu = new ArticuloMenu();
+    let menuActualizado: ArticuloMenuDTO = new ArticuloMenuDTO();
 
     menuActualizado.nombre = nombre;
     menuActualizado.tiempoCoccion = tiempoCoccion;
@@ -227,14 +226,11 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
     if (ingredientesMuestra.length > 0) {
       ingredientesMuestra.forEach(ingredienteDTO => {
-        let ingredienteMenu: IngredienteMenu = new IngredienteMenu();
+        let ingredienteMenu: IngredienteMenuDTO = new IngredienteMenuDTO();
 
         ingredienteMenu.medida = ingredienteDTO.medida;
         ingredienteMenu.cantidad = ingredienteDTO.cantidad;
-
-        let ingrediente: Ingrediente = new Ingrediente();
-        ingrediente.nombre = ingredienteDTO.ingredienteNombre;
-        ingredienteMenu.ingrediente = ingrediente;
+        ingredienteMenu.ingredienteNombre = ingredienteDTO.ingredienteNombre;
 
         menuActualizado.ingredientesMenu?.push(ingredienteMenu);
       });
@@ -242,10 +238,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
     if (ingredientes.length > 0) {
       ingredientes.forEach(ingredienteMenu => {
-        menuActualizado.ingredientesMenu?.push(ingredienteMenu);
+        menuActualizado.ingredientes?.push(ingredienteMenu);
       });
     }
-
 
     toast.promise(MenuService.updateMenu(menuActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando menu...',

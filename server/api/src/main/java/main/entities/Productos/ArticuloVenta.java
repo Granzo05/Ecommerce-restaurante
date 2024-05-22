@@ -32,6 +32,8 @@ public class ArticuloVenta extends Articulo {
     @JsonIgnoreProperties(value = {"articuloVenta"})
     @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
+    @Column(name = "borrado")
+    private String borrado = "NO";
     @JsonIgnoreProperties(value = {"articulosVenta"})
     @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY)
     private Set<Sucursal> sucursales = new HashSet<>();

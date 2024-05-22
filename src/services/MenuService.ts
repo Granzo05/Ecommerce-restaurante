@@ -63,7 +63,7 @@ export const MenuService = {
         }
     },
 
-    updateMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
+    updateMenu: async (menu: ArticuloMenuDTO, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'menu/update/' + sucursalId, {
                 method: 'PUT',
@@ -118,7 +118,7 @@ export const MenuService = {
 
     updateBorradoMenu: async (menu: ArticuloMenuDTO): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'menu/update', {
+            const response = await fetch(URL_API + 'menu/update/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -132,7 +132,6 @@ export const MenuService = {
             console.error('Error:', error);
             throw error;
         }
-
     },
 
     deleteMenu: async (nombre: string): Promise<string> => {

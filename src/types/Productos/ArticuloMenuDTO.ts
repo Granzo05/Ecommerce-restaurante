@@ -1,3 +1,4 @@
+import { IngredienteMenu } from "../Ingredientes/IngredienteMenu";
 import { IngredienteMenuDTO } from "../Ingredientes/IngredienteMenuDTO";
 import { Articulo } from "./Articulo";
 import { EnumTipoArticuloComida } from "./EnumTipoArticuloComida";
@@ -10,6 +11,7 @@ export class ArticuloMenuDTO extends Articulo {
     comensales: number = 0;
     descripcion: string = '';
     ingredientesMenu: IngredienteMenuDTO[] = [];
+    ingredientes: IngredienteMenu[] = [];
 
     constructor() {
         super();

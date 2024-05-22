@@ -62,11 +62,11 @@
 [] Activacion articuloMenu
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Muestra articuloMenu
-[] Carga articuloMenu [] Probar valicación
-[] Actualizacion articuloMenu [] Probar valicación
-[] Eliminacion articuloMenu
-[] Activacion articuloMenu
+[x] Muestra articuloMenu
+[X] Carga articuloMenu [X] Probar valicación
+[X] Actualizacion articuloMenu [X] Probar valicación
+[X] Eliminacion articuloMenu
+[X] Activacion articuloMenu
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Muestra articuloVenta

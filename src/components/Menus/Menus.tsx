@@ -90,6 +90,7 @@ const Menus = () => {
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(false);
         setShowEliminarMenuModal(false);
+        setShowActivarMenuModal(false);
         setMostrarMenus(true);
         fetchMenu();
     };
@@ -100,7 +101,7 @@ const Menus = () => {
             <div className="btns-menu">
                 <button className="btn-agregar" onClick={() => handleAgregarMenu()}> + Agregar menu</button>
             </div>
-            
+
             <hr />
             {mostrarMenus && (
                 <div id="menus">
@@ -141,7 +142,7 @@ const Menus = () => {
                                         </td>
                                     ) : (
                                         <td>
-                                            <button onClick={() => handleActivarMenu(menu)}>ELIMINAR</button>
+                                            <button onClick={() => handleActivarMenu(menu)}>ACTIVAR</button>
                                             <button onClick={() => handleEditarMenu(menu)}>EDITAR</button>
                                         </td>
                                     )}
