@@ -17,6 +17,10 @@ const LoginNegocio = () => {
 
 };
 
+const handleAgregarArticulo = () => {
+  SetShowResetContraModal(true);
+};
+
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
 
@@ -117,7 +121,7 @@ const LoginNegocio = () => {
           </div>
           <div className="my-form__actions">
             <div className="my-form__row_contra">
-              <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={openModalP}>
+              <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={handleAgregarArticulo}>
                 Reestablecela
               </a></span>
               <ModalFlotante isOpen={showResetContraModal} onClose={handleModalClose}>
