@@ -32,9 +32,11 @@ const EliminarIngrediente: React.FC<EliminarIngredienteProps> = ({ ingredienteOr
 
   return (
     <div className="modal-info">
+      
+      <h2>¿Seguro que quieres eliminar el ingrediente?</h2>
       <Toaster />
-      <p>¿Seguro que quieres eliminar el ingrediente?</p>
       <button onClick={onConfirm}>Confirmar</button>
+      <br />
       <button onClick={onCancel}>Cancelar</button>
     </div>
   );
