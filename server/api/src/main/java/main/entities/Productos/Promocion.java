@@ -5,6 +5,7 @@ import lombok.*;
 import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,9 +26,9 @@ public class Promocion {
     @Column(name = "descripcion")
     private String descripcion;
     @Column(name = "fecha_desde")
-    private Date fechaDesde;
+    private LocalDateTime fechaDesde;
     @Column(name = "fecha_hasta")
-    private Date fechaHasta;
+    private LocalDateTime fechaHasta;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "promocion_articulo",

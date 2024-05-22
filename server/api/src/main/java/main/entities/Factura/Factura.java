@@ -8,6 +8,7 @@ import lombok.Setter;
 import main.entities.Pedidos.Pedido;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -27,7 +28,7 @@ public class Factura {
     @Column(name = "fecha_creacion", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    public Date fechaFacturacion;
+    public LocalDateTime fechaFacturacion;
     @Column(name = "total")
     private double total;
     @OneToOne(fetch = FetchType.LAZY)

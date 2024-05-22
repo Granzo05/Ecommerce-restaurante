@@ -7,6 +7,7 @@ import main.entities.Factura.Factura;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class Pedido {
     @Column(name = "fecha_pedido", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    public Date fechaPedido;
+    public LocalDateTime fechaPedido;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";

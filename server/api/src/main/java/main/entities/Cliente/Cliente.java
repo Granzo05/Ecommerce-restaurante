@@ -6,6 +6,7 @@ import main.entities.Domicilio.Domicilio;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,10 +40,10 @@ public class Cliente {
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     @Column(name = "fecha_registro", updatable = false, nullable = false)
-    public Date fechaRegistro;
+    public LocalDate fechaRegistro;
     @JsonIgnore
-    @Column(name = "fecha_nacimiento", updatable = false, nullable = false)
-    public Date fechaNacimiento;
+    @Column(name = "fecha_nacimiento", nullable = false)
+    public LocalDate fechaNacimiento;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
