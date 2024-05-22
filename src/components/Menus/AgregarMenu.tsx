@@ -262,6 +262,7 @@ function AgregarMenu() {
         </ModalFlotante>
         {ingredientes.map((ingredienteMenu, index) => (
           <div key={index}>
+            <hr />
             <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
             <div>
               <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />

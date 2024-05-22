@@ -117,7 +117,6 @@ function AgregarStockIngrediente() {
           </select>
         </div>
       </label>
-      <br />
       <label>
         <div className="inputBox">
           <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />

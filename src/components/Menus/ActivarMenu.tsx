@@ -31,8 +31,9 @@ const ActivarMenu: React.FC<ActivarMenuProps> = ({ menuOriginal, onCloseModal })
   return (
     <div className="modal-info">
       <Toaster />
-      <p>¿Seguro que quieres activar el menú?</p>
+      <h2>¿Seguro que quieres activar el menú?</h2>
       <button onClick={onConfirm}>Confirmar</button>
+      <br />
       <button onClick={onCancel}>Cancelar</button>
     </div>
   );
