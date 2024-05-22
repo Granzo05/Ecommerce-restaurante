@@ -12,7 +12,6 @@ import { StockArticuloVentaDTO } from "../../types/Stock/StockArticuloVentaDTO";
 import ModalFlotante from "../ModalFlotante";
 import InputComponent from "../InputFiltroComponent";
 import ModalFlotanteRecomendaciones from "../ModalFlotanteRecomendaciones";
-import SearchIcon from '@mui/icons-material/Search';
 import ActivarStock from "./ActivarStock";
 
 

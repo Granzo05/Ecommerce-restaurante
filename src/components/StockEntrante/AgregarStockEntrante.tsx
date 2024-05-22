@@ -159,7 +159,6 @@ function AgregarStockEntrante() {
       <div className="inputBox">
         <label style={{display: 'flex', fontWeight: 'bold'}}>Fecha de entrada:</label>
         <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
-        
       </div>
       {ingredientesInputs.map((ingrediente, index) => (
         <div key={index}>

@@ -236,7 +236,9 @@ function AgregarEmpleado() {
 
         {domicilios && domicilios.map((domicilio, index) => (
           <div key={index}>
+            <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
             <h2>Domicilio {index + 1}</h2>
+            
             <div className="inputBox">
               <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
               <span>Nombre de calle</span>
@@ -258,7 +260,7 @@ function AgregarEmpleado() {
             <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
             {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
             <hr />
-            <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
+            
           </div>
         ))}
 
