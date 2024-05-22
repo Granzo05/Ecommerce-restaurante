@@ -49,7 +49,7 @@
   font-size: 1.5rem;
   color: black;
   padding: 0;
-  margin: 0px;
+  margin-left: auto;
   transition: 0.3s;
   z-index: 10;
 }

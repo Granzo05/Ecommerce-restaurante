@@ -11,7 +11,7 @@ import { ArticuloVentaService } from "../services/ArticuloVentaService";
 import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 import CloseIcon from '@mui/icons-material/Close';
 import '../styles/modalFlotante.css'
-import '../styles/inputLabel.css'
+import '../styles/modalCrud.css'
 
 const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelectProduct: (product: string) => void, elementoBuscado: string, inputDepartamento: string, inputProvincia: string }> = ({ onCloseModal, onSelectProduct, elementoBuscado, inputDepartamento, inputProvincia }) => {
   const handleModalClose = () => {
