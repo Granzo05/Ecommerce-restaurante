@@ -4,8 +4,19 @@ import { SucursalService } from '../services/SucursalService';
 import { Toaster, toast } from 'sonner';
 import Modal from 'react-modal';
 import { frases } from '../utils/global_variables/const';
+import ModalFlotante from '../components/ModalFlotante';
+import ReestablecerContra from '../components/ReestablecerContra';
 
 const LoginNegocio = () => {
+
+  const [showResetContraModal, SetShowResetContraModal] = useState(false);
+
+  const handleModalClose = () => {
+    SetShowResetContraModal(false);
+
+
+};
+
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
 
@@ -13,7 +24,7 @@ const LoginNegocio = () => {
     toast.promise(SucursalService.getSucursal(email, contraseña), {
       loading: 'Iniciando sesión...',
       success: (message: string) => {
-        window.location.href = '/';
+        window.location.href = '/opciones';
         return message;
       },
       error: (message: string) => {
@@ -49,19 +60,10 @@ const LoginNegocio = () => {
     setModalIsOpenP(false);
   };
 
-  const [modalIsOpenC, setModalIsOpenC] = useState(false);
-
-  const openModalC = () => {
-    setModalIsOpenC(true);
-  };
-
-  const closeModalC = () => {
-    setModalIsOpenC(false);
-  };
 
   return (
     <div className="form-wrapper">
-      <Toaster />
+      
       <aside className="info-side">
         <div className="blockquote-wrapper">
           <img id='comida-img'
@@ -79,6 +81,7 @@ const LoginNegocio = () => {
         </div>
       </aside>
       <main className="form-side">
+      <Toaster />
         <div className="my-form">
           <div className="form-welcome-row">
             <h1>¡Bienvenido, otra vez! &#128079;</h1>
@@ -117,39 +120,29 @@ const LoginNegocio = () => {
               <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={openModalP}>
                 Reestablecela
               </a></span>
+              <ModalFlotante isOpen={showResetContraModal} onClose={handleModalClose}>
+                <ReestablecerContra />
+              </ModalFlotante>
               <div>
                 <Modal
                   isOpen={modalIsOpenP}
                   onRequestClose={closeModalP}
-                  id='modal-pass-forget'
-                  style={{
-                    content: {
-                      top: '50%',
-                      left: '50%',
-                      right: 'auto',
-                      bottom: 'auto',
-                      marginRight: '-50%',
-                      transform: 'translate(-50%, -50%)',
-                      boxShadow: '0 0 200px black'
-                    },
-                  }}
                   shouldCloseOnOverlayClick={false}
                 >
-                  <div className="modal-content">
-                    <button className="close-button" onClick={closeModalP}><a href=""><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABBUlEQVR4nO3ZTQqDMBAF4HeKPOkV2+MWbE9jKXUhRcQk8xeZt3Il8xFNZgiQyWQyV8odwORdBH41fGtpygPAAmB2xkxrDctaU3UKgOf6gjeAG+zDTQ2vnho8MZRCeGIojfDAUAthiaE2wgJjhtDEmCM0MG4ISYw7QgITBtGDCYdowYRF1GDCI85ghkEcYYZD7M0Q899zhEGteWWGW4lttp+T53DWlUt8Wtz5sSOMzVU52p2GwfDEFhsew4pzIiyGDYddOAw7TuwwGAq0He4YCvZObhgqNIDmGCp2sWYYi1a8aGMs54mihfEYioo0xnOyK1KYCONpkcBc5urtMpehmUwmg3D5AAklyc9YEtl/AAAAAElFTkSuQmCC" /></a></button>
+                  <div className="modal-info">
+                    <p className='cierre-ingrediente' onClick={closeModalP}>X</p>
                     <h2>Restablecer Contraseña</h2>
                     <p>Por favor, ingresa tu correo electrónico para restablecer tu contraseña.</p>
-                    <div className="password-reset-form">
-                      <div className="text-field">
-                        <label htmlFor="email" style={{ display: 'flex' }}>E-mail:</label>
+                    <div>
+                      <div className="inputBox">
                         <input
                           type="email"
                           id="email"
                           name="email"
                           autoComplete="off"
-                          placeholder="tu@ejemplo.com"
                           required
                         />
+                        <span>E-mail de recuperación:</span>
                         <div className="error-message">Formato incorrecto de e-mail.</div>
                       </div>
                       <button>Enviar</button>
