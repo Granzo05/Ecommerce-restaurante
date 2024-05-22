@@ -104,7 +104,6 @@ public class StockIngredientesController {
     }
 
 
-    @Transactional
     @PostMapping("sucursal/{idSucursal}/stockIngredientes/create")
     public ResponseEntity<String> crearStock(@RequestBody StockIngredientes stockDetail, @PathVariable("idSucursal") long id) {
         Optional<Ingrediente> ingredienteDb = ingredienteRepository.findByNombreNotBorrado(stockDetail.getIngrediente().getNombre());

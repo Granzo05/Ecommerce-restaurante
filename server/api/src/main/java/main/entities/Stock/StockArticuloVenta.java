@@ -11,6 +11,7 @@ import main.entities.Productos.ArticuloVenta;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Table(name = "stock_articulos", schema = "buen_sabor")
 public class StockArticuloVenta extends Stock {
     @Id

@@ -20,25 +20,29 @@ function AgregarStockIngrediente() {
     if (!medida && !cantidadMaxima && !costoIngrediente && !cantidadMinima && !cantidadActual && !nombreIngrediente) {
       toast.error("Por favor, llene todos los campos");
       return;
-    } else if (!nombreIngrediente) {
-      toast.error("Por favor, es necesario el nombre");
-      return;
-    } else if (!cantidadActual) {
-      toast.error("Por favor, es necesaria la cantidad actual");
-      return;
-    } else if (!cantidadMinima) {
+    } else if (!cantidadMinima || cantidadMinima < 0) {
       toast.error("Por favor, es necesaria la cantidad mínima");
       return;
-    } else if (!costoIngrediente) {
-      toast.error("Por favor, es necesario el precio del ingrediente");
-      return;
-    } else if (!cantidadMaxima) {
+    } else if (!cantidadMaxima || cantidadMaxima < 0) {
       toast.error("Por favor, es necesaria la cantidad máxima");
+      return;
+    } else if (!cantidadActual || cantidadActual < 0) {
+      toast.error("Por favor, es necesaria la cantidad actual");
       return;
     } else if (!medida) {
       toast.error("Por favor, es necesario la medida");
       return;
+    } else if (!costoIngrediente || costoIngrediente < 0) {
+      toast.error("Por favor, es necesario el precio del ingrediente");
+      return;
+    } else if (cantidadMaxima < cantidadMinima) {
+      toast.error("Por favor, la cantidad mínima no puede ser mayor a la máxima");
+      return;
+    } else if (!nombreIngrediente) {
+      toast.error("Por favor, es necesario el nombre del ingrediente");
+      return;
     }
+
 
     const stock: StockIngredientes = new StockIngredientes();
     stock.cantidadActual = cantidadActual;

@@ -17,5 +17,4 @@ public class StockDTO {
     private int cantidadMinima;
     private int cantidadMaxima;
     private EnumMedida medida;
-
 }

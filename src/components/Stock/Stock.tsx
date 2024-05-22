@@ -145,7 +145,7 @@ const Stocks = () => {
             </ModalFlotante>
 
             <ModalFlotante isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EliminarStock stockOriginal={selectedStock} onCloseModal={handleModalClose}/>}
+                {selectedStock && <EliminarStock stockOriginal={selectedStock} onCloseModal={handleModalClose} />}
             </ModalFlotante>
 
             <ModalFlotante isOpen={showActivarStockModal} onClose={handleModalClose}>
@@ -208,24 +208,22 @@ const Stocks = () => {
                                     <td>{stock.cantidadMaxima}</td>
                                     <td>{stock.precioCompra}</td>
                                     <td>{"Aca la fecha"}</td>
-                                    <td>
 
-                                    </td>
                                     {stock.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones-stock">
-                                                <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
+                                                <button className="btn-accion-editar" onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
 
-                                                <button className="btn-accion-2" onClick={() => handleEliminarStock(stock, 'articulo')}>ELIMINAR</button>
+                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarStock(stock, 'articulo')}>ELIMINAR</button>
 
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones-stock">
-                                                <button className="btn-accion-1" onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
+                                                <button className="btn-accion-editar" onClick={() => handleEditarStock(stock, 'articulo')}>EDITAR</button>
 
-                                                <button className="btn-accion-2" onClick={() => handleActivarStock(stock, 'articulo')}>ACTIVAR</button>
+                                                <button className="btn-accion-activar" onClick={() => handleActivarStock(stock, 'articulo')}>ACTIVAR</button>
                                             </div>
                                         </td>
                                     )}
