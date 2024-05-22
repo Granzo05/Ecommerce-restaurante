@@ -12,9 +12,6 @@ dist
 dist-ssr
 *.local
 
-!**/src/main/webapp/
-**/src/main/webapp/WEB-INF/images/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -28,5 +25,5 @@ dist-ssr
 
 Email: contactodelbuensabor@gmail.com || 1234567qQ@
 
-!**/src/main/resources/application.properties
-server/api/src/main/resources/application.properties
+!**/src/main/resources/
+server/api/src/main/resources/
