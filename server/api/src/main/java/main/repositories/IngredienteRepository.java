@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
-    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre AND i.borrado = 'NO'")
+    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre")
     Optional<Ingrediente> findByName(@Param("nombre") String nombre);
 
     @Query("SELECT NEW main.entities.Ingredientes.IngredienteDTO(i.id, i.nombre, i.borrado) FROM Ingrediente i")

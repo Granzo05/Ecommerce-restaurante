@@ -20,20 +20,23 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
   const [costo, setCosto] = useState(stockOriginal.precioCompra);
 
   function editarStock() {
-    if (!cantidadActual) {
-      toast.error("Por favor, es necesaria la cantidad actual");
-      return;
-    } else if (!cantidadMinima) {
+    if (!cantidadMinima || cantidadMinima < 0) {
       toast.error("Por favor, es necesaria la cantidad mínima");
       return;
-    } else if (!costo) {
-      toast.error("Por favor, es necesario el precio del ingrediente");
-      return;
-    } else if (!cantidadMaxima) {
+    } else if (!cantidadMaxima || cantidadMaxima < 0) {
       toast.error("Por favor, es necesaria la cantidad máxima");
+      return;
+    } else if (!cantidadActual || cantidadActual < 0) {
+      toast.error("Por favor, es necesaria la cantidad actual");
       return;
     } else if (!medida) {
       toast.error("Por favor, es necesario la medida");
+      return;
+    } else if (!costo || costo < 0) {
+      toast.error("Por favor, es necesario el precio del ingrediente");
+      return;
+    } else if (cantidadMaxima < cantidadMinima) {
+      toast.error("Por favor, la cantidad mínima no puede ser mayor a la máxima");
       return;
     }
 
@@ -45,6 +48,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
       stock.cantidadActual = cantidadActual;
       stock.cantidadMinima = cantidadMinima;
       stock.cantidadMaxima = cantidadMaxima;
+      stock.borrado = 'NO';
       stock.precioCompra = costo;
       toast.promise(StockIngredientesService.updateStock(stock), {
         loading: 'Creando stock del ingrediente...',
@@ -65,7 +69,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
       stock.cantidadMaxima = cantidadMaxima;
       stock.precioCompra = costo;
       stock.id = stockOriginal.id;
-
+      stock.borrado = 'NO';
       console.log(stock)
       toast.promise(StockArticuloVentaService.updateStock(stock), {
         loading: 'Creando stock del artículo...',
@@ -97,15 +101,15 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <span>Cantidad actual del ingrediente</span>
       </div><br />
       <div className="inputBox">
-      <select value={medida?.toString()} onChange={(e) => { setMedida(convertirStringAEnumMedida(e.target.value)) }}>
-        <option>Seleccionar medida ingrediente</option>
-        <option value="KILOGRAMOS">Kilogramos</option>
-        <option value="GRAMOS">Gramos</option>
-        <option value="LITROS">Litros</option>
-        <option value="CENTIMETROS_CUBICOS">Centimetros cúbicos</option>
-        <option value="PAQUETES">Paquetes</option>
-        <option value="UNIDADES">Unidades</option>
-      </select>
+        <select value={medida?.toString()} onChange={(e) => { setMedida(convertirStringAEnumMedida(e.target.value)) }}>
+          <option>Seleccionar medida ingrediente</option>
+          <option value="KILOGRAMOS">Kilogramos</option>
+          <option value="GRAMOS">Gramos</option>
+          <option value="LITROS">Litros</option>
+          <option value="CENTIMETROS_CUBICOS">Centimetros cúbicos</option>
+          <option value="PAQUETES">Paquetes</option>
+          <option value="UNIDADES">Unidades</option>
+        </select>
       </div>
       <br /><br />
       <div className="inputBox">

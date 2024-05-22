@@ -117,7 +117,7 @@ public class StockIngredientesController {
             ingredienteRepository.save(ingrediente);
         }
 
-        Ingrediente ingrediente = ingredienteRepository.findByNombreNotBorrado(stockDetail.getIngrediente().getNombre()).get();
+        Ingrediente ingrediente = ingredienteRepository.findByName(stockDetail.getIngrediente().getNombre()).get();
 
         // Busco el ingrediente en la base de datos
         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), id);
@@ -151,7 +151,6 @@ public class StockIngredientesController {
     public ResponseEntity<String> actualizarStock(@RequestBody StockDTO stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
         Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
-        System.out.println(stockIngredientes.getId());
         if (stockEncontrado.isPresent()) {
             StockIngredientes stock = stockEncontrado.get();
 
@@ -160,7 +159,8 @@ public class StockIngredientesController {
             stock.setCantidadActual(stockIngredientes.getCantidadActual());
             stock.setPrecioCompra(stockIngredientes.getPrecioCompra());
             stock.setMedida(stockIngredientes.getMedida());
-
+            stock.setBorrado(stockIngredientes.getBorrado());
+            System.out.println(stockIngredientes.getBorrado());
             stockIngredientesRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
         } else {

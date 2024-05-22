@@ -223,6 +223,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     menuActualizado.precioVenta = precioVenta;
     menuActualizado.descripcion = descripcion;
     menuActualizado.id = menuOriginal.id;
+    menuActualizado.borrado = 'NO';
 
     if (ingredientesMuestra.length > 0) {
       ingredientesMuestra.forEach(ingredienteDTO => {

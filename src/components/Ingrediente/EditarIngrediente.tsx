@@ -14,6 +14,7 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
 
   function editarIngrediente() {
     const ingrediente: Ingrediente = ingredienteOriginal;
+    ingrediente.borrado = 'NO';
 
     if (!nombre) {
       toast.info("Por favor, asigne el nombre");

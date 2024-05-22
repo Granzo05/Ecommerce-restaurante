@@ -17,6 +17,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
       toast.info("Por favor, coloque una fecha");
       return;
     }
+    stockEntrante.borrado = 'NO';
 
     stockEntrante.fechaLlegada = fecha;
 

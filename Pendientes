@@ -76,10 +76,10 @@
 [x] Activacion articuloVenta
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga stockIngrediente [] Probar valicación
-[] Actualizacion stockIngrediente [] Probar valicación
-[] Eliminacion stockIngrediente
-[] Activacion stockIngrediente
+[x] Carga stockIngrediente [x] Probar valicación
+[x] Actualizacion stockIngrediente [x] Probar valicación
+[x] Eliminacion stockIngrediente
+[x] Activacion stockIngrediente
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Carga stockArticulo [] Probar valicación

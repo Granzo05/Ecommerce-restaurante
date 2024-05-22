@@ -100,12 +100,11 @@ const Stocks = () => {
         setShowAgregarStockModalIngrediente(false);
         setShowEditarStockModal(false);
         setShowEliminarStockModal(false);
+        setShowActivarStockModal(false);
 
         setMostrarStocks(true);
         fetchStocks();
         setModalBusqueda(false);
-
-
     };
 
     // Modal flotante de ingrediente
