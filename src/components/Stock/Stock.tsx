@@ -13,6 +13,7 @@ import ModalFlotante from "../ModalFlotante";
 import InputComponent from "../InputFiltroComponent";
 import ModalFlotanteRecomendaciones from "../ModalFlotanteRecomendaciones";
 import ActivarStock from "./ActivarStock";
+import ModalCrud from "../ModalCrud";
 
 
 const Stocks = () => {
@@ -140,9 +141,9 @@ const Stocks = () => {
                 <AgregarStockArticulo />
             </ModalFlotante>
 
-            <ModalFlotante isOpen={showAgregarStockModalIngrediente} onClose={handleModalClose}>
+            <ModalCrud isOpen={showAgregarStockModalIngrediente} onClose={handleModalClose}>
                 <AgregarStockIngrediente />
-            </ModalFlotante>
+            </ModalCrud>
 
             <ModalFlotante isOpen={showEliminarStockModal} onClose={handleModalClose}>
                 {selectedStock && <EliminarStock stockOriginal={selectedStock} onCloseModal={handleModalClose} />}

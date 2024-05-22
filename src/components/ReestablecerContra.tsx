@@ -8,7 +8,7 @@ function ReestablecerContra() {
         <h2>Restablecer Contraseña</h2>
         <p>Por favor, ingresa tu correo electrónico para restablecer tu contraseña.</p>
           <div className="inputBox">
-            <input type="email" required={true}/>
+            <input type="text" required={true}/>
             <span>E-mail de recuperación</span>
           </div>
         <button>Enviar</button>
