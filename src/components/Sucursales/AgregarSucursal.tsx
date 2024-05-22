@@ -236,10 +236,11 @@ function AgregarSucursal() {
 
   return (
     <div className='modal-info'>
+      <h2>Agregar sucursal</h2>
       <Toaster />
       <form>
         <div className="inputBox">
-          <input autoComplete='false' type="email" required={true} onChange={(e) => { setEmail(e.target.value) }} />
+          <input autoComplete='false' type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
           <span>Correo electrónico</span>
         </div>
         <div className="inputBox">
@@ -251,12 +252,14 @@ function AgregarSucursal() {
           <span>Telefono</span>
         </div>
         <div className="inputBox">
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de apertura:</label>
           <input type="time" required={true} onChange={(e) => { setHorarioApertura(e.target.value) }} />
-          <span>Horario de apertura</span>
+
         </div>
         <div className="inputBox">
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de cierre:</label>
           <input type="time" required={true} onChange={(e) => { setHorarioCierre(e.target.value) }} />
-          <span>Horario de cierre</span>
+
         </div>
         <div className="inputBox">
           <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
@@ -270,21 +273,19 @@ function AgregarSucursal() {
           <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
           <span>Código Postal</span>
         </div>
-        <h2>Provincia</h2>
         <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
         {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-        <br />
-        <h2>Departamento</h2>
+
         <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
         {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
 
-        <br />
-        <h2>Localidad</h2>
         <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
         {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
+        <div className="inputBox">
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery:</label>
 
-        <h3>Departamentos disponibles para delivery: </h3>
+        </div>
         {departamentos && (
           <table>
             <tbody>
@@ -308,7 +309,8 @@ function AgregarSucursal() {
           </table>
         )}
 
-        <h3>Localidades disponibles para delivery: </h3>
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
+
         {localidadesMostrablesCheckbox && (
           <table>
             <tbody>
@@ -329,8 +331,10 @@ function AgregarSucursal() {
             </tbody>
           </table>
         )}
-        <button type="button" onClick={handleCargarNegocio}>Agregar sucursal</button>
       </form>
+      <hr />
+      <button type="button" onClick={handleCargarNegocio}>Agregar sucursal</button>
+
     </div>
   )
 }
