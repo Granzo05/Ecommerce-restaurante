@@ -26,9 +26,6 @@ const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ sucursal, onCloseMo
     });
   };
 
-  const onCancel = () => {
-    onCloseModal();
-  };
   return (
     <div className='modal-info'>
       <h2>¿Seguro que quieres eliminar la sucursal?</h2>
