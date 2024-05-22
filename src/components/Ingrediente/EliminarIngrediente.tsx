@@ -1,21 +1,23 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { IngredienteService } from '../../services/IngredienteService';
 import { Toaster, toast } from 'sonner'
 
 interface EliminarIngredienteProps {
   ingredienteOriginal: Ingrediente;
+  onCloseModal: () => void;
+
 }
 
-const EliminarIngrediente: React.FC<EliminarIngredienteProps> = ({ ingredienteOriginal }) => {
-  const navigate = useNavigate();
+const EliminarIngrediente: React.FC<EliminarIngredienteProps> = ({ ingredienteOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
     toast.promise(IngredienteService.deleteIngrediente(ingredienteOriginal.id), {
       loading: 'Creando Ingrediente...',
       success: (message) => {
-        navigate('/opciones');
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -25,7 +27,7 @@ const EliminarIngrediente: React.FC<EliminarIngredienteProps> = ({ ingredienteOr
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (

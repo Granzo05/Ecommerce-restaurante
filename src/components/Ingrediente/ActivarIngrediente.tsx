@@ -1,21 +1,21 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { IngredienteService } from '../../services/IngredienteService';
 import { Toaster, toast } from 'sonner'
 
 interface ActivarIngredienteProps {
   ingredienteOriginal: Ingrediente;
+  onCloseModal: () => void;
 }
 
-const ActivarIngrediente: React.FC<ActivarIngredienteProps> = ({ ingredienteOriginal }) => {
-  const navigate = useNavigate();
-
+const ActivarIngrediente: React.FC<ActivarIngredienteProps> = ({ ingredienteOriginal, onCloseModal }) => {
   const onConfirm = () => {
     toast.promise(IngredienteService.deleteIngrediente(ingredienteOriginal.id), {
       loading: 'Activando Ingrediente...',
       success: (message) => {
-        navigate('/opciones');
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -25,7 +25,7 @@ const ActivarIngrediente: React.FC<ActivarIngredienteProps> = ({ ingredienteOrig
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (

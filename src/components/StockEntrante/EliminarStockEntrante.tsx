@@ -1,21 +1,22 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { StockEntrante } from '../../types/Stock/StockEntrante';
 import { StockEntranteService } from '../../services/StockEntranteService';
 import { toast, Toaster } from 'sonner';
 
 interface EliminarStockProps {
   stockEntrante: StockEntrante;
+  onCloseModal: () => void;
+
 }
 
-const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ stockEntrante }) => {
-  const navigate = useNavigate();
-
+const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ stockEntrante, onCloseModal }) => {
   const onConfirm = () => {
     toast.promise(StockEntranteService.updateStock(stockEntrante), {
       loading: 'Eliminando stock entrante...',
       success: (message) => {
-        navigate('/opciones');
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -25,9 +26,8 @@ const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ stockEntrante }) 
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
-
   return (
     <div className="modal-info">
       <Toaster />

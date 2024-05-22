@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../../styles/empleados.css';
 import { SucursalService } from '../../services/SucursalService';
 import { Toaster, toast } from 'sonner'
@@ -7,24 +6,28 @@ import { Sucursal } from '../../types/Restaurante/Sucursal';
 
 interface ActivarSucursalProps {
   sucursal: Sucursal;
+  onCloseModal: () => void;
+
 }
 
-const ActivarSucursal: React.FC<ActivarSucursalProps> = ({ sucursal }) => {
-  const navigate = useNavigate();
-
+const ActivarSucursal: React.FC<ActivarSucursalProps> = ({ sucursal, onCloseModal }) => {
   const onConfirm = () => {
     toast.promise(SucursalService.updateRestaurant(sucursal), {
       loading: 'Activando sucursal...',
-      success: () => {
-        return `Sucursal activada correctamente`;
+      success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
+        return message;
       },
-      error: 'Error',
+      error: (message) => {
+        return message;
+      },
     });
-    navigate('/opciones');
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (

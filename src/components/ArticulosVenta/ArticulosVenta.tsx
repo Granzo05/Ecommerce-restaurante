@@ -146,10 +146,10 @@ const ArticuloVentas = () => {
                 {selectedArticuloVenta && <EditarArticuloVenta articuloOriginal={selectedArticuloVenta} />}
             </ModalFlotante>
             <ModalFlotante isOpen={showEliminarArticuloVentaModal} onClose={handleModalClose}>
-                {selectedArticuloVenta && <EliminarArticuloVenta articuloOriginal={selectedArticuloVenta} />}
+                {selectedArticuloVenta && <EliminarArticuloVenta articuloOriginal={selectedArticuloVenta} onCloseModal={handleModalClose} />}
             </ModalFlotante>
             <ModalFlotante isOpen={showActivarArticuloVentaModal} onClose={handleModalClose}>
-                {selectedArticuloVenta && <ActivarArticuloVenta articuloOriginal={selectedArticuloVenta} />}
+                {selectedArticuloVenta && <ActivarArticuloVenta articuloOriginal={selectedArticuloVenta} onCloseModal={handleModalClose} />}
             </ModalFlotante>
         </div>
 

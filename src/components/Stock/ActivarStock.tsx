@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
 import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
@@ -8,17 +7,20 @@ import { toast, Toaster } from 'sonner';
 
 interface ActivarStockProps {
   stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
+  onCloseModal: () => void;
+
 }
 
-const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal }) => {
-  const navigate = useNavigate();
+const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
     if (stockOriginal.tipo === 'ingrediente') {
       toast.promise(StockIngredientesService.updateStock(stockOriginal), {
         loading: 'Activando stock del ingrediente...',
         success: (message) => {
-          navigate('/opciones');
+          setTimeout(() => {
+            onCloseModal();
+          }, 800);
           return message;
         },
         error: (message) => {
@@ -29,7 +31,9 @@ const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal }) => {
       toast.promise(StockArticuloVentaService.updateStock(stockOriginal), {
         loading: 'Activando stock del articulo...',
         success: (message) => {
-          navigate('/opciones');
+          setTimeout(() => {
+            onCloseModal();
+          }, 800);
           return message;
         },
         error: (message) => {
@@ -40,7 +44,7 @@ const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal }) => {
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (

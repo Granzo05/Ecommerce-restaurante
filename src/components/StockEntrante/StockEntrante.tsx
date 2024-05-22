@@ -73,7 +73,7 @@ const StocksEntrantes = () => {
             <div className="btns-stock">
                 <button className="btn-agregar" onClick={() => handleAgregarStock()}> + Agregar stock entrante</button>
             </div>
-           
+
             <hr />
             <ModalCrud isOpen={showAgregarStockModal} onClose={handleModalClose}>
                 <AgregarStockEntrante />
@@ -114,11 +114,11 @@ const StocksEntrantes = () => {
                     </table>
 
                     <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                        {selectedStock && <EliminarStockEntrante stockEntrante={selectedStock} />}
+                        {selectedStock && <EliminarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
                     </ModalCrud>
 
                     <ModalCrud isOpen={showActivarStockModal} onClose={handleModalClose}>
-                        {selectedStock && <ActivarStockEntrante stockEntrante={selectedStock} />}
+                        {selectedStock && <ActivarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
                     </ModalCrud>
 
                     <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>

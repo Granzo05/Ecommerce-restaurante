@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import '../../styles/empleados.css';
 import { Toaster, toast } from 'sonner'
@@ -7,15 +6,18 @@ import { Empleado } from '../../types/Restaurante/Empleado';
 
 interface EliminarEmpleadoProps {
   empleadoOriginal: Empleado;
+  onCloseModal: () => void;
 }
 
-const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal }) => {
-  const navigate = useNavigate();
+const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
     toast.promise(EmpleadoService.updateEmpleado(empleadoOriginal), {
       loading: 'Eliminando empleado...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -25,7 +27,7 @@ const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal })
   };
 
   const onCancel = () => {
-    navigate('/opciones');
+    onCloseModal();
   };
 
   return (

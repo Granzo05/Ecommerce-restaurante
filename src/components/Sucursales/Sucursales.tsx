@@ -82,7 +82,6 @@ const Sucursales = () => {
         setShowEliminarSucursalModal(false);
         setShowActivarSucursalModal(false);
         setMostrarSucursales(true);
-
         fetchSucursales();
     };
 
@@ -144,10 +143,10 @@ const Sucursales = () => {
                         <EditarSucursal sucursalOriginal={selectedSucursal} />
                     </ModalCrud>
                     <ModalFlotante isOpen={showEliminarSucursalModal} onClose={handleModalClose}>
-                        {selectedSucursal && <EliminarSucursal sucursal={selectedSucursal} />}
+                        {selectedSucursal && <EliminarSucursal sucursal={selectedSucursal} onCloseModal={handleModalClose} />}
                     </ModalFlotante>
                     <ModalFlotante isOpen={showActivarSucursalModal} onClose={handleModalClose}>
-                        {selectedSucursal && <ActivarSucursal sucursal={selectedSucursal} />}
+                        {selectedSucursal && <ActivarSucursal sucursal={selectedSucursal} onCloseModal={handleModalClose} />}
                     </ModalFlotante>
                 </div>
             )}
