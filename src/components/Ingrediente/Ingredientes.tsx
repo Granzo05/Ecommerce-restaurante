@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
 import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
+import '../../styles/ingredientes.css'
 import { IngredienteService } from "../../services/IngredienteService";
 import { Ingrediente } from "../../types/Ingredientes/Ingrediente";
 import EliminarIngrediente from "./EliminarIngrediente";
@@ -95,7 +96,10 @@ const Ingredientes = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Ingredientes -</h1>
-            <button onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
+            <div className="btns-ingredientes">
+            <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
+            </div>
+            <hr />
             {mostrarIngredientes && (
                 <div id="stocks">
 
@@ -114,13 +118,20 @@ const Ingredientes = () => {
 
                                     {ingrediente.borrado === 'NO' ? (
                                         <td>
-                                            <button onClick={() => handleEliminarIngrediente(ingrediente)}>ELIMINAR</button>
-                                            <button onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
+                                            <div className="btns-acciones">
+                                                
+                                            <button className="btn-accion-editar" onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
+                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarIngrediente(ingrediente)}>ELIMINAR</button>
+                                            </div>
+                                            
                                         </td>
                                     ) : (
                                         <td>
-                                            <button onClick={() => handleActivarIngrediente(ingrediente)}>ELIMINAR</button>
-                                            <button onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
+                                            <div className="btns-acciones">
+                                                
+                                            <button className="btn-accion-editar" onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
+                                            <button className="btn-accion-eliminar" onClick={() => handleActivarIngrediente(ingrediente)}>ELIMINAR</button>
+                                            </div>
                                         </td>
                                     )}
                                 </tr>

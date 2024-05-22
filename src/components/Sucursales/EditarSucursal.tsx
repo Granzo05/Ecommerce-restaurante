@@ -277,7 +277,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
     sucursal.borrado = 'NO';
     sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
-    
+
     toast.promise(SucursalService.updateRestaurant(sucursal), {
       loading: 'Actualizando la sucursal...',
       success: (message) => {
@@ -292,6 +292,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
   return (
     <div className='modal-info'>
+      <h2>Editar sucursal</h2>
       <Toaster />
       <form>
         <div className="inputBox">
@@ -307,12 +308,12 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
           <span>Telefono</span>
         </div>
         <div className="inputBox">
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de apertura:</label>
           <input type="time" required={true} value={horarioApertura} onChange={(e) => { setHorarioApertura(e.target.value) }} />
-          <span>Horario de apertura</span>
         </div>
         <div className="inputBox">
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de cierre:</label>
           <input type="time" required={true} value={horarioCierre} onChange={(e) => { setHorarioCierre(e.target.value) }} />
-          <span>Horario de cierre</span>
         </div>
         <div className="inputBox">
           <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
@@ -326,21 +327,20 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
           <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
           <span>Código Postal</span>
         </div>
-        <h2>Provincia</h2>
         <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
         {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-        <br />
-        <h2>Departamento</h2>
+
         <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
         {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
 
-        <br />
-        <h2>Localidad</h2>
         <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
         {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
 
-        <h3>Departamentos disponibles para delivery: </h3>
+        <div className="inputBox">
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery:</label>
+
+        </div>
         {departamentos && (
           <table>
             <tbody>
@@ -364,7 +364,10 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
           </table>
         )}
 
-        <h3>Localidades disponibles para delivery: </h3>
+        <div className="inputBox">
+
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
+        </div>
         {localidadesMostrablesCheckbox && (
           <table>
             <tbody>
@@ -385,8 +388,10 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
             </tbody>
           </table>
         )}
-        <button type="button" onClick={handleCargarNegocio}>Editar sucursal</button>
+        
       </form>
+      <hr />
+      <button type="button" onClick={handleCargarNegocio}>Editar sucursal</button>
     </div>
   )
 }

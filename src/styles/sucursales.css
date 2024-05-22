@@ -3,3 +3,35 @@
     align-items: center;
     justify-content: center;
 }
+
+.btn-accion-abrir, .btn-accion-activar{
+    width: 150px;
+    color: black;
+    margin: 5px;
+    border: 1px solid black;
+}
+
+.btn-accion-activar{
+    background-color: #48e400;
+}
+
+.btn-accion-abrir{
+    background-color: #007bff;
+}
+
+.btn-accion-activar:hover{
+    background-color: #38a306;
+}
+
+.btn-accion-abrir:hover{
+    background-color: #0056b3;
+}
+
+
+.modal-info .btns-eliminar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }
+  

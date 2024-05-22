@@ -20,7 +20,7 @@ const ModalFlotante: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
             {children}
-          </div>
+           </div>
         </div>
       )}
     </div>
