@@ -6,6 +6,7 @@ import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import net.minidev.json.annotate.JsonIgnore;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,8 +39,8 @@ public class Empleado {
     @JsonIgnoreProperties({"empleado"})
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
-    @Column(name = "fecha_nacimiento", updatable = false, nullable = false)
-    private Date fechaNacimiento;
+    @Column(name = "fecha_nacimiento", nullable = false)
+    private LocalDate fechaNacimiento;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.IllegalBlockSizeException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -233,7 +234,7 @@ public class SucursalController {
             empleadoDb.setEmail(Encrypt.encriptarString(email));
 
 
-            Date fechaNacimiento = empleadoDetails.getFechaNacimiento();
+            LocalDate fechaNacimiento = empleadoDetails.getFechaNacimiento();
             empleadoDb.setFechaNacimiento(fechaNacimiento);
 
             empleadoDb.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
@@ -241,7 +242,7 @@ public class SucursalController {
             empleadoDb.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
 
             domicilioRepository.deleteAllByEmpleadoId(empleadoDb.getId());
-
+            empleadoDetails.getDomicilios().size();
             for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
                 domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setEmpleado(empleadoDetails);

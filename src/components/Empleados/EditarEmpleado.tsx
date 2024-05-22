@@ -21,8 +21,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
   const [cuil, setCuit] = useState(empleadoOriginal.cuil);
   const [contraseña, setContraseña] = useState('');
   const [telefono, setTelefono] = useState(empleadoOriginal.telefono);
-  const initialDate = new Date(empleadoOriginal.fechaNacimiento);
-  const [fechaNacimiento, setFechaNacimiento] = useState<Date>(initialDate);
+  const [fechaNacimiento, setFechaNacimiento] = useState<string>(empleadoOriginal.fechaNacimiento.toString());
   const [sucursales, setSucursales] = useState<Sucursal[]>([]);
   const [sucursalId, setSucursalId] = useState(empleadoOriginal.sucursal?.id);
 
@@ -37,6 +36,26 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     cargarSucursales();
   }, []);
 
+  const isValidDate = (dateString: string): boolean => {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!regex.test(dateString)) {
+      return false;
+    }
+
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const dateString = e.target.value;
+
+    if (isValidDate(dateString)) {
+      setFechaNacimiento(dateString);
+    }
+  };
+
+
   function buscarLocalidades() {
     LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(inputDepartamento, inputProvincia)
       .then(async localidades => {
@@ -46,13 +65,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
         console.error('Error:', error);
       })
   }
-
-  const formatDate = (date: Date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = (date.getDate() + 1).toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
 
   async function cargarSucursales() {
     await SucursalService.getSucursales()
@@ -84,8 +96,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
 
   const handleChangeLocalidad = (localidadNombre: string) => {
     const nuevosDomicilios = [...domicilios];
-    console.log(localidadNombre)
-    console.log(localidades)
     let localidad = localidades.find(localidad => localidad.nombre === localidadNombre);
     console.log(localidad)
 
@@ -125,7 +135,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     if (domiciliosModificable.length > 0) {
       const nuevosDomicilios = [...domiciliosModificable];
       nuevosDomicilios.splice(index, 1);
-      setDomiciliosModificable(domiciliosModificable);
+      setDomiciliosModificable(nuevosDomicilios);
 
       if (indexDomicilioModificable > 0) {
         setIndexDomicilioModificable(indexDomicilioModificable - 1);
@@ -184,6 +194,13 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     }
   };
 
+  const formatDate = (date: Date) => {
+    const day = date.getDate() + 1;
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return new Date(year, month - 1, day);
+  };
+
   async function editarEmpleado() {
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
@@ -200,34 +217,20 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     } else if (!fechaNacimiento) {
       toast.error("Por favor, es necesaria la fecha de nacimiento");
       return;
-    } else if (!inputLocalidad) {
-      toast.error("Por favor, es necesario la localidad para asignar el domicilio");
+    }
+
+    if (domiciliosModificable.length === 0 && domicilios.length === 0) {
+      toast.info("Se debe agregar al menos un domicilio.");
       return;
     }
 
-    for (let i = 0; i < domicilios.length; i++) {
-      const calle = domicilios[i].calle;
-      const numero = domicilios[i].numero;
-      const codigoPostal = domicilios[i].codigoPostal;
+    let domiciliosValidos = [...domiciliosModificable, ...domicilios].filter(domicilio =>
+      domicilio.calle && domicilio.numero && domicilio.codigoPostal
+    );
 
-      if (domiciliosModificable.length > 0) {
-        const calleModificable = domiciliosModificable[0].calle;
-        const numeroModificable = domiciliosModificable[0].numero;
-        const codigoPostalModificable = domiciliosModificable[0].codigoPostal;
-
-        // Si no hay ningun domicilio anterior entonces si verificar que se agregue por lo menos un domicilio nuevo
-        if (!calleModificable && !numeroModificable && !codigoPostalModificable) {
-          if (!calle) {
-            toast.info(`Por favor, el domicilio ${i + 1} debe contener una calle`);
-            return;
-          } else if (numero === 0) {
-            toast.info(`Por favor, el domicilio ${i + 1} debe contener un numero de casa`);
-          } else if (codigoPostal === 0) {
-            toast.info(`Por favor, el domicilio ${i + 1} debe contener un código postal`);
-          }
-        }
-      }
-
+    if (domiciliosValidos.length === 0) {
+      toast.info("Se debe agregar al menos un domicilio válido.");
+      return;
     }
 
     const empleadoActualizado: Empleado = {
@@ -236,22 +239,28 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       email,
       cuil,
       contraseña,
-      fechaNacimiento: new Date(fechaNacimiento),
+      fechaNacimiento: formatDate(new Date(fechaNacimiento)),
       telefono
     };
 
-    domiciliosModificable.forEach(domicilio => {
-      domicilios.push(domicilio);
+    domiciliosModificable.forEach((nuevoDomicilio) => {
+      const existe = domicilios.some((domicilio) =>
+        domicilio.numero === nuevoDomicilio.numero &&
+        domicilio.calle === nuevoDomicilio.calle &&
+        domicilio.codigoPostal === nuevoDomicilio.codigoPostal
+      );
+
+      if (!existe) {
+        domicilios.push(nuevoDomicilio);
+      }
     });
 
     empleadoActualizado.domicilios = domicilios;
 
-    console.log(sucursalId)
-    console.log(sucursales)
     let sucursal = sucursales.find(sucursal => sucursal.id === sucursalId);
 
     if (sucursal) empleadoActualizado.sucursal = sucursal;
-    console.log(empleadoActualizado)
+
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
       loading: 'Actualizando empleado...',
       success: () => {
@@ -287,11 +296,12 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
           <span>Telefono del empleado</span>
         </div>
         <div className="inputBox">
-          <input type="date" required={true} value={fechaNacimiento ? formatDate(fechaNacimiento) : ''} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+          <input type="date" required={true} value={fechaNacimiento} onChange={handleDateChange} />
           <span>Fecha de nacimiento</span>
         </div>
         {domiciliosModificable && domiciliosModificable.map((domicilio, index) => (
           <div key={'domicilioMod' + index}>
+            <p>Domicilio {index + 1}</p>
             <div className="inputBox">
               <input type="text" required={true} value={domicilio.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
               <span>Nombre de calle</span>
@@ -305,13 +315,12 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
               <span>Código Postal</span>
             </div>
             <div className="inputBox">
-              <input type="number" disabled required={true} value={domicilio.localidad?.nombre} />
-              <span>Localidad</span>
+              <input type="text" disabled required={true} value={domicilio.localidad?.nombre} />
             </div>
             <p onClick={() => quitarCampoDomicilioModificable(index)}>X</p>
           </div>
         ))}
-        {domicilios && domicilios.map((domicilio, index) => (
+        {domicilios && indexDomicilio > 0 && domicilios.map((domicilio, index) => (
           <div key={'domicilio' + index}>
             <div className="inputBox">
               <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />

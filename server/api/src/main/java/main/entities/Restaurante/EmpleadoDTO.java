@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import main.entities.Domicilio.DomicilioDTO;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -18,12 +19,12 @@ public class EmpleadoDTO {
     private Set<FechaContratacionEmpleadoDTO> fechaContratacionEmpleado;
     private Set<DomicilioDTO> domicilios;
     private Long telefono;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     @JsonIgnoreProperties({"stocksSucursal", "empresa", "empleados", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta"})
     private Sucursal sucursal;
     private String borrado;
 
-    public EmpleadoDTO(Long id, String nombre, String email, String cuil, Long telefono, Date fechaNacimiento, Sucursal sucursal, String borrado) {
+    public EmpleadoDTO(Long id, String nombre, String email, String cuil, Long telefono, LocalDate fechaNacimiento, Sucursal sucursal, String borrado) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;

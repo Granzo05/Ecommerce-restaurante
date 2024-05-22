@@ -51,7 +51,7 @@
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [x] Carga empleado [x] Probar valicación
-[] Actualizacion empleado [] Probar valicación
+[x] Actualizacion empleado [x] Probar valicación
 [x] Eliminacion empleado
 [x] Activacion empleado
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
