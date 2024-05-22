@@ -56,9 +56,6 @@ const handleAgregarArticulo = () => {
 
   const [modalIsOpenP, setModalIsOpenP] = useState(false);
 
-  const openModalP = () => {
-    setModalIsOpenP(true);
-  };
 
   const closeModalP = () => {
     setModalIsOpenP(false);
