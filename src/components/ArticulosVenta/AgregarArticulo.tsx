@@ -44,14 +44,11 @@ function AgregarArticuloVenta() {
   const [cantidad, setCantidad] = useState(0);
 
   async function agregarArticulo() {
-    if (!nombre) {
+    if (imagenes.length === 0) {
+      toast.info("No se asignó ninguna imagen");
+      return;
+    } else if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
-      return;
-    } else if (!cantidad) {
-      toast.error("Por favor, es necesaria la cantidad");
-      return;
-    } else if (!medida) {
-      toast.error("Por favor, es necesaria la medida");
       return;
     } else if (!precio) {
       toast.error("Por favor, es necesario el precio");
@@ -59,8 +56,11 @@ function AgregarArticuloVenta() {
     } else if (!tipo) {
       toast.error("Por favor, es necesario el tipo");
       return;
-    } else if (imagenes.length === 0) {
-      toast.info("No se asignó ninguna imagen");
+    } else if (!medida) {
+      toast.error("Por favor, es necesaria la medida");
+      return;
+    } else if (!cantidad) {
+      toast.error("Por favor, es necesaria la cantidad");
       return;
     }
 
@@ -100,10 +100,10 @@ function AgregarArticuloVenta() {
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
             />
-            
+
           </div>
         ))}
-        
+
       </div>
       <button onClick={añadirCampoImagen}>Añadir imagen</button>
       <div className="inputBox">
@@ -115,32 +115,32 @@ function AgregarArticuloVenta() {
         <input type="number" required={true} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
         <span>Precio ($)</span>
       </div>
-      
+
       <label>
-      <div className="inputBox">
-      <select name="tipoArticulo" required={true} onChange={(e) => { setTipo(e.target.value) }}
-      defaultValue="">
-          <option value="" disabled hidden>Seleccionar tipo de articulo</option>
-          <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida sin alcohol</option>
-          <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida con alcohol</option>
-        </select>
-        </div>
-        
-      </label>
         <div className="inputBox">
-        <select
-        onChange={(e) => setMedida(e.target.value)}
-        defaultValue=""
-      >
-        <option value="" disabled hidden>Seleccionar medida</option>
-        <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-        <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-        <option value={EnumMedida.LITROS.toString()}>Litros</option>
-        <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-        <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-      </select>
+          <select name="tipoArticulo" required={true} onChange={(e) => { setTipo(e.target.value) }}
+            defaultValue="">
+            <option value="" disabled hidden>Seleccionar tipo de articulo</option>
+            <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida sin alcohol</option>
+            <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida con alcohol</option>
+          </select>
         </div>
-      
+
+      </label>
+      <div className="inputBox">
+        <select
+          onChange={(e) => setMedida(e.target.value)}
+          defaultValue=""
+        >
+          <option value="" disabled hidden>Seleccionar medida</option>
+          <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+          <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+          <option value={EnumMedida.LITROS.toString()}>Litros</option>
+          <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+          <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
+        </select>
+      </div>
+
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
         <span>Cantidad de la medida</span>

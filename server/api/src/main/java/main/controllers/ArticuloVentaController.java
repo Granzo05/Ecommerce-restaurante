@@ -130,21 +130,22 @@ public class ArticuloVentaController {
         }
     }
 
+    @Transactional
     @PutMapping("/articulo/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
-        List<Imagenes> imagenes = imagenesRepository.findByIdArticulo(id);
+        Optional<Imagenes> imagen = imagenesRepository.findById(id);
 
-        for (Imagenes imagen: imagenes) {
+        if(imagen.isPresent()){
             try {
-                imagen.setBorrado("SI");
-                imagenesRepository.save(imagen);
-                return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
+                imagenesRepository.delete(imagen.get());
+                return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
             } catch (Exception e) {
                 System.out.println("Error al crear la imagen: " + e);
             }
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/articulo/tipo/{tipoArticulo}/{idSucursal}")

@@ -157,20 +157,19 @@ public class ArticuloMenuController {
     @Transactional
     @PutMapping("/menu/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
-        List<Imagenes> imagenes = imagenesRepository.findByIdMenu(id);
+        Optional<Imagenes> imagen = imagenesRepository.findById(id);
 
-        for (Imagenes imagen: imagenes) {
+        if(imagen.isPresent()){
             try {
-                imagen.setBorrado("SI");
+                imagenesRepository.delete(imagen.get());
+                return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
-                imagenesRepository.save(imagen);
-
-                return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
             } catch (Exception e) {
                 System.out.println("Error al crear la imagen: " + e);
             }
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/menu/tipo/{tipoMenu}/{idSucursal}")

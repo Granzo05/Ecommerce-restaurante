@@ -66,20 +66,20 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
-    } else if (!cantidad) {
+    } else if (!cantidad || cantidad === 0) {
       toast.error("Por favor, es necesaria la cantidad");
       return;
     } else if (!medida) {
       toast.error("Por favor, es necesaria la medida");
       return;
-    } else if (!precioVenta) {
+    } else if (!precioVenta || precioVenta === 0) {
       toast.error("Por favor, es necesario el precio");
       return;
     } else if (!tipo) {
       toast.error("Por favor, es necesario el tipo");
       return;
-    } else if (imagenes.length === 0) {
-      toast.info("No se asignó ninguna imagen");
+    } else if (imagenes.length === 0 && imagenesMuestra.length === 0) {
+      toast.error("Por favor, es necesario una imagen");
       return;
     }
 
@@ -148,12 +148,12 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
         <br />
 
         <div className="inputBox">
-          <input type="text" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+          <input type="text" required={true} value={precioVenta | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
           <span>Precio del articulo</span>
         </div>
         <br />
         <div className="inputBox">
-          <input type="text" required={true} value={cantidad} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+          <input type="text" required={true} value={cantidad | 0} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
           <span>Cantidad</span>
         </div>
         <br />

@@ -55,6 +55,7 @@ const ArticuloVentas = () => {
     const handleAgregarArticuloVenta = () => {
         setShowAgregarArticuloVentaModal(true);
         setShowEditarArticuloVentaModal(false);
+        setShowActivarArticuloVentaModal(false);
         setShowEliminarArticuloVentaModal(false);
         setMostrarArticuloVenta(false);
     };
@@ -63,6 +64,7 @@ const ArticuloVentas = () => {
         setSelectedArticuloVenta(articulo);
         setShowAgregarArticuloVentaModal(false);
         setShowEditarArticuloVentaModal(true);
+        setShowActivarArticuloVentaModal(false);
         setShowEliminarArticuloVentaModal(false);
         setMostrarArticuloVenta(false);
     };
@@ -89,6 +91,7 @@ const ArticuloVentas = () => {
 
     const handleModalClose = () => {
         setShowAgregarArticuloVentaModal(false);
+        setShowActivarArticuloVentaModal(false);
         setShowEditarArticuloVentaModal(false);
         setShowEliminarArticuloVentaModal(false);
         setMostrarArticuloVenta(true);
