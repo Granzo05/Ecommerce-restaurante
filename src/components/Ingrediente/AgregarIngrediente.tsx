@@ -21,6 +21,7 @@ function AgregarIngrediente() {
     toast.promise(IngredienteService.createIngrediente(ingrediente), {
       loading: 'Creando Ingrediente...',
       success: (message) => {
+        setNombre('');
         return message;
       },
       error: (message) => {
@@ -34,7 +35,7 @@ function AgregarIngrediente() {
       <h2>Cargar nuevo ingrediente</h2>
       <Toaster />
       <div className="inputBox">
-        <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+        <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
         <span>Nombre del ingrediente</span>
       </div>
       <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar </button>

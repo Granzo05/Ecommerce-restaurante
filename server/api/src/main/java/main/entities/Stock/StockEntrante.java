@@ -6,6 +6,8 @@ import lombok.*;
 import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +24,7 @@ public class StockEntrante {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "fecha_llegada", updatable = false, nullable = false)
-    public Date fechaLlegada;
+    public LocalDate fechaLlegada;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";

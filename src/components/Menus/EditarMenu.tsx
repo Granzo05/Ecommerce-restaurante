@@ -190,11 +190,11 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     } else if (!tipo) {
       toast.error("Por favor, es necesario el tipo");
       return;
-    } else if (imagenes.length === 0) {
+    } else if (imagenes.length === 0 && imagenesMuestra.length === 0) {
       toast.info("No se asignó ninguna imagen");
       return;
     } else if (!descripcion) {
-      toast.error("Por favor, es necesario la descripción");
+      toast.error("Por favor, es necesaria la descripción");
       return;
     }
 
@@ -257,9 +257,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       },
     });
 
-    if (imagenes.length === 0) {
-      toast.info('No se añadieron imagenes al menú');
-    }
   }
 
   return (
@@ -340,7 +337,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             {ingredientesMuestra.map((ingredienteMenu, index) => (
               <div key={index} className='div-ingrediente-menu'>
                 <div className="inputBox">
-                  <input type="text" required={true} disabled value={ingredienteMenu.ingredienteNombre} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+                  <input type="text" required={true} value={ingredienteMenu.ingredienteNombre} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
                   <span>Nombre del ingrediente</span>
                 </div>
                 <div className="inputBox">

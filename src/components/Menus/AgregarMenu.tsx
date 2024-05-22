@@ -81,8 +81,7 @@ function AgregarMenu() {
   };
 
   const quitarCampoIngrediente = (index: number) => {
-    if (imagenes.length > 0) {
-
+    if (ingredientes.length > 0) {
       const nuevosIngredientes = [...ingredientes];
       nuevosIngredientes.splice(index, 1);
       setIngredientes(ingredientes);
@@ -91,10 +90,8 @@ function AgregarMenu() {
         selectIndexIngredientes--;
       }
     } else {
-      const nuevosIngredientes = [...ingredientes];
-      nuevosIngredientes.pop();
-      setIngredientes(nuevosIngredientes);
-      selectIndexIngredientes = 0;
+      setIngredientes([]);
+      setSelectIndexIngredientes(0);
     }
   };
 
@@ -182,6 +179,8 @@ function AgregarMenu() {
       loading: 'Creando menu...',
       success: (message) => {
         clearInputs();
+        setSelectIndexIngredientes(0);
+        setSelectIndexImagenes(0);
         return message;
       },
       error: (message) => {

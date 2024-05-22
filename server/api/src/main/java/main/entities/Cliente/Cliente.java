@@ -7,6 +7,7 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +41,7 @@ public class Cliente {
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     @Column(name = "fecha_registro", updatable = false, nullable = false)
-    public LocalDate fechaRegistro;
+    public LocalDateTime fechaRegistro;
     @JsonIgnore
     @Column(name = "fecha_nacimiento", nullable = false)
     public LocalDate fechaNacimiento;

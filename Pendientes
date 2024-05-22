@@ -42,7 +42,7 @@
 [] Avisar que el menu está en traslado junto con el envio de la factura
 [] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
 [] Precio sugerido segun ingredientes y los costos
-
+[] Que el modal de recomendaciones no muestre alguna de las opciones si ya esta seleccionada en un input previo, por ej si ya seleccione el ingrediente 'carne' que al poner otro no muestre este como recomendacion
     Pruebas
 [x] Carga sucursal [x] Probar valicación
 [x] Actualizacion sucursal [x] Probar valicación

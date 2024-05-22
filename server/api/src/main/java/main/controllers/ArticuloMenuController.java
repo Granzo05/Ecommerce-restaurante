@@ -71,6 +71,8 @@ public class ArticuloMenuController {
             articuloMenu.getIngredientesMenu().clear();
             articuloMenu.setIngredientesMenu(ingredientes);
 
+            articuloMenu.setBorrado("NO");
+
             // Si la sucursal coincide con los privilegios del admin o de la empresa que agregue todas las sucursales al menu
             if (idSucursal == 0) {
                 List<Sucursal> sucursales = sucursalRepository.findAll();
