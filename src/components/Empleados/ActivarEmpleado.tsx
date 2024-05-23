@@ -31,13 +31,12 @@ const ActivarEmpleado: React.FC<ActivarEmpleadoProps> = ({ empleadoOriginal, onC
   };
 
   return (
-    <div>
+    <div className='modal-info'>
       <Toaster />
-      <p>¿Seguro que quieres activar el empleado?</p>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <h2>¿Seguro que quieres activar el empleado?</h2>
         <button onClick={onConfirm}>Confirmar</button>
+        <br />
         <button onClick={onCancel}>Cancelar</button>
-      </div>
     </div>
   );
 }

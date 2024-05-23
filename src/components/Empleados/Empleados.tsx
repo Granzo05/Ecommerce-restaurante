@@ -133,13 +133,20 @@ const Empleados = () => {
 
                                     {empleado.borrado === 'NO' ? (
                                         <td>
-                                            <button onClick={() => handleEliminarEmpleado(empleado)}>ELIMINAR</button>
-                                            <button onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                            <div className="btns-empleados">
+                                                
+                                            <button className="btn-accion-editar" onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarEmpleado(empleado)}>ELIMINAR</button>
+                                        
+                                            </div>
                                         </td>
                                     ) : (
                                         <td>
-                                            <button onClick={() => handleActivarEmpleado(empleado)}>ACTIVAR</button>
-                                            <button onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                            <div className="btns-empleados">
+                                            <button className="btn-accion-activar" onClick={() => handleActivarEmpleado(empleado)}>ACTIVAR</button>
+                                            <button className="btn-accion-editar" onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                        
+                                            </div>
                                         </td>
                                     )}
                                 </tr>

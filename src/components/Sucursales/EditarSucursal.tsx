@@ -327,18 +327,19 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
           <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
           <span>Código Postal</span>
         </div>
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
         <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
         {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
         <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
         {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
-
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
         <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
         {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
 
         <div className="inputBox">
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery:</label>
+          <label style={{ display: 'flex', fontWeight: 'bold', marginBottom: '-20px' }}>Departamentos disponibles para delivery:</label>
 
         </div>
         {departamentos && (
@@ -366,7 +367,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
         <div className="inputBox">
 
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
+          <label style={{ display: 'flex', fontWeight: 'bold', marginBottom: '-20px' }}>Localidades disponibles para delivery:</label>
         </div>
         {localidadesMostrablesCheckbox && (
           <table>

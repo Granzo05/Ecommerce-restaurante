@@ -31,8 +31,9 @@ const ActivarIngrediente: React.FC<ActivarIngredienteProps> = ({ ingredienteOrig
   return (
     <div className="modal-info">
       <Toaster />
-      <p>¿Seguro que quieres activar el ingrediente?</p>
+      <h2>¿Seguro que quieres activar el ingrediente?</h2>
       <button onClick={onConfirm}>Confirmar</button>
+      <br />
       <button onClick={onCancel}>Cancelar</button>
     </div>
   );

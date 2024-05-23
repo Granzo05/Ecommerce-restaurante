@@ -130,7 +130,7 @@ const Ingredientes = () => {
                                             <div className="btns-acciones">
                                                 
                                             <button className="btn-accion-editar" onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
-                                            <button className="btn-accion-eliminar" onClick={() => handleActivarIngrediente(ingrediente)}>ELIMINAR</button>
+                                            <button className="btn-accion-activar" onClick={() => handleActivarIngrediente(ingrediente)}>ACTIVAR</button>
                                             </div>
                                         </td>
                                     )}

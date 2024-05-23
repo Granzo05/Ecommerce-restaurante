@@ -255,45 +255,58 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
   }
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextImage = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % imagenesMuestra.length);
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? imagenesMuestra.length - 1 : prevIndex - 1
+    );
+  };
+
   return (
     <div className="modal-info">
       <Toaster />
       <h2>Editar menú</h2>
       {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
 
-      
-
-      <div>
+      <div className="slider-container">
+      <button onClick={prevImage} className="slider-button prev">◀</button>
+      <div className='imagenes-wrapper'>
         {imagenesMuestra.map((imagen, index) => (
-          <div key={index}>
+          <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
 
             <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
+            <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
             {imagen && (
 
               <img
-                className='imagen-muestra-menu'
                 src={imagen.ruta}
                 alt={`Imagen ${index}`}
               />
             )}
           </div>
         ))}
-        
+        <button onClick={nextImage} className="slider-button next">▶</button>
+      </div>
+      </div>
+      <br />
 
-        {imagenes.map((imagen, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'row' }}>
+      {imagenes.map((imagen, index) => (
+          <div key={index} className='inputBox'>
+            <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
             <input
               type="file"
               accept="image/*"
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-              style={{ width: '400px' }}
             />
-            <p style={{ cursor: 'pointer', marginTop: '13px' }} onClick={quitarCampoImagen}>X</p>
+            
           </div>
         ))}
-
-      </div>
       <br />
       <button onClick={añadirCampoImagen}>Añadir imagen</button>
       <div className="inputBox">

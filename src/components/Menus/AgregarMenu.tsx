@@ -265,6 +265,8 @@ function AgregarMenu() {
             <hr />
             <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
             <div>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+
               <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
               {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
             </div>
