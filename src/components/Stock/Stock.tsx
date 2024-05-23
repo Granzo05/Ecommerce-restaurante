@@ -54,6 +54,7 @@ const Stocks = () => {
         StockArticuloVentaService.getStock()
             .then(data => {
                 setStockArticulos(data);
+                console.log(data)
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -203,7 +204,7 @@ const Stocks = () => {
                             ))}
                             {stockArticulos.map(stock => (
                                 <tr key={stock.id}>
-                                    <td>{stock.nombreArticuloVenta}</td>
+                                    <td>{stock.nombreArticulo}</td>
                                     <td>{stock.cantidadActual}</td>
                                     <td>{stock.cantidadMinima}</td>
                                     <td>{stock.cantidadMaxima}</td>

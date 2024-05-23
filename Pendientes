@@ -82,7 +82,7 @@
 [x] Activacion stockIngrediente
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga stockArticulo [] Probar valicación
+[x] Carga stockArticulo [] Probar valicación
 [] Actualizacion stockArticulo [] Probar valicación
 [] Eliminacion stockArticulo 
 [] Activacion stockArticulo
