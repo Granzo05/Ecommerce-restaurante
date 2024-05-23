@@ -120,7 +120,7 @@ function AgregarStockIngrediente() {
       <label>
         <div className="inputBox">
           <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-          <span>Costo del ingrediente por una unidad de medida (opcional)</span>
+          <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
         </div>
       </label>
       <button onClick={crearStockIngrediente}>Agregar</button>
