@@ -1,11 +1,9 @@
 package main.entities.Stock;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,14 +12,16 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class StockEntranteDTO {
     private Long id;
-    public Date fechaLlegada;
-    @JsonIgnoreProperties(value = {"stockEntrante"})
+    private LocalDate fechaLlegada;
+    private String borrado;
     private Set<DetalleStockDTO> detallesStock = new HashSet<>();
 
-    public StockEntranteDTO(Long id, Date fechaLlegada) {
+    public StockEntranteDTO(Long id, LocalDate fechaLlegada, String borrado) {
         this.id = id;
         this.fechaLlegada = fechaLlegada;
+        this.borrado = borrado;
     }
 }

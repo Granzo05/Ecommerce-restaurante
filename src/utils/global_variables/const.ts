@@ -9,8 +9,6 @@ if (usuarioString) {
     sucursalId = usuario.id;
 }
 
-
-
 // Frases del login del restaurante
 
 export const frases = [

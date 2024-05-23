@@ -8,7 +8,7 @@ export class DetalleStock {
     cantidad: number = 0;
     costoUnitario: number = 0;
     subTotal: number = 0;
-    medida: EnumMedida | null = null;
+    medida: EnumMedida | string = '';
     ingrediente: Ingrediente | null = null;
     articuloVenta: ArticuloVenta | null = null;
     stockEntrante: StockEntrante | null = null;

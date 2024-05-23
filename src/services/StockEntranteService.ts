@@ -1,4 +1,5 @@
 import { StockEntrante } from '../types/Stock/StockEntrante';
+import { StockEntranteDTO } from '../types/Stock/StockEntranteDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const StockEntranteService = {
@@ -22,7 +23,7 @@ export const StockEntranteService = {
         }
     },
 
-    getStock: async (): Promise<StockEntrante[]> => {
+    getStock: async (): Promise<StockEntranteDTO[]> => {
         try {
             const response = await fetch(URL_API + 'stockEntrante/' + sucursalId, {
                 method: 'GET',
@@ -42,7 +43,7 @@ export const StockEntranteService = {
         }
     },
 
-    updateStock: async (stock: StockEntrante): Promise<string> => {
+    updateStock: async (stock: StockEntranteDTO): Promise<string> => {
         try {
             const response = await fetch(URL_API + `sucursal/${sucursalId}/stockEntrante/update`, {
                 method: 'PUT',

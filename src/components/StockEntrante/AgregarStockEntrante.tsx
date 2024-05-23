@@ -10,6 +10,7 @@ import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import { IngredienteService } from '../../services/IngredienteService';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import '../../styles/modalCrud.css'
+import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 
 function AgregarStockEntrante() {
 
@@ -19,17 +20,18 @@ function AgregarStockEntrante() {
   const [articulosVentaInputs, setArticulosVentaInputs] = useState<ArticuloVenta[]>([]);
   const [ingredientesInputs, setIngredientesInputs] = useState<Ingrediente[]>([]);
 
-  let [lastIndexDetalle] = useState<number>(0);
+  let lastIndexDetalle = 0;
 
   const [articulosVenta, setArticulosVenta] = useState<ArticuloVenta[]>([]);
   const [ingredientes, setIngredientes] = useState<Ingrediente[]>([]);
 
   // Aca almaceno los detalles para el stock
-  const [detallesStock] = useState<DetalleStock[]>([])
+  const [detallesStock, setDetallesStock] = useState<DetalleStock[]>([])
 
   useEffect(() => {
     IngredienteService.getIngredientes()
       .then(ingredientes => {
+        console.log(ingredientes)
         setIngredientes(ingredientes)
       })
       .catch(error => {
@@ -38,6 +40,7 @@ function AgregarStockEntrante() {
 
     ArticuloVentaService.getArticulos()
       .then(articulos => {
+        console.log(articulos)
         setArticulosVenta(articulos)
       })
       .catch(error => {
@@ -47,32 +50,45 @@ function AgregarStockEntrante() {
 
 
   // Almacenaje de cada detalle por ingrediente
-  const handleNombreIngredienteChange = (index: number, ingrediente: Ingrediente) => {
-    detallesStock[index].ingrediente = ingrediente;
+  const handleNombreIngredienteChange = (ingrediente: Ingrediente) => {
+    detallesStock[lastIndexDetalle].ingrediente = ingrediente;
   };
 
-  const handleNombreArticuloChange = (index: number, articulo: ArticuloVenta) => {
+  const handleNombreArticuloChange = (articulo: ArticuloVenta) => {
     // Busco todos los articulos que de nombre se parezcan
-    detallesStock[index].articuloVenta = articulo;
+    detallesStock[lastIndexDetalle].articuloVenta = articulo;
   };
 
-  const almacenarCantidad = (index: number, cantidad: number) => {
+  const almacenarCantidad = (cantidad: number) => {
     if (cantidad) {
-      detallesStock[index].cantidad = cantidad;
+      detallesStock[lastIndexDetalle].cantidad = cantidad;
     }
   };
 
-  const almacenarSubTotal = (index: number, costo: number) => {
+  const almacenarMedida = (medida: EnumMedida | string) => {
+    if (medida) {
+      detallesStock[lastIndexDetalle].medida = medida;
+    }
+  };
+
+  const almacenarSubTotal = (costo: number) => {
     if (costo) {
-      detallesStock[index].costoUnitario = costo;
-      detallesStock[index].subTotal = costo * detallesStock[index].cantidad;
+      detallesStock[lastIndexDetalle].costoUnitario = costo;
+      detallesStock[lastIndexDetalle].subTotal = costo * detallesStock[lastIndexDetalle].cantidad;
     }
   };
 
   const añadirCampoIngrediente = () => {
     setIngredientesInputs([...ingredientesInputs, { id: 0, nombre: '', stock: null, medida: '', borrado: 'NO' }]);
+    setDetallesStock([...detallesStock, { id: 0, cantidad: 0, costoUnitario: 0, subTotal: 0, medida: EnumMedida.KILOGRAMOS, ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }]);
+    const ultimoDetalle = detallesStock[lastIndexDetalle];
 
-    if (lastIndexDetalle !== 0) lastIndexDetalle++;
+    if (
+      (ultimoDetalle.ingrediente && ultimoDetalle.ingrediente.nombre.length > 2) ||
+      (ultimoDetalle.articuloVenta && ultimoDetalle.articuloVenta.nombre.length > 2)
+    ) {
+      lastIndexDetalle++;
+    }
   };
 
   const quitarCampoIngrediente = () => {
@@ -83,12 +99,20 @@ function AgregarStockEntrante() {
     }
   };
 
-
   const añadirCampoArticulo = () => {
     setArticulosVentaInputs([...articulosVentaInputs, {
       id: 0, tipo: '', medida: '', cantidad: 0, cantidadMedida: 0, nombre: '', precioVenta: 0,
       imagenes: [], imagenesDTO: [], promociones: [], borrado: 'NO'
     }]);
+    setDetallesStock([...detallesStock, { id: 0, cantidad: 0, costoUnitario: 0, subTotal: 0, medida: EnumMedida.KILOGRAMOS, ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }]);
+    const ultimoDetalle = detallesStock[lastIndexDetalle];
+
+    if (
+      (ultimoDetalle.ingrediente && ultimoDetalle.ingrediente.nombre.length > 2) ||
+      (ultimoDetalle.articuloVenta && ultimoDetalle.articuloVenta.nombre.length > 2)
+    ) {
+      lastIndexDetalle++;
+    }
   };
 
   const quitarCampoArticulo = () => {
@@ -100,11 +124,21 @@ function AgregarStockEntrante() {
   };
 
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [elementosABuscar, setElementosABuscar] = useState<string>('');
 
   const handleSelectProduct = (product: string) => {
-    setSelectedProduct(product);
+    console.log(articulosVenta)
+    let articulo = articulosVenta.find(articulo => articulo.nombre === product);
+
+    let ingrediente = ingredientes.find(ingrediente => ingrediente.nombre === product);
+
+    if (product && ingrediente) {
+      handleNombreIngredienteChange(ingrediente);
+    } else if (product && articulo) {
+      handleNombreArticuloChange(articulo);
+    }
+
+    setModalBusqueda(false);
   };
 
   const handleAbrirRecomendaciones = (busqueda: string) => {
@@ -114,23 +148,24 @@ function AgregarStockEntrante() {
 
   const handleModalClose = () => {
     setModalBusqueda(false)
-
-    let articulo = articulosVenta.find(articulo => articulo.nombre === selectedProduct);
-
-    let ingrediente = ingredientes.find(ingrediente => ingrediente.nombre === selectedProduct);
-
-    if (selectedProduct && ingrediente) {
-      handleNombreIngredienteChange(lastIndexDetalle, ingrediente);
-    } else if (selectedProduct && articulo) {
-      handleNombreArticuloChange(lastIndexDetalle, articulo);
-    }
   };
 
   async function agregarStockEntrante() {
+    const hoy = new Date();
+    const fechaIngresada = new Date(fecha);
+
     if (!fecha) {
       toast.error("Por favor, la fecha es necesaria");
       return;
-    } else if (detallesStock.length === 0 && (detallesStock[0].ingrediente?.nombre.match('') || (detallesStock[0].articuloVenta?.nombre.match('')))) {
+    }
+
+    if (fechaIngresada <= hoy) {
+      toast.error("Por favor, la fecha debe ser posterior a la fecha actual");
+      return;
+    }
+
+    if (detallesStock.length === 0 ||
+      (!detallesStock[0].ingrediente?.nombre && !detallesStock[0].articuloVenta?.nombre)) {
       toast.error("Por favor, es necesario asignar un producto de venta o un ingrediente");
       return;
     }
@@ -157,7 +192,7 @@ function AgregarStockEntrante() {
       <h2>Agregar stock entrante</h2>
       <Toaster />
       <div className="inputBox">
-        <label style={{display: 'flex', fontWeight: 'bold'}}>Fecha de entrada:</label>
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
         <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
       </div>
       {ingredientesInputs.map((ingrediente, index) => (
@@ -165,15 +200,29 @@ function AgregarStockEntrante() {
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
           <div className='inputBox'>
-            <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingrediente?.nombre ?? ''} />
+            <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={detallesStock[lastIndexDetalle]?.ingrediente?.nombre ?? ''} />
             {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
           </div>
+          <select
+            id={`select-medidas-ingredientes-${index}`}
+            onChange={(e) => almacenarMedida(e.target.value)}
+            defaultValue=""
+          >
+            <option value="" disabled hidden>Seleccionar medida ingrediente</option>
+            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+            <option value={EnumMedida.LITROS.toString()}>Litros</option>
+            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
+          </select>
+          <br />
+
           <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarCantidad(lastIndexDetalle, parseFloat(e.target.value))} />
+            <input type="number" required={true} onChange={(e) => almacenarCantidad(parseFloat(e.target.value))} />
             <span>Cantidad del ingrediente</span>
           </div>
           <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarSubTotal(lastIndexDetalle, parseFloat(e.target.value))} />
+            <input type="number" required={true} onChange={(e) => almacenarSubTotal(parseFloat(e.target.value))} />
             <span>Costo unitario ($)</span>
           </div>
         </div>
@@ -185,18 +234,34 @@ function AgregarStockEntrante() {
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
           <div>
-            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={articulo?.nombre ?? ''} />
+            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={detallesStock[lastIndexDetalle]?.articuloVenta?.nombre ?? ''} />
             {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
           </div>
+          <select
+            id={`select-medidas-articulos-${index}`}
+            onChange={(e) => almacenarMedida(e.target.value)}
+            defaultValue=""
+          >
+            <option value="" disabled hidden>Seleccionar medida ingrediente</option>
+            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+            <option value={EnumMedida.LITROS.toString()}>Litros</option>
+            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
+          </select>
+          <br />
+          <br />
+
           <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarCantidad(lastIndexDetalle, parseFloat(e.target.value))} />
+            <input type="number" required={true} onChange={(e) => almacenarCantidad(parseFloat(e.target.value))} />
             <span>Cantidad del articulo</span>
           </div>
+
           <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarSubTotal(lastIndexDetalle, parseFloat(e.target.value))} />
+            <input type="number" required={true} onChange={(e) => almacenarSubTotal(parseFloat(e.target.value))} />
             <span>Costo unitario ($)</span>
           </div>
-          
+
         </div>
       ))}
       <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>

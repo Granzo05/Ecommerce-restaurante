@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { clearInputs } from '../../utils/global_variables/functions';
-import { StockEntrante } from '../../types/Stock/StockEntrante';
 import { StockEntranteService } from '../../services/StockEntranteService';
 import { toast, Toaster } from 'sonner';
+import { StockEntranteDTO } from '../../types/Stock/StockEntranteDTO';
 
 interface EditarStockProps {
-  stockEntrante: StockEntrante;
+  stockEntrante: StockEntranteDTO;
 }
 
 const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {

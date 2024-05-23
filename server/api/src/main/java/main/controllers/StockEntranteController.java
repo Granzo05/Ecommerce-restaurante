@@ -1,6 +1,8 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
+import main.entities.Ingredientes.Ingrediente;
+import main.entities.Productos.ArticuloVenta;
 import main.entities.Stock.DetalleStock;
 import main.entities.Stock.DetalleStockDTO;
 import main.entities.Stock.StockEntrante;
@@ -39,6 +41,19 @@ public class StockEntranteController {
 
         for (StockEntranteDTO stock : stocksEntrantes) {
             List<DetalleStockDTO> detalles = detalleStockRepository.findByIdStock(stock.getId());
+            System.out.println(detalles);
+/*
+            for(DetalleStockDTO detalleStockDTO: detalles) {
+                Optional<ArticuloVenta> articulo = articuloVentaRepository.findByName(detalleStockDTO.getArticuloVentaNombre());
+
+                if (articulo.isPresent()) {
+                    detalleStockDTO.setArticuloVenta(articulo.get());
+                } else {
+                    Optional<Ingrediente> ingrediente = ingredienteRepository.findByName(detalleStockDTO.getIngredienteNombre());
+                    detalleStockDTO.setIngrediente(ingrediente.get());
+                }
+            }
+*/
             stock.setDetallesStock(new HashSet<>(detalles));
         }
 
@@ -48,29 +63,55 @@ public class StockEntranteController {
     @Transactional
     @PostMapping("/sucursal/{idSucursal}/StockEntrante/create")
     public ResponseEntity<String> crearStock(@RequestBody StockEntrante stockDetail, @PathVariable("idSucursal") long id) {
-        Optional<StockEntrante> stockEntrante = stockEntranteRepository.findByIdAndIdSucursalAndFecha(stockDetail.getId(), id, stockDetail.getFechaLlegada());
-        // Si no existe lo creamos
-        if (stockEntrante.isEmpty()) {
-            for (DetalleStock detalle : stockDetail.getDetallesStock()) {
-                // Asignamos la sucursal completa
-                detalle.getStockEntrante().setSucursal(stockEntrante.get().getSucursal());
-
-                // Asignamos el articulo o el ingrediente completo
-                if (detalle.getArticuloVenta() != null) {
-                    detalle.setArticuloVenta(articuloVentaRepository.findByName(detalle.getArticuloVenta().getNombre()).get());
-                } else if (detalle.getIngrediente() != null) {
-                    detalle.setIngrediente(ingredienteRepository.findByName(detalle.getIngrediente().getNombre()).get());
-                }
-
+        Optional<StockEntrante> stockEntranteDB = stockEntranteRepository.findByIdSucursalAndFecha(id, stockDetail.getFechaLlegada());
+        System.out.println(stockDetail);
+        // Verificar si existe un pedido para la misma fecha y comparar los detalles
+        if (stockEntranteDB.isPresent()) {
+            StockEntrante stock = stockEntranteDB.get();
+            if (compararStocks(stock, stockDetail)) {
+                return ResponseEntity.badRequest().body("Ya hay un pedido cargado para esa fecha con los mismos detalles");
             }
-
-            stockEntranteRepository.save(stockDetail);
-
-            return ResponseEntity.ok("El pedido fue cargado");
-
         }
 
-        return ResponseEntity.ofNullable("Ya hay un pedido cargado para esa fecha");
+        // Si no existe un pedido igual, crearlo
+        stockDetail.setSucursal(sucursalRepository.findById(id).get());
+
+        for (DetalleStock detalle : stockDetail.getDetallesStock()) {
+            // Asignamos la sucursal completa
+            detalle.setStockEntrante(stockDetail);
+
+            // Asignamos el articulo o el ingrediente completo
+            if (detalle.getArticuloVenta() != null) {
+                detalle.setArticuloVenta(articuloVentaRepository.findByName(detalle.getArticuloVenta().getNombre()).get());
+            } else if (detalle.getIngrediente() != null) {
+                detalle.setIngrediente(ingredienteRepository.findByName(detalle.getIngrediente().getNombre()).get());
+            }
+        }
+
+        stockEntranteRepository.save(stockDetail);
+        return ResponseEntity.ok("El pedido fue cargado con éxito");
+    }
+
+    // Método auxiliar para comparar los detalles del stock
+    private boolean compararStocks(StockEntrante stockDB, StockEntrante stockEntrante) {
+        if (stockDB.getDetallesStock().size() != stockEntrante.getDetallesStock().size()) {
+            return false;
+        }
+
+        for (DetalleStock detalleDB : stockDB.getDetallesStock()) {
+            boolean encontrado = false;
+            for (DetalleStock detalleEntrante : stockEntrante.getDetallesStock()) {
+                if (detalleDB.equals(detalleEntrante)) {
+                    encontrado = true;
+                    break;
+                }
+            }
+            if (!encontrado) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @PutMapping("sucursal/{idSucursal}/stockEntrante/update")

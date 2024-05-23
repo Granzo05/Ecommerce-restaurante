@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import main.entities.Ingredientes.EnumMedida;
 
+import javax.annotation.Nullable;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,4 +20,14 @@ public class DetalleStockDTO {
     private double subTotal;
     private String ingredienteNombre;
     private String articuloVentaNombre;
+
+    public DetalleStockDTO(Long id, int cantidad, EnumMedida medida, double costoUnitario, double subTotal, String nombre) {
+        this.id = id;
+        this.cantidad = cantidad;
+        this.medida = medida;
+        this.costoUnitario = costoUnitario;
+        this.subTotal = subTotal;
+        this.articuloVentaNombre = nombre;
+        this.ingredienteNombre = nombre;
+    }
 }

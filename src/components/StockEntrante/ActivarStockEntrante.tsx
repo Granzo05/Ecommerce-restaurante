@@ -1,10 +1,10 @@
 import React from 'react';
-import { StockEntrante } from '../../types/Stock/StockEntrante';
 import { StockEntranteService } from '../../services/StockEntranteService';
 import { toast, Toaster } from 'sonner';
+import { StockEntranteDTO } from '../../types/Stock/StockEntranteDTO';
 
 interface ActivarStockProps {
-  stockEntrante: StockEntrante;
+  stockEntrante: StockEntranteDTO;
   onCloseModal: () => void;
 
 }
