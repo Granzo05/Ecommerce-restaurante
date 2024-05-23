@@ -221,7 +221,7 @@ function AgregarEmpleado() {
           <span>Cuil del empleado</span>
         </div>
         <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+          <input type="password" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
           <span>Contraseña del empleado</span>
         </div>
         <div className="inputBox">

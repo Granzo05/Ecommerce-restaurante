@@ -154,13 +154,13 @@ const Empleados = () => {
                 {selectedEmpleado && <EditarEmpleado empleadoOriginal={selectedEmpleado} />}
             </ModalCrud>
 
-            <ModalFlotante isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showEliminarEmpleadoModal} onClose={handleModalClose}>
                 {selectedEmpleado && <EliminarEmpleado empleadoOriginal={selectedEmpleado} onCloseModal={handleModalClose}/>}
-            </ModalFlotante>
+            </ModalCrud>
 
-            <ModalFlotante isOpen={showActivarEmpleadoModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showActivarEmpleadoModal} onClose={handleModalClose}>
                 {selectedEmpleado && <ActivarEmpleado empleadoOriginal={selectedEmpleado} onCloseModal={handleModalClose}/>}
-            </ModalFlotante>
+            </ModalCrud>
         </div>
     )
 }
