@@ -7,6 +7,7 @@ import { Toaster, toast } from 'sonner'
 import './editarArticuloVenta.css'
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { EnumTipoArticuloVenta } from '../../types/Productos/EnumTipoArticuloVenta';
+import '../../styles/modalCrud.css'
 
 interface EditarArticuloVentaProps {
   articuloOriginal: ArticuloVenta;
@@ -140,12 +141,12 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
                   alt={`Imagen ${index}`}
                 />
               )}
-              <br />
             </div>
 
           ))}
+          <button onClick={nextImage} className="slider-button next">▶</button>
         </div>
-        <button onClick={nextImage} className="slider-button next">▶</button>
+        
       </div>
 
       {imagenes.map((imagen, index) => (
