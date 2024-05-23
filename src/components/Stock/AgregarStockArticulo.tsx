@@ -103,6 +103,8 @@ function AgregarStockArticulo() {
       <Toaster />
       <h2>Agregar artículo</h2>
       <div>
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+
         <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={nombre ?? ''} />
         {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
       </div>
