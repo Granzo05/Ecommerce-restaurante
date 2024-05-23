@@ -8,11 +8,15 @@ import AccesoDenegado from "../pages/accesoDenegado"
 import MainMenu from "../pages/HomePage"
 import PedidosCliente from "../pages/pedidosCliente"
 import CambioContra from '../components/PasswordResetForm'
+import Empresas from "../components/Empresas/Empresas"
 
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
+      <Route path="/panel" element={<Empresas />}>
+      </Route>
+
       <Route path="/" element={<MainMenu />}>
       </Route>
 

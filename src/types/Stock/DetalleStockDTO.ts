@@ -1,6 +1,6 @@
 import { EnumMedida } from "../Ingredientes/EnumMedida";
 
-export class DetalleStock {
+export class DetalleStockDTO {
     id: number = 0;
     cantidad: number = 0;
     costoUnitario: number = 0;

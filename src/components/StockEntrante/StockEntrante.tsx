@@ -9,6 +9,7 @@ import EliminarStockEntrante from "./EliminarStockEntrante";
 import { StockEntranteDTO } from "../../types/Stock/StockEntranteDTO";
 import ModalFlotante from "../ModalFlotante";
 import DetallesStock from "./DetallesStock";
+import { DetalleStock } from "../../types/Stock/DetalleStock";
 
 const StocksEntrantes = () => {
     const [stockEntrante, setStockEntrante] = useState<StockEntranteDTO[]>([]);
@@ -21,7 +22,7 @@ const StocksEntrantes = () => {
     const [showDetallesStock, setShowDetallesStock] = useState(false);
 
     const [selectedStock, setSelectedStock] = useState<StockEntranteDTO>(new StockEntranteDTO());
-    const [selectedDetalles, setSelectedDetalles] = useState<DetallesStock[]>([]);
+    const [selectedDetalles, setSelectedDetalles] = useState<DetalleStock[]>([]);
 
     useEffect(() => {
         StockEntranteService.getStock()
@@ -70,7 +71,7 @@ const StocksEntrantes = () => {
         setMostrarStocks(true);
     };
 
-    const handleMostrarDetalles = (detalles: DetallesStock[]) => {
+    const handleMostrarDetalles = (detalles: DetalleStock[]) => {
         setSelectedDetalles(detalles);
         setShowEliminarStockModal(false);
         setShowActivarStockModal(false);
@@ -92,7 +93,7 @@ const StocksEntrantes = () => {
             </ModalCrud>
 
             <ModalFlotante isOpen={showDetallesStock} onClose={handleModalClose}>
-                <DetallesStock detallesOriginal={selectedDetalles}/>
+                <DetallesStock detallesOriginal={selectedDetalles} />
             </ModalFlotante>
 
             {mostrarStocks && (
@@ -122,7 +123,6 @@ const StocksEntrantes = () => {
                                             <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
                                         </td>
                                     )}
-
                                 </tr>
                             ))}
                         </tbody>
