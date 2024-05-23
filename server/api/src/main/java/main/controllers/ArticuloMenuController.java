@@ -107,7 +107,7 @@ public class ArticuloMenuController {
         try {
             String basePath = new File("").getAbsolutePath();
             String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + nombreMenu.replaceAll(" ", "") + File.separator;
-
+            System.out.println(basePath);
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);
             if (!carpeta.exists()) {
