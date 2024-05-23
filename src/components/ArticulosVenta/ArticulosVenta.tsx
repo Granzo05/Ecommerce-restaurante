@@ -100,7 +100,7 @@ const ArticuloVentas = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>- Articulos para venta -</h1>
+            <h1>- Articulos -</h1>
             <div className="btns-arts">
             <button className='btn-agregar' onClick={() => handleAgregarArticuloVenta()}> + Agregar articulo</button>
             
@@ -121,18 +121,25 @@ const ArticuloVentas = () => {
                             {articulosVenta.length > 0 && articulosVenta.map(articulo => (
                                 <tr key={articulo.id}>
                                     <td>{articulo.nombre}</td>
-                                    <td>{articulo.cantidadMedida} {articulo.medida?.toString()}</td>
-                                    <td>{articulo.precioVenta}</td>
+                                    <td>{articulo.cantidadMedida} {articulo.medida?.toString().toLowerCase()}</td>
+                                    <td>${articulo.precioVenta}</td>
 
                                     {articulo.borrado === 'NO' ? (
                                         <td>
-                                            <button onClick={() => handleEliminarArticuloVenta(articulo)}>ELIMINAR</button>
-                                            <button onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                            <div className="btns-articulos">
+                                            <button className='btn-accion-editar' onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                            <button className='btn-accion-eliminar' onClick={() => handleEliminarArticuloVenta(articulo)}>ELIMINAR</button>
+                                            
+                                        
+                                            </div>
                                         </td>
                                     ) : (
                                         <td>
-                                            <button onClick={() => handleActivarArticuloVenta(articulo)}>ACTIVAR</button>
-                                            <button onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                            <div className="btns-articulos">
+                                            <button className='btn-accion-activar' onClick={() => handleActivarArticuloVenta(articulo)}>ACTIVAR</button>
+                                            <button className='btn-accion-editar' onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                            </div>
+                                            
                                         </td>
                                     )}
                                 </tr>
@@ -145,15 +152,15 @@ const ArticuloVentas = () => {
             <ModalCrud isOpen={showAgregarArticuloVentaModal} onClose={handleModalClose}>
                 <AgregarArticuloVenta />
             </ModalCrud>
-            <ModalFlotante isOpen={showEditarArticuloVentaModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showEditarArticuloVentaModal} onClose={handleModalClose}>
                 {selectedArticuloVenta && <EditarArticuloVenta articuloOriginal={selectedArticuloVenta} />}
-            </ModalFlotante>
-            <ModalFlotante isOpen={showEliminarArticuloVentaModal} onClose={handleModalClose}>
+            </ModalCrud>
+            <ModalCrud isOpen={showEliminarArticuloVentaModal} onClose={handleModalClose}>
                 {selectedArticuloVenta && <EliminarArticuloVenta articuloOriginal={selectedArticuloVenta} onCloseModal={handleModalClose} />}
-            </ModalFlotante>
-            <ModalFlotante isOpen={showActivarArticuloVentaModal} onClose={handleModalClose}>
+            </ModalCrud>
+            <ModalCrud isOpen={showActivarArticuloVentaModal} onClose={handleModalClose}>
                 {selectedArticuloVenta && <ActivarArticuloVenta articuloOriginal={selectedArticuloVenta} onCloseModal={handleModalClose} />}
-            </ModalFlotante>
+            </ModalCrud>
         </div>
 
     )

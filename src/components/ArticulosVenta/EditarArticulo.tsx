@@ -109,77 +109,99 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     }
   }
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextImage = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % imagenesMuestra.length);
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? imagenesMuestra.length - 1 : prevIndex - 1
+    );
+  };
+
   return (
     <div className="modal-info">
+      <h2>Editar artículo</h2>
       <Toaster />
-      <div id="inputs-imagenes">
-        {imagenesMuestra.map((imagen, index) => (
-          <div key={index}>
-            {imagen && (
-              <img
-                className='imagen-muestra-articulo'
-                src={imagen.ruta}
-                alt={`Imagen ${index}`}
-              />
-            )}
-            <button className='button-form' type='button' onClick={() => handleEliminarImagen(index)}>X</button>
-          </div>
-        ))}
-        {imagenes.map((imagen, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'row' }}>
-            <input
-              type="file"
-              accept="image/*"
-              maxLength={10048576}
-              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-              style={{ width: '400px' }}
-            />
-            <p style={{ cursor: 'pointer', marginTop: '13px' }} onClick={quitarCampoImagen}>X</p>
-          </div>
-        ))}
-        <button onClick={añadirCampoImagen}>Añadir imagen</button>
+      <div className="slider-container">
+        <button onClick={prevImage} className="slider-button prev">◀</button>
+        <div className='imagenes-wrapper'>
+          {imagenesMuestra.map((imagen, index) => (
+            <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
+              <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
+              <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+
+              {imagen && (
+                <img
+
+                  src={imagen.ruta}
+                  alt={`Imagen ${index}`}
+                />
+              )}
+              <br />
+            </div>
+
+          ))}
+        </div>
+        <button onClick={nextImage} className="slider-button next">▶</button>
       </div>
 
+      {imagenes.map((imagen, index) => (
+        <div key={index} className='inputBox'>
+          <hr />
+          <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+          <input
+            type="file"
+            accept="image/*"
+            maxLength={10048576}
+            onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+          />
+        </div>
+      ))}
+      <br />
+      <button onClick={añadirCampoImagen}>Añadir imagen</button>
       <div>
         <div className="inputBox">
+          <hr />
           <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
           <span>Nombre del articulo</span>
         </div>
-        <br />
 
         <div className="inputBox">
           <input type="text" required={true} value={precioVenta | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
           <span>Precio del articulo</span>
         </div>
-        <br />
         <div className="inputBox">
           <input type="text" required={true} value={cantidad | 0} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
           <span>Cantidad</span>
         </div>
-        <br />
-        <label>
+        <div className="inputBox">
           <select value={tipo} name="tipoArticulo" onChange={(e) => { setTipo(e.target.value) }}>
             <option value="">Seleccionar tipo de articulo</option>
             <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida sin alcohol</option>
             <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida con alcohol</option>
           </select>
-        </label>
-        <br />
-        <select
-          value={medida}
-          onChange={(e) => setMedida(e.target.value)}
-        >
-          <option value="">Seleccionar medida ingrediente</option>
-          <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-          <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-          <option value={EnumMedida.LITROS.toString()}>Litros</option>
-          <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-          <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-        </select>
-        <br />
-        <button className='button-form' type='button' onClick={editarArticuloVenta}>Editar articulo</button>
-      </div>
+        </div>
+        <div className="inputBox">
+          <select
+            value={medida}
+            onChange={(e) => setMedida(e.target.value)}
+          >
+            <option value="">Seleccionar medida ingrediente</option>
+            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+            <option value={EnumMedida.LITROS.toString()}>Litros</option>
+            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
+          </select>
+        </div>
 
+
+      </div>
+      <hr />
+      <button className='button-form' type='button' onClick={editarArticuloVenta}>Editar articulo</button>
 
     </div >
   )

@@ -33,8 +33,9 @@ const EliminarArticuloVenta: React.FC<EliminarArticuloProps> = ({ articuloOrigin
   return (
     <div className="modal-info">
       <Toaster />
-      <p>¿Seguro que quieres eliminar el articulo?</p>
+      <h2>¿Seguro que quieres eliminar el articulo?</h2>
       <button onClick={onConfirm}>Confirmar</button>
+      <br />
       <button onClick={onCancel}>Cancelar</button>
     </div>
   );

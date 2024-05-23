@@ -3,6 +3,12 @@
     justify-content: center;
     align-items: center;
   }
+
+  .btns-articulos{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   
   
   

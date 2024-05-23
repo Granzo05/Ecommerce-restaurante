@@ -30,13 +30,12 @@ const ActivarArticuloVenta: React.FC<ActivarArticuloProps> = ({ articuloOriginal
   };
 
   return (
-    <div>
+    <div className='modal-info'>
       <Toaster />
-      <p>¿Seguro que quieres activar el articulo?</p>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <h2>¿Seguro que quieres activar el articulo?</h2>
         <button onClick={onConfirm}>Confirmar</button>
+        <br />
         <button onClick={onCancel}>Cancelar</button>
-      </div>
     </div>
   );
 }
