@@ -273,8 +273,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
 
   return (
     <div className="modal-info">
+      <h2>Editar empleado</h2>
       <Toaster />
-      <br />
       <form>
         <div className="inputBox">
           <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
@@ -302,7 +302,11 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
         </div>
         {domiciliosModificable && domiciliosModificable.map((domicilio, index) => (
           <div key={'domicilioMod' + index}>
-            <p>Domicilio {index + 1}</p>
+            <hr />
+            <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilioModificable(index)}>X</p>
+          
+            <h2>Domicilio {index + 1}</h2>
+            
             <div className="inputBox">
               <input type="text" required={true} value={domicilio.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
               <span>Nombre de calle</span>
@@ -318,7 +322,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
             <div className="inputBox">
               <input type="text" disabled required={true} value={domicilio.localidad?.nombre} />
             </div>
-            <p onClick={() => quitarCampoDomicilioModificable(index)}>X</p>
           </div>
         ))}
         {domicilios && indexDomicilio > 0 && domicilios.map((domicilio, index) => (
@@ -350,9 +353,15 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
             <p onClick={() => quitarCampoDomicilio(index)}>X</p>
           </div>
         ))}
-        <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
-        <br />
-        <p>Sucursal: </p>
+        
+        
+        
+        
+      </form>
+      <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
+      <br />
+      <div className="inputBox">
+        <label>Sucursal: </label>
         <select value={sucursalId} onChange={(e) => setSucursalId(parseInt(e.target.value))}>
           {sucursales && sucursales.map(sucursal => (
             <option key={sucursal.id} value={sucursal.id}>
@@ -360,10 +369,9 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
             </option>
           ))}
         </select>
-        <br />
-        <br />
-        <button className='button-form' type='button' onClick={editarEmpleado}>Editar empleado</button>
-      </form>
+        </div>
+      <hr />
+      <button className='button-form' type='button' onClick={editarEmpleado}>Editar empleado</button>
     </div>
   )
 }
