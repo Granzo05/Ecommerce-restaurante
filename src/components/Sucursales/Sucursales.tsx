@@ -142,12 +142,12 @@ const Sucursales = () => {
                     <ModalCrud isOpen={showEditarSucursalModal} onClose={handleModalClose}>
                         <EditarSucursal sucursalOriginal={selectedSucursal} />
                     </ModalCrud>
-                    <ModalFlotante isOpen={showEliminarSucursalModal} onClose={handleModalClose}>
+                    <ModalCrud isOpen={showEliminarSucursalModal} onClose={handleModalClose}>
                         {selectedSucursal && <EliminarSucursal sucursal={selectedSucursal} onCloseModal={handleModalClose} />}
-                    </ModalFlotante>
-                    <ModalFlotante isOpen={showActivarSucursalModal} onClose={handleModalClose}>
+                    </ModalCrud>
+                    <ModalCrud isOpen={showActivarSucursalModal} onClose={handleModalClose}>
                         {selectedSucursal && <ActivarSucursal sucursal={selectedSucursal} onCloseModal={handleModalClose} />}
-                    </ModalFlotante>
+                    </ModalCrud>
                 </div>
             )}
 

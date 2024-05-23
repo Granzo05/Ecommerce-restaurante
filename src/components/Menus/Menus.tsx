@@ -124,7 +124,7 @@ const Menus = () => {
                             {menus.length > 0 && menus.map(menu => (
                                 <tr key={menu.id}>
                                     <td>{menu.nombre}</td>
-                                    <td>{menu.tiempoCoccion}</td>
+                                    <td>{menu.tiempoCoccion} minutos</td>
                                     <td>{menu.comensales}</td>
                                     <td>{menu.descripcion}</td>
                                     <td>
@@ -134,7 +134,7 @@ const Menus = () => {
                                             </span>
                                         ))}
                                     </td>
-                                    <td>{menu.precioVenta}</td>
+                                    <td>${menu.precioVenta}</td>
                                     <td>{menu.tipo}</td>
 
                                     {menu.borrado === 'NO' ? (

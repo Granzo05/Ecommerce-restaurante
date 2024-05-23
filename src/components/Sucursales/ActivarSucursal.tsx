@@ -31,13 +31,12 @@ const ActivarSucursal: React.FC<ActivarSucursalProps> = ({ sucursal, onCloseModa
   };
 
   return (
-    <div>
+    <div className='modal-info'>
       <Toaster />
-      <p>¿Seguro que quieres activar la sucursal?</p>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <h2>¿Seguro que quieres activar la sucursal?</h2>
         <button onClick={onConfirm}>Confirmar</button>
+        <br />
         <button onClick={onCancel}>Cancelar</button>
-      </div>
     </div>
   );
 }
