@@ -12,6 +12,7 @@ interface ActivarEmpleadoProps {
 const ActivarEmpleado: React.FC<ActivarEmpleadoProps> = ({ empleadoOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
+    empleadoOriginal.borrado = 'NO';
     toast.promise(EmpleadoService.updateEmpleado(empleadoOriginal), {
       loading: 'Activando empleado...',
       success: (message) => {

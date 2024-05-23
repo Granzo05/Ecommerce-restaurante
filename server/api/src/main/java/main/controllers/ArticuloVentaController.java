@@ -1,9 +1,15 @@
 package main.controllers;
 
-import main.entities.Productos.*;
+import main.entities.Productos.ArticuloVenta;
+import main.entities.Productos.ArticuloVentaDTO;
+import main.entities.Productos.EnumTipoArticuloVenta;
+import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
-import main.repositories.*;
+import main.repositories.ArticuloVentaRepository;
+import main.repositories.ImagenesRepository;
+import main.repositories.StockArticuloVentaRepository;
+import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -135,7 +141,7 @@ public class ArticuloVentaController {
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
         Optional<Imagenes> imagen = imagenesRepository.findById(id);
 
-        if(imagen.isPresent()){
+        if (imagen.isPresent()) {
             try {
                 imagenesRepository.delete(imagen.get());
                 return new ResponseEntity<>(HttpStatus.ACCEPTED);

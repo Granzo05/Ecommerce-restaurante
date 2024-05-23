@@ -12,6 +12,7 @@ interface EliminarSucursalProps {
 const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ sucursal, onCloseModal }) => {
 
   const onConfirm = () => {
+    sucursal.borrado = 'SI';
     toast.promise(SucursalService.updateRestaurant(sucursal), {
       loading: 'Eliminando sucursal...',
       success: (message) => {
@@ -33,9 +34,9 @@ const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ sucursal, onCloseMo
     <div className='modal-info'>
       <h2>¿Seguro que quieres eliminar la sucursal?</h2>
       <Toaster />
-        <button onClick={onConfirm}>Confirmar</button>
-        <br />
-        <button onClick={onCancel}>Cancelar</button>
+      <button onClick={onConfirm}>Confirmar</button>
+      <br />
+      <button onClick={onCancel}>Cancelar</button>
     </div>
   );
 }

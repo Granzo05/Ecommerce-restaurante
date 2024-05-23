@@ -1,7 +1,10 @@
 package main.entities.Productos;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -23,6 +26,7 @@ public abstract class Articulo implements Serializable {
     private Set<Promocion> promociones = new HashSet<>();
     @Transient
     private Set<ImagenesDTO> imagenesDTO = new HashSet<>();
+
     public Articulo(double precioVenta) {
         this.precioVenta = precioVenta;
     }

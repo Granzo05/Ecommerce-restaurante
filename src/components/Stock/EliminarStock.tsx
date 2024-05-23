@@ -15,8 +15,9 @@ interface EliminarStockProps {
 
 
 const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal, onCloseModal }) => {
-    const onConfirm = () => {
+  const onConfirm = () => {
     if (stockOriginal.tipo === 'ingrediente') {
+      stockOriginal.borrado = 'SI';
       toast.promise(StockIngredientesService.updateStock(stockOriginal), {
         loading: 'Eliminando stock del ingrediente...',
         success: (message) => {
@@ -30,6 +31,7 @@ const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal, onCloseMod
         },
       });
     } else {
+      stockOriginal.borrado = 'SI';
       toast.promise(StockArticuloVentaService.updateStock(stockOriginal), {
         loading: 'Eliminando stock del articulo...',
         success: (message) => {

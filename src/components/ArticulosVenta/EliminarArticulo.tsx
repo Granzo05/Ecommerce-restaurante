@@ -12,6 +12,7 @@ interface EliminarArticuloProps {
 const EliminarArticuloVenta: React.FC<EliminarArticuloProps> = ({ articuloOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
+    articuloOriginal.borrado = 'SI';
     toast.promise(ArticuloVentaService.updateBorradoArticulo(articuloOriginal), {
       loading: 'Eliminando articulo...',
       success: (message) => {

@@ -12,6 +12,7 @@ interface EliminarIngredienteProps {
 const EliminarIngrediente: React.FC<EliminarIngredienteProps> = ({ ingredienteOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
+    ingredienteOriginal.borrado = 'SI';
     toast.promise(IngredienteService.deleteIngrediente(ingredienteOriginal.id), {
       loading: 'Creando Ingrediente...',
       success: (message) => {
@@ -32,7 +33,7 @@ const EliminarIngrediente: React.FC<EliminarIngredienteProps> = ({ ingredienteOr
 
   return (
     <div className="modal-info">
-      
+
       <h2>¿Seguro que quieres eliminar el ingrediente?</h2>
       <Toaster />
       <button onClick={onConfirm}>Confirmar</button>

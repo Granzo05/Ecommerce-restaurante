@@ -11,6 +11,7 @@ interface ActivarArticuloProps {
 
 const ActivarArticuloVenta: React.FC<ActivarArticuloProps> = ({ articuloOriginal, onCloseModal }) => {
   const onConfirm = () => {
+    articuloOriginal.borrado = 'NO';
     toast.promise(ArticuloVentaService.updateBorradoArticulo(articuloOriginal), {
       loading: 'Activando articulo...',
       success: (message) => {
@@ -33,9 +34,9 @@ const ActivarArticuloVenta: React.FC<ActivarArticuloProps> = ({ articuloOriginal
     <div className='modal-info'>
       <Toaster />
       <h2>¿Seguro que quieres activar el articulo?</h2>
-        <button onClick={onConfirm}>Confirmar</button>
-        <br />
-        <button onClick={onCancel}>Cancelar</button>
+      <button onClick={onConfirm}>Confirmar</button>
+      <br />
+      <button onClick={onCancel}>Cancelar</button>
     </div>
   );
 }

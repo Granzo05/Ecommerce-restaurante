@@ -15,6 +15,7 @@ const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal, onCloseModal
 
   const onConfirm = () => {
     if (stockOriginal.tipo === 'ingrediente') {
+      stockOriginal.borrado = 'NO';
       toast.promise(StockIngredientesService.updateStock(stockOriginal), {
         loading: 'Activando stock del ingrediente...',
         success: (message) => {
@@ -28,6 +29,7 @@ const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal, onCloseModal
         },
       });
     } else {
+      stockOriginal.borrado = 'NO';
       toast.promise(StockArticuloVentaService.updateStock(stockOriginal), {
         loading: 'Activando stock del articulo...',
         success: (message) => {

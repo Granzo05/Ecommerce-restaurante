@@ -1,10 +1,10 @@
-import { Categoria } from '../types/Ingredientes/Categoria';
+import { Subcategoria } from '../types/Ingredientes/Subcategoria';
 import { URL_API } from '../utils/global_variables/const';
 
-export const CategoriaService = {
-    getCategorias: async (): Promise<Categoria[]> => {
+export const SubcategoriaService = {
+    getSubcategorias: async (): Promise<Subcategoria[]> => {
         try {
-            const response = await fetch(URL_API + 'categorias', {
+            const response = await fetch(URL_API + 'subcategoria', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -21,14 +21,14 @@ export const CategoriaService = {
         }
     },
 
-    createCategoria: async (categoria: Categoria): Promise<string> => {
+    createSubcategoria: async (subcategoria: Subcategoria): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'categoria/create', {
+            const response = await fetch(URL_API + 'subcategoria/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(categoria)
+                body: JSON.stringify(subcategoria)
             })
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
@@ -41,14 +41,14 @@ export const CategoriaService = {
         }
     },
 
-    updateCategoria: async (categoria: Categoria): Promise<string> => {
+    updateSubcategoria: async (subcategoria: Subcategoria): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'categoria/update', {
+            const response = await fetch(URL_API + 'subcategoria/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(categoria)
+                body: JSON.stringify(subcategoria)
             })
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
@@ -56,6 +56,26 @@ export const CategoriaService = {
 
             return await response.text();
 
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
+    deleteSubcategoria: async (subcategoriaId: number): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'subcategoria/' + subcategoriaId + '/delete', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
 
         } catch (error) {
             console.error('Error:', error);

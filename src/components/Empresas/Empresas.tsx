@@ -52,14 +52,12 @@ const Empresas = () => {
     };
 
     const handleEliminarEmpresa = (empresa: Empresa) => {
-        empresa.borrado = 'SI';
         setSelectedEmpresa(empresa);
         setShowEliminarEmpresaModal(true);
         setMostrarEmpresas(true);
     };
 
     const handleActivarEmpresa = (empresa: Empresa) => {
-        empresa.borrado = 'NO';
         setSelectedEmpresa(empresa);
         setShowActivarEmpresaModal(true);
         setMostrarEmpresas(true);

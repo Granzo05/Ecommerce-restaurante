@@ -1,8 +1,9 @@
 package main.entities.Ingredientes;
 
-import jakarta.persistence.*;
-import lombok.*;
-import main.entities.Stock.StockIngredientes;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

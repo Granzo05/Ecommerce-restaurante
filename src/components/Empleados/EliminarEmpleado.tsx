@@ -12,6 +12,7 @@ interface EliminarEmpleadoProps {
 const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
+    empleadoOriginal.borrado = 'SI';
     toast.promise(EmpleadoService.updateEmpleado(empleadoOriginal), {
       loading: 'Eliminando empleado...',
       success: (message) => {
@@ -34,9 +35,9 @@ const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal, o
     <div className='modal-info'>
       <Toaster />
       <h2>¿Seguro que quieres eliminar el empleado?</h2>
-        <button onClick={onConfirm}>Confirmar</button>
-        <br />
-        <button onClick={onCancel}>Cancelar</button>
+      <button onClick={onConfirm}>Confirmar</button>
+      <br />
+      <button onClick={onCancel}>Cancelar</button>
     </div>
   );
 }

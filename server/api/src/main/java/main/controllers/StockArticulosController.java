@@ -1,13 +1,10 @@
 package main.controllers;
 
-import jakarta.transaction.Transactional;
-import main.entities.Ingredientes.Ingrediente;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockArticuloVentaDTO;
 import main.entities.Stock.StockDTO;
-import main.entities.Stock.StockIngredientes;
 import main.repositories.ArticuloVentaRepository;
 import main.repositories.IngredienteRepository;
 import main.repositories.StockArticuloVentaRepository;
@@ -60,7 +57,7 @@ public class StockArticulosController {
         System.out.println(stockDetail);
         Optional<ArticuloVenta> articuloDB = articuloVentaRepository.findByName(stockDetail.getArticuloVenta().getNombre());
 
-        if (articuloDB.isPresent()){
+        if (articuloDB.isPresent()) {
             // Busco el ingrediente en la base de datos
             Optional<StockArticuloVenta> stockArticuloDB = stockArticuloRepository.findStockByProductNameAndIdSucursal(stockDetail.getArticuloVenta().getNombre(), id);
 
@@ -106,7 +103,7 @@ public class StockArticulosController {
 
             stockArticuloRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
-        } else if (stockEncontrado.isPresent() && !stockEncontrado.get().getBorrado().equals(stockIngredientes.getBorrado())){
+        } else if (stockEncontrado.isPresent() && !stockEncontrado.get().getBorrado().equals(stockIngredientes.getBorrado())) {
             StockArticuloVenta stock = stockEncontrado.get();
 
             stock.setBorrado(stockIngredientes.getBorrado());

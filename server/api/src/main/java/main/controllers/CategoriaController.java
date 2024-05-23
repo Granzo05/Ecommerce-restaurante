@@ -29,7 +29,7 @@ public class CategoriaController {
     public Set<CategoriaDTO> getCategorias() {
         List<CategoriaDTO> categorias = categoriaRepository.findAllDTO();
 
-        for (CategoriaDTO categoriaDTO: categorias) {
+        for (CategoriaDTO categoriaDTO : categorias) {
             categoriaDTO.setSubcategorias(new HashSet<>(subcategoriaRepository.findByCategoriaId(categoriaDTO.getId())));
         }
 

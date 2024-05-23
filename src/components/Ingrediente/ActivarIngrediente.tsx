@@ -10,6 +10,7 @@ interface ActivarIngredienteProps {
 
 const ActivarIngrediente: React.FC<ActivarIngredienteProps> = ({ ingredienteOriginal, onCloseModal }) => {
   const onConfirm = () => {
+    ingredienteOriginal.borrado = 'NO';
     toast.promise(IngredienteService.deleteIngrediente(ingredienteOriginal.id), {
       loading: 'Activando Ingrediente...',
       success: (message) => {

@@ -1,12 +1,9 @@
 package main.entities.Factura;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.entities.Pedidos.Pedido;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 

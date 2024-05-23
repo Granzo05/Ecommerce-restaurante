@@ -1,6 +1,5 @@
 package main.controllers;
 
-import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Productos.ArticuloMenu;
@@ -34,6 +33,7 @@ public class StockIngredientesController {
         this.articuloMenuRepository = articuloMenuRepository;
         this.sucursalRepository = sucursalRepository;
     }
+
     @GetMapping("/stockIngredientes/{idSucursal}")
     public Set<StockIngredientesDTO> getStock(@PathVariable("idSucursal") long id) {
         return new HashSet<>(stockIngredientesRepository.findAllByIdSucursal(id));

@@ -2,13 +2,11 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
-import main.entities.Cliente.Cliente;
-import main.entities.Domicilio.Domicilio;
-import main.entities.Domicilio.DomicilioDTO;
-import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.Imagenes;
-import main.entities.Restaurante.*;
-import main.repositories.*;
+import main.entities.Restaurante.Empresa;
+import main.entities.Restaurante.EmpresaDTO;
+import main.repositories.EmpresaRepository;
+import main.repositories.ImagenesRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +35,7 @@ public class EmpresaController {
     public EmpresaDTO loginEmpresa(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<EmpresaDTO> empresa = empresaRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
 
-        if(empresa.isPresent()) {
+        if (empresa.isPresent()) {
             return empresa.get();
         }
 
@@ -57,6 +53,7 @@ public class EmpresaController {
 
         return new HashSet<>(empresas);
     }
+
     @PostMapping("/empresa/create")
     @Transactional
     public ResponseEntity<String> crearEmpresa(@RequestBody Empresa empresaDetails) throws Exception {
@@ -105,7 +102,7 @@ public class EmpresaController {
         }
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     @PostMapping("/empresa/imagenes")
     public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("cuit") String cuit) {
         HashSet<Imagenes> listaImagenes = new HashSet<>();
@@ -165,7 +162,7 @@ public class EmpresaController {
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
         Optional<Imagenes> imagen = imagenesRepository.findById(id);
 
-        if(imagen.isPresent()){
+        if (imagen.isPresent()) {
             try {
                 imagenesRepository.delete(imagen.get());
                 return new ResponseEntity<>(HttpStatus.ACCEPTED);

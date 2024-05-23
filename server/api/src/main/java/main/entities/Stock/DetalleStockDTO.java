@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import main.entities.Ingredientes.EnumMedida;
 
-import javax.annotation.Nullable;
-
 @Getter
 @Setter
 @AllArgsConstructor

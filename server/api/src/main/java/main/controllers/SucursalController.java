@@ -3,16 +3,19 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
-import main.entities.Domicilio.*;
+import main.entities.Domicilio.Domicilio;
+import main.entities.Domicilio.DomicilioDTO;
 import main.entities.Restaurante.*;
 import main.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.crypto.IllegalBlockSizeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class SucursalController {
@@ -51,7 +54,7 @@ public class SucursalController {
     public EmpleadoDTO loginEmpleado(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<EmpleadoDTO> empleadoDb = empleadoRepository.findByEmailAndPassword(Encrypt.encriptarString(email), Encrypt.cifrarPassword(password));
 
-        if(empleadoDb.isPresent()) {
+        if (empleadoDb.isPresent()) {
             EmpleadoDTO empleado = empleadoDb.get();
 
             empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
@@ -138,7 +141,7 @@ public class SucursalController {
 
             sucursalDetails.setEmpresa(empresa);
             sucursalDetails.setBorrado("NO");
-            for (LocalidadDelivery localidad: sucursalDetails.getLocalidadesDisponiblesDelivery()) {
+            for (LocalidadDelivery localidad : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
                 localidad.setSucursal(sucursalDetails);
             }
 
@@ -195,7 +198,7 @@ public class SucursalController {
 
             List<DomicilioDTO> domicilios = domicilioRepository.findByIdEmpleadoDTO(empleado.getId());
 
-            for(DomicilioDTO domicilio: domicilios) {
+            for (DomicilioDTO domicilio : domicilios) {
                 domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
             }
 
@@ -252,7 +255,7 @@ public class SucursalController {
             empleadoRepository.save(empleadoDb);
 
             return ResponseEntity.ok("El empleado se modificó correctamente");
-        } else if(empleadoOptional.isPresent() && !empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
+        } else if (empleadoOptional.isPresent() && !empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
             empleadoOptional.get().setBorrado(empleadoDetails.getBorrado());
 
             empleadoRepository.save(empleadoOptional.get());

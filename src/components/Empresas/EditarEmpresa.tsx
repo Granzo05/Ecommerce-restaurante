@@ -75,7 +75,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
 
     empresa.borrado = 'NO';
 
-    toast.promise(EmpresaService.createRestaurant(empresa), {
+    toast.promise(EmpresaService.createEmpresa(empresa), {
       loading: 'Editando empresa...',
       success: (message) => {
         return message;

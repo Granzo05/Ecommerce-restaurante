@@ -1,18 +1,18 @@
 import React from 'react';
-import { CategoriaService } from '../../services/CategoriaService';
 import { Toaster, toast } from 'sonner'
-import { Categoria } from '../../types/Ingredientes/Categoria';
+import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
+import { SubcategoriaService } from '../../services/SubcategoriaService';
 
-interface ActivarCategoriaProps {
-  categoriaOriginal: Categoria;
+interface ActivarSubcategoriaProps {
+  subcategoriaOriginal: Subcategoria;
   onCloseModal: () => void;
 }
 
-const ActivarCategoria: React.FC<ActivarCategoriaProps> = ({ categoriaOriginal, onCloseModal }) => {
+const ActivarSubcategoria: React.FC<ActivarSubcategoriaProps> = ({ subcategoriaOriginal, onCloseModal }) => {
   const onConfirm = () => {
-    categoriaOriginal.borrado = 'NO';
-    toast.promise(CategoriaService.updateCategoria(categoriaOriginal), {
-      loading: 'Activando Categoria...',
+    subcategoriaOriginal.borrado = 'NO';
+    toast.promise(SubcategoriaService.updateSubcategoria(subcategoriaOriginal), {
+      loading: 'Activando subcategoria...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();
@@ -40,4 +40,4 @@ const ActivarCategoria: React.FC<ActivarCategoriaProps> = ({ categoriaOriginal, 
   );
 }
 
-export default ActivarCategoria;
+export default ActivarSubcategoria;

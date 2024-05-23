@@ -10,6 +10,7 @@ interface EliminarMenuProps {
 
 const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuOriginal, onCloseModal }) => {
   const onConfirm = () => {
+    menuOriginal.borrado = 'SI';
     toast.promise(MenuService.updateBorradoMenu(menuOriginal), {
       loading: 'Eliminando articulo...',
       success: (message) => {

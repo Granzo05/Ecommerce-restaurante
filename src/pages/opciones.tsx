@@ -22,6 +22,9 @@ import StocksEntrantes from '../components/StockEntrante/StockEntrante';
 import Sucursales from '../components/Sucursales/Sucursales';
 import Ingredientes from '../components/Ingrediente/Ingredientes';
 import ArticuloVentas from '../components/ArticulosVenta/ArticulosVenta';
+import Categorias from '../components/Categorias/Categorias';
+import Subcategorias from '../components/Subcategorias/Subcategorias';
+import Medidas from '../components/Medidas/Medidas';
 
 //const navItems = ["home", "settings", "build", "cloud", "mail", "bookmark"];
 
@@ -32,10 +35,12 @@ const Opciones = () => {
     const [stockVisible, setStockVisible] = useState(false);
     const [optionsVisible, setOptionsVisible] = useState(false);
     const [settingsVisible, setSettingsVisible] = useState(false);
+    const [categoriaVisible, setCategoriaVisible] = useState(false);
     const [pedidosIcon, setPedidosIcon] = useState(<KeyboardArrowRightIcon />);
     const [stockIcon, setStockIcon] = useState(<KeyboardArrowRightIcon />);
     const [optionsIcon, setOptionsIcon] = useState(<KeyboardArrowRightIcon />);
     const [settingsIcon, setSettingsIcon] = useState(<KeyboardArrowRightIcon />);
+    const [categoriaIcon, setCategoriaIcon] = useState(<KeyboardArrowRightIcon />);
     const [sidebarIcon, setSidebarIcon] = useState(<ArrowForwardIosIcon />);
     const [topIcon, setTopIcon] = useState(<KeyboardArrowDownIcon />);
     const [menuVisible, setMenuVisible] = useState(true);
@@ -53,6 +58,11 @@ const Opciones = () => {
     const toggleOptionsVisibility = () => {
         setOptionsVisible(!optionsVisible);
         setOptionsIcon(optionsVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
+    };
+
+    const toggleCategoriaVisibility = () => {
+        setCategoriaVisible(!categoriaVisible);
+        setCategoriaIcon(categoriaVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
     };
 
     const toggleSettingsVisibility = () => {
@@ -109,6 +119,12 @@ const Opciones = () => {
                 <img id='main-employee' src="../src/assets/img/HatchfulExport-All/logo_transparent.png" alt="" />
                 <h1 id='welcome'>¡BIENVENIDO, AUGUSTO!</h1>
             </div >
+        } else if (opcionSeleccionada === 12) {
+            return <Categorias />;
+        } else if (opcionSeleccionada === 13) {
+            return <Subcategorias />;
+        } else if (opcionSeleccionada === 14) {
+            return <Medidas />;
         }
     };
 
@@ -227,6 +243,31 @@ const Opciones = () => {
                                 >
                                     Ingredientes
                                 </h4>
+                                <div className="categorias">
+                                    <h4 onClick={toggleCategoriaVisibility} className={opcionSeleccionada >= 12 && opcionSeleccionada <= 13 ? 'h4-selected' : ''}>Categoria{categoriaIcon}</h4>
+                                    {categoriaVisible && (
+                                        <>
+                                            <p
+                                                className={opcionSeleccionada === 12 ? 'selected' : ''}
+                                                onClick={() => handleOpcionClick(12)}
+                                            >
+                                                Categoria
+                                            </p>
+                                            <p
+                                                className={opcionSeleccionada === 13 ? 'selected' : ''}
+                                                onClick={() => handleOpcionClick(13)}
+                                            >
+                                                Subcategoria
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
+                                <h4
+                                    className={opcionSeleccionada === 14 ? 'selected' : ''}
+                                    onClick={() => handleOpcionClick(14)}
+                                >
+                                    Medidas
+                                </h4>
                             </div>
                         ) : (
                             <div className="main-options">
@@ -266,6 +307,7 @@ const Opciones = () => {
                                 >
                                     Ingredientes
                                 </p>
+                                
                             </div>
                         )}
                     </>

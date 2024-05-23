@@ -5,7 +5,6 @@ import ModalCrud from "../ModalCrud";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import EditarEmpleado from "./EditarEmpleado";
 import '../../styles/empleados.css';
-import ModalFlotante from "../ModalFlotante";
 import EliminarEmpleado from "./EliminarEmpleado";
 import ActivarEmpleado from "./ActivarEmpleado";
 
@@ -59,7 +58,6 @@ const Empleados = () => {
     };
 
     const handleEliminarEmpleado = (empleado: Empleado) => {
-        empleado.borrado = 'SI';
         setSelectedEmpleado(empleado);
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(false);
@@ -69,7 +67,6 @@ const Empleados = () => {
     };
 
     const handleActivarEmpleado = (empleado: Empleado) => {
-        empleado.borrado = 'NO';
         setSelectedEmpleado(empleado);
         setShowAgregarEmpleadoModal(false);
         setShowEditarEmpleadoModal(false);

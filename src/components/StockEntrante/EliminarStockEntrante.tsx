@@ -11,6 +11,7 @@ interface EliminarStockProps {
 
 const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ stockEntrante, onCloseModal }) => {
   const onConfirm = () => {
+    stockEntrante.borrado = 'SI';
     toast.promise(StockEntranteService.updateStock(stockEntrante), {
       loading: 'Eliminando stock entrante...',
       success: (message) => {

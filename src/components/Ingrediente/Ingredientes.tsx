@@ -57,7 +57,6 @@ const Ingredientes = () => {
     };
 
     const handleEditarIngrediente = (ingrediente: Ingrediente) => {
-        console.log(ingrediente)
         setSelectedIngrediente(ingrediente);
         setShowAgregarModalIngrediente(false);
         setShowEliminarIngredienteModal(false);
@@ -66,7 +65,6 @@ const Ingredientes = () => {
     };
 
     const handleEliminarIngrediente = (ingrediente: Ingrediente) => {
-        ingrediente.borrado = 'SI';
         setSelectedIngrediente(ingrediente);
         setShowAgregarModalIngrediente(false);
         setShowEditarIngredienteModal(false);
@@ -76,7 +74,6 @@ const Ingredientes = () => {
     };
 
     const handleActivarIngrediente = (ingrediente: Ingrediente) => {
-        ingrediente.borrado = 'NO';
         setSelectedIngrediente(ingrediente);
         setShowAgregarModalIngrediente(false);
         setShowEditarIngredienteModal(false);

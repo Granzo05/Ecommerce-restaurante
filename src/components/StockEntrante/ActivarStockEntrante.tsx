@@ -11,6 +11,7 @@ interface ActivarStockProps {
 
 const ActivarStockEntrante: React.FC<ActivarStockProps> = ({ stockEntrante, onCloseModal }) => {
   const onConfirm = () => {
+    stockEntrante.borrado = 'NO';
     toast.promise(StockEntranteService.updateStock(stockEntrante), {
       loading: 'Activando stock entrante...',
       success: (message) => {

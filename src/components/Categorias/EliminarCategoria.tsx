@@ -12,7 +12,8 @@ interface EliminarCategoriaProps {
 const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ categoriaOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
-    toast.promise(CategoriaService.deleteCategoria(categoriaOriginal.id), {
+    categoriaOriginal.borrado = 'SI';
+    toast.promise(CategoriaService.updateCategoria(categoriaOriginal), {
       loading: 'Creando Categoria...',
       success: (message) => {
         setTimeout(() => {
@@ -32,7 +33,7 @@ const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ categoriaOriginal
 
   return (
     <div className="modal-info">
-      
+
       <h2>¿Seguro que quieres eliminar la categoria?</h2>
       <Toaster />
       <button onClick={onConfirm}>Confirmar</button>

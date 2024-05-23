@@ -1,7 +1,9 @@
 package main.entities.Pedidos;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 

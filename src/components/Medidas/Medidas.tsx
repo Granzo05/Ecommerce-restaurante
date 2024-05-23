@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
 import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
-import '../../styles/medidas.css'
 import EliminarMedida from "./EliminarMedida";
 import EditarMedida from "./EditarMedida";
 import AgregarMedida from "./AgregarMedida";
@@ -66,7 +65,6 @@ const Medidas = () => {
     };
 
     const handleEliminarMedida = (medida: Medida) => {
-        medida.borrado = 'SI';
         setSelectedMedida(medida);
         setShowAgregarModalMedida(false);
         setShowEditarMedidaModal(false);
@@ -76,7 +74,6 @@ const Medidas = () => {
     };
 
     const handleActivarMedida = (medida: Medida) => {
-        medida.borrado = 'NO';
         setSelectedMedida(medida);
         setShowAgregarModalMedida(false);
         setShowEditarMedidaModal(false);

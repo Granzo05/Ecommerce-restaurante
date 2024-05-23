@@ -6,7 +6,6 @@ import lombok.Setter;
 import main.entities.Domicilio.DomicilioDTO;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 @Getter

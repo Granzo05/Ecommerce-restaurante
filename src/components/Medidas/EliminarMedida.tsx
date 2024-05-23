@@ -12,7 +12,8 @@ interface EliminarMedidaProps {
 const EliminarMedida: React.FC<EliminarMedidaProps> = ({ medidaOriginal, onCloseModal }) => {
 
   const onConfirm = () => {
-    toast.promise(MedidaService.deleteMedida(medidaOriginal.id), {
+    medidaOriginal.borrado = 'SI';
+    toast.promise(MedidaService.updateMedida(medidaOriginal), {
       loading: 'Creando Medida...',
       success: (message) => {
         setTimeout(() => {
@@ -32,7 +33,7 @@ const EliminarMedida: React.FC<EliminarMedidaProps> = ({ medidaOriginal, onClose
 
   return (
     <div className="modal-info">
-      
+
       <h2>¿Seguro que quieres eliminar la medida?</h2>
       <Toaster />
       <button onClick={onConfirm}>Confirmar</button>

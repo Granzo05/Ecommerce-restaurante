@@ -2,8 +2,6 @@ package main.repositories;
 
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.CategoriaDTO;
-import main.entities.Ingredientes.Ingrediente;
-import main.entities.Ingredientes.IngredienteDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

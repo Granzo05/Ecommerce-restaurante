@@ -1,8 +1,6 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Ingredientes.Ingrediente;
-import main.entities.Productos.ArticuloVenta;
 import main.entities.Stock.DetalleStock;
 import main.entities.Stock.DetalleStockDTO;
 import main.entities.Stock.StockEntrante;

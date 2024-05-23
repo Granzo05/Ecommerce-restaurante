@@ -6,7 +6,6 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
-import main.entities.Factura.FacturaDTO;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.Pedido;
@@ -137,7 +136,7 @@ public class PedidoController {
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido) {
         System.out.println(pedido);
 
-        for (DetallesPedido detallesPedido: pedido.getDetallesPedido()) {
+        for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
             detallesPedido.setPedido(pedido);
         }
 

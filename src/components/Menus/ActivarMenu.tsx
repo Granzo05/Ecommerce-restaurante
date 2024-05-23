@@ -10,6 +10,7 @@ interface ActivarMenuProps {
 
 const ActivarMenu: React.FC<ActivarMenuProps> = ({ menuOriginal, onCloseModal }) => {
   const onConfirm = () => {
+    menuOriginal.borrado = 'NO';
     toast.promise(MenuService.updateBorradoMenu(menuOriginal), {
       loading: 'Activando articulo...',
       success: (message) => {

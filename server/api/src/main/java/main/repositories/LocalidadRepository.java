@@ -18,6 +18,7 @@ public interface LocalidadRepository extends JpaRepository<Localidad, Long> {
 
     @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.departamento.provincia.nombre = :nombreProvincia")
     List<LocalidadDTO> findByNombreProvincia(@Param("nombreProvincia") String nombreProvincia);
+
     @Query("SELECT NEW main.entities.Domicilio.LocalidadDTO(l.id, l.nombre, l.departamento) FROM Localidad l WHERE l.departamento.nombre = :nombreDepartamento")
     List<LocalidadDTO> findByNombreDepartamento(@Param("nombreDepartamento") String nombreDepartamento);
 

@@ -2,9 +2,7 @@ package main.entities.Ingredientes;
 
 import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Restaurante.FechaContratacionEmpleado;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockIngredientes;
 
 import java.util.HashSet;
 import java.util.Set;

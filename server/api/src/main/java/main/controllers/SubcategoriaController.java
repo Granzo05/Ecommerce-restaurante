@@ -2,9 +2,7 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Subcategoria;
-import main.entities.Ingredientes.CategoriaDTO;
 import main.entities.Ingredientes.SubcategoriaDTO;
-import main.repositories.CategoriaRepository;
 import main.repositories.SubcategoriaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -3,7 +3,10 @@ package main.controllers;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.IngredienteMenuDTO;
-import main.entities.Productos.*;
+import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.ArticuloMenuDTO;
+import main.entities.Productos.EnumTipoArticuloComida;
+import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
@@ -159,7 +162,7 @@ public class ArticuloMenuController {
     public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
         Optional<Imagenes> imagen = imagenesRepository.findById(id);
 
-        if(imagen.isPresent()){
+        if (imagen.isPresent()) {
             try {
                 imagenesRepository.delete(imagen.get());
                 return new ResponseEntity<>(HttpStatus.ACCEPTED);

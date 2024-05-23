@@ -11,7 +11,8 @@ interface EliminarEmpresaProps {
 const EliminarEmpresa: React.FC<EliminarEmpresaProps> = ({ empresa, onCloseModal }) => {
 
   const onConfirm = () => {
-    toast.promise(EmpresaService.updateRestaurant(empresa), {
+    empresa.borrado = 'SI';
+    toast.promise(EmpresaService.updateEmpresa(empresa), {
       loading: 'Eliminando empresa...',
       success: (message) => {
         setTimeout(() => {

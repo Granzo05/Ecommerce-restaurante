@@ -6,7 +6,6 @@ import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 

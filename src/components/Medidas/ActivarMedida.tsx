@@ -10,7 +10,8 @@ interface ActivarMedidaProps {
 
 const ActivarMedida: React.FC<ActivarMedidaProps> = ({ medidaOriginal, onCloseModal }) => {
   const onConfirm = () => {
-    toast.promise(MedidaService.deleteMedida(medidaOriginal.id), {
+    medidaOriginal.borrado = 'NO';
+    toast.promise(MedidaService.updateMedida(medidaOriginal), {
       loading: 'Activando Medida...',
       success: (message) => {
         setTimeout(() => {

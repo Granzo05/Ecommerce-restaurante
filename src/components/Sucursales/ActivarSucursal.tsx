@@ -12,6 +12,7 @@ interface ActivarSucursalProps {
 
 const ActivarSucursal: React.FC<ActivarSucursalProps> = ({ sucursal, onCloseModal }) => {
   const onConfirm = () => {
+    sucursal.borrado = 'NO';
     toast.promise(SucursalService.updateRestaurant(sucursal), {
       loading: 'Activando sucursal...',
       success: (message) => {
@@ -34,9 +35,9 @@ const ActivarSucursal: React.FC<ActivarSucursalProps> = ({ sucursal, onCloseModa
     <div className='modal-info'>
       <Toaster />
       <h2>¿Seguro que quieres activar la sucursal?</h2>
-        <button onClick={onConfirm}>Confirmar</button>
-        <br />
-        <button onClick={onCancel}>Cancelar</button>
+      <button onClick={onConfirm}>Confirmar</button>
+      <br />
+      <button onClick={onCancel}>Cancelar</button>
     </div>
   );
 }

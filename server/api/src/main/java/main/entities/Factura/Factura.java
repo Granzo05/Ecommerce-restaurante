@@ -9,7 +9,6 @@ import main.entities.Pedidos.Pedido;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter

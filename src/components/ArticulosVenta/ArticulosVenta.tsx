@@ -4,7 +4,6 @@ import '../../styles/menuPorTipo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
 import { EmpleadoService } from "../../services/EmpleadoService";
-import ModalFlotante from "../ModalFlotante";
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import AgregarArticuloVenta from './AgregarArticulo';
@@ -70,7 +69,6 @@ const ArticuloVentas = () => {
     };
 
     const handleEliminarArticuloVenta = (articulo: ArticuloVenta) => {
-        articulo.borrado = 'SI';
         setSelectedArticuloVenta(articulo);
         setShowAgregarArticuloVentaModal(false);
         setShowEditarArticuloVentaModal(false);
@@ -80,7 +78,6 @@ const ArticuloVentas = () => {
     };
 
     const handleActivarArticuloVenta = (articulo: ArticuloVenta) => {
-        articulo.borrado = 'NO';
         setSelectedArticuloVenta(articulo);
         setShowAgregarArticuloVentaModal(false);
         setShowEditarArticuloVentaModal(false);

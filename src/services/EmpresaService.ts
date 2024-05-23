@@ -2,7 +2,7 @@ import { Empresa } from '../types/Restaurante/Empresa';
 import { URL_API } from '../utils/global_variables/const';
 
 export const EmpresaService = {
-    createRestaurant: async (empresa: Empresa): Promise<string> => {
+    createEmpresa: async (empresa: Empresa): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'empresa/create', {
                 method: 'POST',
@@ -81,7 +81,7 @@ export const EmpresaService = {
         }
     },
 
-    updateRestaurant: async (empresa: Empresa) => {
+    updateEmpresa: async (empresa: Empresa) => {
         try {
             const response = await fetch(URL_API + 'empresa/update', {
                 method: 'PUT',
@@ -96,26 +96,6 @@ export const EmpresaService = {
 
             return await response.text();
 
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
-
-    deleteEmpresa: async (idEmpresa: number): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + 'empresa/' + idEmpresa + '/delete', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
-            }
-
-            return await response.text();
         } catch (error) {
             console.error('Error:', error);
             throw error;

@@ -11,7 +11,8 @@ interface ActivarEmpresaProps {
 
 const ActivarEmpresa: React.FC<ActivarEmpresaProps> = ({ empresa, onCloseModal }) => {
   const onConfirm = () => {
-    toast.promise(EmpresaService.updateRestaurant(empresa), {
+    empresa.borrado = 'NO';
+    toast.promise(EmpresaService.updateEmpresa(empresa), {
       loading: 'Activando empresa...',
       success: (message) => {
         setTimeout(() => {

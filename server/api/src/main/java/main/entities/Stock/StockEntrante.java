@@ -1,6 +1,5 @@
 package main.entities.Stock;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,8 +7,6 @@ import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 

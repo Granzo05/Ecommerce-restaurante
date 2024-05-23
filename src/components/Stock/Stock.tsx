@@ -81,7 +81,6 @@ const Stocks = () => {
 
     const handleEliminarStock = (stock: StockArticuloVentaDTO | StockIngredientesDTO, tipo: string) => {
         stock.tipo = tipo;
-        stock.borrado = 'SI';
         setSelectedStock(stock);
         setShowEliminarStockModal(true);
         setShowActivarStockModal(false);
@@ -90,7 +89,6 @@ const Stocks = () => {
 
     const handleActivarStock = (stock: StockArticuloVentaDTO | StockIngredientesDTO, tipo: string) => {
         stock.tipo = tipo;
-        stock.borrado = 'NO';
         setSelectedStock(stock);
         setShowEliminarStockModal(false);
         setShowActivarStockModal(true);

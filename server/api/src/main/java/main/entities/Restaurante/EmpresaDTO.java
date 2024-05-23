@@ -1,8 +1,9 @@
 package main.entities.Restaurante;
 
-import jakarta.persistence.*;
-import lombok.*;
-import main.entities.Productos.Imagenes;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Productos.ImagenesDTO;
 
 import java.util.HashSet;

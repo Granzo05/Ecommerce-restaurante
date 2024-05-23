@@ -1,13 +1,7 @@
 package main.entities.Pedidos;
 
-import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Cliente.Cliente;
 import main.entities.Cliente.ClienteDTO;
-import main.entities.Factura.Factura;
-import main.entities.Factura.FacturaDTO;
-import net.minidev.json.annotate.JsonIgnore;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 import java.util.HashSet;

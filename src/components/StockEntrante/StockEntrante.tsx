@@ -48,7 +48,6 @@ const StocksEntrantes = () => {
     };
 
     const handleEliminarStock = (stock: StockEntranteDTO) => {
-        stock.borrado = 'SI';
         setSelectedStock(stock);
         setShowEliminarStockModal(true);
         setShowActivarStockModal(false);
@@ -56,7 +55,6 @@ const StocksEntrantes = () => {
     };
 
     const handleActivarStock = (stock: StockEntranteDTO) => {
-        stock.borrado = 'NO';
         setSelectedStock(stock);
         setShowEliminarStockModal(false);
         setShowActivarStockModal(true);

@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
 import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
-import { CategoriaService } from "../../services/CategoriaService";
-import { Categoria } from '../../types/Ingredientes/Categoria';
-import EliminarCategoria from "./EliminarCategoria";
-import EditarCategoria from "./EditarCategoria";
-import AgregarCategoria from "./AgregarCategoria";
-import ActivarCategoria from "./ActivarCategoria";
+import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
+import { SubcategoriaService } from "../../services/SubcategoriaService";
+import EliminarSubcategoria from "./EliminarSubcategoria";
+import ActivarSubcategoria from "./ActivarSubcategoria";
+import EditarSubcategoria from "./EditarSubcategoria";
+import AgregarSubcategoria from "./AgregarSubcategoria";
 
-const Categorias = () => {
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
+const Subcategorias = () => {
+    const [subcategorias, setCategorias] = useState<Subcategoria[]>([]);
     const [mostrarCategorias, setMostrarCategorias] = useState(true);
 
     const [showAgregarModalCategoria, setShowAgregarModalCategoria] = useState(false);
@@ -18,7 +18,7 @@ const Categorias = () => {
     const [showEliminarCategoriaModal, setShowEliminarCategoriaModal] = useState(false);
     const [showActivarCategoriaModal, setShowActivarCategoriaModal] = useState(false);
 
-    const [selectedCategoria, setSelectedCategoria] = useState<Categoria>();
+    const [selectedCategoria, setSelectedCategoria] = useState<Subcategoria>();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,7 +36,7 @@ const Categorias = () => {
 
     const fetchCategorias = async () => {
         try {
-            CategoriaService.getCategorias()
+            SubcategoriaService.getSubcategorias()
                 .then(data => {
                     setCategorias(data);
                 })
@@ -55,17 +55,17 @@ const Categorias = () => {
         setShowAgregarModalCategoria(true);
     };
 
-    const handleEditarCategoria = (categoria: Categoria) => {
-        console.log(categoria)
-        setSelectedCategoria(categoria);
+    const handleEditarCategoria = (subcategoria: Subcategoria) => {
+        console.log(subcategoria)
+        setSelectedCategoria(subcategoria);
         setShowAgregarModalCategoria(false);
         setShowEliminarCategoriaModal(false);
         setMostrarCategorias(false);
         setShowEditarCategoriaModal(true);
     };
 
-    const handleEliminarCategoria = (categoria: Categoria) => {
-        setSelectedCategoria(categoria);
+    const handleEliminarCategoria = (subcategoria: Subcategoria) => {
+        setSelectedCategoria(subcategoria);
         setShowAgregarModalCategoria(false);
         setShowEditarCategoriaModal(false);
         setMostrarCategorias(false);
@@ -73,8 +73,8 @@ const Categorias = () => {
         setShowEliminarCategoriaModal(true);
     };
 
-    const handleActivarCategoria = (categoria: Categoria) => {
-        setSelectedCategoria(categoria);
+    const handleActivarCategoria = (subcategoria: Subcategoria) => {
+        setSelectedCategoria(subcategoria);
         setShowAgregarModalCategoria(false);
         setShowEditarCategoriaModal(false);
         setMostrarCategorias(false);
@@ -92,15 +92,13 @@ const Categorias = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>- Categorias -</h1>
-            <div className="btns-categorias">
-            <button className="btn-agregar" onClick={() => handleAgregarCategoria()}> + Agregar categoria</button>
+            <h1>- Subcategorias -</h1>
+            <div className="btns-subcategorias">
+                <button className="btn-agregar" onClick={() => handleAgregarCategoria()}> + Agregar subcategoria</button>
             </div>
             <hr />
             {mostrarCategorias && (
                 <div id="stocks">
-
-
                     <table>
                         <thead>
                             <tr>
@@ -109,25 +107,25 @@ const Categorias = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {categorias.map(categoria => (
-                                <tr key={categoria.id}>
-                                    <td>{categoria.denominacion}</td>
+                            {subcategorias.map(subcategoria => (
+                                <tr key={subcategoria.id}>
+                                    <td>{subcategoria.denominacion}</td>
 
-                                    {categoria.borrado === 'NO' ? (
+                                    {subcategoria.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                
-                                            <button className="btn-accion-editar" onClick={() => handleEditarCategoria(categoria)}>EDITAR</button>
-                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(categoria)}>ELIMINAR</button>
+
+                                                <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
+                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(subcategoria)}>ELIMINAR</button>
                                             </div>
-                                            
+
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                
-                                            <button className="btn-accion-editar" onClick={() => handleEditarCategoria(categoria)}>EDITAR</button>
-                                            <button className="btn-accion-activar" onClick={() => handleActivarCategoria(categoria)}>ACTIVAR</button>
+
+                                                <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
+                                                <button className="btn-accion-activar" onClick={() => handleActivarCategoria(subcategoria)}>ACTIVAR</button>
                                             </div>
                                         </td>
                                     )}
@@ -138,22 +136,22 @@ const Categorias = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalCategoria} onClose={handleModalClose}>
-                <AgregarCategoria />
+                <AgregarSubcategoria />
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarCategoriaModal} onClose={handleModalClose}>
-                {selectedCategoria && <EliminarCategoria categoriaOriginal={selectedCategoria} onCloseModal={handleModalClose} />}
+                {selectedCategoria && <EliminarSubcategoria subcategoriaOriginal={selectedCategoria} onCloseModal={handleModalClose} />}
             </ModalCrud>
 
             <ModalCrud isOpen={showActivarCategoriaModal} onClose={handleModalClose}>
-                {selectedCategoria && <ActivarCategoria categoriaOriginal={selectedCategoria} onCloseModal={handleModalClose} />}
+                {selectedCategoria && <ActivarSubcategoria subcategoriaOriginal={selectedCategoria} onCloseModal={handleModalClose} />}
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarCategoriaModal} onClose={handleModalClose}>
-                {selectedCategoria && <EditarCategoria categoriaOriginal={selectedCategoria} />}
+                {selectedCategoria && <EditarSubcategoria subcategoriaOriginal={selectedCategoria} />}
             </ModalCrud>
         </div>
     )
 }
 
-export default Categorias
+export default Subcategorias

@@ -8,7 +8,6 @@ import '../../styles/menuPorTipo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
 import { EmpleadoService } from "../../services/EmpleadoService";
-import ModalFlotante from "../ModalFlotante";
 import { ArticuloMenuDTO } from "../../types/Productos/ArticuloMenuDTO";
 import ActivarMenu from "./ActivarMenu";
 
@@ -69,7 +68,6 @@ const Menus = () => {
     };
 
     const handleEliminarMenu = (menu: ArticuloMenuDTO) => {
-        menu.borrado = 'SI';
         setSelectedMenu(menu);
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(false);
@@ -79,7 +77,6 @@ const Menus = () => {
     };
 
     const handleActivarMenu = (menu: ArticuloMenuDTO) => {
-        menu.borrado = 'NO';
         setSelectedMenu(menu);
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(false);

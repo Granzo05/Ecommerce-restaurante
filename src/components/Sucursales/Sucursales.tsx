@@ -4,9 +4,7 @@ import AgregarSucursal from "./AgregarSucursal";
 import ModalCrud from "../ModalCrud";
 import EliminarSucursal from "./EliminarSucursal";
 import EditarSucursal from "./EditarSucursal";
-import ModalFlotante from "../ModalFlotante";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
-import { EmpleadoService } from "../../services/EmpleadoService";
 import ActivarSucursal from "./ActivarSucursal";
 import '../../styles/sucursales.css'
 
@@ -23,14 +21,6 @@ const Sucursales = () => {
     useEffect(() => {
         if (sucursales.length === 0) fetchSucursales();
     }, [sucursales]);
-
-    const fetchData = async () => {
-        try {
-            await EmpleadoService.checkUser();
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     const fetchSucursales = async () => {
         SucursalService.getSucursales()
@@ -63,14 +53,12 @@ const Sucursales = () => {
     };
 
     const handleEliminarSucursal = (sucursal: Sucursal) => {
-        sucursal.borrado = 'SI';
         setSelectedSucursal(sucursal);
         setShowEliminarSucursalModal(true);
         setMostrarSucursales(true);
     };
 
     const handleActivarSucursal = (sucursal: Sucursal) => {
-        sucursal.borrado = 'NO';
         setSelectedSucursal(sucursal);
         setShowActivarSucursalModal(true);
         setMostrarSucursales(true);

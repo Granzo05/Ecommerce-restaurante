@@ -1,7 +1,9 @@
 package main.entities.Productos;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Ingredientes.EnumMedida;
 
 import java.util.HashSet;
