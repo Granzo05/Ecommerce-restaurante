@@ -83,9 +83,9 @@
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [x] Carga stockArticulo [] Probar valicación
-[] Actualizacion stockArticulo [] Probar valicación
-[] Eliminacion stockArticulo 
-[] Activacion stockArticulo
+[x] Actualizacion stockArticulo [] Probar valicación
+[x] Eliminacion stockArticulo 
+[x] Activacion stockArticulo
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Carga pedido stock [] Probar valicación
