@@ -1,10 +1,10 @@
 import { Medida } from '../types/Ingredientes/Medida';
-import { URL_API } from '../utils/global_variables/const';
+import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const MedidaService = {
     getMedidas: async (): Promise<Medida[]> => {
         try {
-            const response = await fetch(URL_API + 'medidas', {
+            const response = await fetch(URL_API + 'medidas/' + sucursalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ export const MedidaService = {
 
     createMedida: async (medida: Medida): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'medida/create', {
+            const response = await fetch(URL_API + 'medida/create/' + sucursalId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ export const MedidaService = {
 
     updateMedida: async (medida: Medida): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'medida/update', {
+            const response = await fetch(URL_API + 'medida/update/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -56,26 +56,6 @@ export const MedidaService = {
 
             return await response.text();
 
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
-
-    deleteMedida: async (medidaId: number): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + 'medida/' + medidaId + '/delete', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
-            }
-
-            return await response.text();
 
         } catch (error) {
             console.error('Error:', error);

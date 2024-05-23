@@ -1,10 +1,10 @@
 import { Subcategoria } from '../types/Ingredientes/Subcategoria';
-import { URL_API } from '../utils/global_variables/const';
+import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const SubcategoriaService = {
     getSubcategorias: async (): Promise<Subcategoria[]> => {
         try {
-            const response = await fetch(URL_API + 'subcategoria', {
+            const response = await fetch(URL_API + 'subcategorias/' + sucursalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ export const SubcategoriaService = {
 
     createSubcategoria: async (subcategoria: Subcategoria): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'subcategoria/create', {
+            const response = await fetch(URL_API + 'subcategoria/create/' + sucursalId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ export const SubcategoriaService = {
 
     updateSubcategoria: async (subcategoria: Subcategoria): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'subcategoria/update', {
+            const response = await fetch(URL_API + 'subcategoria/update/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -56,26 +56,6 @@ export const SubcategoriaService = {
 
             return await response.text();
 
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
-
-    deleteSubcategoria: async (subcategoriaId: number): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + 'subcategoria/' + subcategoriaId + '/delete', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
-            }
-
-            return await response.text();
 
         } catch (error) {
             console.error('Error:', error);

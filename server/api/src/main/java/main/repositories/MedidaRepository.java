@@ -2,6 +2,8 @@ package main.repositories;
 
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.CategoriaDTO;
+import main.entities.Ingredientes.Medida;
+import main.entities.Ingredientes.MedidaDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,16 +14,15 @@ import java.util.Optional;
 
 
 @Repository
-public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
-    @Query("SELECT c FROM Categoria c WHERE c.denominacion = :nombre")
-    Optional<Categoria> findByName(@Param("nombre") String nombre);
+public interface MedidaRepository extends JpaRepository<Medida, Long> {
+    @Query("SELECT NEW main.entities.Ingredientes.MedidaDTO(m.id, m.denominacion, m.borrado) FROM Medida m")
+    Optional<MedidaDTO> findAllDTO();
+    @Query("SELECT m FROM Medida m WHERE m.denominacion = :denominacion AND m.sucursal = :id")
+    Optional<Medida> findByDenominacionAndIdSucursal(@Param("denominacion") String denominacion, @Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Ingredientes.CategoriaDTO(c.id, c.denominacion, c.borrado) FROM Categoria c")
-    List<CategoriaDTO> findAllDTO();
+    @Query("SELECT m FROM Medida m WHERE m.id = :idMedida AND m.sucursal = :idSucursal")
+    Optional<Medida> findByIdMedidaAndIdSucursal(@Param("idMedida") Long idMedida, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT c FROM Categoria c WHERE c.id = :id AND c.borrado = 'NO'")
-    Optional<Categoria> findByIdNotBorrado(@Param("id") Long id);
-
-    @Query("SELECT c FROM Categoria c WHERE c.denominacion = :nombre AND c.borrado = 'NO'")
-    Optional<Categoria> findByNombreNotBorrado(@Param("nombre") String nombre);
+    @Query("SELECT NEW main.entities.Ingredientes.MedidaDTO(m.id, m.denominacion, m.borrado) FROM Medida m WHERE m.sucursal = :id")
+    List<MedidaDTO> findAllDTOByIdSucursal(@Param("id") Long id);
 }

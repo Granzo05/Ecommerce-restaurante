@@ -1,10 +1,10 @@
 import { Categoria } from '../types/Ingredientes/Categoria';
-import { URL_API } from '../utils/global_variables/const';
+import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const CategoriaService = {
     getCategorias: async (): Promise<Categoria[]> => {
         try {
-            const response = await fetch(URL_API + 'categorias', {
+            const response = await fetch(URL_API + 'categorias/' + sucursalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ export const CategoriaService = {
 
     createCategoria: async (categoria: Categoria): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'categoria/create', {
+            const response = await fetch(URL_API + 'categoria/create/' + sucursalId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ export const CategoriaService = {
 
     updateCategoria: async (categoria: Categoria): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'categoria/update', {
+            const response = await fetch(URL_API + 'categoria/update/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

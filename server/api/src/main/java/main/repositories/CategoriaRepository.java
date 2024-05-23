@@ -13,15 +13,12 @@ import java.util.Optional;
 
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
-    @Query("SELECT c FROM Categoria c WHERE c.denominacion = :nombre")
-    Optional<Categoria> findByName(@Param("nombre") String nombre);
+    @Query("SELECT c FROM Categoria c WHERE c.denominacion = :denominacion AND c.sucursal = :id")
+    Optional<Categoria> findByDenominacionAndIdSucursal(@Param("denominacion") String denominacion, @Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Ingredientes.CategoriaDTO(c.id, c.denominacion, c.borrado) FROM Categoria c")
-    List<CategoriaDTO> findAllDTO();
+    @Query("SELECT c FROM Categoria c WHERE c.id = :idCategoria AND c.sucursal = :idSucursal")
+    Optional<Categoria> findByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT c FROM Categoria c WHERE c.id = :id AND c.borrado = 'NO'")
-    Optional<Categoria> findByIdNotBorrado(@Param("id") Long id);
-
-    @Query("SELECT c FROM Categoria c WHERE c.denominacion = :nombre AND c.borrado = 'NO'")
-    Optional<Categoria> findByNombreNotBorrado(@Param("nombre") String nombre);
+    @Query("SELECT NEW main.entities.Ingredientes.CategoriaDTO(c.id, c.denominacion, c.borrado) FROM Categoria c WHERE c.sucursal = :id")
+    List<CategoriaDTO> findAllDTOByIdSucursal(@Param("id") Long id);
 }

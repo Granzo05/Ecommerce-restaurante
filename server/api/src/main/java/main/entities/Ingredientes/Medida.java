@@ -14,8 +14,8 @@ import java.util.Set;
 @Entity
 @Builder
 @ToString
-@Table(name = "categorias", schema = "buen_sabor")
-public class Categoria {
+@Table(name = "medidas", schema = "buen_sabor")
+public class Medida {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -23,8 +23,6 @@ public class Categoria {
     private String denominacion;
     @Column(name = "borrado")
     private String borrado = "NO";
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Subcategoria> subcategorias = new HashSet<>();
     @ManyToOne
     @JoinTable(
             name = "categorias_sucursales",

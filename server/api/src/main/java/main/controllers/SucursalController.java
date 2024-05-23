@@ -5,6 +5,10 @@ import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
+import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.CategoriaDTO;
+import main.entities.Ingredientes.Medida;
+import main.entities.Ingredientes.MedidaDTO;
 import main.entities.Restaurante.*;
 import main.repositories.*;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +33,11 @@ public class SucursalController {
     private final LocalidadRepository localidadRepository;
     private final DepartamentoRepository departamentoRepository;
     private final ProvinciaRepository provinciaRepository;
+    private final MedidaRepository medidaRepository;
+    private final CategoriaRepository categoriaRepository;
 
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, LocalidadRepository localidadRepository, DepartamentoRepository departamentoRepository, ProvinciaRepository provinciaRepository) {
+
+    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, LocalidadRepository localidadRepository, DepartamentoRepository departamentoRepository, ProvinciaRepository provinciaRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
@@ -41,6 +48,8 @@ public class SucursalController {
         this.localidadRepository = localidadRepository;
         this.departamentoRepository = departamentoRepository;
         this.provinciaRepository = provinciaRepository;
+        this.medidaRepository = medidaRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     @CrossOrigin
@@ -143,6 +152,28 @@ public class SucursalController {
             sucursalDetails.setBorrado("NO");
             for (LocalidadDelivery localidad : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
                 localidad.setSucursal(sucursalDetails);
+            }
+
+            HashSet<MedidaDTO> medidas = new HashSet<>(medidaRepository.findAllDTOByIdSucursal(1l));
+
+            for (MedidaDTO medidaDTO: medidas) {
+                Medida medida = new Medida();
+                medida.setDenominacion(medidaDTO.getDenominacion());
+                medida.setSucursal(sucursalDetails);
+                medida.setBorrado("NO");
+
+                sucursalDetails.getMedidas().add(medida);
+            }
+
+            HashSet<CategoriaDTO> categorias = new HashSet<>(categoriaRepository.findAllDTOByIdSucursal(1l));
+
+            for (CategoriaDTO categoriaDTO: categorias) {
+                Categoria categoria = new Categoria();
+                categoria.setDenominacion(categoriaDTO.getDenominacion());
+                categoria.setSucursal(sucursalDetails);
+                categoria.setBorrado("NO");
+
+                sucursalDetails.getCategorias().add(categoria);
             }
 
             sucursalRepository.save(sucursalDetails);

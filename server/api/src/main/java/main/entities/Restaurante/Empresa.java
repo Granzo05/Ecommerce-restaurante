@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "empresa", schema = "buen_sabor")
+@Table(name = "empresas", schema = "buen_sabor")
 public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
