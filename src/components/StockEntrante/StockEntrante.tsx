@@ -21,7 +21,7 @@ const StocksEntrantes = () => {
     const [showDetallesStock, setShowDetallesStock] = useState(false);
 
     const [selectedStock, setSelectedStock] = useState<StockEntranteDTO>(new StockEntranteDTO());
-    const [selectedDetalles, setSelectedDetalles] = useState<DetallesStock>(new DetallesStock());
+    const [selectedDetalles, setSelectedDetalles] = useState<DetallesStock[]>([]);
 
     useEffect(() => {
         StockEntranteService.getStock()
@@ -70,7 +70,7 @@ const StocksEntrantes = () => {
         setMostrarStocks(true);
     };
 
-    const handleMostrarDetalles = (detalles: DetallesStock) => {
+    const handleMostrarDetalles = (detalles: DetallesStock[]) => {
         setSelectedDetalles(detalles);
         setShowEliminarStockModal(false);
         setShowActivarStockModal(false);
