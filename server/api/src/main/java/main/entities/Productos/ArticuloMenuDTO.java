@@ -1,5 +1,6 @@
 package main.entities.Productos;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,13 +22,15 @@ public class ArticuloMenuDTO extends Articulo {
     private int comensales;
     private String descripcion;
     private String borrado;
+    private String nombre;
     private Set<IngredienteMenuDTO> ingredientesMenu = new HashSet<>();
     private Set<IngredienteMenu> ingredientes = new HashSet<>();
     private Set<ImagenesDTO> imagenes = new HashSet<>();
 
     public ArticuloMenuDTO(Long id, String nombre, double precioVenta, int tiempoCoccion, EnumTipoArticuloComida tipo, int comensales, String descripcion, String borrado) {
-        super(nombre, precioVenta);
+        super(precioVenta);
         this.id = id;
+        this.nombre = nombre;
         this.tiempoCoccion = tiempoCoccion;
         this.tipo = tipo;
         this.comensales = comensales;

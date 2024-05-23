@@ -22,6 +22,8 @@ public class ArticuloMenu extends Articulo {
     private Long id;
     @Column(name = "tiempo")
     private int tiempoCoccion;
+    @Column(name = "nombre")
+    private String nombre;
     @Column(name = "tipo")
     private EnumTipoArticuloComida tipo;
     @Column(name = "comensales")

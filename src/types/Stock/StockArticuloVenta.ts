@@ -3,7 +3,7 @@ import { Stock } from "./Stock";
 
 export class StockArticuloVenta extends Stock {
     id: number = 0;
-    articuloVenta: ArticuloVenta | null = null;
+    articuloVenta: ArticuloVenta = new ArticuloVenta();
     borrado: string = '';
 
     constructor() {

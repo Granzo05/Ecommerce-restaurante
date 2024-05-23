@@ -57,9 +57,10 @@ public class StockArticulosController {
 
     @PostMapping("/sucursal/{idSucursal}/stockArticuloVenta/create")
     public ResponseEntity<String> crearStock(@RequestBody StockArticuloVenta stockDetail, @PathVariable("idSucursal") long id) {
+        System.out.println(stockDetail);
         Optional<ArticuloVenta> articuloDB = articuloVentaRepository.findByName(stockDetail.getArticuloVenta().getNombre());
 
-        if (articuloDB.isEmpty()){
+        if (articuloDB.isPresent()){
             // Busco el ingrediente en la base de datos
             Optional<StockArticuloVenta> stockArticuloDB = stockArticuloRepository.findStockByProductNameAndIdSucursal(stockDetail.getArticuloVenta().getNombre(), id);
 

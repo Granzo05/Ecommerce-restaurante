@@ -16,12 +16,14 @@ public class ArticuloVentaDTO extends Articulo {
     private EnumTipoArticuloVenta tipo;
     private EnumMedida medida;
     private String borrado;
+    private String nombre;
     private int cantidadMedida;
     private Set<Imagenes> imagenes = new HashSet<>();
 
     public ArticuloVentaDTO(Long id, String nombre, double precioVenta, EnumTipoArticuloVenta tipo, String borrado, int cantidad, EnumMedida medida) {
-        super(nombre, precioVenta);
+        super(precioVenta);
         this.id = id;
+        this.nombre = nombre;
         this.tipo = tipo;
         this.borrado = borrado;
         this.cantidadMedida = cantidad;

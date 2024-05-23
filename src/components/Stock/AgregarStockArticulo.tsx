@@ -22,32 +22,25 @@ function AgregarStockArticulo() {
       });
   }, []);
 
-  // Modal flotante de ingrediente
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [elementosABuscar, setElementosABuscar] = useState<string>('');
 
   const handleSelectProduct = (product: string) => {
-    setSelectedProduct(product);
-    setNombre(selectedProduct);
-    setInputArticulo(selectedProduct);
+    console.log(product)
+    setNombre(product);
+    handleModalClose();
   };
 
   const handleAbrirRecomendaciones = (busqueda: string) => {
     setElementosABuscar(busqueda)
-    if (!selectedProduct) setModalBusqueda(true);
+    setModalBusqueda(true);
   };
 
   const handleModalClose = () => {
-    setModalBusqueda(false);
-    if(selectedProduct) {
-      handleSelectProduct(selectedProduct)
-    }
+    setModalBusqueda(false)
   };
 
-
   const [articulos, setArticulos] = useState<ArticuloVenta[]>([]);
-  const [inputArticulo, setInputArticulo] = useState('');
   const [nombre, setNombre] = useState('');
   const [cantidadActual, setCantidadActual] = useState(0);
   const [cantidadMinima, setCantidadMinima] = useState(0);
@@ -56,7 +49,10 @@ function AgregarStockArticulo() {
   const [medida, setMedida] = useState<EnumMedida | string>('0');
 
   async function agregarStock() {
-    if (!cantidadMinima || cantidadMinima < 0) {
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre del articulo");
+      return;
+    } else if (!cantidadMinima || cantidadMinima < 0) {
       toast.error("Por favor, es necesaria la cantidad mínima");
       return;
     } else if (!cantidadMaxima || cantidadMaxima < 0) {
@@ -74,14 +70,11 @@ function AgregarStockArticulo() {
     } else if (cantidadMaxima < cantidadMinima) {
       toast.error("Por favor, la cantidad mínima no puede ser mayor a la máxima");
       return;
-    } else if (!nombre) {
-      toast.error("Por favor, es necesario el nombre del articulo");
-      return;
     }
 
     const stock: StockArticuloVenta = new StockArticuloVenta();
 
-    let articulo = articulos.find(articulo => articulo.nombre === inputArticulo);
+    let articulo = articulos.find(articulo => articulo.nombre === nombre);
 
     if (articulo) stock.articuloVenta = articulo;
 
@@ -91,7 +84,7 @@ function AgregarStockArticulo() {
     stock.cantidadMaxima = cantidadMaxima;
     stock.precioCompra = precio;
     stock.borrado = 'NO';
-
+    console.log(stock)
     toast.promise(StockArticuloVentaService.createStock(stock), {
       loading: 'Creando stock...',
       success: (message) => {
@@ -109,12 +102,10 @@ function AgregarStockArticulo() {
 
       <Toaster />
       <h2>Agregar artículo</h2>
-      <label>
-        <div className="inputBox">
-          <InputComponent placeHolder='Buscar artículo...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={inputArticulo} />
-          {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
-        </div>
-      </label>
+      <div>
+        <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={nombre ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
+      </div>
       <label>
         <div className="inputBox">
           <input type="number" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
@@ -143,7 +134,7 @@ function AgregarStockArticulo() {
         <div className="inputBox">
           <select
             onChange={(e) => setMedida(e.target.value)}
-            defaultValue="" // Establece el valor por defecto
+            defaultValue="" 
           >
             <option value="" disabled hidden>Seleccione la unidad de medida</option>
             <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>

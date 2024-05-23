@@ -194,9 +194,9 @@ function AgregarMenu() {
       <h2>Agregar menú</h2>
       <Toaster />
       <div>
-        
+
         {imagenes.map((imagen, index) => (
-          
+
           <div className='inputBox' key={index}>
             <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
             <input
@@ -204,14 +204,14 @@ function AgregarMenu() {
               accept="image/*"
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-              
+
             />
-            
+
           </div>
         ))}
       </div>
       <button onClick={añadirCampoImagen}>Añadir imagen</button>
-      
+
       <div className="inputBox">
         <hr />
         <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
@@ -229,20 +229,20 @@ function AgregarMenu() {
 
       <label>
         <div className="inputBox">
-        <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }} defaultValue="">
-          <option value="" disabled hidden>Seleccionar tipo de menú</option>
-          <option value={EnumTipoArticuloComida.HAMBURGUESAS.toString()}>Hamburguesas</option>
-          <option value={EnumTipoArticuloComida.PANCHOS.toString()}>Panchos</option>
-          <option value={EnumTipoArticuloComida.EMPANADAS.toString()}>Empanadas</option>
-          <option value={EnumTipoArticuloComida.PIZZAS.toString()}>Pizzas</option>
-          <option value={EnumTipoArticuloComida.LOMOS.toString()}>Lomos</option>
-          <option value={EnumTipoArticuloComida.HELADO.toString()}>Helado</option>
-          <option value={EnumTipoArticuloComida.PARRILLA.toString()}>Parrilla</option>
-          <option value={EnumTipoArticuloComida.PASTAS.toString()}>Pastas</option>
-          <option value={EnumTipoArticuloComida.SUSHI.toString()}>Sushi</option>
-          <option value={EnumTipoArticuloComida.MILANESAS.toString()}>Milanesas</option>
-        </select>
-        
+          <select id="tipoMenu" name="tipoMenu" onChange={(e) => { setTipo(e.target.value) }} defaultValue="">
+            <option value="" disabled hidden>Seleccionar tipo de menú</option>
+            <option value={EnumTipoArticuloComida.HAMBURGUESAS.toString()}>Hamburguesas</option>
+            <option value={EnumTipoArticuloComida.PANCHOS.toString()}>Panchos</option>
+            <option value={EnumTipoArticuloComida.EMPANADAS.toString()}>Empanadas</option>
+            <option value={EnumTipoArticuloComida.PIZZAS.toString()}>Pizzas</option>
+            <option value={EnumTipoArticuloComida.LOMOS.toString()}>Lomos</option>
+            <option value={EnumTipoArticuloComida.HELADO.toString()}>Helado</option>
+            <option value={EnumTipoArticuloComida.PARRILLA.toString()}>Parrilla</option>
+            <option value={EnumTipoArticuloComida.PASTAS.toString()}>Pastas</option>
+            <option value={EnumTipoArticuloComida.SUSHI.toString()}>Sushi</option>
+            <option value={EnumTipoArticuloComida.MILANESAS.toString()}>Milanesas</option>
+          </select>
+
         </div>
       </label>
       <div className="inputBox">
@@ -256,7 +256,7 @@ function AgregarMenu() {
       </div>
       <div>
         <h2>Ingredientes</h2>
-        
+
         <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
           <AgregarIngrediente />
         </ModalFlotante>
@@ -266,40 +266,36 @@ function AgregarMenu() {
             <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
             <div>
               <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
-              {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia=''/>}
-              
+              {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
             </div>
             <div className="inputBox">
               <input type="number" required={true} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
               <span>Cantidad necesaria</span>
             </div>
             <div className="inputBox">
-            <select
-              id={`select-medidas-${index}`}
-              onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
-              defaultValue=""
-            >
-              <option value="" disabled hidden>Seleccionar medida ingrediente</option>
-              <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-              <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-              <option value={EnumMedida.LITROS.toString()}>Litros</option>
-              <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-              <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-            </select>
+              <select
+                id={`select-medidas-${index}`}
+                onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
+                defaultValue=""
+              >
+                <option value="" disabled hidden>Seleccionar medida ingrediente</option>
+                <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
+                <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
+                <option value={EnumMedida.LITROS.toString()}>Litros</option>
+                <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
+                <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
+              </select>
             </div>
-            
-
-            
           </div>
         ))}
-        
+
       </div>
       <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
-      
+
       <br />
       <button onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente</button>
 
-      
+
       <hr />
       <button type="button" onClick={agregarMenu}>Agregar menu</button>
     </div >

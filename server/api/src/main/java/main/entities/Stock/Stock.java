@@ -6,6 +6,8 @@ import main.entities.Ingredientes.EnumMedida;
 import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,7 +15,7 @@ import net.minidev.json.annotate.JsonIgnore;
 @ToString
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Stock {
+public abstract class Stock implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

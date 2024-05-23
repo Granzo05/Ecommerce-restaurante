@@ -87,7 +87,7 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          <h2>Filtrar ingredientes</h2>
+          <h2>FILTRAR {elementoBuscado}</h2>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
@@ -99,11 +99,17 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
               </tr>
             </thead>
             <tbody>
-              {recomendacionesFiltradas.map(recomendacion => (
-                <tr key={recomendacion.id} style={{ cursor: 'pointer' }} onClick={() => onSelectProduct(recomendacion.nombre)}>
-                  <td>{recomendacion.nombre}</td>
+              {recomendacionesFiltradas && recomendacionesFiltradas.length > 0 ? (
+                recomendacionesFiltradas.map(recomendacion => (
+                  <tr key={recomendacion.id} style={{ cursor: 'pointer' }} onClick={() => onSelectProduct(recomendacion.nombre)}>
+                    <td>{recomendacion.nombre}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td>No se encontraron datos</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

@@ -7,6 +7,7 @@ import main.entities.Ingredientes.EnumMedida;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,11 +18,14 @@ import java.util.Set;
 @Entity
 @ToString
 @Table(name = "articulos_venta", schema = "buen_sabor")
-public class ArticuloVenta extends Articulo {
+public class ArticuloVenta extends Articulo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "tipo")
     private EnumTipoArticuloVenta tipo;
+    @Column(name = "nombre")
+    private String nombre;
     @Column(name = "medida")
     private EnumMedida medida;
     @Column(name = "cantidad_medida")
