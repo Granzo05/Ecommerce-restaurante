@@ -13,12 +13,12 @@ import java.util.Optional;
 
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
-    @Query("SELECT c FROM Categoria c WHERE c.denominacion = :denominacion AND c.sucursal = :id")
+    @Query("SELECT c FROM Categoria c JOIN c.sucursales s WHERE s.id = :id AND c.denominacion = :denominacion")
     Optional<Categoria> findByDenominacionAndIdSucursal(@Param("denominacion") String denominacion, @Param("id") Long id);
 
-    @Query("SELECT c FROM Categoria c WHERE c.id = :idCategoria AND c.sucursal = :idSucursal")
+    @Query("SELECT c FROM Categoria c JOIN c.sucursales s WHERE s.id = :idSucursal AND c.id = :idCategoria")
     Optional<Categoria> findByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT NEW main.entities.Ingredientes.CategoriaDTO(c.id, c.denominacion, c.borrado) FROM Categoria c WHERE c.sucursal = :id")
+    @Query("SELECT NEW main.entities.Ingredientes.CategoriaDTO(c.id, c.denominacion, c.borrado) FROM Categoria c JOIN c.sucursales s WHERE s.id = :id")
     List<CategoriaDTO> findAllDTOByIdSucursal(@Param("id") Long id);
 }

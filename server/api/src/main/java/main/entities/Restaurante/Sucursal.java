@@ -81,10 +81,10 @@ public class Sucursal {
             inverseJoinColumns = @JoinColumn(name = "id_articulo_venta")
     )
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
-    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Categoria> categorias = new HashSet<>();
     @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
-    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Medida> medidas = new HashSet<>();
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Categoria> categorias = new HashSet<>();
 }

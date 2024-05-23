@@ -36,7 +36,7 @@ public class MedidaController {
         Optional<Medida> medidaDB = medidaRepository.findByDenominacionAndIdSucursal(medidaDetails.getDenominacion(), idSucursal);
 
         if (medidaDB.isEmpty()) {
-            medidaDetails.setSucursal(sucursalRepository.findById(idSucursal).get());
+            medidaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
 
             medidaRepository.save(medidaDetails);
 

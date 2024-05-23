@@ -24,11 +24,11 @@ public class Categoria {
     private String borrado = "NO";
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Subcategoria> subcategorias = new HashSet<>();
-    @ManyToOne
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "categorias_sucursales",
             joinColumns = @JoinColumn(name = "id_categoria"),
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
-    private Sucursal sucursal;
+    private Set<Sucursal> sucursales = new HashSet<>();
 }

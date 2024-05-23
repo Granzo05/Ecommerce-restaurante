@@ -46,7 +46,7 @@ public class CategoriaController {
         Optional<Categoria> categoriaDB = categoriaRepository.findByDenominacionAndIdSucursal(categoriaDetails.getDenominacion(), idSucursal);
 
         if (categoriaDB.isEmpty()) {
-            categoriaDetails.setSucursal(sucursalRepository.findById(idSucursal).get());
+            categoriaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
 
             categoriaRepository.save(categoriaDetails);
 

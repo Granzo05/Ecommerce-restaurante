@@ -23,11 +23,11 @@ public class Medida {
     private String denominacion;
     @Column(name = "borrado")
     private String borrado = "NO";
-    @ManyToOne
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "categorias_sucursales",
-            joinColumns = @JoinColumn(name = "id_categoria"),
+            name = "medidas_sucursales",
+            joinColumns = @JoinColumn(name = "id_medida"),
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
-    private Sucursal sucursal;
+    private Set<Sucursal> sucursales = new HashSet<>();
 }

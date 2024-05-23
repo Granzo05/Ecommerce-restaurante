@@ -17,12 +17,12 @@ import java.util.Optional;
 public interface MedidaRepository extends JpaRepository<Medida, Long> {
     @Query("SELECT NEW main.entities.Ingredientes.MedidaDTO(m.id, m.denominacion, m.borrado) FROM Medida m")
     Optional<MedidaDTO> findAllDTO();
-    @Query("SELECT m FROM Medida m WHERE m.denominacion = :denominacion AND m.sucursal = :id")
+    @Query("SELECT m FROM Medida m JOIN m.sucursales s WHERE s.id = :id AND m.denominacion = :denominacion")
     Optional<Medida> findByDenominacionAndIdSucursal(@Param("denominacion") String denominacion, @Param("id") Long id);
 
-    @Query("SELECT m FROM Medida m WHERE m.id = :idMedida AND m.sucursal = :idSucursal")
+    @Query("SELECT m FROM Medida m JOIN m.sucursales s WHERE s.id = :idSucursal AND m.id = :idMedida")
     Optional<Medida> findByIdMedidaAndIdSucursal(@Param("idMedida") Long idMedida, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT NEW main.entities.Ingredientes.MedidaDTO(m.id, m.denominacion, m.borrado) FROM Medida m WHERE m.sucursal = :id")
+    @Query("SELECT NEW main.entities.Ingredientes.MedidaDTO(m.id, m.denominacion, m.borrado) FROM Medida m JOIN m.sucursales s WHERE s.id = :id")
     List<MedidaDTO> findAllDTOByIdSucursal(@Param("id") Long id);
 }
