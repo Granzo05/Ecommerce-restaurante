@@ -1,5 +1,7 @@
 package main.repositories;
 
+import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.CategoriaDTO;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,16 +14,16 @@ import java.util.Optional;
 
 
 @Repository
-public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
-    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre")
-    Optional<Ingrediente> findByName(@Param("nombre") String nombre);
+public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
+    @Query("SELECT c FROM Categoria c WHERE c.denominacion = :nombre")
+    Optional<Categoria> findByName(@Param("nombre") String nombre);
 
-    @Query("SELECT NEW main.entities.Ingredientes.IngredienteDTO(i.id, i.nombre, i.borrado) FROM Ingrediente i")
-    List<IngredienteDTO> findAllDTO();
+    @Query("SELECT NEW main.entities.Ingredientes.CategoriaDTO(c.id, c.denominacion, c.borrado) FROM Categoria c")
+    List<CategoriaDTO> findAllDTO();
 
-    @Query("SELECT i FROM Ingrediente i WHERE i.id = :id AND i.borrado = 'NO'")
-    Optional<Ingrediente> findByIdNotBorrado(@Param("id") Long id);
+    @Query("SELECT c FROM Categoria c WHERE c.id = :id AND c.borrado = 'NO'")
+    Optional<Categoria> findByIdNotBorrado(@Param("id") Long id);
 
-    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre AND i.borrado = 'NO'")
-    Optional<Ingrediente> findByNombreNotBorrado(@Param("nombre") String nombre);
+    @Query("SELECT c FROM Categoria c WHERE c.denominacion = :nombre AND c.borrado = 'NO'")
+    Optional<Categoria> findByNombreNotBorrado(@Param("nombre") String nombre);
 }

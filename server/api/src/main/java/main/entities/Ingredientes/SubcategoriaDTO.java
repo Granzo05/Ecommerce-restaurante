@@ -2,27 +2,13 @@ package main.entities.Ingredientes;
 
 import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Restaurante.Sucursal;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Builder
-@Table(name = "categorias", schema = "buen_sabor")
-public class Subcategoria {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class SubcategoriaDTO {
     private Long id;
-    @Column(name = "denominacion")
     private String denominacion;
-    @Column(name = "borrado")
     private String borrado = "NO";
-    @ManyToOne
-    @JoinColumn(name = "id_categoria")
-    private Categoria categoria;
 }

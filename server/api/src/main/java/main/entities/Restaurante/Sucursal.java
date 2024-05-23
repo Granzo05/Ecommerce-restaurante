@@ -5,10 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
-import main.entities.Productos.Articulo;
-import main.entities.Productos.ArticuloMenu;
-import main.entities.Productos.ArticuloVenta;
-import main.entities.Productos.Promocion;
+import main.entities.Ingredientes.Categoria;
+import main.entities.Productos.*;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockEntrante;
 import net.minidev.json.annotate.JsonIgnore;
@@ -80,4 +78,8 @@ public class Sucursal {
             inverseJoinColumns = @JoinColumn(name = "id_articulo_venta")
     )
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
+    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
+    private Set<Categoria> categorias = new HashSet<>();
+    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
+    private Set<Imagenes> imagenes = new HashSet<>();
 }

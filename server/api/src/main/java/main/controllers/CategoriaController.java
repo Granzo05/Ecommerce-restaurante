@@ -1,73 +1,69 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Ingredientes.Ingrediente;
-import main.entities.Ingredientes.IngredienteDTO;
-import main.repositories.IngredienteRepository;
+import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.CategoriaDTO;
+import main.repositories.CategoriaRepository;
+import main.repositories.SubcategoriaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @RestController
-public class IngredienteController {
-    private final IngredienteRepository ingredienteRepository;
+public class CategoriaController {
+    private final CategoriaRepository categoriaRepository;
+    private final SubcategoriaRepository subcategoriaRepository;
 
-    public IngredienteController(IngredienteRepository ingredienteRepository) {
-        this.ingredienteRepository = ingredienteRepository;
+    public CategoriaController(CategoriaRepository categoriaRepository, SubcategoriaRepository subcategoriaRepository) {
+        this.categoriaRepository = categoriaRepository;
+        this.subcategoriaRepository = subcategoriaRepository;
     }
 
-    @GetMapping("/ingredientes")
-    public Set<IngredienteDTO> getIngredientes() {
-        return new HashSet<>(ingredienteRepository.findAllDTO());
+
+    @GetMapping("/categorias")
+    public Set<CategoriaDTO> getCategorias() {
+        List<CategoriaDTO> categorias = categoriaRepository.findAllDTO();
+
+        for (CategoriaDTO categoriaDTO: categorias) {
+            categoriaDTO.setSubcategorias(new HashSet<>(subcategoriaRepository.findByCategoriaId(categoriaDTO.getId())));
+        }
+
+        return new HashSet<>(categorias);
     }
 
     @Transactional
-    @PostMapping("/ingrediente/create")
-    public ResponseEntity<String> crearIngrediente(@RequestBody Ingrediente ingredienteDetails) {
-        // Busco el ingrediente en la base de datos
-        Optional<Ingrediente> ingredienteDB = ingredienteRepository.findByName(ingredienteDetails.getNombre());
+    @PostMapping("/categoria/create")
+    public ResponseEntity<String> crearCategoria(@RequestBody Categoria categoriaDetails) {
+        // Busco el categoria en la base de datos
+        Optional<Categoria> categoriaDB = categoriaRepository.findByName(categoriaDetails.getDenominacion());
 
-        if (ingredienteDB.isEmpty()) {
-            Ingrediente ingrediente = new Ingrediente();
-            ingrediente.setNombre(ingredienteDetails.getNombre());
+        if (categoriaDB.isEmpty()) {
+            categoriaRepository.save(categoriaDetails);
 
-            ingredienteRepository.save(ingrediente);
-
-            return new ResponseEntity<>("El ingrediente ha sido añadido correctamente", HttpStatus.CREATED);
+            return new ResponseEntity<>("El categoria ha sido añadido correctamente", HttpStatus.CREATED);
         }
 
-        return ResponseEntity.ofNullable("El ingrediente ya existe");
+        return ResponseEntity.ofNullable("El categoria ya existe");
     }
 
-    @PutMapping("/ingrediente/update")
-    public ResponseEntity<String> actualizarIngrediente(@RequestBody Ingrediente ingrediente) {
-        System.out.println(ingrediente);
-        Optional<Ingrediente> ingredienteEncontrado = ingredienteRepository.findByIdNotBorrado(ingrediente.getId());
-        System.out.println(ingredienteEncontrado);
+    @Transactional
+    @PutMapping("/categoria/update")
+    public ResponseEntity<String> actualizarCategoria(@RequestBody Categoria categoria) {
+        Optional<Categoria> categoriaDB = categoriaRepository.findById(categoria.getId());
 
-        if (ingredienteEncontrado.isEmpty()) {
-            return ResponseEntity.ofNullable("El ingrediente no existe");
+        if (categoriaDB.isEmpty()) {
+            return ResponseEntity.ofNullable("La categoria no existe");
         } else {
-            ingredienteEncontrado.get().setNombre(ingrediente.getNombre());
-            ingredienteRepository.save(ingredienteEncontrado.get());
-            return ResponseEntity.ok("El ingrediente ya existe");
-        }
-    }
-
-    @PutMapping("/ingrediente/{idIngrediente}/delete")
-    public ResponseEntity<String> borrarIngrediente(@PathVariable("idIngrediente") Long idIngrediente) {
-        Optional<Ingrediente> ingredienteEncontrado = ingredienteRepository.findByIdNotBorrado(idIngrediente);
-
-        if (ingredienteEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El ingrediente ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
-        } else {
-            ingredienteEncontrado.get().setBorrado("SI");
-            ingredienteRepository.save(ingredienteEncontrado.get());
-            return new ResponseEntity<>("El ingrediente ha sido borrado correctamente", HttpStatus.OK);
+            categoriaDB.get().setDenominacion(categoria.getDenominacion());
+            categoriaDB.get().setBorrado(categoria.getBorrado());
+            categoriaDB.get().setSubcategorias(categoria.getSubcategorias());
+            categoriaRepository.save(categoriaDB.get());
+            return ResponseEntity.ok("Categoria actualizada correctamente");
         }
     }
 }

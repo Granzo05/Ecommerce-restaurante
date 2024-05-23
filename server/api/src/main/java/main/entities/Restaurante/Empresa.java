@@ -2,6 +2,7 @@ package main.entities.Restaurante;
 
 import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Productos.Imagenes;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +19,17 @@ public class Empresa {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name = "cuit")
-    private long cuit;
+    private String cuit;
     @Column(name = "razon_social")
     private String razonSocial;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "contraseña")
+    private String contraseña;
+    @Column(name = "borrado")
+    private String borrado;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private Set<Sucursal> sucursales = new HashSet<>();
+    @OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY)
+    private Set<Imagenes> imagenes = new HashSet<>();
 }

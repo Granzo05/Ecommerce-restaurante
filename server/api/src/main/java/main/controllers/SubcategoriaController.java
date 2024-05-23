@@ -1,9 +1,11 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.Subcategoria;
 import main.entities.Ingredientes.CategoriaDTO;
+import main.entities.Ingredientes.SubcategoriaDTO;
 import main.repositories.CategoriaRepository;
+import main.repositories.SubcategoriaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,47 +15,45 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-public class CategoriaController {
-    private final CategoriaRepository categoriaRepository;
+public class SubcategoriaController {
+    private final SubcategoriaRepository subcategoriaRepository;
 
-    public CategoriaController(CategoriaRepository categoriaRepository) {
-        this.categoriaRepository = categoriaRepository;
+    public SubcategoriaController(SubcategoriaRepository subcategoriaRepository) {
+        this.subcategoriaRepository = subcategoriaRepository;
     }
 
-
-    @GetMapping("/categorias")
-    public Set<CategoriaDTO> getCategorias() {
-        return new HashSet<>(categoriaRepository.findAllDTO());
+    @GetMapping("/subcategorias")
+    public Set<SubcategoriaDTO> getCategorias() {
+        return new HashSet<>(subcategoriaRepository.findAllDTO());
     }
 
     @Transactional
-    @PostMapping("/categoria/create")
-    public ResponseEntity<String> crearCategoria(@RequestBody Categoria categoriaDetails) {
-        // Busco el categoria en la base de datos
-        Optional<Categoria> categoriaDB = categoriaRepository.findByName(categoriaDetails.getDenominacion());
+    @PostMapping("/subcategoria/create")
+    public ResponseEntity<String> crearCategoria(@RequestBody Subcategoria categoriaDetails) {
+        // Busco el subcategoria en la base de datos
+        Optional<Subcategoria> subcategoriaDB = subcategoriaRepository.findByName(categoriaDetails.getDenominacion());
 
-        if (categoriaDB.isEmpty()) {
-            categoriaRepository.save(categoriaDetails);
+        if (subcategoriaDB.isEmpty()) {
+            subcategoriaRepository.save(categoriaDetails);
 
-            return new ResponseEntity<>("El categoria ha sido añadido correctamente", HttpStatus.CREATED);
+            return new ResponseEntity<>("El subcategoria ha sido añadido correctamente", HttpStatus.CREATED);
         }
 
-        return ResponseEntity.ofNullable("El categoria ya existe");
+        return ResponseEntity.ofNullable("El subcategoria ya existe");
     }
 
     @Transactional
-    @PutMapping("/categoria/update")
-    public ResponseEntity<String> actualizarCategoria(@RequestBody Categoria categoria) {
-        Optional<Categoria> categoriaDB = categoriaRepository.findById(categoria.getId());
+    @PutMapping("/subcategoria/update")
+    public ResponseEntity<String> actualizarCategoria(@RequestBody Subcategoria subcategoria) {
+        Optional<Subcategoria> subcategoriaDB = subcategoriaRepository.findById(subcategoria.getId());
 
-        if (categoriaDB.isEmpty()) {
-            return ResponseEntity.ofNullable("La categoria no existe");
+        if (subcategoriaDB.isEmpty()) {
+            return ResponseEntity.ofNullable("La subcategoria no existe");
         } else {
-            categoriaDB.get().setDenominacion(categoria.getDenominacion());
-            categoriaDB.get().setBorrado(categoria.getBorrado());
-            categoriaDB.get().setSubcategoria(categoria.getSubcategoria());
-            categoriaRepository.save(categoriaDB.get());
-            return ResponseEntity.ok("Categoria actualizada correctamente");
+            subcategoriaDB.get().setDenominacion(subcategoria.getDenominacion());
+            subcategoriaDB.get().setBorrado(subcategoria.getBorrado());
+            subcategoriaRepository.save(subcategoriaDB.get());
+            return ResponseEntity.ok("Subcategoria actualizada correctamente");
         }
     }
 }

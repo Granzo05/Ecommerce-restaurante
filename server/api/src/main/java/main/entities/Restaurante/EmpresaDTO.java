@@ -3,6 +3,7 @@ package main.entities.Restaurante;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.Imagenes;
+import main.entities.Productos.ImagenesDTO;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,19 +12,20 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Builder
-@Table(name = "empresa", schema = "buen_sabor")
-public class Empresa {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class EmpresaDTO {
     private long id;
-    @Column(name = "cuit")
-    private long cuit;
-    @Column(name = "razon_social")
+    private String cuit;
     private String razonSocial;
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private Set<Sucursal> sucursales = new HashSet<>();
-    @OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY)
-    private Set<Imagenes> imagenes = new HashSet<>();
+    private String contraseña;
+    private String email;
+    private String borrado;
+    private Set<ImagenesDTO> imagenes = new HashSet<>();
+
+    public EmpresaDTO(long id, String cuit, String razonSocial, String email, String borrado) {
+        this.id = id;
+        this.cuit = cuit;
+        this.razonSocial = razonSocial;
+        this.email = email;
+        this.borrado = borrado;
+    }
 }

@@ -2,6 +2,8 @@ package main.entities.Productos;
 
 import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Restaurante.Empresa;
+import main.entities.Restaurante.Sucursal;
 
 import java.io.Serializable;
 
@@ -47,4 +49,18 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_promocion")
     )
     private Promocion promocion;
+    @ManyToOne
+    @JoinTable(
+            name = "imagenes_empresa",
+            joinColumns = @JoinColumn(name = "id_imagen"),
+            inverseJoinColumns = @JoinColumn(name = "id_empresa")
+    )
+    private Empresa empresa;
+    @ManyToOne
+    @JoinTable(
+            name = "imagenes_sucursal",
+            joinColumns = @JoinColumn(name = "id_imagen"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
+    private Sucursal sucursal;
 }

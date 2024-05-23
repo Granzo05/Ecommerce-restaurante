@@ -86,11 +86,11 @@ public class Main {
                 }
             }
 
-            Optional<Empresa> empresaOp = empresaRepository.findByCuit(201234566l);
+            Optional<Empresa> empresaOp = empresaRepository.findByCuit("201234566");
 
             if (empresaOp.isEmpty()) {
                 Empresa empresa = new Empresa();
-                empresa.setCuit(201234566);
+                empresa.setCuit("201234566");
                 empresa.setRazonSocial("El buen sabor");
 
                 Sucursal sucursal = new Sucursal();

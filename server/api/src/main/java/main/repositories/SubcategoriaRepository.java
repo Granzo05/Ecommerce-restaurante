@@ -1,7 +1,9 @@
 package main.repositories;
 
-import main.entities.Ingredientes.Ingrediente;
+import main.entities.Ingredientes.Subcategoria;
 import main.entities.Ingredientes.IngredienteDTO;
+import main.entities.Ingredientes.Subcategoria;
+import main.entities.Ingredientes.SubcategoriaDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,16 +14,16 @@ import java.util.Optional;
 
 
 @Repository
-public interface CategoriaRepository extends JpaRepository<Ingrediente, Long> {
-    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre")
-    Optional<Ingrediente> findByName(@Param("nombre") String nombre);
+public interface SubcategoriaRepository extends JpaRepository<Subcategoria, Long> {
+    @Query("SELECT s FROM Subcategoria s WHERE s.denominacion = :nombre")
+    Optional<Subcategoria> findByName(@Param("nombre") String nombre);
 
-    @Query("SELECT NEW main.entities.Ingredientes.IngredienteDTO(i.id, i.nombre, i.borrado) FROM Ingrediente i")
-    List<IngredienteDTO> findAllDTO();
+    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(s.id, s.denominacion, s.borrado) FROM Subcategoria s")
+    List<SubcategoriaDTO> findAllDTO();
 
-    @Query("SELECT i FROM Ingrediente i WHERE i.id = :id AND i.borrado = 'NO'")
-    Optional<Ingrediente> findByIdNotBorrado(@Param("id") Long id);
+    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(s.id, s.denominacion, s.borrado) FROM Subcategoria s WHERE s.categoria.id = :id")
+    List<SubcategoriaDTO> findByCategoriaId(@Param("id") Long id);
 
-    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre AND i.borrado = 'NO'")
-    Optional<Ingrediente> findByNombreNotBorrado(@Param("nombre") String nombre);
+    @Query("SELECT s FROM Subcategoria s WHERE s.denominacion = :nombre AND s.borrado = 'NO'")
+    Optional<Subcategoria> findByNombreNotBorrado(@Param("nombre") String nombre);
 }
