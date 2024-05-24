@@ -4,7 +4,6 @@ import { MenuService } from '../services/MenuService'
 import ModalFlotante from '../components/ModalFlotante';
 import { DetallesMenu } from '../components/Menus/DetallesMenu';
 import '../styles/menuPorTipo.css'
-import { convertirStringAEnumTipoComida } from '../utils/global_variables/functions';
 import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
 
 function RestaurantesPorComida() {
@@ -14,7 +13,7 @@ function RestaurantesPorComida() {
 
   useEffect(() => {
     if (tipoComida) {
-      MenuService.getMenusPorTipo(convertirStringAEnumTipoComida(tipoComida))
+      MenuService.getMenusPorTipo(tipoComida)
         .then(menus => {
           setMenus(menus);
         })

@@ -10,8 +10,6 @@ import AgregarStockIngrediente from "./AgregarStockIngrediente";
 import { StockIngredientesDTO } from "../../types/Stock/StockIngredientesDTO";
 import { StockArticuloVentaDTO } from "../../types/Stock/StockArticuloVentaDTO";
 import ModalFlotante from "../ModalFlotante";
-import InputComponent from "../InputFiltroComponent";
-import ModalFlotanteRecomendaciones from "../ModalFlotanteRecomendaciones";
 import ActivarStock from "./ActivarStock";
 import ModalCrud from "../ModalCrud";
 
@@ -104,21 +102,6 @@ const Stocks = () => {
 
         setMostrarStocks(true);
         fetchStocks();
-        setModalBusqueda(false);
-    };
-
-    // Modal flotante de ingrediente
-    const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
-    const [selectedProduct, setSelectedProduct] = useState<string>('');
-    const [elementosABuscar, setElementosABuscar] = useState<string>('');
-
-    const handleAbrirRecomendaciones = (busqueda: string) => {
-        setElementosABuscar(busqueda)
-        setModalBusqueda(true);
-    };
-
-    const handleSelectProduct = (product: string) => {
-        setSelectedProduct(product);
     };
 
     return (
@@ -131,11 +114,7 @@ const Stocks = () => {
             </div>
 
             <hr />
-            <div className="input-filtrado">
-                <InputComponent placeHolder={'Filtrar...'} onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={selectedProduct ?? ''} />
-                {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
 
-            </div>
             <ModalFlotante isOpen={showAgregarStockModalArticulo} onClose={handleModalClose}>
                 <AgregarStockArticulo />
             </ModalFlotante>
