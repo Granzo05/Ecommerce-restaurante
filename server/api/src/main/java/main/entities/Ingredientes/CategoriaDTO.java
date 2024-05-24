@@ -14,13 +14,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class CategoriaDTO {
     private Long id;
-    private String denominacion;
+    private String nombre;
     private String borrado;
     private Set<SubcategoriaDTO> subcategorias = new HashSet<>();
 
-    public CategoriaDTO(Long id, String denominacion, String borrado) {
+    public CategoriaDTO(Long id, String nombre, String borrado) {
         this.id = id;
-        this.denominacion = denominacion;
+        this.nombre = nombre;
         this.borrado = borrado;
     }
 }

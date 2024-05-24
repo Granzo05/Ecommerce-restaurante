@@ -158,7 +158,7 @@ public class SucursalController {
 
             for (MedidaDTO medidaDTO: medidas) {
                 Medida medida = new Medida();
-                medida.setDenominacion(medidaDTO.getDenominacion());
+                medida.setNombre(medidaDTO.getNombre());
                 medida.getSucursales().add(sucursalDetails);
                 medida.setBorrado("NO");
 
@@ -169,7 +169,7 @@ public class SucursalController {
 
             for (CategoriaDTO categoriaDTO: categorias) {
                 Categoria categoria = new Categoria();
-                categoria.setDenominacion(categoriaDTO.getDenominacion());
+                categoria.setNombre(categoriaDTO.getNombre());
                 categoria.getSucursales().add(sucursalDetails);
                 categoria.setBorrado("NO");
 

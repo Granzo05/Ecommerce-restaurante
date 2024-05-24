@@ -99,6 +99,24 @@ Pruebas
 [] Activacion pedido stock
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
+[] Carga medidda [] Probar valicación
+[] Actualizacionmedidda [] Probar valicación
+[] Eliminacion medidda
+[] Activacion medidda
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
+
+[] Carga categorias [] Probar valicación
+[] Actualizacion categorias [] Probar valicación
+[] Eliminacion categorias
+[] Activacion categorias
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
+
+[] Carga subcategorias [] Probar valicación
+[] Actualizacion subcategorias [] Probar valicación
+[] Eliminacion subcategorias
+[] Activacion subcategorias
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
+
 [] Carga pedido [] Probar valicación
 [] Actualizacion pedido [] Probar valicación
 [] Eliminacion pedido

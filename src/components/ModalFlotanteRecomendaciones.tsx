@@ -12,6 +12,10 @@ import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 import CloseIcon from '@mui/icons-material/Close';
 import '../styles/modalFlotante.css'
 import '../styles/modalCrud.css'
+import { MedidaService } from "../services/MedidaService";
+import { Medida } from "../types/Ingredientes/Medida";
+import { Categoria } from "../types/Ingredientes/Categoria";
+import { CategoriaService } from "../services/CategoriaService";
 
 const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelectProduct: (product: string) => void, elementoBuscado: string, inputDepartamento: string, inputProvincia: string }> = ({ onCloseModal, onSelectProduct, elementoBuscado, inputDepartamento, inputProvincia }) => {
   const handleModalClose = () => {
@@ -20,8 +24,8 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
     onCloseModal();
   };
 
-  const [recomendaciones, setRecomendaciones] = useState<Ingrediente[] | ArticuloVenta[] | Localidad[] | Departamento[] | Provincia[]>([]);
-  const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Ingrediente[] | ArticuloVenta[] | Localidad[] | Departamento[] | Provincia[]>([]);
+  const [recomendaciones, setRecomendaciones] = useState<Ingrediente[] | ArticuloVenta[] | Localidad[] | Departamento[] | Provincia[] | Medida[] | Categoria[]>([]);
+  const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Ingrediente[] | ArticuloVenta[] | Localidad[] | Departamento[] | Provincia[] | Medida[] | Categoria[]>([]);
 
   useEffect(() => {
     if (elementoBuscado === 'INGREDIENTES') {
@@ -65,6 +69,24 @@ const ModalFlotanteRecomendaciones: React.FC<{ onCloseModal: () => void, onSelec
         .then(async localidades => {
           setRecomendaciones(localidades);
           setRecomendacionesFiltradas(localidades);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        })
+    } else if (elementoBuscado === 'MEDIDAS') {
+      MedidaService.getMedidas()
+        .then(async medidas => {
+          setRecomendaciones(medidas);
+          setRecomendacionesFiltradas(medidas);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        })
+    } else if (elementoBuscado === 'CATEGORIAS') {
+      CategoriaService.getCategorias()
+        .then(async categorias => {
+          setRecomendaciones(categorias);
+          setRecomendacionesFiltradas(categorias);
         })
         .catch(error => {
           console.error('Error:', error);

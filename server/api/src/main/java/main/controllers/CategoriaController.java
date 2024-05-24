@@ -43,7 +43,7 @@ public class CategoriaController {
     @PostMapping("/categoria/create/{idSucursal}")
     public ResponseEntity<String> crearCategoria(@RequestBody Categoria categoriaDetails, @PathVariable("idSucursal") Long idSucursal) {
         // Busco el categoria en la base de datos
-        Optional<Categoria> categoriaDB = categoriaRepository.findByDenominacionAndIdSucursal(categoriaDetails.getDenominacion(), idSucursal);
+        Optional<Categoria> categoriaDB = categoriaRepository.findByDenominacionAndIdSucursal(categoriaDetails.getNombre(), idSucursal);
 
         if (categoriaDB.isEmpty()) {
             categoriaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
@@ -64,7 +64,7 @@ public class CategoriaController {
         if (categoriaDB.isEmpty()) {
             return ResponseEntity.ofNullable("La categoria no existe");
         } else {
-            categoriaDB.get().setDenominacion(categoria.getDenominacion());
+            categoriaDB.get().setNombre(categoria.getNombre());
             categoriaDB.get().setBorrado(categoria.getBorrado());
             categoriaDB.get().setSubcategorias(categoria.getSubcategorias());
             categoriaRepository.save(categoriaDB.get());

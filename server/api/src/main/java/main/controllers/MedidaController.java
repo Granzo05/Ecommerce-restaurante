@@ -33,7 +33,7 @@ public class MedidaController {
     @PostMapping("/medida/create/{idSucursal}")
     public ResponseEntity<String> crearMedida(@RequestBody Medida medidaDetails, @PathVariable("idSucursal") Long idSucursal) {
         // Busco el medida en la base de datos
-        Optional<Medida> medidaDB = medidaRepository.findByDenominacionAndIdSucursal(medidaDetails.getDenominacion(), idSucursal);
+        Optional<Medida> medidaDB = medidaRepository.findByDenominacionAndIdSucursal(medidaDetails.getNombre(), idSucursal);
 
         if (medidaDB.isEmpty()) {
             medidaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
@@ -54,7 +54,7 @@ public class MedidaController {
         if (medidaDB.isEmpty()) {
             return ResponseEntity.ofNullable("La medida no existe");
         } else {
-            medidaDB.get().setDenominacion(medida.getDenominacion());
+            medidaDB.get().setNombre(medida.getNombre());
             medidaDB.get().setBorrado(medida.getBorrado());
             medidaRepository.save(medidaDB.get());
             return ResponseEntity.ok("Medida actualizada correctamente");

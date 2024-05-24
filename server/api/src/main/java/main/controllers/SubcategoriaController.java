@@ -32,7 +32,7 @@ public class SubcategoriaController {
     @PostMapping("/subcategoria/create/{idSucursal}")
     public ResponseEntity<String> crearCategoria(@RequestBody Subcategoria categoriaDetails, @PathVariable("idSucursal") Long idSucursal) {
         // Busco el subcategoria en la base de datos
-        Optional<Subcategoria> subcategoriaDB = subcategoriaRepository.findByDenominacionAndIdSucursal(categoriaDetails.getDenominacion(), idSucursal);
+        Optional<Subcategoria> subcategoriaDB = subcategoriaRepository.findByDenominacionAndIdSucursal(categoriaDetails.getNombre(), idSucursal);
 
         if (subcategoriaDB.isEmpty()) {
             categoriaDetails.setSucursal(sucursalRepository.findById(idSucursal).get());
@@ -53,7 +53,7 @@ public class SubcategoriaController {
         if (subcategoriaDB.isEmpty()) {
             return ResponseEntity.ofNullable("La subcategoria no existe");
         } else {
-            subcategoriaDB.get().setDenominacion(subcategoria.getDenominacion());
+            subcategoriaDB.get().setNombre(subcategoria.getNombre());
             subcategoriaDB.get().setBorrado(subcategoria.getBorrado());
             subcategoriaRepository.save(subcategoriaDB.get());
             return ResponseEntity.ok("Subcategoria actualizada correctamente");

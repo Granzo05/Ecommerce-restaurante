@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SubcategoriaDTO {
     private Long id;
-    private String denominacion;
+    private String nombre;
     private String borrado = "NO";
 }

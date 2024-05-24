@@ -10,7 +10,7 @@ interface EditarSubcategoriaProps {
 
 const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOriginal }) => {
 
-  const [nombre, setNombre] = useState(subcategoriaOriginal.denominacion);
+  const [nombre, setNombre] = useState(subcategoriaOriginal.nombre);
 
   function editarCategoria() {
     const subcategoria: Subcategoria = subcategoriaOriginal;
@@ -20,7 +20,7 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
       return;
     }
 
-    subcategoria.denominacion = nombre;
+    subcategoria.nombre = nombre;
     toast.promise(SubcategoriaService.updateSubcategoria(subcategoria), {
       loading: 'Creando Subcategoria...',
       success: (message) => {

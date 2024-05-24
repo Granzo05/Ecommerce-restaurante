@@ -15,7 +15,7 @@ function AgregarCategoria() {
       return;
     }
 
-    categoria.denominacion = nombre;
+    categoria.nombre = nombre;
     categoria.borrado = 'NO';
 
     toast.promise(CategoriaService.createCategoria(categoria), {

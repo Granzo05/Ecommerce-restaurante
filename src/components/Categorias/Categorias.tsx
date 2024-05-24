@@ -112,7 +112,7 @@ const Categorias = () => {
                         <tbody>
                             {categorias.map(categoria => (
                                 <tr key={categoria.id}>
-                                    <td>{categoria.denominacion}</td>
+                                    <td>{categoria.nombre}</td>
 
                                     {categoria.borrado === 'NO' ? (
                                         <td>

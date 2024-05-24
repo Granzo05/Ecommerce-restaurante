@@ -15,12 +15,12 @@ import java.util.Optional;
 
 @Repository
 public interface SubcategoriaRepository extends JpaRepository<Subcategoria, Long> {
-    @Query("SELECT s FROM Subcategoria s WHERE s.denominacion = :denominacion AND s.sucursal = :id")
-    Optional<Subcategoria> findByDenominacionAndIdSucursal(@Param("denominacion") String denominacion, @Param("id") Long id);
+    @Query("SELECT s FROM Subcategoria s WHERE s.nombre = :nombre AND s.sucursal = :id")
+    Optional<Subcategoria> findByDenominacionAndIdSucursal(@Param("nombre") String nombre, @Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(s.id, s.denominacion, s.borrado) FROM Subcategoria s WHERE s.sucursal = :id")
+    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(s.id, s.nombre, s.borrado) FROM Subcategoria s WHERE s.sucursal = :id")
     List<SubcategoriaDTO> findAllDTOByIdSucursal(@Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(s.id, s.denominacion, s.borrado) FROM Subcategoria s WHERE s.categoria = :id")
+    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(s.id, s.nombre, s.borrado) FROM Subcategoria s WHERE s.categoria = :id")
     List<SubcategoriaDTO> findAllDTOByIdCategoria(@Param("id") Long id);
 }

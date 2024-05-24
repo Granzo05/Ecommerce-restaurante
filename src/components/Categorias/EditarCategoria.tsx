@@ -10,7 +10,7 @@ interface EditarCategoriaProps {
 
 const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal }) => {
 
-  const [nombre, setNombre] = useState(categoriaOriginal.denominacion);
+  const [nombre, setNombre] = useState(categoriaOriginal.nombre);
 
   function editarCategoria() {
     const categoria: Categoria = categoriaOriginal;
@@ -21,7 +21,7 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal }) 
       return;
     }
 
-    categoria.denominacion = nombre;
+    categoria.nombre = nombre;
     toast.promise(CategoriaService.updateCategoria(categoria), {
       loading: 'Creando Categoria...',
       success: (message) => {

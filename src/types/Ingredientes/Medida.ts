@@ -1,6 +1,6 @@
 export class Medida {
     id: number = 0;
-    denominacion: string = '';
+    nombre: string = '';
     borrado: string = '';
 
     constructor() {

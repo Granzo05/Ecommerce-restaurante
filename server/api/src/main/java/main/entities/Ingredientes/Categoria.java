@@ -18,8 +18,8 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "denominacion")
-    private String denominacion;
+    @Column(name = "nombre")
+    private String nombre;
     @Column(name = "borrado")
     private String borrado = "NO";
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)

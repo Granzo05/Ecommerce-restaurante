@@ -2,7 +2,7 @@ import { Subcategoria } from "./Subcategoria";
 
 export class Categoria {
     id: number = 0;
-    denominacion: string = '';
+    nombre: string = '';
     borrado: string = '';
     subcategorias: Subcategoria = new Subcategoria();
     

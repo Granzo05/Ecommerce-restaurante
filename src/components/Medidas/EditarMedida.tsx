@@ -10,7 +10,7 @@ interface EditarMedidaProps {
 
 const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal }) => {
 
-  const [nombre, setNombre] = useState(medidaOriginal.denominacion);
+  const [nombre, setNombre] = useState(medidaOriginal.nombre);
 
   function editarMedida() {
     const medida: Medida = medidaOriginal;
@@ -21,7 +21,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal }) => {
       return;
     }
 
-    medida.denominacion = nombre;
+    medida.nombre = nombre;
     toast.promise(MedidaService.updateMedida(medida), {
       loading: 'Creando Medida...',
       success: (message) => {

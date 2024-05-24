@@ -15,7 +15,7 @@ function AgregarMedida() {
       return;
     }
 
-    medida.denominacion = nombre;
+    medida.nombre = nombre;
     medida.borrado = 'NO';
 
     toast.promise(MedidaService.createMedida(medida), {

@@ -15,7 +15,7 @@ function AgregarSubcategoria() {
       return;
     }
 
-    subcategoria.denominacion = nombre;
+    subcategoria.nombre = nombre;
     subcategoria.borrado = 'NO';
 
     toast.promise(SubcategoriaService.createSubcategoria(subcategoria), {

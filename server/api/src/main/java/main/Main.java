@@ -114,109 +114,109 @@ public class Main {
                 sucursal.setDomicilio(domicilio);
 
                 Categoria categoria = new Categoria();
-                categoria.setDenominacion("HAMBURGUESAS");
+                categoria.setNombre("HAMBURGUESAS");
                 categoria.setBorrado("NO");
                 categoria.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria);
 
                 Categoria categoria1 = new Categoria();
-                categoria1.setDenominacion("PANCHOS");
+                categoria1.setNombre("PANCHOS");
                 categoria1.setBorrado("NO");
                 categoria1.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria1);
 
                 Categoria categoria2 = new Categoria();
-                categoria2.setDenominacion("EMPANADAS");
+                categoria2.setNombre("EMPANADAS");
                 categoria2.setBorrado("NO");
                 categoria2.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria2);
 
                 Categoria categoria3 = new Categoria();
-                categoria3.setDenominacion("PIZZAS");
+                categoria3.setNombre("PIZZAS");
                 categoria3.setBorrado("NO");
                 categoria3.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria3);
 
                 Categoria categoria4 = new Categoria();
-                categoria4.setDenominacion("LOMOS");
+                categoria4.setNombre("LOMOS");
                 categoria4.setBorrado("NO");
                 categoria4.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria4);
 
                 Categoria categoria5 = new Categoria();
-                categoria5.setDenominacion("HELADO");
+                categoria5.setNombre("HELADO");
                 categoria5.setBorrado("NO");
                 categoria5.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria5);
 
                 Categoria categoria6 = new Categoria();
-                categoria6.setDenominacion("PARRILLA");
+                categoria6.setNombre("PARRILLA");
                 categoria6.setBorrado("NO");
                 categoria6.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria6);
 
                 Categoria categoria7 = new Categoria();
-                categoria7.setDenominacion("PASTAS");
+                categoria7.setNombre("PASTAS");
                 categoria7.setBorrado("NO");
                 categoria7.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria7);
 
                 Categoria categoria8 = new Categoria();
-                categoria8.setDenominacion("SUSHI");
+                categoria8.setNombre("SUSHI");
                 categoria8.setBorrado("NO");
                 categoria8.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria8);
 
                 Categoria categoria9 = new Categoria();
-                categoria9.setDenominacion("MILANESAS");
+                categoria9.setNombre("MILANESAS");
                 categoria9.setBorrado("NO");
                 categoria9.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria9);
 
                 Categoria categoria10 = new Categoria();
-                categoria10.setDenominacion("BEBIDA_SIN_ALCOHOL");
+                categoria10.setNombre("BEBIDA_SIN_ALCOHOL");
                 categoria10.setBorrado("NO");
                 categoria10.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria10);
 
                 Categoria categoria11 = new Categoria();
-                categoria11.setDenominacion("BEBIDA_CON_ALCOHOL");
+                categoria11.setNombre("BEBIDA_CON_ALCOHOL");
                 categoria11.setBorrado("NO");
                 categoria11.getSucursales().add(sucursal);
                 sucursal.getCategorias().add(categoria11);
 
                 Medida medida = new Medida();
-                medida.setDenominacion("KILOGRAMOS");
+                medida.setNombre("KILOGRAMOS");
                 medida.getSucursales().add(sucursal);
                 medida.setBorrado("NO");
                 sucursal.getMedidas().add(medida);
 
                 Medida medida1 = new Medida();
-                medida1.setDenominacion("GRAMOS");
+                medida1.setNombre("GRAMOS");
                 medida1.getSucursales().add(sucursal);
                 medida1.setBorrado("NO");
                 sucursal.getMedidas().add(medida1);
 
                 Medida medida2 = new Medida();
-                medida2.setDenominacion("LITROS");
+                medida2.setNombre("LITROS");
                 medida2.getSucursales().add(sucursal);
                 medida2.setBorrado("NO");
                 sucursal.getMedidas().add(medida2);
 
                 Medida medida3 = new Medida();
-                medida3.setDenominacion("CENTIMETROS_CUBICOS");
+                medida3.setNombre("CENTIMETROS_CUBICOS");
                 medida3.getSucursales().add(sucursal);
                 medida3.setBorrado("NO");
                 sucursal.getMedidas().add(medida3);
 
                 Medida medida4 = new Medida();
-                medida4.setDenominacion("PAQUETES");
+                medida4.setNombre("PAQUETES");
                 medida4.getSucursales().add(sucursal);
                 medida4.setBorrado("NO");
                 sucursal.getMedidas().add(medida4);
 
                 Medida medida5 = new Medida();
-                medida5.setDenominacion("UNIDADES");
+                medida5.setNombre("UNIDADES");
                 medida5.getSucursales().add(sucursal);
                 medida5.setBorrado("NO");
                 sucursal.getMedidas().add(medida5);

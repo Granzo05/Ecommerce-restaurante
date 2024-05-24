@@ -10,6 +10,6 @@ import main.entities.Restaurante.Sucursal;
 @NoArgsConstructor
 public class MedidaDTO {
     private Long id;
-    private String denominacion;
+    private String nombre;
     private String borrado = "NO";
 }

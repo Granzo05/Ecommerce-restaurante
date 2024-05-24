@@ -111,7 +111,7 @@ const Medidas = () => {
                         <tbody>
                             {medidas.map(medida => (
                                 <tr key={medida.id}>
-                                    <td>{medida.denominacion}</td>
+                                    <td>{medida.nombre}</td>
 
                                     {medida.borrado === 'NO' ? (
                                         <td>

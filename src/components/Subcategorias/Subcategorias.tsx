@@ -109,7 +109,7 @@ const Subcategorias = () => {
                         <tbody>
                             {subcategorias.map(subcategoria => (
                                 <tr key={subcategoria.id}>
-                                    <td>{subcategoria.denominacion}</td>
+                                    <td>{subcategoria.nombre}</td>
 
                                     {subcategoria.borrado === 'NO' ? (
                                         <td>
