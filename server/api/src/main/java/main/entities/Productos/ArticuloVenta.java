@@ -3,7 +3,8 @@ package main.entities.Productos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Ingredientes.EnumMedida;
+import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.Medida;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 
@@ -22,12 +23,14 @@ public class ArticuloVenta extends Articulo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "tipo")
-    private EnumTipoArticuloVenta tipo;
+    @OneToOne
+    @JoinColumn(name = "id_categoria")
+    private Categoria categoria;
     @Column(name = "nombre")
     private String nombre;
-    @Column(name = "medida")
-    private EnumMedida medida;
+    @OneToOne
+    @JoinColumn(name = "id_medida")
+    private Medida medida;
     @Column(name = "cantidad_medida")
     private int cantidadMedida;
     @JsonIgnoreProperties(value = {"articuloVenta"})

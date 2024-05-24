@@ -1,4 +1,4 @@
-import { EnumMedida } from "../Ingredientes/EnumMedida";
+import { Medida } from "../Ingredientes/Medida";
 
 export class Stock {
     id: number = 0;
@@ -6,7 +6,7 @@ export class Stock {
     cantidadActual: number = 0;
     cantidadMinima: number = 0;
     cantidadMaxima: number = 0;
-    medida: EnumMedida | number | null | string = null;
+    medida: Medida = new Medida();
 
     constructor() {
 

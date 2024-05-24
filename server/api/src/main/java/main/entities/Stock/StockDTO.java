@@ -1,7 +1,7 @@
 package main.entities.Stock;
 
 import lombok.*;
-import main.entities.Ingredientes.EnumMedida;
+import main.entities.Ingredientes.Medida;
 
 @Getter
 @Setter
@@ -16,5 +16,5 @@ public class StockDTO {
     private int cantidadActual;
     private int cantidadMinima;
     private int cantidadMaxima;
-    private EnumMedida medida;
+    private Medida medida;
 }

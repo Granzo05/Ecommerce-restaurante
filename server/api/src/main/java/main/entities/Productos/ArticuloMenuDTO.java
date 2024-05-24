@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.IngredienteMenuDTO;
 
@@ -17,7 +18,7 @@ import java.util.Set;
 public class ArticuloMenuDTO extends Articulo {
     private Long id;
     private int tiempoCoccion;
-    private EnumTipoArticuloComida tipo;
+    private Categoria categoria;
     private int comensales;
     private String descripcion;
     private String borrado;
@@ -26,12 +27,12 @@ public class ArticuloMenuDTO extends Articulo {
     private Set<IngredienteMenu> ingredientes = new HashSet<>();
     private Set<ImagenesDTO> imagenes = new HashSet<>();
 
-    public ArticuloMenuDTO(Long id, String nombre, double precioVenta, int tiempoCoccion, EnumTipoArticuloComida tipo, int comensales, String descripcion, String borrado) {
+    public ArticuloMenuDTO(Long id, String nombre, double precioVenta, int tiempoCoccion, Categoria categoria, int comensales, String descripcion, String borrado) {
         super(precioVenta);
         this.id = id;
         this.nombre = nombre;
         this.tiempoCoccion = tiempoCoccion;
-        this.tipo = tipo;
+        this.categoria = categoria;
         this.comensales = comensales;
         this.descripcion = descripcion;
         this.borrado = borrado;

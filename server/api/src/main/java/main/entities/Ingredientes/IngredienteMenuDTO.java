@@ -10,6 +10,6 @@ import lombok.*;
 public class IngredienteMenuDTO {
     private Long id;
     private int cantidad;
-    private EnumMedida medida;
+    private Medida medida;
     private String ingredienteNombre;
 }

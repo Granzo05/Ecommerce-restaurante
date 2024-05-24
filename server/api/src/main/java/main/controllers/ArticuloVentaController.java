@@ -1,15 +1,12 @@
 package main.controllers;
 
+import main.entities.Ingredientes.Categoria;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.ArticuloVentaDTO;
-import main.entities.Productos.EnumTipoArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
-import main.repositories.ArticuloVentaRepository;
-import main.repositories.ImagenesRepository;
-import main.repositories.StockArticuloVentaRepository;
-import main.repositories.SucursalRepository;
+import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +26,14 @@ public class ArticuloVentaController {
     private final ImagenesRepository imagenesRepository;
     private final ArticuloVentaRepository articuloVentaRepository;
     private final SucursalRepository sucursalRepository;
+    private final CategoriaRepository categoriaRepository;
 
-    public ArticuloVentaController(StockArticuloVentaRepository stockArticuloVentaRepository, ImagenesRepository imagenesRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository) {
+    public ArticuloVentaController(StockArticuloVentaRepository stockArticuloVentaRepository, ImagenesRepository imagenesRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, CategoriaRepository categoriaRepository) {
         this.stockArticuloVentaRepository = stockArticuloVentaRepository;
         this.imagenesRepository = imagenesRepository;
         this.articuloVentaRepository = articuloVentaRepository;
         this.sucursalRepository = sucursalRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     @GetMapping("/articulos/{idSucursal}")
@@ -155,15 +154,18 @@ public class ArticuloVentaController {
     }
 
     @GetMapping("/articulo/tipo/{tipoArticulo}/{idSucursal}")
-    public Set<ArticuloVentaDTO> getArticulosPorTipo(@PathVariable("tipoArticulo") String tipo, @PathVariable("idSucursal") Long id) {
-        String tipoArticulo = tipo.toUpperCase().replace(" ", "_");
-        Set<ArticuloVentaDTO> articuloVentas = (new HashSet<>(articuloVentaRepository.findByTipoAndIdSucursal(EnumTipoArticuloVenta.valueOf(tipoArticulo), id)));
+    public Set<ArticuloVentaDTO> getArticulosPorTipo(@PathVariable("tipoArticulo") String categoria, @PathVariable("idSucursal") Long id) {
+        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, id);
 
-        for (ArticuloVentaDTO articuloVenta : articuloVentas) {
-            articuloVenta.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdArticuloDTO(articuloVenta.getId())));
+        if(categoriaDB.isPresent()) {
+            Set<ArticuloVentaDTO> articuloVentas = (new HashSet<>(articuloVentaRepository.findByTipoAndIdSucursal(categoriaDB.get(), id)));
+
+            for (ArticuloVentaDTO articuloVenta : articuloVentas) {
+                articuloVenta.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdArticuloDTO(articuloVenta.getId())));
+            }
+            return articuloVentas;
         }
-
-        return articuloVentas;
+        return null;
     }
 
     @PutMapping("/articulo/update/{idSucursal}")
@@ -174,7 +176,7 @@ public class ArticuloVentaController {
             ArticuloVenta articuloVenta = articuloEncontrado.get();
             articuloVenta.setPrecioVenta(articuloVentaDetail.getPrecioVenta());
             articuloVenta.setNombre(articuloVentaDetail.getNombre());
-            articuloVenta.setTipo(articuloVentaDetail.getTipo());
+            articuloVenta.setCategoria(categoriaRepository.findByNameAndIdSucursal(articuloVentaDetail.getCategoria().getNombre(), id).get());
             articuloVenta.setMedida(articuloVentaDetail.getMedida());
             articuloVenta.setCantidadMedida(articuloVentaDetail.getCantidadMedida());
 

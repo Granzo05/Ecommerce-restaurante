@@ -1,5 +1,5 @@
-import { EnumMedida } from "../Ingredientes/EnumMedida";
 import { Ingrediente } from "../Ingredientes/Ingrediente";
+import { Medida } from "../Ingredientes/Medida";
 import { ArticuloVenta } from "../Productos/ArticuloVenta";
 import { StockEntrante } from "./StockEntrante";
 
@@ -8,7 +8,7 @@ export class DetalleStock {
     cantidad: number = 0;
     costoUnitario: number = 0;
     subTotal: number = 0;
-    medida: EnumMedida | string = '';
+    medida: Medida = new Medida();
     ingrediente: Ingrediente | null = null;
     articuloVenta: ArticuloVenta | null = null;
     stockEntrante: StockEntrante | null = null;

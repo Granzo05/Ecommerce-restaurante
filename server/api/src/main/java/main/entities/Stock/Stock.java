@@ -2,7 +2,7 @@ package main.entities.Stock;
 
 import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Ingredientes.EnumMedida;
+import main.entities.Ingredientes.Medida;
 import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
 
@@ -27,8 +27,9 @@ public abstract class Stock implements Serializable {
     private int cantidadMinima;
     @Column(name = "cantidad_maxima")
     private int cantidadMaxima;
-    @Column(name = "medida")
-    private EnumMedida medida;
+    @OneToOne
+    @JoinColumn(name = "id_medida")
+    private Medida medida;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
@@ -36,7 +37,7 @@ public abstract class Stock implements Serializable {
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
 
-    public Stock(double precioCompra, int cantidadActual, int cantidadMinima, int cantidadMaxima, EnumMedida medida) {
+    public Stock(double precioCompra, int cantidadActual, int cantidadMinima, int cantidadMaxima, Medida medida) {
         this.precioCompra = precioCompra;
         this.cantidadActual = cantidadActual;
         this.cantidadMinima = cantidadMinima;

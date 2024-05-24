@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.entities.Ingredientes.EnumMedida;
+import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.Medida;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,18 +16,18 @@ import java.util.Set;
 @NoArgsConstructor
 public class ArticuloVentaDTO extends Articulo {
     private Long id;
-    private EnumTipoArticuloVenta tipo;
-    private EnumMedida medida;
+    private Categoria categoria;
+    private Medida medida;
     private String borrado;
     private String nombre;
     private int cantidadMedida;
     private Set<Imagenes> imagenes = new HashSet<>();
 
-    public ArticuloVentaDTO(Long id, String nombre, double precioVenta, EnumTipoArticuloVenta tipo, String borrado, int cantidad, EnumMedida medida) {
+    public ArticuloVentaDTO(Long id, String nombre, double precioVenta, Categoria categoria, String borrado, int cantidad, Medida medida) {
         super(precioVenta);
         this.id = id;
         this.nombre = nombre;
-        this.tipo = tipo;
+        this.categoria = categoria;
         this.borrado = borrado;
         this.cantidadMedida = cantidad;
         this.medida = medida;

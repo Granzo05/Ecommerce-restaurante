@@ -3,6 +3,7 @@ package main.entities.Productos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Restaurante.Sucursal;
 
@@ -24,8 +25,9 @@ public class ArticuloMenu extends Articulo {
     private int tiempoCoccion;
     @Column(name = "nombre")
     private String nombre;
-    @Column(name = "tipo")
-    private EnumTipoArticuloComida tipo;
+    @OneToOne
+    @JoinColumn(name = "id_categoria")
+    private Categoria categoria;
     @Column(name = "comensales")
     private int comensales;
     @Column(name = "descripcion")

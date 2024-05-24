@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StockEntrante } from '../../types/Stock/StockEntrante';
 import { StockEntranteService } from '../../services/StockEntranteService';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
@@ -6,11 +6,12 @@ import { DetalleStock } from '../../types/Stock/DetalleStock';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { toast, Toaster } from 'sonner';
 import InputComponent from '../InputFiltroComponent';
-import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
-import { IngredienteService } from '../../services/IngredienteService';
-import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import '../../styles/modalCrud.css'
-import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
+import { Medida } from '../../types/Ingredientes/Medida';
+import { Categoria } from '../../types/Ingredientes/Categoria';
+import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
+import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
+import ModalFlotanteRecomendacionesArticulo from '../../hooks/ModalFlotanteFiltroArticuloVenta';
 
 function AgregarStockEntrante() {
 
@@ -22,50 +23,26 @@ function AgregarStockEntrante() {
 
   let lastIndexDetalle = 0;
 
-  const [articulosVenta, setArticulosVenta] = useState<ArticuloVenta[]>([]);
-  const [ingredientes, setIngredientes] = useState<Ingrediente[]>([]);
-
   // Aca almaceno los detalles para el stock
   const [detallesStock, setDetallesStock] = useState<DetalleStock[]>([])
 
-  useEffect(() => {
-    IngredienteService.getIngredientes()
-      .then(ingredientes => {
-        console.log(ingredientes)
-        setIngredientes(ingredientes)
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
-    ArticuloVentaService.getArticulos()
-      .then(articulos => {
-        console.log(articulos)
-        setArticulosVenta(articulos)
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }, []);
-
-
   // Almacenaje de cada detalle por ingrediente
-  const handleNombreIngredienteChange = (ingrediente: Ingrediente) => {
+  const handleIngredienteChange = (ingrediente: Ingrediente) => {
     detallesStock[lastIndexDetalle].ingrediente = ingrediente;
   };
 
-  const handleNombreArticuloChange = (articulo: ArticuloVenta) => {
+  const handleArticuloChange = (articulo: ArticuloVenta) => {
     // Busco todos los articulos que de nombre se parezcan
     detallesStock[lastIndexDetalle].articuloVenta = articulo;
   };
 
-  const almacenarCantidad = (cantidad: number) => {
+  const handleCantidad = (cantidad: number) => {
     if (cantidad) {
       detallesStock[lastIndexDetalle].cantidad = cantidad;
     }
   };
 
-  const almacenarMedida = (medida: EnumMedida | string) => {
+  const handleMedida = (medida: Medida) => {
     if (medida) {
       detallesStock[lastIndexDetalle].medida = medida;
     }
@@ -79,8 +56,8 @@ function AgregarStockEntrante() {
   };
 
   const añadirCampoIngrediente = () => {
-    setIngredientesInputs([...ingredientesInputs, { id: 0, nombre: '', stock: null, medida: '', borrado: 'NO' }]);
-    setDetallesStock([...detallesStock, { id: 0, cantidad: 0, costoUnitario: 0, subTotal: 0, medida: EnumMedida.KILOGRAMOS, ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }]);
+    setIngredientesInputs([...ingredientesInputs, { id: 0, nombre: '', stock: null, medida: new Medida(), borrado: 'NO' }]);
+    setDetallesStock([...detallesStock, { id: 0, cantidad: 0, costoUnitario: 0, subTotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }]);
     const ultimoDetalle = detallesStock[lastIndexDetalle];
 
     if (
@@ -101,10 +78,10 @@ function AgregarStockEntrante() {
 
   const añadirCampoArticulo = () => {
     setArticulosVentaInputs([...articulosVentaInputs, {
-      id: 0, tipo: '', medida: '', cantidad: 0, cantidadMedida: 0, nombre: '', precioVenta: 0,
+      id: 0, categoria: new Categoria(), medida: new Medida(), cantidad: 0, cantidadMedida: 0, nombre: '', precioVenta: 0,
       imagenes: [], imagenesDTO: [], promociones: [], borrado: 'NO'
     }]);
-    setDetallesStock([...detallesStock, { id: 0, cantidad: 0, costoUnitario: 0, subTotal: 0, medida: EnumMedida.KILOGRAMOS, ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }]);
+    setDetallesStock([...detallesStock, { id: 0, cantidad: 0, costoUnitario: 0, subTotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }]);
     const ultimoDetalle = detallesStock[lastIndexDetalle];
 
     if (
@@ -124,25 +101,8 @@ function AgregarStockEntrante() {
   };
 
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
-  const [elementosABuscar, setElementosABuscar] = useState<string>('');
 
-  const handleSelectProduct = (product: string) => {
-    console.log(articulosVenta)
-    let articulo = articulosVenta.find(articulo => articulo.nombre === product);
-
-    let ingrediente = ingredientes.find(ingrediente => ingrediente.nombre === product);
-
-    if (product && ingrediente) {
-      handleNombreIngredienteChange(ingrediente);
-    } else if (product && articulo) {
-      handleNombreArticuloChange(articulo);
-    }
-
-    setModalBusqueda(false);
-  };
-
-  const handleAbrirRecomendaciones = (busqueda: string) => {
-    setElementosABuscar(busqueda)
+  const handleAbrirRecomendaciones = () => {
     setModalBusqueda(true);
   };
 
@@ -199,26 +159,19 @@ function AgregarStockEntrante() {
         <div key={index}>
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
-          <div className='inputBox'>
-            <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={detallesStock[lastIndexDetalle]?.ingrediente?.nombre ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
+          <div>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+            <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingrediente?.nombre ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente) }} />}
           </div>
-          <select
-            id={`select-medidas-ingredientes-${index}`}
-            onChange={(e) => almacenarMedida(e.target.value)}
-            defaultValue=""
-          >
-            <option value="" disabled hidden>Seleccionar medida ingrediente</option>
-            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-            <option value={EnumMedida.LITROS.toString()}>Litros</option>
-            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-          </select>
+          <div className="input-filtrado">
+            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingrediente.medida.nombre ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedida(medida); handleModalClose(); }} />}
+          </div>
           <br />
 
           <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarCantidad(parseFloat(e.target.value))} />
+            <input type="number" required={true} onChange={(e) => handleCantidad(parseFloat(e.target.value))} />
             <span>Cantidad del ingrediente</span>
           </div>
           <div className="inputBox">
@@ -234,26 +187,19 @@ function AgregarStockEntrante() {
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
           <div>
-            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => handleAbrirRecomendaciones('ARTICULOS')} selectedProduct={detallesStock[lastIndexDetalle]?.articuloVenta?.nombre ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={articulo.nombre ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo); handleModalClose(); }} />}
           </div>
-          <select
-            id={`select-medidas-articulos-${index}`}
-            onChange={(e) => almacenarMedida(e.target.value)}
-            defaultValue=""
-          >
-            <option value="" disabled hidden>Seleccionar medida ingrediente</option>
-            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-            <option value={EnumMedida.LITROS.toString()}>Litros</option>
-            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-          </select>
+          <div className="input-filtrado">
+            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={articulo.medida.nombre ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedida(medida); handleModalClose(); }} />}
+          </div>
           <br />
           <br />
 
           <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarCantidad(parseFloat(e.target.value))} />
+            <input type="number" required={true} onChange={(e) => handleCantidad(parseFloat(e.target.value))} />
             <span>Cantidad del articulo</span>
           </div>
 

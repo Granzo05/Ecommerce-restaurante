@@ -6,11 +6,13 @@ import { SucursalService } from '../../services/SucursalService';
 import { Toaster, toast } from 'sonner'
 import { LocalidadDelivery } from '../../types/Restaurante/LocalidadDelivery';
 import InputComponent from '../InputFiltroComponent';
-import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import { DepartamentoService } from '../../services/DepartamentoService';
 import { LocalidadService } from '../../services/LocalidadService';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { clearInputs } from '../../utils/global_variables/functions';
+import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
+import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
+import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
 
 interface EditarSucursalProps {
   sucursalOriginal: Sucursal;
@@ -29,19 +31,14 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
   //Select que nos permite filtrar para las localidades de la sucursal asi no cargamos de más innecesariamente
   const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
-  const [localidades, setLocalidades] = useState<Localidad[]>([]);
   const [localidadesProvincia, setLocalidadesProvincia] = useState<Localidad[]>([]);
 
   const [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<Localidad[]>([]);
 
-  const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
-  const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
-  const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string>('');
-  const [elementosABuscar, setElementosABuscar] = useState<string>('');
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [localidadSucursal, setLocalidadSucursal] = useState<Localidad>(new Localidad());
   const [inputProvincia, setInputProvincia] = useState<string>(sucursalOriginal.domicilio?.localidad?.departamento.provincia?.nombre);
   const [inputDepartamento, setInputDepartamento] = useState<string>(sucursalOriginal.domicilio?.localidad?.departamento.provincia?.nombre);
-  const [inputLocalidad, setInputLocalidad] = useState<string>(sucursalOriginal.domicilio?.localidad?.nombre);
 
   const [idDepartamentosElegidos, setIdDepartamentosElegidos] = useState<Set<number>>(new Set<number>());
 
@@ -49,7 +46,6 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
 
   useEffect(() => {
     buscarDepartamentos();
-    buscarLocalidadesDeptoyProvincia();
     buscarLocalidadesProvincia();
   }, []);
 
@@ -97,16 +93,6 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       })
   }
 
-  function buscarLocalidadesDeptoyProvincia() {
-    LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(inputDepartamento, inputProvincia)
-      .then(async localidades => {
-        setLocalidades(localidades);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-  }
-
   function buscarLocalidadesProvincia() {
     LocalidadService.getLocalidadesByNombreProvincia(inputProvincia)
       .then(async localidades => {
@@ -118,47 +104,14 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       })
   }
 
-  const handleSelectProduct = (option: string) => {
-    setSelectedOption(option);
-  };
-
-  const handleAbrirRecomendaciones = (busqueda: string) => {
-    setElementosABuscar(busqueda)
-    if (busqueda === 'PROVINCIAS') {
-      setModalBusquedaProvincia(true)
-      setInputProvincia(selectedOption);
-      setInputDepartamento('')
-      setInputLocalidad('')
-    } else if (busqueda === 'DEPARTAMENTOS') {
-      setModalBusquedaDepartamento(true)
-      setInputDepartamento(selectedOption);
-      setInputLocalidad('')
-    } else if (busqueda === 'LOCALIDADES') {
-      setModalBusquedaLocalidad(true)
-      setInputLocalidad(selectedOption);
-    }
+  const handleAbrirRecomendaciones = () => {
+    setModalBusqueda(true)
   };
 
   const handleModalClose = () => {
-    if (elementosABuscar === 'PROVINCIAS') {
-      setInputProvincia(selectedOption);
-      buscarDepartamentos();
-      setInputDepartamento('');
-      setInputLocalidad('');
-      setModalBusquedaProvincia(false);
-
-    } else if (elementosABuscar === 'DEPARTAMENTOS') {
-      setInputDepartamento(selectedOption);
-      buscarLocalidadesDeptoyProvincia();
-      setModalBusquedaDepartamento(false);
-
-      setInputLocalidad('')
-    } else if (elementosABuscar === 'LOCALIDADES') {
-      setInputLocalidad(selectedOption);
-      setModalBusquedaLocalidad(false);
-
-    }
+    setModalBusqueda(false)
   };
+
 
   const handleDepartamentosCheckboxChange = async (departamentoId: number) => {
     // Obtener una copia del conjunto de departamentos seleccionados
@@ -214,7 +167,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     } else if (!codigoPostal) {
       toast.error("Por favor, es necesario el código postal del domicilio");
       return;
-    } else if (!inputLocalidad) {
+    } else if (!localidadSucursal) {
       toast.error("Por favor, es necesario la localidad para asignar el domicilio");
       return;
     } else if (!horarioApertura) {
@@ -237,8 +190,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
 
-    let localidad = localidadesProvincia?.find(localidad => localidad.nombre === inputLocalidad);
-    if (localidad) domicilio.localidad = localidad;
+    if (localidadSucursal) domicilio.localidad = localidadSucursal;
 
     sucursal.domicilio = domicilio;
 
@@ -327,16 +279,14 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
           <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
           <span>Código Postal</span>
         </div>
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-        <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
-        {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
-        <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
-        {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
-        <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-        {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+        <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputProvincia ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
 
+        <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputDepartamento ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
+
+        <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={localidadSucursal.nombre ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadSucursal(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
         <div className="inputBox">
           <label style={{ display: 'flex', fontWeight: 'bold', marginBottom: '-20px' }}>Departamentos disponibles para delivery:</label>
@@ -389,7 +339,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
             </tbody>
           </table>
         )}
-        
+
       </form>
       <hr />
       <button type="button" onClick={handleCargarNegocio}>Editar sucursal</button>

@@ -1,11 +1,11 @@
 import { StockIngredientes } from "../Stock/StockIngredientes";
-import { EnumMedida } from "./EnumMedida";
+import { Medida } from "./Medida";
 
 export class Ingrediente {
     id: number = 0;
     nombre: string = '';
     stock: StockIngredientes | null = null;
-    medida: EnumMedida | string = '';
+    medida: Medida = new Medida();
     borrado: string = '';
     
     constructor() {

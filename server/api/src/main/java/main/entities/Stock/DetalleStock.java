@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Ingredientes.EnumMedida;
 import main.entities.Ingredientes.Ingrediente;
+import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
+
+import javax.print.attribute.standard.Media;
 
 @Getter
 @Setter
@@ -21,8 +23,9 @@ public class DetalleStock {
     private Long id;
     @Column(name = "cantidad")
     private int cantidad;
-    @Column(name = "medida")
-    private EnumMedida medida;
+    @OneToOne
+    @JoinColumn(name = "id_medida")
+    private Medida medida;
     @Column(name = "costo_unitario")
     private double costoUnitario;
     @Column(name = "subtotal")

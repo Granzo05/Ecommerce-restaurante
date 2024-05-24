@@ -1,20 +1,32 @@
 import { useState } from 'react';
 import { clearInputs } from '../../utils/global_variables/functions';
-import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { Toaster, toast } from 'sonner'
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockIngredientes } from '../../types/Stock/StockIngredientes';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import '../../styles/modalFlotante.css'
+import InputComponent from '../InputFiltroComponent';
+import { Medida } from '../../types/Ingredientes/Medida';
+import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 
 function AgregarStockIngrediente() {
 
   const [cantidadActual, setCantidadActual] = useState(0);
   const [cantidadMinima, setCantidadMinima] = useState(0);
   const [cantidadMaxima, setCantidadMaxima] = useState(0);
-  const [medida, setMedida] = useState<EnumMedida | string>('');
+  const [medida, setMedida] = useState<Medida>(new Medida());
   const [costoIngrediente, setCostoIngrediente] = useState(0);
   const [nombreIngrediente, setArticuloVenta] = useState('0');
+
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+
+  const handleAbrirRecomendaciones = () => {
+    setModalBusqueda(true)
+  };
+
+  const handleModalClose = () => {
+    setModalBusqueda(false)
+  };
 
   async function crearStockIngrediente() {
     if (!medida && !cantidadMaxima && !costoIngrediente && !cantidadMinima && !cantidadActual && !nombreIngrediente) {
@@ -42,7 +54,6 @@ function AgregarStockIngrediente() {
       toast.error("Por favor, es necesario el nombre del ingrediente");
       return;
     }
-
 
     const stock: StockIngredientes = new StockIngredientes();
     stock.cantidadActual = cantidadActual;
@@ -103,18 +114,9 @@ function AgregarStockIngrediente() {
 
       </label>
       <label>
-        <div className="inputBox">
-          <select
-            onChange={(e) => setMedida(e.target.value)}
-            defaultValue="" // Establece el valor por defecto
-          >
-            <option value="" disabled hidden>Seleccione la unidad de medida</option>
-            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-            <option value={EnumMedida.LITROS.toString()}>Litros</option>
-            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-          </select>
+        <div className="input-filtrado">
+          <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
+          {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
         </div>
       </label>
       <label>

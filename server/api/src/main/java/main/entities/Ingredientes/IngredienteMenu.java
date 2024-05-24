@@ -19,8 +19,9 @@ public class IngredienteMenu {
     private Long id;
     @Column(name = "cantidad_ingrediente")
     private int cantidad;
-    @Column(name = "medida")
-    private EnumMedida medida;
+    @OneToOne
+    @JoinColumn(name = "id_medida")
+    private Medida medida;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ingrediente")
     @Cascade(org.hibernate.annotations.CascadeType.DETACH)

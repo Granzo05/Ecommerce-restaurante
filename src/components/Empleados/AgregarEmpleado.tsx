@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { EmpleadoService } from '../../services/EmpleadoService';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { Toaster, toast } from 'sonner'
 import { Domicilio } from '../../types/Domicilio/Domicilio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import InputComponent from '../InputFiltroComponent';
-import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import { Localidad } from '../../types/Domicilio/Localidad';
-import { LocalidadService } from '../../services/LocalidadService';
 import '../../styles/modalCrud.css'
+import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
+import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
+import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
 
 function AgregarEmpleado() {
 
@@ -22,62 +22,16 @@ function AgregarEmpleado() {
   const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
   const [indexDomicilio, setIndexDomicilio] = useState<number>(0);
 
-  const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
-  const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
-  const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string>('');
-  const [elementosABuscar, setElementosABuscar] = useState<string>('');
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
   const [inputProvincia, setInputProvincia] = useState<string>('');
   const [inputDepartamento, setInputDepartamento] = useState<string>('');
-  const [inputLocalidad, setInputLocalidad] = useState<string>('');
 
-  const [localidades, setLocalidades] = useState<Localidad[]>([]);
-
-  const handleSelectProduct = (option: string) => {
-    setSelectedOption(option);
-  };
-
-  function buscarLocalidades() {
-    LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(inputDepartamento, inputProvincia)
-      .then(async localidades => {
-        console.log(localidades)
-        setLocalidades(localidades);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-  }
-
-  const handleAbrirRecomendaciones = (busqueda: string) => {
-    setElementosABuscar(busqueda)
-    if (busqueda === 'PROVINCIAS') {
-      setModalBusquedaProvincia(true)
-      setInputDepartamento('')
-      setInputLocalidad('')
-    } else if (busqueda === 'DEPARTAMENTOS') {
-      setModalBusquedaDepartamento(true)
-      setInputLocalidad('')
-    } else if (busqueda === 'LOCALIDADES') {
-      buscarLocalidades();
-      setModalBusquedaLocalidad(true)
-    }
+  const handleAbrirRecomendaciones = () => {
+    setModalBusqueda(true)
   };
 
   const handleModalClose = () => {
-    if (elementosABuscar === 'PROVINCIAS') {
-      setModalBusquedaProvincia(false)
-      setInputProvincia(selectedOption);
-      setInputDepartamento('')
-      setInputLocalidad('')
-    } else if (elementosABuscar === 'DEPARTAMENTOS') {
-      setModalBusquedaDepartamento(false)
-      setInputDepartamento(selectedOption);
-      setInputLocalidad('')
-    } else if (elementosABuscar === 'LOCALIDADES') {
-      setModalBusquedaLocalidad(false)
-      setInputLocalidad(selectedOption);
-      handleChangeLocalidad(indexDomicilio, selectedOption)
-    }
+    setModalBusqueda(false)
   };
 
   const handleChangeCalle = (index: number, calle: string) => {
@@ -99,10 +53,8 @@ function AgregarEmpleado() {
   };
 
 
-  const handleChangeLocalidad = (index: number, nombre: string) => {
+  const handleChangeLocalidad = (index: number, localidad: Localidad) => {
     const nuevosDomicilios = [...domicilios];
-    let localidad = localidades.find(localidad => localidad.nombre === nombre);
-
     if (localidad) {
       nuevosDomicilios[index].localidad = localidad;
       setDomicilios(nuevosDomicilios);
@@ -153,15 +105,13 @@ function AgregarEmpleado() {
     } else if (!fechaNacimiento) {
       toast.error("Por favor, es necesaria la fecha de nacimiento");
       return;
-    } else if (!inputLocalidad) {
-      toast.error("Por favor, es necesario la localidad para asignar el domicilio");
-      return;
     }
 
     for (let i = 0; i < domicilios.length; i++) {
       const calle = domicilios[i].calle;
       const numero = domicilios[i].numero;
       const codigoPostal = domicilios[i].codigoPostal;
+      const localidad = domicilios[i].localidad;
 
       if (!calle) {
         toast.info(`Por favor, el domicilio ${i + 1} debe contener una calle`);
@@ -170,11 +120,12 @@ function AgregarEmpleado() {
         toast.info(`Por favor, el domicilio ${i + 1} debe contener un numero de casa`);
       } else if (codigoPostal === 0) {
         toast.info(`Por favor, el domicilio ${i + 1} debe contener un código postal`);
+      } else if (!localidad) {
+        toast.info(`Por favor, el domicilio ${i + 1} debe contener una localidad`);
       }
     }
 
     const empleado = new Empleado();
-    console.log(domicilios)
     empleado.nombre = nombre;
     empleado.email = email;
     empleado.contraseña = contraseña;
@@ -190,7 +141,6 @@ function AgregarEmpleado() {
     empleado.domicilios = domicilios;
 
     empleado.borrado = 'NO';
-    console.log(empleado);
     toast.promise(EmpleadoService.createEmpleado(empleado), {
       loading: 'Creando empleado...',
       success: (message) => {
@@ -238,7 +188,7 @@ function AgregarEmpleado() {
           <div key={index}>
             <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
             <h2>Domicilio {index + 1}</h2>
-            
+
             <div className="inputBox">
               <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
               <span>Nombre de calle</span>
@@ -251,16 +201,15 @@ function AgregarEmpleado() {
               <input type="number" required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
               <span>Código Postal</span>
             </div>
-            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
-            {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
+            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputProvincia ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
 
-            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
-            {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
+            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputDepartamento ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
 
-            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-            {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={domicilio.localidad.nombre ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
             <hr />
-            
           </div>
         ))}
 

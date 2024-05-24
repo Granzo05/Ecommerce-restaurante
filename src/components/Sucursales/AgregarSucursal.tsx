@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Domicilio } from '../../types/Domicilio/Domicilio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Localidad } from '../../types/Domicilio/Localidad';
@@ -6,11 +6,13 @@ import { SucursalService } from '../../services/SucursalService';
 import { Toaster, toast } from 'sonner'
 import { LocalidadDelivery } from '../../types/Restaurante/LocalidadDelivery';
 import InputComponent from '../InputFiltroComponent';
-import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
-import { DepartamentoService } from '../../services/DepartamentoService';
 import { LocalidadService } from '../../services/LocalidadService';
-import { Departamento } from '../../types/Domicilio/Departamento';
 import { clearInputs } from '../../utils/global_variables/functions';
+import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
+import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
+import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
+import { DepartamentoService } from '../../services/DepartamentoService';
+import { Departamento } from '../../types/Domicilio/Departamento';
 
 function AgregarSucursal() {
   // Atributos necesarios para Sucursal
@@ -23,45 +25,20 @@ function AgregarSucursal() {
   const [horarioApertura, setHorarioApertura] = useState('');
   const [horarioCierre, setHorarioCierre] = useState('');
 
-  //Select que nos permite filtrar para las localidades de la sucursal asi no cargamos de más innecesariamente
-  const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
-  const [localidades, setLocalidades] = useState<Localidad[]>([]);
   const [localidadesProvincia, setLocalidadesProvincia] = useState<Localidad[]>([]);
 
   const [localidadesMostrablesCheckbox, setLocalidadesMostrables] = useState<Localidad[]>([]);
 
-  const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
-  const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
-  const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string>('');
-  const [elementosABuscar, setElementosABuscar] = useState<string>('');
-  const [inputProvincia, setInputProvincia] = useState<string>('');
-  const [inputDepartamento, setInputDepartamento] = useState<string>('');
-  const [inputLocalidad, setInputLocalidad] = useState<string>('');
+  const [departamentosMostrablesCheckBox, setDepartamentosMostrablesCheckbox] = useState<Departamento[]>([]);
 
   const [idDepartamentosElegidos, setIdDepartamentosElegidos] = useState<Set<number>>(new Set<number>());
 
   const [idLocalidadesElegidas, setIdLocalidadesElegidas] = useState<Set<number>>(new Set<number>());
 
-  function buscarDepartamentos(provincia: string) {
-    DepartamentoService.getDepartamentosByNombreProvincia(provincia)
-      .then(async departamentos => {
-        setDepartamentos(departamentos);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-  }
-
-  function buscarLocalidades(departamento: string) {
-    LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(departamento, inputProvincia)
-      .then(async localidades => {
-        setLocalidades(localidades);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-  }
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [inputProvincia, setInputProvincia] = useState<string>('');
+  const [inputDepartamento, setInputDepartamento] = useState<string>('');
+  const [localidadSucursal, setLocalidadSucursal] = useState<Localidad>(new Localidad());
 
   function buscarLocalidadesProvincia() {
     LocalidadService.getLocalidadesByNombreProvincia(inputProvincia)
@@ -73,44 +50,22 @@ function AgregarSucursal() {
       })
   }
 
-  const handleSelectProduct = (option: string) => {
-    setSelectedOption(option);
-  };
+  useEffect(() => {
+    DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
+      .then(async departamentos => {
+        setDepartamentosMostrablesCheckbox(departamentos);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+  }, [inputProvincia]);
 
-  const handleAbrirRecomendaciones = (busqueda: string) => {
-    setElementosABuscar(busqueda)
-    if (busqueda === 'PROVINCIAS') {
-      setModalBusquedaProvincia(true)
-      setInputProvincia(selectedOption);
-      setInputDepartamento('')
-      setInputLocalidad('')
-    } else if (busqueda === 'DEPARTAMENTOS') {
-      setModalBusquedaDepartamento(true)
-      setInputDepartamento(selectedOption);
-      setInputLocalidad('')
-    } else if (busqueda === 'LOCALIDADES') {
-      setModalBusquedaLocalidad(true)
-      setInputLocalidad(selectedOption);
-    }
+  const handleAbrirRecomendaciones = () => {
+    setModalBusqueda(true)
   };
 
   const handleModalClose = () => {
-    if (elementosABuscar === 'PROVINCIAS') {
-      setInputProvincia(selectedOption);
-      buscarDepartamentos(selectedOption)
-      setInputDepartamento('')
-      setInputLocalidad('')
-      setModalBusquedaProvincia(false)
-    } else if (elementosABuscar === 'DEPARTAMENTOS') {
-      setInputDepartamento(selectedOption);
-      buscarLocalidades(selectedOption)
-      setInputLocalidad('')
-      setModalBusquedaDepartamento(false)
-    } else if (elementosABuscar === 'LOCALIDADES') {
-      setInputLocalidad(selectedOption);
-      setModalBusquedaLocalidad(false)
-
-    }
+    setModalBusqueda(false)
   };
 
   const handleDepartamentosCheckboxChange = async (departamentoId: number) => {
@@ -174,9 +129,6 @@ function AgregarSucursal() {
     } else if (!codigoPostal) {
       toast.error("Por favor, es necesario el código postal del domicilio");
       return;
-    } else if (!inputLocalidad) {
-      toast.error("Por favor, es necesario la localidad para asignar el domicilio");
-      return;
     } else if (!horarioApertura) {
       toast.error("Por favor, es necesaria la hora de apertura");
       return;
@@ -194,9 +146,8 @@ function AgregarSucursal() {
     domicilio.calle = calle;
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
-    let localidad = localidades?.find(localidad => localidad.nombre === inputLocalidad);
+    domicilio.localidad = localidadSucursal;
 
-    if (localidad) domicilio.localidad = localidad
     sucursal.domicilio = domicilio;
 
     sucursal.contraseña = contraseña;
@@ -273,25 +224,23 @@ function AgregarSucursal() {
           <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
           <span>Código Postal</span>
         </div>
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-        <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
-        {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
-        <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
-        {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
-        <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-        {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+        <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputProvincia ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
+
+        <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputDepartamento ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
+
+        <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={localidadSucursal.nombre ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadSucursal(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
         <div className="inputBox">
           <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery:</label>
 
         </div>
-        {departamentos && (
+        {departamentosMostrablesCheckBox && (
           <table>
             <tbody>
-
-              {departamentos.map((departamento, index) => (
+              {departamentosMostrablesCheckBox.map((departamento, index) => (
                 <tr key={index}>
                   <td>{departamento.nombre}</td>
                   <td>
@@ -311,7 +260,7 @@ function AgregarSucursal() {
         )}
         <div className="inputBox">
 
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
         </div>
 
         {localidadesMostrablesCheckbox && (

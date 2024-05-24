@@ -8,8 +8,10 @@ import { Domicilio } from '../types/Domicilio/Domicilio';
 import { Cliente } from '../types/Cliente/Cliente';
 import { Toaster, toast } from 'sonner'
 import InputComponent from '../components/InputFiltroComponent';
-import ModalFlotanteRecomendaciones from '../components/ModalFlotanteRecomendaciones';
 import { Localidad } from '../types/Domicilio/Localidad';
+import ModalFlotanteRecomendacionesProvincias from '../hooks/ModalFlotanteFiltroProvincia';
+import ModalFlotanteRecomendacionesDepartamentos from '../hooks/ModalFlotanteFiltroDepartamentos';
+import ModalFlotanteRecomendacionesLocalidades from '../hooks/ModalFlotanteFiltroLocalidades';
 
 const LoginCliente = () => {
     const [nombre, setNombre] = useState('');
@@ -27,50 +29,17 @@ const LoginCliente = () => {
     };
 
     // Modal flotante de ingrediente
-    const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
-    const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
-    const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
-    const [selectedOption, setSelectedOption] = useState<string>('');
-    const [elementosABuscar, setElementosABuscar] = useState<string>('');
     const [inputProvincia, setInputProvincia] = useState<string>('');
     const [inputDepartamento, setInputDepartamento] = useState<string>('');
-    const [inputLocalidad, setInputLocalidad] = useState<string>('');
+    const [localidadCliente, setLocalidadCliente] = useState<Localidad>(new Localidad());
+    const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
 
-    const handleSelectProduct = (option: string) => {
-        setSelectedOption(option);
-    };
-
-    const handleAbrirRecomendaciones = (busqueda: string) => {
-        setElementosABuscar(busqueda)
-        if (busqueda === 'PROVINCIAS') {
-            setModalBusquedaProvincia(true)
-            setInputProvincia(selectedOption);
-            setInputDepartamento('')
-            setInputLocalidad('')
-        } else if (busqueda === 'DEPARTAMENTOS') {
-            setModalBusquedaDepartamento(true)
-            setInputDepartamento(selectedOption);
-            setInputLocalidad('')
-        } else if (busqueda === 'LOCALIDADES') {
-            setModalBusquedaLocalidad(true)
-            setInputLocalidad(selectedOption);
-        }
+    const handleAbrirRecomendaciones = () => {
+        setModalBusqueda(true)
     };
 
     const handleModalClose = () => {
-        if (elementosABuscar === 'PROVINCIAS') {
-            setModalBusquedaProvincia(false)
-            setInputProvincia(selectedOption);
-            setInputDepartamento('')
-            setInputLocalidad('')
-        } else if (elementosABuscar === 'DEPARTAMENTOS') {
-            setModalBusquedaDepartamento(false)
-            setInputDepartamento(selectedOption);
-            setInputLocalidad('')
-        } else if (elementosABuscar === 'LOCALIDADES') {
-            setModalBusquedaLocalidad(false)
-            setInputLocalidad(selectedOption);
-        }
+        setModalBusqueda(false)
     };
 
     const handleCargarUsuario = () => {
@@ -89,7 +58,7 @@ const LoginCliente = () => {
         } else if (!fechaNacimiento) {
             toast.error("Por favor, es necesaria la fecha de nacimiento");
             return;
-        } else if (!inputLocalidad) {
+        } else if (!localidadCliente) {
             toast.error("Por favor, es necesario la localidad para asignar el domicilio");
             return;
         } else if (!calle) {
@@ -113,9 +82,7 @@ const LoginCliente = () => {
         domicilio.codigoPostal = codigoPostal;
         domicilio.numero = numeroCasa;
 
-        let localidad: Localidad = new Localidad();
-        localidad.nombre = inputLocalidad;
-        domicilio.localidad = localidad;
+        domicilio.localidad = localidadCliente;
 
         cliente.nombre = `${nombre} ${apellido}`;
         cliente.email = email;
@@ -302,18 +269,14 @@ const LoginCliente = () => {
                                     </div>
                                 </label>
                             </div>
-                            <h2>Provincia</h2>
-                            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
-                            {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-                            <br />
-                            <h2>Departamento</h2>
-                            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
-                            {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
+                            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputProvincia ?? ''} />
+                            {modalBusqueda && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
 
-                            <br />
-                            <h2>Localidad</h2>
-                            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-                            {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+                            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputDepartamento ?? ''} />
+                            {modalBusqueda && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
+
+                            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={localidadCliente.nombre ?? ''} />
+                            {modalBusqueda && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
                             <div className="input-box">
                                 <label>

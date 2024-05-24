@@ -3,8 +3,6 @@ import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
 import ModalFlotante from '../ModalFlotante';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
-import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
-import { EnumTipoArticuloComida } from '../../types/Productos/EnumTipoArticuloComida';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
 import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { Toaster, toast } from 'sonner'
@@ -13,7 +11,11 @@ import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
 import { IngredienteMenuDTO } from '../../types/Ingredientes/IngredienteMenuDTO';
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
 import InputComponent from '../InputFiltroComponent';
-import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
+import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
+import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
+import { Categoria } from '../../types/Ingredientes/Categoria';
+import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFiltroCategorias';
+import { Medida } from '../../types/Ingredientes/Medida';
 
 interface EditarMenuProps {
   menuOriginal: ArticuloMenuDTO;
@@ -29,7 +31,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
-  const [tipo, setTipo] = useState<EnumTipoArticuloComida | string>(menuOriginal.tipo);
+  const [categoria, setCategoria] = useState<Categoria>(menuOriginal.categoria);
   const [comensales, setComensales] = useState(menuOriginal.comensales);
   const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
   const [nombre, setNombre] = useState(menuOriginal.nombre);
@@ -76,7 +78,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     setIngredientesMuestra(nuevosIngredientes);
   };
 
-  const handleMedidaIngredienteMostrableChange = (index: number, medida: EnumMedida | string) => {
+  const handleMedidaIngredienteMostrableChange = (index: number, medida: Medida) => {
     const nuevosIngredientes = [...ingredientesMuestra];
     nuevosIngredientes[index].medida = medida;
     setIngredientesMuestra(nuevosIngredientes);
@@ -84,11 +86,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
   ///////// INGREDIENTES
 
-  const handleNombreIngredienteChange = (index: number, nombre: string) => {
+  const handleIngredienteChange = (index: number, ingrediente: Ingrediente) => {
     const nuevosIngredientes = [...ingredientes];
-    console.log(nuevosIngredientes)
     if (nuevosIngredientes && nuevosIngredientes[index].ingrediente) {
-      nuevosIngredientes[index].ingrediente.nombre = nombre;
+      nuevosIngredientes[index].ingrediente = ingrediente;
       setIngredientes(nuevosIngredientes);
     }
   };
@@ -99,7 +100,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     setIngredientes(nuevosIngredientes);
   };
 
-  const handleMedidaIngredienteChange = (index: number, medida: EnumMedida | string) => {
+  const handleMedidaIngredienteChange = (index: number, medida: Medida) => {
     const nuevosIngredientes = [...ingredientes];
     nuevosIngredientes[index].medida = medida;
     setIngredientes(nuevosIngredientes);
@@ -108,9 +109,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const añadirCampoIngrediente = () => {
     // SI no hay ingredientes que genere en valor 0 de index
     if (ingredientes.length === 0) {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null, borrado: 'NO' }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: null, borrado: 'NO' }]);
     } else {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: '', articuloMenu: null, borrado: 'NO' }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: null, borrado: 'NO' }]);
       setSelectIndexIngredientes(prevIndex => prevIndex + 1);
     }
   };
@@ -143,17 +144,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
   // Modal flotante de ingrediente
   const [showAgregarIngredienteModal, setShowAgregarIngredienteModal] = useState(false);
-
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<string>('');
-  const [elementosABuscar, setElementosABuscar] = useState<string>('');
 
-  const handleSelectProduct = (product: string) => {
-    setSelectedProduct(product);
-  };
-
-  const handleAbrirRecomendaciones = (busqueda: string) => {
-    setElementosABuscar(busqueda)
+  const handleAbrirRecomendaciones = () => {
     setModalBusqueda(true);
   };
 
@@ -164,9 +157,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const handleModalClose = () => {
     setShowAgregarIngredienteModal(false);
     setModalBusqueda(false)
-    if (selectedProduct) {
-      handleNombreIngredienteChange(selectIndexIngredientes, selectedProduct);
-    }
   };
 
   function editarMenu() {
@@ -182,8 +172,8 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     } else if (!precioVenta) {
       toast.error("Por favor, es necesario el precio");
       return;
-    } else if (!tipo) {
-      toast.error("Por favor, es necesario el tipo");
+    } else if (!categoria) {
+      toast.error("Por favor, es necesario el categoria");
       return;
     } else if (imagenes.length === 0 && imagenesMuestra.length === 0) {
       toast.info("No se asignó ninguna imagen");
@@ -214,7 +204,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
     menuActualizado.nombre = nombre;
     menuActualizado.tiempoCoccion = tiempoCoccion;
-    menuActualizado.tipo = tipo;
+    menuActualizado.categoria = categoria;
     menuActualizado.comensales = comensales;
     menuActualizado.precioVenta = precioVenta;
     menuActualizado.descripcion = descripcion;
@@ -266,8 +256,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     <div className="modal-info">
       <Toaster />
       <h2>Editar menú</h2>
-      {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
-
       <div className="slider-container">
         <button onClick={prevImage} className="slider-button prev">◀</button>
         <div className='imagenes-wrapper'>
@@ -317,25 +305,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
         <span>Minutos de coccion</span>
       </div>
       <label>
-        <div className="inputBox">
-          <select
-            value={tipo}
-            onChange={(e) => {
-              setTipo(e.target.value);
-            }}
-          >
-            <option value='' disabled hidden>Seleccionar tipo</option>
-            <option value={EnumTipoArticuloComida.HAMBURGUESAS.toString()}>Hamburguesas</option>
-            <option value={EnumTipoArticuloComida.PANCHOS.toString()}>Panchos</option>
-            <option value={EnumTipoArticuloComida.EMPANADAS.toString()}>Empanadas</option>
-            <option value={EnumTipoArticuloComida.PIZZAS.toString()}>Pizzas</option>
-            <option value={EnumTipoArticuloComida.LOMOS.toString()}>Lomos</option>
-            <option value={EnumTipoArticuloComida.HELADO.toString()}>Helado</option>
-            <option value={EnumTipoArticuloComida.PARRILLA.toString()}>Parrilla</option>
-            <option value={EnumTipoArticuloComida.PASTAS.toString()}>Pastas</option>
-            <option value={EnumTipoArticuloComida.SUSHI.toString()}>Sushi</option>
-            <option value={EnumTipoArticuloComida.MILANESAS.toString()}>Milanesas</option>
-          </select>
+        <div className="input-filtrado">
+          <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={categoria.nombre ?? ''} />
+          {modalBusqueda && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
         </div>
       </label>
       <div className="inputBox">
@@ -364,19 +336,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
               <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))} />
               <span>Cantidad necesaria</span>
             </div>
-            <div className="inputBox">
-              <select
-                id={`select-medidas-${index}`}
-                value={ingredienteMenu?.medida?.toString()}
-                onChange={(e) => handleMedidaIngredienteMostrableChange(index, e.target.value)}
-              >
-                <option value="">Seleccionar medida ingrediente</option>
-                <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-                <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-                <option value={EnumMedida.LITROS.toString()}>Litros</option>
-                <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-                <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-              </select>
+            <div className="input-filtrado">
+              <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingredienteMenu.medida.nombre ?? ''} />
+              {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteMostrableChange(index, medida); handleModalClose(); }} />}
             </div>
           </div>
         ))}
@@ -384,26 +346,17 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
           <div key={index}>
             <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
             <div>
-              <InputComponent placeHolder='Seleccionar ingrediente...' onInputClick={() => handleAbrirRecomendaciones('INGREDIENTES')} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
-
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+              <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
+              {modalBusqueda && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
             </div>
             <div className="inputBox">
               <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
               <span>Cantidad necesaria</span>
             </div>
-            <div className="inputBox">
-              <select
-                id={`select-medidas-${index}`}
-                onChange={(e) => handleMedidaIngredienteChange(index, e.target.value)}
-                defaultValue=""
-              >
-                <option value="" disabled hidden>Selecciona una unidad de medida</option>
-                <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-                <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-                <option value={EnumMedida.LITROS.toString()}>Litros</option>
-                <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-                <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-              </select>
+            <div className="input-filtrado">
+              <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingredienteMenu.ingrediente?.medida.nombre ?? ''} />
+              {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
             </div>
           </div>
         ))}

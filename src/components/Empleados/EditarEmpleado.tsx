@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import '../../styles/empleados.css';
 import { Toaster, toast } from 'sonner'
-import { SucursalService } from '../../services/SucursalService';
-import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Domicilio } from '../../types/Domicilio/Domicilio';
-import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 import InputComponent from '../InputFiltroComponent';
 import { Localidad } from '../../types/Domicilio/Localidad';
-import { LocalidadService } from '../../services/LocalidadService';
+import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
+import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
+import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
+import ModalFlotanteRecomendacionesSucursales from '../../hooks/ModalFlotanteFiltroSucursales';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -22,19 +22,12 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
   const [contraseña, setContraseña] = useState('');
   const [telefono, setTelefono] = useState(empleadoOriginal.telefono);
   const [fechaNacimiento, setFechaNacimiento] = useState<string>(empleadoOriginal.fechaNacimiento.toString());
-  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
-  const [sucursalId, setSucursalId] = useState(empleadoOriginal.sucursal?.id);
+  const [sucursal, setSucursal] = useState(empleadoOriginal.sucursal);
 
   const [indexDomicilio, setIndexDomicilio] = useState<number>(0);
   const [indexDomicilioModificable, setIndexDomicilioModificable] = useState<number>(0);
   const [domiciliosModificable, setDomiciliosModificable] = useState<Domicilio[]>(empleadoOriginal.domicilios);
   const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
-  const [localidades, setLocalidades] = useState<Localidad[]>([]);
-
-
-  useEffect(() => {
-    cargarSucursales();
-  }, []);
 
   const isValidDate = (dateString: string): boolean => {
     const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -55,27 +48,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     }
   };
 
-
-  function buscarLocalidades() {
-    LocalidadService.getLocalidadesByNombreDepartamentoAndProvincia(inputDepartamento, inputProvincia)
-      .then(async localidades => {
-        setLocalidades(localidades);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-  }
-
-  async function cargarSucursales() {
-    await SucursalService.getSucursales()
-      .then(data => {
-        setSucursales(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-
   const handleChangeCalle = (index: number, calle: string) => {
     const nuevosDomicilios = [...domicilios];
     nuevosDomicilios[index].calle = calle;
@@ -94,13 +66,10 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     setDomicilios(nuevosDomicilios);
   };
 
-  const handleChangeLocalidad = (localidadNombre: string) => {
+  const handleChangeLocalidad = (index: number, localidad: Localidad) => {
     const nuevosDomicilios = [...domicilios];
-    let localidad = localidades.find(localidad => localidad.nombre === localidadNombre);
-    console.log(localidad)
-
     if (localidad) {
-      nuevosDomicilios[indexDomicilio].localidad = localidad;
+      nuevosDomicilios[index].localidad = localidad;
       setDomicilios(nuevosDomicilios);
     }
   };
@@ -146,52 +115,16 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     }
   };
 
-  const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
-  const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
-  const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string>('');
-  const [elementosABuscar, setElementosABuscar] = useState<string>('');
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
   const [inputProvincia, setInputProvincia] = useState<string>('');
   const [inputDepartamento, setInputDepartamento] = useState<string>('');
-  const [inputLocalidad, setInputLocalidad] = useState<string>('');
 
-  const handleSelectProduct = (option: string) => {
-    setSelectedOption(option);
-  };
-
-  const handleAbrirRecomendaciones = (busqueda: string) => {
-    setElementosABuscar(busqueda)
-    if (busqueda === 'PROVINCIAS') {
-      setModalBusquedaProvincia(true)
-      setInputProvincia(selectedOption);
-      setInputDepartamento('')
-      setInputLocalidad('')
-    } else if (busqueda === 'DEPARTAMENTOS') {
-      setModalBusquedaDepartamento(true)
-      setInputDepartamento(selectedOption);
-      setInputLocalidad('')
-    } else if (busqueda === 'LOCALIDADES') {
-      setModalBusquedaLocalidad(true)
-      buscarLocalidades();
-      setInputLocalidad(selectedOption);
-    }
+  const handleAbrirRecomendaciones = () => {
+    setModalBusqueda(true)
   };
 
   const handleModalClose = () => {
-    if (elementosABuscar === 'PROVINCIAS') {
-      setModalBusquedaProvincia(false)
-      setInputProvincia(selectedOption);
-      setInputDepartamento('')
-      setInputLocalidad('')
-    } else if (elementosABuscar === 'DEPARTAMENTOS') {
-      setModalBusquedaDepartamento(false)
-      setInputDepartamento(selectedOption);
-      setInputLocalidad('')
-    } else if (elementosABuscar === 'LOCALIDADES') {
-      setModalBusquedaLocalidad(false)
-      setInputLocalidad(selectedOption);
-      handleChangeLocalidad(selectedOption)
-    }
+    setModalBusqueda(false)
   };
 
   const formatDate = (date: Date) => {
@@ -233,6 +166,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       return;
     }
 
+
     const empleadoActualizado: Empleado = {
       ...empleadoOriginal,
       nombre,
@@ -257,9 +191,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
 
     empleadoActualizado.domicilios = domicilios;
 
-    let sucursal = sucursales.find(sucursal => sucursal.id === sucursalId);
-
     if (sucursal) empleadoActualizado.sucursal = sucursal;
+
     empleadoActualizado.borrado = 'NO';
 
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
@@ -304,9 +237,9 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
           <div key={'domicilioMod' + index}>
             <hr />
             <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilioModificable(index)}>X</p>
-          
+
             <h2>Domicilio {index + 1}</h2>
-            
+
             <div className="inputBox">
               <input type="text" required={true} value={domicilio.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
               <span>Nombre de calle</span>
@@ -339,37 +272,22 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
               <span>Código Postal</span>
             </div>
             <h2>Provincia</h2>
-            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones('PROVINCIAS')} selectedProduct={inputProvincia ?? ''} />
-            {modalBusquedaProvincia && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia='' inputDepartamento='' />}
-            <br />
-            <h2>Departamento</h2>
-            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones('DEPARTAMENTOS')} selectedProduct={inputDepartamento ?? ''} />
-            {modalBusquedaDepartamento && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputProvincia={selectedOption} inputDepartamento='' />}
+            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputProvincia ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
 
-            <br />
-            <h2>Localidad</h2>
-            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones('LOCALIDADES')} selectedProduct={inputLocalidad ?? ''} />
-            {modalBusquedaLocalidad && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
-            <p onClick={() => quitarCampoDomicilio(index)}>X</p>
+            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={inputDepartamento ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
+
+            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={domicilio.localidad.nombre ?? ''} />
+            {modalBusqueda && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+            <hr /><p onClick={() => quitarCampoDomicilio(index)}>X</p>
           </div>
         ))}
-        
-        
-        
-        
       </form>
       <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
       <br />
-      <div className="inputBox">
-        <label>Sucursal: </label>
-        <select value={sucursalId} onChange={(e) => setSucursalId(parseInt(e.target.value))}>
-          {sucursales && sucursales.map(sucursal => (
-            <option key={sucursal.id} value={sucursal.id}>
-              {sucursal.domicilio?.localidad?.nombre}
-            </option>
-          ))}
-        </select>
-        </div>
+      <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={sucursal?.id.toString() ?? ''} />
+      {modalBusqueda && <ModalFlotanteRecomendacionesSucursales onCloseModal={handleModalClose} onSelectSucursal={(sucursal) => { setSucursal(sucursal); handleModalClose(); }} />}
       <hr />
       <button className='button-form' type='button' onClick={editarEmpleado}>Editar empleado</button>
     </div>

@@ -4,8 +4,9 @@ import { StockArticuloVentaService } from '../../services/StockArticulosService'
 import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
 import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 import { toast, Toaster } from 'sonner';
-import { convertirStringAEnumMedida } from '../../utils/global_variables/functions';
 import '../../styles/modalFlotante.css'
+import InputComponent from '../InputFiltroComponent';
+import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 
 interface EditarStockProps {
   stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
@@ -18,6 +19,16 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
   const [cantidadMaxima, setCantidadMaxima] = useState(stockOriginal.cantidadMaxima);
   const [medida, setMedida] = useState(stockOriginal.medida);
   const [costo, setCosto] = useState(stockOriginal.precioCompra);
+
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+
+  const handleAbrirRecomendaciones = () => {
+    setModalBusqueda(true)
+  };
+
+  const handleModalClose = () => {
+    setModalBusqueda(false)
+  };
 
   function editarStock() {
     if (!cantidadMinima || cantidadMinima < 0) {
@@ -100,16 +111,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
         <input type="number" required={true} value={cantidadActual | 0} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
         <span>Cantidad actual del ingrediente</span>
       </div><br />
-      <div className="inputBox">
-        <select value={medida?.toString()} onChange={(e) => { setMedida(convertirStringAEnumMedida(e.target.value)) }}>
-          <option>Seleccionar medida ingrediente</option>
-          <option value="KILOGRAMOS">Kilogramos</option>
-          <option value="GRAMOS">Gramos</option>
-          <option value="LITROS">Litros</option>
-          <option value="CENTIMETROS_CUBICOS">Centimetros cúbicos</option>
-          <option value="PAQUETES">Paquetes</option>
-          <option value="UNIDADES">Unidades</option>
-        </select>
+      <div className="input-filtrado">
+        <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
       </div>
       <br /><br />
       <div className="inputBox">

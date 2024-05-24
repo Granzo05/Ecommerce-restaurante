@@ -3,12 +3,13 @@ import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { Toaster, toast } from 'sonner'
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
-import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
-import { EnumTipoArticuloVenta } from '../../types/Productos/EnumTipoArticuloVenta';
 import { clearInputs } from '../../utils/global_variables/functions';
 import '../../styles/inputLabel.css'
 import InputComponent from '../InputFiltroComponent';
-import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
+import { Categoria } from '../../types/Ingredientes/Categoria';
+import { Medida } from '../../types/Ingredientes/Medida';
+import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
+import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFiltroCategorias';
 
 function AgregarArticuloVenta() {
 
@@ -39,10 +40,10 @@ function AgregarArticuloVenta() {
     }
   };
 
-  const [tipo, setTipo] = useState<EnumTipoArticuloVenta | string>('');
+  const [categoria, setCategoria] = useState<Categoria>(new Categoria());
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
-  const [medida, setMedida] = useState<EnumMedida | string>('');
+  const [medida, setMedida] = useState<Medida>(new Medida);
   const [cantidad, setCantidad] = useState(0);
 
   async function agregarArticulo() {
@@ -55,7 +56,7 @@ function AgregarArticuloVenta() {
     } else if (!precio) {
       toast.error("Por favor, es necesario el precio");
       return;
-    } else if (!tipo) {
+    } else if (!categoria) {
       toast.error("Por favor, es necesario el tipo");
       return;
     } else if (!medida) {
@@ -69,7 +70,7 @@ function AgregarArticuloVenta() {
     const articulo: ArticuloVenta = new ArticuloVenta();
 
     articulo.nombre = nombre;
-    articulo.tipo = tipo;
+    articulo.categoria = categoria;
     articulo.precioVenta = precio;
     articulo.medida = medida;
     articulo.cantidadMedida = cantidad;
@@ -90,21 +91,14 @@ function AgregarArticuloVenta() {
 
   // Modal flotante de ingrediente
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<string>('');
-  const [elementosABuscar, setElementosABuscar] = useState<string>('');
 
-  const handleAbrirRecomendaciones = (busqueda: string) => {
-      setElementosABuscar(busqueda)
-      setModalBusqueda(true);
-  };
-
-  const handleSelectProduct = (product: string) => {
-      setSelectedProduct(product);
+  const handleAbrirRecomendaciones = () => {
+    setModalBusqueda(true);
   };
 
   const handleModalClose = () => {
     setModalBusqueda(false);
-};
+  };
 
   return (
     <div className="modal-info">
@@ -135,21 +129,14 @@ function AgregarArticuloVenta() {
         <input type="number" required={true} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
         <span>Precio ($)</span>
       </div>
-
-        <div className="inputBox">
-          <select name="tipoArticulo" required={true} onChange={(e) => { setTipo(e.target.value) }}
-            defaultValue="">
-            <option value="" disabled hidden>Seleccionar tipo de articulo</option>
-            <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida sin alcohol</option>
-            <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida con alcohol</option>
-          </select>
-        </div>
-        <div className="input-filtrado">
-                <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones('MEDIDAS')} selectedProduct={selectedProduct ?? ''} />
-                {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
-
-            </div>
-
+      <div className="input-filtrado">
+        <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={categoria.nombre ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+      </div>
+      <div className="input-filtrado">
+        <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
+        {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+      </div>
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
         <span>Cantidad de la medida</span>

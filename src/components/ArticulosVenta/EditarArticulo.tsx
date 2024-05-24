@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
-import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
 import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { Toaster, toast } from 'sonner'
 import './editarArticuloVenta.css'
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
-import { EnumTipoArticuloVenta } from '../../types/Productos/EnumTipoArticuloVenta';
 import '../../styles/modalCrud.css'
+import InputComponent from '../InputFiltroComponent';
+import { Categoria } from '../../types/Ingredientes/Categoria';
+import { Medida } from '../../types/Ingredientes/Medida';
+import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFiltroCategorias';
+import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 
 interface EditarArticuloVentaProps {
   articuloOriginal: ArticuloVenta;
@@ -19,16 +22,12 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
-  const [tipo, setTipo] = useState<EnumTipoArticuloVenta | string>(articuloOriginal.tipo.toString());
+  const [categoria, setCategoria] = useState<Categoria>(articuloOriginal.categoria);
   const [precioVenta, setPrecio] = useState(articuloOriginal.precioVenta);
   const [nombre, setNombre] = useState(articuloOriginal.nombre);
-  const [medida, setMedida] = useState<EnumMedida | string>(articuloOriginal.medida?.toString());
+  const [medida, setMedida] = useState<Medida>(articuloOriginal.medida);
   const [cantidad, setCantidad] = useState(articuloOriginal.cantidadMedida);
 
-
-  useEffect(() => {
-    console.log(articuloOriginal)
-  }, []);
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -63,6 +62,16 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     setImagenesEliminadas([...imagenesEliminadas, imagenEliminada]);
   };
 
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+
+  const handleAbrirRecomendaciones = () => {
+    setModalBusqueda(true);
+  };
+
+  const handleModalClose = () => {
+    setModalBusqueda(false);
+  };
+
   function editarArticuloVenta() {
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
@@ -76,7 +85,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     } else if (!precioVenta || precioVenta === 0) {
       toast.error("Por favor, es necesario el precio");
       return;
-    } else if (!tipo) {
+    } else if (!categoria) {
       toast.error("Por favor, es necesario el tipo");
       return;
     } else if (imagenes.length === 0 && imagenesMuestra.length === 0) {
@@ -88,7 +97,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       ...articuloOriginal,
       nombre,
       precioVenta,
-      tipo,
+      categoria,
       cantidadMedida: cantidad,
       medida
     };
@@ -146,7 +155,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
           ))}
           <button onClick={nextImage} className="slider-button next">▶</button>
         </div>
-        
+
       </div>
 
       {imagenes.map((imagen, index) => (
@@ -178,28 +187,14 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
           <input type="text" required={true} value={cantidad | 0} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
           <span>Cantidad</span>
         </div>
-        <div className="inputBox">
-          <select value={tipo} name="tipoArticulo" onChange={(e) => { setTipo(e.target.value) }}>
-            <option value="">Seleccionar tipo de articulo</option>
-            <option value={EnumTipoArticuloVenta.BEBIDA_SIN_ALCOHOL.toString()}>Bebida sin alcohol</option>
-            <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida con alcohol</option>
-          </select>
+        <div className="input-filtrado">
+          <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={categoria.nombre ?? ''} />
+          {modalBusqueda && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
         </div>
-        <div className="inputBox">
-          <select
-            value={medida}
-            onChange={(e) => setMedida(e.target.value)}
-          >
-            <option value="">Seleccionar medida ingrediente</option>
-            <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-            <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-            <option value={EnumMedida.LITROS.toString()}>Litros</option>
-            <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-            <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-          </select>
+        <div className="input-filtrado">
+          <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
+          {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
         </div>
-
-
       </div>
       <hr />
       <button className='button-form' type='button' onClick={editarArticuloVenta}>Editar articulo</button>

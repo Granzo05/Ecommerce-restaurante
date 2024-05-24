@@ -1,11 +1,8 @@
 package main.controllers;
 
-import main.entities.Ingredientes.Ingrediente;
-import main.entities.Ingredientes.IngredienteMenu;
-import main.entities.Ingredientes.IngredienteMenuDTO;
+import main.entities.Ingredientes.*;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloMenuDTO;
-import main.entities.Productos.EnumTipoArticuloComida;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
@@ -30,14 +27,16 @@ public class ArticuloMenuController {
     private final IngredienteRepository ingredienteRepository;
     private final ImagenesRepository imagenesRepository;
     private final SucursalRepository sucursalRepository;
+    private final CategoriaRepository categoriaRepository;
 
 
-    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository) {
+    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository, CategoriaRepository categoriaRepository) {
         this.articuloMenuRepository = articuloMenuRepository;
         this.ingredienteMenuRepository = ingredienteMenuRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.imagenesRepository = imagenesRepository;
         this.sucursalRepository = sucursalRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     // Busca por id de menu
@@ -175,16 +174,21 @@ public class ArticuloMenuController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/menu/tipo/{tipoMenu}/{idSucursal}")
-    public Set<ArticuloMenuDTO> getMenusPorTipo(@PathVariable("tipoMenu") String tipo, @PathVariable("idSucursal") Long idSucursal) {
-        String tipoMenu = tipo.toUpperCase().replace(" ", "_");
-        Set<ArticuloMenuDTO> articuloMenus = (new HashSet<>(articuloMenuRepository.findByTipoAndIdSucursal(EnumTipoArticuloComida.valueOf(tipoMenu), idSucursal)));
+    @GetMapping("/menu/tipo/{categoria}/{idSucursal}")
+    public Set<ArticuloMenuDTO> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
+        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
 
-        for (ArticuloMenuDTO articuloMenu : articuloMenus) {
-            articuloMenu.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdMenuDTO(articuloMenu.getId())));
-            articuloMenu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(articuloMenu.getId())));
+        if(categoriaDB.isPresent()) {
+            Set<ArticuloMenuDTO> articuloMenus = (new HashSet<>(articuloMenuRepository.findByCategoriaAndIdSucursal(categoriaDB.get(), idSucursal)));
+
+            for (ArticuloMenuDTO articuloMenu : articuloMenus) {
+                articuloMenu.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdMenuDTO(articuloMenu.getId())));
+                articuloMenu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(articuloMenu.getId())));
+            }
+            return articuloMenus;
         }
-        return articuloMenus;
+
+        return null;
     }
 
     @Transactional
@@ -222,13 +226,10 @@ public class ArticuloMenuController {
                 articuloMenu.getIngredientesMenu().add(ingredienteMenu1);
             }
 
-            System.out.println(articuloMenuDetail.getIngredientesMenu());
-            System.out.println(articuloMenuDetail.getIngredientes());
-
             articuloMenu.setTiempoCoccion(articuloMenuDetail.getTiempoCoccion());
             articuloMenu.setDescripcion(articuloMenuDetail.getDescripcion());
             articuloMenu.setNombre(articuloMenuDetail.getNombre());
-            articuloMenu.setTipo(articuloMenuDetail.getTipo());
+            articuloMenu.setCategoria(categoriaRepository.findByNameAndIdSucursal(articuloMenuDetail.getCategoria().getNombre(), id).get());
             articuloMenu.setComensales(articuloMenuDetail.getComensales());
 
             articuloMenuRepository.save(articuloMenu);

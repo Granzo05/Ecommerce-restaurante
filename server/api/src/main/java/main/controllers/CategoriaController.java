@@ -43,7 +43,7 @@ public class CategoriaController {
     @PostMapping("/categoria/create/{idSucursal}")
     public ResponseEntity<String> crearCategoria(@RequestBody Categoria categoriaDetails, @PathVariable("idSucursal") Long idSucursal) {
         // Busco el categoria en la base de datos
-        Optional<Categoria> categoriaDB = categoriaRepository.findByDenominacionAndIdSucursal(categoriaDetails.getNombre(), idSucursal);
+        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoriaDetails.getNombre(), idSucursal);
 
         if (categoriaDB.isEmpty()) {
             categoriaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());

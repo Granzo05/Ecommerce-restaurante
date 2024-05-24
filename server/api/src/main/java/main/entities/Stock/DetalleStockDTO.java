@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.entities.Ingredientes.EnumMedida;
+import main.entities.Ingredientes.Medida;
 
 @Getter
 @Setter
@@ -13,13 +13,13 @@ import main.entities.Ingredientes.EnumMedida;
 public class DetalleStockDTO {
     private Long id;
     private int cantidad;
-    private EnumMedida medida;
+    private Medida medida;
     private double costoUnitario;
     private double subTotal;
     private String ingredienteNombre;
     private String articuloVentaNombre;
 
-    public DetalleStockDTO(Long id, int cantidad, EnumMedida medida, double costoUnitario, double subTotal, String nombre) {
+    public DetalleStockDTO(Long id, int cantidad, Medida medida, double costoUnitario, double subTotal, String nombre) {
         this.id = id;
         this.cantidad = cantidad;
         this.medida = medida;
