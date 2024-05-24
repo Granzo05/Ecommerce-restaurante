@@ -8,6 +8,7 @@ import EliminarCategoria from "./EliminarCategoria";
 import EditarCategoria from "./EditarCategoria";
 import AgregarCategoria from "./AgregarCategoria";
 import ActivarCategoria from "./ActivarCategoria";
+import '../../styles/categorias.css'
 
 const Categorias = () => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -94,7 +95,7 @@ const Categorias = () => {
         <div className="opciones-pantallas">
             <h1>- Categorias -</h1>
             <div className="btns-categorias">
-            <button className="btn-agregar" onClick={() => handleAgregarCategoria()}> + Agregar categoria</button>
+                <button className="btn-agregar" onClick={() => handleAgregarCategoria()}> + Agregar categoria</button>
             </div>
             <hr />
             {mostrarCategorias && (
@@ -125,7 +126,6 @@ const Categorias = () => {
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                
                                             <button className="btn-accion-editar" onClick={() => handleEditarCategoria(categoria)}>EDITAR</button>
                                             <button className="btn-accion-activar" onClick={() => handleActivarCategoria(categoria)}>ACTIVAR</button>
                                             </div>

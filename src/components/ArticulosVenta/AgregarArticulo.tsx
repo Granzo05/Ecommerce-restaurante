@@ -7,6 +7,8 @@ import { EnumMedida } from '../../types/Ingredientes/EnumMedida';
 import { EnumTipoArticuloVenta } from '../../types/Productos/EnumTipoArticuloVenta';
 import { clearInputs } from '../../utils/global_variables/functions';
 import '../../styles/inputLabel.css'
+import InputComponent from '../InputFiltroComponent';
+import ModalFlotanteRecomendaciones from '../ModalFlotanteRecomendaciones';
 
 function AgregarArticuloVenta() {
 
@@ -86,6 +88,24 @@ function AgregarArticuloVenta() {
 
   }
 
+  // Modal flotante de ingrediente
+  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>('');
+  const [elementosABuscar, setElementosABuscar] = useState<string>('');
+
+  const handleAbrirRecomendaciones = (busqueda: string) => {
+      setElementosABuscar(busqueda)
+      setModalBusqueda(true);
+  };
+
+  const handleSelectProduct = (product: string) => {
+      setSelectedProduct(product);
+  };
+
+  const handleModalClose = () => {
+    setModalBusqueda(false);
+};
+
   return (
     <div className="modal-info">
       <h2>Agregar artículo para venta</h2>
@@ -116,7 +136,6 @@ function AgregarArticuloVenta() {
         <span>Precio ($)</span>
       </div>
 
-      <label>
         <div className="inputBox">
           <select name="tipoArticulo" required={true} onChange={(e) => { setTipo(e.target.value) }}
             defaultValue="">
@@ -125,21 +144,11 @@ function AgregarArticuloVenta() {
             <option value={EnumTipoArticuloVenta.BEBIDA_CON_ALCOHOL.toString()}>Bebida con alcohol</option>
           </select>
         </div>
+        <div className="input-filtrado">
+                <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones('MEDIDAS')} selectedProduct={selectedProduct ?? ''} />
+                {modalBusqueda && <ModalFlotanteRecomendaciones elementoBuscado={elementosABuscar} onCloseModal={handleModalClose} onSelectProduct={handleSelectProduct} inputDepartamento='' inputProvincia='' />}
 
-      </label>
-      <div className="inputBox">
-        <select
-          onChange={(e) => setMedida(e.target.value)}
-          defaultValue=""
-        >
-          <option value="" disabled hidden>Seleccionar medida</option>
-          <option value={EnumMedida.KILOGRAMOS.toString()}>Kilogramos</option>
-          <option value={EnumMedida.GRAMOS.toString()}>Gramos</option>
-          <option value={EnumMedida.LITROS.toString()}>Litros</option>
-          <option value={EnumMedida.CENTIMETROS_CUBICOS.toString()}>Centimetros cúbicos</option>
-          <option value={EnumMedida.UNIDADES.toString()}>Unidades</option>
-        </select>
-      </div>
+            </div>
 
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />

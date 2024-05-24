@@ -93,7 +93,7 @@ const Subcategorias = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Subcategorias -</h1>
-            <div className="btns-subcategorias">
+            <div className="btns-categorias">
                 <button className="btn-agregar" onClick={() => handleAgregarCategoria()}> + Agregar subcategoria</button>
             </div>
             <hr />

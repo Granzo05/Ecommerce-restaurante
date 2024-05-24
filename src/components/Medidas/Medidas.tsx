@@ -93,7 +93,7 @@ const Medidas = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Medidas -</h1>
-            <div className="btns-medidas">
+            <div className="btns-categorias">
                 <button className="btn-agregar" onClick={() => handleAgregarMedida()}> + Agregar medida</button>
             </div>
             <hr />
