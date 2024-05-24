@@ -12,4 +12,9 @@ public class MedidaDTO {
     private Long id;
     private String nombre;
     private String borrado = "NO";
+
+    public MedidaDTO(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
 }

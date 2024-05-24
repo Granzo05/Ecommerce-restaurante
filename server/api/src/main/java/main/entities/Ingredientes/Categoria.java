@@ -1,5 +1,7 @@
 package main.entities.Ingredientes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Sucursal;
@@ -22,6 +24,7 @@ public class Categoria {
     private String nombre;
     @Column(name = "borrado")
     private String borrado = "NO";
+    @JsonIgnoreProperties(value = {"sucursales", "categoria"})
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Subcategoria> subcategorias = new HashSet<>();
     @ManyToMany(fetch = FetchType.LAZY)

@@ -1,6 +1,7 @@
 package main.entities.Productos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Categoria;
@@ -35,6 +36,7 @@ public class ArticuloVenta extends Articulo implements Serializable {
     private int cantidadMedida;
     @JsonIgnoreProperties(value = {"articuloVenta"})
     @OneToOne(mappedBy = "articuloVenta", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private StockArticuloVenta stock;
     @JsonIgnoreProperties(value = {"articuloVenta"})
     @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY)

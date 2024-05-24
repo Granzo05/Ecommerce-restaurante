@@ -27,13 +27,15 @@ public class ArticuloVentaController {
     private final ArticuloVentaRepository articuloVentaRepository;
     private final SucursalRepository sucursalRepository;
     private final CategoriaRepository categoriaRepository;
+    private final MedidaRepository medidaRepository;
 
-    public ArticuloVentaController(StockArticuloVentaRepository stockArticuloVentaRepository, ImagenesRepository imagenesRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, CategoriaRepository categoriaRepository) {
+    public ArticuloVentaController(StockArticuloVentaRepository stockArticuloVentaRepository, ImagenesRepository imagenesRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, CategoriaRepository categoriaRepository, MedidaRepository medidaRepository) {
         this.stockArticuloVentaRepository = stockArticuloVentaRepository;
         this.imagenesRepository = imagenesRepository;
         this.articuloVentaRepository = articuloVentaRepository;
         this.sucursalRepository = sucursalRepository;
         this.categoriaRepository = categoriaRepository;
+        this.medidaRepository = medidaRepository;
     }
 
     @GetMapping("/articulos/{idSucursal}")
@@ -158,7 +160,7 @@ public class ArticuloVentaController {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, id);
 
         if(categoriaDB.isPresent()) {
-            Set<ArticuloVentaDTO> articuloVentas = (new HashSet<>(articuloVentaRepository.findByTipoAndIdSucursal(categoriaDB.get(), id)));
+            Set<ArticuloVentaDTO> articuloVentas = (new HashSet<>(articuloVentaRepository.findByCategoriaNameAndIdSucursal(categoriaDB.get().getNombre(), id)));
 
             for (ArticuloVentaDTO articuloVenta : articuloVentas) {
                 articuloVenta.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdArticuloDTO(articuloVenta.getId())));
@@ -177,7 +179,7 @@ public class ArticuloVentaController {
             articuloVenta.setPrecioVenta(articuloVentaDetail.getPrecioVenta());
             articuloVenta.setNombre(articuloVentaDetail.getNombre());
             articuloVenta.setCategoria(categoriaRepository.findByNameAndIdSucursal(articuloVentaDetail.getCategoria().getNombre(), id).get());
-            articuloVenta.setMedida(articuloVentaDetail.getMedida());
+            articuloVenta.setMedida(medidaRepository.findByDenominacionAndIdSucursal(articuloVentaDetail.getMedida().getNombre(), id).get());
             articuloVenta.setCantidadMedida(articuloVentaDetail.getCantidadMedida());
 
             articuloVentaRepository.save(articuloVenta);

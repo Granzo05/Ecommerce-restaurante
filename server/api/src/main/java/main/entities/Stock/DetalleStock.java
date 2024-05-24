@@ -1,7 +1,9 @@
 package main.entities.Stock;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Ingrediente;
@@ -37,6 +39,7 @@ public class DetalleStock {
     @OneToOne
     @JsonIgnoreProperties(value = {"stock"})
     @JoinColumn(name = "id_articulo")
+    @JsonBackReference
     private ArticuloVenta articuloVenta;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

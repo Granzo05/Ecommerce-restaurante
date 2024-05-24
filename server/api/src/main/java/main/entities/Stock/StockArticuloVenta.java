@@ -1,5 +1,6 @@
 package main.entities.Stock;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.ArticuloVenta;
@@ -20,5 +21,6 @@ public class StockArticuloVenta extends Stock implements Serializable {
     private Long id;
     @OneToOne
     @JoinColumn(name = "id_articulo")
+    @JsonBackReference
     private ArticuloVenta articuloVenta;
 }

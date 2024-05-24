@@ -76,10 +76,11 @@ function AgregarArticuloVenta() {
     articulo.cantidadMedida = cantidad;
     articulo.borrado = 'NO';
 
+    console.log(articulo)
+
     toast.promise(ArticuloVentaService.createArticulo(articulo, imagenes), {
       loading: 'Creando articulo...',
       success: (message) => {
-        clearInputs();
         return message;
       },
       error: (message) => {

@@ -1,11 +1,14 @@
 package main.entities.Productos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.CategoriaDTO;
 import main.entities.Ingredientes.Medida;
+import main.entities.Ingredientes.MedidaDTO;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,20 +19,22 @@ import java.util.Set;
 @NoArgsConstructor
 public class ArticuloVentaDTO extends Articulo {
     private Long id;
+    @JsonIgnoreProperties("sucursales")
     private Categoria categoria;
+    @JsonIgnoreProperties("sucursales")
     private Medida medida;
     private String borrado;
     private String nombre;
     private int cantidadMedida;
-    private Set<Imagenes> imagenes = new HashSet<>();
+    private Set<ImagenesDTO> imagenes = new HashSet<>();
 
-    public ArticuloVentaDTO(Long id, String nombre, double precioVenta, Categoria categoria, String borrado, int cantidad, Medida medida) {
+    public ArticuloVentaDTO(Long id, String nombre, double precioVenta, String borrado, int cantidad, Categoria categoria, Medida medida) {
         super(precioVenta);
         this.id = id;
         this.nombre = nombre;
-        this.categoria = categoria;
         this.borrado = borrado;
         this.cantidadMedida = cantidad;
+        this.categoria = categoria;
         this.medida = medida;
     }
 }

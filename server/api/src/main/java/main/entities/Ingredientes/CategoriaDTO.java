@@ -23,4 +23,9 @@ public class CategoriaDTO {
         this.nombre = nombre;
         this.borrado = borrado;
     }
+
+    public CategoriaDTO(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
 }
