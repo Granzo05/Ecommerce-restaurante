@@ -1,5 +1,6 @@
 package main.entities.Restaurante;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.Imagenes;
@@ -28,8 +29,10 @@ public class Empresa {
     private String contraseña;
     @Column(name = "borrado")
     private String borrado;
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private Set<Sucursal> sucursales = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
 }

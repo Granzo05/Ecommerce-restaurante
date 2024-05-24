@@ -1,5 +1,6 @@
 package main.entities.Stock;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Medida;
@@ -27,12 +28,13 @@ public abstract class Stock implements Serializable {
     private int cantidadMinima;
     @Column(name = "cantidad_maxima")
     private int cantidadMaxima;
+    @JsonIgnoreProperties(value = {"sucursales"})
     @OneToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
-    @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;

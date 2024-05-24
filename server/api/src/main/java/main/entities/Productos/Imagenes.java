@@ -1,5 +1,6 @@
 package main.entities.Productos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Empresa;
@@ -28,6 +29,7 @@ public class Imagenes implements Serializable {
     private String formato;
     @Column(name = "borrado")
     private String borrado = "NO";
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne
     @JoinTable(
             name = "imagenes_menu",
@@ -35,6 +37,7 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_menu")
     )
     private ArticuloMenu articuloMenu;
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne
     @JoinTable(
             name = "imagenes_articulo",
@@ -42,6 +45,7 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_articulo")
     )
     private ArticuloVenta articuloVenta;
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne
     @JoinTable(
             name = "imagenes_promocion",
@@ -49,6 +53,7 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_promocion")
     )
     private Promocion promocion;
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne
     @JoinTable(
             name = "imagenes_empresa",
@@ -56,6 +61,7 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_empresa")
     )
     private Empresa empresa;
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne
     @JoinTable(
             name = "imagenes_sucursal",

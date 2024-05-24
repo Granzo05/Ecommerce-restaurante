@@ -25,6 +25,7 @@ public class DetalleStock {
     private Long id;
     @Column(name = "cantidad")
     private int cantidad;
+    @JsonIgnoreProperties(value = {"sucursales"})
     @OneToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
@@ -42,7 +43,7 @@ public class DetalleStock {
     @JsonBackReference
     private ArticuloVenta articuloVenta;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"sucursal"})
     @JoinColumn(name = "id_stock_entrante")
     private StockEntrante stockEntrante;
 

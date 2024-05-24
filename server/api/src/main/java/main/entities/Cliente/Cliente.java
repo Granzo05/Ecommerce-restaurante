@@ -1,5 +1,6 @@
 package main.entities.Cliente;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
@@ -28,7 +29,7 @@ public class Cliente {
     private String nombre;
     @Column(name = "email")
     private String email;
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Domicilio> domicilios = new HashSet<>();
     @Column(name = "telefono")

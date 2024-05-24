@@ -1,5 +1,6 @@
 package main.entities.Restaurante;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class FechaContratacionEmpleado {
     @CreationTimestamp
     private LocalDateTime fechaContratacion;
 
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;

@@ -34,16 +34,16 @@ public class ArticuloVenta extends Articulo implements Serializable {
     private Medida medida;
     @Column(name = "cantidad_medida")
     private int cantidadMedida;
-    @JsonIgnoreProperties(value = {"articuloVenta"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToOne(mappedBy = "articuloVenta", fetch = FetchType.LAZY)
     @JsonManagedReference
     private StockArticuloVenta stock;
-    @JsonIgnoreProperties(value = {"articuloVenta"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"articulosVenta"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY)
     private Set<Sucursal> sucursales = new HashSet<>();
 }

@@ -1,5 +1,6 @@
 package main.entities.Productos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Sucursal;
@@ -28,6 +29,7 @@ public class Promocion {
     private LocalDateTime fechaDesde;
     @Column(name = "fecha_hasta")
     private LocalDateTime fechaHasta;
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "promocion_articulo",
@@ -35,6 +37,7 @@ public class Promocion {
             inverseJoinColumns = @JoinColumn(name = "id_articulo")
     )
     private Set<Articulo> articulos = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "promocion_menu",
@@ -42,6 +45,7 @@ public class Promocion {
             inverseJoinColumns = @JoinColumn(name = "id_menu")
     )
     private Set<ArticuloMenu> articulosMenu = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "promocion")
     private Set<Imagenes> imagenes = new HashSet<>();
     @Column(name = "precio_promocion")
@@ -49,6 +53,7 @@ public class Promocion {
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "promocion_sucursal",

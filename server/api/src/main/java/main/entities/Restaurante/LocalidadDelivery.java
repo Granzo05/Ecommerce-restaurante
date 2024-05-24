@@ -18,11 +18,12 @@ public class LocalidadDelivery {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @JsonIgnoreProperties(value = {"localidadesDisponiblesDelivery"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne
     @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToOne
     @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     @JoinColumn(name = "id_localidad")

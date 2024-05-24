@@ -26,6 +26,7 @@ public class Provincia {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_pais")
     private Pais pais;
+    @JsonIgnoreProperties(value = {"provincia"})
     @OneToMany(mappedBy = "provincia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Departamento> departamentos = new HashSet<>();
 }

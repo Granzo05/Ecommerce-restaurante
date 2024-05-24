@@ -46,7 +46,7 @@ public class Empleado {
     @JsonIgnore
     @Column(name = "privilegios")
     private String privilegios;
-    @JsonIgnoreProperties({"empleados", "empresa"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;

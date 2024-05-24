@@ -1,5 +1,6 @@
 package main.entities.Ingredientes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Stock.StockIngredientes;
@@ -20,6 +21,7 @@ public class Ingrediente {
     private String nombre;
     @Column(name = "borrado")
     private String borrado = "NO";
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "ingrediente")
     private StockIngredientes stock;
 }

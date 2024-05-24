@@ -27,6 +27,7 @@ public class Departamento {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_provincia")
     private Provincia provincia;
+    @JsonIgnoreProperties(value = {"departamento"})
     @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Localidad> localidades = new HashSet<>();
 

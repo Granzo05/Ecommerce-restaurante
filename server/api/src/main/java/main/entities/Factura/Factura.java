@@ -1,5 +1,6 @@
 package main.entities.Factura;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Factura {
     public LocalDateTime fechaFacturacion;
     @Column(name = "total")
     private double total;
+    @JsonIgnoreProperties(value = {"factura"})
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido")
     private Pedido pedido;

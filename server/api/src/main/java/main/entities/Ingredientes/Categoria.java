@@ -27,6 +27,7 @@ public class Categoria {
     @JsonIgnoreProperties(value = {"sucursales", "categoria"})
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Subcategoria> subcategorias = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "categorias_sucursales",

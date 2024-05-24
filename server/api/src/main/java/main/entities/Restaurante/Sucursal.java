@@ -30,7 +30,7 @@ public class Sucursal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @JsonIgnoreProperties({"departamentos", "sucursal", "empleado", "cliente"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToOne(mappedBy = "sucursal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Domicilio domicilio;
     @Column(name = "contraseña")
@@ -45,27 +45,28 @@ public class Sucursal {
     private LocalTime horarioApertura;
     @Column(name = "horario_cierre")
     private LocalTime horarioCierre;
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "sucursal")
     private Set<Empleado> empleados = new HashSet<>();
-    @JsonIgnoreProperties({"sucursales"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empresa")
     private Empresa empresa;
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "sucursal")
     private Set<Stock> stocksSucursal = new HashSet<>();
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "sucursal")
     private Set<StockEntrante> stocksEntranteSucursal = new HashSet<>();
-    @JsonIgnore
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(mappedBy = "sucursales")
     private Set<Promocion> promociones = new HashSet<>();
-    @JsonIgnoreProperties(value = "sucursal")
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "articulos_menu_sucursal",
@@ -74,6 +75,7 @@ public class Sucursal {
     )
     private Set<ArticuloMenu> articulosMenu = new HashSet<>();
 
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "articulos_venta_sucursal",
@@ -81,10 +83,13 @@ public class Sucursal {
             inverseJoinColumns = @JoinColumn(name = "id_articulo_venta")
     )
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Medida> medidas = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Categoria> categorias = new HashSet<>();
 }
