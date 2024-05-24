@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Sucursal;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,7 +25,11 @@ public class Subcategoria {
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
-    @ManyToOne
-    @JoinColumn(name = "id_sucursal")
-    private Sucursal sucursal;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "subcategorias_sucursales",
+            joinColumns = @JoinColumn(name = "id_subcategoria"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
+    private Set<Sucursal> sucursales = new HashSet<>();
 }

@@ -35,7 +35,7 @@ public class SubcategoriaController {
         Optional<Subcategoria> subcategoriaDB = subcategoriaRepository.findByDenominacionAndIdSucursal(categoriaDetails.getNombre(), idSucursal);
 
         if (subcategoriaDB.isEmpty()) {
-            categoriaDetails.setSucursal(sucursalRepository.findById(idSucursal).get());
+            categoriaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
 
             subcategoriaRepository.save(categoriaDetails);
 
