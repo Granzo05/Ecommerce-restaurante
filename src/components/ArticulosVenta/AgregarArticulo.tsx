@@ -90,14 +90,12 @@ function AgregarArticuloVenta() {
   }
 
   // Modal flotante de ingrediente
-  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
-
-  const handleAbrirRecomendaciones = () => {
-    setModalBusqueda(true);
-  };
+  const [modalBusquedaCategoria, setModalBusquedaCategoria] = useState<boolean>(false);
+  const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
 
   const handleModalClose = () => {
-    setModalBusqueda(false);
+    setModalBusquedaCategoria(false);
+    setModalBusquedaMedida(false);
   };
 
   return (
@@ -130,12 +128,12 @@ function AgregarArticuloVenta() {
         <span>Precio ($)</span>
       </div>
       <div className="input-filtrado">
-        <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={categoria.nombre ?? ''} />
-        {modalBusqueda && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+        <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
       </div>
       <div className="input-filtrado">
-        <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
-        {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+        <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+        {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
       </div>
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />

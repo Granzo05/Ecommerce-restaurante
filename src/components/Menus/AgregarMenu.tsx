@@ -99,12 +99,10 @@ function AgregarMenu() {
 
 
   // Modal flotante de ingrediente
-  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [modalBusquedaCategoria, setModalBusquedaCategoria] = useState<boolean>(false);
+  const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
+  const [modalBusquedaIngrediente, setModalBusquedaIngrediente] = useState<boolean>(false);
   const [showAgregarIngredienteModal, setShowAgregarIngredienteModal] = useState(false);
-
-  const handleAbrirRecomendaciones = () => {
-    setModalBusqueda(true);
-  };
 
   const handleAgregarIngrediente = () => {
     setShowAgregarIngredienteModal(true);
@@ -112,7 +110,9 @@ function AgregarMenu() {
 
   const handleModalClose = () => {
     setShowAgregarIngredienteModal(false);
-    setModalBusqueda(false)
+    setModalBusquedaCategoria(false)
+    setModalBusquedaMedida(false)
+    setModalBusquedaIngrediente(false)
   };
 
   const [tiempoCoccion, setTiempo] = useState(0);
@@ -221,8 +221,8 @@ function AgregarMenu() {
 
       <label>
         <div className="input-filtrado">
-          <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={categoria.nombre ?? ''} />
-          {modalBusqueda && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+          <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+          {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
         </div>
       </label>
       <div className="inputBox">
@@ -246,16 +246,16 @@ function AgregarMenu() {
             <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-              <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
-              {modalBusqueda && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
+              <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
+              {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
             </div>
             <div className="inputBox">
               <input type="number" required={true} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
               <span>Cantidad necesaria</span>
             </div>
             <div className="input-filtrado">
-              <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingredienteMenu.ingrediente?.medida.nombre ?? ''} />
-              {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
+              <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente?.medida.nombre ?? ''} />
+              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
             </div>
           </div>
         ))}

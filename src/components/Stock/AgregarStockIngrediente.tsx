@@ -18,15 +18,13 @@ function AgregarStockIngrediente() {
   const [costoIngrediente, setCostoIngrediente] = useState(0);
   const [nombreIngrediente, setArticuloVenta] = useState('0');
 
-  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
 
-  const handleAbrirRecomendaciones = () => {
-    setModalBusqueda(true)
-  };
 
   const handleModalClose = () => {
-    setModalBusqueda(false)
+    setModalBusquedaMedida(false)
   };
+
 
   async function crearStockIngrediente() {
     if (!medida && !cantidadMaxima && !costoIngrediente && !cantidadMinima && !cantidadActual && !nombreIngrediente) {
@@ -115,8 +113,8 @@ function AgregarStockIngrediente() {
       </label>
       <label>
         <div className="input-filtrado">
-          <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
-          {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+          <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+          {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
         </div>
       </label>
       <label>

@@ -100,14 +100,15 @@ function AgregarStockEntrante() {
     }
   };
 
-  const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
+  const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
+  const [modalBusquedaArticulo, setModalBusquedaArticulo] = useState<boolean>(false);
+  const [modalBusquedaIngrediente, setModalBusquedaIngrediente] = useState<boolean>(false);
 
-  const handleAbrirRecomendaciones = () => {
-    setModalBusqueda(true);
-  };
 
   const handleModalClose = () => {
-    setModalBusqueda(false)
+    setModalBusquedaMedida(false)
+    setModalBusquedaArticulo(false)
+    setModalBusquedaIngrediente(false)
   };
 
   async function agregarStockEntrante() {
@@ -161,12 +162,12 @@ function AgregarStockEntrante() {
           <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
           <div>
             <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-            <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingrediente?.nombre ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente) }} />}
+            <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente?.nombre ?? ''} />
+            {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente) }} />}
           </div>
           <div className="input-filtrado">
-            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={ingrediente.medida.nombre ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedida(medida); handleModalClose(); }} />}
+            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingrediente.medida.nombre ?? ''} />
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedida(medida); handleModalClose(); }} />}
           </div>
           <br />
 
@@ -188,12 +189,12 @@ function AgregarStockEntrante() {
           <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
           <div>
             <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={articulo.nombre ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo); handleModalClose(); }} />}
+            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={articulo.nombre ?? ''} />
+            {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo); handleModalClose(); }} />}
           </div>
           <div className="input-filtrado">
-            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={articulo.medida.nombre ?? ''} />
-            {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedida(medida); handleModalClose(); }} />}
+            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={articulo.medida.nombre ?? ''} />
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedida(medida); handleModalClose(); }} />}
           </div>
           <br />
           <br />
