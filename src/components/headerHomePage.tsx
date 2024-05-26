@@ -2,25 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 const HeaderHomePage: React.FC = () => {
 
-    
-
-    useEffect(() => {
-        const onScroll = (event: Event) => {
-          console.log("scrolling", event);
-        };
-    
-        window.addEventListener('scroll', onScroll);
-    
-        return () => {
-          window.removeEventListener('scroll', onScroll);
-        };
-      }, []);
-
-    
        
     return (
         <header id='inicio' className="header">
-            <div className="menu container">
+            <div id='header-oscuro' className="menu container">
                 <a href="" className="logo"><img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="" /></a>
                 <input type="checkbox" id="menu" />
                 <label htmlFor="menu">
