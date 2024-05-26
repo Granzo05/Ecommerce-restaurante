@@ -102,7 +102,7 @@ Pruebas
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [x] Carga pedido stock [] Probar validación
-[] Actualizacion pedido stock [] Probar validación
+[x] Actualizacion pedido stock [] Probar validación
 [x] Eliminacion pedido stock
 [x] Activacion pedido stock
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
@@ -114,9 +114,9 @@ Pruebas
 [x] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [x] Carga categorias [x] Probar validación
-[] Actualizacion categorias [] Probar validación
-[] Eliminacion categorias
-[] Activacion categorias
+[x] Actualizacion categorias [x] Probar validación
+[x] Eliminacion categorias
+[x] Activacion categorias
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Carga subcategorias [] Probar validación

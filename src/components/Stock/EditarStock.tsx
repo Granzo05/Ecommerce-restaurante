@@ -83,7 +83,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
       stock.borrado = 'NO';
       console.log(stock)
       toast.promise(StockArticuloVentaService.updateStock(stock), {
-        loading: 'Creando stock del artículo...',
+        loading: 'Editando stock del artículo...',
         success: (message) => {
           return message;
         },

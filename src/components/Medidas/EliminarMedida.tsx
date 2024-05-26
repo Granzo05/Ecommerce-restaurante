@@ -13,7 +13,7 @@ const EliminarMedida: React.FC<EliminarMedidaProps> = ({ medidaOriginal, onClose
   const onConfirm = () => {
     medidaOriginal.borrado = 'SI';
     toast.promise(MedidaService.updateMedida(medidaOriginal), {
-      loading: 'Creando Medida...',
+      loading: 'Eliminando Medida...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();

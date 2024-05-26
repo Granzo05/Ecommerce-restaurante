@@ -100,7 +100,7 @@ public class SucursalController {
     @CrossOrigin
     @GetMapping("/check/{email}")
     public boolean checkPrivilegios(@PathVariable("email") String email) {
-        Sucursal sucursal = sucursalRepository.findByEmail(email);
+        Optional<Sucursal> sucursal = sucursalRepository.findByEmail(email);
 
         // Sucursal tiene acceso a todo, por lo tanto si el email coincide entonces se concede acceso
         if (sucursal != null) {
@@ -126,7 +126,7 @@ public class SucursalController {
     @PostMapping("/sucursal/create")
     @Transactional
     public ResponseEntity<String> crearSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
-        Sucursal sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
+        Optional<Sucursal> sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
         if (sucursalDB == null) {
             Domicilio domicilio = new Domicilio();

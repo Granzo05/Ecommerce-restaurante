@@ -22,7 +22,7 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
 
     subcategoria.nombre = nombre;
     toast.promise(SubcategoriaService.updateSubcategoria(subcategoria), {
-      loading: 'Creando Subcategoria...',
+      loading: 'Editando Subcategoria...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();

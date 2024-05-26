@@ -14,7 +14,7 @@ const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ categoriaOriginal
   const onConfirm = () => {
     categoriaOriginal.borrado = 'SI';
     toast.promise(CategoriaService.updateCategoria(categoriaOriginal), {
-      loading: 'Creando Categoria...',
+      loading: 'Eliminando Categoria...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();

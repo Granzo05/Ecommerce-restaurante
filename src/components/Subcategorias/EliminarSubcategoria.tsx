@@ -14,7 +14,7 @@ const EliminarSubcategoria: React.FC<EliminarSubcategoriaProps> = ({ subcategori
   const onConfirm = () => {
     subcategoriaOriginal.borrado = 'SI';
     toast.promise(SubcategoriaService.updateSubcategoria(subcategoriaOriginal), {
-      loading: 'Creando subcategoria...',
+      loading: 'Eliminando subcategoria...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();

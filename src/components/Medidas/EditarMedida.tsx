@@ -23,7 +23,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
 
     medida.nombre = nombre;
     toast.promise(MedidaService.updateMedida(medida), {
-      loading: 'Creando Medida...',
+      loading: 'Editando Medida...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();

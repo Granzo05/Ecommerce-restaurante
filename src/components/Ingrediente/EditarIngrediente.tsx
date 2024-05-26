@@ -23,7 +23,7 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
 
     ingrediente.nombre = nombre;
     toast.promise(IngredienteService.updateIngrediente(ingrediente), {
-      loading: 'Creando Ingrediente...',
+      loading: 'Editando Ingrediente...',
       success: (message) => {
         clearInputs();
         return message;

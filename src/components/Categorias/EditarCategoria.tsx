@@ -23,7 +23,7 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
 
     categoria.nombre = nombre;
     toast.promise(CategoriaService.updateCategoria(categoria), {
-      loading: 'Creando Categoria...',
+      loading: 'Editando Categoria...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();
