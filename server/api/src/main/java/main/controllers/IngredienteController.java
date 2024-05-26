@@ -45,13 +45,16 @@ public class IngredienteController {
 
     @PutMapping("/ingrediente/update")
     public ResponseEntity<String> actualizarIngrediente(@RequestBody Ingrediente ingrediente) {
-        System.out.println(ingrediente);
         Optional<Ingrediente> ingredienteEncontrado = ingredienteRepository.findByIdNotBorrado(ingrediente.getId());
-        System.out.println(ingredienteEncontrado);
-
         if (ingredienteEncontrado.isEmpty()) {
             return ResponseEntity.ofNullable("El ingrediente no existe");
         } else {
+            Optional<Ingrediente> ingredienteDB = ingredienteRepository.findByName(ingrediente.getNombre());
+
+            if(ingredienteDB.isPresent() && ingredienteDB.get().getId() != ingredienteEncontrado.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe un ingrediente con ese nombre");
+            }
+
             ingredienteEncontrado.get().setNombre(ingrediente.getNombre());
             ingredienteRepository.save(ingredienteEncontrado.get());
             return ResponseEntity.ok("El ingrediente ya existe");

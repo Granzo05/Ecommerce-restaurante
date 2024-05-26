@@ -86,6 +86,7 @@ const Medidas = () => {
         setShowAgregarModalMedida(false);
         setShowEditarMedidaModal(false);
         setShowEliminarMedidaModal(false);
+        setShowActivarMedidaModal(false);
         fetchMedidas();
         setMostrarMedidas(true);
     };
@@ -99,8 +100,6 @@ const Medidas = () => {
             <hr />
             {mostrarMedidas && (
                 <div id="stocks">
-
-
                     <table>
                         <thead>
                             <tr>
@@ -150,7 +149,7 @@ const Medidas = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarMedidaModal} onClose={handleModalClose}>
-                {selectedMedida && <EditarMedida medidaOriginal={selectedMedida} />}
+                {selectedMedida && <EditarMedida medidaOriginal={selectedMedida} onCloseModal={handleModalClose} />}
             </ModalCrud>
         </div>
     )

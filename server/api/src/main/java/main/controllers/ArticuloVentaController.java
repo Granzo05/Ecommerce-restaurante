@@ -1,6 +1,7 @@
 package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
+import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.ArticuloVentaDTO;
 import main.entities.Productos.Imagenes;
@@ -175,6 +176,12 @@ public class ArticuloVentaController {
         Optional<ArticuloVenta> articuloEncontrado = articuloVentaRepository.findByIdArticuloAndIdSucursal(articuloVentaDetail.getId(), id);
 
         if (articuloEncontrado.isPresent() && articuloEncontrado.get().getBorrado().equals(articuloVentaDetail.getBorrado())) {
+            Optional<ArticuloVenta> articuloMenuDB = articuloVentaRepository.findByNameArticuloAndIdSucursal(articuloVentaDetail.getNombre(), id);
+
+            if(articuloMenuDB.isPresent() && articuloMenuDB.get().getId() != articuloEncontrado.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe un articulo con ese nombre");
+            }
+
             ArticuloVenta articuloVenta = articuloEncontrado.get();
             articuloVenta.setPrecioVenta(articuloVentaDetail.getPrecioVenta());
             articuloVenta.setNombre(articuloVentaDetail.getNombre());

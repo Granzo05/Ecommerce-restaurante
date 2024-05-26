@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
 
     @Query("SELECT s FROM Sucursal s WHERE s.email = :email")
-    Sucursal findByEmail(@Param("email") String email);
+    Optional<Sucursal> findByEmail(@Param("email") String email);
 
     @Query("SELECT s FROM Sucursal s WHERE s.id = :id")
     Optional<Sucursal> findById(@Param("id") Long id);

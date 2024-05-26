@@ -17,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Table(name = "categorias", schema = "buen_sabor")
 public class Categoria implements Serializable {
     @Id

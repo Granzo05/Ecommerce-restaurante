@@ -54,84 +54,85 @@
 [] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
 [] Revisar que los inputs que se muestran con informacion de la db(los editar mas que nada) muestren arriba de cada input de que valor es la info dentro del input (label o algo)
 [] Validar que no se pueda pedir nada fuera del horario de atencion de la sucursal
+[] Arreglar muestra de errores y devolucion de mensajes desde el server (ej base EditarCategoria)
 
 Pruebas
-[x] Carga sucursal [x] Probar valicación
-[x] Actualizacion sucursal [x] Probar valicación
+[x] Carga sucursal [x] Probar validación
+[x] Actualizacion sucursal [x] Probar validación
 [x] Eliminacion sucursal
 [x] Activacion sucursal 
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[x] Carga empleado [x] Probar valicación
-[x] Actualizacion empleado [x] Probar valicación
+[x] Carga empleado [x] Probar validación
+[x] Actualizacion empleado [x] Probar validación
 [x] Eliminacion empleado
 [x] Activacion empleado
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga cliente [] Probar valicación
-[] Actualizacion cliente [] Probar valicación
+[] Carga cliente [] Probar validación
+[] Actualizacion cliente [] Probar validación
 [] Eliminacion cliente
 [] Activacion articuloMenu
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [x] Muestra articuloMenu
-[X] Carga articuloMenu [X] Probar valicación
-[X] Actualizacion articuloMenu [X] Probar valicación
+[X] Carga articuloMenu [X] Probar validación
+[X] Actualizacion articuloMenu [X] Probar validación
 [X] Eliminacion articuloMenu
 [X] Activacion articuloMenu
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Muestra articuloVenta
-[x] Carga articuloVenta [x] Probar valicación
-[x] Actualizacion articuloVenta[x] Probar valicación
+[x] Carga articuloVenta [x] Probar validación
+[x] Actualizacion articuloVenta[x] Probar validación
 [x] Eliminacion articuloVenta
 [x] Activacion articuloVenta
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[x] Carga stockIngrediente [x] Probar valicación
-[x] Actualizacion stockIngrediente [x] Probar valicación
+[x] Carga stockIngrediente [x] Probar validación
+[x] Actualizacion stockIngrediente [x] Probar validación
 [x] Eliminacion stockIngrediente
 [x] Activacion stockIngrediente
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[x] Carga stockArticulo [] Probar valicación
-[x] Actualizacion stockArticulo [] Probar valicación
+[x] Carga stockArticulo [] Probar validación
+[x] Actualizacion stockArticulo [] Probar validación
 [x] Eliminacion stockArticulo 
 [x] Activacion stockArticulo
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[x] Carga pedido stock [] Probar valicación
-[] Actualizacion pedido stock [] Probar valicación
+[x] Carga pedido stock [] Probar validación
+[] Actualizacion pedido stock [] Probar validación
 [x] Eliminacion pedido stock
 [x] Activacion pedido stock
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga medida [] Probar valicación
-[] Actualizacionmedidda [] Probar valicación
-[] Eliminacion medidda
-[] Activacion medidda
-[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
+[X] Carga medida [x] Probar validación
+[x] Actualizacionmedidda [x] Probar validación
+[x] Eliminacion medidda
+[x] Activacion medidda
+[x] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga categorias [] Probar valicación
-[] Actualizacion categorias [] Probar valicación
+[x] Carga categorias [x] Probar validación
+[] Actualizacion categorias [] Probar validación
 [] Eliminacion categorias
 [] Activacion categorias
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga subcategorias [] Probar valicación
-[] Actualizacion subcategorias [] Probar valicación
+[] Carga subcategorias [] Probar validación
+[] Actualizacion subcategorias [] Probar validación
 [] Eliminacion subcategorias
 [] Activacion subcategorias
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga pedido [] Probar valicación
-[] Actualizacion pedido [] Probar valicación
+[] Carga pedido [] Probar validación
+[] Actualizacion pedido [] Probar validación
 [] Eliminacion pedido
 [] Activacion pedido
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga ingredientes [] Probar valicación
-[] Actualizacion ingredientes [] Probar valicación
+[] Carga ingredientes [] Probar validación
+[] Actualizacion ingredientes [] Probar validación
 [] Eliminacion ingredientes
 [] Activacion ingredientes
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)

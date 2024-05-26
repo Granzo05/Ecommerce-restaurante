@@ -5,12 +5,10 @@ import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
-import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.CategoriaDTO;
-import main.entities.Ingredientes.Medida;
-import main.entities.Ingredientes.MedidaDTO;
+import main.entities.Ingredientes.*;
 import main.entities.Restaurante.*;
 import main.repositories.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -302,9 +300,14 @@ public class SucursalController {
     @PutMapping("/sucursal/update")
     public ResponseEntity<String> updateSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
         Optional<Sucursal> sucursalDb = sucursalRepository.findById(sucursalDetails.getId());
-        System.out.println(sucursalDetails.getId());
-
         if (sucursalDb.isPresent()) {
+            Optional<Sucursal> sucursalEncontrada = sucursalRepository.findByEmail(sucursalDetails.getEmail());
+
+            // Si no es la misma sucursal pero si el mismo email entonces ejecuta esto
+            if(sucursalEncontrada.isPresent() && sucursalDb.get().getId() != sucursalEncontrada.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una sucursal con ese email");
+            }
+
             Sucursal sucursal = sucursalDb.get();
 
             if (sucursal.getBorrado().equals(sucursalDetails.getBorrado())) {

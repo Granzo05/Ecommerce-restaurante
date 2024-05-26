@@ -196,7 +196,17 @@ public class ArticuloMenuController {
     public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenuDTO articuloMenuDetail, @PathVariable("idSucursal") Long id) {
         Optional<ArticuloMenu> menuEncontrado = articuloMenuRepository.findByIdMenuAndIdSucursal(articuloMenuDetail.getId(), id);
 
+        if (menuEncontrado.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El menú no se encontró");
+        }
+
         if (menuEncontrado.isPresent() && menuEncontrado.get().getBorrado().equals(articuloMenuDetail.getBorrado())) {
+            Optional<ArticuloMenu> articuloMenuDB = articuloMenuRepository.findByNameMenuAndIdSucursal(articuloMenuDetail.getNombre(), id);
+
+            if(articuloMenuDB.isPresent() && articuloMenuDB.get().getId() != menuEncontrado.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe un menú con ese nombre");
+            }
+
             ArticuloMenu articuloMenu = menuEncontrado.get();
 
             ingredienteMenuRepository.deleteAllByIdArticuloMenu(articuloMenu.getId());

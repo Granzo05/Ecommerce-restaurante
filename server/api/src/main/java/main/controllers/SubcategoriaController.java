@@ -1,6 +1,7 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
+import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.Subcategoria;
 import main.entities.Ingredientes.SubcategoriaDTO;
 import main.repositories.SubcategoriaRepository;
@@ -58,6 +59,13 @@ public class SubcategoriaController {
         if (subcategoriaDB.isEmpty()) {
             return ResponseEntity.ofNullable("La subcategoria no existe");
         } else {
+            Optional<Subcategoria> subcategoriaEncontrada = subcategoriaRepository.findByDenominacionAndIdSucursal(subcategoria.getNombre(), idSucursal);
+
+
+            if(subcategoriaEncontrada.isPresent() && subcategoriaDB.get().getId() != subcategoriaEncontrada.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una subcategoria con ese nombre");
+            }
+
             subcategoriaDB.get().setNombre(subcategoria.getNombre());
             subcategoriaDB.get().setBorrado(subcategoria.getBorrado());
             subcategoriaRepository.save(subcategoriaDB.get());

@@ -85,6 +85,7 @@ const Subcategorias = () => {
     const handleModalClose = () => {
         setShowAgregarModalCategoria(false);
         setShowEditarCategoriaModal(false);
+        setShowActivarCategoriaModal(false);
         setShowEliminarCategoriaModal(false);
         fetchCategorias();
         setMostrarCategorias(true);
@@ -148,7 +149,7 @@ const Subcategorias = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarCategoriaModal} onClose={handleModalClose}>
-                {selectedCategoria && <EditarSubcategoria subcategoriaOriginal={selectedCategoria} />}
+                {selectedCategoria && <EditarSubcategoria subcategoriaOriginal={selectedCategoria} onCloseModal={handleModalClose}/>}
             </ModalCrud>
         </div>
     )

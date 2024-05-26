@@ -62,8 +62,14 @@ public class CategoriaController {
         Optional<Categoria> categoriaDB = categoriaRepository.findByIdCategoriaAndIdSucursal(categoria.getId(), idSucursal);
 
         if (categoriaDB.isEmpty()) {
-            return ResponseEntity.ofNullable("La categoria no existe");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La categoria no existe");
         } else {
+            Optional<Categoria> categoriaEncontrada = categoriaRepository.findByNameAndIdSucursal(categoria.getNombre(), idSucursal);
+
+            if(categoriaEncontrada.isPresent() && categoriaEncontrada.get().getId() != categoriaDB.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una categoría con ese nombre");
+            }
+
             categoriaDB.get().setNombre(categoria.getNombre());
 
             categoriaDB.get().setBorrado(categoria.getBorrado());

@@ -6,7 +6,6 @@ import { Toaster, toast } from 'sonner'
 interface EliminarMedidaProps {
   medidaOriginal: Medida;
   onCloseModal: () => void;
-
 }
 
 const EliminarMedida: React.FC<EliminarMedidaProps> = ({ medidaOriginal, onCloseModal }) => {

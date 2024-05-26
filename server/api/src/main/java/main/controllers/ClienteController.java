@@ -83,15 +83,17 @@ public class ClienteController {
     }
 
     @PutMapping("/cliente/update")
-    public String updateCliente(@RequestBody Cliente clienteDetails) throws Exception {
-
+    public ResponseEntity<String> updateCliente(@RequestBody Cliente clienteDetails) throws Exception {
         Optional<Cliente> clienteOptional = clienteRepository.findById(clienteDetails.getId());
 
-        if (clienteOptional.isEmpty()) {
-            return "Cliente inexistente";
+        Optional<Cliente> clienteDB = clienteRepository.findByEmail(clienteDetails.getEmail());
+
+        if(clienteDB.isPresent() && clienteDB.get().getId() != clienteOptional.get().getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una cuenta registrada con ese email");
         }
 
         Cliente cliente = clienteOptional.get();
+
 
         for (Domicilio domicilio : clienteDetails.getDomicilios()) {
             if (cliente.getDomicilios().stream().anyMatch(d ->
@@ -121,7 +123,7 @@ public class ClienteController {
 
         clienteRepository.save(cliente);
 
-        return "Cliente actualizado con éxito";
+        return ResponseEntity.ok("Cuenta actualizada con éxito");
     }
 
     @DeleteMapping("/cliente/{id}/delete")

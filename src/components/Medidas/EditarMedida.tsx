@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { Medida } from '../../types/Ingredientes/Medida';
 import { Toaster, toast } from 'sonner'
 import { MedidaService } from '../../services/MedidaService';
 
 interface EditarMedidaProps {
   medidaOriginal: Medida;
+  onCloseModal: () => void;
 }
 
-const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal }) => {
+const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModal }) => {
 
   const [nombre, setNombre] = useState(medidaOriginal.nombre);
 
@@ -25,7 +25,9 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal }) => {
     toast.promise(MedidaService.updateMedida(medida), {
       loading: 'Creando Medida...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

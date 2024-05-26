@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { Categoria } from '../../types/Ingredientes/Categoria';
 import { Toaster, toast } from 'sonner'
 import { CategoriaService } from '../../services/CategoriaService';
 
 interface EditarCategoriaProps {
   categoriaOriginal: Categoria;
+  onCloseModal: () => void;
 }
 
-const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal }) => {
+const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, onCloseModal }) => {
 
   const [nombre, setNombre] = useState(categoriaOriginal.nombre);
 
@@ -25,7 +25,9 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal }) 
     toast.promise(CategoriaService.updateCategoria(categoria), {
       loading: 'Creando Categoria...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

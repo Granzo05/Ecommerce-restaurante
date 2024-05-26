@@ -22,6 +22,9 @@ public interface ArticuloVentaRepository extends JpaRepository<ArticuloVenta, Lo
     @Query("SELECT a FROM ArticuloVenta a JOIN a.sucursales s WHERE a.id = :idMenu AND s.id = :idSucursal")
     Optional<ArticuloVenta> findByIdArticuloAndIdSucursal(@Param("idMenu") Long idMenu, @Param("idSucursal") Long idSucursal);
 
+    @Query("SELECT a FROM ArticuloVenta a JOIN a.sucursales s WHERE a.nombre = :nombre AND s.id = :idSucursal")
+    Optional<ArticuloVenta> findByNameArticuloAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
+
     @Query("SELECT NEW main.entities.Productos.ArticuloVentaDTO(m.id, m.nombre,m.precioVenta, m.borrado, m.cantidadMedida, m.categoria, m.subcategoria, m.medida) FROM ArticuloVenta m JOIN m.sucursales s WHERE s.id = :idSucursal AND m.nombre = :nombre")
     List<ArticuloVentaDTO> findByCategoriaNameAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 

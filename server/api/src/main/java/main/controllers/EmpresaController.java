@@ -2,6 +2,7 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
+import main.entities.Cliente.Cliente;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.EmpresaDTO;
@@ -79,6 +80,18 @@ public class EmpresaController {
         Optional<Empresa> empresaDB = empresaRepository.findById(empresaDetails.getId());
 
         if (empresaDB.isPresent()) {
+            Optional<Empresa> empresaEncontrada = empresaRepository.findByEmail(empresaDetails.getEmail());
+
+            if(empresaDB.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una cuenta registrada con ese email");
+            }
+
+            empresaEncontrada = empresaRepository.findByCuit(empresaDetails.getCuit());
+
+            if(empresaDB.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una cuenta registrada con ese cuit");
+            }
+
             Empresa empresa = empresaDB.get();
 
             if (empresa.getBorrado().equals(empresaDetails.getBorrado())) {

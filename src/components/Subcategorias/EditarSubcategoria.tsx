@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 import { Toaster, toast } from 'sonner'
 import { SubcategoriaService } from '../../services/SubcategoriaService';
 
 interface EditarSubcategoriaProps {
   subcategoriaOriginal: Subcategoria;
+  onCloseModal: () => void;
 }
 
-const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOriginal }) => {
+const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOriginal, onCloseModal }) => {
 
   const [nombre, setNombre] = useState(subcategoriaOriginal.nombre);
 
@@ -24,7 +24,9 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
     toast.promise(SubcategoriaService.updateSubcategoria(subcategoria), {
       loading: 'Creando Subcategoria...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

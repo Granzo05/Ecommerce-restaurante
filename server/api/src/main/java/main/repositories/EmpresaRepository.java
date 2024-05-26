@@ -16,6 +16,9 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     @Query("SELECT e FROM Empresa e WHERE e.cuit = :cuit")
     Optional<Empresa> findByCuit(@Param("cuit") String cuit);
 
+    @Query("SELECT e FROM Empresa e WHERE e.email = :email")
+    Optional<Empresa> findByEmail(@Param("email") String email);
+
     @Query("SELECT NEW main.entities.Restaurante.EmpresaDTO(e.id, e.cuit, e.razonSocial, e.email, e.borrado) FROM Empresa e WHERE e.email = :email AND e.contraseña = :contraseña")
     Optional<EmpresaDTO> findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String contraseña);
 
