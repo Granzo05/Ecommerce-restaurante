@@ -15,19 +15,6 @@ export default function MainMenu() {
     }
     */
 
-    useEffect(() => {
-        const onScroll = (event: Event) => {
-          console.log("scrolling", event);
-        };
-    
-        window.addEventListener('scroll', onScroll);
-    
-        return () => {
-          window.removeEventListener('scroll', onScroll);
-        };
-      }, []);
-
-
     return (
         <>
         <section id='servicios' className='information container'>
