@@ -1,4 +1,4 @@
-import '../styles/mainMenu.css'
+import '../styles/homePage-header-footer.css'
 import burguerImage from '../assets/img/hamburguesa-background.png'
 import pizzaImage from '../assets/img/pizza-background.png'
 import lomoImage from '../assets/img/lomo-background.jpeg'
@@ -9,6 +9,7 @@ import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
 import IcecreamIcon from '@mui/icons-material/Icecream';
 import lomoIcono from '../assets/img/icono-lomos.png'
 import sushiIcono from '../assets/img/icono-sushi.png'
+import { useEffect } from 'react'
 
 export default function MainMenu() {
 
@@ -24,9 +25,241 @@ export default function MainMenu() {
             });
     }
     */
-   
+
+    useEffect(() => {
+        const onScroll = (event: Event) => {
+          console.log("scrolling", event);
+        };
+    
+        window.addEventListener('scroll', onScroll);
+    
+        return () => {
+          window.removeEventListener('scroll', onScroll);
+        };
+      }, []);
+
+
     return (
-        <div className='body'>
+        <>
+        <section id='servicios' className='information container'>
+            <div  className="information-content">
+                <div className='information-1'>
+                    <div className="information-c1">
+                        <h3>Historia</h3>
+                        <p>"El Buen Sabor", fundado en 2000 por la familia Rodríguez, ofrece una experiencia culinaria única y auténtica en nuestro país.</p>
+                        <a href="" className='btn-1'>Conocer historia</a>
+                    </div>
+                    <div className="information-a1">
+                        <img src="../src/assets/img/restaurante-bg.avif" alt="" />
+                    </div>
+                </div>
+                <div className='information-2'>
+                <div className="information-b1">
+                        <img src="../src/assets/img/meseros.jpg" alt="" />
+                    </div>
+                    <div className="information-c1">
+                        <h3>Sobre nosotros</h3>
+                        <p>Somos "El Buen Sabor", un lugar de comidas dedicado a ofrecer lo mejor de la gastronomía local. 
+                            Nuestro compromiso es brindar platos deliciosos con ingredientes frescos 
+                            y de alta calidad, en un ambiente acogedor y familiar.
+                        </p>
+                        <a href="" className='btn-1'>Más sobre nosotros</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section className='our'>
+            <div id='ofertas' className="container">
+                <h2>Nuestras promociones</h2>
+            </div>
+        </section>
+        <section className="oferts">
+            <div className="ofert-content container">
+                <div className="ofert-1">
+                    <div className="ofert-txt">
+                        <h3>Lorem</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                        <a href="" className='btn-2'>Más Información</a>
+                    </div>
+                    <div className="ofert-img">
+                        <img src="../src/assets/img/hamburguesa-background.png" alt="" />
+                    </div>
+                </div>
+
+                <div className="ofert-1">
+                    <div className="ofert-img">
+                        <img src="../src/assets/img/lomo-background.jpeg" alt="" />
+                    </div>
+                    <div className="ofert-txt">
+                        <h3>Lorem</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                        <a href="" className='btn-2'>Más Información</a>
+                    </div>
+                    
+                </div>
+
+                <div className="ofert-1">
+                    <div className="ofert-txt">
+                        <h3>Lorem</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                        <a href="" className='btn-2'>Más Información</a>
+                    </div>
+                    <div className="ofert-img">
+                        <img src="../src/assets/img/pizza-background.png" alt="" />
+                    </div>
+                </div>
+
+                <div className="ofert-1">
+                    <div className="ofert-img">
+                        <img src="../src/assets/img/tacos.jpg" alt="" />
+                    </div>
+                    <div className="ofert-txt">
+                        <h3>Lorem</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+                        <a href="" className='btn-2'>Más Información</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        <section className='bg'></section>
+        <section id='menus' className='food container'>
+            <h2>Menús</h2>
+            <span>Categorías</span>
+            <div className="food-content">
+                <div className="left">
+                    <div className="food-1">
+                        <h3>Hamburguesas</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" className="menu-img"/></p>
+                            
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="right">
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="food-1">
+                        <h3>Lorem impsum</h3>
+                        <div className="food-txt">
+                            <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
+                            <div className="overlay">
+
+                            <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </>
+        
+    );
+}
+
+/*<div className='body'>
             <div className="container">
 
                 <div className="card" onClick={() => handleMenu('hamburguesas')}>
@@ -154,6 +387,4 @@ export default function MainMenu() {
                 </div>
             </div>
 
-        </div>
-    );
-}
+        </div>*/

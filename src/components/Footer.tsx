@@ -1,9 +1,48 @@
-import '../styles/footer.css'
-import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png'
+import '../styles/footer.css';
+import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
 
 const Footer = () => {
-    return (
-        <footer className="footer">
+  return (
+    <footer id='contactos' className='footer'>
+      <div className="footer-content container">
+        <div className="link">
+          <a className="logo-footer"><img src={Logo} alt="Logo" /></a>
+        </div>
+        <div className="link">
+          <ul>
+            <li>
+              - Contacto -
+              <ul>
+                <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+                <li><a href="">WhatsApp</a></li>
+              </ul>
+            </li>
+            <li>
+              - Ubicación -
+              <ul>
+                <li><a href="https://maps.google.com" target="_blank" rel="noopener noreferrer">Google Maps</a></li>
+                <li><a href="https://www.yelp.com" target="_blank" rel="noopener noreferrer">Yelp</a></li>
+              </ul>
+            </li>
+            <li>
+              - Horario -
+              <ul>
+                <li><a >Lunes a sábado: 9am - 11pm</a></li>
+                <li><a >Domingo: 11am - 9pm</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;
+
+
+/*<footer className="footer">
         <div className="footer-container">
           
           <div className="footer-body">
@@ -71,8 +110,4 @@ const Footer = () => {
               <p>&copy; Copyright 2024. All right reserved.</p>
           </div>
         </div>
-      </footer>
-    )
-}
-
-export default Footer
+      </footer> */
