@@ -23,7 +23,7 @@ public class StockEntrante {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "fecha_llegada", updatable = false, nullable = false)
+    @Column(name = "fecha_llegada", nullable = false)
     public LocalDate fechaLlegada;
     @JsonIgnore
     @Column(name = "borrado")
@@ -32,7 +32,7 @@ public class StockEntrante {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
-    @JsonIgnoreProperties(value = {"sucursal", "stockEntrante", "articuloVenta", "ingrediente"})
+    @JsonIgnoreProperties(value = {"sucursal", "stockEntrante"})
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "stockEntrante", cascade = CascadeType.ALL)
     private Set<DetalleStock> detallesStock = new HashSet<>();
 }

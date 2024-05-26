@@ -4,7 +4,7 @@ export class Categoria {
     id: number = 0;
     nombre: string = '';
     borrado: string = '';
-    subcategorias: Subcategoria = new Subcategoria();
+    subcategorias: Subcategoria[] = [];
     
     constructor() {
     }

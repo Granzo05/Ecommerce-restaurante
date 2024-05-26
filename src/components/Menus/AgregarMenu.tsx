@@ -8,17 +8,21 @@ import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 import { Toaster, toast } from 'sonner'
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
 import InputComponent from '../InputFiltroComponent';
-import { clearInputs } from '../../utils/global_variables/functions';
 import '../../styles/modalCrud.css'
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFiltroCategorias';
 import { Medida } from '../../types/Ingredientes/Medida';
 import { Categoria } from '../../types/Ingredientes/Categoria';
 import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
+import AgregarCategoria from '../Categorias/AgregarCategoria';
+import AgregarSubcategoria from '../Subcategorias/AgregarSubcategoria';
+import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
+import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
+  const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
   let [selectIndexImagenes, setSelectIndexImagenes] = useState<number>(0);
   let [selectIndexIngredientes, setSelectIndexIngredientes] = useState<number>(0);
 
@@ -100,19 +104,28 @@ function AgregarMenu() {
 
   // Modal flotante de ingrediente
   const [modalBusquedaCategoria, setModalBusquedaCategoria] = useState<boolean>(false);
+  const [modalBusquedaSubcategoria, setModalBusquedaSubcategoria] = useState<boolean>(false);
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
   const [modalBusquedaIngrediente, setModalBusquedaIngrediente] = useState<boolean>(false);
   const [showAgregarIngredienteModal, setShowAgregarIngredienteModal] = useState(false);
+  const [showAgregarSubcategoriaModal, setShowAgregarSubcategoriaModal] = useState(false);
+  const [showAgregarCategoriaModal, setShowAgregarCategoriaModal] = useState(false);
 
-  const handleAgregarIngrediente = () => {
-    setShowAgregarIngredienteModal(true);
-  };
 
   const handleModalClose = () => {
     setShowAgregarIngredienteModal(false);
     setModalBusquedaCategoria(false)
     setModalBusquedaMedida(false)
     setModalBusquedaIngrediente(false)
+    setShowAgregarCategoriaModal(false)
+    setShowAgregarSubcategoriaModal(false)
+    setModalBusquedaSubcategoria(false)
+  };
+
+  const handleSubcategoria = (subcategoria: Subcategoria) => {
+    setSubcategoria(subcategoria);
+
+    categoria.subcategorias.push(subcategoria);
   };
 
   const [tiempoCoccion, setTiempo] = useState(0);
@@ -123,6 +136,7 @@ function AgregarMenu() {
   const [descripcion, setDescripcion] = useState('');
 
   async function agregarMenu() {
+    console.log(categoria)
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -143,6 +157,9 @@ function AgregarMenu() {
       return;
     } else if (!descripcion) {
       toast.error("Por favor, es necesario la descripción");
+      return;
+    } else if (!subcategoria) {
+      toast.error("Por favor, es necesaria una subcategoria");
       return;
     }
 
@@ -170,7 +187,6 @@ function AgregarMenu() {
     toast.promise(MenuService.createMenu(menu, imagenes), {
       loading: 'Creando menu...',
       success: (message) => {
-        clearInputs();
         setSelectIndexIngredientes(0);
         setSelectIndexImagenes(0);
         return message;
@@ -186,7 +202,6 @@ function AgregarMenu() {
       <h2>Agregar menú</h2>
       <Toaster />
       <div>
-
         {imagenes.map((imagen, index) => (
 
           <div className='inputBox' key={index}>
@@ -196,9 +211,7 @@ function AgregarMenu() {
               accept="image/*"
               maxLength={10048576}
               onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-
             />
-
           </div>
         ))}
       </div>
@@ -218,13 +231,22 @@ function AgregarMenu() {
         <input type="number" required={true} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
         <span>Minutos de coccion</span>
       </div>
-
-      <label>
-        <div className="input-filtrado">
-          <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
-          {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
-        </div>
-      </label>
+      <ModalFlotante isOpen={showAgregarCategoriaModal} onClose={handleModalClose}>
+        <AgregarCategoria />
+      </ModalFlotante>
+      <button onClick={() => setShowAgregarCategoriaModal(true)}>Cargar nueva categoria</button>
+      <div className="input-filtrado">
+        <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+      </div>
+      <ModalFlotante isOpen={showAgregarSubcategoriaModal} onClose={handleModalClose}>
+        <AgregarSubcategoria />
+      </ModalFlotante>
+      <button onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar nueva subcategoria</button>
+      <div className="input-filtrado">
+        <InputComponent placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
+        {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { handleSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
+      </div>
       <div className="inputBox">
         <input type="number" required={true} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
         <span>Precio</span>
@@ -236,7 +258,6 @@ function AgregarMenu() {
       </div>
       <div>
         <h2>Ingredientes</h2>
-
         <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
           <AgregarIngrediente />
         </ModalFlotante>
@@ -264,8 +285,7 @@ function AgregarMenu() {
       <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
 
       <br />
-      <button onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente</button>
-
+      <button onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente</button>
 
       <hr />
       <button type="button" onClick={agregarMenu}>Agregar menu</button>

@@ -3,16 +3,19 @@ import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
 import { Toaster, toast } from 'sonner'
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
-import { clearInputs } from '../../utils/global_variables/functions';
 import '../../styles/inputLabel.css'
 import InputComponent from '../InputFiltroComponent';
 import { Categoria } from '../../types/Ingredientes/Categoria';
 import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFiltroCategorias';
+import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
+import ModalFlotante from '../ModalFlotante';
+import AgregarCategoria from '../Categorias/AgregarCategoria';
+import AgregarSubcategoria from '../Subcategorias/AgregarSubcategoria';
+import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
 
 function AgregarArticuloVenta() {
-
   const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
@@ -41,6 +44,7 @@ function AgregarArticuloVenta() {
   };
 
   const [categoria, setCategoria] = useState<Categoria>(new Categoria());
+  const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
   const [medida, setMedida] = useState<Medida>(new Medida);
@@ -75,8 +79,7 @@ function AgregarArticuloVenta() {
     articulo.medida = medida;
     articulo.cantidadMedida = cantidad;
     articulo.borrado = 'NO';
-
-    console.log(articulo)
+    articulo.subcategoria = subcategoria;
 
     toast.promise(ArticuloVentaService.createArticulo(articulo, imagenes), {
       loading: 'Creando articulo...',
@@ -93,10 +96,16 @@ function AgregarArticuloVenta() {
   // Modal flotante de ingrediente
   const [modalBusquedaCategoria, setModalBusquedaCategoria] = useState<boolean>(false);
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
+  const [modalBusquedaSubcategoria, setModalBusquedaSubcategoria] = useState<boolean>(false);
+  const [showAgregarSubcategoriaModal, setShowAgregarSubcategoriaModal] = useState(false);
+  const [showAgregarCategoriaModal, setShowAgregarCategoriaModal] = useState(false);
 
   const handleModalClose = () => {
-    setModalBusquedaCategoria(false);
-    setModalBusquedaMedida(false);
+    setModalBusquedaCategoria(false)
+    setModalBusquedaMedida(false)
+    setShowAgregarCategoriaModal(false)
+    setShowAgregarSubcategoriaModal(false)
+    setModalBusquedaSubcategoria(false)
   };
 
   return (
@@ -128,9 +137,21 @@ function AgregarArticuloVenta() {
         <input type="number" required={true} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
         <span>Precio ($)</span>
       </div>
+      <ModalFlotante isOpen={showAgregarCategoriaModal} onClose={handleModalClose}>
+        <AgregarCategoria />
+      </ModalFlotante>
+      <button onClick={() => setShowAgregarCategoriaModal(true)}>Cargar nueva categoria</button>
       <div className="input-filtrado">
         <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
         {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+      </div>
+      <ModalFlotante isOpen={showAgregarSubcategoriaModal} onClose={handleModalClose}>
+        <AgregarSubcategoria />
+      </ModalFlotante>
+      <button onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar nueva subcategoria</button>
+      <div className="input-filtrado">
+        <InputComponent placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
+        {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
       </div>
       <div className="input-filtrado">
         <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />

@@ -19,7 +19,7 @@ public class StockArticuloVenta extends Stock implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_articulo")
     @JsonBackReference
     private ArticuloVenta articuloVenta;

@@ -1,5 +1,4 @@
 import { ArticuloVenta } from '../types/Productos/ArticuloVenta';
-import { EnumTipoArticuloVenta } from '../types/Productos/EnumTipoArticuloVenta';
 import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
 import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
@@ -12,8 +11,8 @@ export const ArticuloVentaService = {
         return await response.json();
     },
 
-    getArticulosPorTipo: async (tipoArticulo: EnumTipoArticuloVenta): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + `articulo/tipo/${tipoArticulo}/${sucursalId}`);
+    getArticulosPorCategoria: async (nombreCategoria: string): Promise<ArticuloVenta[]> => {
+        const response = await fetch(URL_API + `articulo/tipo/${nombreCategoria}/${sucursalId}`);
 
         return await response.json();
     },

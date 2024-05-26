@@ -21,7 +21,7 @@ public class IngredienteMenu {
     @Column(name = "cantidad_ingrediente")
     private int cantidad;
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})

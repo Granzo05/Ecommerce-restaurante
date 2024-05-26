@@ -27,6 +27,6 @@ public interface DomicilioRepository extends JpaRepository<Domicilio, Long> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM Domicilio i WHERE i.empleado.id = :id")
+    @Query("DELETE FROM Domicilio d WHERE d.empleado.id = :id")
     void deleteAllByEmpleadoId(@Param("id") Long id);
 }

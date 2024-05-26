@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Ingredientes.Subcategoria;
 import main.entities.Restaurante.Sucursal;
 
 import java.util.HashSet;
@@ -25,9 +26,12 @@ public class ArticuloMenu extends Articulo {
     private int tiempoCoccion;
     @Column(name = "nombre")
     private String nombre;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
+    @ManyToOne
+    @JoinColumn(name = "id_subcategoria")
+    private Subcategoria subcategoria;
     @Column(name = "comensales")
     private int comensales;
     @Column(name = "descripcion")

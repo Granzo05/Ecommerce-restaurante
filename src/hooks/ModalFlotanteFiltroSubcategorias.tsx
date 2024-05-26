@@ -2,29 +2,31 @@ import { useEffect, useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import '../styles/modalFlotante.css'
 import '../styles/modalCrud.css'
-import { ArticuloVentaService } from "../services/ArticuloVentaService";
-import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
+import { Subcategoria } from "../types/Ingredientes/Subcategoria";
+import { Categoria } from "../types/Ingredientes/Categoria";
+import { SubcategoriaService } from "../services/SubcategoriaService";
 
-const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void, onSelectArticuloVenta: (articulo: ArticuloVenta) => void }> = ({ onCloseModal, onSelectArticuloVenta }) => {
+const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => void, onSelectSubcategoria: (subcategoria: Subcategoria) => void, categoria: Categoria }> = ({ onCloseModal, onSelectSubcategoria, categoria }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
     onCloseModal();
   };
 
-  const [recomendaciones, setRecomendaciones] = useState<ArticuloVenta[]>([]);
-  const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<ArticuloVenta[]>([]);
+  const [recomendaciones, setRecomendaciones] = useState<Subcategoria[]>([]);
+  const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Subcategoria[]>([]);
 
   useEffect(() => {
-    ArticuloVentaService.getArticulos()
-      .then(async articulos => {
-        setRecomendaciones(articulos);
-        setRecomendacionesFiltradas(articulos);
+    console.log(categoria.id)
+    SubcategoriaService.getSubcategoriasByCategoriaId(categoria.id)
+      .then(subcategorias => {
+        setRecomendaciones(subcategorias);
+        setRecomendacionesFiltradas(subcategorias);
       })
       .catch(error => {
         console.error('Error:', error);
-      })
-  }, []);
+      });
+  }, [categoria]);
 
   function filtrarRecomendaciones(filtro: string) {
     if (filtro.length > 0) {
@@ -41,7 +43,7 @@ const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void,
         <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          <h2>FILTRAR ARTICULOS</h2>
+          <h2>FILTRAR SUBCATEGORIAS</h2>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
@@ -55,7 +57,7 @@ const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void,
             <tbody>
               {recomendacionesFiltradas && recomendacionesFiltradas.length > 0 ? (
                 recomendacionesFiltradas.map(recomendacion => (
-                  <tr key={recomendacion.id} style={{ cursor: 'pointer' }} onClick={() => onSelectArticuloVenta(recomendacion)}>
+                  <tr key={recomendacion.id} style={{ cursor: 'pointer' }} onClick={() => onSelectSubcategoria(recomendacion)}>
                     <td>{recomendacion.nombre}</td>
                   </tr>
                 ))
@@ -72,4 +74,4 @@ const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void,
   );
 };
 
-export default ModalFlotanteRecomendacionesArticulo;
+export default ModalFlotanteRecomendacionesSubcategoria;

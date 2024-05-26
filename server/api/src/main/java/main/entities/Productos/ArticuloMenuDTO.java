@@ -7,6 +7,7 @@ import lombok.Setter;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.IngredienteMenuDTO;
+import main.entities.Ingredientes.Subcategoria;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +20,7 @@ public class ArticuloMenuDTO extends Articulo {
     private Long id;
     private int tiempoCoccion;
     private Categoria categoria;
+    private Subcategoria subcategoria;
     private int comensales;
     private String descripcion;
     private String borrado;
@@ -27,7 +29,7 @@ public class ArticuloMenuDTO extends Articulo {
     private Set<IngredienteMenu> ingredientes = new HashSet<>();
     private Set<ImagenesDTO> imagenes = new HashSet<>();
 
-    public ArticuloMenuDTO(Long id, String nombre, double precioVenta, int tiempoCoccion, Categoria categoria, int comensales, String descripcion, String borrado) {
+    public ArticuloMenuDTO(Long id, String nombre, double precioVenta, int tiempoCoccion, Categoria categoria, Subcategoria subcategoria, int comensales, String descripcion, String borrado) {
         super(precioVenta);
         this.id = id;
         this.nombre = nombre;
@@ -35,6 +37,7 @@ public class ArticuloMenuDTO extends Articulo {
         this.categoria = categoria;
         this.comensales = comensales;
         this.descripcion = descripcion;
+        this.subcategoria = subcategoria;
         this.borrado = borrado;
     }
 }

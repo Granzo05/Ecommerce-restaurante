@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.DetalleStock;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,4 +33,5 @@ public class Medida {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
+
 }

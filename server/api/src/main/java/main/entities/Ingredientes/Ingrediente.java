@@ -21,7 +21,4 @@ public class Ingrediente {
     private String nombre;
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "ingrediente")
-    private StockIngredientes stock;
 }

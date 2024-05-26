@@ -28,6 +28,11 @@ public class SubcategoriaController {
         return new HashSet<>(subcategoriaRepository.findAllDTOByIdSucursal(idSucursal));
     }
 
+    @GetMapping("categoria/{idCategoria}/subcategorias/{idSucursal}")
+    public Set<SubcategoriaDTO> getCategoriasByCategoriaId(@PathVariable("idCategoria") Long idCategoria, @PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(subcategoriaRepository.findAllDTOByIdCategoriaAndIdSucursal(idCategoria, idSucursal));
+    }
+
     @Transactional
     @PostMapping("/subcategoria/create/{idSucursal}")
     public ResponseEntity<String> crearCategoria(@RequestBody Subcategoria categoriaDetails, @PathVariable("idSucursal") Long idSucursal) {

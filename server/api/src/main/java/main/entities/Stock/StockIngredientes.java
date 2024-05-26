@@ -17,7 +17,7 @@ public class StockIngredientes extends Stock {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonIgnoreProperties(value = {"stock"})
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
 }

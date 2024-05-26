@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.CategoriaDTO;
-import main.entities.Ingredientes.Medida;
-import main.entities.Ingredientes.MedidaDTO;
+import main.entities.Ingredientes.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,13 +19,15 @@ public class ArticuloVentaDTO extends Articulo {
     @JsonIgnoreProperties("sucursales")
     private Categoria categoria;
     @JsonIgnoreProperties("sucursales")
+    private Subcategoria subcategoria;
+    @JsonIgnoreProperties("sucursales")
     private Medida medida;
     private String borrado;
     private String nombre;
     private int cantidadMedida;
     private Set<ImagenesDTO> imagenes = new HashSet<>();
 
-    public ArticuloVentaDTO(Long id, String nombre, double precioVenta, String borrado, int cantidad, Categoria categoria, Medida medida) {
+    public ArticuloVentaDTO(Long id, String nombre, double precioVenta, String borrado, int cantidad, Categoria categoria, Subcategoria subcategoria, Medida medida) {
         super(precioVenta);
         this.id = id;
         this.nombre = nombre;
@@ -36,5 +35,6 @@ public class ArticuloVentaDTO extends Articulo {
         this.cantidadMedida = cantidad;
         this.categoria = categoria;
         this.medida = medida;
+        this.subcategoria = subcategoria;
     }
 }

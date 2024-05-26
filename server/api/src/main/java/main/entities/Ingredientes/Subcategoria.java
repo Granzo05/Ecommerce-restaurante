@@ -1,9 +1,12 @@
 package main.entities.Ingredientes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Sucursal;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +17,7 @@ import java.util.Set;
 @Entity
 @Builder
 @Table(name = "subcategorias", schema = "buen_sabor")
-public class Subcategoria {
+public class Subcategoria implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,9 +25,12 @@ public class Subcategoria {
     private String nombre;
     @Column(name = "borrado")
     private String borrado = "NO";
+    @JsonIgnoreProperties(value = {"sucursales", "subcategorias"})
     @ManyToOne
     @JoinColumn(name = "id_categoria")
+    @JsonBackReference
     private Categoria categoria;
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "subcategorias_sucursales",

@@ -41,7 +41,7 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
         <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          <h2>FILTRAR CATEGORIAS</h2>
+          <h2>FILTRAR INGREDIENTES</h2>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>

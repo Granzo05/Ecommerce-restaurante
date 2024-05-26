@@ -41,6 +41,7 @@ const ArticuloVentas = () => {
         try {
             ArticuloVentaService.getArticulos()
                 .then(data => {
+                    console.log(data)
                     setArticulosVenta(data);
                 })
                 .catch(error => {

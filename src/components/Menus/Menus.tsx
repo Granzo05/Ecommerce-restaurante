@@ -127,12 +127,12 @@ const Menus = () => {
                                     <td>
                                         {menu.ingredientesMenu?.map((ingrediente, index) => (
                                             <span key={index}>
-                                                {ingrediente.ingredienteNombre} - {ingrediente.cantidad} {ingrediente.medida}<br />
+                                                {ingrediente.ingredienteNombre} - {ingrediente.cantidad} {ingrediente.medida.nombre}<br />
                                             </span>
                                         ))}
                                     </td>
                                     <td>${menu.precioVenta}</td>
-                                    <td>{menu.tipo}</td>
+                                    <td>{menu.categoria.nombre}</td>
 
                                     {menu.borrado === 'NO' ? (
                                         <td>

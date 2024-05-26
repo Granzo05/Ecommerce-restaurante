@@ -29,7 +29,7 @@ public abstract class Stock implements Serializable {
     @Column(name = "cantidad_maxima")
     private int cantidadMaxima;
     @JsonIgnoreProperties(value = {"sucursales"})
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
     @Column(name = "borrado")

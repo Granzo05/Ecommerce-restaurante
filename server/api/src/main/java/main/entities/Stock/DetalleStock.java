@@ -18,6 +18,7 @@ import javax.print.attribute.standard.Media;
 @NoArgsConstructor
 @Entity
 @Builder
+@ToString
 @Table(name = "detalle_stock", schema = "buen_sabor")
 public class DetalleStock {
     @Id
@@ -25,22 +26,21 @@ public class DetalleStock {
     private Long id;
     @Column(name = "cantidad")
     private int cantidad;
-    @JsonIgnoreProperties(value = {"sucursales"})
-    @OneToOne
+    @JsonIgnoreProperties(value = {"sucursales", "detalleStock"})
+    @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
     @Column(name = "costo_unitario")
     private double costoUnitario;
     @Column(name = "subtotal")
     private double subTotal;
-    @OneToOne
+    @ManyToOne
     @JsonIgnoreProperties(value = {"stock"})
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
-    @OneToOne
+    @ManyToOne
     @JsonIgnoreProperties(value = {"stock"})
     @JoinColumn(name = "id_articulo")
-    @JsonBackReference
     private ArticuloVenta articuloVenta;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = {"sucursal"})

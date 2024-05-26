@@ -21,20 +21,19 @@ export const SubcategoriaService = {
         }
     },
 
-    createSubcategoria: async (subcategoria: Subcategoria): Promise<string> => {
+    getSubcategoriasByCategoriaId: async (idCategoria: number): Promise<Subcategoria[]> => {
         try {
-            const response = await fetch(URL_API + 'subcategoria/create/' + sucursalId, {
-                method: 'POST',
+            const response = await fetch(URL_API + 'categoria/' + idCategoria + '/subcategorias/' + sucursalId, {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(subcategoria)
+                }
             })
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
+            return await response.json();
 
-            return await response.text();
         } catch (error) {
             console.error('Error:', error);
             throw error;

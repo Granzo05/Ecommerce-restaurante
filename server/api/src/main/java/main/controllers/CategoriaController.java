@@ -3,6 +3,7 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.CategoriaDTO;
+import main.entities.Ingredientes.Subcategoria;
 import main.repositories.CategoriaRepository;
 import main.repositories.SubcategoriaRepository;
 import main.repositories.SucursalRepository;
@@ -56,7 +57,6 @@ public class CategoriaController {
         return ResponseEntity.ofNullable("El categoria ya existe");
     }
 
-    @Transactional
     @PutMapping("/categoria/update/{idSucursal}")
     public ResponseEntity<String> actualizarCategoria(@RequestBody Categoria categoria, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByIdCategoriaAndIdSucursal(categoria.getId(), idSucursal);
@@ -65,8 +65,18 @@ public class CategoriaController {
             return ResponseEntity.ofNullable("La categoria no existe");
         } else {
             categoriaDB.get().setNombre(categoria.getNombre());
+
             categoriaDB.get().setBorrado(categoria.getBorrado());
+
+            // Creación de subcategorias
+            for(Subcategoria subcategoria: categoria.getSubcategorias()) {
+                subcategoriaRepository.deleteById(subcategoria.getId());
+                subcategoria.setCategoria(categoriaDB.get());
+                subcategoria.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+            }
+
             categoriaDB.get().setSubcategorias(categoria.getSubcategorias());
+
             categoriaRepository.save(categoriaDB.get());
             return ResponseEntity.ok("Categoria actualizada correctamente");
         }

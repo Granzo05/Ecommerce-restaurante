@@ -24,40 +24,68 @@ const StocksEntrantes = () => {
     const [selectedStock, setSelectedStock] = useState<StockEntranteDTO>(new StockEntranteDTO());
     const [selectedDetalles, setSelectedDetalles] = useState<DetalleStock[]>([]);
 
+    const formatDate = (date: Date) => {
+        const dia = date.getDate() + 1;
+        const mes = date.getMonth() + 1; 
+        const año = date.getFullYear();
+
+        const diaFormateado = dia < 10 ? `0${dia}` : dia;
+        const mesFormateado = mes < 10 ? `0${mes}` : mes;
+
+        return `${diaFormateado}/${mesFormateado}/${año}`;
+    };
+
+
     useEffect(() => {
+        buscarStocks();
+    }, []);
+
+    function buscarStocks() {
         StockEntranteService.getStock()
             .then(data => {
-                console.log(data)
                 setStockEntrante(data);
             })
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, []);
+    }
 
     const handleAgregarStock = () => {
         setShowAgregarStockModal(true);
+        setShowEditarStockModal(false);
+        setShowEliminarStockModal(false);
+        setShowActivarStockModal(false);
+        setShowDetallesStock(false);
         setMostrarStocks(false);
     };
 
     const handleEditarStock = (stock: StockEntranteDTO) => {
         setSelectedStock(stock);
+        setShowAgregarStockModal(false);
         setShowEditarStockModal(true);
+        setShowEliminarStockModal(false);
+        setShowActivarStockModal(false);
+        setShowDetallesStock(false);
         setMostrarStocks(false);
-
     };
 
     const handleEliminarStock = (stock: StockEntranteDTO) => {
         setSelectedStock(stock);
+        setShowAgregarStockModal(false);
+        setShowEditarStockModal(false);
         setShowEliminarStockModal(true);
         setShowActivarStockModal(false);
+        setShowDetallesStock(false);
         setMostrarStocks(false);
     };
 
     const handleActivarStock = (stock: StockEntranteDTO) => {
         setSelectedStock(stock);
+        setShowAgregarStockModal(false);
+        setShowEditarStockModal(false);
         setShowEliminarStockModal(false);
         setShowActivarStockModal(true);
+        setShowDetallesStock(false);
         setMostrarStocks(false);
     };
 
@@ -65,17 +93,22 @@ const StocksEntrantes = () => {
         setShowAgregarStockModal(false);
         setShowEditarStockModal(false);
         setShowEliminarStockModal(false);
+        setShowActivarStockModal(false);
         setShowDetallesStock(false);
         setMostrarStocks(true);
+        buscarStocks();
     };
 
     const handleMostrarDetalles = (detalles: DetalleStock[]) => {
         setSelectedDetalles(detalles);
+        setShowAgregarStockModal(false);
+        setShowEditarStockModal(false);
         setShowEliminarStockModal(false);
         setShowActivarStockModal(false);
         setShowDetallesStock(true);
         setMostrarStocks(false);
     };
+
 
     return (
         <div className="opciones-pantallas">
@@ -94,6 +127,18 @@ const StocksEntrantes = () => {
                 <DetallesStock detallesOriginal={selectedDetalles} />
             </ModalFlotante>
 
+            <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
+                {selectedStock && <EliminarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
+            </ModalCrud>
+
+            <ModalCrud isOpen={showActivarStockModal} onClose={handleModalClose}>
+                {selectedStock && <ActivarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
+            </ModalCrud>
+
+            <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
+                {selectedStock && <EditarStock stockEntrante={selectedStock} />}
+            </ModalCrud>
+
             {mostrarStocks && (
                 <div id="stocks">
                     <table>
@@ -107,37 +152,24 @@ const StocksEntrantes = () => {
                         <tbody>
                             {stockEntrante.map(stock => (
                                 <tr key={stock.id}>
-                                    <td>{stock.fechaLlegada?.toString()}</td>
+                                    <td>{formatDate(new Date(stock.fechaLlegada.toString()))}</td>
                                     <td onClick={() => handleMostrarDetalles(stock.detallesStock)}>Detalle stock</td>
 
                                     {stock.borrado === 'NO' ? (
                                         <td>
-                                            <button onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
-                                            <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
+                                            <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
                                         </td>
                                     ) : (
                                         <td>
-                                            <button onClick={() => handleActivarStock(stock)}>ACTIVAR</button>
-                                            <button onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            <button className="btn-accion-activar" onClick={() => handleActivarStock(stock)}>ACTIVAR</button>
+                                            <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
                                         </td>
                                     )}
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-
-                    <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                        {selectedStock && <EliminarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
-                    </ModalCrud>
-
-                    <ModalCrud isOpen={showActivarStockModal} onClose={handleModalClose}>
-                        {selectedStock && <ActivarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
-                    </ModalCrud>
-
-                    <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
-                        {selectedStock && <EditarStock stockEntrante={selectedStock} />}
-                    </ModalCrud>
-
                 </div>
             )}
 
