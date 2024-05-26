@@ -119,10 +119,16 @@ Pruebas
 [x] Activacion categorias
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga subcategorias [] Probar validación
-[] Actualizacion subcategorias [] Probar validación
-[] Eliminacion subcategorias
-[] Activacion subcategorias
+[x] Carga subcategorias [x] Probar validación
+[x] Actualizacion subcategorias [x] Probar validación
+[x] Eliminacion subcategorias
+[x] Activacion subcategorias
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
+
+[] Carga ingredientes [] Probar validación
+[] Actualizacion ingredientes [] Probar validación
+[] Eliminacion ingredientes
+[] Activacion ingredientes
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Carga pedido [] Probar validación
@@ -131,11 +137,6 @@ Pruebas
 [] Activacion pedido
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga ingredientes [] Probar validación
-[] Actualizacion ingredientes [] Probar validación
-[] Eliminacion ingredientes
-[] Activacion ingredientes
-[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle), telefono)
 

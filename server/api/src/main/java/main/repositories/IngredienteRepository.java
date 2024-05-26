@@ -13,15 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
-    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre")
-    Optional<Ingrediente> findByName(@Param("nombre") String nombre);
+    @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE i.nombre = :nombre AND s.id = :idSucursal")
+    Optional<Ingrediente> findByNameAndIdSucursal(@Param("nombre") String nombre, @Param("idIngrediente") Long idIngrediente);
 
-    @Query("SELECT NEW main.entities.Ingredientes.IngredienteDTO(i.id, i.nombre, i.borrado) FROM Ingrediente i")
-    List<IngredienteDTO> findAllDTO();
+    @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE s.id = :idIngrediente")
+    List<IngredienteDTO> findAllByIdSucursal(@Param("idIngrediente") Long idIngrediente);
 
-    @Query("SELECT i FROM Ingrediente i WHERE i.id = :id AND i.borrado = 'NO'")
-    Optional<Ingrediente> findByIdNotBorrado(@Param("id") Long id);
+    @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE i.id = :idIngrediente AND s.id = :idSucursal")
+    Optional<Ingrediente> findByIdIngredienteAndIdSucursal(@Param("idSucursal") Long idSucursal, @Param("idIngrediente") Long idIngrediente);
 
-    @Query("SELECT i FROM Ingrediente i WHERE i.nombre = :nombre AND i.borrado = 'NO'")
-    Optional<Ingrediente> findByNombreNotBorrado(@Param("nombre") String nombre);
 }

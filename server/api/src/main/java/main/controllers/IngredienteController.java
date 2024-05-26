@@ -20,16 +20,16 @@ public class IngredienteController {
         this.ingredienteRepository = ingredienteRepository;
     }
 
-    @GetMapping("/ingredientes")
-    public Set<IngredienteDTO> getIngredientes() {
-        return new HashSet<>(ingredienteRepository.findAllDTO());
+    @GetMapping("/ingredientes/{idSucursal}")
+    public Set<IngredienteDTO> getIngredientes(@PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(ingredienteRepository.findAllByIdSucursal(idSucursal));
     }
 
     @Transactional
-    @PostMapping("/ingrediente/create")
-    public ResponseEntity<String> crearIngrediente(@RequestBody Ingrediente ingredienteDetails) {
+    @PostMapping("/ingrediente/create/{idSucursal}")
+    public ResponseEntity<String> crearIngrediente(@RequestBody Ingrediente ingredienteDetails, @PathVariable("idSucursal") Long idSucursal) {
         // Busco el ingrediente en la base de datos
-        Optional<Ingrediente> ingredienteDB = ingredienteRepository.findByName(ingredienteDetails.getNombre());
+        Optional<Ingrediente> ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteDetails.getNombre(), idSucursal);
 
         if (ingredienteDB.isEmpty()) {
             Ingrediente ingrediente = new Ingrediente();
@@ -43,34 +43,25 @@ public class IngredienteController {
         return ResponseEntity.ofNullable("El ingrediente ya existe");
     }
 
-    @PutMapping("/ingrediente/update")
-    public ResponseEntity<String> actualizarIngrediente(@RequestBody Ingrediente ingrediente) {
-        Optional<Ingrediente> ingredienteEncontrado = ingredienteRepository.findByIdNotBorrado(ingrediente.getId());
+    @PutMapping("/ingrediente/update/{idSucursal}")
+    public ResponseEntity<String> actualizarIngrediente(@RequestBody Ingrediente ingrediente, @PathVariable("idSucursal") Long idSucursal) {
+        Optional<Ingrediente> ingredienteEncontrado = ingredienteRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
         if (ingredienteEncontrado.isEmpty()) {
             return ResponseEntity.ofNullable("El ingrediente no existe");
         } else {
-            Optional<Ingrediente> ingredienteDB = ingredienteRepository.findByName(ingrediente.getNombre());
+            Optional<Ingrediente> ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingrediente.getNombre(), idSucursal);
 
-            if(ingredienteDB.isPresent() && ingredienteDB.get().getId() != ingredienteEncontrado.get().getId()) {
+            if (ingredienteDB.isPresent() && ingredienteDB.get().getId() != ingredienteEncontrado.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe un ingrediente con ese nombre");
             }
 
             ingredienteEncontrado.get().setNombre(ingrediente.getNombre());
+
+            ingredienteEncontrado.get().setBorrado(ingrediente.getBorrado());
+
             ingredienteRepository.save(ingredienteEncontrado.get());
+
             return ResponseEntity.ok("El ingrediente ya existe");
-        }
-    }
-
-    @PutMapping("/ingrediente/{idIngrediente}/delete")
-    public ResponseEntity<String> borrarIngrediente(@PathVariable("idIngrediente") Long idIngrediente) {
-        Optional<Ingrediente> ingredienteEncontrado = ingredienteRepository.findByIdNotBorrado(idIngrediente);
-
-        if (ingredienteEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El ingrediente ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
-        } else {
-            ingredienteEncontrado.get().setBorrado("SI");
-            ingredienteRepository.save(ingredienteEncontrado.get());
-            return new ResponseEntity<>("El ingrediente ha sido borrado correctamente", HttpStatus.OK);
         }
     }
 }

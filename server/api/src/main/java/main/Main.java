@@ -4,6 +4,7 @@ import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Domicilio.*;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
+import main.entities.Ingredientes.Subcategoria;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
@@ -117,48 +118,208 @@ public class Main {
                 categoria.setNombre("HAMBURGUESAS");
                 categoria.setBorrado("NO");
                 categoria.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria0 = new Subcategoria();
+                subcategoria0.setCategoria(categoria);
+                subcategoria0.setNombre("Stress cheddar");
+                subcategoria0.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria1 = new Subcategoria();
+                subcategoria1.setCategoria(categoria);
+                subcategoria1.setNombre("Actitud positiva");
+                subcategoria1.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria2 = new Subcategoria();
+                subcategoria2.setCategoria(categoria);
+                subcategoria2.setNombre("Demichelis la concha de tu madre");
+                subcategoria2.getSucursales().add(sucursal);
+
+                categoria.getSubcategorias().add(subcategoria0);
+                categoria.getSubcategorias().add(subcategoria1);
+                categoria.getSubcategorias().add(subcategoria2);
+
                 sucursal.getCategorias().add(categoria);
 
                 Categoria categoria1 = new Categoria();
                 categoria1.setNombre("PANCHOS");
                 categoria1.setBorrado("NO");
                 categoria1.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria10 = new Subcategoria();
+                subcategoria10.setCategoria(categoria1);
+                subcategoria10.setNombre("Completo");
+                subcategoria10.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria11 = new Subcategoria();
+                subcategoria11.setCategoria(categoria1);
+                subcategoria11.setNombre("Con poncho");
+                subcategoria11.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria12 = new Subcategoria();
+                subcategoria12.setCategoria(categoria1);
+                subcategoria12.setNombre("Doble");
+                subcategoria12.getSucursales().add(sucursal);
+
+                categoria1.getSubcategorias().add(subcategoria10);
+                categoria1.getSubcategorias().add(subcategoria11);
+                categoria1.getSubcategorias().add(subcategoria12);
+
                 sucursal.getCategorias().add(categoria1);
 
                 Categoria categoria2 = new Categoria();
                 categoria2.setNombre("EMPANADAS");
                 categoria2.setBorrado("NO");
                 categoria2.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria20 = new Subcategoria();
+                subcategoria20.setCategoria(categoria2);
+                subcategoria20.setNombre("Jamón y queso");
+                subcategoria20.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria21 = new Subcategoria();
+                subcategoria21.setCategoria(categoria2);
+                subcategoria21.setNombre("Carne");
+                subcategoria21.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria22 = new Subcategoria();
+                subcategoria22.setCategoria(categoria2);
+                subcategoria22.setNombre("Cebolla");
+                subcategoria22.getSucursales().add(sucursal);
+
+                categoria2.getSubcategorias().add(subcategoria20);
+                categoria2.getSubcategorias().add(subcategoria21);
+                categoria2.getSubcategorias().add(subcategoria22);
+
                 sucursal.getCategorias().add(categoria2);
 
                 Categoria categoria3 = new Categoria();
                 categoria3.setNombre("PIZZAS");
                 categoria3.setBorrado("NO");
                 categoria3.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria30 = new Subcategoria();
+                subcategoria30.setCategoria(categoria3);
+                subcategoria30.setNombre("A la piedra");
+                subcategoria30.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria31 = new Subcategoria();
+                subcategoria31.setCategoria(categoria3);
+                subcategoria31.setNombre("A la masa");
+                subcategoria31.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria32 = new Subcategoria();
+                subcategoria32.setCategoria(categoria3);
+                subcategoria32.setNombre("Media");
+                subcategoria32.getSucursales().add(sucursal);
+
+                categoria3.getSubcategorias().add(subcategoria30);
+                categoria3.getSubcategorias().add(subcategoria31);
+                categoria3.getSubcategorias().add(subcategoria32);
+
                 sucursal.getCategorias().add(categoria3);
 
                 Categoria categoria4 = new Categoria();
                 categoria4.setNombre("LOMOS");
                 categoria4.setBorrado("NO");
                 categoria4.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria40 = new Subcategoria();
+                subcategoria40.setCategoria(categoria4);
+                subcategoria40.setNombre("Cerdo");
+                subcategoria40.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria41 = new Subcategoria();
+                subcategoria41.setCategoria(categoria4);
+                subcategoria41.setNombre("Carne");
+                subcategoria41.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria42 = new Subcategoria();
+                subcategoria42.setCategoria(categoria4);
+                subcategoria42.setNombre("Pollo");
+                subcategoria42.getSucursales().add(sucursal);
+
+                categoria4.getSubcategorias().add(subcategoria40);
+                categoria4.getSubcategorias().add(subcategoria41);
+                categoria4.getSubcategorias().add(subcategoria42);
+
                 sucursal.getCategorias().add(categoria4);
 
                 Categoria categoria5 = new Categoria();
                 categoria5.setNombre("HELADO");
                 categoria5.setBorrado("NO");
                 categoria5.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria50 = new Subcategoria();
+                subcategoria50.setCategoria(categoria5);
+                subcategoria50.setNombre("A la crema");
+                subcategoria50.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria51 = new Subcategoria();
+                subcategoria51.setCategoria(categoria5);
+                subcategoria51.setNombre("Al agua");
+                subcategoria51.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria52 = new Subcategoria();
+                subcategoria52.setCategoria(categoria5);
+                subcategoria52.setNombre("Postre");
+                subcategoria52.getSucursales().add(sucursal);
+
+                categoria5.getSubcategorias().add(subcategoria50);
+                categoria5.getSubcategorias().add(subcategoria51);
+                categoria5.getSubcategorias().add(subcategoria52);
+
                 sucursal.getCategorias().add(categoria5);
 
                 Categoria categoria6 = new Categoria();
                 categoria6.setNombre("PARRILLA");
                 categoria6.setBorrado("NO");
                 categoria6.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria60 = new Subcategoria();
+                subcategoria60.setCategoria(categoria6);
+                subcategoria60.setNombre("Vacio a la llama");
+                subcategoria60.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria61 = new Subcategoria();
+                subcategoria60.setCategoria(categoria6);
+                subcategoria60.setNombre("Cordero a la llama");
+                subcategoria60.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria62 = new Subcategoria();
+                subcategoria60.setCategoria(categoria6);
+                subcategoria60.setNombre("Costillar a la llama");
+                subcategoria60.getSucursales().add(sucursal);
+
+                categoria6.getSubcategorias().add(subcategoria60);
+                categoria6.getSubcategorias().add(subcategoria61);
+                categoria6.getSubcategorias().add(subcategoria62);
+
                 sucursal.getCategorias().add(categoria6);
 
                 Categoria categoria7 = new Categoria();
                 categoria7.setNombre("PASTAS");
                 categoria7.setBorrado("NO");
                 categoria7.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria70 = new Subcategoria();
+                subcategoria70.setCategoria(categoria7);
+                subcategoria70.setNombre("Peronista (Ñoquis)");
+                subcategoria70.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria71 = new Subcategoria();
+                subcategoria71.setCategoria(categoria7);
+                subcategoria71.setNombre("Di Maria (Fideos)");
+                subcategoria71.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria72 = new Subcategoria();
+                subcategoria72.setCategoria(categoria7);
+                subcategoria72.setNombre("Ravioles");
+                subcategoria72.getSucursales().add(sucursal);
+
+                categoria7.getSubcategorias().add(subcategoria70);
+                categoria7.getSubcategorias().add(subcategoria71);
+                categoria7.getSubcategorias().add(subcategoria72);
+
                 sucursal.getCategorias().add(categoria7);
 
                 Categoria categoria8 = new Categoria();
@@ -177,12 +338,52 @@ public class Main {
                 categoria10.setNombre("BEBIDA_SIN_ALCOHOL");
                 categoria10.setBorrado("NO");
                 categoria10.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria100 = new Subcategoria();
+                subcategoria100.setCategoria(categoria10);
+                subcategoria100.setNombre("Gaseosas");
+                subcategoria100.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria101 = new Subcategoria();
+                subcategoria101.setCategoria(categoria10);
+                subcategoria101.setNombre("Agua");
+                subcategoria101.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria102 = new Subcategoria();
+                subcategoria102.setCategoria(categoria10);
+                subcategoria102.setNombre("Gaseosas sin azúcar");
+                subcategoria102.getSucursales().add(sucursal);
+
+                categoria10.getSubcategorias().add(subcategoria100);
+                categoria10.getSubcategorias().add(subcategoria101);
+                categoria10.getSubcategorias().add(subcategoria102);
+
                 sucursal.getCategorias().add(categoria10);
 
                 Categoria categoria11 = new Categoria();
                 categoria11.setNombre("BEBIDA_CON_ALCOHOL");
                 categoria11.setBorrado("NO");
                 categoria11.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria110 = new Subcategoria();
+                subcategoria110.setCategoria(categoria11);
+                subcategoria110.setNombre("Vino");
+                subcategoria110.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria111 = new Subcategoria();
+                subcategoria111.setCategoria(categoria11);
+                subcategoria111.setNombre("Cerveza");
+                subcategoria111.getSucursales().add(sucursal);
+
+                Subcategoria subcategoria112 = new Subcategoria();
+                subcategoria112.setCategoria(categoria11);
+                subcategoria112.setNombre("Tragos");
+                subcategoria112.getSucursales().add(sucursal);
+
+                categoria11.getSubcategorias().add(subcategoria110);
+                categoria11.getSubcategorias().add(subcategoria111);
+                categoria11.getSubcategorias().add(subcategoria112);
+
                 sucursal.getCategorias().add(categoria11);
 
                 Medida medida = new Medida();
