@@ -3,14 +3,15 @@ import ModalCrud from "../ModalCrud";
 import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
 import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
-import { SubcategoriaService } from "../../services/SubcategoriaService";
 import EliminarSubcategoria from "./EliminarSubcategoria";
 import ActivarSubcategoria from "./ActivarSubcategoria";
 import EditarSubcategoria from "./EditarSubcategoria";
 import AgregarSubcategoria from "./AgregarSubcategoria";
+import { CategoriaService } from "../../services/CategoriaService";
+import { Categoria } from "../../types/Ingredientes/Categoria";
 
 const Subcategorias = () => {
-    const [subcategorias, setCategorias] = useState<Subcategoria[]>([]);
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [mostrarCategorias, setMostrarCategorias] = useState(true);
 
     const [showAgregarModalCategoria, setShowAgregarModalCategoria] = useState(false);
@@ -36,7 +37,7 @@ const Subcategorias = () => {
 
     const fetchCategorias = async () => {
         try {
-            SubcategoriaService.getSubcategorias()
+            CategoriaService.getCategorias()
                 .then(data => {
                     setCategorias(data);
                 })
@@ -108,28 +109,32 @@ const Subcategorias = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {subcategorias.map(subcategoria => (
-                                <tr key={subcategoria.id}>
-                                    <td>{subcategoria.nombre}</td>
+                            {categorias.map(categoria => (
+                                <tr key={categoria.id}>
+                                    <td>{categoria.nombre}</td>
+                                    {categoria.subcategorias.map(subcategoria => (
+                                        <tr key={subcategoria.id}>
+                                            <td>{subcategoria.nombre}</td>
+                                            {subcategoria.borrado === 'NO' ? (
+                                                <td>
+                                                    <div className="btns-acciones">
 
-                                    {subcategoria.borrado === 'NO' ? (
-                                        <td>
-                                            <div className="btns-acciones">
+                                                        <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
+                                                        <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(subcategoria)}>ELIMINAR</button>
+                                                    </div>
 
-                                                <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
-                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(subcategoria)}>ELIMINAR</button>
-                                            </div>
+                                                </td>
+                                            ) : (
+                                                <td>
+                                                    <div className="btns-acciones">
 
-                                        </td>
-                                    ) : (
-                                        <td>
-                                            <div className="btns-acciones">
-
-                                                <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
-                                                <button className="btn-accion-activar" onClick={() => handleActivarCategoria(subcategoria)}>ACTIVAR</button>
-                                            </div>
-                                        </td>
-                                    )}
+                                                        <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
+                                                        <button className="btn-accion-activar" onClick={() => handleActivarCategoria(subcategoria)}>ACTIVAR</button>
+                                                    </div>
+                                                </td>
+                                            )}
+                                        </tr>
+                                    ))}
                                 </tr>
                             ))}
                         </tbody>
@@ -149,7 +154,7 @@ const Subcategorias = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarCategoriaModal} onClose={handleModalClose}>
-                {selectedCategoria && <EditarSubcategoria subcategoriaOriginal={selectedCategoria} onCloseModal={handleModalClose}/>}
+                {selectedCategoria && <EditarSubcategoria subcategoriaOriginal={selectedCategoria} onCloseModal={handleModalClose} />}
             </ModalCrud>
         </div>
     )

@@ -31,7 +31,7 @@ export const IngredienteService = {
                 body: JSON.stringify(ingrediente)
             })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -51,7 +51,7 @@ export const IngredienteService = {
                 body: JSON.stringify(ingrediente)
             })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -72,7 +72,7 @@ export const IngredienteService = {
                 }
             })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();

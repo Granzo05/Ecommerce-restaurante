@@ -20,10 +20,10 @@ public interface SubcategoriaRepository extends JpaRepository<Subcategoria, Long
     @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(sc.id, sc.nombre, sc.borrado) FROM Subcategoria sc JOIN sc.sucursales s WHERE s.id = :id")
     List<SubcategoriaDTO> findAllDTOByIdSucursal(@Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(sc.id, sc.nombre, sc.borrado) FROM Subcategoria sc WHERE sc.categoria.id = :id AND sc.borrado = 'NO'")
+    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(sc.id, sc.nombre, sc.borrado) FROM Subcategoria sc WHERE sc.categoria.id = :id")
     List<SubcategoriaDTO> findAllDTOByIdCategoria(@Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(sc.id, sc.nombre, sc.borrado) FROM Subcategoria sc JOIN sc.sucursales s WHERE sc.categoria.id = :idCategoria AND s.id = :idSucursal AND sc.borrado = 'NO'")
+    @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(sc.id, sc.nombre, sc.borrado) FROM Subcategoria sc JOIN sc.sucursales s WHERE sc.categoria.id = :idCategoria AND s.id = :idSucursal")
     List<SubcategoriaDTO> findAllDTOByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 
     @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(sc.id, sc.nombre, sc.borrado) FROM Subcategoria sc WHERE sc.id = :id")

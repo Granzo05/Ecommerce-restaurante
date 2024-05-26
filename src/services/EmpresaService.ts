@@ -13,10 +13,10 @@ export const EmpresaService = {
             })
 
             if (!response.ok) {
-                throw new Error('Usuario no encontrado');
+                throw new Error(await response.text());
             }
 
-            return response.text();
+            return await response.text();
 
         } catch (error) {
             console.error('Error:', error);

@@ -16,7 +16,7 @@ export const StockIngredientesService = {
                 body: JSON.stringify(stock)
             })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -56,7 +56,7 @@ export const StockIngredientesService = {
                 }
             })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -81,7 +81,7 @@ export const StockIngredientesService = {
                 }
             });
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -104,32 +104,10 @@ export const StockIngredientesService = {
                 body: JSON.stringify(stock)
             })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
-
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
-
-    deleteStock: async (stockId: number): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/${stockId}/delete`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
-            }
-
-            return await response.text();
-
 
         } catch (error) {
             console.error('Error:', error);

@@ -1,6 +1,5 @@
 import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
-import { EnumTipoArticuloComida } from '../types/Productos/EnumTipoArticuloComida';
 import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
 import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
@@ -13,7 +12,7 @@ export const MenuService = {
         return await response.json();
     },
 
-    getMenusPorTipo: async (tipoComida: EnumTipoArticuloComida | null): Promise<ArticuloMenuDTO[]> => {
+    getMenusPorTipo: async (tipoComida: string): Promise<ArticuloMenuDTO[]> => {
         const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + sucursalId);
 
         return await response.json();
@@ -126,28 +125,11 @@ export const MenuService = {
                 body: JSON.stringify(menu)
             })
 
-            return response.text();
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
-
-    deleteMenu: async (nombre: string): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + `menu/${nombre}/delete`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
-
 
         } catch (error) {
             console.error('Error:', error);

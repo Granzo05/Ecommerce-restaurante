@@ -116,8 +116,11 @@ export const ArticuloVentaService = {
                 body: JSON.stringify(articuloVenta)
             })
 
-            return response.text();
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
 
+            return await response.text();
         } catch (error) {
             console.error('Error:', error);
             throw error;

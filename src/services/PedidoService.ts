@@ -70,7 +70,7 @@ export const PedidoService = {
             })
 
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -94,7 +94,7 @@ export const PedidoService = {
             })
 
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -125,7 +125,7 @@ export const PedidoService = {
             })
 
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();

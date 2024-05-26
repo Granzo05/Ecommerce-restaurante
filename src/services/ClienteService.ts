@@ -95,9 +95,9 @@ export const ClienteService = {
                 },
                 body: JSON.stringify(cliente)
             })
-
+   
             if (!response.ok) {
-                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -107,27 +107,5 @@ export const ClienteService = {
             throw error;
         }
 
-    },
-
-    deleteUser: async (cliente: Cliente): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + 'cliente/delete', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(cliente)
-            })
-
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
-            }
-
-            return await response.text();
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
     },
 }

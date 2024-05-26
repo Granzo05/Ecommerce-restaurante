@@ -13,10 +13,10 @@ export const SucursalService = {
             })
 
             if (!response.ok) {
-                throw new Error('Usuario no encontrado');
+                throw new Error(await response.text());
             }
 
-            return response.text();
+            return await response.text();
 
         } catch (error) {
             console.error('Error:', error);
@@ -96,26 +96,6 @@ export const SucursalService = {
 
             return await response.text();
 
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-    },
-
-    deleteSucursal: async (idSucursal: number): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + 'sucursal/' + idSucursal + '/delete', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
-            }
-
-            return await response.text();
         } catch (error) {
             console.error('Error:', error);
             throw error;

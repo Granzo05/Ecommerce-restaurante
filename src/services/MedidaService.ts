@@ -31,7 +31,7 @@ export const MedidaService = {
                 body: JSON.stringify(medida)
             })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
@@ -51,7 +51,7 @@ export const MedidaService = {
                 body: JSON.stringify(medida)
             })
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                throw new Error(await response.text());
             }
 
             return await response.text();
