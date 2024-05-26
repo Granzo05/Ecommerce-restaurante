@@ -24,7 +24,7 @@ export default function MainMenu() {
             });
     }
     */
-   
+
     return (
         <div className='body'>
             <div className="container">
