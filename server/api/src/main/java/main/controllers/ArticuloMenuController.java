@@ -60,7 +60,7 @@ public class ArticuloMenuController {
             Set<IngredienteMenu> ingredientes = new HashSet<>();
 
             for (IngredienteMenu ingredienteMenu : articuloMenu.getIngredientesMenu()) {
-                Ingrediente ingredienteDB = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get();
+                Ingrediente ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteMenu.getIngrediente().getNombre(), idSucursal).get();
                 IngredienteMenu ingredienteMenu1 = new IngredienteMenu();
 
                 ingredienteMenu1.setIngrediente(ingredienteDB);
@@ -219,13 +219,13 @@ public class ArticuloMenuController {
                 ingredienteMenu.setArticuloMenu(articuloMenu);
                 ingredienteMenu.setMedida(ingredienteMenuDTO.getMedida());
                 ingredienteMenu.setCantidad(ingredienteMenuDTO.getCantidad());
-                ingredienteMenu.setIngrediente(ingredienteRepository.findByName(ingredienteMenuDTO.getIngredienteNombre()).get());
+                ingredienteMenu.setIngrediente(ingredienteRepository.findByNameAndIdSucursal(ingredienteMenuDTO.getIngredienteNombre(), id).get());
 
                 articuloMenu.getIngredientesMenu().add(ingredienteMenu);
             }
 
             for (IngredienteMenu ingredienteMenu : articuloMenuDetail.getIngredientes()) {
-                Ingrediente ingredienteDB = ingredienteRepository.findByName(ingredienteMenu.getIngrediente().getNombre()).get();
+                Ingrediente ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteMenu.getIngrediente().getNombre(), id).get();
                 IngredienteMenu ingredienteMenu1 = new IngredienteMenu();
 
                 ingredienteMenu1.setIngrediente(ingredienteDB);

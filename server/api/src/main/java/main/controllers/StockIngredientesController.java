@@ -106,7 +106,7 @@ public class StockIngredientesController {
 
     @PostMapping("sucursal/{idSucursal}/stockIngredientes/create")
     public ResponseEntity<String> crearStock(@RequestBody StockIngredientes stockDetail, @PathVariable("idSucursal") long id) {
-        Optional<Ingrediente> ingredienteDb = ingredienteRepository.findByNombreNotBorrado(stockDetail.getIngrediente().getNombre());
+        Optional<Ingrediente> ingredienteDb = ingredienteRepository.findByNameAndIdSucursal(stockDetail.getIngrediente().getNombre(), id);
 
         // Si el cliente no se ha creado en su sección lo creamos para evitar trabajar doble
         if (ingredienteDb.isEmpty()) {
@@ -116,7 +116,7 @@ public class StockIngredientesController {
             ingredienteRepository.save(ingrediente);
         }
 
-        Ingrediente ingrediente = ingredienteRepository.findByName(stockDetail.getIngrediente().getNombre()).get();
+        Ingrediente ingrediente = ingredienteRepository.findByNameAndIdSucursal(stockDetail.getIngrediente().getNombre(), id).get();
 
         // Busco el ingrediente en la base de datos
         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), id);

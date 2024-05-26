@@ -83,7 +83,7 @@ public class StockEntranteController {
                 ArticuloVenta articulo = articuloVentaRepository.findByName(detalle.getArticuloVenta().getNombre()).get();
                 nuevoDetalle.setArticuloVenta(articulo);
             } else if (detalle.getIngrediente() != null && detalle.getIngrediente().getNombre().length() > 2) {
-                Ingrediente ingrediente = ingredienteRepository.findByName(detalle.getIngrediente().getNombre()).get();
+                Ingrediente ingrediente = ingredienteRepository.findByNameAndIdSucursal(detalle.getIngrediente().getNombre(), id).get();
                 nuevoDetalle.setIngrediente(ingrediente);
             } else {
                 return ResponseEntity.badRequest().body("No se han recibido los articulos correctamente");
