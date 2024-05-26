@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
     @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE i.nombre = :nombre AND s.id = :idSucursal")
-    Optional<Ingrediente> findByNameAndIdSucursal(@Param("nombre") String nombre, @Param("idIngrediente") Long idIngrediente);
+    Optional<Ingrediente> findByNameAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 
     @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE s.id = :idIngrediente")
     List<IngredienteDTO> findAllByIdSucursal(@Param("idIngrediente") Long idIngrediente);
