@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react';
 import '../styles/login.css';
 import { ClienteService } from '../services/ClienteService'
 import LockIcon from '@mui/icons-material/Lock';
@@ -14,6 +14,16 @@ import ModalFlotanteRecomendacionesDepartamentos from '../hooks/ModalFlotanteFil
 import ModalFlotanteRecomendacionesLocalidades from '../hooks/ModalFlotanteFiltroLocalidades';
 
 const LoginCliente = () => {
+    const [step, setStep] = useState(1);
+
+    const nextStep = () => {
+        setStep(step + 1);
+    };
+
+    const prevStep = () => {
+        setStep(step - 1);
+    };
+
     const [nombre, setNombre] = useState('');
     const [email, setEmail] = useState('');
     const [contraseña, setContraseña] = useState('');
@@ -124,6 +134,7 @@ const LoginCliente = () => {
             setMostrarIniciarSesion(true);
             setMostrarReestablecerContraseña(false);
             setMostrarCrearCuenta(false);
+            setStep(1); // Reinicia el paso al iniciar sesión
         } else if (seccion === 'reestablecerContraseña') {
             setMostrarIniciarSesion(false);
             setMostrarReestablecerContraseña(true);
@@ -132,12 +143,136 @@ const LoginCliente = () => {
             setMostrarIniciarSesion(false);
             setMostrarReestablecerContraseña(false);
             setMostrarCrearCuenta(true);
+            setStep(1); // Reinicia el paso al crear una cuenta
         }
     };
 
+    const renderStep = () => {
+        switch (step) {
+            case 1:
+                return (
+                    <>
+                        {/* Datos personales */}
+                        <div className="input-box">
+                            <label>
+                                <div className="inputBox">
+                                    <input type='text' required={true} onChange={(e) => { setNombre(e.target.value) }} />
+                                    <span>Nombre</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div className="input-box">
+                            <label>
+                                <div className="inputBox">
+                                    <input type='text' required={true} onChange={(e) => { setApellido(e.target.value) }} />
+                                    <span>Apellido</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div className="input-box">
+                            <label>
+                                <div className="inputBox">
+                                    <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
+                                    <input type='date' required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+                                </div>
+                            </label>
+                        </div>
+                        <div className="btns-crear-cuenta">
+                        <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+                        </div>
+                        
+                    </>
+                );
+            case 2:
+                return (
+                    <>
+                        {/* Datos del correo */}
+                        <div className="input-box">
+                            <label>
+                                <div className="inputBox">
+                                    <input type='phone' required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+                                    <span>Teléfono</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div className="input-box">
+                            <label>
+                                <div className="inputBox">
+                                    <input type='email' required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                                    <span>Correo electrónico</span>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div className="input-box">
+                            <label>
+                                <div className="inputBox">
+                                    <input type={tipoInput} required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+                                    <span>Contraseña</span>
+                                </div>
+                            </label>
+                            <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
+                        </div>
+                        <div className='btns-crear-cuenta'>
+                        <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+                        <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+                        </div>
+                    </>
+                );
+            case 3:
+                return (
+                    <>
+                        {/* Domicilio */}
+                        <div className="input-box">
+                            <label>
+                                <div className="inputBox">
+                                    <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
+                                    <span>Nombre de la calle</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div className="input-box">
+                            <label>
+                                <div className="inputBox">
+                                    <input type="number" required={true} onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
+                                    <span>Número de la casa</span>
+                                </div>
+                            </label>
+                        </div>
+                        {/* Aquí van los componentes para seleccionar provincia, departamento y localidad */}
+                        <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
+                            {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
+
+                            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
+                            {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
+
+                            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadCliente.nombre ?? ''} />
+                            {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+
+                            <div className="input-box">
+                                <label>
+                                    <div className="inputBox">
+                                        <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+                                        <span>Código postal</span>
+                                    </div>
+                                </label>
+                            </div>
+                        <div className="btns-crear-cuenta">
+                        <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+                        <button className='btn-accion-registrarse' onClick={handleCargarUsuario}>Registrarse ✓</button>
+                    
+                        </div>
+                    </>
+                );
+            default:
+                return null;
+        }
+    };
+
+
     return (
 
-        <body>
+        <>
             <Toaster />
             {/*INICIAR SESION*/}
             <section className="form-main" style={{ display: mostrarIniciarSesion ? '' : 'none' }}>
@@ -150,7 +285,7 @@ const LoginCliente = () => {
                             <div className="input-box">
                                 <label>
                                     <div className="inputBox">
-                                        <input type="email" required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                                        <input type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
                                         <span>Correo electrónico</span>
                                     </div>
                                 </label>
@@ -185,7 +320,7 @@ const LoginCliente = () => {
                             <div className="input-box">
                                 <label>
                                     <div className="inputBox">
-                                        <input type='email' required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                                        <input type='text' required={true} onChange={(e) => { setEmail(e.target.value) }} />
                                         <span>Correo electrónico</span>
                                     </div>
                                 </label>
@@ -203,98 +338,12 @@ const LoginCliente = () => {
                         <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></h2>
                         <h3>- CREAR UNA CUENTA -</h3>
                         <p id='subtitle'>o registrate con: <img id='icon-gmail' src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new" /></p>
-                        <form action="">
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type='text' required={true} onChange={(e) => { setNombre(e.target.value) }} />
-                                        <span>Nombre</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type='text' required={true} onChange={(e) => { setApellido(e.target.value) }} />
-                                        <span>Apellido</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type='email' required={true} onChange={(e) => { setEmail(e.target.value) }} />
-                                        <span>Correo electrónico</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type='date' required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
-                                        <span>Fecha de nacimiento</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type='phone' required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-                                        <span>Teléfono</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type={tipoInput} required={true} onChange={(e) => { setContraseña(e.target.value) }} />
-                                        <span>Contraseña</span>
-                                    </div>
-                                </label>
-                                <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
-
-                            </div>
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
-                                        <span>Nombre de la calle</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type="number" required={true} onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
-                                        <span>Número de la casa</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
-                            {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
-
-                            <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
-                            {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
-
-                            <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadCliente.nombre ?? ''} />
-                            {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
-
-                            <div className="input-box">
-                                <label>
-                                    <div className="inputBox">
-                                        <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
-                                        <span>Código postal</span>
-                                    </div>
-                                </label>
-                            </div>
-
-                            <input style={{ marginTop: '1px' }} type="button" className='btn' value="REGISTRARSE" onClick={handleCargarUsuario} />
-                        </form>
+                        {renderStep()}
                         <p id='subtitle'>¿Ya tienes una cuenta?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('iniciarSesion')}>Iniciar sesión</a></p>
                     </div>
                 </div>
             </section>
-        </body>
+        </>
     )
 }
 

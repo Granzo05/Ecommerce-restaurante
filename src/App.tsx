@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const ruta = window.location.href.split('/').pop(); 
     
-    if (ruta === '') {
+    if (ruta === '' || ruta === '#user'|| ruta === 'login-cliente') {
       setMostrarFooter(true);
     } else {
       setMostrarFooter(false);
@@ -29,7 +29,7 @@ function App() {
       setMostrarHeader(false);
     }
 
-    if (ruta === 'opciones' || ruta === 'prueba') {
+    if (ruta === 'opciones' || ruta === 'prueba' || ruta === 'login-cliente') {
       setMostrarHeaderLogin(true);
     } else {
       setMostrarHeaderLogin(false);
