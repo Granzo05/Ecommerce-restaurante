@@ -1,4 +1,4 @@
-import { ImagenesProducto } from "../Productos/ImagenesProducto";
+import { Imagenes } from "../Productos/Imagenes";
 import { ImagenesProductoDTO } from "../Productos/ImagenesProductoDTO";
 
 export class Empresa {
@@ -6,7 +6,7 @@ export class Empresa {
     cuit: string = '';
     nombre: string = '';
     razonSocial: string = '';
-    imagenes: ImagenesProducto[] = [];
+    imagenes: Imagenes[] = [];
     imagenesDTO: ImagenesProductoDTO[] = [];
     borrado: string = '';
 

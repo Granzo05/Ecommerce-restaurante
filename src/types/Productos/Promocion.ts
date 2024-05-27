@@ -1,6 +1,6 @@
 import { Articulo } from "./Articulo";
 import { ArticuloMenu } from "./ArticuloMenu";
-import { ImagenesProducto } from "./ImagenesProducto";
+import { Imagenes } from "./Imagenes";
 
 export class Promocion {
     id: number = 0;
@@ -10,7 +10,7 @@ export class Promocion {
     fechaHasta: Date | null = null;
     articulos: Articulo[] = [];
     articulosMenu: ArticuloMenu[] = [];
-    imagenes: ImagenesProducto[] = [];
+    imagenes: Imagenes[] = [];
     precio: number = 0;
     borrado: string = '';
 

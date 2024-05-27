@@ -36,7 +36,7 @@ public class Promocion {
             joinColumns = @JoinColumn(name = "id_promocion"),
             inverseJoinColumns = @JoinColumn(name = "id_articulo")
     )
-    private Set<Articulo> articulos = new HashSet<>();
+    private Set<ArticuloVenta> articulosVenta = new HashSet<>();
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -44,6 +44,8 @@ public class ArticuloMenu extends Articulo {
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToMany(mappedBy = "articuloMenu", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
+    @ManyToMany(mappedBy = "articulosMenu", fetch = FetchType.LAZY)
+    private Set<Promocion> promociones = new HashSet<>();
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(mappedBy = "articulosMenu", fetch = FetchType.LAZY)
     private Set<Sucursal> sucursales = new HashSet<>();

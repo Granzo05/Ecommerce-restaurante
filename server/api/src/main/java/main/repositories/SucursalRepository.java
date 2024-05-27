@@ -20,6 +20,9 @@ public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
     @Query("SELECT s FROM Sucursal s WHERE s.id = :id")
     Optional<Sucursal> findById(@Param("id") Long id);
 
+    @Query("SELECT s FROM Sucursal s WHERE s.nombre = :nombre")
+    Optional<Sucursal> findByName(@Param("nombre") String nombre);
+
     @Query("SELECT s.localidadesDisponiblesDelivery FROM Sucursal s WHERE s.id = :id AND s.borrado = 'NO'")
     List<LocalidadDelivery> findLocalidadesByIdSucursal(@Param("id") Long id);
 

@@ -1,4 +1,4 @@
-export class ImagenesProducto {
+export class Imagenes {
     index: number = 0;
     file: File | null = null; 
     ruta: string = '';

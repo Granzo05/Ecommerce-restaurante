@@ -6,6 +6,7 @@ import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.IngredienteMenuDTO;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloMenuDTO;
+import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
@@ -104,15 +105,15 @@ public class ArticuloMenuController {
     }
 
     @Transactional
-    @PostMapping("/menu/imagenes")
-    public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu) {
+    @PostMapping("/menu/imagenes/{idSucursal}")
+    public ResponseEntity<String> crearImagenMenu(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu, @PathVariable("idSucursal") Long idSucursal) {
         HashSet<Imagenes> listaImagenes = new HashSet<>();
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
             String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + nombreMenu.replaceAll(" ", "") + File.separator;
-            System.out.println(basePath);
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesMenu" + File.separator + nombreMenu.replaceAll(" ", "") + File.separator;
+
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);
             if (!carpeta.exists()) {
@@ -137,13 +138,13 @@ public class ArticuloMenuController {
             try {
                 for (Imagenes imagenProducto : listaImagenes) {
                     // Asignamos el menu a la imagen
-                    Optional<ArticuloMenu> menu = articuloMenuRepository.findByName(nombreMenu);
+                    Optional<ArticuloMenu> menu = articuloMenuRepository.findByNameMenuAndIdSucursal(nombreMenu, idSucursal);
                     if (menu.isEmpty()) {
-                        return new ResponseEntity<>("Menu vacio", HttpStatus.NOT_FOUND);
+                        return new ResponseEntity<>("menu vacio", HttpStatus.NOT_FOUND);
                     }
                     imagenProducto.setArticuloMenu(menu.get());
-
-                    imagenesRepository.save(imagen);
+                    imagenProducto.setSucursal(sucursalRepository.findById(idSucursal).get());
+                    imagenesRepository.save(imagenProducto);
                 }
 
             } catch (Exception e) {
@@ -161,7 +162,7 @@ public class ArticuloMenuController {
 
     @Transactional
     @PutMapping("/menu/imagen/{id}/delete")
-    public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
+    public ResponseEntity<String> eliminarImagenMenu(@PathVariable("id") Long id) {
         Optional<Imagenes> imagen = imagenesRepository.findById(id);
 
         if (imagen.isPresent()) {

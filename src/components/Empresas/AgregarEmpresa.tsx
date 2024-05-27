@@ -3,7 +3,7 @@ import { Empresa } from '../../types/Restaurante/Empresa';
 import { EmpresaService } from '../../services/EmpresaService';
 import { Toaster, toast } from 'sonner'
 import { clearInputs } from '../../utils/global_variables/functions';
-import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
+import { Imagenes } from '../../types/Productos/Imagenes';
 
 function AgregarEmpresa() {
   // Atributos necesarios para Empresa
@@ -11,7 +11,7 @@ function AgregarEmpresa() {
   const [cuit, setCuit] = useState('');
   const [razonSocial, setRazonSocial] = useState('');
 
-  const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   let [selectIndexImagenes, setSelectIndexImagenes] = useState<number>(0);
 
   const handleImagen = (index: number, file: File | null) => {
@@ -23,7 +23,7 @@ function AgregarEmpresa() {
   };
 
   const añadirCampoImagen = () => {
-    setImagenes([...imagenes, { index: imagenes.length, file: null } as ImagenesProducto]);
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagenes]);
   };
 
   const quitarCampoImagen = () => {

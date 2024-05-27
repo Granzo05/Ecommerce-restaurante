@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
-import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
+import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import { Empresa } from '../../types/Restaurante/Empresa';
 import { EmpresaService } from '../../services/EmpresaService';
@@ -12,7 +12,7 @@ interface EditarMenuProps {
 const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
   const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(empresaOriginal.imagenesDTO);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
-  const [imagenes, setImagenes] = useState<ImagenesProducto[]>(empresaOriginal.imagenes);
+  const [imagenes, setImagenes] = useState<Imagenes[]>(empresaOriginal.imagenes);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const [nombre, setNombre] = useState('');
@@ -28,7 +28,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
   };
 
   const añadirCampoImagen = () => {
-    let imagenNueva = new ImagenesProducto();
+    let imagenNueva = new Imagenes();
     imagenNueva.index = imagenes.length;
     setImagenes([...imagenes, imagenNueva]);
   };

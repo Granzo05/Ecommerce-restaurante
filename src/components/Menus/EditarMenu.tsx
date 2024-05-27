@@ -4,7 +4,7 @@ import { MenuService } from '../../services/MenuService';
 import ModalFlotante from '../ModalFlotante';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
-import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
+import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import './editarMenu.css'
 import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
@@ -27,7 +27,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   let [selectIndexIngredientes, setSelectIndexIngredientes] = useState<number>(0);
   const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(menuOriginal.imagenesDTO);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
-  const [imagenes, setImagenes] = useState<ImagenesProducto[]>(menuOriginal.imagenes);
+  const [imagenes, setImagenes] = useState<Imagenes[]>(menuOriginal.imagenes);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
@@ -46,7 +46,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   };
 
   const añadirCampoImagen = () => {
-    let imagenNueva = new ImagenesProducto();
+    let imagenNueva = new Imagenes();
     imagenNueva.index = imagenes.length;
     setImagenes([...imagenes, imagenNueva]);
   };

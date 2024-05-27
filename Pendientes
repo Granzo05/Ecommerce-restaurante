@@ -28,33 +28,33 @@
 [x] Opcion para seleccionar que localidades abarcaria el local, para asi cargar la db con los datos de esa provincia y no de todo el pais
 [x] Cambio de select a input con resultados
 [x] Validaciones echas
+[x] Arreglar muestra de errores y devolucion de mensajes desde el server (ej base EditarCategoria)
+[x] Crear modal para mostrar opciones extra al interactuar con las opciones
+[x] Acomodar mensajes de los toast que se devuelven del back, ej base loginRestaurante.tsx
+[x] Agregar como medidas paquetes x3,x6,x10,x12 unidades
+[x] Crear empresas
+[x] Crear categorias y subs
+[x] Crear unidad de medida
+[x] Crear subcategorias predeterminadas
+[x] Asignar subcategorias predeterminadas al cargar una sucursal nueva
+[x] Muestra sin repetidas de subcategorias por cada categoria existente al crear, editar o borrar.
 [] Boton en pedidos del cliente para poder repetir un pedido anterior
 [] Descontar stock al comprar
 [] Cancelacion de pedido
 [] Mercadopago
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
-[] Crear modal para mostrar opciones extra al interactuar con las opciones
 [] Ver tema del auth para privilegios y esas cosas
-[] Acomodar mensajes de los toast que se devuelven del back, ej base loginRestaurante.tsx
 [] Mostrar receta de cada menu
-[] Agregar como medidas paquetes x3,x6,x10,x12 unidades
 [] Avisar que el menu está en traslado junto con el envio de la factura
 [] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
 [] Precio sugerido segun ingredientes y los costos
 [] Que el modal de recomendaciones no muestre alguna de las opciones si ya esta seleccionada en un input previo, por ej si ya seleccione el ingrediente 'carne' que al poner otro no muestre este como recomendacion
-[] Crear empresas
-[] Crear categorias y subs
-[] Crear unidad de medida
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
 [] Mostrar paises al seleccionar domicilio
-[] Crear subcategorias predeterminadas
-[] Asignar subcategorias predeterminadas al cargar una sucursal nueva
-[] Muestra sin repetidas de subcategorias por cada categoria existente al crear, editar o borrar.
 [] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
 [] Revisar que los inputs que se muestran con informacion de la db(los editar mas que nada) muestren arriba de cada input de que valor es la info dentro del input (label o algo)
 [] Validar que no se pueda pedir nada fuera del horario de atencion de la sucursal
-[] Arreglar muestra de errores y devolucion de mensajes desde el server (ej base EditarCategoria)
 
 Pruebas
 [x] Carga sucursal [x] Probar validación

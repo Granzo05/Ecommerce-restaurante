@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
+import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
@@ -16,7 +16,7 @@ import AgregarSubcategoria from '../Subcategorias/AgregarSubcategoria';
 import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
 
 function AgregarArticuloVenta() {
-  const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const handleImagen = (index: number, file: File | null) => {
@@ -28,7 +28,7 @@ function AgregarArticuloVenta() {
   };
 
   const añadirCampoImagen = () => {
-    setImagenes([...imagenes, { index: imagenes.length, file: null } as ImagenesProducto]);
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagenes]);
   };
 
   const quitarCampoImagen = () => {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
-import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
+import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import './editarArticuloVenta.css'
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
@@ -21,7 +21,7 @@ interface EditarArticuloVentaProps {
 const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOriginal }) => {
   const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(articuloOriginal.imagenesDTO);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
-  const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const [categoria, setCategoria] = useState<Categoria>(articuloOriginal.categoria);
@@ -41,7 +41,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   };
 
   const añadirCampoImagen = () => {
-    let imagenNueva = new ImagenesProducto();
+    let imagenNueva = new Imagenes();
     imagenNueva.index = imagenes.length;
     setImagenes([...imagenes, imagenNueva]);
   };

@@ -25,9 +25,7 @@ const HeaderHomePage: React.FC = () => {
 
     const handleCloseCart = () => {
         setIsCartOpen(false);
-    };
-
-    
+    };    
 
     //PRUEBA CARRITO
     const [cartItems, setCartItems] = useState<CartItem[]>([]);

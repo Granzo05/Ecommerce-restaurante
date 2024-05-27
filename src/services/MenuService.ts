@@ -1,6 +1,6 @@
 import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
-import { ImagenesProducto } from '../types/Productos/ImagenesProducto';
+import { ImagenesProducto } from '../types/Productos/Imagenes';
 import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 

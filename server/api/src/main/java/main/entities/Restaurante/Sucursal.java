@@ -38,6 +38,8 @@ public class Sucursal {
     private long telefono;
     @Column(name = "email")
     private String email;
+    @Column(name = "nombre")
+    private String nombre;
     @Column(name = "privilegios")
     private String privilegios;
     @Column(name = "horario_apertura")

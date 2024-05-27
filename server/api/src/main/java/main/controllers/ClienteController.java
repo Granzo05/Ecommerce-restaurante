@@ -38,7 +38,7 @@ public class ClienteController {
         if (cliente.isEmpty()) {
             clienteDetails.setContraseña(Encrypt.cifrarPassword(clienteDetails.getContraseña()));
             for (Domicilio domicilio : clienteDetails.getDomicilios()) {
-                domicilio.setLocalidad(localidadRepository.findByName(Encrypt.encriptarString(domicilio.getLocalidad().getNombre())).get());
+                domicilio.setLocalidad(localidadRepository.findByName(domicilio.getLocalidad().getNombre()).get());
                 domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setCliente(clienteDetails);
             }

@@ -2,19 +2,29 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
-import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.CategoriaDTO;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.MedidaDTO;
-import main.entities.Restaurante.*;
+import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.ArticuloVenta;
+import main.entities.Productos.Imagenes;
+import main.entities.Productos.Promocion;
+import main.entities.Restaurante.Empresa;
+import main.entities.Restaurante.LocalidadDelivery;
+import main.entities.Restaurante.Sucursal;
+import main.entities.Restaurante.SucursalDTO;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
@@ -22,212 +32,170 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-public class SucursalController {
+public class PromocionController {
+    private final PromocionRepository promocionRepository;
+    private final ImagenesRepository imagenesRepository;
     private final SucursalRepository sucursalRepository;
-    private final EmpleadoRepository empleadoRepository;
-    private final ClienteRepository clienteRepository;
-    private final EmpresaRepository empresaRepository;
-    private final LocalidadDeliveryRepository localidadDeliveryRepository;
-    private final DomicilioRepository domicilioRepository;
-    private final MedidaRepository medidaRepository;
-    private final CategoriaRepository categoriaRepository;
 
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository) {
+    public PromocionController(PromocionRepository promocionRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository) {
+        this.promocionRepository = promocionRepository;
+        this.imagenesRepository = imagenesRepository;
         this.sucursalRepository = sucursalRepository;
-        this.empleadoRepository = empleadoRepository;
-        this.clienteRepository = clienteRepository;
-        this.empresaRepository = empresaRepository;
-        this.localidadDeliveryRepository = localidadDeliveryRepository;
-        this.domicilioRepository = domicilioRepository;
-        this.medidaRepository = medidaRepository;
-        this.categoriaRepository = categoriaRepository;
     }
 
 
     @CrossOrigin
-    @GetMapping("/sucursal/login/{email}/{password}")
-    public SucursalDTO loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        return sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+    @GetMapping("/promociones/idSucursal")
+    public Set<Promocion> getPromociones(@PathVariable("idSucursal") Long idSucursal) throws Exception {
+        List<Promocion> promociones = promocionRepository.findAllByIdSucursal(idSucursal);
+
+        return new HashSet<>(promociones);
     }
 
-    @CrossOrigin
-    @GetMapping("/sucursales")
-    public Set<SucursalDTO> getSucursales() throws Exception {
-        List<SucursalDTO> sucursales = sucursalRepository.findAllDTO();
-
-        for (SucursalDTO sucursal : sucursales) {
-            DomicilioDTO domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
-
-            domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-
-            sucursal.setDomicilio(domicilio);
-            sucursal.setLocalidadesDisponiblesDelivery(localidadDeliveryRepository.findByIdSucursal(sucursal.getId()));
-        }
-
-        return new HashSet<>(sucursales);
-    }
-
-    @CrossOrigin
-    @GetMapping("/sucursal/{idSucursal}")
-    public Sucursal getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
-        Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
-
-        if(sucursal.isPresent()) {
-            return sucursal.get();
-        }
-
-        return null;
-    }
-
-    @CrossOrigin
-    @GetMapping("/localidades/delivery/sucursal/{id}")
-    public Set<LocalidadDelivery> getLocalidadesDeliverySucursal(@PathVariable("id") Long id) throws Exception {
-        List<LocalidadDelivery> localidades = sucursalRepository.findLocalidadesByIdSucursal(id);
-
-        return new HashSet<>(localidades);
-    }
-
-    @CrossOrigin
-    @GetMapping("/check/{email}")
-    public boolean checkPrivilegios(@PathVariable("email") String email) {
-        Optional<Sucursal> sucursal = sucursalRepository.findByEmail(email);
-
-        // Sucursal tiene acceso a todo, por lo tanto si el email coincide entonces se concede acceso
-        if (sucursal != null) {
-            return true;
-        }
-
-        // Recibo un email y para chequear si se puede dar acceso o no
-        Optional<Cliente> cliente = clienteRepository.findByEmail(email);
-        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
-        if (cliente.isPresent()) {
-            return false;
-        }
-
-        Optional<Empleado> empleado = empleadoRepository.findByEmail(email);
-        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
-        if (empleado.isPresent()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @PostMapping("/sucursal/create")
+    @PostMapping("/promocion/create/{idSucursal}")
     @Transactional
-    public ResponseEntity<String> crearSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
-        Optional<Sucursal> sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
+    public ResponseEntity<String> crearSucursal(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
+        Optional<Promocion> promocionDB = promocionRepository.findByNameAndIdSucursal(promocionDetails.getNombre(), idSucursal);
 
-        if (sucursalDB.isEmpty()) {
-            Domicilio domicilio = new Domicilio();
-            domicilio.setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
-            domicilio.setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
-            domicilio.setNumero(sucursalDetails.getDomicilio().getNumero());
-            domicilio.setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
-            domicilio.setSucursal(sucursalDetails);
+        if (promocionDB.isEmpty()) {
+            promocionRepository.save(promocionDetails);
 
-            sucursalDetails.setDomicilio(domicilio);
-
-            sucursalDetails.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
-
-            sucursalDetails.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
-            sucursalDetails.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
-            sucursalDetails.setPrivilegios("negocio");
-
-            Empresa empresa = empresaRepository.findById(1l).get();
-
-            sucursalDetails.setEmpresa(empresa);
-            sucursalDetails.setBorrado("NO");
-            for (LocalidadDelivery localidad : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
-                localidad.setSucursal(sucursalDetails);
-            }
-
-            HashSet<MedidaDTO> medidas = new HashSet<>(medidaRepository.findAllDTOByIdSucursal(1l));
-
-            for (MedidaDTO medidaDTO : medidas) {
-                Medida medida = new Medida();
-                medida.setNombre(medidaDTO.getNombre());
-                medida.getSucursales().add(sucursalDetails);
-                medida.setBorrado("NO");
-
-                sucursalDetails.getMedidas().add(medida);
-            }
-
-            HashSet<CategoriaDTO> categorias = new HashSet<>(categoriaRepository.findAllDTOByIdSucursal(1l));
-
-            for (CategoriaDTO categoriaDTO : categorias) {
-                Categoria categoria = new Categoria();
-                categoria.setNombre(categoriaDTO.getNombre());
-                categoria.getSucursales().add(sucursalDetails);
-                categoria.setBorrado("NO");
-
-                sucursalDetails.getCategorias().add(categoria);
-            }
-
-            sucursalRepository.save(sucursalDetails);
-
-            return ResponseEntity.ok("Carga con éxito");
+            return ResponseEntity.ok("Promoción cargada con éxito");
         } else {
-            return ResponseEntity.badRequest().body("Hay una sucursal cargada con ese email");
+            return ResponseEntity.badRequest().body("Hay una promocion cargada con ese nombre");
         }
     }
 
     @Transactional
-    @PutMapping("/sucursal/update")
-    public ResponseEntity<String> updateSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
-        Optional<Sucursal> sucursalDb = sucursalRepository.findById(sucursalDetails.getId());
-        if (sucursalDb.isPresent()) {
-            Optional<Sucursal> sucursalEncontrada = sucursalRepository.findByEmail(sucursalDetails.getEmail());
+    @PostMapping("/promocion/imagenes/{idSucursal}")
+    public ResponseEntity<String> crearImagenPromocion(@RequestParam("file") MultipartFile file, @RequestParam("nombrePromocion") String nombrePromocion, @PathVariable("idSucursal") Long idSucursal) {
+        HashSet<Imagenes> listaImagenes = new HashSet<>();
+        // Buscamos el nombre de la foto
+        String fileName = file.getOriginalFilename().replaceAll(" ", "");
+        try {
+            String basePath = new File("").getAbsolutePath();
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesPromocion" + File.separator + nombrePromocion.replaceAll(" ", "") + File.separator;
+
+            // Verificar si la carpeta existe, caso contrario, crearla
+            File carpeta = new File(rutaCarpeta);
+            if (!carpeta.exists()) {
+                carpeta.mkdirs();
+            }
+
+            String rutaArchivo = rutaCarpeta + fileName;
+            file.transferTo(new File(rutaArchivo));
+
+            String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(nombrePromocion.replaceAll(" ", "") + "/")
+                    .path(fileName.replaceAll(" ", ""))
+                    .toUriString();
+
+            Imagenes imagen = new Imagenes();
+            imagen.setNombre(fileName.replaceAll(" ", ""));
+            imagen.setRuta(downloadUrl);
+            imagen.setFormato(file.getContentType());
+
+            listaImagenes.add(imagen);
+
+            try {
+                for (Imagenes imagenProducto : listaImagenes) {
+                    // Asignamos el menu a la imagen
+                    Optional<Promocion> promocion = promocionRepository.findByNameAndIdSucursal(nombrePromocion, idSucursal);
+                    if (promocion.isEmpty()) {
+                        return new ResponseEntity<>("promocion vacio", HttpStatus.NOT_FOUND);
+                    }
+                    imagenProducto.setPromocion(promocion.get());
+                    imagenProducto.setSucursal(sucursalRepository.findById(idSucursal).get());
+                    imagenesRepository.save(imagenProducto);
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error al insertar la ruta en el menu: " + e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.out.println("Error al crear la imagen: " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @PutMapping("/promocion/imagen/{id}/delete")
+    public ResponseEntity<String> eliminarImagenPromocion(@PathVariable("id") Long id) {
+        Optional<Imagenes> imagen = imagenesRepository.findById(id);
+
+        if (imagen.isPresent()) {
+            try {
+                imagenesRepository.delete(imagen.get());
+                return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
+            } catch (Exception e) {
+                System.out.println("Error al crear la imagen: " + e);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/sucursal/update/{idSucursal}")
+    public ResponseEntity<String> updateSucursal(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
+        Optional<Promocion>  promocionDB = promocionRepository.findByIdPromocionAndIdSucursal(promocionDetails.getId(), idSucursal);
+        if (promocionDB.isPresent()) {
+            Optional<Promocion> promocionEncontrada = promocionRepository.findByNameAndIdSucursal(promocionDetails.getNombre(), idSucursal);
 
             // Si no es la misma sucursal pero si el mismo email entonces ejecuta esto
-            if (sucursalEncontrada.isPresent() && sucursalDb.get().getId() != sucursalEncontrada.get().getId()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una sucursal con ese email");
+            if (promocionEncontrada.isPresent() && promocionDB.get().getId() != promocionEncontrada.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una promocion con ese nombre");
             }
 
-            Sucursal sucursal = sucursalDb.get();
+            Promocion promocion = promocionDB.get();
 
-            if (sucursal.getBorrado().equals(sucursalDetails.getBorrado())) {
-                // Actualizar domicilio
-                sucursal.getDomicilio().setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
-                sucursal.getDomicilio().setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
-                sucursal.getDomicilio().setNumero(sucursalDetails.getDomicilio().getNumero());
-                sucursal.getDomicilio().setSucursal(sucursalDetails);
-                sucursal.getDomicilio().setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
-
-                // Actualizar contraseña
-                if (sucursalDetails.getContraseña().length() > 1) {
-                    sucursal.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
-                }
+            if (promocion.getBorrado().equals(promocionDetails.getBorrado())) {
+                // Borrar todas los articulos y menus
+                promocionRepository.deleteAllByPromocionId(promocion.getId());
 
                 // Actualizar horarios
-                sucursal.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
-                sucursal.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
+                promocion.setFechaDesde(LocalDateTime.parse(promocion.getFechaDesde().toString()));
+                promocion.setFechaHasta(LocalDateTime.parse(promocion.getFechaHasta().toString()));
 
-                // Borrar todas las localidades
-                localidadDeliveryRepository.deleteAllBySucursalId(sucursal.getId());
-
-                // Agregar nuevas localidades
-                Set<LocalidadDelivery> nuevasLocalidades = new HashSet<>();
-                for (LocalidadDelivery localidad : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
-                    localidad.setSucursal(sucursal);
-                    nuevasLocalidades.add(localidad);
+                Set<ArticuloMenu> nuevosMenus = new HashSet<>();
+                for (ArticuloMenu menu : promocion.getArticulosMenu()) {
+                    menu.getPromociones().add(promocion);
+                    nuevosMenus.add(menu);
                 }
-                sucursal.setLocalidadesDisponiblesDelivery(nuevasLocalidades);
+                promocion.setArticulosMenu(nuevosMenus);
 
-                // Actualizar otros campos
-                sucursal.setEmail(sucursalDetails.getEmail());
-                sucursal.setTelefono(sucursalDetails.getTelefono());
+                Set<ArticuloVenta> nuevosArticulos = new HashSet<>();
+                for (ArticuloVenta articuloVenta : promocion.getArticulosVenta()) {
+                    articuloVenta.getPromociones().add(promocion);
+                    nuevosArticulos.add(articuloVenta);
+                }
+                promocion.setArticulosVenta(nuevosArticulos);
 
-                sucursalRepository.save(sucursal);
+                Set<Sucursal> nuevasSucursales = new HashSet<>();
+                for (Sucursal sucursal : promocion.getSucursales()) {
+                    sucursal.getPromociones().add(promocion);
+                    nuevasSucursales.add(sucursal);
+                }
+                promocion.setSucursales(nuevasSucursales);
 
-                return ResponseEntity.ok("La sucursal se actualizó correctamente");
+                promocion.setDescripcion(promocionDetails.getDescripcion());
+
+                promocion.setPrecio(promocionDetails.getPrecio());
+
+                promocionRepository.save(promocion);
+
+                return ResponseEntity.ok("La promoción se actualizó correctamente");
             } else {
-                sucursal.setBorrado(sucursalDetails.getBorrado());
-                sucursalRepository.save(sucursal);
-                return ResponseEntity.ok("La sucursal se actualizó correctamente");
+                promocion.setBorrado(promocionDetails.getBorrado());
+                promocionRepository.save(promocion);
+                return ResponseEntity.ok("La promoción se actualizó correctamente");
             }
         } else {
-            return ResponseEntity.ok("La sucursal no se encontró");
+            return ResponseEntity.ok("La promoción no se encontró");
         }
     }
 }

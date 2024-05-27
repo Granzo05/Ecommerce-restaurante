@@ -3,7 +3,7 @@ import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import ModalFlotante from '../ModalFlotante';
 import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
-import { ImagenesProducto } from '../../types/Productos/ImagenesProducto';
+import { Imagenes } from '../../types/Productos/Imagenes';
 import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 import { Toaster, toast } from 'sonner'
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
@@ -21,7 +21,7 @@ import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteF
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
-  const [imagenes, setImagenes] = useState<ImagenesProducto[]>([]);
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
   let [selectIndexImagenes, setSelectIndexImagenes] = useState<number>(0);
   let [selectIndexIngredientes, setSelectIndexIngredientes] = useState<number>(0);
@@ -35,7 +35,7 @@ function AgregarMenu() {
   };
 
   const añadirCampoImagen = () => {
-    setImagenes([...imagenes, { index: imagenes.length, file: null } as ImagenesProducto]);
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagenes]);
   };
 
   const quitarCampoImagen = () => {

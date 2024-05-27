@@ -31,6 +31,8 @@ public class ArticuloVenta extends Articulo implements Serializable {
     private Subcategoria subcategoria;
     @Column(name = "nombre")
     private String nombre;
+    @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY)
+    private Set<Promocion> promociones = new HashSet<>();
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;

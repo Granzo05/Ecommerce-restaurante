@@ -9,12 +9,17 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.CategoriaDTO;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.MedidaDTO;
+import main.entities.Productos.Imagenes;
+import main.entities.Productos.Promocion;
 import main.entities.Restaurante.*;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
@@ -31,8 +36,9 @@ public class SucursalController {
     private final DomicilioRepository domicilioRepository;
     private final MedidaRepository medidaRepository;
     private final CategoriaRepository categoriaRepository;
+    private final ImagenesRepository imagenesRepository;
 
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository) {
+    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository, ImagenesRepository imagenesRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
@@ -41,6 +47,7 @@ public class SucursalController {
         this.domicilioRepository = domicilioRepository;
         this.medidaRepository = medidaRepository;
         this.categoriaRepository = categoriaRepository;
+        this.imagenesRepository = imagenesRepository;
     }
 
 
@@ -65,6 +72,18 @@ public class SucursalController {
         }
 
         return new HashSet<>(sucursales);
+    }
+
+    @CrossOrigin
+    @GetMapping("/sucursal/{idSucursal}")
+    public Sucursal getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
+        Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
+
+        if(sucursal.isPresent()) {
+            return sucursal.get();
+        }
+
+        return null;
     }
 
     @CrossOrigin
@@ -158,6 +177,79 @@ public class SucursalController {
         } else {
             return ResponseEntity.badRequest().body("Hay una sucursal cargada con ese email");
         }
+    }
+
+    @Transactional
+    @PostMapping("/sucursal/imagenes")
+    public ResponseEntity<String> crearImagenSucursal(@RequestParam("file") MultipartFile file, @RequestParam("nombreSucursal") String nombreSucursal) {
+        HashSet<Imagenes> listaImagenes = new HashSet<>();
+        // Buscamos el nombre de la foto
+        String fileName = file.getOriginalFilename().replaceAll(" ", "");
+        try {
+            String basePath = new File("").getAbsolutePath();
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesSucursal" + File.separator + nombreSucursal.replaceAll(" ", "") + File.separator;
+
+            // Verificar si la carpeta existe, caso contrario, crearla
+            File carpeta = new File(rutaCarpeta);
+            if (!carpeta.exists()) {
+                carpeta.mkdirs();
+            }
+
+            String rutaArchivo = rutaCarpeta + fileName;
+            file.transferTo(new File(rutaArchivo));
+
+            String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(nombreSucursal.replaceAll(" ", "") + "/")
+                    .path(fileName.replaceAll(" ", ""))
+                    .toUriString();
+
+            Imagenes imagen = new Imagenes();
+            imagen.setNombre(fileName.replaceAll(" ", ""));
+            imagen.setRuta(downloadUrl);
+            imagen.setFormato(file.getContentType());
+
+            listaImagenes.add(imagen);
+
+            try {
+                for (Imagenes imagenProducto : listaImagenes) {
+                    // Asignamos el menu a la imagen
+                    Optional<Sucursal> sucursal = sucursalRepository.findByName(nombreSucursal);
+                    if (sucursal.isEmpty()) {
+                        return new ResponseEntity<>("sucursal vacio", HttpStatus.NOT_FOUND);
+                    }
+                    imagenProducto.setSucursal(sucursal.get());
+                    imagenesRepository.save(imagenProducto);
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error al insertar la ruta en el menu: " + e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.out.println("Error al crear la imagen: " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @PutMapping("/sucursal/imagen/{id}/delete")
+    public ResponseEntity<String> eliminarImagenSucursal(@PathVariable("id") Long id) {
+        Optional<Imagenes> imagen = imagenesRepository.findById(id);
+
+        if (imagen.isPresent()) {
+            try {
+                imagenesRepository.delete(imagen.get());
+                return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
+            } catch (Exception e) {
+                System.out.println("Error al crear la imagen: " + e);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Transactional

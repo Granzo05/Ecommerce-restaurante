@@ -3,6 +3,7 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Productos.Imagenes;
+import main.entities.Productos.Promocion;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.EmpresaDTO;
 import main.repositories.EmpresaRepository;
@@ -71,6 +72,79 @@ public class EmpresaController {
         } else {
             return ResponseEntity.badRequest().body("Hay una empresa existente con ese cuit");
         }
+    }
+
+    @Transactional
+    @PostMapping("/empresa/imagenes/")
+    public ResponseEntity<String> crearImagenEmpresa(@RequestParam("file") MultipartFile file, @RequestParam("razonSocialEmpresa") String razonSocialEmpresa) {
+        HashSet<Imagenes> listaImagenes = new HashSet<>();
+        // Buscamos el nombre de la foto
+        String fileName = file.getOriginalFilename().replaceAll(" ", "");
+        try {
+            String basePath = new File("").getAbsolutePath();
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesEmpresas" + File.separator + razonSocialEmpresa.replaceAll(" ", "") + File.separator;
+
+            // Verificar si la carpeta existe, caso contrario, crearla
+            File carpeta = new File(rutaCarpeta);
+            if (!carpeta.exists()) {
+                carpeta.mkdirs();
+            }
+
+            String rutaArchivo = rutaCarpeta + fileName;
+            file.transferTo(new File(rutaArchivo));
+
+            String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(razonSocialEmpresa.replaceAll(" ", "") + "/")
+                    .path(fileName.replaceAll(" ", ""))
+                    .toUriString();
+
+            Imagenes imagen = new Imagenes();
+            imagen.setNombre(fileName.replaceAll(" ", ""));
+            imagen.setRuta(downloadUrl);
+            imagen.setFormato(file.getContentType());
+
+            listaImagenes.add(imagen);
+
+            try {
+                for (Imagenes imagenProducto : listaImagenes) {
+                    // Asignamos el menu a la imagen
+                    Optional<Empresa> empresa = empresaRepository.findByRazonSocial(razonSocialEmpresa);
+                    if (empresa.isEmpty()) {
+                        return new ResponseEntity<>("empresa vacio", HttpStatus.NOT_FOUND);
+                    }
+                    imagenProducto.setEmpresa(empresa.get());
+                    imagenesRepository.save(imagenProducto);
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error al insertar la ruta en el menu: " + e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.out.println("Error al crear la imagen: " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    @PutMapping("/empresa/imagen/{id}/delete")
+    public ResponseEntity<String> eliminarImagenEmpresa(@PathVariable("id") Long id) {
+        Optional<Imagenes> imagen = imagenesRepository.findById(id);
+
+        if (imagen.isPresent()) {
+            try {
+                imagenesRepository.delete(imagen.get());
+                return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
+            } catch (Exception e) {
+                System.out.println("Error al crear la imagen: " + e);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Transactional
@@ -167,23 +241,5 @@ public class EmpresaController {
             System.out.println("Error al crear la imagen: " + e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    @org.springframework.transaction.annotation.Transactional
-    @PutMapping("/empresa/imagen/{id}/delete")
-    public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
-        Optional<Imagenes> imagen = imagenesRepository.findById(id);
-
-        if (imagen.isPresent()) {
-            try {
-                imagenesRepository.delete(imagen.get());
-                return new ResponseEntity<>(HttpStatus.ACCEPTED);
-
-            } catch (Exception e) {
-                System.out.println("Error al crear la imagen: " + e);
-            }
-        }
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

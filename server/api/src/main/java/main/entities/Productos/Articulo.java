@@ -22,8 +22,6 @@ public abstract class Articulo implements Serializable {
     private Long id;
     @Column(name = "precio_venta")
     private double precioVenta;
-    @ManyToMany(mappedBy = "articulos", fetch = FetchType.LAZY)
-    private Set<Promocion> promociones = new HashSet<>();
     @Transient
     private Set<ImagenesDTO> imagenesDTO = new HashSet<>();
 

@@ -4,6 +4,7 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.ArticuloVentaDTO;
 import main.entities.Productos.Imagenes;
+import main.entities.Productos.Promocion;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 import main.repositories.*;
@@ -79,15 +80,15 @@ public class ArticuloVentaController {
         }
     }
 
-    @PostMapping("/articulo/imagenes")
     @Transactional
-    public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("nombreArticulo") String nombreArticulo) {
+    @PostMapping("/articulo/imagenes/{idSucursal}")
+    public ResponseEntity<String> crearImagenArticulo(@RequestParam("file") MultipartFile file, @RequestParam("nombreArticulo") String nombreArticulo, @PathVariable("idSucursal") Long idSucursal) {
         HashSet<Imagenes> listaImagenes = new HashSet<>();
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
             String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "images" + File.separator + nombreArticulo.replaceAll(" ", "") + File.separator;
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesArticuloVenta" + File.separator + nombreArticulo.replaceAll(" ", "") + File.separator;
 
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);
@@ -109,23 +110,21 @@ public class ArticuloVentaController {
             imagen.setFormato(file.getContentType());
 
             listaImagenes.add(imagen);
-            System.out.println(listaImagenes);
-            System.out.println(nombreArticulo);
+
             try {
                 for (Imagenes imagenProducto : listaImagenes) {
-                    // Asignamos el articulo a la imagen
-                    Optional<ArticuloVenta> articulo = articuloVentaRepository.findByName(nombreArticulo);
-                    if (articulo.isEmpty()) {
-                        return new ResponseEntity<>("Articulo vacio", HttpStatus.NOT_FOUND);
+                    // Asignamos el menu a la imagen
+                    Optional<ArticuloVenta> articuloVenta = articuloVentaRepository.findByNameArticuloAndIdSucursal(nombreArticulo, idSucursal);
+                    if (articuloVenta.isEmpty()) {
+                        return new ResponseEntity<>("articuloVenta vacio", HttpStatus.NOT_FOUND);
                     }
-                    articulo.get().setImagenes(listaImagenes);
-                    imagenProducto.setArticuloVenta(articulo.get());
-
-                    imagenesRepository.save(imagen);
+                    imagenProducto.setArticuloVenta(articuloVenta.get());
+                    imagenProducto.setSucursal(sucursalRepository.findById(idSucursal).get());
+                    imagenesRepository.save(imagenProducto);
                 }
 
             } catch (Exception e) {
-                System.out.println("Error al insertar la ruta en el articulo: " + e);
+                System.out.println("Error al insertar la ruta en el menu: " + e);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
@@ -137,9 +136,9 @@ public class ArticuloVentaController {
         }
     }
 
-    @Transactional
+    @jakarta.transaction.Transactional
     @PutMapping("/articulo/imagen/{id}/delete")
-    public ResponseEntity<String> eliminarImagen(@PathVariable("id") Long id) {
+    public ResponseEntity<String> eliminarImagenArticulo(@PathVariable("id") Long id) {
         Optional<Imagenes> imagen = imagenesRepository.findById(id);
 
         if (imagen.isPresent()) {
