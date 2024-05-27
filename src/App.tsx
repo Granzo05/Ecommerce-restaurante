@@ -8,34 +8,34 @@ import './App.css';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [mostrarFooter, setMostrarFooter] = useState(true);
-  const [mostrarHeader, setMostrarHeader] = useState(true);
-  const [mostrarHeaderLogin, setMostrarHeaderLogin] = useState(true);
+  const [mostrarFooter, setMostrarFooter] = useState(false);
+  const [mostrarHeader, setMostrarHeader] = useState(false);
+  const [mostrarHeaderLogin, setMostrarHeaderLogin] = useState(false);
   const [mostrarHeaderHomePage, setMostrarHeaderHomePage] = useState(false);
   
 
   useEffect(() => {
     const ruta = window.location.href.split('/').pop(); 
     
-    if (ruta === 'opciones' || ruta === 'login-negocio' || ruta === 'prueba') {
-      setMostrarFooter(false);
-    } else {
-      setMostrarFooter(true);
-    }
-
-    if (ruta === 'opciones' || ruta === 'login-negocio' || ruta === '' || ruta === 'prueba') {
-      setMostrarHeader(false);
-    } else {
-      setMostrarHeader(true);
-    }
-
-    if (ruta === 'opciones' || ruta === '' || ruta === 'prueba') {
-      setMostrarHeaderLogin(false);
-    } else {
-      setMostrarHeaderLogin(true);
-    }
-
     if (ruta === '') {
+      setMostrarFooter(true);
+    } else {
+      setMostrarFooter(false);
+    }
+
+    if (ruta === 'opciones' || ruta === 'login-negocio' || ruta === 'prueba') {
+      setMostrarHeader(true);
+    } else {
+      setMostrarHeader(false);
+    }
+
+    if (ruta === 'opciones' || ruta === 'prueba') {
+      setMostrarHeaderLogin(true);
+    } else {
+      setMostrarHeaderLogin(false);
+    }
+
+    if (ruta === '' || ruta === '#user') {
       setMostrarHeaderHomePage(true);
     } else {
       setMostrarHeaderHomePage(false);

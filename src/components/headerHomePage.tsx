@@ -1,23 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/homePage-header-footer.css'
 
 const HeaderHomePage: React.FC = () => {
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const header = document.querySelector("header");
-            if (header) {
-                header.classList.toggle("scrolled", window.scrollY > 0);
-            }
-        };
+    const [isClicked, setIsClicked] = useState(false); // Estado para controlar si se hizo clic en "Iniciar sesión"
 
-        window.addEventListener("scroll", handleScroll);
+    const handleLoginClick = () => {
+        // Actualiza el estado cuando se hace clic en "Iniciar sesión"
+        setIsClicked(true);
+    };
 
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
-    
+
     return (
         <header id='inicio' className="header">
             <div className="menu container">
@@ -34,8 +27,16 @@ const HeaderHomePage: React.FC = () => {
                         <li><a href="#menus">Menús</a></li>
                         <li><a href="#contactos">Contactos</a></li>
                     </ul>
+                    {/* Renderizado condicional basado en si se hizo clic en "Iniciar sesión" */}
                     <ul>
-                        <li className='btn-iniciar-sesion'><a href="/login-cliente">Iniciar sesión</a></li>
+                        {isClicked ? (
+                            <>
+                                <img className='menu-icono' src="../src/assets/icons/header-icono-carrito.png" alt="" />
+                                <img className='menu-icono' src="../src/assets/icons/header-icono-cuenta.png" alt="" />
+                            </>
+                        ) : (
+                            <li className='btn-iniciar-sesion'><a href="#user" onClick={handleLoginClick}>Iniciar sesión</a></li>
+                        )}
                     </ul>
                 </nav>
             </div>

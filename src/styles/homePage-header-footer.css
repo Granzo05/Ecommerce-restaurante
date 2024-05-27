@@ -141,6 +141,7 @@ img{
 .menu-icono:hover{
     background-color: #2b87c4c7;
     transition: .3s;
+    cursor: pointer;
 }
 
 .menu label{
