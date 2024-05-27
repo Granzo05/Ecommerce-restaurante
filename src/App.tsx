@@ -17,19 +17,19 @@ function App() {
   useEffect(() => {
     const ruta = window.location.href.split('/').pop(); 
     
-    if (ruta === 'opciones' || ruta === 'login-negocio') {
+    if (ruta === 'opciones' || ruta === 'login-negocio' || ruta === 'prueba') {
       setMostrarFooter(false);
     } else {
       setMostrarFooter(true);
     }
 
-    if (ruta === 'opciones' || ruta === 'login-negocio' || ruta === '') {
+    if (ruta === 'opciones' || ruta === 'login-negocio' || ruta === '' || ruta === 'prueba') {
       setMostrarHeader(false);
     } else {
       setMostrarHeader(true);
     }
 
-    if (ruta === 'opciones' || ruta === '') {
+    if (ruta === 'opciones' || ruta === '' || ruta === 'prueba') {
       setMostrarHeaderLogin(false);
     } else {
       setMostrarHeaderLogin(true);

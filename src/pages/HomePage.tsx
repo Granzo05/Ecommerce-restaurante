@@ -1,15 +1,4 @@
 import '../styles/homePage-header-footer.css'
-import burguerImage from '../assets/img/hamburguesa-background.png'
-import pizzaImage from '../assets/img/pizza-background.png'
-import lomoImage from '../assets/img/lomo-background.jpeg'
-import sushiImage from '../assets/img/sushi-background.jpg'
-import heladoImage from '../assets/img/helado-background.jpg'
-import LunchDiningIcon from '@mui/icons-material/LunchDining';
-import LocalPizzaIcon from '@mui/icons-material/LocalPizza';
-import IcecreamIcon from '@mui/icons-material/Icecream';
-import lomoIcono from '../assets/img/icono-lomos.png'
-import sushiIcono from '../assets/img/icono-sushi.png'
-import { useEffect } from 'react'
 
 export default function MainMenu() {
 
@@ -26,6 +15,10 @@ export default function MainMenu() {
     }
     */
 
+    window.addEventListener("scroll", function(){
+        var header = document.querySelector("our");
+        header?.classList.toggle("sticky", window.scrollY > 0)
+    })
 
     return (
         <>
@@ -242,6 +235,7 @@ export default function MainMenu() {
                 </div>
             </div>
         </section>
+        
         </>
         
     );

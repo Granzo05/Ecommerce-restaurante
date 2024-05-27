@@ -14,6 +14,7 @@ import Empresas from "../components/Empresas/Empresas"
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
+
       <Route path="/panel" element={<Empresas />}>
       </Route>
 
