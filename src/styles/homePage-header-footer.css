@@ -104,7 +104,6 @@ img{
     cursor: pointer;
     background-color: #2b86c4;
     border-radius: 34px;
-    
 }
 
 .menu .navbar .btn-iniciar-sesion:hover{
@@ -620,6 +619,89 @@ h3{
 .cart-total strong{
     font-weight: bold;
 }
+
+/*-----------------PREFERENCIAS DE CUENTA-------------------*/
+
+.account-dropdown {
+    position: absolute;
+    top: 62px;
+    right: 30px;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    box-shadow: 0 2px 40px black;
+    z-index: 1000;
+    border-radius: 5px;
+    max-width: 30%;
+}
+
+.account-dropdown h4 {
+    white-space: nowrap;
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+    color: #2C2C2C;
+    padding: 10px 0;
+    border-bottom: 2px solid #2C2C2C;
+}
+
+.account-dropdown .logout-button {
+    display: block;
+    margin: 0 auto;
+    background-color: rgb(253, 17, 17);
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 34px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.account-dropdown .logout-button:hover {
+    background-color: black;
+    transition: .2s;
+    color: rgb(253, 17, 17);
+}
+
+.account-dropdown .button-logout-div{
+    border-top: 2px solid #2C2C2C;
+    padding-top: 10px;
+    margin-top: -5px;
+}
+
+.preferences-list {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding: 0;
+}
+
+.preferences-list li {
+    margin-bottom: 5px;
+    margin-right: auto;
+    border-bottom: 1px solid #c7c1c1;
+    width: 100%;
+    padding-bottom: 4px;
+}
+
+.preferences-list button {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.preferences-list button:hover {
+    color: #0056b3;
+}
+
+
 
 
 

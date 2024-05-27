@@ -16,7 +16,7 @@
 }
 
 #logo-header-login:hover {
-    filter: drop-shadow(10px 8px 6px #a6b335e7);
+    filter: drop-shadow(10px 8px 6px black);
     transition: 0.4s;
 }
 
