@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
 import EditarPromocion from "./EditarPromocion";
-import '../../styles/promocion.css';
 import ActivarPromocionEntrante from "./ActivarPromocion";
 import EliminarPromocionEntrante from "./EliminarPromocion";
 import { PromocionService } from "../../services/PromocionService";
 import { Promocion } from "../../types/Productos/Promocion";
 import AgregarPromocion from "./AgregarPromocion";
 
-const PromocionesEntrantes = () => {
+const Promociones = () => {
     const [promociones, setPromociones] = useState<Promocion[]>([]);
     const [mostrarPromociones, setMostrarPromociones] = useState(true);
 
@@ -161,4 +160,4 @@ const PromocionesEntrantes = () => {
     )
 }
 
-export default PromocionesEntrantes
+export default Promociones

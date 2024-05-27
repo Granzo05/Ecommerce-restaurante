@@ -131,6 +131,12 @@ Pruebas
 [x] Activacion ingredientes
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
+[] Carga promocion [] Probar validación
+[] Actualizacion promocion [] Probar validación
+[] Eliminacion promocion
+[] Activacion promocion
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
+
 [] Carga pedido [] Probar validación
 [] Actualizacion pedido [] Probar validación
 [] Eliminacion pedido
