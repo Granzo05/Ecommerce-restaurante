@@ -625,7 +625,7 @@ h3{
 
 /*-----------RESPONSIVE----------------*/
 
-@media (max-width:991px){
+@media (max-width:1085px){
     .menu{
         padding: 20px;
     }
