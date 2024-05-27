@@ -649,8 +649,8 @@ h3{
 .account-dropdown .logout-button {
     display: block;
     margin: 0 auto;
-    background-color: red;
-    color: white;
+    background-color: rgb(253, 17, 17);
+    color: black;
     border: none;
     padding: 10px 20px;
     font-size: 16px;
@@ -661,8 +661,9 @@ h3{
 }
 
 .account-dropdown .logout-button:hover {
-    background-color: #940303;
+    background-color: black;
     transition: .2s;
+    color: rgb(253, 17, 17);
 }
 
 .account-dropdown .button-logout-div{
