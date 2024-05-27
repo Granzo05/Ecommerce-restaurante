@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../styles/homePage-header-footer.css'
+import { Link } from 'react-router-dom';
 
 interface CartItem {
     id: number;
@@ -25,6 +26,8 @@ const HeaderHomePage: React.FC = () => {
     const handleCloseCart = () => {
         setIsCartOpen(false);
     };
+
+    
 
     //PRUEBA CARRITO
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -62,6 +65,10 @@ const HeaderHomePage: React.FC = () => {
         const total = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
         return total.toLocaleString('es-AR');
     };
+
+    const getTotalItems = () => {
+        return cartItems.reduce((total, item) => total + item.quantity, 0);
+    };
     //TERMINA PRUEBA CARRITO
 
 
@@ -85,6 +92,9 @@ const HeaderHomePage: React.FC = () => {
                     <ul>
                         {isClicked ? (
                             <>
+                                {getTotalItems() > 0 && (
+                                        <span className="cart-item-count" onClick={handleCartClick}>{getTotalItems()}</span>
+                                    )}
                                 <img className='menu-icono' src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
                                 
                                 <img className='menu-icono' src="../src/assets/icons/header-icono-cuenta.png" alt="" />
@@ -92,29 +102,38 @@ const HeaderHomePage: React.FC = () => {
                                     <div className="cart-dropdown">
                                         <h4>Carrito de compras</h4>
                                         <button className="close-cart" onClick={handleCloseCart}>X<strong>(cerrar)</strong></button>
-                                        {cartItems.map(item => (
-                                            <div key={item.id} className="cart-item">
-                                                <button className="remove-item" onClick={() => removeItem(item.id)}>X</button>
-                                                <p id='name-item'>{item.name}</p>
-                                                <p id='price-item'><strong>Precio:&nbsp;</strong>${formatPrice(item.price)}</p>
-                                                <div className="quantity-controls">
-                                                    <p>Cantidad:&nbsp;</p>
-                                                    <button 
-                                                        className={item.quantity === 1 ? 'disabled' : ''} 
-                                                        onClick={() => decreaseQuantity(item.id)}
-                                                        disabled={item.quantity === 1}
-                                                    >
-                                                        -
-                                                    </button>
-                                                    <span>{item.quantity}</span>
-                                                    <button onClick={() => increaseQuantity(item.id)}>+</button>
-                                                    
+                                        {cartItems.length === 0 ? (
+                                            <p className="empty-cart-message">NO HAY ARTÍCULOS EN EL CARRITO</p>
+                                        ) : (
+                                            cartItems.map(item => (
+                                                <div key={item.id} className="cart-item">
+                                                    <button className="remove-item" onClick={() => removeItem(item.id)}>X</button>
+                                                    <p id='name-item'>{item.name}</p>
+                                                    <p id='price-item'><strong>Precio:&nbsp;</strong>${formatPrice(item.price)}</p>
+                                                    <div className="quantity-controls">
+                                                        <p>Cantidad:&nbsp;</p>
+                                                        <button 
+                                                            className={item.quantity === 1 ? 'disabled' : ''} 
+                                                            onClick={() => decreaseQuantity(item.id)}
+                                                            disabled={item.quantity === 1}
+                                                        >
+                                                            -
+                                                        </button>
+                                                        <span>{item.quantity}</span>
+                                                        <button onClick={() => increaseQuantity(item.id)}>+</button>
+                                                    </div>
                                                 </div>
+                                            ))
+                                        )}
+                                        {cartItems.length > 0 && (
+                                            <div className="cart-total">
+                                                <p><strong>Precio final: </strong>${calculateTotal()}</p>
+                                                <Link to={'/pago'}>
+                                                <button  className='finalizar-pedido'>Finalizar pedido</button>
+                                            
+                                                </Link>
                                             </div>
-                                        ))}
-                                        <div className="cart-total">
-                                            <p><strong>Precio final: </strong>${calculateTotal()}</p>
-                                        </div>
+                                        )}
                                     </div>
                                 )}
                             </>
