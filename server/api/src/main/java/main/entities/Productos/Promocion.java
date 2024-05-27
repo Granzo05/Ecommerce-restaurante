@@ -29,7 +29,7 @@ public class Promocion {
     private LocalDateTime fechaDesde;
     @Column(name = "fecha_hasta")
     private LocalDateTime fechaHasta;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"promociones", "sucursales"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "promocion_articulo",
@@ -37,7 +37,7 @@ public class Promocion {
             inverseJoinColumns = @JoinColumn(name = "id_articulo")
     )
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"ingredientesMenu", "promociones", "sucursales"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "promocion_menu",
@@ -45,7 +45,7 @@ public class Promocion {
             inverseJoinColumns = @JoinColumn(name = "id_menu")
     )
     private Set<ArticuloMenu> articulosMenu = new HashSet<>();
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal"})
     @OneToMany(mappedBy = "promocion")
     private Set<Imagenes> imagenes = new HashSet<>();
     @Column(name = "precio_promocion")
@@ -53,7 +53,7 @@ public class Promocion {
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "contraseña", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "promocion_sucursal",
@@ -61,5 +61,4 @@ public class Promocion {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
-
 }

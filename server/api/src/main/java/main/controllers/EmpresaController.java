@@ -94,6 +94,7 @@ public class EmpresaController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("imagesEmpresas/")
                     .path(razonSocialEmpresa.replaceAll(" ", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();

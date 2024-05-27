@@ -1,5 +1,6 @@
 package main.entities.Pedidos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.ArticuloMenu;
@@ -21,12 +22,15 @@ public class DetallesPedido {
     private int cantidad;
     @Column(name = "subtotal")
     private double subTotal;
+    @JsonIgnoreProperties(value = {"promociones", "sucursales"})
     @OneToOne
     @JoinColumn(name = "id_menu")
     private ArticuloMenu articuloMenu;
+    @JsonIgnoreProperties(value = {"promociones", "sucursales"})
     @OneToOne
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
+    @JsonIgnoreProperties(value = {"factura", "cliente", "empleado"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido")
     private Pedido pedido;

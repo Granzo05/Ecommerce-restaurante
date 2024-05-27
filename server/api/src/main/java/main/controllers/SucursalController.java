@@ -199,6 +199,7 @@ public class SucursalController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("imagesSucursal/")
                     .path(nombreSucursal.replaceAll(" ", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();

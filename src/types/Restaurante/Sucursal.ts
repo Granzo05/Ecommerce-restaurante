@@ -9,6 +9,7 @@ import { LocalidadDelivery } from "./LocalidadDelivery";
 export class Sucursal {
     id: number = 0;
     domicilio: Domicilio = new Domicilio();
+    nombre: string = '';
     contraseña: string = '';
     telefono: number = 0;
     email: string = '';

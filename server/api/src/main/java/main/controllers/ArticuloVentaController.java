@@ -100,6 +100,7 @@ public class ArticuloVentaController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("imagesArticuloVenta/")
                     .path(nombreArticulo.replaceAll(" ", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();

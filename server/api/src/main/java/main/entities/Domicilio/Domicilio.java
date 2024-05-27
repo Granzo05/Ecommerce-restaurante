@@ -37,7 +37,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_cliente")
     )
     private Cliente cliente;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @OneToOne
     @JoinTable(
             name = "sucursales_domicilio",

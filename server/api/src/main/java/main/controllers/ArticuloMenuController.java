@@ -124,6 +124,7 @@ public class ArticuloMenuController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("imagesMenu/")
                     .path(nombreMenu.replaceAll(" ", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();

@@ -32,7 +32,7 @@ public class Empleado {
     private String cuil;
     @Column(name = "telefono")
     private Long telefono;
-    @JsonIgnoreProperties({"empleado", "sucursal", "cliente"})
+    @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"})
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
     private Set<Domicilio> domicilios = new HashSet<>();
     @JsonIgnoreProperties({"empleado"})
@@ -46,7 +46,7 @@ public class Empleado {
     @JsonIgnore
     @Column(name = "privilegios")
     private String privilegios;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "contraseña", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;

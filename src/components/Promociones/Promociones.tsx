@@ -29,7 +29,6 @@ const Promociones = () => {
         return `${diaFormateado}/${mesFormateado}/${año}`;
     };
 
-
     useEffect(() => {
         buscarPromociones();
     }, []);

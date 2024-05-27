@@ -1,6 +1,5 @@
 import { ArticuloVenta } from '../types/Productos/ArticuloVenta';
-import { ImagenesProducto } from '../types/Productos/Imagenes';
-import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
+import { Imagenes } from '../types/Productos/Imagenes';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const ArticuloVentaService = {
@@ -18,7 +17,7 @@ export const ArticuloVentaService = {
     },
 
 
-    createArticulo: async (articuloVenta: ArticuloVenta, imagenes: ImagenesProducto[]): Promise<string> => {
+    createArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[]): Promise<string> => {
         try {
             const menuResponse = await fetch(URL_API + 'articulo/create/' + sucursalId, {
                 method: 'POST',
@@ -44,7 +43,7 @@ export const ArticuloVentaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        await fetch(URL_API + 'articulo/imagenes', {
+                        await fetch(URL_API + 'articulo/imagenes/' + sucursalId, {
                             method: 'POST',
                             body: formData
                         });
@@ -60,7 +59,7 @@ export const ArticuloVentaService = {
         }
     },
 
-    updateArticulo: async (articuloVenta: ArticuloVenta, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
+    updateArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'articulo/update/' + sucursalId, {
                 method: 'PUT',
@@ -81,7 +80,7 @@ export const ArticuloVentaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        await fetch(URL_API + 'articulo/imagenes', {
+                        await fetch(URL_API + 'articulo/imagenes/' + sucursalId, {
                             method: 'POST',
                             body: formData
                         });

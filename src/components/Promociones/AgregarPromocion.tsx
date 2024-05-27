@@ -209,11 +209,9 @@ function AgregarStockEntrante() {
 
     promocion.nombre = nombre;
 
-    promocion.imagenes = imagenes;
-
     promocion.descripcion = descripcion;
 
-    toast.promise(PromocionService.createPromocion(promocion), {
+    toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
       success: (message) => {
         return message;
@@ -244,11 +242,11 @@ function AgregarStockEntrante() {
       </div>
       <button onClick={añadirCampoImagen}>Añadir imagen</button>
       <div className="inputBox">
-        <input type="number" required={true} onChange={(e) => setNombre(e.target.value)} />
+        <input type="text" required={true} onChange={(e) => setNombre(e.target.value)} />
         <span>Nombre de la promoción</span>
       </div>
       <div className="inputBox">
-        <input type="number" required={true} onChange={(e) => setDescripcion(e.target.value)} />
+        <input type="text" required={true} onChange={(e) => setDescripcion(e.target.value)} />
         <span>Descrición de la promoción</span>
       </div>
       <div className="inputBox">
@@ -271,7 +269,7 @@ function AgregarStockEntrante() {
           <hr />
           <p className='cierre-articuloMenu' onClick={quitarCampoArticuloMenu}>X</p>
           <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú {index}:</label>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú {index + 1}:</label>
             <InputComponent placeHolder='Filtrar articuloMenu...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
             {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
           </div>
@@ -298,7 +296,7 @@ function AgregarStockEntrante() {
           <hr />
           <p className='cierre-articuloMenu' onClick={quitarCampoArticulo}>X</p>
           <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo {index}:</label>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo {index + 1}:</label>
             <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />
             {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
           </div>

@@ -3,6 +3,7 @@ package main.entities.Productos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Ingredientes.Categoria;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.Sucursal;
 
@@ -61,7 +62,7 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_empresa")
     )
     private Empresa empresa;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToOne
     @JoinTable(
             name = "imagenes_sucursal",
@@ -69,4 +70,12 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Sucursal sucursal;
+    @JsonIgnoreProperties(value = {"subcategorias", "sucursales"})
+    @ManyToOne
+    @JoinTable(
+            name = "imagenes_categoria",
+            joinColumns = @JoinColumn(name = "id_imagen"),
+            inverseJoinColumns = @JoinColumn(name = "id_categoria")
+    )
+    private Categoria categoria;
 }

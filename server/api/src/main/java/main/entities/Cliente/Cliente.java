@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
+import main.entities.Pedidos.Pedido;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -29,7 +30,7 @@ public class Cliente {
     private String nombre;
     @Column(name = "email")
     private String email;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"})
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Domicilio> domicilios = new HashSet<>();
     @Column(name = "telefono")
@@ -48,5 +49,8 @@ public class Cliente {
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
+    @JsonIgnoreProperties(value = {"cliente"})
+    @OneToMany(mappedBy = "cliente")
+    private Set<Pedido> pedidos = new HashSet<>();
 }
 

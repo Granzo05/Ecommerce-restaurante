@@ -45,7 +45,7 @@ public class PromocionController {
 
 
     @CrossOrigin
-    @GetMapping("/promociones/idSucursal")
+    @GetMapping("/promociones/{idSucursal}")
     public Set<Promocion> getPromociones(@PathVariable("idSucursal") Long idSucursal) throws Exception {
         List<Promocion> promociones = promocionRepository.findAllByIdSucursal(idSucursal);
 
@@ -86,6 +86,7 @@ public class PromocionController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("imagesPromocion/")
                     .path(nombrePromocion.replaceAll(" ", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();

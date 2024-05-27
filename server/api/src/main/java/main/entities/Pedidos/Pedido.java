@@ -1,5 +1,6 @@
 package main.entities.Pedidos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Cliente.Cliente;
@@ -37,9 +38,11 @@ public class Pedido {
     private String horaFinalizacion;
     @OneToOne(mappedBy = "pedido")
     private Factura factura;
+    @JsonIgnoreProperties(value = {"pedido"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
+    @JsonIgnoreProperties(value = {"pedido"})
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pedido", cascade = CascadeType.ALL)
     private Set<DetallesPedido> detallesPedido = new HashSet<>();
 }
