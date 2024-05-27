@@ -136,6 +136,7 @@ img{
     margin-right: 30px;
     padding: 2px;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .menu-icono:hover{
@@ -449,10 +450,27 @@ h3{
 /*-----------CARRITO----------------*/
 
 
+.cart-item-count {
+    position: absolute;
+    transform: translateX(25px);
+    background-color: #FFFFFF;
+    color: #2C2C2C;
+    border-radius: 50%;
+    padding: 0px 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cart-item-count:hover + .menu-icono{
+    background-color: #2b87c4c7;
+    transition: .3s;
+}
+
 .cart-dropdown {
     position: absolute;
     top: 62px;
-    right: 100px;
+    right: 97px;
     background-color: white;
     border: 1px solid #ccc;
     padding: 10px;
@@ -528,6 +546,16 @@ h3{
     margin: 0;
 }
 
+.empty-cart-message{
+    color: rgb(175, 174, 174);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
 .quantity-controls {
     display: flex;
     align-items: center;
@@ -579,6 +607,10 @@ h3{
     margin-top: -1px;
     padding-top: 10px;
     text-align: right;
+}
+
+.cart-total .finalizar-pedido{
+    margin-top: -10px;
 }
 
 .cart-total p{
