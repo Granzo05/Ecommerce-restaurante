@@ -125,10 +125,10 @@ Pruebas
 [x] Activacion subcategorias
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga ingredientes [] Probar validación
-[] Actualizacion ingredientes [] Probar validación
-[] Eliminacion ingredientes
-[] Activacion ingredientes
+[x] Carga ingredientes [x] Probar validación
+[x] Actualizacion ingredientes [x] Probar validación
+[x] Eliminacion ingredientes
+[x] Activacion ingredientes
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Carga pedido [] Probar validación

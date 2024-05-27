@@ -5,14 +5,16 @@ import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.DomicilioDTO;
-import main.entities.Ingredientes.*;
+import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.CategoriaDTO;
+import main.entities.Ingredientes.Medida;
+import main.entities.Ingredientes.MedidaDTO;
 import main.entities.Restaurante.*;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
@@ -26,50 +28,26 @@ public class SucursalController {
     private final ClienteRepository clienteRepository;
     private final EmpresaRepository empresaRepository;
     private final LocalidadDeliveryRepository localidadDeliveryRepository;
-    private final FechaContratacionRepository fechaContratacionRepository;
     private final DomicilioRepository domicilioRepository;
-    private final LocalidadRepository localidadRepository;
-    private final DepartamentoRepository departamentoRepository;
-    private final ProvinciaRepository provinciaRepository;
     private final MedidaRepository medidaRepository;
     private final CategoriaRepository categoriaRepository;
 
-
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, LocalidadRepository localidadRepository, DepartamentoRepository departamentoRepository, ProvinciaRepository provinciaRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository) {
+    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
         this.empresaRepository = empresaRepository;
         this.localidadDeliveryRepository = localidadDeliveryRepository;
-        this.fechaContratacionRepository = fechaContratacionRepository;
         this.domicilioRepository = domicilioRepository;
-        this.localidadRepository = localidadRepository;
-        this.departamentoRepository = departamentoRepository;
-        this.provinciaRepository = provinciaRepository;
         this.medidaRepository = medidaRepository;
         this.categoriaRepository = categoriaRepository;
     }
+
 
     @CrossOrigin
     @GetMapping("/sucursal/login/{email}/{password}")
     public SucursalDTO loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         return sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-    }
-
-    @CrossOrigin
-    @GetMapping("/empleado/login/{email}/{password}")
-    public EmpleadoDTO loginEmpleado(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        Optional<EmpleadoDTO> empleadoDb = empleadoRepository.findByEmailAndPassword(Encrypt.encriptarString(email), Encrypt.cifrarPassword(password));
-
-        if (empleadoDb.isPresent()) {
-            EmpleadoDTO empleado = empleadoDb.get();
-
-            empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
-            empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
-            empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
-        }
-
-        return empleadoDb.get();
     }
 
     @CrossOrigin
@@ -128,7 +106,7 @@ public class SucursalController {
     public ResponseEntity<String> crearSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
         Optional<Sucursal> sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
-        if (sucursalDB == null) {
+        if (sucursalDB.isEmpty()) {
             Domicilio domicilio = new Domicilio();
             domicilio.setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
             domicilio.setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
@@ -154,7 +132,7 @@ public class SucursalController {
 
             HashSet<MedidaDTO> medidas = new HashSet<>(medidaRepository.findAllDTOByIdSucursal(1l));
 
-            for (MedidaDTO medidaDTO: medidas) {
+            for (MedidaDTO medidaDTO : medidas) {
                 Medida medida = new Medida();
                 medida.setNombre(medidaDTO.getNombre());
                 medida.getSucursales().add(sucursalDetails);
@@ -165,7 +143,7 @@ public class SucursalController {
 
             HashSet<CategoriaDTO> categorias = new HashSet<>(categoriaRepository.findAllDTOByIdSucursal(1l));
 
-            for (CategoriaDTO categoriaDTO: categorias) {
+            for (CategoriaDTO categoriaDTO : categorias) {
                 Categoria categoria = new Categoria();
                 categoria.setNombre(categoriaDTO.getNombre());
                 categoria.getSucursales().add(sucursalDetails);
@@ -178,122 +156,8 @@ public class SucursalController {
 
             return ResponseEntity.ok("Carga con éxito");
         } else {
-            return ResponseEntity.ofNullable("Hay una sucursal cargada con ese correo");
+            return ResponseEntity.badRequest().body("Hay una sucursal cargada con ese email");
         }
-    }
-
-    @Transactional
-    @PostMapping("/empleado/create")
-    public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
-        Optional<Empleado> empleadoDB = empleadoRepository.findByCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
-
-        if (empleadoDB.isEmpty()) {
-            empleadoDetails.setNombre(Encrypt.encriptarString(empleadoDetails.getNombre()));
-
-            empleadoDetails.setEmail(Encrypt.encriptarString(empleadoDetails.getEmail()));
-
-            empleadoDetails.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
-
-            for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
-                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
-                domicilio.setEmpleado(empleadoDetails);
-            }
-
-            empleadoDetails.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
-            empleadoDetails.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
-
-            FechaContratacionEmpleado fecha = new FechaContratacionEmpleado();
-            fecha.setEmpleado(empleadoDetails);
-            empleadoDetails.getFechaContratacion().add(fecha);
-            empleadoDetails.setBorrado("NO");
-
-            empleadoRepository.save(empleadoDetails);
-
-            return ResponseEntity.ok("Carga con exito");
-        } else {
-            return ResponseEntity.ofNullable("Ya existe un empleado con ese cuil");
-        }
-    }
-
-    @GetMapping("/empleados")
-    public Set<EmpleadoDTO> getEmpleados() throws Exception {
-
-        List<EmpleadoDTO> empleados = empleadoRepository.findAllDTO();
-
-        for (EmpleadoDTO empleado : empleados) {
-            empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
-            empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
-            empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
-
-            List<DomicilioDTO> domicilios = domicilioRepository.findByIdEmpleadoDTO(empleado.getId());
-
-            for (DomicilioDTO domicilio : domicilios) {
-                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-            }
-
-            empleado.setDomicilios(new HashSet<>(domicilios));
-
-            empleado.setFechaContratacionEmpleado(new HashSet<>(fechaContratacionRepository.findByIdEmpleado(empleado.getId())));
-        }
-
-        return new HashSet<>(empleados);
-    }
-
-
-    @Transactional
-    @PutMapping("/empleado/update")
-    public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
-        Optional<Empleado> empleadoOptional = empleadoRepository.findById(empleadoDetails.getId());
-
-        if (empleadoOptional.isPresent() && empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
-            // Comparo cada uno de los datos a ver si ha cambiado, ya que clienteDetails viene de un DTO y no contiene los mismos datos del empleadoDB entonces hay valores nulos
-            Empleado empleadoDb = empleadoOptional.get();
-
-            String contraseña = empleadoDetails.getContraseña();
-            if (contraseña != null && !contraseña.isEmpty()) {
-                empleadoDb.setContraseña(Encrypt.cifrarPassword(contraseña));
-            }
-
-            String nombre = empleadoDetails.getNombre();
-            empleadoDb.setNombre(Encrypt.encriptarString(nombre));
-
-
-            Long telefono = empleadoDetails.getTelefono();
-            empleadoDb.setTelefono(telefono);
-
-
-            String email = empleadoDetails.getEmail();
-            empleadoDb.setEmail(Encrypt.encriptarString(email));
-
-
-            LocalDate fechaNacimiento = empleadoDetails.getFechaNacimiento();
-            empleadoDb.setFechaNacimiento(fechaNacimiento);
-
-            empleadoDb.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
-
-            empleadoDb.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
-
-            domicilioRepository.deleteAllByEmpleadoId(empleadoDb.getId());
-            empleadoDetails.getDomicilios().size();
-            for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
-                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
-                domicilio.setEmpleado(empleadoDetails);
-                empleadoDb.getDomicilios().add(domicilio);
-            }
-
-            empleadoRepository.save(empleadoDb);
-
-            return ResponseEntity.ok("El empleado se modificó correctamente");
-        } else if (empleadoOptional.isPresent() && !empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
-            empleadoOptional.get().setBorrado(empleadoDetails.getBorrado());
-
-            empleadoRepository.save(empleadoOptional.get());
-
-            return ResponseEntity.ok("El empleado se modificó correctamente");
-        }
-
-        return ResponseEntity.ok("El empleado no se encontró");
-
     }
 
     @Transactional
@@ -304,7 +168,7 @@ public class SucursalController {
             Optional<Sucursal> sucursalEncontrada = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
             // Si no es la misma sucursal pero si el mismo email entonces ejecuta esto
-            if(sucursalEncontrada.isPresent() && sucursalDb.get().getId() != sucursalEncontrada.get().getId()) {
+            if (sucursalEncontrada.isPresent() && sucursalDb.get().getId() != sucursalEncontrada.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una sucursal con ese email");
             }
 

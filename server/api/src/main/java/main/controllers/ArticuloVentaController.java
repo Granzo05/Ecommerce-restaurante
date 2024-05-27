@@ -1,7 +1,6 @@
 package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
-import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.ArticuloVentaDTO;
 import main.entities.Productos.Imagenes;
@@ -76,7 +75,7 @@ public class ArticuloVentaController {
 
             return new ResponseEntity<>("El articulo ha sido añadido correctamente", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Hay un articulo creado con ese nombre", HttpStatus.FOUND);
+            return ResponseEntity.badRequest().body("Hay un articulo existente con ese nombre");
         }
     }
 
@@ -160,7 +159,7 @@ public class ArticuloVentaController {
     public Set<ArticuloVentaDTO> getArticulosPorTipo(@PathVariable("tipoArticulo") String categoria, @PathVariable("idSucursal") Long id) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, id);
 
-        if(categoriaDB.isPresent()) {
+        if (categoriaDB.isPresent()) {
             Set<ArticuloVentaDTO> articuloVentas = (new HashSet<>(articuloVentaRepository.findByCategoriaNameAndIdSucursal(categoriaDB.get().getNombre(), id)));
 
             for (ArticuloVentaDTO articuloVenta : articuloVentas) {
@@ -178,7 +177,7 @@ public class ArticuloVentaController {
         if (articuloEncontrado.isPresent() && articuloEncontrado.get().getBorrado().equals(articuloVentaDetail.getBorrado())) {
             Optional<ArticuloVenta> articuloMenuDB = articuloVentaRepository.findByNameArticuloAndIdSucursal(articuloVentaDetail.getNombre(), id);
 
-            if(articuloMenuDB.isPresent() && articuloMenuDB.get().getId() != articuloEncontrado.get().getId()) {
+            if (articuloMenuDB.isPresent() && articuloMenuDB.get().getId() != articuloEncontrado.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe un articulo con ese nombre");
             }
 
@@ -209,7 +208,7 @@ public class ArticuloVentaController {
             return ResponseEntity.ok("El articulo ha sido actualizado correctamente");
         }
 
-        return ResponseEntity.ofNullable("El articulo no se ha encontrado");
+        return ResponseEntity.badRequest().body("El articulo no existe");
     }
 
 }

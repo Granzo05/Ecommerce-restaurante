@@ -159,7 +159,7 @@ public class StockIngredientesController {
             stock.setPrecioCompra(stockIngredientes.getPrecioCompra());
             stock.setMedida(stockIngredientes.getMedida());
             stock.setBorrado(stockIngredientes.getBorrado());
-            System.out.println(stockIngredientes.getBorrado());
+
             stockIngredientesRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
         } else {
@@ -167,15 +167,4 @@ public class StockIngredientesController {
         }
     }
 
-    @PutMapping("sucursal/{idSucursal}/stockIngrediente/{stockId}/delete")
-    public ResponseEntity<String> borrarStock(@PathVariable("stockId") long idStock, @PathVariable("idSucursal") long idSucursal) {
-        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(idStock, idSucursal);
-        if (stockEncontrado.isEmpty()) {
-            return ResponseEntity.ofNullable("El stock del ingrediente ya ha sido borrado previamente");
-        }
-
-        stockEncontrado.get().setBorrado("SI");
-        stockIngredientesRepository.save(stockEncontrado.get());
-        return ResponseEntity.ok("El stock del ingrediente ha sido borrado correctamente");
-    }
 }

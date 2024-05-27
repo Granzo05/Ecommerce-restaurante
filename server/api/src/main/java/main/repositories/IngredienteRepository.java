@@ -1,7 +1,6 @@
 package main.repositories;
 
 import main.entities.Ingredientes.Ingrediente;
-import main.entities.Ingredientes.IngredienteDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +16,7 @@ public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> 
     Optional<Ingrediente> findByNameAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 
     @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE s.id = :idIngrediente")
-    List<IngredienteDTO> findAllByIdSucursal(@Param("idIngrediente") Long idIngrediente);
+    List<Ingrediente> findAllByIdSucursal(@Param("idIngrediente") Long idIngrediente);
 
     @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE i.id = :idIngrediente AND s.id = :idSucursal")
     Optional<Ingrediente> findByIdIngredienteAndIdSucursal(@Param("idSucursal") Long idSucursal, @Param("idIngrediente") Long idIngrediente);

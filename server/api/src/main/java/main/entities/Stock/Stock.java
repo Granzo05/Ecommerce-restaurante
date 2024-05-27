@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Medida;
 import main.entities.Restaurante.Sucursal;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.io.Serializable;
 

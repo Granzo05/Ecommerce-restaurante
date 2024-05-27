@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockIngredientes;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +24,7 @@ public class Ingrediente {
     private String nombre;
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"domicilio", "empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "localidadesDisponiblesDelivery", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "medidas_sucursales",

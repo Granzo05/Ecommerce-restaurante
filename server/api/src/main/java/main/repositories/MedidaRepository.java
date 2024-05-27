@@ -1,7 +1,5 @@
 package main.repositories;
 
-import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.CategoriaDTO;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.MedidaDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +15,7 @@ import java.util.Optional;
 public interface MedidaRepository extends JpaRepository<Medida, Long> {
     @Query("SELECT NEW main.entities.Ingredientes.MedidaDTO(m.id, m.nombre, m.borrado) FROM Medida m")
     Optional<MedidaDTO> findAllDTO();
+
     @Query("SELECT m FROM Medida m JOIN m.sucursales s WHERE s.id = :id AND m.nombre = :nombre")
     Optional<Medida> findByDenominacionAndIdSucursal(@Param("nombre") String nombre, @Param("id") Long id);
 

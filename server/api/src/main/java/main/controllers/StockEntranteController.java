@@ -10,7 +10,6 @@ import main.entities.Stock.DetalleStockDTO;
 import main.entities.Stock.StockEntrante;
 import main.entities.Stock.StockEntranteDTO;
 import main.repositories.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,10 +40,10 @@ public class StockEntranteController {
         List<StockEntranteDTO> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
 
         for (StockEntranteDTO stock : stocksEntrantes) {
-            for (DetalleStockDTO detalleStockDTO: detalleStockRepository.findIngredienteByIdStock(stock.getId())) {
+            for (DetalleStockDTO detalleStockDTO : detalleStockRepository.findIngredienteByIdStock(stock.getId())) {
                 stock.getDetallesStock().add(detalleStockDTO);
             }
-            for (DetalleStockDTO detalleStockDTO: detalleStockRepository.findArticuloByIdStock(stock.getId())) {
+            for (DetalleStockDTO detalleStockDTO : detalleStockRepository.findArticuloByIdStock(stock.getId())) {
                 stock.getDetallesStock().add(detalleStockDTO);
             }
         }
@@ -76,7 +75,8 @@ public class StockEntranteController {
             nuevoDetalle.setCantidad(detalle.getCantidad());
             nuevoDetalle.setCostoUnitario(detalle.getCostoUnitario());
             nuevoDetalle.setSubTotal(detalle.getSubTotal());
-            Medida medida = medidaRepository.findById(detalle.getMedida().getId()).get();;
+            Medida medida = medidaRepository.findById(detalle.getMedida().getId()).get();
+            ;
             nuevoDetalle.setMedida(medida);
             // Asignar la entidad correcta de ArticuloVenta o Ingrediente
             if (detalle.getArticuloVenta() != null && detalle.getArticuloVenta().getNombre().length() > 2) {
@@ -133,7 +133,7 @@ public class StockEntranteController {
 
         if (stockEncontrado.isPresent()) {
             StockEntrante stock = stockEncontrado.get();
-            System.out.println(stockEntrante.getFechaLlegada());
+
             stock.setFechaLlegada(stockEntrante.getFechaLlegada());
 
             List<DetalleStock> detallesStockDB = stock.getDetallesStock().stream().toList();
@@ -154,17 +154,5 @@ public class StockEntranteController {
         } else {
             return ResponseEntity.ofNullable("El stock no existe");
         }
-    }
-
-    @PutMapping("/sucursal/{idSucursal}/stockEntrante/{stockId}/delete")
-    public ResponseEntity<String> borrarStock(@PathVariable("stockId") Long idStock, @PathVariable("idSucursal") Long idSucursal) {
-        Optional<StockEntrante> stockEncontrado = stockEntranteRepository.findByIdAndIdSucursal(idStock, idSucursal);
-        if (stockEncontrado.isEmpty()) {
-            return new ResponseEntity<>("El stock entrante ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
-        }
-
-        stockEncontrado.get().setBorrado("SI");
-        stockEntranteRepository.save(stockEncontrado.get());
-        return new ResponseEntity<>("El stock entrante ha sido borrado correctamente", HttpStatus.ACCEPTED);
     }
 }

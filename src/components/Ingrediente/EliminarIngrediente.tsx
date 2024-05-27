@@ -13,7 +13,7 @@ const EliminarIngrediente: React.FC<EliminarIngredienteProps> = ({ ingredienteOr
 
   const onConfirm = () => {
     ingredienteOriginal.borrado = 'SI';
-    toast.promise(IngredienteService.deleteIngrediente(ingredienteOriginal.id), {
+    toast.promise(IngredienteService.updateIngrediente(ingredienteOriginal), {
       loading: 'Eliminando Ingrediente...',
       success: (message) => {
         setTimeout(() => {

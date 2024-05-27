@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.entities.Ingredientes.*;
+import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.Medida;
+import main.entities.Ingredientes.Subcategoria;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -83,7 +83,7 @@ public class StockArticulosController {
                 return new ResponseEntity<>("El stock ya existe", HttpStatus.FOUND);
             }
         } else {
-            return ResponseEntity.ofNullable("No existe ningun articulo con ese nombre, debe crearlo antes de asignarle un stock");
+            return ResponseEntity.badRequest().body("No existe ningun articulo con ese nombre, debe crearlo antes de asignarle un stock");
         }
     }
 

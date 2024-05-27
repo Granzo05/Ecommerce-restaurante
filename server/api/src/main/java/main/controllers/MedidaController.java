@@ -1,7 +1,6 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.MedidaDTO;
 import main.repositories.MedidaRepository;
@@ -44,7 +43,7 @@ public class MedidaController {
             return new ResponseEntity<>("El medida ha sido añadido correctamente", HttpStatus.CREATED);
         }
 
-        return ResponseEntity.ofNullable("El medida ya existe");
+        return ResponseEntity.badRequest().body("Hay una medida existente con ese nombre");
     }
 
     @Transactional
@@ -57,7 +56,7 @@ public class MedidaController {
         } else {
             Optional<Medida> medidaEncontrada = medidaRepository.findByDenominacionAndIdSucursal(medida.getNombre(), idSucursal);
 
-            if(medidaEncontrada.isPresent() && medidaEncontrada.get().getId() != medidaDB.get().getId()) {
+            if (medidaEncontrada.isPresent() && medidaEncontrada.get().getId() != medidaDB.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una medida con ese nombre");
             }
 

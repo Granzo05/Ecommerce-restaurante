@@ -1,6 +1,9 @@
 package main.controllers;
 
-import main.entities.Ingredientes.*;
+import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.Ingrediente;
+import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Ingredientes.IngredienteMenuDTO;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloMenuDTO;
 import main.entities.Productos.Imagenes;
@@ -87,7 +90,7 @@ public class ArticuloMenuController {
                     Sucursal sucursal = sucursalOpt.get();
                     sucursal.getArticulosMenu().add(articuloMenu);
                 } else {
-                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                    return ResponseEntity.badRequest().body("Sucursal no encontrada");
                 }
             }
 
@@ -96,7 +99,7 @@ public class ArticuloMenuController {
             return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.OK);
 
         } else {
-            return new ResponseEntity<>("Hay un menú creado con ese nombre", HttpStatus.FOUND);
+            return ResponseEntity.badRequest().body("Hay un menú existente con ese nombre");
         }
     }
 
@@ -178,7 +181,7 @@ public class ArticuloMenuController {
     public Set<ArticuloMenuDTO> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
 
-        if(categoriaDB.isPresent()) {
+        if (categoriaDB.isPresent()) {
             Set<ArticuloMenuDTO> articuloMenus = (new HashSet<>(articuloMenuRepository.findByCategoriaAndIdSucursal(categoriaDB.get(), idSucursal)));
 
             for (ArticuloMenuDTO articuloMenu : articuloMenus) {
@@ -203,7 +206,7 @@ public class ArticuloMenuController {
         if (menuEncontrado.isPresent() && menuEncontrado.get().getBorrado().equals(articuloMenuDetail.getBorrado())) {
             Optional<ArticuloMenu> articuloMenuDB = articuloMenuRepository.findByNameMenuAndIdSucursal(articuloMenuDetail.getNombre(), id);
 
-            if(articuloMenuDB.isPresent() && articuloMenuDB.get().getId() != menuEncontrado.get().getId()) {
+            if (articuloMenuDB.isPresent() && articuloMenuDB.get().getId() != menuEncontrado.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe un menú con ese nombre");
             }
 
@@ -255,7 +258,7 @@ public class ArticuloMenuController {
             return ResponseEntity.ok("El menu ha sido actualizado correctamente");
         }
 
-        return ResponseEntity.ofNullable("El articulo no se ha encontrado");
+        return ResponseEntity.badRequest().body("El menu no existe existe");
     }
 
 }

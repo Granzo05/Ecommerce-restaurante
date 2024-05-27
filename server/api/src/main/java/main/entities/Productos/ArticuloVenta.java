@@ -1,14 +1,12 @@
 package main.entities.Productos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.Subcategoria;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockArticuloVenta;
 
 import java.io.Serializable;
 import java.util.HashSet;

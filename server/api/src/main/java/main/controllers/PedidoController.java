@@ -66,7 +66,6 @@ public class PedidoController {
     @GetMapping("/pedidos/{estado}")
     public Set<PedidoDTO> getPedidosPorEstado(@PathVariable("estado") EnumEstadoPedido estado) {
         List<PedidoDTO> pedidos = pedidoRepository.findPedidosByEstado(estado);
-        System.out.println(pedidos);
         for (PedidoDTO pedido : pedidos) {
             pedido.setCliente(clienteRepository.findByIdDTO(pedido.getIdCliente()));
 
@@ -149,7 +148,7 @@ public class PedidoController {
     public ResponseEntity<?> borrarPedido(@PathVariable Long id) {
         Optional<Pedido> pedido = pedidoRepository.findById(id);
         if (pedido.isEmpty()) {
-            return new ResponseEntity<>("La pedido ya ha sido borrada previamente", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("La pedido ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
         }
         pedido.get().setBorrado("SI");
         pedidoRepository.save(pedido.get());
@@ -181,9 +180,9 @@ public class PedidoController {
             Gmail gmail = new Gmail();
 
             if (pedido.getTipoEnvio().toString().equals("DELVIERY")) {
-                gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", "facu.granzotto5@gmail.com", archivo.getBody());
+                gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", pedido.getCliente().getEmail(), archivo.getBody());
             } else {
-                gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", "facu.granzotto5@gmail.com", archivo.getBody());
+                gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", pedido.getCliente().getEmail(), archivo.getBody());
             }
 
         }

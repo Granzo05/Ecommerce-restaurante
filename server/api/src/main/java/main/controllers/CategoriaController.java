@@ -54,7 +54,7 @@ public class CategoriaController {
             return new ResponseEntity<>("El categoria ha sido añadido correctamente", HttpStatus.CREATED);
         }
 
-        return ResponseEntity.ofNullable("El categoria ya existe");
+        return ResponseEntity.badRequest().body("Hay una categoria existente con ese nombre");
     }
 
     @PutMapping("/categoria/update/{idSucursal}")
@@ -66,7 +66,7 @@ public class CategoriaController {
         } else {
             Optional<Categoria> categoriaEncontrada = categoriaRepository.findByNameAndIdSucursal(categoria.getNombre(), idSucursal);
 
-            if(categoriaEncontrada.isPresent() && categoriaEncontrada.get().getId() != categoriaDB.get().getId()) {
+            if (categoriaEncontrada.isPresent() && categoriaEncontrada.get().getId() != categoriaDB.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una categoría con ese nombre");
             }
 
@@ -75,7 +75,7 @@ public class CategoriaController {
             categoriaDB.get().setBorrado(categoria.getBorrado());
 
             // Creación de subcategorias
-            for(Subcategoria subcategoria: categoria.getSubcategorias()) {
+            for (Subcategoria subcategoria : categoria.getSubcategorias()) {
                 subcategoriaRepository.deleteById(subcategoria.getId());
                 subcategoria.setCategoria(categoriaDB.get());
                 subcategoria.getSucursales().add(sucursalRepository.findById(idSucursal).get());

@@ -1,6 +1,7 @@
 package main.repositories;
 
-import main.entities.Ingredientes.*;
+import main.entities.Ingredientes.Subcategoria;
+import main.entities.Ingredientes.SubcategoriaDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,6 +29,7 @@ public interface SubcategoriaRepository extends JpaRepository<Subcategoria, Long
 
     @Query("SELECT NEW main.entities.Ingredientes.SubcategoriaDTO(sc.id, sc.nombre, sc.borrado) FROM Subcategoria sc WHERE sc.id = :id")
     List<SubcategoriaDTO> findByIdDTO(@Param("id") Long id);
+
     @Query("SELECT sc.id FROM Subcategoria sc JOIN sc.sucursales s WHERE s.id = :idSucursal AND sc.categoria.id = :idCategoria")
     List<Long> findSubcategoriaIdsByCategoriaIdAndSucursalId(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 

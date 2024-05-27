@@ -2,7 +2,6 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
-import main.entities.Cliente.Cliente;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.EmpresaDTO;
@@ -68,9 +67,9 @@ public class EmpresaController {
 
             empresaRepository.save(empresaDetails);
 
-            return ResponseEntity.ok("Carga con éxito");
+            return ResponseEntity.ok("Empresa creada con éxito");
         } else {
-            return ResponseEntity.ofNullable("Hay una empresa cargada con ese cuit");
+            return ResponseEntity.badRequest().body("Hay una empresa existente con ese cuit");
         }
     }
 
@@ -82,13 +81,13 @@ public class EmpresaController {
         if (empresaDB.isPresent()) {
             Optional<Empresa> empresaEncontrada = empresaRepository.findByEmail(empresaDetails.getEmail());
 
-            if(empresaDB.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
+            if (empresaDB.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una cuenta registrada con ese email");
             }
 
             empresaEncontrada = empresaRepository.findByCuit(empresaDetails.getCuit());
 
-            if(empresaDB.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
+            if (empresaDB.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una cuenta registrada con ese cuit");
             }
 

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
-import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
 import '../../styles/ingredientes.css'
 import { IngredienteService } from "../../services/IngredienteService";
@@ -22,16 +21,6 @@ const Ingredientes = () => {
     const [selectedIngrediente, setSelectedIngrediente] = useState<Ingrediente>();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Esto retorna true o false
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
         fetchIngredientes();
     }, []);
 
@@ -86,6 +75,7 @@ const Ingredientes = () => {
         setShowAgregarModalIngrediente(false);
         setShowEditarIngredienteModal(false);
         setShowEliminarIngredienteModal(false);
+        setShowActivarIngredienteModal(false);
         fetchIngredientes();
         setMostrarIngredientes(true);
     };

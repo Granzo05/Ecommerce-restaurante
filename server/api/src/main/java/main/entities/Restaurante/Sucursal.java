@@ -12,7 +12,6 @@ import main.entities.Productos.Imagenes;
 import main.entities.Productos.Promocion;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockEntrante;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalTime;
 import java.util.HashSet;

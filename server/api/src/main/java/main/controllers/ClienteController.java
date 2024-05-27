@@ -88,7 +88,7 @@ public class ClienteController {
 
         Optional<Cliente> clienteDB = clienteRepository.findByEmail(clienteDetails.getEmail());
 
-        if(clienteDB.isPresent() && clienteDB.get().getId() != clienteOptional.get().getId()) {
+        if (clienteDB.isPresent() && clienteDB.get().getId() != clienteOptional.get().getId()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una cuenta registrada con ese email");
         }
 

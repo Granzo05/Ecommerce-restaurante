@@ -1,16 +1,11 @@
 package main.entities.Stock;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
-
-import javax.print.attribute.standard.Media;
 
 @Getter
 @Setter
