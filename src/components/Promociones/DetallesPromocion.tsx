@@ -2,24 +2,30 @@ import Carousel from 'react-bootstrap/Carousel';
 import '../../styles/modalFlotante.css';
 import { useState } from 'react';
 import { CarritoService } from '../../services/CarritoService';
-import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
+import { Promocion } from '../../types/Productos/Promocion';
+import { toast, Toaster } from 'sonner';
 
 interface Props {
-  menuActual: ArticuloMenuDTO;
+  selectedPromocion: Promocion;
 }
 
-export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
-  const imagenesInvertidas = [...menuActual.imagenesDTO].reverse();
-  const [cantidadMenu, setCantidadMenu] = useState<number>(1);
+export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion }) => {
+  const imagenesInvertidas = [...selectedPromocion.imagenesDTO].reverse();
+  const [cantidadPromocion, setCantidadPromocion] = useState<number>(1);
 
+  async function handleAñadirPromocionAlCarrito(promocion: Promocion) {
+    if (cantidadPromocion <= 0) {
+      toast.error("Por favor, la cantidad debe ser mayor a 0");
+      return;
+    }
 
-  async function handleAñadirCarrito(menu: ArticuloMenuDTO) {
-    await CarritoService.agregarAlCarrito(menu, null, cantidadMenu);
+    CarritoService.agregarPromocionAlCarrito(promocion, cantidadPromocion);
   }
 
   return (
     <div id="grid-container-modal">
-      <div key={menuActual.id} className="grid-item-modal">
+      <Toaster />
+      <div key={selectedPromocion.id} className="grid-item-modal">
         <Carousel>
           {imagenesInvertidas.map((imagen, index) => (
             <Carousel.Item key={index} interval={4000}>
@@ -27,27 +33,28 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
             </Carousel.Item>
           ))}
         </Carousel>
-        <h2>{menuActual.nombre}</h2>
-        <p>${menuActual.precioVenta}</p>
-        <p>Descripción: {menuActual.descripcion}</p>
-        <h2><svg xmlns="http://www.w3.org/2000/svg"><path d="M16 15.503A5.041 5.041 0 1 0 16 5.42a5.041 5.041 0 0 0 0 10.083zm0 2.215c-6.703 0-11 3.699-11 5.5v3.363h22v-3.363c0-2.178-4.068-5.5-11-5.5z" /></svg>{menuActual.comensales}</h2>
-        <p>Ingredientes:</p>
+        <h2>{selectedPromocion.nombre}</h2>
+        <p>Descripción: {selectedPromocion.descripcion}</p>
+        <p>Productos:</p>
         <ul>
-          {menuActual.ingredientesMenu?.map((ingredienteMenu, index) => (
-            <li key={index}>* {ingredienteMenu.ingredienteNombre}</li>
+          {selectedPromocion.detallesPromocion?.map((detalle, index) => (
+            <>
+              <li key={index}>* {detalle.articuloMenu?.nombre} - {detalle.cantidad} - {detalle.medida.nombre}</li>
+              <li key={index}>* {detalle.articuloVenta?.nombre} - {detalle.cantidad} - {detalle.medida.nombre}</li>
+            </>
           ))}
         </ul>
-        <p>Tiempo de cocción: {menuActual.tiempoCoccion} minutos</p>
+        <p>Precio: ${selectedPromocion.precio}</p>
 
         <div className="inputBox">
-          <input type="number" required={true} value={cantidadMenu} onChange={(e) => { setCantidadMenu(parseInt(e.target.value)) }} />
+          <input type="number" required={true} value={cantidadPromocion} onChange={(e) => { setCantidadPromocion(parseInt(e.target.value)) }} />
           <span>Cantidad</span>
         </div>
-        <button type='submit' onClick={() => handleAñadirCarrito(menuActual)}>Añadir al carrito</button>
+        <button type='submit' onClick={() => handleAñadirPromocionAlCarrito(selectedPromocion)}>Añadir al carrito</button>
       </div>
     </div>
   );
 
 }
 
-export default DetallesMenu;
+export default DetallesPromocion;

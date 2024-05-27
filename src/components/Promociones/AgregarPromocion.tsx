@@ -1,39 +1,76 @@
 import { useState } from 'react';
-import { StockEntrante } from '../../types/Stock/StockEntrante';
-import { StockEntranteService } from '../../services/StockEntranteService';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
-import { DetalleStock } from '../../types/Stock/DetalleStock';
-import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { toast, Toaster } from 'sonner';
 import InputComponent from '../InputFiltroComponent';
 import '../../styles/modalCrud.css'
-import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
-import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
 import ModalFlotanteRecomendacionesArticulo from '../../hooks/ModalFlotanteFiltroArticuloVenta';
 import AgregarMedida from '../Medidas/AgregarMedida';
 import ModalFlotante from '../ModalFlotante';
+import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
+import { DetallePromocion } from '../../types/Productos/DetallePromocion';
+import { Medida } from '../../types/Ingredientes/Medida';
+import { Promocion } from '../../types/Productos/Promocion';
+import { PromocionService } from '../../services/PromocionService';
+import ModalFlotanteRecomendacionesArticuloMenu from '../../hooks/ModalFlotanteFiltroArticuloMenu';
+import { Imagenes } from '../../types/Productos/Imagenes';
 
 function AgregarStockEntrante() {
 
-  const [fecha, setFecha] = useState(new Date());
+  const [fechaDesde, setFechaDesde] = useState(new Date());
+  const [fechaHasta, setFechaHasta] = useState(new Date());
+  const [total, setTotal] = useState(0);
+  const [nombre, setNombre] = useState<string>('');
+  const [descripcion, setDescripcion] = useState<string>('');
 
   // Aca almaceno los detalles para el stock
-  const [detallesIngredienteStock, setDetallesIngredientesStock] = useState<DetalleStock[]>([])
-  const [detallesArticuloStock, setDetallesArticuloStock] = useState<DetalleStock[]>([])
+  const [detallesArticuloMenu, setDetallesArticulosMenu] = useState<DetallePromocion[]>([])
+  const [detallesArticuloVenta, setDetallesArticuloVenta] = useState<DetallePromocion[]>([])
 
-  // Almacenaje de cada detalle por ingrediente
-  const handleIngredienteChange = (ingrediente: Ingrediente, index: number) => {
-    setDetallesIngredientesStock(prevState => {
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
+  let [selectIndexImagenes, setSelectIndexImagenes] = useState<number>(0);
+
+  const handleImagen = (index: number, file: File | null) => {
+    if (file) {
+      const newImagenes = [...imagenes];
+      newImagenes[index] = { ...newImagenes[index], file };
+      setImagenes(newImagenes);
+    }
+  };
+
+  const añadirCampoImagen = () => {
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagenes]);
+  };
+
+  const quitarCampoImagen = () => {
+    if (imagenes.length > 0) {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+
+      if (selectIndexImagenes > 0) {
+        setSelectIndexImagenes(prevIndex => prevIndex - 1);
+      }
+    } else {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+      setSelectIndexImagenes(0);
+    }
+  };
+
+  // Almacenaje de cada detalle por articuloMenu
+  const handleArticuloMenuChange = (articuloMenu: ArticuloMenu, index: number) => {
+    setDetallesArticulosMenu(prevState => {
       const newState = [...prevState];
-      newState[index].ingrediente = ingrediente;
+      newState[index].articuloMenu = articuloMenu;
       return newState;
     });
   };
 
-  const handleCantidadIngrediente = (cantidad: number, index: number) => {
+  const handleCantidadArticuloMenu = (cantidad: number, index: number) => {
     if (cantidad) {
-      setDetallesIngredientesStock(prevState => {
+      setDetallesArticulosMenu(prevState => {
         const newState = [...prevState];
         newState[index].cantidad = cantidad;
         return newState;
@@ -41,9 +78,9 @@ function AgregarStockEntrante() {
     }
   };
 
-  const handleMedidaIngrediente = (medida: Medida, index: number) => {
+  const handleMedidaArticuloMenu = (medida: Medida, index: number) => {
     if (medida) {
-      setDetallesIngredientesStock(prevState => {
+      setDetallesArticulosMenu(prevState => {
         const newState = [...prevState];
         newState[index].medida = medida;
         return newState;
@@ -51,19 +88,8 @@ function AgregarStockEntrante() {
     }
   };
 
-  const almacenarSubTotalIngrediente = (costo: number, index: number) => {
-    if (costo) {
-      setDetallesIngredientesStock(prevState => {
-        const newState = [...prevState];
-        newState[index].costoUnitario = costo;
-        newState[index].subtotal = costo * newState[index].cantidad;
-        return newState;
-      });
-    }
-  };
-
   const handleArticuloChange = (articulo: ArticuloVenta, index: number) => {
-    setDetallesArticuloStock(prevState => {
+    setDetallesArticuloVenta(prevState => {
       const newState = [...prevState];
       newState[index].articuloVenta = articulo;
       return newState;
@@ -72,7 +98,7 @@ function AgregarStockEntrante() {
 
   const handleCantidadArticulo = (cantidad: number, index: number) => {
     if (cantidad) {
-      setDetallesArticuloStock(prevState => {
+      setDetallesArticuloVenta(prevState => {
         const newState = [...prevState];
         newState[index].cantidad = cantidad;
         return newState;
@@ -82,7 +108,7 @@ function AgregarStockEntrante() {
 
   const handleMedidaArticulo = (medida: Medida, index: number) => {
     if (medida) {
-      setDetallesArticuloStock(prevState => {
+      setDetallesArticuloVenta(prevState => {
         const newState = [...prevState];
         newState[index].medida = medida;
         return newState;
@@ -90,40 +116,29 @@ function AgregarStockEntrante() {
     }
   };
 
-  const almacenarSubTotalArticulo = (costo: number, index: number) => {
-    if (costo) {
-      setDetallesArticuloStock(prevState => {
-        const newState = [...prevState];
-        newState[index].costoUnitario = costo;
-        newState[index].subtotal = costo * newState[index].cantidad;
-        return newState;
-      });
-    }
-  };
-
-  const añadirCampoIngrediente = () => {
-    setDetallesIngredientesStock(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+  const añadirCampoArticuloMenu = () => {
+    setDetallesArticulosMenu(prevState => {
+      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
       return newState;
     });
   };
 
   const añadirCampoArticulo = () => {
-    setDetallesArticuloStock(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+    setDetallesArticuloVenta(prevState => {
+      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
       return newState;
     });
   };
 
-  const quitarCampoIngrediente = () => {
-    setDetallesIngredientesStock(prevState => {
+  const quitarCampoArticuloMenu = () => {
+    setDetallesArticulosMenu(prevState => {
       const newState = prevState.slice(0, -1);
       return newState;
     });
   };
 
   const quitarCampoArticulo = () => {
-    setDetallesArticuloStock(prevState => {
+    setDetallesArticuloVenta(prevState => {
       const newState = prevState.slice(0, -1);
       return newState;
     });
@@ -131,56 +146,75 @@ function AgregarStockEntrante() {
 
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
   const [modalBusquedaArticulo, setModalBusquedaArticulo] = useState<boolean>(false);
-  const [modalBusquedaIngrediente, setModalBusquedaIngrediente] = useState<boolean>(false);
+  const [modalBusquedaArticuloMenu, setModalBusquedaArticuloMenu] = useState<boolean>(false);
   const [showAgregarMedidaModal, setShowAgregarMedidaModal] = useState<boolean>(false);
 
 
   const handleModalClose = () => {
     setModalBusquedaMedida(false)
     setModalBusquedaArticulo(false)
-    setModalBusquedaIngrediente(false)
+    setModalBusquedaArticuloMenu(false)
     setShowAgregarMedidaModal(false)
   };
 
   async function agregarStockEntrante() {
     const hoy = new Date();
-    const fechaIngresada = new Date(fecha);
 
-    if (!fecha) {
-      toast.error("Por favor, la fecha es necesaria");
+    if (!fechaDesde) {
+      toast.error("Por favor, la fecha de inicio es necesaria");
+      return;
+    } else if (!fechaHasta) {
+      toast.error("Por favor, la fecha de finalización es necesaria");
+      return;
+    } else if (new Date(fechaDesde) <= hoy || new Date(fechaHasta) <= hoy) {
+      toast.error("Por favor, las fechas debe ser posterior a la fecha actual");
+      return;
+    } else if (new Date(fechaHasta) <= new Date(fechaDesde)) {
+      toast.error("Por favor, las fecha de inicio no puede ser posterior a la de finalización");
+      return;
+    } else if ((!detallesArticuloMenu[0].articuloMenu?.nombre.length && !detallesArticuloVenta[0].articuloVenta?.nombre)) {
+      toast.error("Por favor, es necesario asignar un producto de venta o un menú");
+      return;
+    } else if (imagenes.length === 0) {
+      toast.error("No se asignó ninguna imagen");
+      return;
+    } else if (!total) {
+      toast.error("Por favor, es necesario el precio");
+      return;
+    } else if (!descripcion) {
+      toast.error("Por favor, es necesaria la descripción");
       return;
     }
 
-    if (fechaIngresada <= hoy) {
-      toast.error("Por favor, la fecha debe ser posterior a la fecha actual");
-      return;
-    }
+    const promocion: Promocion = new Promocion();
 
-    if ((!detallesIngredienteStock[0].ingrediente?.nombre.length && !detallesArticuloStock[0].articuloVenta?.nombre)) {
-      toast.error("Por favor, es necesario asignar un producto de venta o un ingrediente");
-      return;
-    }
+    promocion.fechaDesde = fechaDesde;
+    promocion.fechaHasta = fechaHasta;
 
-    const stockEntrante: StockEntrante = new StockEntrante();
+    promocion.borrado = 'NO';
 
-    stockEntrante.fechaLlegada = fecha;
-    stockEntrante.borrado = 'NO';
+    const detallesPromocion: DetallePromocion[] = [];
 
-    const detallesStock: DetalleStock[] = [];
-
-    detallesIngredienteStock.forEach(detalle => {
-      if (detalle.ingrediente?.nombre && detalle.ingrediente?.nombre.length > 2) detallesStock.push(detalle);
+    detallesArticuloMenu.forEach(detalle => {
+      if (detalle.articuloMenu?.nombre && detalle.articuloMenu?.nombre.length > 2) detallesPromocion.push(detalle);
     });
 
-    detallesArticuloStock.forEach(detalle => {
-      if (detalle.articuloVenta?.nombre && detalle.articuloVenta?.nombre.length > 2) detallesStock.push(detalle);
+    detallesArticuloVenta.forEach(detalle => {
+      if (detalle.articuloVenta?.nombre && detalle.articuloVenta?.nombre.length > 2) detallesPromocion.push(detalle);
     });
 
-    stockEntrante.detallesStock = detallesStock;
+    promocion.detallesPromocion = detallesPromocion;
 
-    console.log(stockEntrante)
-    toast.promise(StockEntranteService.createStock(stockEntrante), {
-      loading: 'Creando stock entrante...',
+    promocion.precio = total;
+
+    promocion.nombre = nombre;
+
+    promocion.imagenes = imagenes;
+
+    promocion.descripcion = descripcion;
+
+    toast.promise(PromocionService.createPromocion(promocion), {
+      loading: 'Creando promoción...',
       success: (message) => {
         return message;
       },
@@ -192,53 +226,80 @@ function AgregarStockEntrante() {
 
   return (
     <div className="modal-info">
-      <h2>Agregar stock entrante</h2>
+      <h2>Agregar promoción</h2>
       <Toaster />
+      <div>
+        {imagenes.map((imagen, index) => (
+
+          <div className='inputBox' key={index}>
+            <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+            <input
+              type="file"
+              accept="image/*"
+              maxLength={10048576}
+              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+            />
+          </div>
+        ))}
+      </div>
+      <button onClick={añadirCampoImagen}>Añadir imagen</button>
       <div className="inputBox">
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
-        <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
+        <input type="number" required={true} onChange={(e) => setNombre(e.target.value)} />
+        <span>Nombre de la promoción</span>
+      </div>
+      <div className="inputBox">
+        <input type="number" required={true} onChange={(e) => setDescripcion(e.target.value)} />
+        <span>Descrición de la promoción</span>
+      </div>
+      <div className="inputBox">
+        <input type="number" required={true} onChange={(e) => setTotal(parseFloat(e.target.value))} />
+        <span>Precio ($)</span>
+      </div>
+      <div className="inputBox">
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
+        <input type="date" required={true} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
+      </div>
+      <div className="inputBox">
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
+        <input type="date" required={true} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
       </div>
       <ModalFlotante isOpen={showAgregarMedidaModal} onClose={handleModalClose}>
         <AgregarMedida />
       </ModalFlotante>
-      {detallesIngredienteStock.map((ingrediente, index) => (
+      {detallesArticuloMenu.map((articuloMenu, index) => (
         <div key={index}>
           <hr />
-          <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
+          <p className='cierre-articuloMenu' onClick={quitarCampoArticuloMenu}>X</p>
           <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-            <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={detallesIngredienteStock[index].ingrediente?.nombre ?? ''} />
-            {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleModalClose(); }} />}
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú {index}:</label>
+            <InputComponent placeHolder='Filtrar articuloMenu...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
+            {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
           </div>
           <br />
           <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
           <br />
           <br />
           <div className="input-filtrado">
-            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesIngredienteStock[index]?.medida.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
+            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida.nombre ?? ''} />
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
           </div>
           <br />
           <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
+            <input type="number" required={true} onChange={(e) => handleCantidadArticuloMenu(parseFloat(e.target.value), index)} />
             <span>Cantidad de unidades</span>
-          </div>
-          <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarSubTotalIngrediente(parseFloat(e.target.value), index)} />
-            <span>Costo unitario ($)</span>
           </div>
         </div>
       ))}
 
-      <button onClick={añadirCampoIngrediente}>+ Añadir ingrediente</button>
+      <button onClick={añadirCampoArticuloMenu}>+ Añadir menú</button>
       <br />
-      {detallesArticuloStock.map((articulo, index) => (
+      {detallesArticuloVenta.map((articulo, index) => (
         <div key={index}>
           <hr />
-          <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
+          <p className='cierre-articuloMenu' onClick={quitarCampoArticulo}>X</p>
           <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.nombre ?? ''} />
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo {index}:</label>
+            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />
             {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
           </div>
           <br />
@@ -246,7 +307,7 @@ function AgregarStockEntrante() {
           <br />
           <br />
           <div className="input-filtrado">
-            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloStock[index]?.medida.nombre ?? ''} />
+            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida.nombre ?? ''} />
             {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
           </div>
           <br />
@@ -256,12 +317,6 @@ function AgregarStockEntrante() {
             <input type="number" required={true} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />
             <span>Cantidad de unidades</span>
           </div>
-
-          <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarSubTotalArticulo(parseFloat(e.target.value), index)} />
-            <span>Costo unitario ($)</span>
-          </div>
-
         </div>
       ))}
       <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>

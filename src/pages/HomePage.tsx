@@ -5,6 +5,7 @@ import { SucursalService } from '../services/SucursalService';
 import { useParams } from 'react-router-dom';
 import { Promocion } from '../types/Productos/Promocion';
 import ModalFlotante from '../components/ModalFlotante';
+import DetallesPromocion from '../components/Promociones/DetallesPromocion';
 
 export default function MainMenu() {
     const { id } = useParams()

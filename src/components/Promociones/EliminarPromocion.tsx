@@ -1,19 +1,19 @@
 import React from 'react';
-import { StockEntranteService } from '../../services/StockEntranteService';
 import { toast, Toaster } from 'sonner';
-import { StockEntranteDTO } from '../../types/Stock/StockEntranteDTO';
+import { Promocion } from '../../types/Productos/Promocion';
+import { PromocionService } from '../../services/PromocionService';
 
 interface EliminarStockProps {
-  stockEntrante: StockEntranteDTO;
+  promocion: Promocion;
   onCloseModal: () => void;
 
 }
 
-const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ stockEntrante, onCloseModal }) => {
+const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ promocion, onCloseModal }) => {
   const onConfirm = () => {
-    stockEntrante.borrado = 'SI';
-    toast.promise(StockEntranteService.updateStock(stockEntrante), {
-      loading: 'Eliminando stock entrante...',
+    promocion.borrado = 'SI';
+    toast.promise(PromocionService.updatePromocion(promocion), {
+      loading: 'Eliminando promocion...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();
@@ -32,7 +32,7 @@ const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ stockEntrante, on
   return (
     <div className="modal-info">
       <Toaster />
-      <p>¿Seguro que quieres eliminar el stock?</p>
+      <p>¿Seguro que quieres eliminar la promocion?</p>
       <button onClick={onConfirm}>Confirmar</button>
       <button onClick={onCancel}>Cancelar</button>
     </div>

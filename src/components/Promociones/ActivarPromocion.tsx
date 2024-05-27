@@ -1,23 +1,23 @@
 import React from 'react';
-import { StockEntranteService } from '../../services/StockEntranteService';
 import { toast, Toaster } from 'sonner';
-import { StockEntranteDTO } from '../../types/Stock/StockEntranteDTO';
+import { Promocion } from '../../types/Productos/Promocion';
+import { PromocionService } from '../../services/PromocionService';
 
 interface ActivarStockProps {
-  stockEntrante: StockEntranteDTO;
+  promocion: Promocion;
   onCloseModal: () => void;
 
 }
 
-const ActivarStockEntrante: React.FC<ActivarStockProps> = ({ stockEntrante, onCloseModal }) => {
+const ActivarStockEntrante: React.FC<ActivarStockProps> = ({ promocion, onCloseModal }) => {
   const onConfirm = () => {
-    stockEntrante.borrado = 'NO';
-    toast.promise(StockEntranteService.updateStock(stockEntrante), {
-      loading: 'Activando stock entrante...',
+    promocion.borrado = 'NO';
+    toast.promise(PromocionService.updatePromocion(promocion), {
+      loading: 'Activando promoción...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();
-        }, 800);        return message;
+        }, 800); return message;
       },
       error: (message) => {
         return message;
@@ -32,7 +32,7 @@ const ActivarStockEntrante: React.FC<ActivarStockProps> = ({ stockEntrante, onCl
   return (
     <div className="modal-info">
       <Toaster />
-      <p>¿Seguro que quieres activar el stock?</p>
+      <p>¿Seguro que quieres activar la promoción?</p>
       <button onClick={onConfirm}>Confirmar</button>
       <button onClick={onCancel}>Cancelar</button>
     </div>

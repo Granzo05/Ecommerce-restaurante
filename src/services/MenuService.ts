@@ -1,12 +1,12 @@
 import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
-import { ImagenesProducto } from '../types/Productos/Imagenes';
+import { Imagenes } from '../types/Productos/Imagenes';
 import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const MenuService = {
 
-    getMenus: async (): Promise<ArticuloMenuDTO[]> => {
+    getMenus: async (): Promise<ArticuloMenu[]> => {
         const response = await fetch(URL_API + 'menus/' + sucursalId)
 
         return await response.json();
@@ -19,7 +19,7 @@ export const MenuService = {
     },
 
 
-    createMenu: async (menu: ArticuloMenu, imagenes: ImagenesProducto[]): Promise<string> => {
+    createMenu: async (menu: ArticuloMenu, imagenes: Imagenes[]): Promise<string> => {
         try {
             const menuResponse = await fetch(URL_API + 'menu/create/' + sucursalId, {
                 method: 'POST',
@@ -62,7 +62,7 @@ export const MenuService = {
         }
     },
 
-    updateMenu: async (menu: ArticuloMenuDTO, imagenes: ImagenesProducto[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
+    updateMenu: async (menu: ArticuloMenuDTO, imagenes: Imagenes[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'menu/update/' + sucursalId, {
                 method: 'PUT',

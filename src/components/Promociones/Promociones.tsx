@@ -1,32 +1,27 @@
 import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
-import EditarStock from "./EditarPromocion";
-import '../../styles/stock.css';
-import { StockEntranteService } from "../../services/StockEntranteService";
-import AgregarStockEntrante from "./AgregarPromocion";
-import ActivarStockEntrante from "./ActivarPromocion";
-import EliminarStockEntrante from "./EliminarPromocion";
-import { StockEntranteDTO } from "../../types/Stock/StockEntranteDTO";
-import ModalFlotante from "../ModalFlotante";
-import DetallesStock from "./DetallesStock";
-import { DetalleStock } from "../../types/Stock/DetalleStock";
+import EditarPromocion from "./EditarPromocion";
+import '../../styles/promocion.css';
+import ActivarPromocionEntrante from "./ActivarPromocion";
+import EliminarPromocionEntrante from "./EliminarPromocion";
+import { PromocionService } from "../../services/PromocionService";
+import { Promocion } from "../../types/Productos/Promocion";
+import AgregarPromocion from "./AgregarPromocion";
 
-const StocksEntrantes = () => {
-    const [stockEntrante, setStockEntrante] = useState<StockEntranteDTO[]>([]);
-    const [mostrarStocks, setMostrarStocks] = useState(true);
+const PromocionesEntrantes = () => {
+    const [promociones, setPromociones] = useState<Promocion[]>([]);
+    const [mostrarPromociones, setMostrarPromociones] = useState(true);
 
-    const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
-    const [showEditarStockModal, setShowEditarStockModal] = useState(false);
-    const [showEliminarStockModal, setShowEliminarStockModal] = useState(false);
-    const [showActivarStockModal, setShowActivarStockModal] = useState(false);
-    const [showDetallesStock, setShowDetallesStock] = useState(false);
+    const [showAgregarPromocionModal, setShowAgregarPromocionModal] = useState(false);
+    const [showEditarPromocionModal, setShowEditarPromocionModal] = useState(false);
+    const [showEliminarPromocionModal, setShowEliminarPromocionModal] = useState(false);
+    const [showActivarPromocionModal, setShowActivarPromocionModal] = useState(false);
 
-    const [selectedStock, setSelectedStock] = useState<StockEntranteDTO>(new StockEntranteDTO());
-    const [selectedDetalles, setSelectedDetalles] = useState<DetalleStock[]>([]);
+    const [selectedPromocion, setSelectedPromocion] = useState<Promocion>(new Promocion());
 
     const formatDate = (date: Date) => {
         const dia = date.getDate() + 1;
-        const mes = date.getMonth() + 1; 
+        const mes = date.getMonth() + 1;
         const año = date.getFullYear();
 
         const diaFormateado = dia < 10 ? `0${dia}` : dia;
@@ -37,110 +32,91 @@ const StocksEntrantes = () => {
 
 
     useEffect(() => {
-        buscarStocks();
+        buscarPromociones();
     }, []);
 
-    function buscarStocks() {
-        StockEntranteService.getStock()
+    function buscarPromociones() {
+        PromocionService.getPromociones()
             .then(data => {
-                setStockEntrante(data);
+                setPromociones(data);
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     }
 
-    const handleAgregarStock = () => {
-        setShowAgregarStockModal(true);
-        setShowEditarStockModal(false);
-        setShowEliminarStockModal(false);
-        setShowActivarStockModal(false);
-        setShowDetallesStock(false);
-        setMostrarStocks(false);
+    const handleAgregarPromocion = () => {
+        setShowAgregarPromocionModal(true);
+        setShowEditarPromocionModal(false);
+        setShowEliminarPromocionModal(false);
+        setShowActivarPromocionModal(false);
+        setMostrarPromociones(false);
     };
 
-    const handleEditarStock = (stock: StockEntranteDTO) => {
-        setSelectedStock(stock);
-        setShowAgregarStockModal(false);
-        setShowEditarStockModal(true);
-        setShowEliminarStockModal(false);
-        setShowActivarStockModal(false);
-        setShowDetallesStock(false);
-        setMostrarStocks(false);
+    const handleEditarPromocion = (promocion: Promocion) => {
+        setSelectedPromocion(promocion);
+        setShowAgregarPromocionModal(false);
+        setShowEditarPromocionModal(true);
+        setShowEliminarPromocionModal(false);
+        setShowActivarPromocionModal(false);
+        setMostrarPromociones(false);
     };
 
-    const handleEliminarStock = (stock: StockEntranteDTO) => {
-        setSelectedStock(stock);
-        setShowAgregarStockModal(false);
-        setShowEditarStockModal(false);
-        setShowEliminarStockModal(true);
-        setShowActivarStockModal(false);
-        setShowDetallesStock(false);
-        setMostrarStocks(false);
+    const handleEliminarPromocion = (promocion: Promocion) => {
+        setSelectedPromocion(promocion);
+        setShowAgregarPromocionModal(false);
+        setShowEditarPromocionModal(false);
+        setShowEliminarPromocionModal(true);
+        setShowActivarPromocionModal(false);
+        setMostrarPromociones(false);
     };
 
-    const handleActivarStock = (stock: StockEntranteDTO) => {
-        setSelectedStock(stock);
-        setShowAgregarStockModal(false);
-        setShowEditarStockModal(false);
-        setShowEliminarStockModal(false);
-        setShowActivarStockModal(true);
-        setShowDetallesStock(false);
-        setMostrarStocks(false);
+    const handleActivarPromocion = (promocion: Promocion) => {
+        setSelectedPromocion(promocion);
+        setShowAgregarPromocionModal(false);
+        setShowEditarPromocionModal(false);
+        setShowEliminarPromocionModal(false);
+        setShowActivarPromocionModal(true);
+        setMostrarPromociones(false);
     };
 
     const handleModalClose = () => {
-        setShowAgregarStockModal(false);
-        setShowEditarStockModal(false);
-        setShowEliminarStockModal(false);
-        setShowActivarStockModal(false);
-        setShowDetallesStock(false);
-        setMostrarStocks(true);
-        buscarStocks();
+        setShowAgregarPromocionModal(false);
+        setShowEditarPromocionModal(false);
+        setShowEliminarPromocionModal(false);
+        setShowActivarPromocionModal(false);
+        setMostrarPromociones(true);
+        buscarPromociones();
     };
-
-    const handleMostrarDetalles = (detalles: DetalleStock[]) => {
-        setSelectedDetalles(detalles);
-        setShowAgregarStockModal(false);
-        setShowEditarStockModal(false);
-        setShowEliminarStockModal(false);
-        setShowActivarStockModal(false);
-        setShowDetallesStock(true);
-        setMostrarStocks(false);
-    };
-
 
     return (
         <div className="opciones-pantallas">
 
-            <h1>- Stock entrante -</h1>
-            <div className="btns-stock">
-                <button className="btn-agregar" onClick={() => handleAgregarStock()}> + Agregar stock entrante</button>
+            <h1>- Promocion entrante -</h1>
+            <div className="btns-promocion">
+                <button className="btn-agregar" onClick={() => handleAgregarPromocion()}> + Agregar promocion entrante</button>
             </div>
 
             <hr />
-            <ModalCrud isOpen={showAgregarStockModal} onClose={handleModalClose}>
-                <AgregarStockEntrante />
+            <ModalCrud isOpen={showAgregarPromocionModal} onClose={handleModalClose}>
+                <AgregarPromocion />
             </ModalCrud>
 
-            <ModalFlotante isOpen={showDetallesStock} onClose={handleModalClose}>
-                <DetallesStock detallesOriginal={selectedDetalles} />
-            </ModalFlotante>
 
-            <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EliminarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
+            <ModalCrud isOpen={showEliminarPromocionModal} onClose={handleModalClose}>
+                {selectedPromocion && <EliminarPromocionEntrante promocion={selectedPromocion} onCloseModal={handleModalClose} />}
             </ModalCrud>
 
-            <ModalCrud isOpen={showActivarStockModal} onClose={handleModalClose}>
-                {selectedStock && <ActivarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
+            <ModalCrud isOpen={showActivarPromocionModal} onClose={handleModalClose}>
+                {selectedPromocion && <ActivarPromocionEntrante promocion={selectedPromocion} onCloseModal={handleModalClose} />}
             </ModalCrud>
 
-            <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EditarStock stockEntrante={selectedStock} />}
+            <ModalCrud isOpen={showEditarPromocionModal} onClose={handleModalClose}>
+                {selectedPromocion && <EditarPromocion promocion={selectedPromocion} />}
             </ModalCrud>
 
-            {mostrarStocks && (
-                <div id="stocks">
+            {mostrarPromociones && (
+                <div id="promociones">
                     <table>
                         <thead>
                             <tr>
@@ -150,20 +126,28 @@ const StocksEntrantes = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {stockEntrante.map(stock => (
-                                <tr key={stock.id}>
-                                    <td>{formatDate(new Date(stock.fechaLlegada.toString()))}</td>
-                                    <td onClick={() => handleMostrarDetalles(stock.detallesStock)}>Detalle stock</td>
+                            {promociones.map(promocion => (
+                                <tr key={promocion.id}>
+                                    <td>{formatDate(new Date(promocion.fechaDesde.toString()))}</td>
+                                    <td>{formatDate(new Date(promocion.fechaHasta.toString()))}</td>
+                                    {promocion.detallesPromocion && promocion.detallesPromocion.map(detalle => (
+                                        <>
+                                            <td>{detalle.articuloMenu.nombre} - {detalle.articuloMenu.cantidad}</td>
+                                            <td>{detalle.articuloVenta.nombre} - {detalle.articuloVenta.cantidad}</td>
+                                        </>
+                                    ))}
 
-                                    {stock.borrado === 'NO' ? (
+                                    <td>{promocion.precio}</td>
+
+                                    {promocion.borrado === 'NO' ? (
                                         <td>
-                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarPromocion(promocion)}>ELIMINAR</button>
+                                            <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
                                         </td>
                                     ) : (
                                         <td>
-                                            <button className="btn-accion-activar" onClick={() => handleActivarStock(stock)}>ACTIVAR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            <button className="btn-accion-activar" onClick={() => handleActivarPromocion(promocion)}>ACTIVAR</button>
+                                            <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
                                         </td>
                                     )}
                                 </tr>
@@ -177,4 +161,4 @@ const StocksEntrantes = () => {
     )
 }
 
-export default StocksEntrantes
+export default PromocionesEntrantes

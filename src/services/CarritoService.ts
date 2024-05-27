@@ -1,6 +1,7 @@
 import { Carrito } from "../types/Pedidos/Carrito";
 import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
-import { ArticuloMenuDTO } from "../types/Productos/ArticuloMenuDTO";
+import { Promocion } from "../types/Productos/Promocion";
+import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 
 export const CarritoService = {
     getCarrito: async (): Promise<Carrito> => {
@@ -10,7 +11,7 @@ export const CarritoService = {
         return carrito;
     },
 
-    agregarAlCarrito: async (articuloMenu: ArticuloMenuDTO | null, articuloVenta: ArticuloVenta | null, cantidad = 1) => {
+    agregarAlCarrito: async (articuloMenu: ArticuloMenu | null, articuloVenta: ArticuloVenta | null, cantidad = 1) => {
         // Busco el carrito existente
         let carrito = await CarritoService.getCarrito();
 
@@ -53,6 +54,53 @@ export const CarritoService = {
         }
 
         console.log(carrito)
+        CarritoService.actualizarCarrito(carrito);
+    },
+
+    agregarPromocionAlCarrito: async (promocion: Promocion, cantidad: number) => {
+        // Busco el carrito existente
+        let carrito = await CarritoService.getCarrito();
+
+        let productoEnCarrito = false;
+
+        promocion.detallesPromocion.forEach(detalle => {
+            if (detalle.articuloMenu) {
+                // Veo si el articulo entrante ya está cargado en el carrito
+                carrito.articuloMenu.forEach((producto, index) => {
+                    if (producto.nombre === detalle.articuloMenu.nombre) {
+                        // Si existe, simplemente sumamos la cantidad
+                        carrito.articuloMenu[index].cantidad += cantidad;
+                        productoEnCarrito = true;
+                    }
+                });
+
+                if (!productoEnCarrito) {
+                    detalle.articuloMenu.cantidad = cantidad;
+
+                    carrito.totalProductos += cantidad;
+
+                    carrito.articuloMenu.push(detalle.articuloMenu);
+                }
+            } else if (detalle.articuloVenta) {
+                carrito.articuloVenta.forEach((producto, index) => {
+                    if (producto.nombre === detalle.articuloVenta.nombre) {
+                        // Si existe, simplemente sumamos la cantidad
+                        carrito.articuloVenta[index].cantidad += cantidad;
+                        productoEnCarrito = true;
+                    }
+                });
+
+                if (!productoEnCarrito) {
+
+                    detalle.articuloVenta.cantidad = cantidad;
+
+                    carrito.totalProductos += cantidad;
+
+                    carrito.articuloVenta.push(detalle.articuloVenta);
+                }
+            }
+        });
+
         CarritoService.actualizarCarrito(carrito);
     },
 

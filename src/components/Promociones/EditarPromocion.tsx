@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { StockEntranteService } from '../../services/StockEntranteService';
 import { toast, Toaster } from 'sonner';
-import { StockEntranteDTO } from '../../types/Stock/StockEntranteDTO';
+import { Promocion } from '../../types/Productos/Promocion';
+import { PromocionService } from '../../services/PromocionService';
 
 interface EditarStockProps {
-  stockEntrante: StockEntranteDTO;
+  promocion: Promocion;
 }
 
-const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
+const EditarStock: React.FC<EditarStockProps> = ({ promocion }) => {
   const formatDate = (date: Date) => {
     const dia = date.getDate() + 1;
     const mes = date.getMonth() + 1;
@@ -15,18 +15,25 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
     return new Date(año, mes - 1, dia);
   };
 
-  const [fecha, setFecha] = useState(stockEntrante.fechaLlegada ? new Date(stockEntrante.fechaLlegada) : new Date());
-  
+  const [fechaDesde, setFechaDesde] = useState(promocion.fechaDesde ? new Date(promocion.fechaDesde) : new Date());
+  const [fechaHasta, setFechaHasta] = useState(promocion.fechaHasta ? new Date(promocion.fechaHasta) : new Date());
+
   function editarStock() {
-    if (!fecha) {
-      toast.info("Por favor, coloque una fecha");
+    if (!fechaDesde) {
+      toast.info("Por favor, coloque una fecha de inicio");
+      return;
+    } else if (!fechaHasta) {
+      toast.info("Por favor, coloque una fecha de fin");
       return;
     }
-    stockEntrante.borrado = 'NO';
 
-    stockEntrante.fechaLlegada = formatDate(new Date(fecha));
-    toast.promise(StockEntranteService.updateStock(stockEntrante), {
-      loading: 'Editando stock entrante...',
+    promocion.borrado = 'NO';
+
+    promocion.fechaDesde = formatDate(new Date(fechaDesde));
+    promocion.fechaHasta = formatDate(new Date(fechaHasta));
+
+    toast.promise(PromocionService.updatePromocion(promocion), {
+      loading: 'Editando promoción...',
       success: (message) => {
         return message;
       },
@@ -43,10 +50,19 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
         <input
           type="date"
           required={true}
-          value={fecha.toISOString().substring(0, 10)}
-          onChange={(e) => setFecha(new Date(e.target.value))}
-        />        
-        <span>Fecha de entrada</span>
+          value={fechaDesde.toISOString().substring(0, 10)}
+          onChange={(e) => setFechaDesde(new Date(e.target.value))}
+        />
+        <span>Fecha de inicio</span>
+      </div>
+      <div className="inputBox">
+        <input
+          type="date"
+          required={true}
+          value={fechaHasta.toISOString().substring(0, 10)}
+          onChange={(e) => setFechaHasta(new Date(e.target.value))}
+        />
+        <span>Fecha de finalización</span>
       </div>
       <button type="button" onClick={editarStock}>Editar stock entrante</button>
     </div>
