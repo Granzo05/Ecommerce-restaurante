@@ -44,12 +44,12 @@
   transform: translateX(0);
 }
 
-h4 {
+/*h4 {
   cursor: pointer;
   padding: 5px;
   font-size: 20px;
   border-radius: 7px;
-}
+}*/
 
 p {
   font-size: 15px;
@@ -70,10 +70,10 @@ p {
   border-radius: 7px;
 }
 
-h4:hover {
+/*h4:hover {
   background-color: grey;
   transition: .3s;
-}
+}*/
 
 .main-options p:hover {
   background-color: grey;

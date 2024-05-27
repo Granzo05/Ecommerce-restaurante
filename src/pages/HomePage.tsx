@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import '../styles/homePage-header-footer.css'
 
 export default function MainMenu() {
@@ -14,11 +15,6 @@ export default function MainMenu() {
             });
     }
     */
-
-    window.addEventListener("scroll", function(){
-        var header = document.querySelector("our");
-        header?.classList.toggle("sticky", window.scrollY > 0)
-    })
 
     return (
         <>
