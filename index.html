@@ -11,13 +11,36 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <meta name="google-signin-client_id" content="285186085169-h2uh6dl2201ntvitiargj73lliqsla75.apps.googleusercontent.com">
-  
+  <meta name="google-signin-client_id"
+    content="285186085169-h2uh6dl2201ntvitiargj73lliqsla75.apps.googleusercontent.com">
+
 </head>
 
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
+
+<script>
+  const handleScroll = () => {
+    const offset = window.scrollY;
+    let header = document.getElementById("header-oscuro");
+    console.log(header)
+    if (header) {
+      if (offset > 50) { // Puedes ajustar este valor
+        header.classList.add('bg-header');
+      } else {
+        header.classList.remove('bg-header');
+      }
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll);
+
+  // Limpieza del evento al desmontar el componente
+  const cleanup = () => {
+    window.removeEventListener('scroll', handleScroll);
+  };
+</script>
 
 </html>
