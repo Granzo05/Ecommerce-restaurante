@@ -18,7 +18,7 @@
 #icon-lock {
     color: #2c2c2c;;
     position: absolute;
-    right: 15%;
+    right: 0p;
     margin-top: 4px;
     padding: 5px;
 }
@@ -152,7 +152,7 @@ a {
 }
 
 .form-content .input-link {
-    margin-top: 10px;
+    margin-top: -8px;
     text-align: right;
 }
 
@@ -205,5 +205,10 @@ a {
 }
 
 .btns-crear-cuenta .btn-accion-registrarse{
+    background-color: green;
     width: 100%;
+}
+
+.btns-crear-cuenta .btn-accion-registrarse:hover{
+    background-color: rgb(1, 73, 1);
 }
