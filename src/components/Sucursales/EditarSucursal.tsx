@@ -13,6 +13,7 @@ import { clearInputs } from '../../utils/global_variables/functions';
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
 import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
 import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
+import { Imagenes } from '../../types/Productos/Imagenes';
 
 interface EditarSucursalProps {
   sucursalOriginal: Sucursal;
@@ -45,6 +46,55 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
   const [idDepartamentosElegidos, setIdDepartamentosElegidos] = useState<Set<number>>(new Set<number>());
 
   const [idLocalidadesElegidas, setIdLocalidadesElegidas] = useState<Set<number>>(new Set<number>());
+
+  const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(sucursalOriginal.imagenes);
+  const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
+  const [selectIndex, setSelectIndex] = useState<number>(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleImagen = (index: number, file: File | null) => {
+    if (file) {
+      const newImagenes = [...imagenes];
+      newImagenes[index] = { ...newImagenes[index], file };
+      setImagenes(newImagenes);
+    }
+  };
+
+  const añadirCampoImagen = () => {
+    let imagenNueva = new Imagenes();
+    imagenNueva.index = imagenes.length;
+    setImagenes([...imagenes, imagenNueva]);
+  };
+
+  const quitarCampoImagen = () => {
+    if (imagenes.length > 0) {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+
+      if (selectIndex > 0) {
+        setSelectIndex(prevIndex => prevIndex - 1);
+      }
+    }
+  };
+
+  const handleEliminarImagen = (index: number) => {
+    const nuevasImagenes = [...imagenesMuestra];
+    const imagenEliminada = nuevasImagenes.splice(index, 1)[0];
+    setImagenesMuestra(nuevasImagenes);
+    setImagenesEliminadas([...imagenesEliminadas, imagenEliminada]);
+  };
+
+  const nextImage = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % imagenesMuestra.length);
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? imagenesMuestra.length - 1 : prevIndex - 1
+    );
+  };
 
   useEffect(() => {
     buscarDepartamentos();
@@ -229,7 +279,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     sucursal.borrado = 'NO';
     sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
 
-    toast.promise(SucursalService.updateSucursal(sucursal), {
+    toast.promise(SucursalService.updateSucursal(sucursal, imagenes, imagenesEliminadas), {
       loading: 'Actualizando la sucursal...',
       success: (message) => {
         clearInputs();
@@ -246,6 +296,43 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
       <h2>Editar sucursal</h2>
       <Toaster />
       <form>
+        <div className="slider-container">
+          <button onClick={prevImage} className="slider-button prev">◀</button>
+          <div className='imagenes-wrapper'>
+            {imagenesMuestra.map((imagen, index) => (
+              <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
+                <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
+                <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+
+                {imagen && (
+                  <img
+
+                    src={imagen.ruta}
+                    alt={`Imagen ${index}`}
+                  />
+                )}
+              </div>
+
+            ))}
+            <button onClick={nextImage} className="slider-button next">▶</button>
+          </div>
+
+        </div>
+
+        {imagenes.map((imagen, index) => (
+          <div key={index} className='inputBox'>
+            <hr />
+            <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+            <input
+              type="file"
+              accept="image/*"
+              maxLength={10048576}
+              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+            />
+          </div>
+        ))}
+        <br />
+        <button onClick={añadirCampoImagen}>Añadir imagen</button>
         <div className="inputBox">
           <input autoComplete='false' type="email" value={email} required={true} onChange={(e) => { setEmail(e.target.value) }} />
           <span>Correo electrónico</span>

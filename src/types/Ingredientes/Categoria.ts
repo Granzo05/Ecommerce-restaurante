@@ -1,3 +1,4 @@
+import { Imagenes } from "../Productos/Imagenes";
 import { Subcategoria } from "./Subcategoria";
 
 export class Categoria {
@@ -5,7 +6,8 @@ export class Categoria {
     nombre: string = '';
     borrado: string = '';
     subcategorias: Subcategoria[] = [];
-    
+    imagenes: Imagenes[] = [];
+
     constructor() {
     }
 }
