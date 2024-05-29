@@ -622,6 +622,33 @@ h3{
 
 /*-----------------PREFERENCIAS DE CUENTA-------------------*/
 
+.account-dropdown .close-cart {
+    position: absolute;
+    top: -8px;
+    right: -5px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #2C2C2C;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.account-dropdown .close-cart strong{
+    font-size: 15px;
+    font-weight: 0;
+}
+
+.account-dropdown .close-cart strong:hover{
+    text-decoration: underline;
+}
+
+.account-dropdown .close-cart:hover{
+    color: #d31616;
+    transition: .2s;
+}
+
 .account-dropdown {
     position: absolute;
     top: 62px;

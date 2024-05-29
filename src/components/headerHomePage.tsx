@@ -11,6 +11,8 @@ interface CartItem {
 
 const HeaderHomePage: React.FC = () => {
 
+    /*HEADER FUNCTIONS */
+
     const [isClicked, setIsClicked] = useState(false); // Estado para controlar si se hizo clic en "Iniciar sesión"
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
     const [isAccountOpen, setIsAccountOpen] = useState(false); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
@@ -80,7 +82,7 @@ const HeaderHomePage: React.FC = () => {
         return cartItems.reduce((total, item) => total + item.quantity, 0);
     };
     //TERMINA PRUEBA CARRITO
-
+    /*HEADER FUNCTIONS */
 
     return (
         <header id='inicio' className="header">

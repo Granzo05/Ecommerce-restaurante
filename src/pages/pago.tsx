@@ -141,6 +141,7 @@ const Pago = () => {
     }
 
     return (
+        <>
         <div className="container-pago">
             <Toaster />
             <div className="div-pago">
@@ -217,6 +218,8 @@ const Pago = () => {
                 )}
             </div>
         </div >
+        </>
+        
     )
 }
 

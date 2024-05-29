@@ -8,8 +8,8 @@ import './App.css';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [mostrarFooter, setMostrarFooter] = useState(false);
-  const [mostrarHeader, setMostrarHeader] = useState(false);
+  const [mostrarFooter, setMostrarFooter] = useState(true);
+  const [mostrarHeader, setMostrarHeader] = useState(true);
   const [mostrarHeaderLogin, setMostrarHeaderLogin] = useState(false);
   const [mostrarHeaderHomePage, setMostrarHeaderHomePage] = useState(false);
   
@@ -17,19 +17,19 @@ function App() {
   useEffect(() => {
     const ruta = window.location.href.split('/').pop(); 
     
-    if (ruta === '' || ruta === '#user'|| ruta === 'login-cliente') {
-      setMostrarFooter(true);
-    } else {
+    if (ruta === 'login-negocio') {
       setMostrarFooter(false);
-    }
-
-    if (ruta === 'opciones' || ruta === 'login-negocio' || ruta === 'prueba') {
-      setMostrarHeader(true);
     } else {
-      setMostrarHeader(false);
+      setMostrarFooter(true);
     }
 
-    if (ruta === 'opciones' || ruta === 'prueba' || ruta === 'login-cliente') {
+    if ( ruta === 'login-negocio') {
+      setMostrarHeader(false);
+    } else {
+      setMostrarHeader(true);
+    }
+
+    if (ruta === 'opciones' || ruta === 'prueba' || ruta === 'login-cliente' ) {
       setMostrarHeaderLogin(true);
     } else {
       setMostrarHeaderLogin(false);
