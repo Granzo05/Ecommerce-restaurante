@@ -8,13 +8,10 @@ import { PedidoService } from "../services/PedidoService";
 import { EnumTipoEnvio } from "../types/Pedidos/EnumTipoEnvio";
 import { DetallesPedido } from "../types/Pedidos/Detalles_pedido";
 import { EnumEstadoPedido } from "../types/Pedidos/EnumEstadoPedido";
-import { StockIngredientesService } from "../services/StockIngredientesService";
-import { StockArticuloVentaService } from "../services/StockArticulosService";
 import { toast, Toaster } from "sonner";
 import { Domicilio } from "../types/Domicilio/Domicilio";
 
 const Pago = () => {
-
     const [carrito, setCarrito] = useState<Carrito | null>(null);
     const [cliente, setCliente] = useState<Cliente | null>(null);
     const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
@@ -54,44 +51,13 @@ const Pago = () => {
     }
 
     async function enviarPedidoARestaurante(tipoEnvio: EnumTipoEnvio) {
-        // Chequeamos que haya stock antes que nada
-
         let hayStock = true;
 
-        /*
-        for (const producto of carrito?.articuloMenu || []) {
-            // Esta funcion devuelve un booleano, true en caso de haber stock y false caso contrario
-            const stockProducto = await StockIngredientesService.getStockProduct(producto.nombre, producto.cantidad);
-
-            if (!stockProducto.match('El stock es suficiente')) {
-                hayStock = false;
-                alert(stockProducto)
-                // Salimos si encontramos un producto sin stock
-                break;
-            }
-        }
-
-        for (const producto of carrito?.articuloVenta || []) {
-            // Esta funcion devuelve un booleano, true en caso de haber stock y false caso contrario
-            const stockProducto = await StockArticuloVentaService.getStockProduct(producto.nombre, producto.cantidad);
-
-            if (!stockProducto.match('El stock es suficiente')) {
-                hayStock = false;
-                alert(stockProducto)
-                // Salimos si encontramos un producto sin stock
-                break;
-            }
-        }
-        */
         if (hayStock) {
             let pedido = new Pedido();
-            // Asignamos el cliente
             if (cliente) pedido.cliente = cliente;
-
-            // Asignamos la forma de pago
             pedido.tipoEnvio = tipoEnvio;
 
-            // Creamos los detalles
             let detalles: DetallesPedido[] = [];
             carrito?.articuloMenu.forEach(producto => {
                 let detalle = new DetallesPedido();
@@ -101,22 +67,10 @@ const Pago = () => {
                 detalles.push(detalle);
             });
 
-            /*
-            carrito?.articuloVenta.forEach(producto => {
-                let detalle = new DetallesPedido();
-                detalle.articuloVenta = producto;
-                detalle.cantidad = producto.cantidad;
-                detalle.subTotal = producto.cantidad * producto.precioVenta;
-
-                detalles.push(detalle);
-            });
-            */
             pedido.factura = null;
-
             pedido.detallesPedido = detalles;
             pedido.estado = EnumEstadoPedido.ENTRANTES;
 
-            // Realizar el envío del pedido
             toast.promise(PedidoService.crearPedido(pedido), {
                 loading: 'Creando pedido...',
                 success: (message) => {
@@ -128,13 +82,10 @@ const Pago = () => {
                 },
             });
 
-            //window.location.href = Pagina de muestra de tiempo y eso
-
         } else {
             console.error('No hay suficiente stock para completar el pedido');
         }
     }
-
 
     function realizarPago() {
         // Logica para mercadopago
@@ -150,12 +101,13 @@ const Pago = () => {
             <Toaster />
             <div className="div-pago">
                 <div id="detalle-producto"></div>
-                <select name="tipoEnvio" id="tipoEnvio" onChange={e => setTipoEnvio(e.target.value)}>
+                <label style={{fontWeight: 'bold', color: '#2C2C2C'}}>Tipo de entrega:</label>
+                <select className="tipo-envio" name="tipoEnvio" id="tipoEnvio" onChange={e => setTipoEnvio(e.target.value)}>
                     <option value="DELIVERY">Delivery</option>
                     <option value="RETIRO">Retiro en tienda</option>
                 </select>
-
-                <h2>Detalles del domicilio</h2>
+                <hr />
+                <h2>Detalles del pedido</h2>
 
                 {envio === 'DELIVERY' && (
                     domicilios && domicilios.length > 0 && (
@@ -169,62 +121,75 @@ const Pago = () => {
                     )
                 )}
 
-
                 <div className="productos">
                     {carrito && carrito.articuloMenu.map((producto, index) => (
                         <div className="item-pago" key={index}>
                             {producto.imagenesDTO[0] && (
-                                <img src={producto.imagenesDTO[0].ruta} alt="" />
-                            )}                            <p>{producto.nombre}</p>
-                            <p>{carrito.articuloMenu[index].cantidad}</p>
-                            <p>{carrito.articuloMenu[index].cantidad * carrito.articuloMenu[index].precioVenta}</p>
+                                <img src={producto.imagenesDTO[0].ruta} alt={producto.nombre} />
+                            )}
+                            <p>{producto.nombre}</p>
+                            <p>Cantidad: {carrito.articuloMenu[index].cantidad}</p>
+                            <p>Subtotal: ${carrito.articuloMenu[index].cantidad * carrito.articuloMenu[index].precioVenta}</p>
                         </div>
                     ))}
                     {carrito && carrito.articuloVenta.map((producto, index) => (
                         <div className="item-pago" key={index}>
                             {producto.imagenesDTO[0] && (
-                                <img src={producto.imagenesDTO[0].ruta} alt="" />
-                            )}                            <p>{producto.nombre}</p>
-                            <p>{carrito.articuloVenta[index].cantidad}</p>
-                            <p>{carrito.articuloVenta[index].cantidad * carrito.articuloVenta[index].precioVenta}</p>
+                                <img src={producto.imagenesDTO[0].ruta} alt={producto.nombre} />
+                            )}
+                            <p>{producto.nombre}</p>
+                            <p >Cantidad: {carrito.articuloVenta[index].cantidad}</p>
+                            <p>Subtotal: ${carrito.articuloVenta[index].cantidad * carrito.articuloVenta[index].precioVenta}</p>
+                        
                         </div>
                     ))}
+                    <hr />
                 </div>
 
                 {envio === 'DELIVERY' ? (
                     <div className="total">
-                        <h3>Total: ${carrito?.totalPrecio}</h3>
+                        <h2>Total: ${carrito?.totalPrecio}</h2>
 
                         <button
                             type="submit"
-                            id="checkout-btn"
+                            className="checkout-btn"
                             onClick={realizarPago}
                         >
                             Pagar con MercadoPago
                         </button>
+                        <button
+                            type="submit"
+                            className="cancelar-btn"
+                        >
+                            Cancelar pedido
+                        </button>
                     </div>
 
                 ) : (
-                    <div>
+                    <div className="total">
                         {carrito?.totalPrecio && (
-                            <h3>Total: ${carrito.totalPrecio * 0.9}</h3>
+                            <h2>Total: ${carrito.totalPrecio * 0.9}</h2>
                         )}
                         <p>*Retiro en tienda con 10% de descuento</p>
                         <button
                             type="submit"
+                            className="checkout-btn"
                             onClick={() => enviarPedidoARestaurante(EnumTipoEnvio.TIENDA)}
-                            id="botonEncargo"
                         >
                             Realizar encargo
                         </button>
+                        <button
+                            type="submit"
+                            className="cancelar-btn"
+                        >
+                            Cancelar pedido
+                        </button>
                     </div>
-
                 )}
             </div>
         </div >
         </>
-        
     )
 }
 
-export default Pago
+export default Pago;
