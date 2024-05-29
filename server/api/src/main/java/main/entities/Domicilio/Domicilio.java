@@ -29,7 +29,7 @@ public class Domicilio {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_localidad")
     private Localidad localidad;
-    @JsonIgnoreProperties(value = {"domicilios"})
+    @JsonIgnoreProperties(value = {"domicilios"}, allowSetters = true)
     @ManyToOne
     @JoinTable(
             name = "clientes_domicilio",
@@ -37,7 +37,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_cliente")
     )
     private Cliente cliente;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
     @OneToOne
     @JoinTable(
             name = "sucursales_domicilio",
@@ -45,7 +45,7 @@ public class Domicilio {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Sucursal sucursal;
-    @JsonIgnoreProperties(value = {"domicilios"})
+    @JsonIgnoreProperties(value = {"domicilios"}, allowSetters = true)
     @ManyToOne
     @JoinTable(
             name = "empleados_domicilio",

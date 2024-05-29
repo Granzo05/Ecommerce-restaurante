@@ -211,6 +211,8 @@ function AgregarPromocion() {
 
     promocion.descripcion = descripcion;
 
+    console.log(promocion)
+
     toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
       success: (message) => {
@@ -319,7 +321,7 @@ function AgregarPromocion() {
       ))}
       <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
       <hr />
-      <button type="button" onClick={agregarStockEntrante}>Agregar stock entrante</button>
+      <button type="button" onClick={agregarStockEntrante}>Agregar promoción</button>
     </div >
   )
 }

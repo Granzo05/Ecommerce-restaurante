@@ -20,16 +20,16 @@ public class IngredienteMenu {
     private Long id;
     @Column(name = "cantidad_ingrediente")
     private int cantidad;
-    @JsonIgnoreProperties(value = {"sucursales"})
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
-    @JsonIgnoreProperties(value = {"sucursales"})
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ingrediente")
     @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     private Ingrediente ingrediente;
-    @JsonIgnoreProperties(value = {"ingredientesMenu", "imagenes", "promociones", "sucursales"})
+    @JsonIgnoreProperties(value = {"ingredientesMenu", "imagenes", "sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_menu")
     @Cascade(org.hibernate.annotations.CascadeType.DETACH)

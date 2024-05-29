@@ -25,12 +25,12 @@ public class Subcategoria implements Serializable {
     private String nombre;
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"sucursales", "subcategorias"})
+    @JsonIgnoreProperties(value = {"sucursales", "subcategorias"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     @JsonBackReference
     private Categoria categoria;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "subcategorias_sucursales",

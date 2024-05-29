@@ -1,11 +1,13 @@
-package main.entities.Stock;
+package main.entities.Productos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.Medida;
-import main.entities.Productos.ArticuloVenta;
+import main.entities.Stock.StockEntrante;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -13,33 +15,27 @@ import main.entities.Productos.ArticuloVenta;
 @NoArgsConstructor
 @Entity
 @Builder
-@ToString
-@Table(name = "detalle_stock", schema = "buen_sabor")
-public class DetalleStock {
+@Table(name = "detalle_promocion", schema = "buen_sabor")
+public class DetallePromocion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "cantidad")
     private int cantidad;
-    @JsonIgnoreProperties(value = {"sucursales", "detalleStock"})
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
-    @Column(name = "costo_unitario")
-    private double costoUnitario;
-    @Column(name = "subtotal")
-    private double subTotal;
     @ManyToOne
-    @JsonIgnoreProperties(value = {"stock"})
-    @JoinColumn(name = "id_ingrediente")
-    private Ingrediente ingrediente;
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
+    @JoinColumn(name = "id_articulo_menu")
+    private ArticuloMenu articuloMenu;
     @ManyToOne
-    @JsonIgnoreProperties(value = {"stock"})
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = {"sucursal"})
-    @JoinColumn(name = "id_stock_entrante")
-    private StockEntrante stockEntrante;
-
+    @JsonIgnoreProperties(value = {"detallesPromocion", "sucursales", "imagenes"}, allowSetters = true)
+    @ManyToOne
+    @JoinColumn(name = "id_promocion")
+    private Promocion promocion;
 }

@@ -111,6 +111,7 @@ export const PromocionService = {
     },
 
     updatePromocionBorrado: async (promocion: Promocion) => {
+        console.log(promocion)
         try {
             const response = await fetch(URL_API + 'promocion/update/' + sucursalId, {
                 method: 'PUT',

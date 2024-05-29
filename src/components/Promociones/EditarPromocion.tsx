@@ -190,7 +190,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion }) => {
     setShowAgregarMedidaModal(false)
   };
 
-  async function agregarStockEntrante() {
+  async function editarPromocion() {
     const hoy = new Date();
 
     if (!fechaDesde) {
@@ -295,11 +295,11 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion }) => {
       </div>
       <button onClick={añadirCampoImagen}>Añadir imagen</button>
       <div className="inputBox">
-        <input type="number" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        <input type="text" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
         <span>Nombre de la promoción</span>
       </div>
       <div className="inputBox">
-        <input type="number" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+        <input type="text" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
         <span>Descrición de la promoción</span>
       </div>
       <div className="inputBox">
@@ -372,7 +372,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion }) => {
       ))}
       <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
       <hr />
-      <button type="button" onClick={agregarStockEntrante}>Agregar stock entrante</button>
+      <button type="button" onClick={editarPromocion}>Editar promoción</button>
     </div >
   )
 }

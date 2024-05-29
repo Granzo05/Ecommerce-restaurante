@@ -25,7 +25,7 @@ public class FechaContratacionEmpleado {
     @CreationTimestamp
     private LocalDateTime fechaContratacion;
 
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;

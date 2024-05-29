@@ -74,8 +74,9 @@ public class StockEntranteController {
             nuevoDetalle.setCostoUnitario(detalle.getCostoUnitario());
             nuevoDetalle.setSubTotal(detalle.getSubTotal());
             Medida medida = medidaRepository.findById(detalle.getMedida().getId()).get();
-            ;
+
             nuevoDetalle.setMedida(medida);
+
             // Asignar la entidad correcta de ArticuloVenta o Ingrediente
             if (detalle.getArticuloVenta() != null && detalle.getArticuloVenta().getNombre().length() > 2) {
                 ArticuloVenta articulo = articuloVentaRepository.findByName(detalle.getArticuloVenta().getNombre()).get();

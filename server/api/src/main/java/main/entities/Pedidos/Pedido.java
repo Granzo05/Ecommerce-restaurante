@@ -39,14 +39,14 @@ public class Pedido {
     private String horaFinalizacion;
     @OneToOne(mappedBy = "pedido")
     private Factura factura;
-    @JsonIgnoreProperties(value = {"pedido"})
+    @JsonIgnoreProperties(value = {"pedido"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
     @JsonIgnoreProperties(value = {"pedido"})
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pedido", cascade = CascadeType.ALL)
     private Set<DetallesPedido> detallesPedido = new HashSet<>();
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "pedidos_sucursales",

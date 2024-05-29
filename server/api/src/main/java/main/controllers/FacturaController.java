@@ -3,7 +3,6 @@ package main.controllers;
 import main.entities.Factura.EnumMetodoPago;
 import main.entities.Factura.EnumTipoFactura;
 import main.entities.Factura.Factura;
-import main.entities.Factura.FacturaDTO;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Pedidos.Pedido;
@@ -55,8 +54,8 @@ public class FacturaController {
     }
 
     @GetMapping("/facturas/cliente/{id}")
-    public Set<FacturaDTO> getFacturas(@PathVariable("id") Long id) {
-        List<FacturaDTO> facturas = facturaRepository.findByIdCliente(id);
+    public Set<Factura> getFacturas(@PathVariable("id") Long id) {
+        List<Factura> facturas = facturaRepository.findByIdCliente(id);
 
         return new HashSet<>(facturas);
     }

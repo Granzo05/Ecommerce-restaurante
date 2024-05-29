@@ -26,11 +26,11 @@ public class ArticuloMenu extends Articulo {
     private int tiempoCoccion;
     @Column(name = "nombre")
     private String nombre;
-    @JsonIgnoreProperties(value = {"subcategorias", "sucursales"})
+    @JsonIgnoreProperties(value = {"subcategorias", "sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
-    @JsonIgnoreProperties(value = {"categoria", "sucursales"})
+    @JsonIgnoreProperties(value = {"categoria", "sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_subcategoria")
     private Subcategoria subcategoria;
@@ -40,16 +40,13 @@ public class ArticuloMenu extends Articulo {
     private String descripcion;
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"articuloMenu"})
+    @JsonIgnoreProperties(value = {"articuloMenu"}, allowSetters = true)
     @OneToMany(mappedBy = "articuloMenu", cascade = CascadeType.ALL)
     private Set<IngredienteMenu> ingredientesMenu = new HashSet<>();
-    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal"})
+    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
     @OneToMany(mappedBy = "articuloMenu", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
-    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal"})
-    @ManyToMany(mappedBy = "articulosMenu", fetch = FetchType.LAZY)
-    private Set<Promocion> promociones = new HashSet<>();
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
     @ManyToMany(mappedBy = "articulosMenu", fetch = FetchType.LAZY)
     private Set<Sucursal> sucursales = new HashSet<>();
 }

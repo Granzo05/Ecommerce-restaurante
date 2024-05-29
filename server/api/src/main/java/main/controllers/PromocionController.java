@@ -1,12 +1,11 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Productos.ArticuloMenu;
-import main.entities.Productos.ArticuloVenta;
-import main.entities.Productos.Imagenes;
-import main.entities.Productos.Promocion;
+import main.entities.Productos.*;
 import main.entities.Restaurante.Sucursal;
-import main.repositories.*;
+import main.repositories.ImagenesRepository;
+import main.repositories.PromocionRepository;
+import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,15 +46,30 @@ public class PromocionController {
         Optional<Promocion> promocionDB = promocionRepository.findByNameAndIdSucursal(promocionDetails.getNombre(), idSucursal);
 
         if (promocionDB.isEmpty()) {
-            for (ArticuloVenta articuloVenta: promocionDetails.getArticulosVenta()) {
-                articuloVenta.getPromociones().add(promocionDetails);
-            }
-
-            for (ArticuloMenu articuloMenu: promocionDetails.getArticulosMenu()) {
-                articuloMenu.getPromociones().add(promocionDetails);
-            }
-
             promocionDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+
+            Set<DetallePromocion> detalles = new HashSet<>();
+            for(DetallePromocion detallePromocion: promocionDetails.getDetallesPromocion()) {
+                if (detallePromocion.getArticuloMenu().getNombre().length() > 2) {
+                    DetallePromocion detalleNuevo = new DetallePromocion();
+                    detalleNuevo.setMedida(detallePromocion.getMedida());
+                    detalleNuevo.setCantidad(detallePromocion.getCantidad());
+                    detalleNuevo.setArticuloMenu(detallePromocion.getArticuloMenu());
+                    detalleNuevo.setPromocion(promocionDetails);
+
+                    detalles.add(detalleNuevo);
+                } else if(detallePromocion.getArticuloVenta().getNombre().length() > 2 ) {
+                    DetallePromocion detalleNuevo = new DetallePromocion();
+                    detalleNuevo.setMedida(detallePromocion.getMedida());
+                    detalleNuevo.setCantidad(detallePromocion.getCantidad());
+                    detalleNuevo.setArticuloVenta(detallePromocion.getArticuloVenta());
+                    detalleNuevo.setPromocion(promocionDetails);
+
+                    detalles.add(detalleNuevo);
+                }
+            }
+
+            promocionDetails.setDetallesPromocion(detalles);
 
             promocionRepository.save(promocionDetails);
 
@@ -140,9 +154,10 @@ public class PromocionController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/sucursal/update/{idSucursal}")
-    public ResponseEntity<String> updateSucursal(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
-        Optional<Promocion>  promocionDB = promocionRepository.findByIdPromocionAndIdSucursal(promocionDetails.getId(), idSucursal);
+    @PutMapping("/promocion/update/{idSucursal}")
+    public ResponseEntity<String> updatePromocion(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
+        Optional<Promocion> promocionDB = promocionRepository.findByIdPromocionAndIdSucursal(promocionDetails.getId(), idSucursal);
+
         if (promocionDB.isPresent()) {
             Optional<Promocion> promocionEncontrada = promocionRepository.findByNameAndIdSucursal(promocionDetails.getNombre(), idSucursal);
 
@@ -161,30 +176,23 @@ public class PromocionController {
                 promocion.setFechaDesde(LocalDateTime.parse(promocion.getFechaDesde().toString()));
                 promocion.setFechaHasta(LocalDateTime.parse(promocion.getFechaHasta().toString()));
 
-                Set<ArticuloMenu> nuevosMenus = new HashSet<>();
-                for (ArticuloMenu menu : promocion.getArticulosMenu()) {
-                    menu.getPromociones().add(promocion);
-                    nuevosMenus.add(menu);
+                for(DetallePromocion detallePromocion: promocionDetails.getDetallesPromocion()) {
+                    detallePromocion.setPromocion(promocionDetails);
                 }
-                promocion.setArticulosMenu(nuevosMenus);
-
-                Set<ArticuloVenta> nuevosArticulos = new HashSet<>();
-                for (ArticuloVenta articuloVenta : promocion.getArticulosVenta()) {
-                    articuloVenta.getPromociones().add(promocion);
-                    nuevosArticulos.add(articuloVenta);
-                }
-                promocion.setArticulosVenta(nuevosArticulos);
 
                 Set<Sucursal> nuevasSucursales = new HashSet<>();
                 for (Sucursal sucursal : promocion.getSucursales()) {
                     sucursal.getPromociones().add(promocion);
                     nuevasSucursales.add(sucursal);
                 }
+
                 promocion.setSucursales(nuevasSucursales);
 
                 promocion.setDescripcion(promocionDetails.getDescripcion());
 
                 promocion.setPrecio(promocionDetails.getPrecio());
+
+                promocion.setDetallesPromocion(promocionDetails.getDetallesPromocion());
 
                 promocionRepository.save(promocion);
 
