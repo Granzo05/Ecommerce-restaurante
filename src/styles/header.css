@@ -9,6 +9,11 @@
   transition: background-color 0.3s ease;
 }
 
+.header-all .menu{
+  background-color: #2b86c4;
+
+}
+
 .header-all .navbar .ul-header-all li a:hover{
   color: #2C2C2C;
 }

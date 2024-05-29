@@ -9,6 +9,7 @@ export class IngredienteMenu {
     ingrediente: Ingrediente | null = null;
     articuloMenu: ArticuloMenu | null = null;
     borrado: string = '';
+  nombre: ReactNode;
 
     constructor() {
     }

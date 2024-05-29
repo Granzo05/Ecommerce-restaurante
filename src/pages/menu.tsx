@@ -6,7 +6,7 @@ import { DetallesMenu } from '../components/Menus/DetallesMenu';
 import '../styles/menuPorTipo.css'
 import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
 
-function RestaurantesPorComida() {
+function RestaurantesPorComida(this: any) {
   const { tipoComida } = useParams()
 
   const [menus, setMenus] = useState<ArticuloMenuDTO[]>([]);
@@ -34,12 +34,555 @@ function RestaurantesPorComida() {
   };
 
   useEffect(() => {
-    document.title = 'Menú - '+tipoComida;
+    document.title = 'Menú - ' + tipoComida;
   }, []);
+
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const flipCard = () => {
+    setIsFlipped(!isFlipped);
+  };
 
 
   return (
-    <div id="grid-container">
+    <>
+      <div className='menu-tipo'>
+        <div className="heading">
+          <h1>Menú</h1>
+          <h3>&mdash;{tipoComida}&mdash;</h3>
+        </div>
+
+
+
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+        <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+              <div className="front">
+                <div className='img-food'>
+                  <img src="../src/assets/img/hamburguesa-background.png" alt="Hamburguesa" />
+                  <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                </div>
+                <div className="details">
+                  <div className="details-sub">
+                    <h5>Hamburguesa</h5>
+                    <h5 className='price'>$4999</h5>
+                  </div>
+                  <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
+                  <button className="add-to-cart">Añadir al carrito</button>
+                </div>
+              </div>
+              <div className="back">
+                <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                <div className="details-sub">
+                  <h5>Hamburguesa</h5>
+                  <h5 className='price'>$4999</h5>
+                </div>
+                <div className="table">
+                  <div className="table-header">
+                    <div className="table-cell">INGREDIENTE</div>
+                    <div className="table-cell">CANTIDAD</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 1</div>
+                    <div className="table-cell">1 unidad</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                  <div className="table-row">
+                    <div className="table-cell">Ingrediente 2</div>
+                    <div className="table-cell">100 gramos</div>
+                  </div>
+                </div>
+
+                <div className='details-back'>
+                  <button>Añadir al carrito</button>
+                </div>
+              </div>
+        </div>
+
+
+
+
+
+      </div>
+    </>
+
+
+  );
+
+}
+
+export default RestaurantesPorComida;
+
+/*<div id="grid-container">
       {menus.length > 0 && menus.map((menu) => (
         <div key={menu.id} className="grid-item" onClick={handleMostrarMenu} style={{ width: '300px' }}>
           {menu.imagenesDTO.length > 0 && (
@@ -58,11 +601,4 @@ function RestaurantesPorComida() {
         </div>
       ))
       }
-    </div >
-
-
-  );
-
-}
-
-export default RestaurantesPorComida;
+    </div > */
