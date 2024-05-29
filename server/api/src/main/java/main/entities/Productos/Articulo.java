@@ -22,9 +22,6 @@ public abstract class Articulo implements Serializable {
     private Long id;
     @Column(name = "precio_venta")
     private double precioVenta;
-    @Transient
-    private Set<ImagenesDTO> imagenesDTO = new HashSet<>();
-
     public Articulo(double precioVenta) {
         this.precioVenta = precioVenta;
     }

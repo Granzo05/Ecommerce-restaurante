@@ -2,7 +2,6 @@ package main.repositories;
 
 import main.entities.Restaurante.LocalidadDelivery;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Restaurante.SucursalDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,14 +21,13 @@ public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
 
     @Query("SELECT s FROM Sucursal s WHERE s.nombre = :nombre")
     Optional<Sucursal> findByName(@Param("nombre") String nombre);
+    @Query("SELECT s FROM Sucursal s WHERE s.empresa.id = :id")
+    List<Sucursal> findByIdEmpresa(@Param("id") Long id);
 
     @Query("SELECT s.localidadesDisponiblesDelivery FROM Sucursal s WHERE s.id = :id AND s.borrado = 'NO'")
     List<LocalidadDelivery> findLocalidadesByIdSucursal(@Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id, s.telefono, s.email, s.horarioApertura, s.horarioCierre, s.borrado) FROM Sucursal s")
-    List<SucursalDTO> findAllDTO();
-
-    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id) FROM Sucursal s WHERE s.email = :email AND s.contraseña = :contraseña AND s.borrado = 'NO'")
-    SucursalDTO findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String password);
+    @Query("SELECT s FROM Sucursal s WHERE s.email = :email AND s.contraseña = :contraseña AND s.borrado = 'NO'")
+    Optional<Sucursal> findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String password);
 
 }

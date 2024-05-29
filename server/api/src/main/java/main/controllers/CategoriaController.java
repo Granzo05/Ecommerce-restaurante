@@ -2,10 +2,8 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.CategoriaDTO;
 import main.entities.Ingredientes.Subcategoria;
 import main.entities.Productos.Imagenes;
-import main.entities.Restaurante.Sucursal;
 import main.repositories.CategoriaRepository;
 import main.repositories.ImagenesRepository;
 import main.repositories.SubcategoriaRepository;
@@ -38,11 +36,11 @@ public class CategoriaController {
 
 
     @GetMapping("/categorias/{idSucursal}")
-    public Set<CategoriaDTO> getCategorias(@PathVariable("idSucursal") Long idSucursal) {
-        List<CategoriaDTO> categorias = categoriaRepository.findAllDTOByIdSucursal(idSucursal);
+    public Set<Categoria> getCategorias(@PathVariable("idSucursal") Long idSucursal) {
+        List<Categoria> categorias = categoriaRepository.findAllByIdSucursal(idSucursal);
 
-        for (CategoriaDTO categoriaDTO : categorias) {
-            categoriaDTO.setSubcategorias(new HashSet<>(subcategoriaRepository.findAllDTOByIdCategoria(categoriaDTO.getId())));
+        for (Categoria Categoria : categorias) {
+            Categoria.setSubcategorias(new HashSet<>(subcategoriaRepository.findAllByIdCategoria(Categoria.getId())));
         }
 
         return new HashSet<>(categorias);

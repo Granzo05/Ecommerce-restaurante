@@ -6,9 +6,7 @@ import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.DetalleStock;
-import main.entities.Stock.DetalleStockDTO;
 import main.entities.Stock.StockEntrante;
-import main.entities.Stock.StockEntranteDTO;
 import main.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +34,14 @@ public class StockEntranteController {
     }
 
     @GetMapping("/stockEntrante/{idSucursal}")
-    public Set<StockEntranteDTO> getStock(@PathVariable("idSucursal") long id) {
-        List<StockEntranteDTO> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
+    public Set<StockEntrante> getStock(@PathVariable("idSucursal") long id) {
+        List<StockEntrante> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
 
-        for (StockEntranteDTO stock : stocksEntrantes) {
-            for (DetalleStockDTO detalleStockDTO : detalleStockRepository.findIngredienteByIdStock(stock.getId())) {
+        for (StockEntrante stock : stocksEntrantes) {
+            for (DetalleStock detalleStockDTO : detalleStockRepository.findIngredienteByIdStock(stock.getId())) {
                 stock.getDetallesStock().add(detalleStockDTO);
             }
-            for (DetalleStockDTO detalleStockDTO : detalleStockRepository.findArticuloByIdStock(stock.getId())) {
+            for (DetalleStock detalleStockDTO : detalleStockRepository.findArticuloByIdStock(stock.getId())) {
                 stock.getDetallesStock().add(detalleStockDTO);
             }
         }

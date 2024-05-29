@@ -3,16 +3,16 @@ import { toast, Toaster } from 'sonner';
 import { Promocion } from '../../types/Productos/Promocion';
 import { PromocionService } from '../../services/PromocionService';
 
-interface EliminarStockProps {
+interface EliminarPromocionProps {
   promocion: Promocion;
   onCloseModal: () => void;
 
 }
 
-const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ promocion, onCloseModal }) => {
+const EliminarPromocion: React.FC<EliminarPromocionProps> = ({ promocion, onCloseModal }) => {
   const onConfirm = () => {
     promocion.borrado = 'SI';
-    toast.promise(PromocionService.updatePromocion(promocion), {
+    toast.promise(PromocionService.updatePromocionBorrado(promocion), {
       loading: 'Eliminando promocion...',
       success: (message) => {
         setTimeout(() => {
@@ -39,4 +39,4 @@ const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ promocion, onClos
   );
 }
 
-export default EliminarStockEntrante;
+export default EliminarPromocion;

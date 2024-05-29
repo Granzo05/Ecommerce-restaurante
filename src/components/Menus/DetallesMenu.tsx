@@ -2,18 +2,18 @@ import Carousel from 'react-bootstrap/Carousel';
 import '../../styles/modalFlotante.css';
 import { useState } from 'react';
 import { CarritoService } from '../../services/CarritoService';
-import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
+import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 
 interface Props {
-  menuActual: ArticuloMenuDTO;
+  menuActual: ArticuloMenu;
 }
 
 export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
-  const imagenesInvertidas = [...menuActual.imagenesDTO].reverse();
+  const imagenesInvertidas = [...menuActual.imagenes].reverse();
   const [cantidadMenu, setCantidadMenu] = useState<number>(1);
 
 
-  async function handleAñadirCarrito(menu: ArticuloMenuDTO) {
+  async function handleAñadirCarrito(menu: ArticuloMenu) {
     await CarritoService.agregarAlCarrito(menu, null, cantidadMenu);
   }
 
@@ -34,7 +34,7 @@ export const DetallesMenu: React.FC<Props> = ({ menuActual }) => {
         <p>Ingredientes:</p>
         <ul>
           {menuActual.ingredientesMenu?.map((ingredienteMenu, index) => (
-            <li key={index}>* {ingredienteMenu.ingredienteNombre}</li>
+            <li key={index}>* {ingredienteMenu.ingrediente.nombre}</li>
           ))}
         </ul>
         <p>Tiempo de cocción: {menuActual.tiempoCoccion} minutos</p>

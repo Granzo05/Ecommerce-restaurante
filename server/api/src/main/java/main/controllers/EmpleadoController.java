@@ -3,9 +3,7 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Domicilio.DomicilioDTO;
 import main.entities.Restaurante.Empleado;
-import main.entities.Restaurante.EmpleadoDTO;
 import main.entities.Restaurante.FechaContratacionEmpleado;
 import main.repositories.DomicilioRepository;
 import main.repositories.EmpleadoRepository;
@@ -37,11 +35,11 @@ public class EmpleadoController {
 
     @CrossOrigin
     @GetMapping("/empleado/login/{email}/{password}")
-    public EmpleadoDTO loginEmpleado(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        Optional<EmpleadoDTO> empleadoDb = empleadoRepository.findByEmailAndPassword(Encrypt.encriptarString(email), Encrypt.cifrarPassword(password));
+    public Empleado loginEmpleado(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+        Optional<Empleado> empleadoDb = empleadoRepository.findByEmailAndPassword(Encrypt.encriptarString(email), Encrypt.cifrarPassword(password));
 
         if (empleadoDb.isPresent()) {
-            EmpleadoDTO empleado = empleadoDb.get();
+            Empleado empleado = empleadoDb.get();
 
             empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
             empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
@@ -84,25 +82,25 @@ public class EmpleadoController {
         }
     }
 
-    @GetMapping("/empleados")
-    public Set<EmpleadoDTO> getEmpleados() throws Exception {
+    @GetMapping("/empleados/{idSucursal}")
+    public Set<Empleado> getEmpleados(@PathVariable("idSucursal") Long idSucursal) throws Exception {
 
-        List<EmpleadoDTO> empleados = empleadoRepository.findAllDTO();
+        List<Empleado> empleados = empleadoRepository.findAllByIdSucursal(idSucursal);
 
-        for (EmpleadoDTO empleado : empleados) {
+        for (Empleado empleado : empleados) {
             empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
             empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
             empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
 
-            List<DomicilioDTO> domicilios = domicilioRepository.findByIdEmpleadoDTO(empleado.getId());
+            List<Domicilio> domicilios = domicilioRepository.findByIdEmpleado(empleado.getId());
 
-            for (DomicilioDTO domicilio : domicilios) {
+            for (Domicilio domicilio : domicilios) {
                 domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
             }
 
             empleado.setDomicilios(new HashSet<>(domicilios));
 
-            empleado.setFechaContratacionEmpleado(new HashSet<>(fechaContratacionRepository.findByIdEmpleado(empleado.getId())));
+            empleado.setFechaContratacion(new HashSet<>(fechaContratacionRepository.findByIdEmpleado(empleado.getId())));
         }
 
         return new HashSet<>(empleados);

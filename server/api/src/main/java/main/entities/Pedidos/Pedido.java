@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Cliente.Cliente;
 import main.entities.Factura.Factura;
+import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -45,4 +46,12 @@ public class Pedido {
     @JsonIgnoreProperties(value = {"pedido"})
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pedido", cascade = CascadeType.ALL)
     private Set<DetallesPedido> detallesPedido = new HashSet<>();
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "pedidos_sucursales",
+            joinColumns = @JoinColumn(name = "id_pedido"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
+    private Set<Sucursal> sucursales = new HashSet<>();
 }

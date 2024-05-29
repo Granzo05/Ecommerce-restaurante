@@ -1,10 +1,10 @@
 import React from 'react';
 import { MenuService } from '../../services/MenuService';
 import { toast, Toaster } from 'sonner';
-import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
+import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 
 interface EliminarMenuProps {
-  menuOriginal: ArticuloMenuDTO;
+  menuOriginal: ArticuloMenu;
   onCloseModal: () => void;
 }
 
@@ -12,7 +12,7 @@ const EliminarMenu: React.FC<EliminarMenuProps> = ({ menuOriginal, onCloseModal 
   const onConfirm = () => {
     menuOriginal.borrado = 'SI';
     toast.promise(MenuService.updateBorradoMenu(menuOriginal), {
-      loading: 'Eliminando articulo...',
+      loading: 'Eliminando menú...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();

@@ -6,8 +6,8 @@ export class IngredienteMenu {
     id: number = 0;
     cantidad: number = 0;
     medida: Medida = new Medida();
-    ingrediente: Ingrediente | null = null;
-    articuloMenu: ArticuloMenu | null = null;
+    ingrediente: Ingrediente = new Ingrediente();
+    articuloMenu: ArticuloMenu = new ArticuloMenu();
     borrado: string = '';
 
     constructor() {

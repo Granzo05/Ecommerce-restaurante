@@ -8,11 +8,11 @@ import '../../styles/menuPorTipo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
 import { EmpleadoService } from "../../services/EmpleadoService";
-import { ArticuloMenuDTO } from "../../types/Productos/ArticuloMenuDTO";
 import ActivarMenu from "./ActivarMenu";
+import { ArticuloMenu } from "../../types/Productos/ArticuloMenu";
 
 const Menus = () => {
-    const [menus, setMenus] = useState<ArticuloMenuDTO[]>([]);
+    const [menus, setMenus] = useState<ArticuloMenu[]>([]);
     const [mostrarMenus, setMostrarMenus] = useState(true);
 
     const [showAgregarMenuModal, setShowAgregarMenuModal] = useState(false);
@@ -20,7 +20,7 @@ const Menus = () => {
     const [showEliminarMenuModal, setShowEliminarMenuModal] = useState(false);
     const [showActivarMenuModal, setShowActivarMenuModal] = useState(false);
 
-    const [selectedMenu, setSelectedMenu] = useState<ArticuloMenuDTO | null>(null);
+    const [selectedMenu, setSelectedMenu] = useState<ArticuloMenu>();
 
     useEffect(() => {
         fetchData();
@@ -59,7 +59,7 @@ const Menus = () => {
         setMostrarMenus(false);
     };
 
-    const handleEditarMenu = (menu: ArticuloMenuDTO) => {
+    const handleEditarMenu = (menu: ArticuloMenu) => {
         setSelectedMenu(menu);
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(true);
@@ -67,7 +67,7 @@ const Menus = () => {
         setMostrarMenus(false);
     };
 
-    const handleEliminarMenu = (menu: ArticuloMenuDTO) => {
+    const handleEliminarMenu = (menu: ArticuloMenu) => {
         setSelectedMenu(menu);
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(false);
@@ -76,7 +76,7 @@ const Menus = () => {
         setMostrarMenus(false);
     };
 
-    const handleActivarMenu = (menu: ArticuloMenuDTO) => {
+    const handleActivarMenu = (menu: ArticuloMenu) => {
         setSelectedMenu(menu);
         setShowAgregarMenuModal(false);
         setShowEditarMenuModal(false);
@@ -127,7 +127,7 @@ const Menus = () => {
                                     <td>
                                         {menu.ingredientesMenu?.map((ingrediente, index) => (
                                             <span key={index}>
-                                                {ingrediente.ingredienteNombre} - {ingrediente.cantidad} {ingrediente.medida.nombre}<br />
+                                                {ingrediente.ingrediente.nombre} - {ingrediente.cantidad} {ingrediente.medida.nombre}<br />
                                             </span>
                                         ))}
                                     </td>
@@ -138,17 +138,17 @@ const Menus = () => {
                                         <td>
                                             <div className="btns-acciones-stock">
 
-                                            <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
-                                            
-                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarMenu(menu)}>ELIMINAR</button>
+                                                <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
+
+                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarMenu(menu)}>ELIMINAR</button>
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones-stock">
 
-                                            <button className="btn-accion-activar" onClick={() => handleActivarMenu(menu)}>ACTIVAR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
+                                                <button className="btn-accion-activar" onClick={() => handleActivarMenu(menu)}>ACTIVAR</button>
+                                                <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
                                             </div>
                                         </td>
                                     )}

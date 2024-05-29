@@ -1,7 +1,5 @@
 import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
-import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
 import { Imagenes } from '../types/Productos/Imagenes';
-import { ImagenesProductoDTO } from '../types/Productos/ImagenesProductoDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const MenuService = {
@@ -12,7 +10,7 @@ export const MenuService = {
         return await response.json();
     },
 
-    getMenusPorTipo: async (tipoComida: string): Promise<ArticuloMenuDTO[]> => {
+    getMenusPorTipo: async (tipoComida: string): Promise<ArticuloMenu[]> => {
         const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + sucursalId);
 
         return await response.json();
@@ -45,7 +43,7 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        await fetch(URL_API + 'menu/imagenes', {
+                        await fetch(URL_API + 'menu/imagenes/' + sucursalId, {
                             method: 'POST',
                             body: formData
                         });
@@ -62,7 +60,7 @@ export const MenuService = {
         }
     },
 
-    updateMenu: async (menu: ArticuloMenuDTO, imagenes: Imagenes[], imagenesEliminadas: ImagenesProductoDTO[]): Promise<string> => {
+    updateMenu: async (menu: ArticuloMenu, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'menu/update/' + sucursalId, {
                 method: 'PUT',
@@ -89,7 +87,7 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        await fetch(URL_API + 'menu/imagenes', {
+                        await fetch(URL_API + 'menu/imagenes/' + sucursalId, {
                             method: 'POST',
                             body: formData
                         });
@@ -115,7 +113,7 @@ export const MenuService = {
 
     },
 
-    updateBorradoMenu: async (menu: ArticuloMenuDTO): Promise<string> => {
+    updateBorradoMenu: async (menu: ArticuloMenu): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'menu/update/' + sucursalId, {
                 method: 'PUT',

@@ -3,7 +3,7 @@ import { Sucursal } from '../types/Restaurante/Sucursal';
 import { URL_API } from '../utils/global_variables/const';
 
 export const SucursalService = {
-    createRestaurant: async (sucursal: Sucursal, imagenes: Imagenes[]): Promise<string> => {
+    createSucursal: async (sucursal: Sucursal, imagenes: Imagenes[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'sucursal/create', {
                 method: 'POST',
@@ -121,7 +121,7 @@ export const SucursalService = {
         }
     },
 
-    updateRestaurant: async (sucursal: Sucursal, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]) => {
+    updateSucursal: async (sucursal: Sucursal, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]) => {
         try {
             const response = await fetch(URL_API + 'sucursal/update', {
                 method: 'PUT',
@@ -159,6 +159,27 @@ export const SucursalService = {
                         });
                     }));
                 }
+            }
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
+    updateBorrado: async (sucursal: Sucursal) => {
+        try {
+            const response = await fetch(URL_API + 'sucursal/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(sucursal)
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
 
             return await response.text();

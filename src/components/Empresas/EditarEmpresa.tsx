@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import { Empresa } from '../../types/Restaurante/Empresa';
@@ -10,7 +9,7 @@ interface EditarMenuProps {
 }
 
 const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
-  const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(empresaOriginal.imagenesDTO);
+  const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(empresaOriginal.imagenes);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>(empresaOriginal.imagenes);
   const [selectIndex, setSelectIndex] = useState<number>(0);

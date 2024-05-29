@@ -9,10 +9,10 @@ export class Pedido {
     id: number = 0;
     tipoEnvio: EnumTipoEnvio | null = null;
     estado: EnumEstadoPedido | null = null;
-    fechaPedido: Date | null = null;
+    fechaPedido: Date = new Date();
     horaFinalizacion: string = '';
     factura: Factura | null = null;
-    cliente: Cliente | null = null;
+    cliente: Cliente = new Cliente();
     domicilioEnvio: Domicilio | null = null;
     detallesPedido: DetallesPedido[] = [];
     borrado: string = '';

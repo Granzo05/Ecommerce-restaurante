@@ -3,12 +3,9 @@ import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
 import ModalFlotante from '../ModalFlotante';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
-import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import './editarMenu.css'
-import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
-import { IngredienteMenuDTO } from '../../types/Ingredientes/IngredienteMenuDTO';
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
 import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
@@ -16,18 +13,21 @@ import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteF
 import { Categoria } from '../../types/Ingredientes/Categoria';
 import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFiltroCategorias';
 import { Medida } from '../../types/Ingredientes/Medida';
+import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
+import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
+import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 
 interface EditarMenuProps {
-  menuOriginal: ArticuloMenuDTO;
+  menuOriginal: ArticuloMenu;
 }
 
 const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
-  const [ingredientesMuestra, setIngredientesMuestra] = useState<IngredienteMenuDTO[]>(menuOriginal.ingredientesMenu);
+  const [ingredientesMuestra, setIngredientesMuestra] = useState<IngredienteMenu[]>(menuOriginal.ingredientesMenu);
   let [selectIndexIngredientes, setSelectIndexIngredientes] = useState<number>(0);
-  const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(menuOriginal.imagenesDTO);
-  const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
-  const [imagenes, setImagenes] = useState<Imagenes[]>(menuOriginal.imagenes);
+  const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(menuOriginal.imagenes);
+  const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
@@ -36,6 +36,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
   const [nombre, setNombre] = useState(menuOriginal.nombre);
   const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
+  const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -109,9 +110,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const añadirCampoIngrediente = () => {
     // SI no hay ingredientes que genere en valor 0 de index
     if (ingredientes.length === 0) {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: null, borrado: 'NO' }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
     } else {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: null, borrado: 'NO' }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
       setSelectIndexIngredientes(prevIndex => prevIndex + 1);
     }
   };
@@ -147,6 +148,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
   const [modalBusquedaIngrediente, setModalBusquedaIngrediente] = useState<boolean>(false);
   const [showAgregarIngredienteModal, setShowAgregarIngredienteModal] = useState(false);
+  const [modalBusquedaSubcategoria, setModalBusquedaSubcategoria] = useState<boolean>(false);
 
   const handleAgregarIngrediente = () => {
     setShowAgregarIngredienteModal(true);
@@ -157,6 +159,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     setModalBusquedaCategoria(false)
     setModalBusquedaMedida(false)
     setModalBusquedaIngrediente(false)
+    setModalBusquedaSubcategoria(false)
   };
 
   function editarMenu() {
@@ -200,7 +203,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       }
     }
 
-    let menuActualizado: ArticuloMenuDTO = new ArticuloMenuDTO();
+    let menuActualizado: ArticuloMenu = menuOriginal;
 
     menuActualizado.nombre = nombre;
     menuActualizado.tiempoCoccion = tiempoCoccion;
@@ -210,14 +213,15 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     menuActualizado.descripcion = descripcion;
     menuActualizado.id = menuOriginal.id;
     menuActualizado.borrado = 'NO';
+    menuActualizado.subcategoria = subcategoria;
 
     if (ingredientesMuestra.length > 0) {
       ingredientesMuestra.forEach(ingredienteDTO => {
-        let ingredienteMenu: IngredienteMenuDTO = new IngredienteMenuDTO();
+        let ingredienteMenu: IngredienteMenu = new IngredienteMenu();
 
         ingredienteMenu.medida = ingredienteDTO.medida;
         ingredienteMenu.cantidad = ingredienteDTO.cantidad;
-        ingredienteMenu.ingredienteNombre = ingredienteDTO.ingredienteNombre;
+        ingredienteMenu.ingrediente = ingredienteDTO.ingrediente;
 
         menuActualizado.ingredientesMenu?.push(ingredienteMenu);
       });
@@ -225,7 +229,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
 
     if (ingredientes.length > 0) {
       ingredientes.forEach(ingredienteMenu => {
-        menuActualizado.ingredientes?.push(ingredienteMenu);
+        menuActualizado.ingredientesMenu?.push(ingredienteMenu);
       });
     }
 
@@ -304,12 +308,14 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
         <input type="number" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
         <span>Minutos de coccion</span>
       </div>
-      <label>
-        <div className="input-filtrado">
-          <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
-          {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
-        </div>
-      </label>
+      <div className="input-filtrado">
+        <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+      </div>
+      <div className="input-filtrado">
+        <InputComponent placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
+        {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
+      </div>
       <div className="inputBox">
         <input type="number" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
         <span>Precio</span>
@@ -329,7 +335,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             <hr />
             <p className='cierre-ingrediente' onClick={() => quitarCampoIngredienteMuestra(index)}>X</p>
             <div className="inputBox">
-              <input type="text" required={true} value={ingredienteMenu.ingredienteNombre} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+              <input type="text" required={true} value={ingredienteMenu.ingrediente?.nombre} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
               <span>Nombre del ingrediente</span>
             </div>
             <div className="inputBox">

@@ -148,4 +148,25 @@ export const EmpresaService = {
             throw error;
         }
     },
+
+    updateEmpresaBorrado: async (empresa: Empresa) => {
+        try {
+            const response = await fetch(URL_API + 'empresa/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(empresa)
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 }

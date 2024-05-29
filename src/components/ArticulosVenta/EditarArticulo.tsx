@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
-import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import './editarArticuloVenta.css'
@@ -19,8 +18,8 @@ interface EditarArticuloVentaProps {
 }
 
 const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOriginal }) => {
-  const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(articuloOriginal.imagenesDTO);
-  const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
+  const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(articuloOriginal.imagenes);
+  const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 

@@ -15,7 +15,7 @@ import { PromocionService } from '../../services/PromocionService';
 import ModalFlotanteRecomendacionesArticuloMenu from '../../hooks/ModalFlotanteFiltroArticuloMenu';
 import { Imagenes } from '../../types/Productos/Imagenes';
 
-function AgregarStockEntrante() {
+function AgregarPromocion() {
 
   const [fechaDesde, setFechaDesde] = useState(new Date());
   const [fechaHasta, setFechaHasta] = useState(new Date());
@@ -278,7 +278,7 @@ function AgregarStockEntrante() {
           <br />
           <br />
           <div className="input-filtrado">
-            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida.nombre ?? ''} />
+            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida?.nombre ?? ''} />
             {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
           </div>
           <br />
@@ -305,7 +305,7 @@ function AgregarStockEntrante() {
           <br />
           <br />
           <div className="input-filtrado">
-            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida.nombre ?? ''} />
+            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida?.nombre ?? ''} />
             {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
           </div>
           <br />
@@ -324,4 +324,4 @@ function AgregarStockEntrante() {
   )
 }
 
-export default AgregarStockEntrante
+export default AgregarPromocion

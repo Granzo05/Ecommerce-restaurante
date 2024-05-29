@@ -1,21 +1,11 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.controllers.EncryptMD5.Encrypt;
-import main.entities.Domicilio.Domicilio;
-import main.entities.Domicilio.DomicilioDTO;
-import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.CategoriaDTO;
-import main.entities.Ingredientes.Medida;
-import main.entities.Ingredientes.MedidaDTO;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Productos.Promocion;
-import main.entities.Restaurante.Empresa;
-import main.entities.Restaurante.LocalidadDelivery;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Restaurante.SucursalDTO;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +15,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -54,10 +43,20 @@ public class PromocionController {
 
     @PostMapping("/promocion/create/{idSucursal}")
     @Transactional
-    public ResponseEntity<String> crearSucursal(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
+    public ResponseEntity<String> crearPromocion(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
         Optional<Promocion> promocionDB = promocionRepository.findByNameAndIdSucursal(promocionDetails.getNombre(), idSucursal);
 
         if (promocionDB.isEmpty()) {
+            for (ArticuloVenta articuloVenta: promocionDetails.getArticulosVenta()) {
+                articuloVenta.getPromociones().add(promocionDetails);
+            }
+
+            for (ArticuloMenu articuloMenu: promocionDetails.getArticulosMenu()) {
+                articuloMenu.getPromociones().add(promocionDetails);
+            }
+
+            promocionDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+
             promocionRepository.save(promocionDetails);
 
             return ResponseEntity.ok("Promoción cargada con éxito");

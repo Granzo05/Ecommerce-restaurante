@@ -3,9 +3,7 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Productos.Imagenes;
-import main.entities.Productos.Promocion;
 import main.entities.Restaurante.Empresa;
-import main.entities.Restaurante.EmpresaDTO;
 import main.repositories.EmpresaRepository;
 import main.repositories.ImagenesRepository;
 import org.springframework.http.HttpStatus;
@@ -33,8 +31,8 @@ public class EmpresaController {
 
     @CrossOrigin
     @GetMapping("/empresa/login/{email}/{password}")
-    public EmpresaDTO loginEmpresa(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        Optional<EmpresaDTO> empresa = empresaRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+    public Empresa loginEmpresa(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+        Optional<Empresa> empresa = empresaRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
 
         if (empresa.isPresent()) {
             return empresa.get();
@@ -45,11 +43,11 @@ public class EmpresaController {
 
     @CrossOrigin
     @GetMapping("/empresas")
-    public Set<EmpresaDTO> getEmpresas() throws Exception {
-        List<EmpresaDTO> empresas = empresaRepository.findAllDTO();
+    public Set<Empresa> getEmpresas() throws Exception {
+        List<Empresa> empresas = empresaRepository.findAllDTO();
 
-        for (EmpresaDTO empresa : empresas) {
-            empresa.setImagenes(new HashSet<>(imagenesRepository.findByIdEmpresaDTO(empresa.getId())));
+        for (Empresa empresa : empresas) {
+            empresa.setImagenes(new HashSet<>(imagenesRepository.findByIdEmpresa(empresa.getId())));
         }
 
         return new HashSet<>(empresas);
@@ -150,7 +148,7 @@ public class EmpresaController {
 
     @Transactional
     @PutMapping("/empresa/update")
-    public ResponseEntity<String> updateEmpresa(@RequestBody EmpresaDTO empresaDetails) throws Exception {
+    public ResponseEntity<String> updateEmpresa(@RequestBody Empresa empresaDetails) throws Exception {
         Optional<Empresa> empresaDB = empresaRepository.findById(empresaDetails.getId());
 
         if (empresaDB.isPresent()) {

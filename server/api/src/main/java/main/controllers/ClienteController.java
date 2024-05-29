@@ -3,9 +3,7 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
-import main.entities.Cliente.ClienteDTO;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Domicilio.DomicilioDTO;
 import main.repositories.ClienteRepository;
 import main.repositories.DomicilioRepository;
 import main.repositories.LocalidadRepository;
@@ -32,7 +30,7 @@ public class ClienteController {
 
     @Transactional
     @PostMapping("/cliente/create")
-    public ClienteDTO crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
+    public Cliente crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
 
         if (cliente.isEmpty()) {
@@ -45,14 +43,14 @@ public class ClienteController {
 
             clienteDetails = clienteRepository.save(clienteDetails);
 
-            ClienteDTO clienteDTO = new ClienteDTO();
+            Cliente Cliente = new Cliente();
 
-            clienteDTO.setId(clienteDetails.getId());
-            clienteDTO.setNombre(clienteDetails.getNombre());
-            clienteDTO.setTelefono(clienteDetails.getTelefono());
-            clienteDTO.setEmail(clienteDetails.getEmail());
+            Cliente.setId(clienteDetails.getId());
+            Cliente.setNombre(clienteDetails.getNombre());
+            Cliente.setTelefono(clienteDetails.getTelefono());
+            Cliente.setEmail(clienteDetails.getEmail());
 
-            return clienteDTO;
+            return Cliente;
         } else {
             return null;
         }
@@ -60,22 +58,26 @@ public class ClienteController {
 
     @CrossOrigin
     @GetMapping("/cliente/login/{email}/{password}")
-    public ClienteDTO loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        return clienteRepository.findByEmailAndPasswordDTO(email, Encrypt.cifrarPassword(password));
+    public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+        Optional<Cliente> cliente = clienteRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+
+        if(cliente.isPresent()) {
+            return cliente.get();
+        } else return null;
     }
 
     @CrossOrigin
     @GetMapping("/cliente/domicilio/{email}")
-    public Set<DomicilioDTO> getDomicilio(@PathVariable("email") String email) throws Exception {
+    public Set<Domicilio> getDomicilio(@PathVariable("email") String email) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmail(email);
 
         if (cliente.isEmpty()) {
             return null;
         }
 
-        List<DomicilioDTO> domicilios = domicilioRepository.findByIdClienteDTO(cliente.get().getId());
+        List<Domicilio> domicilios = domicilioRepository.findByIdCliente(cliente.get().getId());
 
-        for (DomicilioDTO domicilio : domicilios) {
+        for (Domicilio domicilio : domicilios) {
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
         }
 

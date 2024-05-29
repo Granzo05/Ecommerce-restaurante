@@ -1,10 +1,10 @@
 import React from 'react';
 import { StockEntranteService } from '../../services/StockEntranteService';
 import { toast, Toaster } from 'sonner';
-import { StockEntranteDTO } from '../../types/Stock/StockEntranteDTO';
+import { StockEntrante } from '../../types/Stock/StockEntrante';
 
 interface ActivarStockProps {
-  stockEntrante: StockEntranteDTO;
+  stockEntrante: StockEntrante;
   onCloseModal: () => void;
 
 }
@@ -17,7 +17,7 @@ const ActivarStockEntrante: React.FC<ActivarStockProps> = ({ stockEntrante, onCl
       success: (message) => {
         setTimeout(() => {
           onCloseModal();
-        }, 800);        return message;
+        }, 800); return message;
       },
       error: (message) => {
         return message;

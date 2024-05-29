@@ -27,8 +27,8 @@ public class Ingrediente {
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "medidas_sucursales",
-            joinColumns = @JoinColumn(name = "id_medida"),
+            name = "ingredientes_sucursales",
+            joinColumns = @JoinColumn(name = "id_ingrediente"),
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();

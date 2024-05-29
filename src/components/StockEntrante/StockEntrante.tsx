@@ -6,13 +6,13 @@ import { StockEntranteService } from "../../services/StockEntranteService";
 import AgregarStockEntrante from "./AgregarStockEntrante";
 import ActivarStockEntrante from "./ActivarStockEntrante";
 import EliminarStockEntrante from "./EliminarStockEntrante";
-import { StockEntranteDTO } from "../../types/Stock/StockEntranteDTO";
 import ModalFlotante from "../ModalFlotante";
 import DetallesStock from "./DetallesStock";
 import { DetalleStock } from "../../types/Stock/DetalleStock";
+import { StockEntrante } from "../../types/Stock/StockEntrante";
 
 const StocksEntrantes = () => {
-    const [stockEntrante, setStockEntrante] = useState<StockEntranteDTO[]>([]);
+    const [stockEntrante, setStockEntrante] = useState<StockEntrante[]>([]);
     const [mostrarStocks, setMostrarStocks] = useState(true);
 
     const [showAgregarStockModal, setShowAgregarStockModal] = useState(false);
@@ -21,12 +21,12 @@ const StocksEntrantes = () => {
     const [showActivarStockModal, setShowActivarStockModal] = useState(false);
     const [showDetallesStock, setShowDetallesStock] = useState(false);
 
-    const [selectedStock, setSelectedStock] = useState<StockEntranteDTO>(new StockEntranteDTO());
+    const [selectedStock, setSelectedStock] = useState<StockEntrante>(new StockEntrante());
     const [selectedDetalles, setSelectedDetalles] = useState<DetalleStock[]>([]);
 
     const formatDate = (date: Date) => {
         const dia = date.getDate() + 1;
-        const mes = date.getMonth() + 1; 
+        const mes = date.getMonth() + 1;
         const año = date.getFullYear();
 
         const diaFormateado = dia < 10 ? `0${dia}` : dia;
@@ -59,7 +59,7 @@ const StocksEntrantes = () => {
         setMostrarStocks(false);
     };
 
-    const handleEditarStock = (stock: StockEntranteDTO) => {
+    const handleEditarStock = (stock: StockEntrante) => {
         setSelectedStock(stock);
         setShowAgregarStockModal(false);
         setShowEditarStockModal(true);
@@ -69,7 +69,7 @@ const StocksEntrantes = () => {
         setMostrarStocks(false);
     };
 
-    const handleEliminarStock = (stock: StockEntranteDTO) => {
+    const handleEliminarStock = (stock: StockEntrante) => {
         setSelectedStock(stock);
         setShowAgregarStockModal(false);
         setShowEditarStockModal(false);
@@ -79,7 +79,7 @@ const StocksEntrantes = () => {
         setMostrarStocks(false);
     };
 
-    const handleActivarStock = (stock: StockEntranteDTO) => {
+    const handleActivarStock = (stock: StockEntrante) => {
         setSelectedStock(stock);
         setShowAgregarStockModal(false);
         setShowEditarStockModal(false);

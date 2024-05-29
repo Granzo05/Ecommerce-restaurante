@@ -3,6 +3,7 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Ingrediente;
 import main.repositories.IngredienteRepository;
+import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,11 @@ import java.util.Set;
 @RestController
 public class IngredienteController {
     private final IngredienteRepository ingredienteRepository;
+    private final SucursalRepository sucursalRepository;
 
-    public IngredienteController(IngredienteRepository ingredienteRepository) {
+    public IngredienteController(IngredienteRepository ingredienteRepository, SucursalRepository sucursalRepository) {
         this.ingredienteRepository = ingredienteRepository;
+        this.sucursalRepository = sucursalRepository;
     }
 
     @GetMapping("/ingredientes/{idSucursal}")
@@ -33,6 +36,7 @@ public class IngredienteController {
         if (ingredienteDB.isEmpty()) {
             Ingrediente ingrediente = new Ingrediente();
             ingrediente.setNombre(ingredienteDetails.getNombre());
+            ingrediente.getSucursales().add(sucursalRepository.findById(idSucursal).get());
 
             ingredienteRepository.save(ingrediente);
 

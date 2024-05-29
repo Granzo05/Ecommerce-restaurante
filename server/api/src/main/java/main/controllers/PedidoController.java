@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.Pedido;
-import main.entities.Pedidos.PedidoDTO;
 import main.repositories.*;
 import main.utility.gmail.Gmail;
 import org.springframework.http.HttpHeaders;
@@ -46,42 +45,24 @@ public class PedidoController {
     }
 
     @GetMapping("/cliente/{id}/pedidos")
-    public Set<PedidoDTO> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
-        List<PedidoDTO> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
-
-        cargarPedidos(pedidos);
+    public Set<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
+        List<Pedido> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
 
         return new HashSet<>(pedidos);
     }
 
-    @GetMapping("/pedidos")
-    public Set<PedidoDTO> getPedidosPorNegocio() {
-        List<PedidoDTO> pedidos = pedidoRepository.findPedidos();
-
-        cargarPedidos(pedidos);
+    @GetMapping("/pedidos/{idSucursal}")
+    public Set<Pedido> getPedidosPorNegocio(@PathVariable("idSucursal") Long idSucursal) {
+        List<Pedido> pedidos = pedidoRepository.findAllByIdSucursal(idSucursal);
 
         return new HashSet<>(pedidos);
     }
 
-    @GetMapping("/pedidos/{estado}")
-    public Set<PedidoDTO> getPedidosPorEstado(@PathVariable("estado") EnumEstadoPedido estado) {
-        List<PedidoDTO> pedidos = pedidoRepository.findPedidosByEstado(estado);
-        for (PedidoDTO pedido : pedidos) {
-            pedido.setCliente(clienteRepository.findByIdDTO(pedido.getIdCliente()));
-
-
-            pedido.setDetallesPedido(new HashSet<>(detallePedidoRepository.findByIdDTO(pedido.getId())));
-        }
+    @GetMapping("/pedidos/{estado}/{idSucursal}")
+    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") EnumEstadoPedido estado, @PathVariable("idSucursal") Long idSucursal) {
+        List<Pedido> pedidos = pedidoRepository.findPedidosByEstadoAndIdSucursal(estado, idSucursal);
 
         return new HashSet<>(pedidos);
-    }
-
-    private void cargarPedidos(List<PedidoDTO> pedidos) {
-        for (PedidoDTO pedido : pedidos) {
-            pedido.setCliente(clienteRepository.findByIdDTO(pedido.getIdCliente()));
-
-            pedido.setDetallesPedido(new HashSet<>(detallePedidoRepository.findByIdDTO(pedido.getId())));
-        }
     }
 
     //Funcion para cargar pdfs

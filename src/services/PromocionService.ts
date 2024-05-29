@@ -109,4 +109,22 @@ export const PromocionService = {
             throw error;
         }
     },
+
+    updatePromocionBorrado: async (promocion: Promocion) => {
+        try {
+            const response = await fetch(URL_API + 'promocion/update/' + sucursalId, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(promocion)
+            })
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 }
