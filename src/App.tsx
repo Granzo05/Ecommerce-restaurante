@@ -23,7 +23,7 @@ function App() {
       setMostrarFooter(true);
     }
 
-    if ( ruta === 'login-negocio') {
+    if ( ruta === '') {
       setMostrarHeader(false);
     } else {
       setMostrarHeader(true);

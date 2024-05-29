@@ -140,6 +140,10 @@ const Pago = () => {
         // Logica para mercadopago
     }
 
+    useEffect(() => {
+        document.title = 'El Buen Sabor - Pago';
+      }, []);
+
     return (
         <>
         <div className="container-pago">

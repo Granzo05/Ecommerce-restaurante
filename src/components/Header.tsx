@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
-import ReorderIcon from '@mui/icons-material/Reorder';
 import { useEffect, useState } from 'react';
 import '../styles/header.css';
 
@@ -77,6 +76,8 @@ const Header = () => {
         return cartItems.reduce((total, item) => total + item.quantity, 0);
     };
 
+    const location = useLocation(); // Obtiene la ruta actual
+
     return (
         <header id="inicio" className="header-all">
             <div className="menu container">
@@ -96,12 +97,16 @@ const Header = () => {
                         <li><a href="#contactos">Contactos</a></li>
                     </ul>
                     <ul>
-                        {getTotalItems() > 0 && (
-                            <span className="cart-item-count" onClick={handleCartClick}>{getTotalItems()}</span>
+                        {location.pathname !== '/pago' && (
+                            <>
+                                {getTotalItems() > 0 && (
+                                    <span className="cart-item-count" onClick={handleCartClick}>{getTotalItems()}</span>
+                                )}
+                                <img className={`menu-icono-all ${isCartOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
+                            </>
                         )}
-                        <img className={`menu-icono-all ${isCartOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
                         <img className={`menu-icono-all ${isAccountOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-cuenta.png" alt="Cuenta" onClick={handleAccountClick} />
-                        {isCartOpen && (
+                        {isCartOpen && location.pathname !== '/pago' && (
                             <div className="cart-dropdown">
                                 <h4>Carrito de compras</h4>
                                 <button className="close-cart" onClick={handleCloseCart}>X<strong>(cerrar)</strong></button>
