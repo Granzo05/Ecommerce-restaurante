@@ -99,8 +99,8 @@ const Header = () => {
                         {getTotalItems() > 0 && (
                             <span className="cart-item-count" onClick={handleCartClick}>{getTotalItems()}</span>
                         )}
-                        <img className="menu-icono-all" src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
-                        <img className="menu-icono-all" src="../src/assets/icons/header-icono-cuenta.png" alt="Cuenta" onClick={handleAccountClick} />
+                        <img className={`menu-icono-all ${isCartOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
+                        <img className={`menu-icono-all ${isAccountOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-cuenta.png" alt="Cuenta" onClick={handleAccountClick} />
                         {isCartOpen && (
                             <div className="cart-dropdown">
                                 <h4>Carrito de compras</h4>

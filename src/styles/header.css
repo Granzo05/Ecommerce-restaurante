@@ -30,3 +30,8 @@
   transition: .3s;
   cursor: pointer;
 }
+
+.cart-icon-open {
+  background-color: #2C2C2C;
+  transition: background-color 0.3s ease; /* Transición para un efecto suave */
+}
