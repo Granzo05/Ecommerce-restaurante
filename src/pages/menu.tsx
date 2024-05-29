@@ -4,12 +4,12 @@ import { MenuService } from '../services/MenuService'
 import ModalFlotante from '../components/ModalFlotante';
 import { DetallesMenu } from '../components/Menus/DetallesMenu';
 import '../styles/menuPorTipo.css'
-import { ArticuloMenuDTO } from '../types/Productos/ArticuloMenuDTO';
+import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 
 function RestaurantesPorComida(this: any) {
   const { tipoComida } = useParams()
 
-  const [menus, setMenus] = useState<ArticuloMenuDTO[]>([]);
+  const [menus, setMenus] = useState<ArticuloMenu[]>([]);
 
   useEffect(() => {
     if (tipoComida) {
