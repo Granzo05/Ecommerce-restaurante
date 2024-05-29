@@ -13,7 +13,7 @@ interface ActivarSucursalProps {
 const ActivarSucursal: React.FC<ActivarSucursalProps> = ({ sucursal, onCloseModal }) => {
   const onConfirm = () => {
     sucursal.borrado = 'NO';
-    toast.promise(SucursalService.updateRestaurant(sucursal), {
+    toast.promise(SucursalService.updateBorrado(sucursal), {
       loading: 'Activando sucursal...',
       success: (message) => {
         setTimeout(() => {

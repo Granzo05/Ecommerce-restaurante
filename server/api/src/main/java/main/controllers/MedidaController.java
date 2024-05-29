@@ -2,7 +2,6 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Medida;
-import main.entities.Ingredientes.MedidaDTO;
 import main.repositories.MedidaRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
@@ -25,8 +24,8 @@ public class MedidaController {
 
 
     @GetMapping("/medidas/{idSucursal}")
-    public Set<MedidaDTO> getMedidas(@PathVariable("idSucursal") Long idSucursal) {
-        return new HashSet<>(medidaRepository.findAllDTOByIdSucursal(idSucursal));
+    public Set<Medida> getMedidas(@PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(medidaRepository.findAllByIdSucursal(idSucursal));
     }
 
     @Transactional

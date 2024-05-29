@@ -30,7 +30,7 @@ public class Cliente {
     private String nombre;
     @Column(name = "email")
     private String email;
-    @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"})
+    @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"}, allowSetters = true)
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Domicilio> domicilios = new HashSet<>();
     @Column(name = "telefono")
@@ -49,7 +49,7 @@ public class Cliente {
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"cliente"})
+    @JsonIgnoreProperties(value = {"cliente"}, allowSetters = true)
     @OneToMany(mappedBy = "cliente")
     private Set<Pedido> pedidos = new HashSet<>();
 }

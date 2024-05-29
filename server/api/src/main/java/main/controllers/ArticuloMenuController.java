@@ -3,10 +3,7 @@ package main.controllers;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
-import main.entities.Ingredientes.IngredienteMenuDTO;
 import main.entities.Productos.ArticuloMenu;
-import main.entities.Productos.ArticuloMenuDTO;
-import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
@@ -32,24 +29,26 @@ public class ArticuloMenuController {
     private final ImagenesRepository imagenesRepository;
     private final SucursalRepository sucursalRepository;
     private final CategoriaRepository categoriaRepository;
+    private final SubcategoriaRepository subcategoriaRepository;
 
 
-    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository, CategoriaRepository categoriaRepository) {
+    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository, CategoriaRepository categoriaRepository, SubcategoriaRepository subcategoriaRepository) {
         this.articuloMenuRepository = articuloMenuRepository;
         this.ingredienteMenuRepository = ingredienteMenuRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.imagenesRepository = imagenesRepository;
         this.sucursalRepository = sucursalRepository;
         this.categoriaRepository = categoriaRepository;
+        this.subcategoriaRepository = subcategoriaRepository;
     }
 
     // Busca por id de menu
     @GetMapping("/menus/{idSucursal}")
-    public Set<ArticuloMenuDTO> getMenusDisponibles(@PathVariable("idSucursal") Long idSucursal) {
-        List<ArticuloMenuDTO> menus = articuloMenuRepository.findAllBySucursal(idSucursal);
+    public Set<ArticuloMenu> getMenusDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloMenu> menus = articuloMenuRepository.findAllBySucursal(idSucursal);
 
-        for (ArticuloMenuDTO menu : menus) {
-            menu.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdMenuDTO(menu.getId())));
+        for (ArticuloMenu menu : menus) {
+            menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
             menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
         }
 
@@ -61,43 +60,52 @@ public class ArticuloMenuController {
     public ResponseEntity<String> crearMenu(@RequestBody ArticuloMenu articuloMenu, @PathVariable("idSucursal") Long idSucursal) {
         Optional<ArticuloMenu> menuDB = articuloMenuRepository.findByName(articuloMenu.getNombre());
         if (menuDB.isEmpty()) {
-            Set<IngredienteMenu> ingredientes = new HashSet<>();
+            try {
+                Set<IngredienteMenu> ingredientes = new HashSet<>();
 
-            for (IngredienteMenu ingredienteMenu : articuloMenu.getIngredientesMenu()) {
-                Ingrediente ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteMenu.getIngrediente().getNombre(), idSucursal).get();
-                IngredienteMenu ingredienteMenu1 = new IngredienteMenu();
+                for (IngredienteMenu ingredienteMenu : articuloMenu.getIngredientesMenu()) {
+                    Ingrediente ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteMenu.getIngrediente().getNombre(), idSucursal).get();
+                    IngredienteMenu ingredienteMenu1 = new IngredienteMenu();
 
-                ingredienteMenu1.setIngrediente(ingredienteDB);
-                ingredienteMenu1.setCantidad(ingredienteMenu.getCantidad());
-                ingredienteMenu1.setArticuloMenu(articuloMenu);
-                ingredienteMenu1.setMedida(ingredienteMenu.getMedida());
+                    ingredienteMenu1.setIngrediente(ingredienteDB);
+                    ingredienteMenu1.setCantidad(ingredienteMenu.getCantidad());
+                    ingredienteMenu1.setArticuloMenu(articuloMenu);
+                    ingredienteMenu1.setMedida(ingredienteMenu.getMedida());
 
-                ingredientes.add(ingredienteMenu1);
-            }
-            articuloMenu.getIngredientesMenu().clear();
-            articuloMenu.setIngredientesMenu(ingredientes);
-
-            articuloMenu.setBorrado("NO");
-
-            // Si la sucursal coincide con los privilegios del admin o de la empresa que agregue todas las sucursales al menu
-            if (idSucursal == 0) {
-                List<Sucursal> sucursales = sucursalRepository.findAll();
-                for (Sucursal sucursal : sucursales) {
-                    sucursal.getArticulosMenu().add(articuloMenu);
+                    ingredientes.add(ingredienteMenu1);
                 }
-            } else {
-                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
-                if (sucursalOpt.isPresent()) {
-                    Sucursal sucursal = sucursalOpt.get();
-                    sucursal.getArticulosMenu().add(articuloMenu);
+                articuloMenu.getIngredientesMenu().clear();
+                articuloMenu.setIngredientesMenu(ingredientes);
+
+                articuloMenu.setBorrado("NO");
+
+                // Si la sucursal coincide con los privilegios del admin o de la empresa que agregue todas las sucursales al menu
+                if (idSucursal == 0) {
+                    List<Sucursal> sucursales = sucursalRepository.findAll();
+                    for (Sucursal sucursal : sucursales) {
+                        sucursal.getArticulosMenu().add(articuloMenu);
+                    }
                 } else {
-                    return ResponseEntity.badRequest().body("Sucursal no encontrada");
+                    Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                    if (sucursalOpt.isPresent()) {
+                        Sucursal sucursal = sucursalOpt.get();
+                        sucursal.getArticulosMenu().add(articuloMenu);
+                    } else {
+                        return ResponseEntity.badRequest().body("Sucursal no encontrada");
+                    }
                 }
+
+                articuloMenu.setCategoria(categoriaRepository.findById(articuloMenu.getCategoria().getId()).get());
+                articuloMenu.setSubcategoria(subcategoriaRepository.findById(articuloMenu.getSubcategoria().getId()).get());
+
+                articuloMenuRepository.save(articuloMenu);
+
+                return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.OK);
+            } catch (Exception e ) {
+                return ResponseEntity.badRequest().body("Hubo un error al cargar el menú");
+
             }
 
-            articuloMenuRepository.save(articuloMenu);
-
-            return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.OK);
 
         } else {
             return ResponseEntity.badRequest().body("Hay un menú existente con ese nombre");
@@ -180,17 +188,18 @@ public class ArticuloMenuController {
     }
 
     @GetMapping("/menu/tipo/{categoria}/{idSucursal}")
-    public Set<ArticuloMenuDTO> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
+    public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
 
         if (categoriaDB.isPresent()) {
-            Set<ArticuloMenuDTO> articuloMenus = (new HashSet<>(articuloMenuRepository.findByCategoriaAndIdSucursal(categoriaDB.get(), idSucursal)));
+            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByCategoriaAndIdSucursal(categoriaDB.get(), idSucursal);
 
-            for (ArticuloMenuDTO articuloMenu : articuloMenus) {
-                articuloMenu.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdMenuDTO(articuloMenu.getId())));
-                articuloMenu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(articuloMenu.getId())));
+            for (ArticuloMenu menu : articuloMenus) {
+                menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
+                menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
             }
-            return articuloMenus;
+
+            return new HashSet<>(articuloMenus);
         }
 
         return null;
@@ -198,7 +207,7 @@ public class ArticuloMenuController {
 
     @Transactional
     @PutMapping("/menu/update/{idSucursal}")
-    public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenuDTO articuloMenuDetail, @PathVariable("idSucursal") Long id) {
+    public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenu articuloMenuDetail, @PathVariable("idSucursal") Long id) {
         Optional<ArticuloMenu> menuEncontrado = articuloMenuRepository.findByIdMenuAndIdSucursal(articuloMenuDetail.getId(), id);
 
         if (menuEncontrado.isEmpty()) {
@@ -218,27 +227,14 @@ public class ArticuloMenuController {
 
             articuloMenu.setPrecioVenta(articuloMenuDetail.getPrecioVenta());
 
-
-            for (IngredienteMenuDTO ingredienteMenuDTO : articuloMenuDetail.getIngredientesMenu()) {
+            for (IngredienteMenu ingredienteMenuDTO : articuloMenuDetail.getIngredientesMenu()) {
                 IngredienteMenu ingredienteMenu = new IngredienteMenu();
                 ingredienteMenu.setArticuloMenu(articuloMenu);
                 ingredienteMenu.setMedida(ingredienteMenuDTO.getMedida());
                 ingredienteMenu.setCantidad(ingredienteMenuDTO.getCantidad());
-                ingredienteMenu.setIngrediente(ingredienteRepository.findByNameAndIdSucursal(ingredienteMenuDTO.getIngredienteNombre(), id).get());
+                ingredienteMenu.setIngrediente(ingredienteRepository.findByNameAndIdSucursal(ingredienteMenuDTO.getIngrediente().getNombre(), id).get());
 
                 articuloMenu.getIngredientesMenu().add(ingredienteMenu);
-            }
-
-            for (IngredienteMenu ingredienteMenu : articuloMenuDetail.getIngredientes()) {
-                Ingrediente ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteMenu.getIngrediente().getNombre(), id).get();
-                IngredienteMenu ingredienteMenu1 = new IngredienteMenu();
-
-                ingredienteMenu1.setIngrediente(ingredienteDB);
-                ingredienteMenu1.setCantidad(ingredienteMenu.getCantidad());
-                ingredienteMenu1.setArticuloMenu(articuloMenu);
-                ingredienteMenu1.setMedida(ingredienteMenu.getMedida());
-
-                articuloMenu.getIngredientesMenu().add(ingredienteMenu1);
             }
 
             articuloMenu.setTiempoCoccion(articuloMenuDetail.getTiempoCoccion());

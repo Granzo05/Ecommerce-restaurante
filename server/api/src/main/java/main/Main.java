@@ -108,7 +108,7 @@ public class Main {
                 domicilio.setNumero(774);
                 domicilio.setCalle(Encrypt.encriptarString("San martin"));
                 domicilio.setCodigoPostal(4441);
-                Optional<Localidad> localidad = localidadRepository.findById(5906l);
+                Optional<Localidad> localidad = localidadRepository.findByName("GODOY CRUZ");
                 domicilio.setLocalidad(localidad.get());
                 domicilio.setSucursal(sucursal);
 

@@ -23,30 +23,28 @@ public class ArticuloVenta extends Articulo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @JsonIgnoreProperties(value = {"subcategorias", "sucursales"})
+    @JsonIgnoreProperties(value = {"subcategorias", "sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
-    @JsonIgnoreProperties(value = {"categoria", "sucursales"})
+    @JsonIgnoreProperties(value = {"categoria", "sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_subcategoria")
     private Subcategoria subcategoria;
     @Column(name = "nombre")
     private String nombre;
-    @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY)
-    private Set<Promocion> promociones = new HashSet<>();
-    @JsonIgnoreProperties(value = {"sucursales"})
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
     @Column(name = "cantidad_medida")
     private int cantidadMedida;
-    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal"})
+    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
     @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
     @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY)
     private Set<Sucursal> sucursales = new HashSet<>();
 }

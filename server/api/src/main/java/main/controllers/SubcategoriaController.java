@@ -2,7 +2,6 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Subcategoria;
-import main.entities.Ingredientes.SubcategoriaDTO;
 import main.repositories.SubcategoriaRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
@@ -24,13 +23,13 @@ public class SubcategoriaController {
     }
 
     @GetMapping("/subcategorias/{idSucursal}")
-    public Set<SubcategoriaDTO> getCategorias(@PathVariable("idSucursal") Long idSucursal) {
-        return new HashSet<>(subcategoriaRepository.findAllDTOByIdSucursal(idSucursal));
+    public Set<Subcategoria> getCategorias(@PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(subcategoriaRepository.findAllByIdSucursal(idSucursal));
     }
 
     @GetMapping("categoria/{idCategoria}/subcategorias/{idSucursal}")
-    public Set<SubcategoriaDTO> getCategoriasByCategoriaId(@PathVariable("idCategoria") Long idCategoria, @PathVariable("idSucursal") Long idSucursal) {
-        return new HashSet<>(subcategoriaRepository.findAllDTOByIdCategoriaAndIdSucursal(idCategoria, idSucursal));
+    public Set<Subcategoria> getCategoriasByCategoriaId(@PathVariable("idCategoria") Long idCategoria, @PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(subcategoriaRepository.findAllByIdCategoriaAndIdSucursal(idCategoria, idSucursal));
     }
 
     @Transactional

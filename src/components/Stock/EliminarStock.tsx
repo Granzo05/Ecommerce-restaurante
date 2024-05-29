@@ -1,22 +1,22 @@
 import React from 'react';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
-import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
-import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 import { toast, Toaster } from 'sonner';
 import '../../styles/modalFlotante.css'
+import { StockIngredientes } from '../../types/Stock/StockIngredientes';
+import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 
 interface EliminarStockProps {
-  stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
+  stockOriginal: StockArticuloVenta | StockIngredientes;
   onCloseModal: () => void;
-
+  tipo: string;
 }
 
 
 
-const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal, onCloseModal }) => {
+const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal, onCloseModal, tipo }) => {
   const onConfirm = () => {
-    if (stockOriginal.tipo === 'ingrediente') {
+    if (tipo === 'ingrediente') {
       stockOriginal.borrado = 'SI';
       toast.promise(StockIngredientesService.updateStock(stockOriginal), {
         loading: 'Eliminando stock del ingrediente...',

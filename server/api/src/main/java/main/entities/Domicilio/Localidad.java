@@ -17,7 +17,7 @@ public class Localidad {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @JsonIgnoreProperties({"localidades"})
+    @JsonIgnoreProperties(value = {"localidades"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_departamento")
     private Departamento departamento;

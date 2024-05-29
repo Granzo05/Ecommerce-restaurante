@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ImagenesProductoDTO } from '../../types/Productos/ImagenesProductoDTO';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import { Empresa } from '../../types/Restaurante/Empresa';
@@ -10,8 +9,8 @@ interface EditarMenuProps {
 }
 
 const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
-  const [imagenesMuestra, setImagenesMuestra] = useState<ImagenesProductoDTO[]>(empresaOriginal.imagenesDTO);
-  const [imagenesEliminadas, setImagenesEliminadas] = useState<ImagenesProductoDTO[]>([]);
+  const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(empresaOriginal.imagenes);
+  const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>(empresaOriginal.imagenes);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
@@ -75,7 +74,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
 
     empresa.borrado = 'NO';
 
-    toast.promise(EmpresaService.createEmpresa(empresa), {
+    toast.promise(EmpresaService.updateEmpresa(empresa, imagenes, imagenesEliminadas), {
       loading: 'Editando empresa...',
       success: (message) => {
         return message;

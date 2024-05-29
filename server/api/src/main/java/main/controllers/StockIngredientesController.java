@@ -4,9 +4,8 @@ import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockDTO;
+import main.entities.Stock.Stock;
 import main.entities.Stock.StockIngredientes;
-import main.entities.Stock.StockIngredientesDTO;
 import main.repositories.ArticuloMenuRepository;
 import main.repositories.IngredienteRepository;
 import main.repositories.StockIngredientesRepository;
@@ -35,7 +34,7 @@ public class StockIngredientesController {
     }
 
     @GetMapping("/stockIngredientes/{idSucursal}")
-    public Set<StockIngredientesDTO> getStock(@PathVariable("idSucursal") long id) {
+    public Set<StockIngredientes> getStock(@PathVariable("idSucursal") long id) {
         return new HashSet<>(stockIngredientesRepository.findAllByIdSucursal(id));
     }
 
@@ -147,7 +146,7 @@ public class StockIngredientesController {
     }
 
     @PutMapping("sucursal/{idSucursal}/stockIngrediente/update")
-    public ResponseEntity<String> actualizarStock(@RequestBody StockDTO stockIngredientes, @PathVariable("idSucursal") long id) {
+    public ResponseEntity<String> actualizarStock(@RequestBody Stock stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
         Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
         if (stockEncontrado.isPresent()) {

@@ -21,7 +21,7 @@ public class DetalleStock {
     private Long id;
     @Column(name = "cantidad")
     private int cantidad;
-    @JsonIgnoreProperties(value = {"sucursales", "detalleStock"})
+    @JsonIgnoreProperties(value = {"sucursales", "detalleStock"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
@@ -30,15 +30,15 @@ public class DetalleStock {
     @Column(name = "subtotal")
     private double subTotal;
     @ManyToOne
-    @JsonIgnoreProperties(value = {"stock"})
+    @JsonIgnoreProperties(value = {"stock"}, allowSetters = true)
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
     @ManyToOne
-    @JsonIgnoreProperties(value = {"stock"})
+    @JsonIgnoreProperties(value = {"stock"}, allowSetters = true)
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = {"sucursal"})
+    @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
     @JoinColumn(name = "id_stock_entrante")
     private StockEntrante stockEntrante;
 

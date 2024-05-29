@@ -1,7 +1,6 @@
 package main.repositories;
 
 import main.entities.Restaurante.Empresa;
-import main.entities.Restaurante.EmpresaDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,9 +21,9 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     @Query("SELECT e FROM Empresa e WHERE e.razonSocial = :razonSocial")
     Optional<Empresa> findByRazonSocial(@Param("razonSocial") String razonSocial);
 
-    @Query("SELECT NEW main.entities.Restaurante.EmpresaDTO(e.id, e.cuit, e.razonSocial, e.email, e.borrado) FROM Empresa e WHERE e.email = :email AND e.contraseña = :contraseña")
-    Optional<EmpresaDTO> findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String contraseña);
+    @Query("SELECT e FROM Empresa e WHERE e.email = :email AND e.contraseña = :contraseña")
+    Optional<Empresa> findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String contraseña);
 
-    @Query("SELECT NEW main.entities.Restaurante.EmpresaDTO(e.id, e.cuit, e.razonSocial, e.email, e.borrado) FROM Empresa e")
-    List<EmpresaDTO> findAllDTO();
+    @Query("SELECT e FROM Empresa e")
+    List<Empresa> findAllDTO();
 }

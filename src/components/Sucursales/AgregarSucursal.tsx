@@ -13,6 +13,7 @@ import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotante
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
 import { DepartamentoService } from '../../services/DepartamentoService';
 import { Departamento } from '../../types/Domicilio/Departamento';
+import { Imagenes } from '../../types/Productos/Imagenes';
 
 function AgregarSucursal() {
   // Atributos necesarios para Sucursal
@@ -66,6 +67,33 @@ function AgregarSucursal() {
     setModalBusquedaLocalidad(false)
     setModalBusquedaDepartamento(false)
     setModalBusquedaProvincia(false)
+  };
+
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
+  const [selectIndex, setSelectIndex] = useState<number>(0);
+
+  const handleImagen = (index: number, file: File | null) => {
+    if (file) {
+      const newImagenes = [...imagenes];
+      newImagenes[index] = { ...newImagenes[index], file };
+      setImagenes(newImagenes);
+    }
+  };
+
+  const añadirCampoImagen = () => {
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagenes]);
+  };
+
+  const quitarCampoImagen = () => {
+    if (imagenes.length > 0) {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+
+      if (selectIndex > 0) {
+        setSelectIndex(prevIndex => prevIndex - 1);
+      }
+    }
   };
 
   const handleDepartamentosCheckboxChange = async (departamentoId: number) => {
@@ -173,7 +201,7 @@ function AgregarSucursal() {
 
     sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
     sucursal.borrado = 'NO';
-    toast.promise(SucursalService.createRestaurant(sucursal), {
+    toast.promise(SucursalService.createSucursal(sucursal, imagenes), {
       loading: 'Guardando sucursal...',
       success: (message) => {
         clearInputs();
@@ -190,6 +218,22 @@ function AgregarSucursal() {
       <h2>Agregar sucursal</h2>
       <Toaster />
       <form>
+        <div >
+          {imagenes.map((imagen, index) => (
+            <div key={index} className='inputBox'>
+              <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+              <input
+                type="file"
+                accept="image/*"
+                maxLength={10048576}
+                onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+              />
+
+            </div>
+          ))}
+
+        </div>
+        <button onClick={añadirCampoImagen}>Añadir imagen</button>
         <div className="inputBox">
           <input autoComplete='false' type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
           <span>Correo electrónico</span>

@@ -1,7 +1,6 @@
 package main.repositories;
 
 import main.entities.Ingredientes.IngredienteMenu;
-import main.entities.Ingredientes.IngredienteMenuDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +19,7 @@ public interface IngredienteMenuRepository extends JpaRepository<IngredienteMenu
     @Query("DELETE FROM IngredienteMenu i WHERE i.articuloMenu.id = :id")
     void deleteAllByIdArticuloMenu(@Param("id") Long id);
 
-    @Query("SELECT NEW main.entities.Ingredientes.IngredienteMenuDTO(i.id, i.cantidad, i.medida, i.ingrediente.nombre) FROM IngredienteMenu i WHERE i.articuloMenu.id = :id")
-    List<IngredienteMenuDTO> findByMenuId(@Param("id") Long id);
+    @Query("SELECT i FROM IngredienteMenu i WHERE i.articuloMenu.id = :id")
+    List<IngredienteMenu> findByMenuId(@Param("id") Long id);
 
 }

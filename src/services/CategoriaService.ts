@@ -111,4 +111,26 @@ export const CategoriaService = {
             throw error;
         }
     },
+
+    updateCategoriaBorrado: async (categoria: Categoria): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + 'categoria/update/' + sucursalId, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(categoria)
+            })
+
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 }

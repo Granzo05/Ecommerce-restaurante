@@ -31,7 +31,7 @@ public class Factura {
     public LocalDateTime fechaFacturacion;
     @Column(name = "total")
     private double total;
-    @JsonIgnoreProperties(value = {"factura"})
+    @JsonIgnoreProperties(value = {"factura"}, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido")
     private Pedido pedido;

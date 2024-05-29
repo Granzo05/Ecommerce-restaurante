@@ -65,7 +65,7 @@ function AgregarEmpresa() {
 
     empresa.borrado = 'NO';
 
-    toast.promise(EmpresaService.createEmpresa(empresa), {
+    toast.promise(EmpresaService.createEmpresa(empresa, imagenes), {
       loading: 'Creando empresa...',
       success: (message) => {
         clearInputs();

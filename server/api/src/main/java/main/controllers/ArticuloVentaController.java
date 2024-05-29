@@ -2,9 +2,7 @@ package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
 import main.entities.Productos.ArticuloVenta;
-import main.entities.Productos.ArticuloVentaDTO;
 import main.entities.Productos.Imagenes;
-import main.entities.Productos.Promocion;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 import main.repositories.*;
@@ -40,11 +38,11 @@ public class ArticuloVentaController {
     }
 
     @GetMapping("/articulos/{idSucursal}")
-    public Set<ArticuloVentaDTO> getArticulosDisponibles(@PathVariable("idSucursal") Long idSucursal) {
-        List<ArticuloVentaDTO> articulos = articuloVentaRepository.findAllBySucursal(idSucursal);
+    public Set<ArticuloVenta> getArticulosDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloVenta> articulos = articuloVentaRepository.findAllBySucursal(idSucursal);
 
-        for (ArticuloVentaDTO articulo : articulos) {
-            articulo.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdArticuloDTO(articulo.getId())));
+        for (ArticuloVenta articulo : articulos) {
+            articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));
         }
 
         return new HashSet<>(articulos);
@@ -156,14 +154,14 @@ public class ArticuloVentaController {
     }
 
     @GetMapping("/articulo/tipo/{tipoArticulo}/{idSucursal}")
-    public Set<ArticuloVentaDTO> getArticulosPorTipo(@PathVariable("tipoArticulo") String categoria, @PathVariable("idSucursal") Long id) {
+    public Set<ArticuloVenta> getArticulosPorTipo(@PathVariable("tipoArticulo") String categoria, @PathVariable("idSucursal") Long id) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, id);
 
         if (categoriaDB.isPresent()) {
-            Set<ArticuloVentaDTO> articuloVentas = (new HashSet<>(articuloVentaRepository.findByCategoriaNameAndIdSucursal(categoriaDB.get().getNombre(), id)));
+            Set<ArticuloVenta> articuloVentas = (new HashSet<>(articuloVentaRepository.findByCategoriaNameAndIdSucursal(categoriaDB.get().getNombre(), id)));
 
-            for (ArticuloVentaDTO articuloVenta : articuloVentas) {
-                articuloVenta.setImagenesDTO(new HashSet<>(imagenesRepository.findByIdArticuloDTO(articuloVenta.getId())));
+            for (ArticuloVenta articuloVenta : articuloVentas) {
+                articuloVenta.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articuloVenta.getId())));
             }
             return articuloVentas;
         }
@@ -171,7 +169,7 @@ public class ArticuloVentaController {
     }
 
     @PutMapping("/articulo/update/{idSucursal}")
-    public ResponseEntity<String> actualizarArticulo(@RequestBody ArticuloVentaDTO articuloVentaDetail, @PathVariable("idSucursal") Long id) {
+    public ResponseEntity<String> actualizarArticulo(@RequestBody ArticuloVenta articuloVentaDetail, @PathVariable("idSucursal") Long id) {
         Optional<ArticuloVenta> articuloEncontrado = articuloVentaRepository.findByIdArticuloAndIdSucursal(articuloVentaDetail.getId(), id);
 
         if (articuloEncontrado.isPresent() && articuloEncontrado.get().getBorrado().equals(articuloVentaDetail.getBorrado())) {

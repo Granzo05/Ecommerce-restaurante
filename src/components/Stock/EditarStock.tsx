@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
-import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
-import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 import { toast, Toaster } from 'sonner';
 import '../../styles/modalFlotante.css'
 import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
+import { StockIngredientes } from '../../types/Stock/StockIngredientes';
+import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 
 interface EditarStockProps {
-  stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
+  stockOriginal: StockArticuloVenta | StockIngredientes;
+  tipo: string;
 }
 
-const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
+const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo }) => {
 
   const [cantidadActual, setCantidadActual] = useState(stockOriginal.cantidadActual);
   const [cantidadMinima, setCantidadMinima] = useState(stockOriginal.cantidadMinima);
@@ -51,8 +52,8 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
       return;
     }
 
-    if (stockOriginal.tipo === 'ingrediente') {
-      const stock: StockIngredientesDTO = new StockIngredientesDTO();
+    if (tipo === 'ingrediente') {
+      const stock: StockIngredientes = new StockIngredientes();
 
       if (medida) stock.medida = medida;
       stock.id = stockOriginal.id;
@@ -72,7 +73,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal }) => {
       });
 
     } else {
-      const stock: StockArticuloVentaDTO = new StockArticuloVentaDTO();
+      const stock: StockArticuloVenta = new StockArticuloVenta();
 
       if (medida) stock.medida = medida;
       stock.cantidadActual = cantidadActual;

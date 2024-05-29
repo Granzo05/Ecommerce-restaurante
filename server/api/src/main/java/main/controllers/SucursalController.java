@@ -4,13 +4,9 @@ import jakarta.transaction.Transactional;
 import main.controllers.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Domicilio.DomicilioDTO;
 import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.CategoriaDTO;
 import main.entities.Ingredientes.Medida;
-import main.entities.Ingredientes.MedidaDTO;
 import main.entities.Productos.Imagenes;
-import main.entities.Productos.Promocion;
 import main.entities.Restaurante.*;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
@@ -53,22 +49,24 @@ public class SucursalController {
 
     @CrossOrigin
     @GetMapping("/sucursal/login/{email}/{password}")
-    public SucursalDTO loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        return sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+    public Sucursal loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+        Optional<Sucursal> sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+
+        return sucursal.orElse(null);
     }
 
     @CrossOrigin
-    @GetMapping("/sucursales")
-    public Set<SucursalDTO> getSucursales() throws Exception {
-        List<SucursalDTO> sucursales = sucursalRepository.findAllDTO();
+    @GetMapping("/sucursales/{idEmpresa}")
+    public Set<Sucursal> getSucursales(@PathVariable("idEmpresa") Long idEmpresa) throws Exception {
+        List<Sucursal> sucursales = sucursalRepository.findByIdEmpresa(idEmpresa);
 
-        for (SucursalDTO sucursal : sucursales) {
-            DomicilioDTO domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
+        for (Sucursal sucursal : sucursales) {
+            Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
 
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
 
             sucursal.setDomicilio(domicilio);
-            sucursal.setLocalidadesDisponiblesDelivery(localidadDeliveryRepository.findByIdSucursal(sucursal.getId()));
+            sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
         }
 
         return new HashSet<>(sucursales);
@@ -149,9 +147,9 @@ public class SucursalController {
                 localidad.setSucursal(sucursalDetails);
             }
 
-            HashSet<MedidaDTO> medidas = new HashSet<>(medidaRepository.findAllDTOByIdSucursal(1l));
+            HashSet<Medida> medidas = new HashSet<>(medidaRepository.findAllByIdSucursal(1l));
 
-            for (MedidaDTO medidaDTO : medidas) {
+            for (Medida medidaDTO : medidas) {
                 Medida medida = new Medida();
                 medida.setNombre(medidaDTO.getNombre());
                 medida.getSucursales().add(sucursalDetails);
@@ -160,9 +158,9 @@ public class SucursalController {
                 sucursalDetails.getMedidas().add(medida);
             }
 
-            HashSet<CategoriaDTO> categorias = new HashSet<>(categoriaRepository.findAllDTOByIdSucursal(1l));
+            HashSet<Categoria> categorias = new HashSet<>(categoriaRepository.findAllByIdSucursal(1l));
 
-            for (CategoriaDTO categoriaDTO : categorias) {
+            for (Categoria categoriaDTO : categorias) {
                 Categoria categoria = new Categoria();
                 categoria.setNombre(categoriaDTO.getNombre());
                 categoria.getSucursales().add(sucursalDetails);

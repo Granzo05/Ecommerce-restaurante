@@ -6,9 +6,7 @@ import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.DetalleStock;
-import main.entities.Stock.DetalleStockDTO;
 import main.entities.Stock.StockEntrante;
-import main.entities.Stock.StockEntranteDTO;
 import main.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +34,14 @@ public class StockEntranteController {
     }
 
     @GetMapping("/stockEntrante/{idSucursal}")
-    public Set<StockEntranteDTO> getStock(@PathVariable("idSucursal") long id) {
-        List<StockEntranteDTO> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
+    public Set<StockEntrante> getStock(@PathVariable("idSucursal") long id) {
+        List<StockEntrante> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
 
-        for (StockEntranteDTO stock : stocksEntrantes) {
-            for (DetalleStockDTO detalleStockDTO : detalleStockRepository.findIngredienteByIdStock(stock.getId())) {
+        for (StockEntrante stock : stocksEntrantes) {
+            for (DetalleStock detalleStockDTO : detalleStockRepository.findIngredienteByIdStock(stock.getId())) {
                 stock.getDetallesStock().add(detalleStockDTO);
             }
-            for (DetalleStockDTO detalleStockDTO : detalleStockRepository.findArticuloByIdStock(stock.getId())) {
+            for (DetalleStock detalleStockDTO : detalleStockRepository.findArticuloByIdStock(stock.getId())) {
                 stock.getDetallesStock().add(detalleStockDTO);
             }
         }
@@ -76,8 +74,9 @@ public class StockEntranteController {
             nuevoDetalle.setCostoUnitario(detalle.getCostoUnitario());
             nuevoDetalle.setSubTotal(detalle.getSubTotal());
             Medida medida = medidaRepository.findById(detalle.getMedida().getId()).get();
-            ;
+
             nuevoDetalle.setMedida(medida);
+
             // Asignar la entidad correcta de ArticuloVenta o Ingrediente
             if (detalle.getArticuloVenta() != null && detalle.getArticuloVenta().getNombre().length() > 2) {
                 ArticuloVenta articulo = articuloVentaRepository.findByName(detalle.getArticuloVenta().getNombre()).get();

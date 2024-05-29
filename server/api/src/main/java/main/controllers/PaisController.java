@@ -1,10 +1,10 @@
 package main.controllers;
 
 import main.controllers.EncryptMD5.Encrypt;
-import main.entities.Domicilio.DepartamentoDTO;
-import main.entities.Domicilio.DomicilioDTO;
-import main.entities.Domicilio.LocalidadDTO;
-import main.entities.Domicilio.ProvinciaDTO;
+import main.entities.Domicilio.Departamento;
+import main.entities.Domicilio.Domicilio;
+import main.entities.Domicilio.Localidad;
+import main.entities.Domicilio.Provincia;
 import main.repositories.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,59 +35,59 @@ public class PaisController {
 
     @CrossOrigin
     @GetMapping("/provincias")
-    public Set<ProvinciaDTO> getProvincias() throws Exception {
-        List<ProvinciaDTO> provincias = provinciaRepository.findAllDTO();
+    public Set<Provincia> getProvincias() throws Exception {
+        List<Provincia> provincias = provinciaRepository.findAll();
 
         return new HashSet<>(provincias);
     }
 
     @CrossOrigin
     @GetMapping("/localidades")
-    public Set<LocalidadDTO> getLocalidades() throws Exception {
-        List<LocalidadDTO> localidades = localidadRepository.findAllDTO();
+    public Set<Localidad> getLocalidades() throws Exception {
+        List<Localidad> localidades = localidadRepository.findAll();
 
         return new HashSet<>(localidades);
     }
 
     @CrossOrigin
     @GetMapping("/localidades/{nombreDepartamento}/{nombreProvincia}")
-    public Set<LocalidadDTO> getLocalidadesByNombreDepartamentoAndProvincia(@PathVariable("nombreDepartamento") String nombreDepartamento, @PathVariable("nombreProvincia") String nombreProvincia) throws Exception {
-        List<LocalidadDTO> localidades = localidadRepository.findByNombreDepartamentoAndProvincia(nombreDepartamento, nombreProvincia);
+    public Set<Localidad> getLocalidadesByNombreDepartamentoAndProvincia(@PathVariable("nombreDepartamento") String nombreDepartamento, @PathVariable("nombreProvincia") String nombreProvincia) throws Exception {
+        List<Localidad> localidades = localidadRepository.findByNombreDepartamentoAndProvincia(nombreDepartamento, nombreProvincia);
 
         return new HashSet<>(localidades);
     }
 
     @CrossOrigin
     @GetMapping("/localidades/departamento/{nombreDepartamento}")
-    public Set<LocalidadDTO> getLocalidadesByNombreDepartamento(@PathVariable("nombreDepartamento") String nombreDepartamento) throws Exception {
-        List<LocalidadDTO> localidades = localidadRepository.findByNombreDepartamento(nombreDepartamento);
+    public Set<Localidad> getLocalidadesByNombreDepartamento(@PathVariable("nombreDepartamento") String nombreDepartamento) throws Exception {
+        List<Localidad> localidades = localidadRepository.findByNombreDepartamento(nombreDepartamento);
 
         return new HashSet<>(localidades);
     }
 
     @CrossOrigin
     @GetMapping("/localidades/provincia/{nombreProvincia}")
-    public Set<LocalidadDTO> getLocalidadesByNombreProvincia(@PathVariable("nombreProvincia") String nombreProvincia) throws Exception {
-        List<LocalidadDTO> localidades = localidadRepository.findByNombreProvincia(nombreProvincia);
+    public Set<Localidad> getLocalidadesByNombreProvincia(@PathVariable("nombreProvincia") String nombreProvincia) throws Exception {
+        List<Localidad> localidades = localidadRepository.findByNombreProvincia(nombreProvincia);
 
         return new HashSet<>(localidades);
     }
 
     @CrossOrigin
     @GetMapping("/departamentos/{nombreProvincia}")
-    public Set<DepartamentoDTO> getDepartamentosByNombreProvincia(@PathVariable("nombreProvincia") String nombre) throws Exception {
-        List<DepartamentoDTO> departamentos = departamentoRepository.findByNombreProvincia(nombre);
+    public Set<Departamento> getDepartamentosByNombreProvincia(@PathVariable("nombreProvincia") String nombre) throws Exception {
+        List<Departamento> departamentos = departamentoRepository.findByNombreProvincia(nombre);
 
         return new HashSet<>(departamentos);
     }
 
     @CrossOrigin
     @GetMapping("/domicilios/{empleadoId}")
-    public Set<DomicilioDTO> getDomiciliosByEmpleadoId(@PathVariable("empleadoId") Long id) throws Exception {
-        List<DomicilioDTO> domicilios = domicilioRepository.findByIdEmpleadoDTO(id);
+    public Set<Domicilio> getDomiciliosByEmpleadoId(@PathVariable("empleadoId") Long id) throws Exception {
+        List<Domicilio> domicilios = domicilioRepository.findByIdEmpleadoDTO(id);
 
         try {
-            for (DomicilioDTO domicilio : domicilios) {
+            for (Domicilio domicilio : domicilios) {
                 domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
             }
         } catch (IllegalBlockSizeException e) {

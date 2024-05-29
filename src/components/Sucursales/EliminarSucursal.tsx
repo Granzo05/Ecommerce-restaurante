@@ -13,7 +13,7 @@ const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ sucursal, onCloseMo
 
   const onConfirm = () => {
     sucursal.borrado = 'SI';
-    toast.promise(SucursalService.updateRestaurant(sucursal), {
+    toast.promise(SucursalService.updateBorrado(sucursal), {
       loading: 'Eliminando sucursal...',
       success: (message) => {
         setTimeout(() => {

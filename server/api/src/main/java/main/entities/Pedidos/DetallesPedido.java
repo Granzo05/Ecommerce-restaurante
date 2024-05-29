@@ -22,15 +22,15 @@ public class DetallesPedido {
     private int cantidad;
     @Column(name = "subtotal")
     private double subTotal;
-    @JsonIgnoreProperties(value = {"promociones", "sucursales"})
+    @JsonIgnoreProperties(value = {"promociones", "sucursales"}, allowSetters = true)
     @OneToOne
     @JoinColumn(name = "id_menu")
     private ArticuloMenu articuloMenu;
-    @JsonIgnoreProperties(value = {"promociones", "sucursales"})
+    @JsonIgnoreProperties(value = {"promociones", "sucursales"}, allowSetters = true)
     @OneToOne
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
-    @JsonIgnoreProperties(value = {"factura", "cliente", "empleado"})
+    @JsonIgnoreProperties(value = {"factura", "cliente", "empleado"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido")
     private Pedido pedido;

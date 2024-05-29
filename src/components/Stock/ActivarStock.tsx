@@ -1,20 +1,20 @@
 import React from 'react';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
-import { StockArticuloVentaDTO } from '../../types/Stock/StockArticuloVentaDTO';
-import { StockIngredientesDTO } from '../../types/Stock/StockIngredientesDTO';
 import { toast, Toaster } from 'sonner';
+import { StockIngredientes } from '../../types/Stock/StockIngredientes';
+import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 
 interface ActivarStockProps {
-  stockOriginal: StockArticuloVentaDTO | StockIngredientesDTO;
+  stockOriginal: StockArticuloVenta | StockIngredientes;
   onCloseModal: () => void;
-
+  tipo: string;
 }
 
-const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal, onCloseModal }) => {
+const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal, onCloseModal, tipo }) => {
 
   const onConfirm = () => {
-    if (stockOriginal.tipo === 'ingrediente') {
+    if (tipo === 'ingrediente') {
       stockOriginal.borrado = 'NO';
       toast.promise(StockIngredientesService.updateStock(stockOriginal), {
         loading: 'Activando stock del ingrediente...',

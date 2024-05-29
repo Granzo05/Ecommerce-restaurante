@@ -87,6 +87,18 @@ const Promociones = () => {
         buscarPromociones();
     };
 
+    function diasRestantes(dateString: string): number {
+        const hoy = new Date();
+        const fechaLimite = new Date(dateString);
+
+        // Calcula la diferencia en milisegundos
+        const diasTotales = fechaLimite.getTime() - hoy.getTime();
+
+        // Convierte la diferencia en milisegundos a días
+        const segundos = 1000 * 60 * 60 * 24;
+        return Math.ceil(diasTotales / segundos);
+    }
+
     return (
         <div className="opciones-pantallas">
 
@@ -118,7 +130,8 @@ const Promociones = () => {
                     <table>
                         <thead>
                             <tr>
-                                <th>Fecha</th>
+                                <th>Duración</th>
+                                <th>Detalles de Promoción</th>
                                 <th>Costo</th>
                                 <th>Acciones</th>
                             </tr>
@@ -126,32 +139,37 @@ const Promociones = () => {
                         <tbody>
                             {promociones.map(promocion => (
                                 <tr key={promocion.id}>
-                                    <td>{formatDate(new Date(promocion.fechaDesde.toString()))}</td>
-                                    <td>{formatDate(new Date(promocion.fechaHasta.toString()))}</td>
-                                    {promocion.detallesPromocion && promocion.detallesPromocion.map(detalle => (
-                                        <>
-                                            <td>{detalle.articuloMenu.nombre} - {detalle.articuloMenu.cantidad}</td>
-                                            <td>{detalle.articuloVenta.nombre} - {detalle.articuloVenta.cantidad}</td>
-                                        </>
-                                    ))}
-
+                                    <td>
+                                        {formatDate(new Date(promocion.fechaDesde.toString()))} -
+                                        {formatDate(new Date(promocion.fechaHasta.toString()))}
+                                        (Quedan {diasRestantes(promocion.fechaHasta.toString())} días)
+                                    </td>
+                                    <td>
+                                        {promocion.detallesPromocion && promocion.detallesPromocion.map((detalle, index) => (
+                                            <div key={index}>
+                                                {detalle.articuloMenu?.nombre} {detalle.articuloVenta?.nombre} - {detalle?.cantidad}
+                                            </div>
+                                        ))}
+                                    </td>
                                     <td>{promocion.precio}</td>
-
-                                    {promocion.borrado === 'NO' ? (
-                                        <td>
-                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarPromocion(promocion)}>ELIMINAR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
-                                        </td>
-                                    ) : (
-                                        <td>
-                                            <button className="btn-accion-activar" onClick={() => handleActivarPromocion(promocion)}>ACTIVAR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
-                                        </td>
-                                    )}
+                                    <td>
+                                        {promocion.borrado === 'NO' ? (
+                                            <>
+                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarPromocion(promocion)}>ELIMINAR</button>
+                                                <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button className="btn-accion-activar" onClick={() => handleActivarPromocion(promocion)}>ACTIVAR</button>
+                                                <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
+                                            </>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+
                 </div>
             )}
 

@@ -27,13 +27,13 @@ public abstract class Stock implements Serializable {
     private int cantidadMinima;
     @Column(name = "cantidad_maxima")
     private int cantidadMaxima;
-    @JsonIgnoreProperties(value = {"sucursales"})
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"})
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;

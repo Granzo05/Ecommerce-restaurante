@@ -1,10 +1,10 @@
 import React from 'react';
 import { MenuService } from '../../services/MenuService';
 import { toast, Toaster } from 'sonner';
-import { ArticuloMenuDTO } from '../../types/Productos/ArticuloMenuDTO';
+import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 
 interface ActivarMenuProps {
-  menuOriginal: ArticuloMenuDTO;
+  menuOriginal: ArticuloMenu;
   onCloseModal: () => void;
 }
 
@@ -12,7 +12,7 @@ const ActivarMenu: React.FC<ActivarMenuProps> = ({ menuOriginal, onCloseModal })
   const onConfirm = () => {
     menuOriginal.borrado = 'NO';
     toast.promise(MenuService.updateBorradoMenu(menuOriginal), {
-      loading: 'Activando articulo...',
+      loading: 'Activando menú...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();

@@ -12,7 +12,7 @@ const EliminarEmpresa: React.FC<EliminarEmpresaProps> = ({ empresa, onCloseModal
 
   const onConfirm = () => {
     empresa.borrado = 'SI';
-    toast.promise(EmpresaService.updateEmpresa(empresa), {
+    toast.promise(EmpresaService.updateEmpresaBorrado(empresa), {
       loading: 'Eliminando empresa...',
       success: (message) => {
         setTimeout(() => {

@@ -11,7 +11,7 @@ interface ActivarCategoriaProps {
 const ActivarCategoria: React.FC<ActivarCategoriaProps> = ({ categoriaOriginal, onCloseModal }) => {
   const onConfirm = () => {
     categoriaOriginal.borrado = 'NO';
-    toast.promise(CategoriaService.updateCategoria(categoriaOriginal), {
+    toast.promise(CategoriaService.updateCategoriaBorrado(categoriaOriginal), {
       loading: 'Activando Categoria...',
       success: (message) => {
         setTimeout(() => {

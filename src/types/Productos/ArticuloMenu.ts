@@ -11,7 +11,7 @@ export class ArticuloMenu extends Articulo{
     subcategoria: Subcategoria = new Subcategoria();
     comensales: number = 0;
     descripcion: string = '';
-    ingredientesMenu: IngredienteMenu[] | null = [];
+    ingredientesMenu: IngredienteMenu[] = [];
 
     constructor() {
         super();

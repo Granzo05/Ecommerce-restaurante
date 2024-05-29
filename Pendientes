@@ -55,6 +55,7 @@
 [] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
 [] Revisar que los inputs que se muestran con informacion de la db(los editar mas que nada) muestren arriba de cada input de que valor es la info dentro del input (label o algo)
 [] Validar que no se pueda pedir nada fuera del horario de atencion de la sucursal
+[] Modal con checkboxs para elegir sucursales, provincias, etc (Promocion necesita sucursales)
 
 Pruebas
 [x] Carga sucursal [x] Probar validación
