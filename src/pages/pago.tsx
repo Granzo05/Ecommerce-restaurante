@@ -141,7 +141,7 @@ const Pago = () => {
     }
 
     useEffect(() => {
-        document.title = 'El Buen Sabor - Pago';
+        document.title = 'Detalle del pedido y pago';
       }, []);
 
     return (
