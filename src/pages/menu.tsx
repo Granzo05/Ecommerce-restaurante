@@ -62,7 +62,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
@@ -119,7 +119,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
@@ -176,7 +176,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
@@ -233,7 +233,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
@@ -290,7 +290,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
@@ -347,7 +347,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
@@ -404,7 +404,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
@@ -461,7 +461,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
@@ -518,7 +518,7 @@ function RestaurantesPorComida(this: any) {
                 </div>
                 <div className="details">
                   <div className="details-sub">
-                    <h5>Hamburguesa</h5>
+                    <h5>{tipoComida}</h5>
                     <h5 className='price'>$4999</h5>
                   </div>
                   <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae quidem deserunt saepe laborum debitis, nobis nisi deleniti odit aliquid magni ex sint velit blanditiis placeat ea neque porro libero quas?</p>
