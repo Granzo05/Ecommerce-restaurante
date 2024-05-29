@@ -33,6 +33,11 @@ function RestaurantesPorComida() {
     setShowDetailsMenuModal(false);
   };
 
+  useEffect(() => {
+    document.title = 'Menú - '+tipoComida;
+  }, []);
+
+
   return (
     <div id="grid-container">
       {menus.length > 0 && menus.map((menu) => (

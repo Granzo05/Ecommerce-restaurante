@@ -21,26 +21,4 @@
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
-<script>
-  const handleScroll = () => {
-    const offset = window.scrollY;
-    let header = document.getElementById("header-oscuro");
-    console.log(header)
-    if (header) {
-      if (offset > 50) { // Puedes ajustar este valor
-        header.classList.add('bg-header');
-      } else {
-        header.classList.remove('bg-header');
-      }
-    }
-  };
-
-  window.addEventListener('scroll', handleScroll);
-
-  // Limpieza del evento al desmontar el componente
-  const cleanup = () => {
-    window.removeEventListener('scroll', handleScroll);
-  };
-</script>
-
 </html>
