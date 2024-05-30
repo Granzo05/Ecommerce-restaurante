@@ -108,60 +108,95 @@ function AgregarArticuloVenta() {
     setModalBusquedaSubcategoria(false)
   };
 
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+          <h4>Paso 1</h4>
+            <div className="inputBox">
+              <hr />
+              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del articulo</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
+              <span>Precio ($)</span>
+            </div>
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
+              <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+            </div>
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
+              <InputComponent placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
+              {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
+            </div>
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
+              <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
+              <span>Cantidad de la medida</span>
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+          <h4>Paso 2</h4>
+            <div >
+              <hr />
+              {imagenes.map((imagen, index) => (
+                <div key={index} className='inputBox'>
+                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    maxLength={10048576}
+                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                  />
+
+                </div>
+              ))}
+
+            </div>
+            <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <br />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
+              
+            </div>
+          </>
+        );
+    }
+
+  }
+
   return (
     <div className="modal-info">
-      <h2>Agregar artículo para venta</h2>
+      <h2>&mdash; Agregar artículo para venta &mdash;</h2>
       <Toaster />
-      <div >
-        {imagenes.map((imagen, index) => (
-          <div key={index} className='inputBox'>
-            <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-            <input
-              type="file"
-              accept="image/*"
-              maxLength={10048576}
-              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-            />
+      {renderStep()}
 
-          </div>
-        ))}
-
-      </div>
-      <button onClick={añadirCampoImagen}>Añadir imagen</button>
-      <div className="inputBox">
-        <hr />
-        <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
-        <span>Nombre del articulo</span>
-      </div>
-      <div className="inputBox">
-        <input type="number" required={true} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
-        <span>Precio ($)</span>
-      </div>
-      <ModalFlotante isOpen={showAgregarCategoriaModal} onClose={handleModalClose}>
-        <AgregarCategoria />
-      </ModalFlotante>
-      <button onClick={() => setShowAgregarCategoriaModal(true)}>Cargar nueva categoria</button>
-      <div className="input-filtrado">
-        <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
-        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
-      </div>
-      <ModalFlotante isOpen={showAgregarSubcategoriaModal} onClose={handleModalClose}>
-        <AgregarSubcategoria />
-      </ModalFlotante>
-      <button onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar nueva subcategoria</button>
-      <div className="input-filtrado">
-        <InputComponent placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
-        {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
-      </div>
-      <div className="input-filtrado">
-        <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
-        {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-      </div>
-      <div className="inputBox">
-        <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
-        <span>Cantidad de la medida</span>
-      </div>
-      <button type="button" onClick={agregarArticulo}>Agregar articulo</button>
     </div >
   )
 }
