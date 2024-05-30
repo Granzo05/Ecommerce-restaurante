@@ -10,7 +10,7 @@
 
 .sidebar {
   min-height: 100%;
-  height: auto;
+  max-height: 100%;
   display: flex;
   background-color: #2b86c4;
 }
@@ -21,6 +21,7 @@
 
 .opciones-menu {
   min-height: 100%;
+  max-height: 100%;
   width: 300px;
   background-color: black;
   padding: 20px;
@@ -30,6 +31,27 @@
   transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Estilos personalizados para la barra de desplazamiento */
+.opciones-menu::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+.opciones-menu::-webkit-scrollbar-track {
+  background: #333; /* Color del fondo de la barra de desplazamiento */
+  border-radius: 10px; /* Bordes redondeados del fondo */
+}
+
+.opciones-menu::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color de la "thumb" (la parte movible) */
+  border-radius: 10px; /* Bordes redondeados de la "thumb" */
+  border: 2px solid #333; /* Espacio alrededor de la "thumb" */
+}
+
+.opciones-menu::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color de la "thumb" al pasar el mouse por encima */
 }
 
 .spacer{
@@ -203,7 +225,9 @@ p {
   display: none;
 }
 
-
+.table-info{
+  height: auto;
+}
 
 
 /* Media Queries */
