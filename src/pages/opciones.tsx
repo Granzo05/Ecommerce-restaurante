@@ -146,8 +146,9 @@ const Opciones = () => {
 
     useEffect(() => {
         document.title = 'Administración y opciones';
-      }, []);
+    }, []);
 
+    
     const [sidebarBg, setSidebarBg] = useState('');
 
     return (

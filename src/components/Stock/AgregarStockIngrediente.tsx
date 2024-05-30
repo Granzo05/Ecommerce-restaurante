@@ -111,18 +111,14 @@ function AgregarStockIngrediente() {
         </div>
 
       </label>
-      <label>
-        <div className="input-filtrado">
           <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
           {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-        </div>
-      </label>
-      <label>
+        
         <div className="inputBox">
           <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
           <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
         </div>
-      </label>
+        <hr />
       <button onClick={crearStockIngrediente}>Agregar</button>
     </div>
   )
