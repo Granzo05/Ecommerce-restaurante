@@ -300,7 +300,7 @@ const Opciones = () => {
                             <label className="name-account">Augusto David Ficara Vargas</label>
                         </div>
 
-                        <LogoutIcon className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
+                        <LogoutIcon onClick={() => window.location.href = 'http://localhost:5173/login-negocio'} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
                     </div>
                     <div className="icon-topbar" onClick={toggleMenuVisibility}>
                         {topIcon}
