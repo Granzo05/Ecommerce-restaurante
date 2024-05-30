@@ -8,6 +8,7 @@ import '../../styles/modalFlotante.css'
 import InputComponent from '../InputFiltroComponent';
 import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
+import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
 
 function AgregarStockIngrediente() {
 
@@ -17,12 +18,17 @@ function AgregarStockIngrediente() {
   const [medida, setMedida] = useState<Medida>(new Medida());
   const [costoIngrediente, setCostoIngrediente] = useState(0);
   const [nombreIngrediente, setArticuloVenta] = useState('0');
+  
+  const [ingrediente, setIngrediente] = useState<Ingrediente>(new Ingrediente());
 
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
+  
+  const [modalBusquedaIngrediente, setModalBusquedaIngrediente] = useState<boolean>(false);
 
 
   const handleModalClose = () => {
     setModalBusquedaMedida(false)
+    setModalBusquedaIngrediente(false)
   };
 
 
@@ -85,12 +91,13 @@ function AgregarStockIngrediente() {
     <div className="modal-info">
       <Toaster />
       <h2>&mdash; Agregar ingrediente &mdash;</h2>
-      <label>
-        <div className="inputBox">
-          <input type="text" required onChange={(e) => { setArticuloVenta(e.target.value) }} />
-          <span>Nombre del ingrediente</span>
-        </div>
-      </label>
+      <div>
+      <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+        <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
+        {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
+      
+      </div>
+        
       <label>
         <div className="inputBox">
           <input type="text" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
