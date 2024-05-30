@@ -192,33 +192,26 @@ function AgregarStockEntrante() {
 
   return (
     <div className="modal-info">
-      <h2>Agregar stock entrante</h2>
+      <h2>&mdash; Agregar stock entrante &mdash;</h2>
       <Toaster />
       <div className="inputBox">
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
         <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
       </div>
-      <ModalFlotante isOpen={showAgregarMedidaModal} onClose={handleModalClose}>
-        <AgregarMedida />
-      </ModalFlotante>
       {detallesIngredienteStock.map((ingrediente, index) => (
         <div key={index}>
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
+          <h4>Ingrediente {index+1}</h4>
           <div>
             <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
             <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={detallesIngredienteStock[index].ingrediente?.nombre ?? ''} />
             {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleModalClose(); }} />}
           </div>
-          <br />
-          <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
-          <br />
-          <br />
-          <div className="input-filtrado">
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
             <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesIngredienteStock[index]?.medida.nombre ?? ''} />
             {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
-          </div>
-          <br />
+          
           <div className="inputBox">
             <input type="number" required={true} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
             <span>Cantidad de unidades</span>
@@ -229,29 +222,23 @@ function AgregarStockEntrante() {
           </div>
         </div>
       ))}
-
-      <button onClick={añadirCampoIngrediente}>+ Añadir ingrediente</button>
+        <button style={{marginLeft: '18.9%'}} onClick={añadirCampoIngrediente}>+ Añadir ingrediente</button>
+      
       <br />
       {detallesArticuloStock.map((articulo, index) => (
         <div key={index}>
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
+          <h4>Artículo {index+1}</h4>
           <div>
             <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
             <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.nombre ?? ''} />
             {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
           </div>
-          <br />
-          <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
-          <br />
-          <br />
-          <div className="input-filtrado">
+          <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
             <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloStock[index]?.medida.nombre ?? ''} />
             {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
-          </div>
-          <br />
-          <br />
-          <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
+          
           <div className="inputBox">
             <input type="number" required={true} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />
             <span>Cantidad de unidades</span>
@@ -264,7 +251,7 @@ function AgregarStockEntrante() {
 
         </div>
       ))}
-      <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
+      <button style={{marginLeft: '18.9%'}} onClick={añadirCampoArticulo}>+ Añadir artículo</button>
       <hr />
       <button type="button" onClick={agregarStockEntrante}>Agregar stock entrante</button>
     </div >

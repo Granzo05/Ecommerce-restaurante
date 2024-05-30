@@ -32,11 +32,11 @@ function AgregarMedida() {
 
   return (
     <div className="modal-info">
-      <h2>Cargar nuevo medida</h2>
+      <h2>Cargar nueva unidad de medida</h2>
       <Toaster />
       <div className="inputBox">
         <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-        <span>Nombre del medida</span>
+        <span>Nombre de la unidad de medida</span>
       </div>
       <button value="Agregar medida" id="agregarMedida" onClick={agregarMedida}>Cargar </button>
     </div>
