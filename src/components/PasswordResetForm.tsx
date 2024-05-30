@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import '../styles/passwordResetForm.css';
+import HeaderLogin from './headerLogin';
 
 const PasswordResetForm = () => {
 
     const [password, setPassword] = useState("");
 
     return (
+        <>
+        <HeaderLogin></HeaderLogin>
         <div className="password-change-container">
             <div className="password-change-form">
                 <h2>Restablecer contraseña</h2>
@@ -29,6 +32,8 @@ const PasswordResetForm = () => {
                 </form>
             </div>
         </div>
+        </>
+        
     );
 };
 

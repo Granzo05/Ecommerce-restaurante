@@ -9,6 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
 import '../styles/header.css';
 import Header from '../components/Header'
+import Footer from '../components/Footer';
 
 
 interface CartItem {
@@ -586,6 +587,7 @@ function RestaurantesPorComida(this: any) {
 
 
       </div>
+      <Footer></Footer>
     </>
 
 

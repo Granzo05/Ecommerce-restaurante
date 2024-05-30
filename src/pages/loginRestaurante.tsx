@@ -4,9 +4,9 @@ import { SucursalService } from '../services/SucursalService';
 import { Toaster, toast } from 'sonner';
 import Modal from 'react-modal';
 import { frases } from '../utils/global_variables/const';
-import ModalFlotante from '../components/ModalFlotante';
 import ReestablecerContra from '../components/ReestablecerContra';
 import ModalCrud from '../components/ModalCrud';
+import HeaderLogin from '../components/headerLogin';
 
 const LoginNegocio = () => {
 
@@ -64,6 +64,8 @@ const handleAgregarArticulo = () => {
 
 
   return (
+    <>
+    <HeaderLogin></HeaderLogin>
     <div className="form-wrapper">
       
       <aside className="info-side">
@@ -162,6 +164,8 @@ const handleAgregarArticulo = () => {
         </div>
       </main>
     </div>
+    </>
+    
   )
 }
 
