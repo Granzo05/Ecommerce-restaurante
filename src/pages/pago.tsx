@@ -109,7 +109,7 @@ const Pago = () => {
                     <option value="RETIRO">Retiro en tienda</option>
                 </select>
                 <hr />
-                <label style={{fontWeight: 'bold', color: '#2C2C2C', fontSize: '18px'}}>Domicilio a enviar:</label>
+                <label style={{fontWeight: 'bold', color: '#2C2C2C', fontSize: '18px'}}>Domicilio a entregar:</label>
                 {envio === 'DELIVERY' && (
                     domicilios && domicilios.length > 0 && (
                         <select id="domicilioSeleccionado" name="domicilioSeleccionado">
