@@ -32,6 +32,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  position: relative;
 }
 
 /* Estilos personalizados para la barra de desplazamiento */
@@ -41,12 +42,12 @@
 
 .opciones-menu::-webkit-scrollbar-track {
   background: #333; /* Color del fondo de la barra de desplazamiento */
-  border-radius: 10px; /* Bordes redondeados del fondo */
+  border-radius: 0px 10px 10px 0px; /* Bordes redondeados del fondo */
 }
 
 .opciones-menu::-webkit-scrollbar-thumb {
   background-color: #888; /* Color de la "thumb" (la parte movible) */
-  border-radius: 10px; /* Bordes redondeados de la "thumb" */
+  border-radius: 0px 10px 10px 0px; /* Bordes redondeados de la "thumb" */
   border: 2px solid #333; /* Espacio alrededor de la "thumb" */
 }
 
@@ -66,12 +67,12 @@
   transform: translateX(0);
 }
 
-/*h4 {
+.main-options h4 {
   cursor: pointer;
   padding: 5px;
   font-size: 20px;
   border-radius: 7px;
-}*/
+}
 
 p {
   font-size: 15px;
@@ -92,10 +93,11 @@ p {
   border-radius: 7px;
 }
 
-/*h4:hover {
+.main-options h4:hover {
   background-color: grey;
   transition: .3s;
-}*/
+}
+
 
 .main-options p:hover {
   background-color: grey;
