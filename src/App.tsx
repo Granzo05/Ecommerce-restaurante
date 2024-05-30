@@ -17,19 +17,19 @@ function App() {
   useEffect(() => {
     const ruta = window.location.href.split('/').pop(); 
     
-    if (ruta === 'login-negocio') {
+    if (ruta?.startsWith('login-negocio')) {
       setMostrarFooter(false);
     } else {
       setMostrarFooter(true);
     }
 
-    if ( ruta === '') {
+    if ( ruta?.startsWith('') || ruta?.startsWith('cambio-contra') || ruta?.startsWith('login-cliente')) {
       setMostrarHeader(false);
     } else {
       setMostrarHeader(true);
     }
 
-    if (ruta === 'opciones' || ruta === 'prueba' || ruta === 'login-cliente' ) {
+    if (ruta?.startsWith('cambio-contra') || ruta?.startsWith('login-cliente') ) {
       setMostrarHeaderLogin(true);
     } else {
       setMostrarHeaderLogin(false);
