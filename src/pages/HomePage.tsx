@@ -42,6 +42,10 @@ export default function MainMenu() {
             })
     }, [id]);
 
+    useEffect(() => {
+        document.title = 'El Buen Sabor';
+      }, []);
+
     return (
         <>
             <section id='servicios' className='information container'>

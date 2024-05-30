@@ -2,6 +2,10 @@ import '../styles/footer.css';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
 
 const Footer = () => {
+
+
+  
+
   return (
     <footer id='contactos' className='footer'>
       <div className="footer-content container">
@@ -21,6 +25,7 @@ const Footer = () => {
             <li>
               - Ubicación -
               <ul>
+                <li><a>NO HA SELECCIONADO UNA SUCURSAL.</a><a href="/selec-sucursal">HÁGALO AHORA</a></li>
                 <li><a href="https://maps.google.com" target="_blank" rel="noopener noreferrer">Google Maps</a></li>
                 <li><a href="https://www.yelp.com" target="_blank" rel="noopener noreferrer">Yelp</a></li>
               </ul>
@@ -28,6 +33,7 @@ const Footer = () => {
             <li>
               - Horario -
               <ul>
+                <li><a>NO HA SELECCIONADO UNA SUCURSAL.</a><a href="/selec-sucursal">HÁGALO AHORA</a></li>
                 <li><a >Lunes a sábado: 9am - 11pm</a></li>
                 <li><a >Domingo: 11am - 9pm</a></li>
               </ul>
