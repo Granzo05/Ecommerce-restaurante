@@ -224,104 +224,155 @@ function AgregarPromocion() {
     });
   }
 
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <h4>Paso 1 - Datos</h4>
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => setNombre(e.target.value)} />
+              <span>Nombre de la promoción</span>
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => setDescripcion(e.target.value)} />
+              <span>Descrición de la promoción</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => setTotal(parseFloat(e.target.value))} />
+              <span>Precio ($)</span>
+            </div>
+            <div className="inputBox">
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
+              <input type="date" required={true} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
+            </div>
+            <div className="inputBox">
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
+              <input type="date" required={true} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h4>Paso 2 - Agregar menú a la promoción</h4>
+            {detallesArticuloMenu.map((articuloMenu, index) => (
+              <div key={index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={quitarCampoArticuloMenu}>X</p>
+                <h4>Menú {index+1}</h4>
+                <div>
+                  <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú:</label>
+                  <InputComponent placeHolder='Filtrar menú...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
+                  {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
+                </div>
+                <div>
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
+                  <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida?.nombre ?? ''} />
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} onChange={(e) => handleCantidadArticuloMenu(parseFloat(e.target.value), index)} />
+                  <span>Cantidad de unidades</span>
+                </div>
+              </div>
+            ))}
+
+            <button onClick={añadirCampoArticuloMenu}>+ Añadir menú</button>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h4>Paso 3 - Agregar artículo a la promoción</h4>
+            {detallesArticuloVenta.map((articulo, index) => (
+              <div key={index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
+                <h4>Artículo {index+1}</h4>
+                <div>
+                  <label style={{ display: 'flex', fontWeight: 'bold' }}>Artículo:</label>
+                  <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />
+                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
+                </div>
+                <div>
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
+                  <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida?.nombre ?? ''} />
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />
+                  <span>Cantidad de unidades</span>
+                </div>
+              </div>
+            ))}
+            <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+          <h4>Paso final - Imagen</h4>
+            <div>
+              {imagenes.map((imagen, index) => (
+                
+                <div className='inputBox' key={index}>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+                  <h4 style={{fontSize: '18px'}}>Imagen {index+1}</h4>
+                  <br />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    maxLength={10048576}
+                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                  />
+                </div>
+              ))}
+            </div>
+            <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={agregarStockEntrante}>Agregar promoción ✓</button>
+              
+            </div>
+          </>
+        );
+    }
+  }
+
   return (
     <div className="modal-info">
-      <h2>Agregar promoción</h2>
+      <h2>&mdash; Agregar promoción &mdash;</h2>
       <Toaster />
-      <div>
-        {imagenes.map((imagen, index) => (
-
-          <div className='inputBox' key={index}>
-            <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-            <input
-              type="file"
-              accept="image/*"
-              maxLength={10048576}
-              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-            />
-          </div>
-        ))}
-      </div>
-      <button onClick={añadirCampoImagen}>Añadir imagen</button>
-      <div className="inputBox">
-        <input type="text" required={true} onChange={(e) => setNombre(e.target.value)} />
-        <span>Nombre de la promoción</span>
-      </div>
-      <div className="inputBox">
-        <input type="text" required={true} onChange={(e) => setDescripcion(e.target.value)} />
-        <span>Descrición de la promoción</span>
-      </div>
-      <div className="inputBox">
-        <input type="number" required={true} onChange={(e) => setTotal(parseFloat(e.target.value))} />
-        <span>Precio ($)</span>
-      </div>
-      <div className="inputBox">
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
-        <input type="date" required={true} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
-      </div>
-      <div className="inputBox">
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
-        <input type="date" required={true} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
-      </div>
-      <ModalFlotante isOpen={showAgregarMedidaModal} onClose={handleModalClose}>
-        <AgregarMedida />
-      </ModalFlotante>
-      {detallesArticuloMenu.map((articuloMenu, index) => (
-        <div key={index}>
-          <hr />
-          <p className='cierre-articuloMenu' onClick={quitarCampoArticuloMenu}>X</p>
-          <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú {index + 1}:</label>
-            <InputComponent placeHolder='Filtrar articuloMenu...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
-            {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
-          </div>
-          <br />
-          <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
-          <br />
-          <br />
-          <div className="input-filtrado">
-            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida?.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
-          </div>
-          <br />
-          <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => handleCantidadArticuloMenu(parseFloat(e.target.value), index)} />
-            <span>Cantidad de unidades</span>
-          </div>
-        </div>
-      ))}
-
-      <button onClick={añadirCampoArticuloMenu}>+ Añadir menú</button>
-      <br />
-      {detallesArticuloVenta.map((articulo, index) => (
-        <div key={index}>
-          <hr />
-          <p className='cierre-articuloMenu' onClick={quitarCampoArticulo}>X</p>
-          <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo {index + 1}:</label>
-            <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />
-            {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
-          </div>
-          <br />
-          <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
-          <br />
-          <br />
-          <div className="input-filtrado">
-            <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida?.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
-          </div>
-          <br />
-          <br />
-          <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
-          <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />
-            <span>Cantidad de unidades</span>
-          </div>
-        </div>
-      ))}
-      <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
-      <hr />
-      <button type="button" onClick={agregarStockEntrante}>Agregar promoción</button>
+      {renderStep()}
     </div >
   )
 }

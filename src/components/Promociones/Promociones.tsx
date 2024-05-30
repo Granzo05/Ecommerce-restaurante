@@ -102,9 +102,9 @@ const Promociones = () => {
     return (
         <div className="opciones-pantallas">
 
-            <h1>- Promocion entrante -</h1>
-            <div className="btns-promocion">
-                <button className="btn-agregar" onClick={() => handleAgregarPromocion()}> + Agregar promocion entrante</button>
+            <h1>- Promoción entrante -</h1>
+            <div className="btns-stock">
+                <button className="btn-agregar" onClick={() => handleAgregarPromocion()}> + Agregar promoción</button>
             </div>
 
             <hr />
