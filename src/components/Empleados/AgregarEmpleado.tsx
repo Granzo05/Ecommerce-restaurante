@@ -11,6 +11,8 @@ import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFil
 import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
 
+import '../../styles/inputLabel.css'
+
 function AgregarEmpleado() {
 
   const [nombre, setNombre] = useState('');
@@ -155,12 +157,24 @@ function AgregarEmpleado() {
     });
   }
 
-  return (
-    <div className="modal-info">
-      <h2>Agregar empleado</h2>
-      <Toaster />
-      <form>
-        <div className="inputBox">
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+          <h4>Paso 1</h4>
+          <div className="inputBox">
           <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
           <span>Nombre del empleado</span>
         </div>
@@ -185,8 +199,16 @@ function AgregarEmpleado() {
           <input type="date" required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
           <hr />
         </div>
-
-        {domicilios && domicilios.map((domicilio, index) => (
+          <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+          </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+          <h4>Paso 2</h4>
+          {domicilios && domicilios.map((domicilio, index) => (
           <div key={index}>
             <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
             <h2>Domicilio {index + 1}</h2>
@@ -203,22 +225,39 @@ function AgregarEmpleado() {
               <input type="number" required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
               <span>Código Postal</span>
             </div>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
             <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
             {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
-
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
             <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
             {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
-
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
             <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
             {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
             <hr />
           </div>
         ))}
+        <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
+        <hr />
+        <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
+              
+            </div>
+          </>
+        );
+    }
 
-      </form>
-      <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
-      <hr />
-      <button className='button-form' type='button' onClick={agregarEmpleado}>Agregar empleado</button>
+  }
+
+  return (
+    <div className="modal-info">
+      <h2>&mdash; Agregar empleado &mdash;</h2>
+      <Toaster />
+      {renderStep()}
+
+        
+
 
     </div>
   )

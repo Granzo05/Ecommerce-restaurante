@@ -10,9 +10,6 @@ import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFiltroCategorias';
 import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
-import ModalFlotante from '../ModalFlotante';
-import AgregarCategoria from '../Categorias/AgregarCategoria';
-import AgregarSubcategoria from '../Subcategorias/AgregarSubcategoria';
 import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
 
 function AgregarArticuloVenta() {
@@ -97,8 +94,6 @@ function AgregarArticuloVenta() {
   const [modalBusquedaCategoria, setModalBusquedaCategoria] = useState<boolean>(false);
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
   const [modalBusquedaSubcategoria, setModalBusquedaSubcategoria] = useState<boolean>(false);
-  const [showAgregarSubcategoriaModal, setShowAgregarSubcategoriaModal] = useState(false);
-  const [showAgregarCategoriaModal, setShowAgregarCategoriaModal] = useState(false);
 
   const handleModalClose = () => {
     setModalBusquedaCategoria(false)
