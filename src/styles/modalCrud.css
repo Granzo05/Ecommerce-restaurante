@@ -9,6 +9,24 @@
   }
 }
 
+.btns-pasos{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btns-pasos .btn-accion-atras{
+  margin-right: 10px;
+}
+
+.btns-pasos .btn-accion-completar{
+  background-color: green;
+}
+
+.btns-pasos .btn-accion-completar:hover{
+  background-color: rgb(1, 73, 1);
+}
+
 .slider-container {
   position: relative;
   width: 100%;
