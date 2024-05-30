@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const ruta = window.location.href.split('/').pop(); 
     
-    if (ruta?.startsWith('login-negocio')) {
+    if (ruta?.startsWith('login-negocio') || ruta?.startsWith('opciones')) {
       setMostrarFooter(false);
     } else {
       setMostrarFooter(true);
@@ -29,13 +29,13 @@ function App() {
       setMostrarHeader(true);
     }
 
-    if (ruta?.startsWith('cambio-contra') || ruta?.startsWith('login-cliente') ) {
+    if (ruta?.startsWith('cambio-contra') || ruta?.startsWith('login-cliente') || ruta?.startsWith('login-negocio')) {
       setMostrarHeaderLogin(true);
     } else {
       setMostrarHeaderLogin(false);
     }
 
-    if (ruta === '' || ruta === '#user') {
+    if (ruta === '') {
       setMostrarHeaderHomePage(true);
     } else {
       setMostrarHeaderHomePage(false);

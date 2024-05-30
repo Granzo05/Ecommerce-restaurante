@@ -42,6 +42,8 @@ const Opciones = () => {
     const [sidebarIcon, setSidebarIcon] = useState(<ArrowForwardIosIcon />);
     const [topIcon, setTopIcon] = useState(<KeyboardArrowDownIcon />);
     const [menuVisible, setMenuVisible] = useState(true);
+    const [opcionesBg, setOpcionesBg] = useState('');
+    const [settingsBg, setSettingsBg] = useState('');
 
     const toggleStockVisibility = () => {
         setStockVisible(!stockVisible);
@@ -54,6 +56,7 @@ const Opciones = () => {
     const toggleOptionsVisibility = () => {
         setOptionsVisible(!optionsVisible);
         setOptionsIcon(optionsVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
+        setOpcionesBg(optionsVisible ? '' : 'options-selected');
     };
 
     const toggleCategoriaVisibility = () => {
@@ -64,6 +67,7 @@ const Opciones = () => {
     const toggleSettingsVisibility = () => {
         setSettingsVisible(!settingsVisible);
         setSettingsIcon(settingsVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
+        setSettingsBg(settingsVisible ? '' : 'options-selected');
     };
 
     const togglePedidosVisibility = () => {
@@ -140,16 +144,18 @@ const Opciones = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        document.title = 'Administración y opciones';
+      }, []);
+
     const [sidebarBg, setSidebarBg] = useState('');
 
     return (
         <div className={`sidebar ${sidebarBg}`}>
             <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
                 <div className="title-header">
-                    <h3 onClick={() => window.location.href = 'http://localhost:5173/'} className="title">
-                        <img src="../src/assets/img/HatchfulExport-All/logo-simple.png" alt="Logo" className="logo-opciones" />
-                        EL BUEN SABOR
-                    </h3>
+                    <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/opciones'}/>
+                        
 
                     <div className="icon-sidebar" onClick={toggleMenuVisibility}>
                         {sidebarIcon}
@@ -157,7 +163,7 @@ const Opciones = () => {
                 </div>
 
                 <hr />
-                <label id="label" onClick={toggleOptionsVisibility}>
+                <label id="label" className={`opciones-link ${opcionesBg}`} onClick={toggleOptionsVisibility}>
                     _opciones
                     {optionsIcon}
                 </label>
@@ -272,7 +278,7 @@ const Opciones = () => {
                 <div className="spacer"></div>
                 <div className="bottom-section">
                     <hr />
-                    <label id="label" onClick={toggleSettingsVisibility}>
+                    <label id="label" className={`ajustes-link ${settingsBg}`} onClick={toggleSettingsVisibility}>
                         _ajustes de cuenta
                         {settingsIcon}
                     </label>
