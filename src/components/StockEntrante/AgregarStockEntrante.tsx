@@ -185,15 +185,37 @@ function AgregarStockEntrante() {
     });
   }
 
-  return (
-    <div className="modal-info">
-      <h2>&mdash; Agregar stock entrante &mdash;</h2>
-      <Toaster />
-      <div className="inputBox">
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return(
+          <>
+          <h4>Paso 1 - Datos</h4>
+          <div className="inputBox">
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
         <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
       </div>
-      {detallesIngredienteStock.map((ingrediente, index) => (
+      <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return(
+          <>
+          <h4>Paso 2 - Agregar ingrediente al stock entrante</h4>
+          {detallesIngredienteStock.map((ingrediente, index) => (
         <div key={index}>
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
@@ -217,10 +239,20 @@ function AgregarStockEntrante() {
           </div>
         </div>
       ))}
-        <button style={{marginLeft: '18.9%'}} onClick={añadirCampoIngrediente}>+ Añadir ingrediente</button>
-      
-      <br />
-      {detallesArticuloStock.map((articulo, index) => (
+        <button onClick={añadirCampoIngrediente}>+ Añadir ingrediente</button>
+        <br />
+        <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              
+            </div>
+          </>
+        );
+      case 3:
+        return(
+          <>
+          <h4>Paso final - Agregar artículo al stock entrante</h4>
+          {detallesArticuloStock.map((articulo, index) => (
         <div key={index}>
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
@@ -246,9 +278,23 @@ function AgregarStockEntrante() {
 
         </div>
       ))}
-      <button style={{marginLeft: '18.9%'}} onClick={añadirCampoArticulo}>+ Añadir artículo</button>
+      <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
       <hr />
-      <button type="button" onClick={agregarStockEntrante}>Agregar stock entrante</button>
+      <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={agregarStockEntrante}>Agregar stock entrante ✓</button>
+              
+            </div>
+          </>
+        );
+    }
+  }
+
+  return (
+    <div className="modal-info">
+      <h2>&mdash; Agregar stock entrante &mdash;</h2>
+      <Toaster />
+      {renderStep()}
     </div >
   )
 }
