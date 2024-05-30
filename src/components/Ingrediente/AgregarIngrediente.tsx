@@ -32,7 +32,7 @@ function AgregarIngrediente() {
 
   return (
     <div className="modal-info">
-      <h2>Cargar nuevo ingrediente</h2>
+      <h2>&mdash; Cargar nuevo ingrediente &mdash;</h2>
       <Toaster />
       <div className="inputBox">
         <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />

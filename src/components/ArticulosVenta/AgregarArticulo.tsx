@@ -119,7 +119,7 @@ function AgregarArticuloVenta() {
       case 1:
         return (
           <>
-          <h4>Paso 1</h4>
+          <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
               <hr />
               <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
@@ -156,12 +156,14 @@ function AgregarArticuloVenta() {
       case 2:
         return (
           <>
-          <h4>Paso 2</h4>
+          <h4>Paso final - Imagen</h4>
             <div >
-              <hr />
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
+                  <hr />
                   <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+                  <h4 style={{fontSize: '18px'}}>Imagen {index+1}</h4>
+                  <br />
                   <input
                     type="file"
                     accept="image/*"

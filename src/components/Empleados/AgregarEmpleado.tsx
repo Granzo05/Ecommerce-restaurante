@@ -173,7 +173,7 @@ function AgregarEmpleado() {
       case 1:
         return (
           <>
-          <h4>Paso 1</h4>
+          <h4>Paso 1 - Datos</h4>
           <div className="inputBox">
           <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
           <span>Nombre del empleado</span>
@@ -207,11 +207,12 @@ function AgregarEmpleado() {
       case 2:
         return (
           <>
-          <h4>Paso 2</h4>
+          <h4>Paso final - Domicilio/os</h4>
           {domicilios && domicilios.map((domicilio, index) => (
           <div key={index}>
+            <hr />
             <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
-            <h2>Domicilio {index + 1}</h2>
+            <h4 style={{fontSize: '18px'}}>Domicilio {index + 1}</h4>
 
             <div className="inputBox">
               <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />

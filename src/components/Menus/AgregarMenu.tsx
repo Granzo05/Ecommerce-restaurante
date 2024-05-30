@@ -18,6 +18,7 @@ import AgregarCategoria from '../Categorias/AgregarCategoria';
 import AgregarSubcategoria from '../Subcategorias/AgregarSubcategoria';
 import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
+import ModalCrud from '../ModalCrud';
 
 function AgregarMenu() {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
@@ -197,7 +198,7 @@ function AgregarMenu() {
       case 1:
         return (
           <>
-          <h4>Paso 1</h4>
+          <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
               <hr />
               <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
@@ -242,17 +243,16 @@ function AgregarMenu() {
       case 2:
         return (
           <>
-          <h4>Paso 2</h4>
+          <h4>Paso 2 - Agregar ingrediente al menú</h4>
             <div>
-              <hr />
-              <h2>Ingredientes</h2>
-              <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
+              <ModalCrud isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
                 <AgregarIngrediente />
-              </ModalFlotante>
+              </ModalCrud>
               {ingredientes.map((ingredienteMenu, index) => (
                 <div key={index}>
                   <hr />
                   <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
+                  <h4 style={{fontSize: '18px'}}>Ingrediente {index+1}</h4>
                   <div>
                     <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
                     <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredientes[index].ingrediente?.nombre ?? ''} />
@@ -270,10 +270,10 @@ function AgregarMenu() {
               ))}
 
             </div>
-            <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
+            <button onClick={añadirCampoIngrediente}>Añadir ingrediente al menú</button>
 
             <br />
-            <button onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente</button>
+            <button onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente en el inventario</button>
             <br />
             <div className='btns-pasos'>
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
@@ -284,13 +284,15 @@ function AgregarMenu() {
       case 3:
         return (
           <>
-          <h4>Paso 3</h4>
+          <h4>Paso final - Imagen</h4>
             <div>
-              <hr />
               {imagenes.map((imagen, index) => (
 
                 <div className='inputBox' key={index}>
+                  <hr />
                   <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+                  <h4 style={{fontSize: '18px'}}>Imagen {index+1}</h4>
+                  <br />
                   <input
                     type="file"
                     accept="image/*"
