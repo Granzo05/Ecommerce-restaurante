@@ -181,9 +181,30 @@ function AgregarMenu() {
     });
   }
 
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+    const nextStep = () => {
+        setStep(step + 1);
+    };
+
+    const prevStep = () => {
+        setStep(step - 1);
+    };
+
+  const renderStep = () => {
+    switch(step){
+      case 1:
+        return(
+          <>
+          </>
+        );
+    }
+  }
+
   return (
     <div className="modal-info">
-      <h2>Agregar menú</h2>
+      <h2>&mdash; Agregar menú &mdash;</h2>
       <Toaster />
       <div>
         {imagenes.map((imagen, index) => (
@@ -215,19 +236,16 @@ function AgregarMenu() {
         <input type="number" required={true} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
         <span>Minutos de coccion</span>
       </div>
-      <ModalFlotante isOpen={showAgregarCategoriaModal} onClose={handleModalClose}>
-        <AgregarCategoria />
-      </ModalFlotante>
-      <button onClick={() => setShowAgregarCategoriaModal(true)}>Cargar nueva categoria</button>
-      <div className="input-filtrado">
+      <div>
+      <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
         <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
         {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+      
       </div>
-      <ModalFlotante isOpen={showAgregarSubcategoriaModal} onClose={handleModalClose}>
-        <AgregarSubcategoria />
-      </ModalFlotante>
-      <button onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar nueva subcategoria</button>
-      <div className="input-filtrado">
+      
+      
+      <div>
+      <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
         <InputComponent placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
         {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { handleSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
       </div>

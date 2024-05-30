@@ -59,7 +59,7 @@ function AgregarCategoria() {
 
   return (
     <div className="modal-info">
-      <h2>Cargar nuevo categoria</h2>
+      <h2>&mdash; Cargar nueva categoria &mdash;</h2>
       <Toaster />
       <div >
         {imagenes.map((imagen, index) => (
@@ -76,6 +76,7 @@ function AgregarCategoria() {
         ))}
       </div>
       <button onClick={añadirCampoImagen}>Añadir imagen</button>
+      <br />
       <div className="inputBox">
         <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
         <span>Nombre del categoria</span>

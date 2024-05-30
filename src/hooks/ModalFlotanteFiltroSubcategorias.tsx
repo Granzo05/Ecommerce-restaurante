@@ -5,6 +5,8 @@ import '../styles/modalCrud.css'
 import { Subcategoria } from "../types/Ingredientes/Subcategoria";
 import { Categoria } from "../types/Ingredientes/Categoria";
 import { SubcategoriaService } from "../services/SubcategoriaService";
+import ModalCrud from "../components/ModalCrud";
+import AgregarSubcategoria from "../components/Subcategorias/AgregarSubcategoria";
 
 const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => void, onSelectSubcategoria: (subcategoria: Subcategoria) => void, categoria: Categoria }> = ({ onCloseModal, onSelectSubcategoria, categoria }) => {
   const handleModalClose = () => {
@@ -13,8 +15,14 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
     onCloseModal();
   };
 
+  const handleModalAddSubClose = () => {
+    setShowAgregarSubcategoriaModal(false)
+  };
+
   const [recomendaciones, setRecomendaciones] = useState<Subcategoria[]>([]);
   const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Subcategoria[]>([]);
+  
+  const [showAgregarSubcategoriaModal, setShowAgregarSubcategoriaModal] = useState(false);
 
   useEffect(() => {
     console.log(categoria.id)
@@ -40,10 +48,18 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
     <div>
       <div className="modal-overlay">
 
-        <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          <h2>FILTRAR SUBCATEGORIAS</h2>
+          <h2>&mdash; Filtrar subcategorías &mdash;</h2>
+          <div className="btns-stock">
+          <button onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar nueva subcategoria</button>
+          
+          </div>
+          <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={handleModalAddSubClose}>
+        <AgregarSubcategoria />
+      </ModalCrud>
+         <hr />
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>

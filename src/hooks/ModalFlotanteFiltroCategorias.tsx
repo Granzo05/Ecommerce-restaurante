@@ -4,6 +4,8 @@ import '../styles/modalFlotante.css'
 import '../styles/modalCrud.css'
 import { Categoria } from "../types/Ingredientes/Categoria";
 import { CategoriaService } from "../services/CategoriaService";
+import ModalCrud from "../components/ModalCrud";
+import AgregarCategoria from "../components/Categorias/AgregarCategoria";
 
 const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void, onSelectCategoria: (categoria: Categoria) => void }> = ({ onCloseModal, onSelectCategoria }) => {
   const handleModalClose = () => {
@@ -34,14 +36,31 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
     }
   }
 
+  
+  const [showAgregarCategoriaModal, setShowAgregarCategoriaModal] = useState(false);
+
+  const handleModalAddCategoriaClose = () => {
+    setShowAgregarCategoriaModal(false)
+  };
+
+
+
   return (
     <div>
       <div className="modal-overlay">
 
-        <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          <h2>FILTRAR CATEGORIAS</h2>
+          <h2>&mdash; Filtrar categorías &mdash;</h2>
+          <div className="btns-stock">
+          <button onClick={() => setShowAgregarCategoriaModal(true)}>Cargar nueva categoria</button>
+          
+          </div>
+          <hr />
+          <ModalCrud isOpen={showAgregarCategoriaModal} onClose={handleModalAddCategoriaClose}>
+        <AgregarCategoria />
+      </ModalCrud>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
