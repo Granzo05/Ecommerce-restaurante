@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import '../styles/homePage-header-footer.css'
-import { Sucursal } from '../types/Restaurante/Sucursal';
 import { SucursalService } from '../services/SucursalService';
 import { useParams } from 'react-router-dom';
 import { Promocion } from '../types/Productos/Promocion';
@@ -43,8 +42,12 @@ export default function MainMenu() {
     }, [id]);
 
     useEffect(() => {
-        document.title = 'El Buen Sabor';
-      }, []);
+        if (sucursal?.nombre) {
+            document.title = sucursal?.nombre;
+        } else {
+            document.title = 'Home';
+        }
+    }, [sucursal]);
 
     return (
         <>
@@ -110,265 +113,62 @@ export default function MainMenu() {
                 <h2>Menús</h2>
                 <span>Categorías</span>
                 <div className="food-content">
-                    <div className="left">
-                        <div className="food-1">
-                            <h3>Hamburguesas</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" className="menu-img" /></p>
-
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
+                    {sucursal && sucursal.categorias.length > 0 && (
+                        <>
+                            <div className="left">
+                                {sucursal && sucursal.categorias.map((categoria, index) => {
+                                    if (index < sucursal.categorias.length / 2) {
+                                        return (
+                                            <div className="food-1" key={index}>
+                                                <h3>{categoria.nombre}</h3>
+                                                <div className="food-txt">
+                                                    <p>
+                                                        {categoria.imagenes ? (
+                                                            <img src={categoria.imagenes[0]?.ruta} alt="" className="menu-img" />
+                                                        ) : (
+                                                            <img src='../src/assets/img/menus/burguer-bg.avif' alt="" className="menu-img" />
+                                                        )}
+                                                    </p>
+                                                    <div className="overlay">
+                                                        <p className='abrir-menu' onClick={() => handleMenu(categoria.nombre.toLowerCase())}>Ver menú</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    } else {
+                                        return null;
+                                    }
+                                })}
                             </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
+                            <div className="right">
+                                {sucursal && sucursal.categorias.map((categoria, index) => {
+                                    if (index >= sucursal.categorias.length / 2) {
+                                        return (
+                                            <div className="food-1" key={index}>
+                                                <h3>{categoria.nombre}</h3>
+                                                <div className="food-txt">
+                                                    <p>
+                                                        {categoria.imagenes ? (
+                                                            <img src={categoria.imagenes[0]?.ruta} alt="" className="menu-img" />
+                                                        ) : (
+                                                            <img src='../src/assets/img/menus/burguer-bg.avif' alt="" className="menu-img" />
+                                                        )}
+                                                    </p>                                                    <div className="overlay">
+                                                        <p className='abrir-menu' onClick={() => handleMenu(categoria.nombre.toLowerCase())}>Ver menú</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    } else {
+                                        return null;
+                                    }
+                                })}
                             </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
 
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="right">
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="food-1">
-                            <h3>Lorem impsum</h3>
-                            <div className="food-txt">
-                                <p><img src="../src/assets/img/menus/burguer-bg.avif" alt="" /></p>
-                                <div className="overlay">
-
-                                    <p className='abrir-menu' onClick={() => handleMenu('hamburguesas')}>Ver menú</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </>
+                    )}
                 </div>
             </section>
-
         </>
-
-    );
+    )
 }
-
-/*<div className='body'>
-            <div className="container">
-
-                <div className="card" onClick={() => handleMenu('hamburguesas')}>
-                    <img className="background" src={burguerImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <label style={{ color: 'white' }}><LunchDiningIcon /></label>
-                        </div>
-                        <h3 className="title">HAMBURGUESAS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-
-                <div className="card" onClick={() => handleMenu('pizzas')}>
-                    <img className="background" src={pizzaImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <label style={{ color: 'white' }}><LocalPizzaIcon /></label>
-                        </div>
-
-                        <h3 className="title">PIZZAS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-
-                <div className="card" onClick={() => handleMenu('lomos')}>
-                    <img className="background" src={lomoImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <img src={lomoIcono} alt="" style={{ width: '30px', marginTop: '-15px', height: '35px' }} />
-                        </div>
-
-                        <h3 className="title">LOMOS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-
-                <div className="card" onClick={() => handleMenu('sushi')}>
-                    <img className="background" src={sushiImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <img src={sushiIcono} alt="" style={{ width: '30px', height: '35px' }} />
-                        </div>
-
-                        <h3 className="title">SUSHI</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-
-                <div className="card" onClick={() => handleMenu('helado')}>
-                    <img className="background" src={heladoImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <label style={{ color: 'white' }}><IcecreamIcon /></label>
-                        </div>
-
-                        <h3 className="title">HELADOS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-                <div className="card">
-                    <img className="background" src={heladoImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <label style={{ color: 'white' }}><IcecreamIcon /></label>
-                        </div>
-
-                        <h3 className="title">HELADOS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-                <div className="card">
-                    <img className="background" src={heladoImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <label style={{ color: 'white' }}><IcecreamIcon /></label>
-                        </div>
-
-                        <h3 className="title">HELADOS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-                <div className="card">
-                    <img className="background" src={heladoImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <label style={{ color: 'white' }}><IcecreamIcon /></label>
-                        </div>
-
-                        <h3 className="title">HELADOS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-                <div className="card">
-                    <img className="background" src={heladoImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <label style={{ color: 'white' }}><IcecreamIcon /></label>
-                        </div>
-
-                        <h3 className="title">HELADOS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-                <div className="card">
-                    <img className="background" src={heladoImage} alt="" />
-
-                    <div className="card-content">
-                        <div className="profile-image">
-                            <label style={{ color: 'white' }}><IcecreamIcon /></label>
-                        </div>
-
-                        <h3 className="title">HELADOS</h3>
-                    </div>
-                    <div className="backdrop"></div>
-                </div>
-            </div>
-
-        </div>*/
