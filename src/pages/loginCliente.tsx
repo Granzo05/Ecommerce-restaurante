@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/login.css';
 import { ClienteService } from '../services/ClienteService'
 import LockIcon from '@mui/icons-material/Lock';
@@ -12,6 +12,8 @@ import { Localidad } from '../types/Domicilio/Localidad';
 import ModalFlotanteRecomendacionesProvincias from '../hooks/ModalFlotanteFiltroProvincia';
 import ModalFlotanteRecomendacionesDepartamentos from '../hooks/ModalFlotanteFiltroDepartamentos';
 import ModalFlotanteRecomendacionesLocalidades from '../hooks/ModalFlotanteFiltroLocalidades';
+import HeaderLogin from '../components/headerLogin';
+import Footer from '../components/Footer';
 
 const LoginCliente = () => {
     const [step, setStep] = useState(1);
@@ -147,6 +149,10 @@ const LoginCliente = () => {
         }
     };
 
+    useEffect(() => {
+        document.title = 'El Buen Sabor - Iniciar sesión';
+      }, []);
+
     const renderStep = () => {
         switch (step) {
             case 1:
@@ -241,6 +247,7 @@ const LoginCliente = () => {
     return (
 
         <>
+            <HeaderLogin></HeaderLogin>
             <Toaster />
             {/*INICIAR SESION*/}
             <section className="form-main" style={{ display: mostrarIniciarSesion ? '' : 'none' }}>

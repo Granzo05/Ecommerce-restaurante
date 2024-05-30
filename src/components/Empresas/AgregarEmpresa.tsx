@@ -77,41 +77,76 @@ function AgregarEmpresa() {
     });
   };
 
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <h4>Paso 1 - Datos</h4>
+            <div className="inputBox">
+              <input autoComplete='false' type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre</span>
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => { setRazonSocial(e.target.value) }} />
+              <span>Razón social</span>
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => { setCuit(e.target.value) }} />
+              <span>Cuit</span>
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <div>
+              {imagenes.map((imagen, index) => (
+
+                <div className='inputBox' key={index}>
+                  
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    maxLength={10048576}
+                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                  />
+                </div>
+              ))}
+            </div>
+            <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={handleCargarNegocio}>Agregar empresa ✓</button>
+              
+            </div>
+          </>
+        );
+    }
+  }
+
   return (
     <div className='modal-info'>
-      <h2>Agregar empresa</h2>
+      <h2>&mdash; Agregar empresa &mdash;</h2>
       <Toaster />
-      <div>
-        {imagenes.map((imagen, index) => (
-
-          <div className='inputBox' key={index}>
-            <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-            <input
-              type="file"
-              accept="image/*"
-              maxLength={10048576}
-              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-            />
-          </div>
-        ))}
-      </div>
-      <button onClick={añadirCampoImagen}>Añadir imagen</button>
-      <form>
-        <div className="inputBox">
-          <input autoComplete='false' type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
-          <span>Nombre</span>
-        </div>
-        <div className="inputBox">
-          <input type="text" required={true} onChange={(e) => { setRazonSocial(e.target.value) }} />
-          <span>Razón social</span>
-        </div>
-        <div className="inputBox">
-          <input type="text" required={true} onChange={(e) => { setCuit(e.target.value) }} />
-          <span>Cuit</span>
-        </div>
-      </form>
-      <hr />
-      <button type="button" onClick={handleCargarNegocio}>Agregar empresa</button>
+      {renderStep()}
     </div>
   )
 }

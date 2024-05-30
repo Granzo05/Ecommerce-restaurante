@@ -6,6 +6,8 @@ import { Promocion } from '../types/Productos/Promocion';
 import ModalFlotante from '../components/ModalFlotante';
 import DetallesPromocion from '../components/Promociones/DetallesPromocion';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
+import HeaderHomePage from '../components/headerHomePage';
+import Footer from '../components/Footer';
 
 export default function MainMenu() {
     const convertirFecha = (date: Date) => {
@@ -45,18 +47,19 @@ export default function MainMenu() {
         if (sucursal?.nombre) {
             document.title = sucursal?.nombre;
         } else {
-            document.title = 'Home';
+            document.title = 'El Buen Sabor';
         }
     }, [sucursal]);
 
     return (
         <>
+        <HeaderHomePage></HeaderHomePage>
             <section id='servicios' className='information container'>
                 <div className="information-content">
                     <div className='information-1'>
                         <div className="information-c1">
                             <h3>Historia</h3>
-                            <p>"El Buen Sabor", fundado en 2000 por la familia Rodríguez, ofrece una experiencia culinaria única y auténtica en nuestro país.</p>
+                            <p>"El Buen Sabor", fundado en 2000 por Carlos Rodríguez, ofrece una experiencia culinaria única y auténtica en nuestro país.</p>
                             <a href="" className='btn-1'>Conocer historia</a>
                         </div>
                         <div className="information-a1">
@@ -169,6 +172,7 @@ export default function MainMenu() {
                     )}
                 </div>
             </section>
+        <Footer></Footer>
         </>
     )
 }

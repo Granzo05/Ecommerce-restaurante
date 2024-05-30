@@ -67,7 +67,7 @@
   transform: translateX(0);
 }
 
-.main-options h4 {
+.main-options h4, .settings h4 {
   cursor: pointer;
   padding: 5px;
   font-size: 20px;
@@ -93,7 +93,7 @@ p {
   border-radius: 7px;
 }
 
-.main-options h4:hover {
+.main-options h4:hover, .settings h4:hover {
   background-color: grey;
   transition: .3s;
 }

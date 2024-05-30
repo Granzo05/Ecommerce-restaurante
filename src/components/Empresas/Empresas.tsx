@@ -72,10 +72,12 @@ const Empresas = () => {
         fetchEmpresas();
     };
 
+    
+
     return (
         <div className="opciones-pantallas">
             <h1>- Empresas -</h1>
-            <div className="btns-empresas">
+            <div className="btns-stock">
 
                 <button className="btn-agregar" onClick={() => handleAgregarEmpresa()}> + Agregar empresa</button>
             </div>
@@ -88,10 +90,9 @@ const Empresas = () => {
                     <table>
                         <thead>
                             <tr>
-                                <th>Domicilio</th>
-                                <th>Telefono</th>
-                                <th>Horario apertura</th>
-                                <th>Horario cierre</th>
+                                <th>Nombre</th>
+                                <th>Razón Social</th>
+                                <th>CUIT</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>

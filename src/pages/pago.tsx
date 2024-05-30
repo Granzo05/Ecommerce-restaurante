@@ -10,6 +10,8 @@ import { DetallesPedido } from "../types/Pedidos/Detalles_pedido";
 import { EnumEstadoPedido } from "../types/Pedidos/EnumEstadoPedido";
 import { toast, Toaster } from "sonner";
 import { Domicilio } from "../types/Domicilio/Domicilio";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const Pago = () => {
     const [carrito, setCarrito] = useState<Carrito | null>(null);
@@ -97,6 +99,7 @@ const Pago = () => {
 
     return (
         <>
+        <Header></Header>
         <div className="container-pago">
             <Toaster />
             <div className="div-pago">
@@ -199,6 +202,7 @@ const Pago = () => {
                 )}
             </div>
         </div >
+        <Footer></Footer>
         </>
     )
 }

@@ -8,46 +8,10 @@ import './App.css';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [mostrarFooter, setMostrarFooter] = useState(true);
-  const [mostrarHeader, setMostrarHeader] = useState(false);
-  const [mostrarHeaderLogin, setMostrarHeaderLogin] = useState(false);
-  const [mostrarHeaderHomePage, setMostrarHeaderHomePage] = useState(false);
-  
-
-  useEffect(() => {
-    const ruta = window.location.href.split('/').pop(); 
-    
-    if (ruta?.startsWith('login-negocio') || ruta?.startsWith('opciones') || ruta?.startsWith('selec-sucursal')) {
-      setMostrarFooter(false);
-    } else {
-      setMostrarFooter(true);
-    }
-
-    if ( ruta?.startsWith('cambio-contra') || ruta?.startsWith('login-cliente') || ruta?.startsWith('selec-sucursal') || ruta?.startsWith('pago')) {
-      setMostrarHeader(true);
-    } else {
-      setMostrarHeader(false);
-    }
-
-    if (ruta?.startsWith('cambio-contra') || ruta?.startsWith('login-cliente') || ruta?.startsWith('login-negocio') || ruta?.startsWith('selec-sucursal')) {
-      setMostrarHeaderLogin(true);
-    } else {
-      setMostrarHeaderLogin(false);
-    }
-
-    if (ruta === '') {
-      setMostrarHeaderHomePage(true);
-    } else {
-      setMostrarHeaderHomePage(false);
-    }
-
-  }, []);
 
   return (
     <Router>
-      {mostrarHeader ? <Header /> : mostrarHeaderLogin ? <HeaderLogin /> : mostrarHeaderHomePage ? <HeaderHomePage /> : null}
       <AppRoutes />
-      {mostrarFooter && <Footer />}
     </Router>
   );
 }

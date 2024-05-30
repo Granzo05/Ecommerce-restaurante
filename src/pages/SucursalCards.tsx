@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import '../styles/sucursalCards.css';
+import HeaderLogin from '../components/headerLogin';
 
 interface Sucursal {
   id: number;
@@ -25,10 +26,12 @@ const SucursalCards: React.FC = () => {
   };
 
   useEffect(() => {
-    document.title = 'Seleccionar sucursal';
+    document.title = 'EBS - Seleccionar sucursal';
   }, []);
 
   return (
+    <>
+    <HeaderLogin></HeaderLogin>
     <div className="outer-container-sucursal-card">
       <div className="inner-container-sucursal-card">
         <h1 className="header-sucursal-card">&mdash; Selecciona una sucursal &mdash;</h1>
@@ -45,6 +48,8 @@ const SucursalCards: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
+    
   );
 };
 
