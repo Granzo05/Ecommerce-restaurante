@@ -6,13 +6,20 @@ import { useParams } from 'react-router-dom';
 import { Promocion } from '../types/Productos/Promocion';
 import ModalFlotante from '../components/ModalFlotante';
 import DetallesPromocion from '../components/Promociones/DetallesPromocion';
+import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 
 export default function MainMenu() {
+    const convertirFecha = (date: Date) => {
+        const dia = date.getDate() + 1;
+        const mes = date.getMonth() + 1;
+        const año = date.getFullYear();
+        return `${dia}/${mes}/${año}`;
+    };
     const { id } = useParams()
 
-    const [sucursal, setSucursal] = useState<Sucursal>();
+    const [sucursal, setSucursal] = useState<SucursalDTO>();
 
-    const [selectedPromocion, setSelectedPromocion] = useState<Promocion>();
+    const [selectedPromocion, setSelectedPromocion] = useState<Promocion>(new Promocion());
     const [showDetallePromocionModal, setShowDetallePromocionModal] = useState<boolean>(false);
 
     function handleMenu(tipoComida: string) {
@@ -25,14 +32,14 @@ export default function MainMenu() {
     };
 
     useEffect(() => {
-        if (id)
-            SucursalService.getSucursalById(parseInt(id))
-                .then(async sucursal => {
-                    if (sucursal) setSucursal(sucursal);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
+        SucursalService.getSucursalDTOById(1)
+            .then(async sucursal => {
+                console.log(sucursal)
+                if (sucursal) setSucursal(sucursal);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
     }, [id]);
 
     return (
@@ -74,11 +81,11 @@ export default function MainMenu() {
                     <section className="oferts">
                         <div className="ofert-content container">
                             {sucursal && sucursal.promociones.map(promocion =>
-                                <div className="ofert-1">
+                                <div key={promocion.id} className="ofert-1">
                                     <div className="ofert-txt">
                                         <h3>{promocion.nombre}</h3>
-                                        <p>Desde: {promocion.fechaDesde?.toString()}</p>
-                                        <p>Hasta: {promocion.fechaHasta?.toString()}</p>
+                                        <p>Desde: {convertirFecha(new Date(promocion.fechaDesde))}</p>
+                                        <p>Hasta: {convertirFecha(new Date(promocion.fechaHasta))}</p>
                                         <a className='btn-2' onClick={() => { setShowDetallePromocionModal(true); setSelectedPromocion(promocion) }}>Más Información</a>
                                     </div>
                                     <div className="ofert-img">

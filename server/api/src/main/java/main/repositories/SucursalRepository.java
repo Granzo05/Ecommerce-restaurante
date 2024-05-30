@@ -2,6 +2,7 @@ package main.repositories;
 
 import main.entities.Restaurante.LocalidadDelivery;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Restaurante.SucursalDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,12 +16,12 @@ public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
 
     @Query("SELECT s FROM Sucursal s WHERE s.email = :email")
     Optional<Sucursal> findByEmail(@Param("email") String email);
-
-    @Query("SELECT s FROM Sucursal s WHERE s.id = :id")
-    Optional<Sucursal> findById(@Param("id") Long id);
-
     @Query("SELECT s FROM Sucursal s WHERE s.nombre = :nombre")
     Optional<Sucursal> findByName(@Param("nombre") String nombre);
+
+    @Query("SELECT NEW main.entities.Restaurante.SucursalDTO(s.id, s.domicilio, s.telefono, s.email, s.nombre, s.horarioApertura, s.horarioCierre, s.borrado) FROM Sucursal s WHERE s.id = :id")
+    Optional<SucursalDTO> findByIdDTO(@Param("id") Long id);
+
     @Query("SELECT s FROM Sucursal s WHERE s.empresa.id = :id")
     List<Sucursal> findByIdEmpresa(@Param("id") Long id);
 

@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion }) => {
-  const imagenesInvertidas = [...selectedPromocion.imagenesDTO].reverse();
+  const imagenesInvertidas = [...selectedPromocion.imagenes].reverse();
   const [cantidadPromocion, setCantidadPromocion] = useState<number>(1);
 
   async function handleAñadirPromocionAlCarrito(promocion: Promocion) {
@@ -37,10 +37,9 @@ export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion }) => {
         <p>Descripción: {selectedPromocion.descripcion}</p>
         <p>Productos:</p>
         <ul>
-          {selectedPromocion.detallesPromocion?.map((detalle, index) => (
+          {selectedPromocion.detallesPromocion?.map((detalle) => (
             <>
-              <li key={index}>* {detalle.articuloMenu?.nombre} - {detalle.cantidad} - {detalle.medida.nombre}</li>
-              <li key={index}>* {detalle.articuloVenta?.nombre} - {detalle.cantidad} - {detalle.medida.nombre}</li>
+              <li key={detalle.id}>* {detalle.articuloMenu?.nombre} {detalle.articuloVenta?.nombre} - {detalle.cantidad} - {detalle.medida.nombre}</li>
             </>
           ))}
         </ul>

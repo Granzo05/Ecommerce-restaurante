@@ -11,8 +11,6 @@ import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
 import ModalFlotanteRecomendacionesArticulo from '../../hooks/ModalFlotanteFiltroArticuloVenta';
-import AgregarMedida from '../Medidas/AgregarMedida';
-import ModalFlotante from '../ModalFlotante';
 
 function AgregarStockEntrante() {
 
@@ -132,14 +130,11 @@ function AgregarStockEntrante() {
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
   const [modalBusquedaArticulo, setModalBusquedaArticulo] = useState<boolean>(false);
   const [modalBusquedaIngrediente, setModalBusquedaIngrediente] = useState<boolean>(false);
-  const [showAgregarMedidaModal, setShowAgregarMedidaModal] = useState<boolean>(false);
-
 
   const handleModalClose = () => {
     setModalBusquedaMedida(false)
     setModalBusquedaArticulo(false)
     setModalBusquedaIngrediente(false)
-    setShowAgregarMedidaModal(false)
   };
 
   async function agregarStockEntrante() {

@@ -33,8 +33,9 @@ public class SucursalController {
     private final MedidaRepository medidaRepository;
     private final CategoriaRepository categoriaRepository;
     private final ImagenesRepository imagenesRepository;
+    private final PromocionRepository promocionRepository;
 
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository, ImagenesRepository imagenesRepository) {
+    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository, ImagenesRepository imagenesRepository, PromocionRepository promocionRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
@@ -44,6 +45,7 @@ public class SucursalController {
         this.medidaRepository = medidaRepository;
         this.categoriaRepository = categoriaRepository;
         this.imagenesRepository = imagenesRepository;
+        this.promocionRepository = promocionRepository;
     }
 
 
@@ -62,9 +64,6 @@ public class SucursalController {
 
         for (Sucursal sucursal : sucursales) {
             Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
-
-            domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
-
             sucursal.setDomicilio(domicilio);
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
         }
@@ -74,11 +73,18 @@ public class SucursalController {
 
     @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}")
-    public Sucursal getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
-        Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
+    public SucursalDTO getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
+        Optional<SucursalDTO> sucursalDB = sucursalRepository.findByIdDTO(idSucursal);
 
-        if(sucursal.isPresent()) {
-            return sucursal.get();
+        if(sucursalDB.isPresent()) {
+            SucursalDTO sucursal = sucursalDB.get();
+
+            sucursal.setCategorias(new HashSet<>(categoriaRepository.findAllByIdSucursal(idSucursal)));
+            sucursal.setImagenes(new HashSet<>(imagenesRepository.findByIdSucursal(idSucursal)));
+            sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(idSucursal)));
+            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllByIdSucursal(idSucursal)));
+            
+            return sucursal;
         }
 
         return null;

@@ -1,5 +1,6 @@
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Sucursal } from '../types/Restaurante/Sucursal';
+import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 import { URL_API } from '../utils/global_variables/const';
 
 export const SucursalService = {
@@ -101,7 +102,7 @@ export const SucursalService = {
         }
     },
 
-    getSucursalById: async (idSucursal: number): Promise<Sucursal | null> => {
+    getSucursalDTOById: async (idSucursal: number): Promise<SucursalDTO | null> => {
         try {
             const response = await fetch(URL_API + 'sucursal/' + idSucursal, {
                 method: 'GET',

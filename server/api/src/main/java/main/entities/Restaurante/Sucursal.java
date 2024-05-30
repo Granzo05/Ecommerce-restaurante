@@ -17,6 +17,14 @@ import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
+
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,45 +36,61 @@ import java.util.Set;
 public class Sucursal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
+
     @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"})
     @OneToOne(mappedBy = "sucursal", cascade = CascadeType.ALL, orphanRemoval = true)
     private Domicilio domicilio;
+
     @Column(name = "contraseña")
     private String contraseña;
+
     @Column(name = "telefono")
-    private long telefono;
+    private Long telefono;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "nombre")
     private String nombre;
+
     @Column(name = "privilegios")
     private String privilegios;
+
     @Column(name = "horario_apertura")
     private LocalTime horarioApertura;
+
     @Column(name = "horario_cierre")
     private LocalTime horarioCierre;
+
     @JsonIgnoreProperties(value = {"domicilios", "sucursal"}, allowSetters = true)
     @OneToMany(mappedBy = "sucursal")
     private Set<Empleado> empleados = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"sucursales", "imagenes"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_empresa")
     private Empresa empresa;
+
     @Column(name = "borrado")
     private String borrado = "NO";
+
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
-    @OneToMany(mappedBy = "sucursal")
+    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
     private Set<Stock> stocksSucursal = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
-    @OneToMany(mappedBy = "sucursal")
+    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
     private Set<StockEntrante> stocksEntranteSucursal = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales")
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.EAGER)
     private Set<Promocion> promociones = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"imagenes", "sucursales"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -84,13 +108,17 @@ public class Sucursal {
             inverseJoinColumns = @JoinColumn(name = "id_articulo_venta")
     )
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
     @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
     private Set<Imagenes> imagenes = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Medida> medidas = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"sucursales", "subcategorias"}, allowSetters = true)
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Categoria> categorias = new HashSet<>();
+
 }
