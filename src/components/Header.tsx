@@ -81,7 +81,7 @@ const Header = () => {
     return (
         <header id="inicio" className="header-all">
             <div className="menu container">
-                <a href="" className="logo">
+                <a href="/" className="logo">
                     <img src={Logo} alt="Logo" />
                 </a>
                 <input type="checkbox" id="menu" />
