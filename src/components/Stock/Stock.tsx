@@ -113,9 +113,9 @@ const Stocks = () => {
 
             <hr />
 
-            <ModalFlotante isOpen={showAgregarStockModalArticulo} onClose={handleModalClose}>
+            <ModalCrud isOpen={showAgregarStockModalArticulo} onClose={handleModalClose}>
                 <AgregarStockArticulo />
-            </ModalFlotante>
+            </ModalCrud>
 
             <ModalCrud isOpen={showAgregarStockModalIngrediente} onClose={handleModalClose}>
                 <AgregarStockIngrediente />

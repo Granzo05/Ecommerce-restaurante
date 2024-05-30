@@ -84,7 +84,7 @@ function AgregarStockIngrediente() {
   return (
     <div className="modal-info">
       <Toaster />
-      <h2>Agregar ingrediente</h2>
+      <h2>&mdash; Agregar ingrediente &mdash;</h2>
       <label>
         <div className="inputBox">
           <input type="text" required onChange={(e) => { setArticuloVenta(e.target.value) }} />
