@@ -1,0 +1,54 @@
+  .outer-container-sucursal-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background: url('../assets/img/backgrounds/bg-sucursal-card.jpg') no-repeat center center fixed; 
+    background-size: cover;
+    min-height: 100%;
+  }
+  
+  .inner-container-sucursal-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 40px black; /* Sombra para dar efecto de elevación */
+    text-align: center;
+  }
+  
+  .header-sucursal-card {
+    margin-bottom: 20px;
+  }
+  
+  .sucursal-card-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .sucursal-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    width: 30%; /* Añadido para mantener las tarjetas con un tamaño uniforme */
+    background-color: #fafafa; /* Fondo blanco de las tarjetas */
+  }
+  
+  .sucursal-card:hover {
+    transform: scale(1.05);
+    background-color: #cccccc;
+  }
+  
+  .sucursal-card h2 {
+    font-size: 18px;
+  }
+  
+  .sucursal-card p {
+    font-size: 14px;
+    color: #555;
+  }
+  

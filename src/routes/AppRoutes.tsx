@@ -9,11 +9,15 @@ import MainMenu from "../pages/HomePage"
 import PedidosCliente from "../pages/pedidosCliente"
 import CambioContra from '../components/PasswordResetForm'
 import Empresas from "../components/Empresas/Empresas"
+import SucursalCards from "../pages/SucursalCards"
 
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
+
+      <Route path="/selec-sucursal" element={<SucursalCards />}>
+      </Route>
 
       <Route path="/panel" element={<Empresas />}>
       </Route>
