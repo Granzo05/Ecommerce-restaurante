@@ -213,123 +213,200 @@ function AgregarSucursal() {
     });
   };
 
-  return (
-    <div className='modal-info'>
-      <h2>Agregar sucursal</h2>
-      <Toaster />
-      <form>
-        <div >
-          {imagenes.map((imagen, index) => (
-            <div key={index} className='inputBox'>
-              <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-              <input
-                type="file"
-                accept="image/*"
-                maxLength={10048576}
-                onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-              />
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <h4>Paso 1 - Datos</h4>
+            <div className="inputBox">
+              <input autoComplete='false' type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
+              <span>Correo electrónico</span>
+            </div>
+            <div className="inputBox">
+              <input type="password" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+              <span>Contraseña</span>
+            </div>
+            <div className="inputBox">
+              <input type="phone" required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+              <span>Telefono</span>
+            </div>
+            <div className="inputBox">
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de apertura:</label>
+              <input type="time" required={true} onChange={(e) => { setHorarioApertura(e.target.value) }} />
 
             </div>
-          ))}
+            <div className="inputBox">
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de cierre:</label>
+              <input type="time" required={true} onChange={(e) => { setHorarioCierre(e.target.value) }} />
 
-        </div>
-        <button onClick={añadirCampoImagen}>Añadir imagen</button>
-        <div className="inputBox">
-          <input autoComplete='false' type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
-          <span>Correo electrónico</span>
-        </div>
-        <div className="inputBox">
-          <input type="password" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
-          <span>Contraseña</span>
-        </div>
-        <div className="inputBox">
-          <input type="phone" required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-          <span>Telefono</span>
-        </div>
-        <div className="inputBox">
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de apertura:</label>
-          <input type="time" required={true} onChange={(e) => { setHorarioApertura(e.target.value) }} />
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h4>Paso 2 - Domicilio</h4>
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
+              <span>Nombre de calle</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
+              <span>Número de domicilio</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+              <span>Código Postal</span>
+            </div>
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
+              <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
+              {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
 
-        </div>
-        <div className="inputBox">
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de cierre:</label>
-          <input type="time" required={true} onChange={(e) => { setHorarioCierre(e.target.value) }} />
+            </div>
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
+              <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
+              {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
 
-        </div>
-        <div className="inputBox">
-          <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
-          <span>Nombre de calle</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
-          <span>Número de domicilio</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
-          <span>Código Postal</span>
-        </div>
-        <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
-        {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
+            </div>
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
+              <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadSucursal.nombre ?? ''} />
+              {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadSucursal(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
-        <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
-        {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h4>Paso 3 - Departamentos para delivery</h4>
+            <div className="inputBox">
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery:</label>
 
-        <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadSucursal.nombre ?? ''} />
-        {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadSucursal(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+            </div>
+            {departamentosMostrablesCheckBox && (
+              <table>
+                <tbody>
+                  {departamentosMostrablesCheckBox.map((departamento, index) => (
+                    <tr key={index}>
+                      <td>{departamento.nombre}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          id={`localidad-${index}`}
+                          value={departamento.id}
+                          checked={idDepartamentosElegidos.has(departamento.id)}
+                          onChange={() => handleDepartamentosCheckboxChange(departamento.id)}
+                        />
+                      </td>
+                    </tr>
 
-        <div className="inputBox">
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery:</label>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <h4>Paso 4 - Localidades para delivery</h4>
+            <div className="inputBox">
 
-        </div>
-        {departamentosMostrablesCheckBox && (
-          <table>
-            <tbody>
-              {departamentosMostrablesCheckBox.map((departamento, index) => (
-                <tr key={index}>
-                  <td>{departamento.nombre}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      id={`localidad-${index}`}
-                      value={departamento.id}
-                      checked={idDepartamentosElegidos.has(departamento.id)}
-                      onChange={() => handleDepartamentosCheckboxChange(departamento.id)}
-                    />
-                  </td>
-                </tr>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
+            </div>
 
+            {localidadesMostrablesCheckbox && (
+              <table>
+                <tbody>
+                  {localidadesMostrablesCheckbox.map((localidad, index) => (
+                    <tr key={index}>
+                      <td>{localidad.nombre}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          value={localidad.id}
+                          checked={idLocalidadesElegidas.has(localidad.id)}
+                          onChange={() => handleLocalidadesCheckboxChange(localidad.id)}
+                        />
+                      </td>
+                    </tr>
+
+                  ))}
+                </tbody>
+              </table>
+            )}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              
+            </div>
+          </>
+        );
+      case 5:
+        return (
+          <>
+          <h4>Paso final - Imagen</h4>
+            <div >
+              {imagenes.map((imagen, index) => (
+                <div key={index} className='inputBox'>
+                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    maxLength={10048576}
+                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                  />
+
+                </div>
               ))}
-            </tbody>
-          </table>
-        )}
-        <div className="inputBox">
 
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
-        </div>
+            </div>
+            <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={handleCargarNegocio}>Agregar sucursal ✓</button>
+              
+            </div>
+          </>
+        );
+    }
+  }
 
-        {localidadesMostrablesCheckbox && (
-          <table>
-            <tbody>
-              {localidadesMostrablesCheckbox.map((localidad, index) => (
-                <tr key={index}>
-                  <td>{localidad.nombre}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      value={localidad.id}
-                      checked={idLocalidadesElegidas.has(localidad.id)}
-                      onChange={() => handleLocalidadesCheckboxChange(localidad.id)}
-                    />
-                  </td>
-                </tr>
-
-              ))}
-            </tbody>
-          </table>
-        )}
-      </form>
+  return (
+    <div className='modal-info'>
+      <h2>&mdash; Agregar sucursal &mdash;</h2>
+      <Toaster />
+      {renderStep()}
       <hr />
-      <button type="button" onClick={handleCargarNegocio}>Agregar sucursal</button>
 
     </div>
   )

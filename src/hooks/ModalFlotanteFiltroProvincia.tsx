@@ -38,10 +38,10 @@ const ModalFlotanteRecomendacionesProvincias: React.FC<{ onCloseModal: () => voi
     <div>
       <div className="modal-overlay">
 
-        <div className="modal-flotante-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          <h2>FILTRAR PROVINCIAS</h2>
+          <h2>&mdash; Filtrar provincias &mdash;</h2>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
