@@ -123,7 +123,7 @@ export default function MainMenu() {
                                     if (index < sucursal.categorias.length / 2) {
                                         return (
                                             <div className="food-1" key={index}>
-                                                <h3>{categoria.nombre}</h3>
+                                                <h3>{categoria.nombre.replace(/_/g, ' ')}</h3>
                                                 <div className="food-txt">
                                                     <p>
                                                         {categoria.imagenes.length > 0 ? (
