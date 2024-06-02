@@ -16,7 +16,6 @@ export const MenuService = {
         return await response.json();
     },
 
-
     createMenu: async (menu: ArticuloMenu, imagenes: Imagenes[]): Promise<string> => {
         try {
             const menuResponse = await fetch(URL_API + 'menu/create/' + sucursalId, {

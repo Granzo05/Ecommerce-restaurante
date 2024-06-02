@@ -6,6 +6,7 @@ import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 import '../styles/header.css';
 import Header from '../components/Header'
 import Footer from '../components/Footer';
+import { CarritoService } from '../services/CarritoService';
 
 
 function RestaurantesPorComida() {
@@ -45,7 +46,7 @@ function RestaurantesPorComida() {
         </div>
 
         {menus && menus.map(menu =>
-          <div className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+          <div key={menu.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
             <div className="front">
               <div className='img-food'>
                 <img src={menu.imagenes[0].ruta} alt={menu.descripcion} />
@@ -53,12 +54,12 @@ function RestaurantesPorComida() {
               </div>
               <div className="details">
                 <div className="details-sub">
-                  <h5>{tipoComida}</h5>
-                  <h5 className='price'>{menu.precioVenta}</h5>
+                  <h5>{ }</h5>
+                  <h5 className='price'>${menu.precioVenta}</h5>
                 </div>
                 <h5>{menu.nombre}</h5>
                 <p>{menu.descripcion}</p>
-                <button className="add-to-cart">Añadir al carrito</button>
+                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
               </div>
             </div>
             <div className="back">
@@ -69,14 +70,14 @@ function RestaurantesPorComida() {
                   <div className="table-cell">CANTIDAD</div>
                 </div>
                 {menu.ingredientesMenu && menu.ingredientesMenu.map(ingrediente =>
-                  <div className="table-row">
+                  <div key={ingrediente.id} className="table-row">
                     <div className="table-cell">{ingrediente.ingrediente.nombre}</div>
-                    <div className="table-cell">{ingrediente.cantidad}</div>
+                    <div className="table-cell">{ingrediente.cantidad} {ingrediente.medida.nombre}</div>
                   </div>
                 )}
               </div>
               <div className='details-back'>
-                <button>Añadir al carrito</button>
+                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
               </div>
             </div>
           </div>

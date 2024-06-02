@@ -192,7 +192,7 @@ public class ArticuloMenuController {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
 
         if (categoriaDB.isPresent()) {
-            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByCategoriaAndIdSucursal(categoriaDB.get(), idSucursal);
+            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByCategoriaAndIdSucursal(categoriaDB.get().getId(), idSucursal);
 
             for (ArticuloMenu menu : articuloMenus) {
                 menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));

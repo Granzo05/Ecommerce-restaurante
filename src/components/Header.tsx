@@ -33,7 +33,11 @@ const Header = () => {
     const [carrito, setCarrito] = useState<Carrito>(new Carrito());
 
     useEffect(() => {
-        cargarCarrito();
+        let interval = setInterval(() => {
+            cargarCarrito();
+        }, 99);
+
+        return () => clearInterval(interval);
     }, []);
 
     async function cargarCarrito() {

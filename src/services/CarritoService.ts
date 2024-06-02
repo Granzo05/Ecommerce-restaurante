@@ -107,44 +107,22 @@ export const CarritoService = {
         // Busco el carrito existente
         let carrito = await CarritoService.getCarrito();
 
-        let productoEnCarrito = false;
-
         if (articuloMenu) {
             // Veo si el articulo entrante ya está cargado en el carrito
             carrito.articuloMenu.forEach((producto, index) => {
                 if (producto.nombre === articuloMenu.nombre) {
                     // Si existe, simplemente sumamos la cantidad
-                    carrito.articuloMenu[index].cantidad -= cantidad;
-                    productoEnCarrito = true;
+                    if (carrito.articuloMenu[index].cantidad > 0) carrito.articuloMenu[index].cantidad -= cantidad;
                 }
             });
-
-            if (!productoEnCarrito) {
-                articuloMenu.cantidad = cantidad;
-
-                carrito.totalProductos -= cantidad;
-
-                carrito.articuloMenu.push(articuloMenu);
-            }
         } else if (articuloVenta) {
             carrito.articuloVenta.forEach((producto, index) => {
                 if (producto.nombre === articuloVenta.nombre) {
                     // Si existe, simplemente sumamos la cantidad
-                    carrito.articuloVenta[index].cantidad += cantidad;
-                    productoEnCarrito = true;
+                    if (carrito.articuloMenu[index].cantidad > 0) carrito.articuloVenta[index].cantidad -= cantidad;
                 }
             });
-
-            if (!productoEnCarrito) {
-
-                articuloVenta.cantidad = cantidad;
-
-                carrito.totalProductos -= cantidad;
-
-                carrito.articuloVenta.push(articuloVenta);
-            }
         }
-
         CarritoService.actualizarCarrito(carrito);
     },
 
