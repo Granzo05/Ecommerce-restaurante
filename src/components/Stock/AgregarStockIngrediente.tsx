@@ -17,7 +17,7 @@ function AgregarStockIngrediente() {
   const [cantidadMaxima, setCantidadMaxima] = useState(0);
   const [medida, setMedida] = useState<Medida>(new Medida());
   const [costoIngrediente, setCostoIngrediente] = useState(0);
-  const [nombreIngrediente, setArticuloVenta] = useState('0');
+  const [nombreIngrediente] = useState('0');
   
   const [ingrediente, setIngrediente] = useState<Ingrediente>(new Ingrediente());
 
@@ -93,7 +93,7 @@ function AgregarStockIngrediente() {
       <h2>&mdash; Agregar ingrediente &mdash;</h2>
       <div>
       <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-        <InputComponent placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
+        <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
         {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
       
       </div>
@@ -118,7 +118,7 @@ function AgregarStockIngrediente() {
         </div>
 
       </label>
-          <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+          <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
           {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
         
         <div className="inputBox">

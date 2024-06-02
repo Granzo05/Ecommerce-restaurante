@@ -113,7 +113,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo }) => {
         <span>Cantidad actual del ingrediente</span>
       </div><br />
       <div className="input-filtrado">
-        <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
+        <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
         {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
       </div>
       <br /><br />

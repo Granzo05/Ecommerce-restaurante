@@ -98,8 +98,6 @@ function AgregarArticuloVenta() {
   const handleModalClose = () => {
     setModalBusquedaCategoria(false)
     setModalBusquedaMedida(false)
-    setShowAgregarCategoriaModal(false)
-    setShowAgregarSubcategoriaModal(false)
     setModalBusquedaSubcategoria(false)
   };
 
@@ -131,17 +129,17 @@ function AgregarArticuloVenta() {
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
-              <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
               {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
-              <InputComponent placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
-              <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
               {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
             </div>
             <div className="inputBox">

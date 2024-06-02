@@ -1,9 +1,9 @@
 import TuneIcon from '@mui/icons-material/Tune';
 
-const InputComponent: React.FC<{ onInputClick: () => void, selectedProduct: string, placeHolder: string }> = ({ onInputClick, selectedProduct, placeHolder }) => {
+const InputComponent: React.FC<{ onInputClick: () => void, selectedProduct: string, placeHolder: string, disabled: boolean }> = ({ disabled, onInputClick, selectedProduct, placeHolder }) => {
   return (
     <>
-      
+
       {selectedProduct.length === 0 ? (
         <div className="inputBox">
           <TuneIcon className='icon-filter' />
@@ -15,6 +15,7 @@ const InputComponent: React.FC<{ onInputClick: () => void, selectedProduct: stri
               onInputClick();
             }}
             defaultValue={selectedProduct}
+            disabled={disabled}
             readOnly
           />
           <span>{placeHolder}</span>
@@ -25,6 +26,7 @@ const InputComponent: React.FC<{ onInputClick: () => void, selectedProduct: stri
           <input
             type="text"
             required={true}
+            disabled={disabled}
             onClick={(e) => {
               e.preventDefault();
               onInputClick();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/login.css';
 import { ClienteService } from '../services/ClienteService'
 import LockIcon from '@mui/icons-material/Lock';
@@ -13,7 +13,6 @@ import ModalFlotanteRecomendacionesProvincias from '../hooks/ModalFlotanteFiltro
 import ModalFlotanteRecomendacionesDepartamentos from '../hooks/ModalFlotanteFiltroDepartamentos';
 import ModalFlotanteRecomendacionesLocalidades from '../hooks/ModalFlotanteFiltroLocalidades';
 import HeaderLogin from '../components/headerLogin';
-import Footer from '../components/Footer';
 
 const LoginCliente = () => {
     const [step, setStep] = useState(1);
@@ -106,13 +105,8 @@ const LoginCliente = () => {
             cliente.domicilios.push(domicilio);
         }
 
-        const fechaNacimientoDate = new Date(fechaNacimiento);
-        fechaNacimientoDate.setUTCDate(fechaNacimientoDate.getUTCDate() + 1);
+        cliente.fechaNacimiento = fechaNacimiento;
 
-        const fechaNacimientoLocal = new Date(fechaNacimientoDate.toLocaleString());
-
-        cliente.fechaNacimiento = fechaNacimientoLocal;
-        console.log(cliente)
         toast.promise(ClienteService.createUser(cliente), {
             loading: 'Creando usuario...',
             success: () => {
@@ -151,7 +145,7 @@ const LoginCliente = () => {
 
     useEffect(() => {
         document.title = 'El Buen Sabor - Iniciar sesión';
-      }, []);
+    }, []);
 
     const renderStep = () => {
         switch (step) {
@@ -160,11 +154,11 @@ const LoginCliente = () => {
                     <>
                         {/* Datos personales */}
                         <div className="inputBox">
-                            <input type='text' required={true} onChange={(e) => { setNombre(e.target.value) }} />
+                            <input type='text' required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
                             <span>Nombre</span>
                         </div>
                         <div className="inputBox">
-                            <input type='text' required={true} onChange={(e) => { setApellido(e.target.value) }} />
+                            <input type='text' required={true} value={apellido} onChange={(e) => { setApellido(e.target.value) }} />
                             <span>Apellido</span>
                         </div>
                         <div className="inputBox">
@@ -182,17 +176,17 @@ const LoginCliente = () => {
                     <>
                         {/* Datos del correo */}
                         <div className="inputBox">
-                            <input type='phone' required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+                            <input type='phone' required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
                             <span>Teléfono</span>
                         </div>
                         <div className="inputBox">
-                            <input type='email' required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                            <input type='email' required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
                             <span>Correo electrónico</span>
                         </div>
 
 
                         <div className="inputBox">
-                            <input type={tipoInput} required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+                            <input type={tipoInput} required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
                             <span>Contraseña</span>
                             <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
                         </div>
@@ -209,22 +203,22 @@ const LoginCliente = () => {
                     <>
                         {/* Domicilio */}
                         <div className="inputBox">
-                            <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
+                            <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
                             <span>Nombre de la calle</span>
                         </div>
                         <div className="inputBox">
-                            <input type="number" required={true} onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
+                            <input type="number" required={true} value={numeroCasa} onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
                             <span>Número de la casa</span>
                         </div>
                         {/* Aquí van los componentes para seleccionar provincia, departamento y localidad */}
                         <label style={{ display: 'flex', fontWeight: 'bold', marginTop: '-5px' }}>Provincia:</label>
-                        <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
+                        <InputComponent placeHolder='Seleccionar provincia...' disabled={false} onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
                         {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
                         <label style={{ display: 'flex', fontWeight: 'bold', marginTop: '-5px' }}>Departamento:</label>
-                        <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
+                        <InputComponent placeHolder='Seleccionar departamento...' disabled={inputProvincia.length === 0} onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
                         {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
                         <label style={{ display: 'flex', fontWeight: 'bold', marginTop: '-5px' }}>Localidad:</label>
-                        <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadCliente.nombre ?? ''} />
+                        <InputComponent placeHolder='Seleccionar localidad...' disabled={inputDepartamento.length === 0} onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadCliente.nombre ?? ''} />
                         {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
                         <div className="inputBox">
@@ -286,11 +280,11 @@ const LoginCliente = () => {
                         <h3>- REESTABLECER CONTRASEÑA -</h3>
                         <p id='subtitle'>¡Necesitamos que coloques un correo electrónico para ayudarte a reestablecer tu contraseña!</p>
                         <form action="">
-                                    <div className="inputBox">
-                                        <input type='text' required={true} onChange={(e) => { setEmail(e.target.value) }} />
-                                        <span>Correo electrónico</span>
-                                    </div>
-                                    <br />
+                            <div className="inputBox">
+                                <input type='text' required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                                <span>Correo electrónico</span>
+                            </div>
+                            <br />
                             <input type="button" className='btn' value="ENVIAR CORREO DE RECUPERACIÓN" onClick={handleIniciarSesionUsuario} style={{ marginTop: '0.5px' }} />
                         </form>
                     </div>

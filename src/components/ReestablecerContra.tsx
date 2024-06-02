@@ -14,6 +14,6 @@ function ReestablecerContra() {
         <button>Enviar</button>
       </div>
   );
-};
+}
 
 export default ReestablecerContra;

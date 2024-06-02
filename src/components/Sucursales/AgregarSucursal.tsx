@@ -275,26 +275,26 @@ function AgregarSucursal() {
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-              <InputComponent placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
+              <InputComponent disabled={false} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
               {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
 
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
-              <InputComponent placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
+              <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
               {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
 
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
-              <InputComponent placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadSucursal.nombre ?? ''} />
+              <InputComponent disabled={inputDepartamento.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadSucursal.nombre ?? ''} />
               {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadSucursal(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-              
+
             </div>
           </>
         );
@@ -330,7 +330,7 @@ function AgregarSucursal() {
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-              
+
             </div>
           </>
         );
@@ -366,14 +366,14 @@ function AgregarSucursal() {
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-              
+
             </div>
           </>
         );
       case 5:
         return (
           <>
-          <h4>Paso final - Imagen</h4>
+            <h4>Paso final - Imagen</h4>
             <div >
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -394,7 +394,7 @@ function AgregarSucursal() {
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={handleCargarNegocio}>Agregar sucursal ✓</button>
-              
+
             </div>
           </>
         );

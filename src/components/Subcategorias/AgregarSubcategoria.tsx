@@ -39,7 +39,7 @@ function AgregarSubcategoria() {
       categoria.subcategorias.push(subcategoria);
     }
 
-    toast.promise(CategoriaService.updateCategoria(categoria), {
+    toast.promise(CategoriaService.updateCategoriaBorrado(categoria), {
       loading: 'Creando subcategoria...',
       success: (message) => {
         return message;
@@ -55,8 +55,8 @@ function AgregarSubcategoria() {
       <h2>&mdash; Cargar nueva subcategoria &mdash;</h2>
       <Toaster />
       <div>
-      <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
-        <InputComponent placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
+        <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
         {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
       </div>
       <div className="inputBox">

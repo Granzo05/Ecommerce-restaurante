@@ -81,7 +81,7 @@ function AgregarStockArticulo() {
       <h2>&mdash; Agregar artículo &mdash;</h2>
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-        <InputComponent placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={articulo.nombre ?? ''} />
+        <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={articulo.nombre ?? ''} />
         {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { setArticulo(articulo); handleModalClose(); }} />}
       </div>
       <label>
@@ -108,7 +108,7 @@ function AgregarStockArticulo() {
           <span>Costo ($)</span>
         </div>
       </label>
-          <InputComponent placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+          <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
           {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
         
       <br />
