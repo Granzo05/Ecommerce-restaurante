@@ -30,8 +30,7 @@ const Header = () => {
         setIsAccountOpen(false); // Oculta la ventana de preferencias de cuenta al cerrar sesión
     };
 
-    // PRUEBA CARRITO
-    const [carrito, setCarrito] = useState<Carrito>();
+    const [carrito, setCarrito] = useState<Carrito>(new Carrito());
 
     useEffect(() => {
         cargarCarrito();

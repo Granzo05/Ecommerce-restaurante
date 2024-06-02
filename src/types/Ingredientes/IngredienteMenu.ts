@@ -9,7 +9,6 @@ export class IngredienteMenu {
     ingrediente: Ingrediente = new Ingrediente();
     articuloMenu: ArticuloMenu = new ArticuloMenu();
     borrado: string = '';
-  nombre: ReactNode;
 
     constructor() {
     }
