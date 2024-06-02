@@ -4,44 +4,42 @@ import { URL_API } from '../utils/global_variables/const';
 
 export const EmpresaService = {
     createEmpresa: async (empresa: Empresa, imagenes: Imagenes[]): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + 'empresa/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(empresa)
-            })
+        const response = await fetch(URL_API + 'empresa/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(empresa)
+        })
 
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
-
-            let cargarImagenes = true;
-
-            // Cargar imágenes solo si se debe hacer
-            if (cargarImagenes) {
-                await Promise.all(imagenes.map(async (imagen: Imagenes) => {
-                    if (imagen.file) {
-                        // Crear objeto FormData para las imágenes
-                        const formData = new FormData();
-                        formData.append('file', imagen.file);
-                        formData.append('razonSocialEmpresa', empresa.razonSocial);
-
-                        await fetch(URL_API + 'empresa/imagenes/', {
-                            method: 'POST',
-                            body: formData
-                        });
-                    }
-                }));
-            }
-
-            return await response.text();
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw new Error('Credenciales inválidas');
+        if (!response.ok) {
+            throw new Error(await response.text());
         }
+
+        let cargarImagenes = true;
+
+        // Cargar imágenes solo si se debe hacer
+        if (cargarImagenes) {
+            await Promise.all(imagenes.map(async (imagen: Imagenes) => {
+                if (imagen.file) {
+                    // Crear objeto FormData para las imágenes
+                    const formData = new FormData();
+                    formData.append('file', imagen.file);
+                    formData.append('razonSocialEmpresa', empresa.razonSocial);
+
+                    const responseImagenes = await fetch(URL_API + 'empresa/imagenes/', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!responseImagenes.ok) {
+                        throw new Error(await response.text());
+                    }
+                }
+            }));
+        }
+
+        return await response.text();
     },
 
     getEmpresa: async (email: string, contraseña: string): Promise<string> => {

@@ -53,7 +53,7 @@ export default function MainMenu() {
 
     return (
         <>
-        <HeaderHomePage></HeaderHomePage>
+            <HeaderHomePage></HeaderHomePage>
             <section id='servicios' className='information container'>
                 <div className="information-content">
                     <div className='information-1'>
@@ -126,14 +126,14 @@ export default function MainMenu() {
                                                 <h3>{categoria.nombre}</h3>
                                                 <div className="food-txt">
                                                     <p>
-                                                        {categoria.imagenes ? (
+                                                        {categoria.imagenes.length > 0 ? (
                                                             <img src={categoria.imagenes[0]?.ruta} alt="" className="menu-img" />
                                                         ) : (
-                                                            <img src='../src/assets/img/menus/burguer-bg.avif' alt="" className="menu-img" />
+                                                            <img src='../src/assets/img/default.jpg' alt="" className="menu-img" />
                                                         )}
                                                     </p>
                                                     <div className="overlay">
-                                                        <p className='abrir-menu' onClick={() => handleMenu(categoria.nombre.toLowerCase())}>Ver menú</p>
+                                                        <p className='abrir-menu' onClick={() => handleMenu(categoria.nombre.toLowerCase())}>Ver menús</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -148,16 +148,16 @@ export default function MainMenu() {
                                     if (index >= sucursal.categorias.length / 2) {
                                         return (
                                             <div className="food-1" key={index}>
-                                                <h3>{categoria.nombre}</h3>
+                                                <h3>{categoria.nombre.replace(/_/g, ' ')}</h3>
                                                 <div className="food-txt">
                                                     <p>
-                                                        {categoria.imagenes ? (
+                                                        {categoria.imagenes.length > 0 ? (
                                                             <img src={categoria.imagenes[0]?.ruta} alt="" className="menu-img" />
                                                         ) : (
-                                                            <img src='../src/assets/img/menus/burguer-bg.avif' alt="" className="menu-img" />
+                                                            <img src='../src/assets/img/default.jpg' alt="" className="menu-img" />
                                                         )}
                                                     </p>                                                    <div className="overlay">
-                                                        <p className='abrir-menu' onClick={() => handleMenu(categoria.nombre.toLowerCase())}>Ver menú</p>
+                                                        <p className='abrir-menu' onClick={() => handleMenu(categoria.nombre.toLowerCase())}>Ver menús</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -172,7 +172,7 @@ export default function MainMenu() {
                     )}
                 </div>
             </section>
-        <Footer></Footer>
+            <Footer></Footer>
         </>
     )
 }

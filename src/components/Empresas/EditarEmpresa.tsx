@@ -14,9 +14,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
   const [imagenes, setImagenes] = useState<Imagenes[]>(empresaOriginal.imagenes);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
-  const [nombre, setNombre] = useState('');
-  const [cuit, setCuit] = useState('');
-  const [razonSocial, setRazonSocial] = useState('');
+  const [nombre, setNombre] = useState(empresaOriginal.nombre);
+  const [cuit, setCuit] = useState(empresaOriginal.cuit);
+  const [razonSocial, setRazonSocial] = useState(empresaOriginal.razonSocial);
+  const [contraseña, setContraseña] = useState('');
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -61,10 +62,12 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
     } else if (!razonSocial) {
       toast.error("Por favor, es necesaria la razón social");
       return;
+    } else if (imagenes.length === 0 || imagenesMuestra.length === 0) {
+      toast.error("Por favor, es necesaria una imagen");
+      return;
     }
 
-
-    let empresa: Empresa = new Empresa();
+    let empresa: Empresa = empresaOriginal;
 
     empresa.nombre = nombre;
 
@@ -72,8 +75,11 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
 
     empresa.razonSocial = razonSocial;
 
+    if (contraseña.length > 2) empresa.contraseña = contraseña;
+
     empresa.borrado = 'NO';
 
+    console.log(empresa);
     toast.promise(EmpresaService.updateEmpresa(empresa, imagenes, imagenesEliminadas), {
       loading: 'Editando empresa...',
       success: (message) => {
@@ -148,6 +154,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
         <div className="inputBox">
           <input type="text" required={true} value={cuit} onChange={(e) => { setCuit(e.target.value) }} />
           <span>Cuit</span>
+        </div>
+        <div className="inputBox">
+          <input type="text" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+          <span>Contraseña</span>
         </div>
       </form>
       <hr />

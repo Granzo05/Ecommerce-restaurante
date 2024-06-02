@@ -10,6 +10,7 @@ function AgregarEmpresa() {
   const [nombre, setNombre] = useState('');
   const [cuit, setCuit] = useState('');
   const [razonSocial, setRazonSocial] = useState('');
+  const [contraseña, setContraseña] = useState('');
 
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   let [selectIndexImagenes, setSelectIndexImagenes] = useState<number>(0);
@@ -53,6 +54,12 @@ function AgregarEmpresa() {
     } else if (!razonSocial) {
       toast.error("Por favor, es necesaria la razón social");
       return;
+    } else if (!contraseña) {
+      toast.error("Por favor, es necesaria la contraseña");
+      return;
+    } else if (imagenes.length === 0) {
+      toast.error("Por favor, es necesaria una imagen");
+      return;
     }
 
     let empresa: Empresa = new Empresa();
@@ -62,6 +69,8 @@ function AgregarEmpresa() {
     empresa.cuit = cuit;
 
     empresa.razonSocial = razonSocial;
+
+    empresa.contraseña = contraseña;
 
     empresa.borrado = 'NO';
 
@@ -106,6 +115,10 @@ function AgregarEmpresa() {
               <input type="text" required={true} onChange={(e) => { setCuit(e.target.value) }} />
               <span>Cuit</span>
             </div>
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+              <span>Contraseña</span>
+            </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
@@ -118,7 +131,7 @@ function AgregarEmpresa() {
               {imagenes.map((imagen, index) => (
 
                 <div className='inputBox' key={index}>
-                  
+
                   <hr />
                   <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
                   <input
@@ -135,7 +148,7 @@ function AgregarEmpresa() {
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={handleCargarNegocio}>Agregar empresa ✓</button>
-              
+
             </div>
           </>
         );

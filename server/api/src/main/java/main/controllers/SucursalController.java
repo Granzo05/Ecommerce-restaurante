@@ -83,7 +83,9 @@ public class SucursalController {
             sucursal.setImagenes(new HashSet<>(imagenesRepository.findByIdSucursal(idSucursal)));
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(idSucursal)));
             sucursal.setPromociones(new HashSet<>(promocionRepository.findAllByIdSucursal(idSucursal)));
-            
+
+            sucursal.getDomicilio().setCalle(Encrypt.desencriptarString(sucursal.getDomicilio().getCalle()));
+
             return sucursal;
         }
 

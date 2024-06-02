@@ -93,7 +93,7 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
       <div className="slider-container">
         <button onClick={prevImage} className="slider-button prev">◀</button>
         <div className='imagenes-wrapper'>
-          {imagenesMuestra.map((imagen, index) => (
+          {imagenesMuestra?.map((imagen, index) => (
             <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
               <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
               <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
@@ -113,7 +113,7 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
 
       </div>
 
-      {imagenes.map((imagen, index) => (
+      {imagenes?.map((imagen, index) => (
         <div key={index} className='inputBox'>
           <hr />
           <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>

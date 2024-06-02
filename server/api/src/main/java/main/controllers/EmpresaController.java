@@ -30,9 +30,9 @@ public class EmpresaController {
 
 
     @CrossOrigin
-    @GetMapping("/empresa/login/{email}/{password}")
-    public Empresa loginEmpresa(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
-        Optional<Empresa> empresa = empresaRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+    @GetMapping("/empresa/login/{variable}/{password}")
+    public Empresa loginEmpresa(@PathVariable("variable") String variable, @PathVariable("password") String password) throws Exception {
+        Optional<Empresa> empresa = empresaRepository.findByCuitOrNombreAndPassword(variable, Encrypt.cifrarPassword(password));
 
         if (empresa.isPresent()) {
             return empresa.get();
@@ -75,7 +75,7 @@ public class EmpresaController {
     @Transactional
     @PostMapping("/empresa/imagenes/")
     public ResponseEntity<String> crearImagenEmpresa(@RequestParam("file") MultipartFile file, @RequestParam("razonSocialEmpresa") String razonSocialEmpresa) {
-        HashSet<Imagenes> listaImagenes = new HashSet<>();
+        Set<Imagenes> listaImagenes = new HashSet<>();
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
@@ -152,15 +152,15 @@ public class EmpresaController {
         Optional<Empresa> empresaDB = empresaRepository.findById(empresaDetails.getId());
 
         if (empresaDB.isPresent()) {
-            Optional<Empresa> empresaEncontrada = empresaRepository.findByEmail(empresaDetails.getEmail());
+            Optional<Empresa> empresaEncontrada = empresaRepository.findByName(empresaDetails.getNombre());
 
-            if (empresaDB.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
+            if (empresaEncontrada.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una cuenta registrada con ese email");
             }
 
             empresaEncontrada = empresaRepository.findByCuit(empresaDetails.getCuit());
 
-            if (empresaDB.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
+            if (empresaEncontrada.isPresent() && empresaDB.get().getId() != empresaEncontrada.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una cuenta registrada con ese cuit");
             }
 
@@ -171,7 +171,8 @@ public class EmpresaController {
                     empresa.setContraseña(Encrypt.cifrarPassword(empresaDetails.getContraseña()));
                 }
 
-                empresa.setEmail(empresaDetails.getEmail());
+                empresa.setNombre(empresaDetails.getNombre());
+
                 empresa.setRazonSocial(empresaDetails.getRazonSocial());
 
                 empresaRepository.save(empresa);

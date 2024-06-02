@@ -57,8 +57,16 @@
 [] Validar que no se pueda pedir nada fuera del horario de atencion de la sucursal
 [] Modal con checkboxs para elegir sucursales, provincias, etc (Promocion necesita sucursales)
 [] Poner tipo de date para promociones con seleccion de horario ademas del dia
+[] Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
+[] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 
 Pruebas
+[x] Carga empresa [] Probar validación
+[x] Actualizacion empresa [x] Probar validación
+[x] Eliminacion empresa
+[x] Activacion empresa 
+[] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
+
 [x] Carga sucursal [x] Probar validación
 [x] Actualizacion sucursal [x] Probar validación
 [x] Eliminacion sucursal
@@ -145,8 +153,5 @@ Pruebas
 [] Activacion pedido
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-
 [] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle), telefono)
 
-Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
-Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual

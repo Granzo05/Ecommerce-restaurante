@@ -96,7 +96,6 @@ public class ClienteController {
 
         Cliente cliente = clienteOptional.get();
 
-
         for (Domicilio domicilio : clienteDetails.getDomicilios()) {
             if (cliente.getDomicilios().stream().anyMatch(d ->
             {
