@@ -56,6 +56,7 @@
 [] Revisar que los inputs que se muestran con informacion de la db(los editar mas que nada) muestren arriba de cada input de que valor es la info dentro del input (label o algo)
 [] Validar que no se pueda pedir nada fuera del horario de atencion de la sucursal
 [] Modal con checkboxs para elegir sucursales, provincias, etc (Promocion necesita sucursales)
+[] Poner tipo de date para promociones con seleccion de horario ademas del dia
 
 Pruebas
 [x] Carga sucursal [x] Probar validación
@@ -132,10 +133,10 @@ Pruebas
 [x] Activacion ingredientes
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Carga promocion [] Probar validación
-[] Actualizacion promocion [] Probar validación
-[] Eliminacion promocion
-[] Activacion promocion
+[x] Carga promocion [] Probar validación
+[x] Actualizacion promocion [] Probar validación
+[x] Eliminacion promocion
+[x] Activacion promocion
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
 [] Carga pedido [] Probar validación

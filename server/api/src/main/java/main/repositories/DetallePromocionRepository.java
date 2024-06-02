@@ -1,5 +1,6 @@
 package main.repositories;
 
+import main.entities.Productos.DetallePromocion;
 import main.entities.Productos.Promocion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,19 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PromocionRepository extends JpaRepository<Promocion, Long> {
-
-    @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :id")
-    List<Promocion> findAllByIdSucursal(@Param("id") Long id);
-
-    @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :id AND p.nombre = :nombre")
-    Optional<Promocion> findByNameAndIdSucursal(@Param("nombre") String nombre, @Param("id") Long id);
-
-    @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :idSucursal AND p.id = :idPromocion")
-    Optional<Promocion> findByIdPromocionAndIdSucursal(@Param("idPromocion") Long idPromocion, @Param("idSucursal") Long idSucursal);
+public interface DetallePromocionRepository extends JpaRepository<DetallePromocion, Long> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM Promocion p WHERE p.id = :id")
+    @Query("DELETE FROM DetallePromocion d WHERE d.promocion.id = :id")
     void deleteAllByPromocionId(@Param("id") Long id);
 }

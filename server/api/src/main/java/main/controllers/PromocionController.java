@@ -3,6 +3,7 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.entities.Productos.*;
 import main.entities.Restaurante.Sucursal;
+import main.repositories.DetallePromocionRepository;
 import main.repositories.ImagenesRepository;
 import main.repositories.PromocionRepository;
 import main.repositories.SucursalRepository;
@@ -24,11 +25,13 @@ public class PromocionController {
     private final PromocionRepository promocionRepository;
     private final ImagenesRepository imagenesRepository;
     private final SucursalRepository sucursalRepository;
+    private final DetallePromocionRepository detallePromocionRepository;
 
-    public PromocionController(PromocionRepository promocionRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository) {
+    public PromocionController(PromocionRepository promocionRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository, DetallePromocionRepository detallePromocionRepository) {
         this.promocionRepository = promocionRepository;
         this.imagenesRepository = imagenesRepository;
         this.sucursalRepository = sucursalRepository;
+        this.detallePromocionRepository = detallePromocionRepository;
     }
 
 
@@ -170,11 +173,11 @@ public class PromocionController {
 
             if (promocion.getBorrado().equals(promocionDetails.getBorrado())) {
                 // Borrar todas los articulos y menus
-                promocionRepository.deleteAllByPromocionId(promocion.getId());
+                detallePromocionRepository.deleteAllByPromocionId(promocion.getId());
 
                 // Actualizar horarios
-                promocion.setFechaDesde(LocalDateTime.parse(promocion.getFechaDesde().toString()));
-                promocion.setFechaHasta(LocalDateTime.parse(promocion.getFechaHasta().toString()));
+                promocion.setFechaDesde(LocalDateTime.parse(promocionDetails.getFechaDesde().toString()));
+                promocion.setFechaHasta(LocalDateTime.parse(promocionDetails.getFechaHasta().toString()));
 
                 for(DetallePromocion detallePromocion: promocionDetails.getDetallesPromocion()) {
                     detallePromocion.setPromocion(promocionDetails);
