@@ -126,7 +126,6 @@ export default function MainMenu() {
                                                 <h3>{categoria.nombre}</h3>
                                                 <div className="food-txt">
                                                     <p>
-                                                        {/* ESTO LO CAMBIE A PROPOSITO, VA A MOSTRAR LA FOTO GRIS TODA COGIDA ESA, HABRIA QUE BUSCAR OTRA. NO PONGO UNA IMAGEN DE UN PLATO PORQUE PUEDE SER UNA SUCURSAL QUE VENDEN PITOS AZULES Y NO PEGA  */}
                                                         {categoria.imagenes.length > 0 ? (
                                                             <img src={categoria.imagenes[0]?.ruta} alt="" className="menu-img" />
                                                         ) : (

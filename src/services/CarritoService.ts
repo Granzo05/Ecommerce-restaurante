@@ -53,7 +53,6 @@ export const CarritoService = {
             }
         }
 
-        console.log(carrito)
         CarritoService.actualizarCarrito(carrito);
     },
 
@@ -100,6 +99,51 @@ export const CarritoService = {
                 }
             }
         });
+
+        CarritoService.actualizarCarrito(carrito);
+    },
+
+    descontarAlCarrito: async (articuloMenu: ArticuloMenu | null, articuloVenta: ArticuloVenta | null, cantidad = 1) => {
+        // Busco el carrito existente
+        let carrito = await CarritoService.getCarrito();
+
+        let productoEnCarrito = false;
+
+        if (articuloMenu) {
+            // Veo si el articulo entrante ya está cargado en el carrito
+            carrito.articuloMenu.forEach((producto, index) => {
+                if (producto.nombre === articuloMenu.nombre) {
+                    // Si existe, simplemente sumamos la cantidad
+                    carrito.articuloMenu[index].cantidad -= cantidad;
+                    productoEnCarrito = true;
+                }
+            });
+
+            if (!productoEnCarrito) {
+                articuloMenu.cantidad = cantidad;
+
+                carrito.totalProductos -= cantidad;
+
+                carrito.articuloMenu.push(articuloMenu);
+            }
+        } else if (articuloVenta) {
+            carrito.articuloVenta.forEach((producto, index) => {
+                if (producto.nombre === articuloVenta.nombre) {
+                    // Si existe, simplemente sumamos la cantidad
+                    carrito.articuloVenta[index].cantidad += cantidad;
+                    productoEnCarrito = true;
+                }
+            });
+
+            if (!productoEnCarrito) {
+
+                articuloVenta.cantidad = cantidad;
+
+                carrito.totalProductos -= cantidad;
+
+                carrito.articuloVenta.push(articuloVenta);
+            }
+        }
 
         CarritoService.actualizarCarrito(carrito);
     },
