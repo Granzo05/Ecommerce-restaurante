@@ -190,7 +190,7 @@ const Opciones = () => {
                                                 Pedidos aceptados
                                             </p>
                                             <p className={opcionSeleccionada === 3 ? 'selected' : ''} onClick={() => handleOpcionClick(3)}>
-                                                Pedidos cocinados
+                                                Pedidos para entregar
                                             </p>
                                             <p className={opcionSeleccionada === 4 ? 'selected' : ''} onClick={() => handleOpcionClick(4)}>
                                                 Pedidos entregados

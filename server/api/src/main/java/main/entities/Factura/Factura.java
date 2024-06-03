@@ -9,6 +9,7 @@ import lombok.Setter;
 import main.entities.Pedidos.Pedido;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "facturas", schema = "buen_sabor")
-public class Factura {
+public class Factura implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -31,7 +32,10 @@ public class Factura {
     public LocalDateTime fechaFacturacion;
     @Column(name = "total")
     private double total;
-    @JsonIgnoreProperties(value = {"factura"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {
+            "factura", "cliente", "sucursales", "detallesPedido",
+            "tipoEnvio", "estado"
+    }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido")
     private Pedido pedido;

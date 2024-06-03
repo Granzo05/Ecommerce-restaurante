@@ -90,6 +90,8 @@ export const PedidoService = {
             pedido = await FacturaService.crearFactura(pedido);
         }
 
+        console.log(pedido)
+
         try {
             const response = await fetch(URL_API + 'pedido/update/estado/' + sucursalId, {
                 method: 'PUT',

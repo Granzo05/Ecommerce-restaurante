@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { EmpleadoService } from '../../services/EmpleadoService';
 import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 import { toast, Toaster } from 'sonner';
+import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 
 
 const PedidosEntrantes = () => {
@@ -23,7 +23,6 @@ const PedidosEntrantes = () => {
     const buscarPedidos = async () => {
         PedidoService.getPedidos(EnumEstadoPedido.ENTRANTES)
             .then(data => {
-                console.log(data)
                 setPedidos(data);
             })
             .catch(error => {
@@ -116,16 +115,22 @@ const PedidosEntrantes = () => {
                                 <td>
                                     <div>
                                         <p>{pedido.cliente?.nombre}</p>
-                                        <p>{pedido.domicilioEnvio?.calle} {pedido.domicilioEnvio?.numero}, {pedido.domicilioEnvio?.localidad?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
+
+                                        <p>{pedido.fechaPedido.toString()}</p>
                                     </div>
                                 </td>
-                                <td>{pedido.tipoEnvio}</td>
+                                {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
+                                    <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></td>
+                                ) : (
+                                    <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</td>
+                                )}
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
-                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
+                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre} </p>
+                                            <p>{detalle.cantidad} - {detalle.articuloVenta?.nombre} </p>
                                         </div>
                                     ))}
                                 </td>

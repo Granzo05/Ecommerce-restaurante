@@ -32,7 +32,7 @@ public class FacturaController {
 
         factura.setTipoFactura(EnumTipoFactura.B);
 
-        if (pedido.getTipoEnvio().equals(EnumTipoEnvio.TIENDA)) {
+        if (pedido.getTipoEnvio().equals(EnumTipoEnvio.RETIRO_EN_TIENDA)) {
             factura.setMetodoPago(EnumMetodoPago.EFECTIVO);
         } else {
             factura.setMetodoPago(EnumMetodoPago.MERCADOPAGO);

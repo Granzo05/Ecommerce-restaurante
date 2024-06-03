@@ -2,5 +2,5 @@ package main.entities.Pedidos;
 
 public enum EnumTipoEnvio {
     DELIVERY,
-    TIENDA
+    RETIRO_EN_TIENDA
 }

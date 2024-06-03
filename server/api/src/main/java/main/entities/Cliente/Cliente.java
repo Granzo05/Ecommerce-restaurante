@@ -8,6 +8,7 @@ import main.entities.Pedidos.Pedido;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -21,7 +22,7 @@ import java.util.Set;
 @Entity
 @ToString
 @Table(name = "clientes", schema = "buen_sabor")
-public class Cliente {
+public class Cliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -49,7 +50,10 @@ public class Cliente {
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"cliente"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {
+            "factura", "cliente", "sucursales", "detallesPedido",
+            "tipoEnvio", "estado"
+    }, allowSetters = true)
     @OneToMany(mappedBy = "cliente")
     private Set<Pedido> pedidos = new HashSet<>();
 }

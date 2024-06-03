@@ -13,6 +13,7 @@ import main.entities.Productos.Promocion;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockEntrante;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +34,7 @@ import java.util.Set;
 @ToString
 @Getter
 @Table(name = "sucursales", schema = "buen_sabor")
-public class Sucursal {
+public class Sucursal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

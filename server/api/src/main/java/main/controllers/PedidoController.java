@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumEstadoPedido;
+import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Pedidos.Pedido;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
@@ -146,6 +147,7 @@ public class PedidoController {
         return new ResponseEntity<>("El pedido ha sido eliminado correctamente", HttpStatus.ACCEPTED);
     }
 
+    @Transactional
     @PutMapping("/pedido/update/{idSucursal}")
     public ResponseEntity<?> updatePedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
         pedidoRepository.save(pedido);
@@ -153,10 +155,9 @@ public class PedidoController {
     }
 
     @PutMapping("/pedido/update/estado/{idSucursal}")
-    public ResponseEntity<?> updateEstadoPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) throws GeneralSecurityException, IOException, MessagingException {
-        System.out.println(pedido);
-
-        Optional<Pedido> pedidoDb = pedidoRepository.findById(pedido.getId());
+    @Transactional
+    public ResponseEntity<String> updateEstadoPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) throws GeneralSecurityException, IOException, MessagingException {
+        Optional<Pedido> pedidoDb = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
 
         if (pedidoDb.isEmpty()) {
             return new ResponseEntity<>("La pedido ya ha sido borrada previamente", HttpStatus.BAD_REQUEST);
@@ -164,13 +165,13 @@ public class PedidoController {
 
         pedidoDb.get().setEstado(pedido.getEstado());
 
-        if (pedido.getEstado().equals("entregados")) {
+        if (pedido.getEstado().equals(EnumEstadoPedido.ENTREGADOS)) {
             pedidoDb.get().setFactura(pedido.getFactura());
 
             ResponseEntity<byte[]> archivo = generarFacturaPDF(pedidoDb.get().getId());
             Gmail gmail = new Gmail();
 
-            if (pedido.getTipoEnvio().toString().equals("DELVIERY")) {
+            if (pedido.getTipoEnvio().equals(EnumTipoEnvio.DELIVERY)) {
                 gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", pedido.getCliente().getEmail(), archivo.getBody());
             } else {
                 gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", pedido.getCliente().getEmail(), archivo.getBody());

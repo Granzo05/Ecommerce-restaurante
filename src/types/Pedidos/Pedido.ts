@@ -7,8 +7,8 @@ import { Domicilio } from "../Domicilio/Domicilio";
 
 export class Pedido {
     id: number = 0;
-    tipoEnvio: EnumTipoEnvio | null = null;
-    estado: EnumEstadoPedido | null = null;
+    tipoEnvio: EnumTipoEnvio | string = '';
+    estado: EnumEstadoPedido = EnumEstadoPedido.ENTRANTES;
     fechaPedido: Date = new Date();
     horaFinalizacion: string = '';
     factura: Factura | null = null;

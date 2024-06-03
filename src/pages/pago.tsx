@@ -18,7 +18,7 @@ const Pago = () => {
     const [carrito, setCarrito] = useState<Carrito | null>(null);
     const [cliente, setCliente] = useState<Cliente | null>(null);
     const [domicilio, setDomicilio] = useState<Domicilio>();
-    const [envio, setTipoEnvio] = useState<string>('DELIVERY');
+    const [envio, setTipoEnvio] = useState<EnumTipoEnvio | string>(EnumTipoEnvio.DELIVERY);
 
     const [modalBusquedaDomicilio, setModalBusquedaDomicilio] = useState<boolean>(false);
 
@@ -46,13 +46,13 @@ const Pago = () => {
         setCarrito(carrito);
     }
 
-    async function enviarPedidoARestaurante(tipoEnvio: EnumTipoEnvio) {
+    async function enviarPedidoARestaurante() {
         let hayStock = true;
 
         if (hayStock) {
             let pedido = new Pedido();
             if (cliente) pedido.cliente = cliente;
-            pedido.tipoEnvio = tipoEnvio;
+            pedido.tipoEnvio = envio;
 
             let detalles: DetallesPedido[] = [];
 
@@ -77,7 +77,7 @@ const Pago = () => {
             pedido.estado = EnumEstadoPedido.ENTRANTES;
             pedido.borrado = 'NO';
 
-            if (envio === 'RETIRO') {
+            if (envio === EnumTipoEnvio.RETIRO_EN_TIENDA) {
                 pedido.domicilioEntrega = null;
             }
 
@@ -116,12 +116,12 @@ const Pago = () => {
                     <div id="detalle-producto"></div>
                     <label style={{ fontWeight: 'bold', color: '#2C2C2C', fontSize: '18px' }}>Tipo de entrega:</label>
                     <select className="tipo-envio" name="tipoEnvio" id="tipoEnvio" onChange={e => setTipoEnvio(e.target.value)}>
-                        <option value="DELIVERY">Delivery</option>
-                        <option value="RETIRO">Retiro en tienda</option>
+                        <option value={EnumTipoEnvio.DELIVERY}>Delivery</option>
+                        <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Retiro en tienda</option>
                     </select>
                     <hr />
                     <label style={{ fontWeight: 'bold', color: '#2C2C2C', fontSize: '18px' }}>Domicilio a entregar:</label>
-                    {envio === 'DELIVERY' && (
+                    {envio === EnumTipoEnvio.DELIVERY && (
                         <>
                             <InputComponent placeHolder='Seleccionar domicilio...' onInputClick={() => setModalBusquedaDomicilio(true)} selectedProduct={domicilio?.calle ?? ''} disabled={false} />
                             {modalBusquedaDomicilio && <ModalFlotanteRecomendacionesDomicilios onCloseModal={handleModalClose} onSelectedDomicilio={(domicilio) => { setDomicilio(domicilio); handleModalClose(); }} cliente={cliente} />}
@@ -192,7 +192,7 @@ const Pago = () => {
                             <button
                                 type="submit"
                                 className="checkout-btn"
-                                onClick={() => enviarPedidoARestaurante(EnumTipoEnvio.TIENDA)}
+                                onClick={() => enviarPedidoARestaurante()}
                             >
                                 Realizar encargo
                             </button>

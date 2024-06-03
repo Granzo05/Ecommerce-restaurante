@@ -1,25 +1,14 @@
 import { useEffect, useState } from 'react';
 import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
-import { EmpleadoService } from '../../services/EmpleadoService';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
+import { toast, Toaster } from 'sonner';
 
 const PedidosAceptados = () => {
     const [PedidosAceptados, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
-
-        //buscarPedidos();
-
+        buscarPedidos();
     }, []);
 
     const buscarPedidos = async () => {
@@ -33,20 +22,29 @@ const PedidosAceptados = () => {
     }
 
     async function handleFinalizarPedido(pedido: Pedido) {
-        let response = await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ACEPTADOS);
-        alert(await response);
+        toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.COCINADOS), {
+            loading: 'Enviando pedido al administrador...',
+            success: (message) => {
+                return message;
+            },
+            error: (message) => {
+                return message;
+            },
+        });
         buscarPedidos();
     }
 
     return (
 
         <div className="opciones-pantallas">
+            <Toaster />
             <h1>- Pedidos aceptados -</h1>
             <hr />
             <div id="pedidos">
                 <table>
                     <thead>
                         <tr>
+                            <th>Tipo de envío</th>
                             <th>Menu</th>
                             <th>Finalizar</th>
                         </tr>
@@ -54,14 +52,6 @@ const PedidosAceptados = () => {
                     <tbody>
                         {PedidosAceptados.map(pedido => (
                             <tr key={pedido.id}>
-                                <td>
-                                    <div>
-                                        <p>{pedido.cliente?.nombre}</p>
-                                        <p>{pedido.domicilioEnvio?.calle} {pedido.domicilioEnvio?.numero}, {pedido.domicilioEnvio?.localidad?.nombre}</p>
-                                        <p>{pedido.cliente?.telefono}</p>
-                                        <p>{pedido.cliente?.email}</p>
-                                    </div>
-                                </td>
                                 <td>{pedido.tipoEnvio}</td>
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (

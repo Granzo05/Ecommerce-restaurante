@@ -4,6 +4,8 @@ import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
+import { toast, Toaster } from 'sonner';
+import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 
 
 const PedidosEntrantes = () => {
@@ -35,17 +37,28 @@ const PedidosEntrantes = () => {
     }
 
     async function handleEntregarPedido(pedido: Pedido) {
-        // Modificar estado de pantalla del cliente donde vea que el negocio acepto el pedido, podria
-        // usar la condicional de estado 'aceptado' para ir variando las imagenes que se le muestran al cliente en su pedido
-
-        let response = await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ENTREGADOS);
-        alert(await response);
+        toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ENTREGADOS), {
+            loading: 'Entregando el pedido...',
+            success: (message) => {
+                return message;
+            },
+            error: (message) => {
+                return message;
+            },
+        });
         buscarPedidos();
     }
 
     async function handleCancelarPedido(pedido: Pedido) {
-        let response = await PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS);
-        alert(await response);
+        toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
+            loading: 'Rechazando el pedido...',
+            success: (message) => {
+                return message;
+            },
+            error: (message) => {
+                return message;
+            },
+        });
         buscarPedidos();
     }
 
@@ -53,6 +66,7 @@ const PedidosEntrantes = () => {
 
         <div className="opciones-pantallas">
             <h1>- Pedidos listos -</h1>
+            <Toaster />
             <hr />
             <div id="pedidos">
                 <table>
@@ -71,21 +85,20 @@ const PedidosEntrantes = () => {
                                 <td>
                                     <div>
                                         <p>{pedido.cliente?.nombre}</p>
-                                        <p>{pedido.domicilioEnvio?.calle} {pedido.domicilioEnvio?.numero}, {pedido.domicilioEnvio?.localidad?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
                                     </div>
                                 </td>
-                                <td>{pedido.tipoEnvio}</td>
+                                {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
+                                    <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></td>
+                                ) : (
+                                    <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</td>
+                                )}
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
-                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
-                                        </div>
-                                    ))}
-                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                        <div key={detalle.id}>
-                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
+                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre} </p>
+                                            <p>{detalle.cantidad} - {detalle.articuloVenta?.nombre} </p>
                                         </div>
                                     ))}
                                 </td>

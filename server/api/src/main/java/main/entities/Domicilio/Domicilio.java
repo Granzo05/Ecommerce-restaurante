@@ -8,6 +8,8 @@ import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Sucursal;
 import org.hibernate.annotations.Cascade;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -16,7 +18,7 @@ import org.hibernate.annotations.Cascade;
 @Entity
 @ToString
 @Table(name = "domicilios", schema = "buen_sabor")
-public class Domicilio {
+public class Domicilio implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
