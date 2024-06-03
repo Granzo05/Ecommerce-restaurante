@@ -6,6 +6,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
+import main.entities.Factura.Factura;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.EnumTipoEnvio;
@@ -187,14 +188,18 @@ public class PedidoController {
     }
 
     public ResponseEntity<byte[]> generarFacturaPDF(Long idPedido) {
-        Optional<Pedido> pedido = pedidoRepository.findById(idPedido);
+        Optional<Pedido> pedidoDB = pedidoRepository.findById(idPedido);
 
-        if (pedido.isEmpty()) {
+        if (pedidoDB.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         // Crear un nuevo documento PDF
         Document document = new Document();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        Pedido pedido = pedidoDB.get();
+
+        Optional<Factura> factura = facturaRepository.findByIdPedido(pedido.getId());
 
         try {
             PdfWriter.getInstance(document, baos);
@@ -202,8 +207,8 @@ public class PedidoController {
             double total = 0;
 
             document.add(new Paragraph("Factura del Pedido"));
-            document.add(new Paragraph("Tipo: " + pedido.get().getFactura().getTipoFactura().toString()));
-            document.add(new Paragraph("Cliente: " + pedido.get().getCliente().getNombre()));
+            document.add(new Paragraph("Tipo: " + factura.get().getTipoFactura().toString()));
+            document.add(new Paragraph("Cliente: " + pedido.getCliente().getNombre()));
             document.add(new Paragraph(""));
             document.add(new Paragraph("Detalles de la factura"));
 
@@ -215,7 +220,7 @@ public class PedidoController {
             table.addCell("Cantidad");
             table.addCell("Subtotal");
 
-            for (DetallesPedido detalle : pedido.get().getDetallesPedido()) {
+            for (DetallesPedido detalle : pedido.getDetallesPedido()) {
                 // Agregar cada detalle como una fila en la tabla
                 table.addCell(detalle.getArticuloMenu().getNombre());
                 table.addCell(String.valueOf(detalle.getCantidad()));

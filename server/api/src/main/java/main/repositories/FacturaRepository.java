@@ -14,6 +14,6 @@ public interface FacturaRepository extends JpaRepository<Factura, Long> {
     @Query("SELECT f FROM Factura f WHERE f.pedido.cliente.id = :id ")
     List<Factura> findByIdCliente(@Param("id") long id);
 
-    @Query("SELECT f FROM Factura f WHERE f.id = :id")
-    Optional<Factura> findByIdDTO(@Param("id") long id);
+    @Query("SELECT f FROM Factura f WHERE f.pedido.id = :id")
+    Optional<Factura> findByIdPedido(@Param("id") long id);
 }

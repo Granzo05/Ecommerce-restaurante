@@ -68,7 +68,7 @@ public class Gmail {
         MimeMessage email = new MimeMessage(session);
         email.setFrom(new InternetAddress("contactodelbuensabor@gmail.com"));
         email.addRecipient(javax.mail.Message.RecipientType.TO,
-                new InternetAddress("facu.granzotto5@gmail.com"));
+                new InternetAddress(emailCliente));
         email.setSubject(asunto);
 
         MimeBodyPart mimeBodyPart = new MimeBodyPart();
@@ -113,7 +113,7 @@ public class Gmail {
         MimeMessage email = new MimeMessage(session);
         email.setFrom(new InternetAddress("contactodelbuensabor@gmail.com"));
         email.addRecipient(javax.mail.Message.RecipientType.TO,
-                new InternetAddress("facu.granzotto5@gmail.com"));
+                new InternetAddress(emailCliente));
         email.setSubject(asunto);
         email.setText(mensaje);
 

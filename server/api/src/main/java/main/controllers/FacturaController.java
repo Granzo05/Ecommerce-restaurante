@@ -26,7 +26,7 @@ public class FacturaController {
     }
 
     @PostMapping("/factura/create")
-    public Pedido crearFactura(@RequestBody Pedido pedido) {
+    public void crearFactura(@RequestBody Pedido pedido) {
 
         Factura factura = new Factura();
 
@@ -38,19 +38,9 @@ public class FacturaController {
             factura.setMetodoPago(EnumMetodoPago.MERCADOPAGO);
         }
 
-        double total = 0;
+        factura.setPedido(pedido);
 
-        for (DetallesPedido detalle : pedido.getDetallesPedido()) {
-            total += detalle.getSubTotal() * detalle.getCantidad();
-        }
-
-        factura.setTotal(total);
-
-        Factura facturaSave = facturaRepository.save(factura);
-
-        pedido.setFactura(facturaSave);
-
-        return pedido;
+        facturaRepository.save(factura);
     }
 
     @GetMapping("/facturas/cliente/{id}")

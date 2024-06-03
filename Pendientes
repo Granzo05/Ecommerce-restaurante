@@ -63,6 +63,7 @@
 [] Revisar la carga de subcategorias
 [] Agregar addEventListener del enter para activar los botones de los modales ok
 [] Calcular tiempo de entrega de un menu al realizar un pedido
+[] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
 
 Pruebas
 [x] Carga empresa [] Probar validación

@@ -4,7 +4,8 @@ import { URL_API } from '../utils/global_variables/const';
 
 export const FacturaService = {
 
-    crearFactura: async (pedido: Pedido) : Promise<Pedido> => {
+    crearFactura: async (pedido: Pedido) => {
+        console.log(pedido)
         try {
             const response = await fetch(URL_API + 'factura/create', {
                 method: 'POST',
@@ -17,8 +18,6 @@ export const FacturaService = {
             if (!response.ok) {
                 throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
-
-            return await response.json();
 
         } catch (error) {
             console.error('Error:', error);

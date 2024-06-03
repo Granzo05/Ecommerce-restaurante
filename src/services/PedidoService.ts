@@ -86,8 +86,8 @@ export const PedidoService = {
         pedido.estado = estado;
 
         // La factura solo se crea cuando el producto esta para entregar
-        if (pedido.estado.toString().match('entregados')) {
-            pedido = await FacturaService.crearFactura(pedido);
+        if (pedido.estado === EnumEstadoPedido.ENTREGADOS) {
+            await FacturaService.crearFactura(pedido);
         }
 
         console.log(pedido)

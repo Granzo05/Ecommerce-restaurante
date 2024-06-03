@@ -46,7 +46,7 @@ public class Pedido implements Serializable {
     private String horaFinalizacion;
 
     @JsonIgnoreProperties(value = {"pedido"}, allowSetters = true)
-    @OneToOne(mappedBy = "pedido", optional = true)
+    @OneToOne(mappedBy = "pedido", optional = true, cascade = CascadeType.ALL)
     private Factura factura;
 
     @JsonIgnoreProperties(value = {"pedidos"}, allowSetters = true)

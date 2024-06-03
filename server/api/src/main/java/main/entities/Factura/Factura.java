@@ -30,8 +30,6 @@ public class Factura implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     public LocalDateTime fechaFacturacion;
-    @Column(name = "total")
-    private double total;
     @JsonIgnoreProperties(value = {
             "factura", "cliente", "sucursales", "detallesPedido",
             "tipoEnvio", "estado"
