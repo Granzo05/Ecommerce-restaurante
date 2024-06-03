@@ -28,7 +28,7 @@ public class DetallePromocion implements Serializable {
     private Medida medida;
     @ManyToOne
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @JoinColumn(name = "id_articulo_menu")
+    @JoinColumn(name = "id_menu")
     private ArticuloMenu articuloMenu;
     @ManyToOne
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)

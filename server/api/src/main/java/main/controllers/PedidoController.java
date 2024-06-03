@@ -114,7 +114,6 @@ public class PedidoController {
     @Transactional
     @PostMapping("/pedido/create")
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido) {
-        System.out.println(pedido);
 
         for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
             detallesPedido.setPedido(pedido);

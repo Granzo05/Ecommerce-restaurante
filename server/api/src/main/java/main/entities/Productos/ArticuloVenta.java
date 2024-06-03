@@ -23,7 +23,7 @@ public class ArticuloVenta extends Articulo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @JsonIgnoreProperties(value = {"subcategorias", "sucursales"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"subcategorias", "sucursales", "imagenes"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
@@ -44,7 +44,7 @@ public class ArticuloVenta extends Articulo implements Serializable {
     private Set<Imagenes> imagenes = new HashSet<>();
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes"}, allowSetters = true)
     @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY)
     private Set<Sucursal> sucursales = new HashSet<>();
 }

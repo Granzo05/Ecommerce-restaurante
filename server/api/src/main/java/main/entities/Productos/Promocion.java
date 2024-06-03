@@ -38,7 +38,6 @@ public class Promocion implements Serializable {
     private Set<Imagenes> imagenes = new HashSet<>();
     @Column(name = "precio_promocion")
     private double precio;
-    @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
     @JsonIgnoreProperties(value = {"empleados", "empresa", "contraseña", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)

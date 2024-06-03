@@ -7,28 +7,41 @@ import '../styles/header.css';
 import Header from '../components/Header'
 import Footer from '../components/Footer';
 import { CarritoService } from '../services/CarritoService';
+import { ArticuloVenta } from '../types/Productos/ArticuloVenta';
+import { ArticuloVentaService } from '../services/ArticuloVentaService';
 
 
 function RestaurantesPorComida() {
-  const { tipoComida } = useParams()
+  const { categoria } = useParams()
 
   const [menus, setMenus] = useState<ArticuloMenu[]>([]);
+  const [articulos, setArticulos] = useState<ArticuloVenta[]>([]);
 
   useEffect(() => {
-    if (tipoComida) {
-      MenuService.getMenusPorTipo(tipoComida)
+    if (categoria) {
+      MenuService.getMenusPorTipo(categoria)
         .then(menus => {
-          setMenus(menus);
+          if (menus.length === 0) {
+            ArticuloVentaService.getArticulosPorCategoria(categoria)
+              .then(articulos => {
+                setArticulos(articulos);
+              })
+              .catch(error => {
+                console.error("Error al obtener los artículos:", error);
+              });
+          } else {
+            setMenus(menus);
+          }
         })
         .catch(error => {
           console.error("Error al obtener los menús:", error);
         });
     }
-  }, [tipoComida]);
+  }, [categoria]);
 
   useEffect(() => {
-    document.title = 'Menú - ' + tipoComida;
-  }, [tipoComida]);
+    document.title = 'Menú - ' + categoria;
+  }, [categoria]);
 
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -42,10 +55,10 @@ function RestaurantesPorComida() {
       <div className='menu-tipo'>
         <div className="heading">
           <h1>Menú</h1>
-          <h3>&mdash;{tipoComida}&mdash;</h3>
+          <h3>&mdash;{categoria}&mdash;</h3>
         </div>
 
-        {menus && menus.map(menu =>
+        {menus && menus?.map(menu =>
           <div key={menu.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
             <div className="front">
               <div className='img-food'>
@@ -83,6 +96,23 @@ function RestaurantesPorComida() {
           </div>
         )}
 
+        {articulos && articulos?.map(articulo =>
+          <div key={articulo.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+            <div className="front">
+              <div className='img-food'>
+                <img src={articulo?.imagenes[0]?.ruta} alt={articulo?.nombre} />
+              </div>
+              <div className="details">
+                <div className="details-sub">
+                  <h5>{ }</h5>
+                  <h5 className='price'>${articulo.precioVenta}</h5>
+                </div>
+                <h5>{articulo.nombre}</h5>
+                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(null, articulo, 1)}>Añadir al carrito</button>
+              </div>
+            </div>
+          </div>
+        )}
 
 
       </div>

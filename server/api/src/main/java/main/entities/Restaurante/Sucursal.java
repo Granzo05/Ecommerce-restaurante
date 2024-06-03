@@ -75,7 +75,7 @@ public class Sucursal {
     @Column(name = "borrado")
     private String borrado = "NO";
 
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
     @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
     private Set<Stock> stocksSucursal = new HashSet<>();
 
@@ -117,7 +117,7 @@ public class Sucursal {
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Medida> medidas = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"sucursales", "subcategorias"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"sucursales", "subcategorias", "imagenes"}, allowSetters = true)
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Categoria> categorias = new HashSet<>();
 

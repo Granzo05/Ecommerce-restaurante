@@ -1,6 +1,7 @@
 package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
+import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
@@ -46,6 +47,22 @@ public class ArticuloVentaController {
         }
 
         return new HashSet<>(articulos);
+    }
+
+    @GetMapping("/articulos/tipo/{categoria}/{idSucursal}")
+    public Set<ArticuloVenta> getArticulosPorCategoria(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
+        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
+
+        if (categoriaDB.isPresent()) {
+            List<ArticuloVenta> articulos = articuloVentaRepository.findByCategoriaNameAndIdSucursal(categoriaDB.get().getNombre(), idSucursal);
+
+            for (ArticuloVenta menu : articulos) {
+                menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
+            }
+
+            return new HashSet<>(articulos);
+        }
+        return null;
     }
 
     @Transactional

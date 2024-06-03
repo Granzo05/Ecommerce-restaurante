@@ -61,9 +61,18 @@ const Pago = () => {
             pedido.tipoEnvio = tipoEnvio;
 
             let detalles: DetallesPedido[] = [];
-            carrito?.articuloMenu.forEach(producto => {
+
+            carrito?.articuloMenu?.forEach(producto => {
                 let detalle = new DetallesPedido();
                 detalle.articuloMenu = producto;
+                detalle.cantidad = producto.cantidad;
+                detalle.subTotal = producto.cantidad * producto.precioVenta;
+                detalles.push(detalle);
+            });
+
+            carrito?.articuloVenta?.forEach(producto => {
+                let detalle = new DetallesPedido();
+                detalle.articuloVenta = producto;
                 detalle.cantidad = producto.cantidad;
                 detalle.subTotal = producto.cantidad * producto.precioVenta;
                 detalles.push(detalle);
@@ -72,11 +81,12 @@ const Pago = () => {
             pedido.factura = null;
             pedido.detallesPedido = detalles;
             pedido.estado = EnumEstadoPedido.ENTRANTES;
+            pedido.borrado = 'NO';
             console.log(pedido);
             toast.promise(PedidoService.crearPedido(pedido), {
                 loading: 'Creando pedido...',
                 success: (message) => {
-                    localStorage.removeItem('carrito');
+                    //localStorage.removeItem('carrito');
                     return message;
                 },
                 error: (message) => {
@@ -182,7 +192,7 @@ const Pago = () => {
                     ) : (
                         <div className="total">
                             {carrito?.totalPrecio && (
-                                <h2><strong>Total:</strong> ${carrito.totalPrecio * 0.9}</h2>
+                                <h2><strong>Total:</strong> ${Math.ceil(carrito.totalPrecio * 0.9)}</h2>
                             )}
                             <p style={{ color: '#007bff' }}>*Retiro en tienda con 10% de descuento</p>
                             <button

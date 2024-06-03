@@ -11,7 +11,7 @@ export const ArticuloVentaService = {
     },
 
     getArticulosPorCategoria: async (nombreCategoria: string): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + `articulo/tipo/${nombreCategoria}/${sucursalId}`);
+        const response = await fetch(URL_API + `articulos/tipo/${nombreCategoria}/${sucursalId}`);
 
         return await response.json();
     },

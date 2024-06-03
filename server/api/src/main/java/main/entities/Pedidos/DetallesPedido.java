@@ -1,10 +1,13 @@
 package main.entities.Pedidos;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -12,27 +15,32 @@ import main.entities.Productos.ArticuloVenta;
 @NoArgsConstructor
 @Entity
 @Builder
-@ToString
-@Table(name = "detalles_pedido", schema = "buen_sabor")
-public class DetallesPedido {
+public class DetallesPedido implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "cantidad")
+
+    @Column(name = "cantidad", nullable = false)
     private int cantidad;
-    @Column(name = "subtotal")
+
+    @Column(name = "subtotal", nullable = false)
     private double subTotal;
-    @JsonIgnoreProperties(value = {"promociones", "sucursales"}, allowSetters = true)
-    @OneToOne
+
+    @JsonIgnoreProperties({"sucursales"})
+    @ManyToOne
     @JoinColumn(name = "id_menu")
     private ArticuloMenu articuloMenu;
-    @JsonIgnoreProperties(value = {"promociones", "sucursales"}, allowSetters = true)
-    @OneToOne
+
+    @JsonIgnoreProperties({"sucursales"})
+    @ManyToOne
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
-    @JsonIgnoreProperties(value = {"factura", "cliente", "empleado"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_pedido")
-    private Pedido pedido;
 
+    @JsonIgnoreProperties({
+            "factura", "cliente", "sucursales", "detallesPedido",
+            "tipoEnvio", "estado"
+    })
+    @ManyToOne
+    @JoinColumn(name = "id_pedido", nullable = false)
+    private Pedido pedido;
 }
