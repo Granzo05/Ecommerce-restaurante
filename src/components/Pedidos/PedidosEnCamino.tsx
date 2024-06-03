@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { EmpleadoService } from '../../services/EmpleadoService';
 import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
@@ -8,26 +7,15 @@ import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 
 
-const PedidosEntrantes = () => {
+const PedidosEnCamino = () => {
     const [pedidosEntrantes, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
-
         buscarPedidos();
-
     }, []);
 
     const buscarPedidos = async () => {
-        PedidoService.getPedidos(EnumEstadoPedido.COCINADOS)
+        PedidoService.getPedidos(EnumEstadoPedido.EN_CAMINO)
             .then(data => {
                 setPedidos(data);
             })
@@ -36,17 +24,9 @@ const PedidosEntrantes = () => {
             });
     }
 
-    async function handleEntregarPedido(pedido: Pedido) {
-        // Por default la entrega es en el restaurante
-        let estadoPedido = EnumEstadoPedido.ENTREGADOS;
-
-        // En caso de ser delivery pasa por un estado extra
-        if (pedido.tipoEnvio === EnumTipoEnvio.DELIVERY) {
-            estadoPedido = EnumEstadoPedido.EN_CAMINO;
-        }
-
-        toast.promise(PedidoService.updateEstadoPedido(pedido, estadoPedido), {
-            loading: 'Entregando el pedido...',
+    async function handleAceptarPedido(pedido: Pedido) {
+        toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ENTREGADOS), {
+            loading: 'Enviando factura al cliente...',
             success: (message) => {
                 return message;
             },
@@ -54,12 +34,13 @@ const PedidosEntrantes = () => {
                 return message;
             },
         });
+
         buscarPedidos();
     }
 
-    async function handleCancelarPedido(pedido: Pedido) {
+    async function handleRechazarPedido(pedido: Pedido) {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
-            loading: 'Rechazando el pedido...',
+            loading: 'Rechazando pedido...',
             success: (message) => {
                 return message;
             },
@@ -67,14 +48,15 @@ const PedidosEntrantes = () => {
                 return message;
             },
         });
+
         buscarPedidos();
     }
 
     return (
 
         <div className="opciones-pantallas">
-            <h1>- Pedidos listos -</h1>
             <Toaster />
+            <h1>- Pedidos en camino -</h1>
             <hr />
             <div id="pedidos">
                 <table>
@@ -83,8 +65,8 @@ const PedidosEntrantes = () => {
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
                             <th>Menu</th>
-                            <th>Entregar</th>
-                            <th>Cancelar</th>
+                            <th>Aceptar</th>
+                            <th>Rechazar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,6 +77,8 @@ const PedidosEntrantes = () => {
                                         <p>{pedido.cliente?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
+
+                                        <p>{pedido.fechaPedido.toString()}</p>
                                     </div>
                                 </td>
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
@@ -110,8 +94,8 @@ const PedidosEntrantes = () => {
                                         </div>
                                     ))}
                                 </td>
-                                <td><button onClick={() => handleEntregarPedido(pedido)}>Entregar</button></td>
-                                <td><button onClick={() => handleCancelarPedido(pedido)}>Cancelar</button></td>
+                                <td><button onClick={() => handleAceptarPedido(pedido)}>Aceptar</button></td>
+                                <td><button onClick={() => handleRechazarPedido(pedido)}>Rechazar</button></td>
                             </tr>
                         ))}
 
@@ -123,4 +107,4 @@ const PedidosEntrantes = () => {
     )
 }
 
-export default PedidosEntrantes
+export default PedidosEnCamino

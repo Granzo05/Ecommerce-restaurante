@@ -11,6 +11,7 @@ const CambioContra = lazy(() => import('../components/PasswordResetForm'));
 const Menu = lazy(() => import('../pages/menu'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
 const SucursalCards = lazy(() => import('../pages/SucursalCards'));
+const Preferencias = lazy(() => import('../components/Preferencias'));
 
 
 const AppRoutes: React.FC = () => {
@@ -45,7 +46,10 @@ const AppRoutes: React.FC = () => {
         <Route path="/acceso-denegado" element={<AccesoDenegado />}>
         </Route>
 
-        <Route path="/pedidos" element={<PedidosCliente />}>
+        <Route path="/cliente/pedidos" element={<PedidosCliente />}>
+        </Route>
+
+        <Route path="/cliente/preferencias" element={<Preferencias />}>
         </Route>
 
         <Route path="/cambio-contra" element={<CambioContra />}>

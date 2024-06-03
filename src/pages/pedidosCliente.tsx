@@ -126,7 +126,7 @@ const PedidosCliente = () => {
                                     <td>
                                         <div>
                                             <p>{pedido.cliente?.nombre}</p>
-                                            <p>{pedido.domicilioEnvio?.calle} {pedido.domicilioEnvio?.numero}, {pedido.domicilioEnvio?.localidad?.nombre}</p>
+                                            <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></td>
                                             <p>{pedido.cliente?.telefono}</p>
                                             <p>{pedido.cliente?.email}</p>
                                         </div>

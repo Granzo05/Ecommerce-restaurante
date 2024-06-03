@@ -85,12 +85,10 @@ export const PedidoService = {
     updateEstadoPedido: async (pedido: Pedido, estado: EnumEstadoPedido): Promise<string> => {
         pedido.estado = estado;
 
-        // La factura solo se crea cuando el producto esta para entregar
+        // La factura solo se crea cuando el producto ha sido entregado
         if (pedido.estado === EnumEstadoPedido.ENTREGADOS) {
             await FacturaService.crearFactura(pedido);
         }
-
-        console.log(pedido)
 
         try {
             const response = await fetch(URL_API + 'pedido/update/estado/' + sucursalId, {

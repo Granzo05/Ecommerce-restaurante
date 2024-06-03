@@ -13,7 +13,6 @@
 [x] Pagina de pedidos cliente
 [x] Mostrar tiempo
 [x] Aceptar entrega del menu
-
 [x] Cifrar domicilio
 [x] Limpiar carrito después de una compra
 [x] Mejorar la toma de privilegios para no estar haciendo mil llamadas a la db
@@ -38,16 +37,16 @@
 [x] Crear subcategorias predeterminadas
 [x] Asignar subcategorias predeterminadas al cargar una sucursal nueva
 [x] Muestra sin repetidas de subcategorias por cada categoria existente al crear, editar o borrar.
+[x] Que se genere la factura al entregarlo.
 [] Boton en pedidos del cliente para poder repetir un pedido anterior
+[] Mercadopago
 [] Descontar stock al comprar
 [] Cancelacion de pedido
-[] Mercadopago
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Ver tema del auth para privilegios y esas cosas
 [] Mostrar receta de cada menu
 [] Avisar que el menu está en traslado junto con el envio de la factura
-[] Que se genere la factura, en el caso de delivery al enviarlo y en el caso del retiro al entregarlo.
 [] Precio sugerido segun ingredientes y los costos
 [] Que el modal de recomendaciones no muestre alguna de las opciones si ya esta seleccionada en un input previo, por ej si ya seleccione el ingrediente 'carne' que al poner otro no muestre este como recomendacion
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
@@ -61,7 +60,7 @@
 [] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [] Configurar rutas privadas
 [] Revisar la carga de subcategorias
-[] Agregar addEventListener del enter para activar los botones de los modales ok
+[] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
 [] Calcular tiempo de entrega de un menu al realizar un pedido
 [] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
 

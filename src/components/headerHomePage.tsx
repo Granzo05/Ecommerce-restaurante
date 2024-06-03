@@ -3,15 +3,27 @@ import '../styles/homePage-header-footer.css'
 import { Link, useNavigate } from 'react-router-dom';
 import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
+import { Cliente } from '../types/Cliente/Cliente';
 
 const HeaderHomePage: React.FC = () => {
 
     /*HEADER FUNCTIONS */
 
-    const [isClicked, setIsClicked] = useState(false); // Estado para controlar si se hizo clic en "Iniciar sesión"
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
     const [isAccountOpen, setIsAccountOpen] = useState(false); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
     const navigate = useNavigate();
+    const [cliente, setCliente] = useState<Cliente>(); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
+
+    useEffect(() => {
+        cargarUsuario();
+    }, []);
+
+    const cargarUsuario = async () => {
+        const clienteString = localStorage.getItem('usuario');
+        let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+
+        setCliente(clienteMem);
+    }
 
     const handleLoginClick = () => {
         navigate('/login-cliente')
@@ -27,12 +39,10 @@ const HeaderHomePage: React.FC = () => {
 
     const handleAccountClick = () => {
         // Muestra la ventana de preferencias de cuenta
-        setIsAccountOpen(true);
+        setIsAccountOpen(!isAccountOpen);
     };
 
     const handleLogout = () => {
-        // Cierra la sesión
-        setIsClicked(false);
         setIsAccountOpen(false); // Oculta la ventana de preferencias de cuenta al cerrar sesión
     };
 
@@ -41,7 +51,7 @@ const HeaderHomePage: React.FC = () => {
     useEffect(() => {
         let interval = setInterval(() => {
             cargarCarrito();
-        }, 1000);
+        }, 99);
 
         return () => clearInterval(interval);
     }, []);
@@ -73,13 +83,12 @@ const HeaderHomePage: React.FC = () => {
                     </ul>
                     {/* Renderizado condicional basado en si se hizo clic en "Iniciar sesión" */}
                     <ul>
-                        {isClicked ? (
+                        {cliente ? (
                             <>
                                 <>
                                     {carrito && carrito?.totalProductos > 0 && (
                                         <span className="cart-item-count" onClick={handleCartClick}>{carrito?.totalProductos}</span>
                                     )}
-                                    <img className={`menu-icono-all ${isCartOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
                                 </>
                                 <img className='menu-icono' src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
 
@@ -149,9 +158,9 @@ const HeaderHomePage: React.FC = () => {
                                     <div className="account-dropdown">
                                         <h4>Preferencias de cuenta</h4>
                                         <ul className="preferences-list">
-                                            <li><button >Editar perfil</button></li>
-                                            <li><button >Editar domicilios</button></li>
-                                            <li><button >Pedidos</button></li>
+                                            <li><button onClick={() => navigate('/cliente/preferencias')}>Editar perfil</button></li>
+                                            <li><button onClick={() => navigate('/cliente/pedidos')}>Editar domicilios</button></li>
+                                            <li><button onClick={() => navigate('/cliente/pedidos')}>Pedidos</button></li>
                                         </ul>
                                         <div className='button-logout-div'>
                                             <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>

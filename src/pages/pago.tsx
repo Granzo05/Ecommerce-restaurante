@@ -29,10 +29,10 @@ const Pago = () => {
 
     useEffect(() => {
         cargarPedido();
-        buscarDomicilio();
+        cargarUsuario();
     }, []);
 
-    const buscarDomicilio = async () => {
+    const cargarUsuario = async () => {
         const clienteString = localStorage.getItem('usuario');
         let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
 
