@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../styles/homePage-header-footer.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
 
@@ -11,10 +11,10 @@ const HeaderHomePage: React.FC = () => {
     const [isClicked, setIsClicked] = useState(false); // Estado para controlar si se hizo clic en "Iniciar sesión"
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
     const [isAccountOpen, setIsAccountOpen] = useState(false); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
+    const navigate = useNavigate();
 
     const handleLoginClick = () => {
-        // Actualiza el estado cuando se hace clic en "Iniciar sesión"
-        setIsClicked(true);
+        navigate('/login-cliente')
     };
 
     const handleCartClick = () => {
@@ -160,7 +160,7 @@ const HeaderHomePage: React.FC = () => {
                                 )}
                             </>
                         ) : (
-                            <li className='btn-iniciar-sesion'><a href="#user" onClick={handleLoginClick}>Iniciar sesión</a></li>
+                            <li className='btn-iniciar-sesion'><a onClick={handleLoginClick}>Iniciar sesión</a></li>
                         )}
                     </ul>
                 </nav>

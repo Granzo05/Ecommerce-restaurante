@@ -59,7 +59,8 @@ public class PedidoController {
     }
 
     @GetMapping("/pedidos/{estado}/{idSucursal}")
-    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") EnumEstadoPedido estado, @PathVariable("idSucursal") Long idSucursal) {
+    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") int estadoValue, @PathVariable("idSucursal") Long idSucursal) {
+        EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
         List<Pedido> pedidos = pedidoRepository.findPedidosByEstadoAndIdSucursal(estado, idSucursal);
 
         return new HashSet<>(pedidos);
@@ -112,20 +113,22 @@ public class PedidoController {
     }
 
     @Transactional
-    @PostMapping("/pedido/create")
-    public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido) {
+    @PostMapping("/pedido/create/{idSucursal}")
+    public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
 
         for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
             detallesPedido.setPedido(pedido);
         }
+
+        pedido.getSucursales().add(sucursalRepository.findById(idSucursal).get());
 
         pedidoRepository.save(pedido);
 
         return new ResponseEntity<>("La pedido ha sido cargado correctamente", HttpStatus.CREATED);
     }
 
-    @PutMapping("/pedido/delete/{id}")
-    public ResponseEntity<?> borrarPedido(@PathVariable Long id) {
+    @PutMapping("/pedido/delete/{id}/{idSucursal}")
+    public ResponseEntity<?> borrarPedido(@PathVariable Long id, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Pedido> pedido = pedidoRepository.findById(id);
         if (pedido.isEmpty()) {
             return new ResponseEntity<>("La pedido ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
@@ -135,14 +138,14 @@ public class PedidoController {
         return new ResponseEntity<>("El pedido ha sido eliminado correctamente", HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/pedido/update")
-    public ResponseEntity<?> updatePedido(@RequestBody Pedido pedido) {
+    @PutMapping("/pedido/update/{idSucursal}")
+    public ResponseEntity<?> updatePedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
         pedidoRepository.save(pedido);
         return new ResponseEntity<>("El pedido ha sido actualizado correctamente", HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/pedido/update/estado")
-    public ResponseEntity<?> updateEstadoPedido(@RequestBody Pedido pedido) throws GeneralSecurityException, IOException, MessagingException {
+    @PutMapping("/pedido/update/estado/{idSucursal}")
+    public ResponseEntity<?> updateEstadoPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) throws GeneralSecurityException, IOException, MessagingException {
         System.out.println(pedido);
 
         Optional<Pedido> pedidoDb = pedidoRepository.findById(pedido.getId());

@@ -1,7 +1,7 @@
 import { Cliente } from '../types/Cliente/Cliente';
 import { EnumEstadoPedido } from '../types/Pedidos/EnumEstadoPedido';
 import { Pedido } from '../types/Pedidos/Pedido'
-import { URL_API } from '../utils/global_variables/const';
+import { sucursalId, URL_API } from '../utils/global_variables/const';
 import { FacturaService } from './FacturaService';
 
 export const PedidoService = {
@@ -39,7 +39,7 @@ export const PedidoService = {
 
     getPedidos: async (estado: EnumEstadoPedido): Promise<Pedido[]> => {
         try {
-            const response = await fetch(URL_API + 'pedidos/' + estado, {
+            const response = await fetch(URL_API + `pedidos/${estado}/${sucursalId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ export const PedidoService = {
 
     crearPedido: async (pedido: Pedido): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'pedido/create', {
+            const response = await fetch(URL_API + `pedido/create/${sucursalId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -82,31 +82,6 @@ export const PedidoService = {
 
     },
 
-
-    eliminarPedido: async (pedido: Pedido): Promise<string> => {
-        try {
-            const response = await fetch(URL_API + 'pedido/delete', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(pedido)
-            })
-
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
-
-            return await response.text();
-
-
-        } catch (error) {
-            console.error('Error:', error);
-            throw error;
-        }
-
-    },
-
     updateEstadoPedido: async (pedido: Pedido, estado: EnumEstadoPedido): Promise<string> => {
         pedido.estado = estado;
 
@@ -116,7 +91,7 @@ export const PedidoService = {
         }
 
         try {
-            const response = await fetch(URL_API + 'pedido/update/estado', {
+            const response = await fetch(URL_API + 'pedido/update/estado/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

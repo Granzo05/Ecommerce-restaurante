@@ -82,7 +82,9 @@ const Pago = () => {
             pedido.detallesPedido = detalles;
             pedido.estado = EnumEstadoPedido.ENTRANTES;
             pedido.borrado = 'NO';
+
             console.log(pedido);
+
             toast.promise(PedidoService.crearPedido(pedido), {
                 loading: 'Creando pedido...',
                 success: (message) => {

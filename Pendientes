@@ -61,6 +61,7 @@
 [] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [] Configurar rutas privadas
 [] Revisar la carga de subcategorias
+[] Agregar addEventListener del enter para activar los botones de los modales ok
 
 Pruebas
 [x] Carga empresa [] Probar validación

@@ -45,7 +45,7 @@ public class Pedido implements Serializable {
     private String horaFinalizacion;
 
     @JsonIgnoreProperties(value = {"pedido"}, allowSetters = true)
-    @OneToOne(mappedBy = "pedido")
+    @OneToOne(mappedBy = "pedido", optional = true)
     private Factura factura;
 
     @JsonIgnoreProperties(value = {"pedidos"}, allowSetters = true)

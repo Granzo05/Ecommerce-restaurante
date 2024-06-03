@@ -32,6 +32,7 @@ const PedidosEntrantes = () => {
     const buscarPedidos = async () => {
         PedidoService.getPedidos(EnumEstadoPedido.ENTRANTES)
             .then(data => {
+                console.log(data)
                 setPedidos(data);
             })
             .catch(error => {

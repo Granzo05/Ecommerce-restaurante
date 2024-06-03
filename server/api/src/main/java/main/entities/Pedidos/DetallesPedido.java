@@ -27,12 +27,12 @@ public class DetallesPedido implements Serializable {
     private double subTotal;
 
     @JsonIgnoreProperties({"sucursales"})
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "id_menu")
     private ArticuloMenu articuloMenu;
 
     @JsonIgnoreProperties({"sucursales"})
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
 
