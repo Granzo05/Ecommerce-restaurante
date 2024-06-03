@@ -14,6 +14,7 @@ import org.hibernate.annotations.Cascade;
 @NoArgsConstructor
 @Builder
 @Entity
+@ToString
 @Table(name = "domicilios", schema = "buen_sabor")
 public class Domicilio {
     @Id

@@ -13,7 +13,7 @@ export class Pedido {
     horaFinalizacion: string = '';
     factura: Factura | null = null;
     cliente: Cliente = new Cliente();
-    domicilioEnvio: Domicilio | null = null;
+    domicilioEntrega: Domicilio | null = null;
     detallesPedido: DetallesPedido[] = [];
     borrado: string = '';
 

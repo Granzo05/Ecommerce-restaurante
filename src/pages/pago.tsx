@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Carrito } from "../types/Pedidos/Carrito";
 import { Cliente } from "../types/Cliente/Cliente";
 import '../styles/pago.css';
-import { ClienteService } from "../services/ClienteService";
 import { Pedido } from "../types/Pedidos/Pedido";
 import { PedidoService } from "../services/PedidoService";
 import { EnumTipoEnvio } from "../types/Pedidos/EnumTipoEnvio";
@@ -12,12 +11,21 @@ import { toast, Toaster } from "sonner";
 import { Domicilio } from "../types/Domicilio/Domicilio";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import InputComponent from "../components/InputFiltroComponent";
+import ModalFlotanteRecomendacionesDomicilios from "../hooks/ModalFlotanteFiltroDomicilios";
 
 const Pago = () => {
     const [carrito, setCarrito] = useState<Carrito | null>(null);
     const [cliente, setCliente] = useState<Cliente | null>(null);
-    const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
+    const [domicilio, setDomicilio] = useState<Domicilio>();
     const [envio, setTipoEnvio] = useState<string>('DELIVERY');
+
+    const [modalBusquedaDomicilio, setModalBusquedaDomicilio] = useState<boolean>(false);
+
+
+    const handleModalClose = () => {
+        setModalBusquedaDomicilio(false)
+    };
 
     useEffect(() => {
         cargarPedido();
@@ -29,20 +37,6 @@ const Pago = () => {
         let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
 
         setCliente(clienteMem);
-
-        if (cliente) {
-            try {
-                ClienteService.getDomicilios(cliente?.id)
-                    .then(data => {
-                        setDomicilios(data);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            } catch (error) {
-                console.error('Error al obtener empleados:', error);
-            }
-        }
     }
 
     function cargarPedido() {
@@ -83,7 +77,9 @@ const Pago = () => {
             pedido.estado = EnumEstadoPedido.ENTRANTES;
             pedido.borrado = 'NO';
 
-            console.log(pedido);
+            if (envio === 'RETIRO') {
+                pedido.domicilioEntrega = null;
+            }
 
             toast.promise(PedidoService.crearPedido(pedido), {
                 loading: 'Creando pedido...',
@@ -126,15 +122,11 @@ const Pago = () => {
                     <hr />
                     <label style={{ fontWeight: 'bold', color: '#2C2C2C', fontSize: '18px' }}>Domicilio a entregar:</label>
                     {envio === 'DELIVERY' && (
-                        domicilios && domicilios.length > 0 && (
-                            <select id="domicilioSeleccionado" name="domicilioSeleccionado">
-                                {domicilios.map((domicilio, index) => (
-                                    <option key={index} value={domicilio.calle}>
-                                        {domicilio.calle}
-                                    </option>
-                                ))}
-                            </select>
-                        )
+                        <>
+                            <InputComponent placeHolder='Seleccionar domicilio...' onInputClick={() => setModalBusquedaDomicilio(true)} selectedProduct={domicilio?.calle ?? ''} disabled={false} />
+                            {modalBusquedaDomicilio && <ModalFlotanteRecomendacionesDomicilios onCloseModal={handleModalClose} onSelectedDomicilio={(domicilio) => { setDomicilio(domicilio); handleModalClose(); }} cliente={cliente} />}
+
+                        </>
                     )}
                     <hr />
                     <label style={{ fontWeight: 'bold', color: '#2C2C2C', fontSize: '18px' }}>Detalles del pedido:</label>

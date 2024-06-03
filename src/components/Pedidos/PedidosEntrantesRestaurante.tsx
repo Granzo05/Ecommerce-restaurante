@@ -11,7 +11,6 @@ const PedidosEntrantes = () => {
     const [pedidosEntrantes, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
-        //fetchData();
         /*
         setInterval(() => {
             buscarPedidos();
@@ -20,14 +19,6 @@ const PedidosEntrantes = () => {
         buscarPedidos();
 
     }, []);
-
-    const fetchData = async () => {
-        try {
-            await EmpleadoService.checkUser();
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     const buscarPedidos = async () => {
         PedidoService.getPedidos(EnumEstadoPedido.ENTRANTES)

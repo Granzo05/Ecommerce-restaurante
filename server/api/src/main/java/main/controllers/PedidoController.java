@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.Pedido;
+import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
 import main.utility.gmail.Gmail;
 import org.springframework.http.HttpHeaders;
@@ -120,7 +121,14 @@ public class PedidoController {
             detallesPedido.setPedido(pedido);
         }
 
-        pedido.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+        Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
+        pedido.getSucursales().add(sucursal);
+
+
+        // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
+        if(pedido.getDomicilioEntrega() == null) {
+            pedido.setDomicilioEntrega(sucursal.getDomicilio());
+        }
 
         pedidoRepository.save(pedido);
 

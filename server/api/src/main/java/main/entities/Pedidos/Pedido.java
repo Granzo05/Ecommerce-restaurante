@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Cliente.Cliente;
+import main.entities.Domicilio.Domicilio;
 import main.entities.Factura.Factura;
 import main.entities.Restaurante.Sucursal;
 import net.minidev.json.annotate.JsonIgnore;
@@ -52,6 +53,11 @@ public class Pedido implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
+
+    @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"}, allowSetters = true)
+    @ManyToOne
+    @JoinColumn(name = "id_domicilio_entrega")
+    private Domicilio domicilioEntrega;
 
     @JsonIgnoreProperties(value = {"pedido"}, allowSetters = true)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "pedido", cascade = CascadeType.ALL)

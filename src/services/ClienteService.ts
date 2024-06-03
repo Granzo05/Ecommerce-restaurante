@@ -67,7 +67,7 @@ export const ClienteService = {
 
     getDomicilios: async (id: number): Promise<Domicilio[]> => {
         try {
-            const response = await fetch(URL_API + 'cliente/domicilio/' + id, {
+            const response = await fetch(URL_API + `cliente/${id}/domicilios`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ export const ClienteService = {
                 },
                 body: JSON.stringify(cliente)
             })
-   
+
             if (!response.ok) {
                 throw new Error(await response.text());
             }

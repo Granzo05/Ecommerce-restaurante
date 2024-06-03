@@ -62,6 +62,7 @@
 [] Configurar rutas privadas
 [] Revisar la carga de subcategorias
 [] Agregar addEventListener del enter para activar los botones de los modales ok
+[] Calcular tiempo de entrega de un menu al realizar un pedido
 
 Pruebas
 [x] Carga empresa [] Probar validación

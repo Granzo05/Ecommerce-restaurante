@@ -67,9 +67,9 @@ public class ClienteController {
     }
 
     @CrossOrigin
-    @GetMapping("/cliente/domicilio/{email}")
-    public Set<Domicilio> getDomicilio(@PathVariable("email") String email) throws Exception {
-        Optional<Cliente> cliente = clienteRepository.findByEmail(email);
+    @GetMapping("/cliente/{idCliente}/domicilios")
+    public Set<Domicilio> getDomicilio(@PathVariable("idCliente") Long idCliente) throws Exception {
+        Optional<Cliente> cliente = clienteRepository.findById(idCliente);
 
         if (cliente.isEmpty()) {
             return null;
