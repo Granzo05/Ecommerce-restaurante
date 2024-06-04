@@ -22,6 +22,7 @@ const HeaderHomePage: React.FC = () => {
         const clienteString = localStorage.getItem('usuario');
         let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
 
+        console.log(clienteMem)
         setCliente(clienteMem);
     }
 
@@ -83,7 +84,7 @@ const HeaderHomePage: React.FC = () => {
                     </ul>
                     {/* Renderizado condicional basado en si se hizo clic en "Iniciar sesión" */}
                     <ul>
-                        {cliente ? (
+                        {cliente && cliente?.email.length > 0 ? (
                             <>
                                 <>
                                     {carrito && carrito?.totalProductos > 0 && (
