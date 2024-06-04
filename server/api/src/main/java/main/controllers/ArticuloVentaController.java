@@ -37,6 +37,7 @@ public class ArticuloVentaController {
         this.medidaRepository = medidaRepository;
     }
 
+    @CrossOrigin
     @GetMapping("/articulos/{idSucursal}")
     public Set<ArticuloVenta> getArticulosDisponibles(@PathVariable("idSucursal") Long idSucursal) {
         List<ArticuloVenta> articulos = articuloVentaRepository.findAllBySucursal(idSucursal);
@@ -48,6 +49,7 @@ public class ArticuloVentaController {
         return new HashSet<>(articulos);
     }
 
+    @CrossOrigin
     @GetMapping("/articulos/tipo/{categoria}/{idSucursal}")
     public Set<ArticuloVenta> getArticulosPorCategoria(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
@@ -64,6 +66,7 @@ public class ArticuloVentaController {
         return null;
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/articulo/create/{idSucursal}")
     public ResponseEntity<String> crearArticulo(@RequestBody ArticuloVenta articuloVenta, @PathVariable("idSucursal") Long idSucursal) {
@@ -122,6 +125,7 @@ public class ArticuloVentaController {
     }
 
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/articulo/imagenes/{idSucursal}")
     public ResponseEntity<String> crearImagenArticulo(@RequestParam("file") MultipartFile file, @RequestParam("nombreArticulo") String nombreArticulo, @PathVariable("idSucursal") Long idSucursal) {
@@ -180,6 +184,7 @@ public class ArticuloVentaController {
     }
 
     @jakarta.transaction.Transactional
+    @CrossOrigin
     @PutMapping("/articulo/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagenArticulo(@PathVariable("id") Long id) {
         Optional<Imagenes> imagen = imagenesRepository.findById(id);
@@ -197,6 +202,7 @@ public class ArticuloVentaController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CrossOrigin
     @GetMapping("/articulo/tipo/{tipoArticulo}/{idSucursal}")
     public Set<ArticuloVenta> getArticulosPorTipo(@PathVariable("tipoArticulo") String categoria, @PathVariable("idSucursal") Long id) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, id);
@@ -212,6 +218,7 @@ public class ArticuloVentaController {
         return null;
     }
 
+    @CrossOrigin
     @PutMapping("/articulo/update/{idSucursal}")
     public ResponseEntity<String> actualizarArticulo(@RequestBody ArticuloVenta articuloVentaDetail, @PathVariable("idSucursal") Long id) {
         Optional<ArticuloVenta> articuloEncontrado = articuloVentaRepository.findByIdArticuloAndIdSucursal(articuloVentaDetail.getId(), id);

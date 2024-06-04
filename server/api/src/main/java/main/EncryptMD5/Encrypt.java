@@ -1,4 +1,4 @@
-package main.controllers.EncryptMD5;
+package main.EncryptMD5;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;

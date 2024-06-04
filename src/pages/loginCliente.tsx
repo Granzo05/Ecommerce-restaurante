@@ -29,11 +29,11 @@ const LoginCliente = () => {
     const [email, setEmail] = useState('');
     const [contraseña, setContraseña] = useState('');
     const [calle, setCalle] = useState('');
-    const [numeroCasa, setNumeroCasa] = useState(0);
+    const [numeroCasa, setNumeroCasa] = useState('');
     const [fechaNacimiento, setFechaNacimiento] = useState<Date>(new Date());
     const [codigoPostal, setCodigoPostal] = useState(0);
     const [apellido, setApellido] = useState('');
-    const [telefono, setTelefono] = useState(0);
+    const [telefono, setTelefono] = useState('');
 
     const handleIniciarSesionUsuario = () => {
         ClienteService.getUser(email, contraseña);
@@ -64,7 +64,7 @@ const LoginCliente = () => {
         } else if (!contraseña) {
             toast.error("Por favor, es necesaria la contraseña");
             return;
-        } else if (!telefono) {
+        } else if (!telefono.replace(/\D/g, '')) {
             toast.error("Por favor, es necesario el telefono");
             return;
         } else if (!fechaNacimiento) {
@@ -76,7 +76,7 @@ const LoginCliente = () => {
         } else if (!calle) {
             toast.error("Por favor, es necesario la calle para el domicilio");
             return;
-        } else if (!numeroCasa) {
+        } else if (!numeroCasa.replace(/\D/g, '')) {
             toast.error("Por favor, es necesario el número del domicilio");
             return;
         } else if (!codigoPostal) {
@@ -92,14 +92,14 @@ const LoginCliente = () => {
         let domicilio = new Domicilio();
         domicilio.calle = calle;
         domicilio.codigoPostal = codigoPostal;
-        domicilio.numero = numeroCasa;
+        domicilio.numero = parseInt(numeroCasa);
 
         domicilio.localidad = localidadCliente;
 
         cliente.nombre = `${nombre} ${apellido}`;
         cliente.email = email;
         cliente.contraseña = contraseña;
-        cliente.telefono = telefono;
+        cliente.telefono = parseInt(telefono);
 
         if (domicilio) {
             cliente.domicilios.push(domicilio);
@@ -176,7 +176,7 @@ const LoginCliente = () => {
                     <>
                         {/* Datos del correo */}
                         <div className="inputBox">
-                            <input type='phone' required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+                            <input type='number' required={true} value={telefono} onChange={(e) => { setTelefono(e.target.value) }} />
                             <span>Teléfono</span>
                         </div>
                         <div className="inputBox">
@@ -207,7 +207,7 @@ const LoginCliente = () => {
                             <span>Nombre de la calle</span>
                         </div>
                         <div className="inputBox">
-                            <input type="number" required={true} value={numeroCasa} onChange={(e) => { setNumeroCasa(parseInt(e.target.value)) }} />
+                            <input type="text" required={true} value={numeroCasa} onChange={(e) => { setNumeroCasa(e.target.value) }} />
                             <span>Número de la casa</span>
                         </div>
                         {/* Aquí van los componentes para seleccionar provincia, departamento y localidad */}

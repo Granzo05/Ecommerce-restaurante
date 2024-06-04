@@ -1,6 +1,6 @@
 package main;
 
-import main.controllers.EncryptMD5.Encrypt;
+import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.*;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
@@ -32,21 +32,6 @@ import java.util.Optional;
 public class Main {
     public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
         SpringApplication.run(Main.class, args);
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "http://localhost:5173/")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("Origin", "Content-Type", "Accept", "Authorization")
-                        .allowCredentials(true);
-
-            }
-        };
     }
 
     @Autowired(required = true)

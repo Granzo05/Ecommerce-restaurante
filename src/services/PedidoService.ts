@@ -1,6 +1,7 @@
 import { Cliente } from '../types/Cliente/Cliente';
 import { EnumEstadoPedido } from '../types/Pedidos/EnumEstadoPedido';
 import { Pedido } from '../types/Pedidos/Pedido'
+import { PreferenceMP } from '../types/Pedidos/PreferenceMP';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 import { FacturaService } from './FacturaService';
 
@@ -81,6 +82,30 @@ export const PedidoService = {
         }
 
     },
+
+    crearPedidoMercadopago: async (pedido: Pedido): Promise<PreferenceMP> => {
+        try {
+            const response = await fetch(`${URL_API}pedido/create/mercadopago/${sucursalId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pedido),
+                mode: 'cors'
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+    
 
     updateEstadoPedido: async (pedido: Pedido, estado: EnumEstadoPedido): Promise<string> => {
         pedido.estado = estado;

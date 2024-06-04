@@ -1,7 +1,7 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.controllers.EncryptMD5.Encrypt;
+import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.FechaContratacionEmpleado;
@@ -50,6 +50,7 @@ public class EmpleadoController {
     }
 
     @Transactional
+    @CrossOrigin
     @PostMapping("/empleado/create")
     public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
         Optional<Empleado> empleadoDB = empleadoRepository.findByCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
@@ -82,6 +83,7 @@ public class EmpleadoController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/empleados/{idSucursal}")
     public Set<Empleado> getEmpleados(@PathVariable("idSucursal") Long idSucursal) throws Exception {
 
@@ -108,6 +110,7 @@ public class EmpleadoController {
 
 
     @Transactional
+    @CrossOrigin
     @PutMapping("/empleado/update")
     public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
         Optional<Empleado> empleadoOptional = empleadoRepository.findById(empleadoDetails.getId());

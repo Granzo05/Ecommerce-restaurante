@@ -17,12 +17,15 @@ import { StockArticuloVentaService } from "../services/StockArticulosService";
 import { StockIngredientesService } from "../services/StockIngredientesService";
 import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 
 const Pago = () => {
     const [carrito, setCarrito] = useState<Carrito | null>(null);
     const [cliente, setCliente] = useState<Cliente | null>(null);
     const [domicilio, setDomicilio] = useState<Domicilio>();
-    const [envio, setTipoEnvio] = useState<EnumTipoEnvio | string>(EnumTipoEnvio.DELIVERY);
+    const [envio, setTipoEnvio] = useState<EnumTipoEnvio>(EnumTipoEnvio.RETIRO_EN_TIENDA);
+    const [isVisible, setIsVisible] = useState(false);
+    const [preferenceId, setPreferenceId] = useState<string | null>(null);
 
     const [modalBusquedaDomicilio, setModalBusquedaDomicilio] = useState<boolean>(false);
 
@@ -30,6 +33,21 @@ const Pago = () => {
     const handleModalClose = () => {
         setModalBusquedaDomicilio(false)
     };
+
+    useEffect(() => {
+        if (preferenceId) {
+            initMercadoPago("TEST-41b327fc-a375-4756-a0af-e30b0344a817", {
+                locale: "es-AR",
+            });
+
+            if (preferenceId && preferenceId !== "") {
+                setIsVisible(true);
+            } else {
+                setIsVisible(false);
+            }
+        }
+
+    }, [preferenceId]);
 
     useEffect(() => {
         cargarPedido();
@@ -129,8 +147,79 @@ const Pago = () => {
     }
 
 
-    function realizarPago() {
-        // Logica para mercadopago
+    async function crearPreferencia() {
+        if (envio === 1) {
+            let hayStock = true;
+            let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
+
+            // Verificar stock de ArticuloMenu
+            if (carrito?.articuloMenu) {
+                for (const producto of carrito.articuloMenu) {
+                    for (const ingrediente of producto.ingredientesMenu) {
+                        hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
+
+                        if (!hayStock) {
+                            productoFaltante = producto;
+                            break;
+                        }
+                    }
+                    if (!hayStock) break;
+                }
+            }
+
+            // Verificar stock de ArticuloVenta
+            if (hayStock && carrito?.articuloVenta) {
+                for (const articulo of carrito.articuloVenta) {
+                    hayStock = await StockArticuloVentaService.checkStock(articulo.id, articulo.cantidad);
+
+                    if (!hayStock) {
+                        productoFaltante = articulo;
+                        break;
+                    }
+                }
+            }
+
+            if (hayStock) {
+                if (preferenceId === null) {
+                    let pedido = new Pedido();
+                    if (cliente) pedido.cliente = cliente;
+                    pedido.tipoEnvio = envio;
+
+                    let detalles: DetallesPedido[] = [];
+
+                    carrito?.articuloMenu?.forEach(producto => {
+                        let detalle = new DetallesPedido();
+                        detalle.articuloMenu = producto;
+                        detalle.cantidad = producto.cantidad;
+                        detalle.subTotal = producto.cantidad * producto.precioVenta;
+                        detalles.push(detalle);
+                    });
+
+                    carrito?.articuloVenta?.forEach(producto => {
+                        let detalle = new DetallesPedido();
+                        detalle.articuloVenta = producto;
+                        detalle.cantidad = producto.cantidad;
+                        detalle.subTotal = producto.cantidad * producto.precioVenta;
+                        detalles.push(detalle);
+                    });
+
+                    pedido.factura = null;
+                    pedido.detallesPedido = detalles;
+                    pedido.estado = EnumEstadoPedido.ENTRANTES;
+                    pedido.borrado = 'NO';
+
+                    if (domicilio) pedido.domicilioEntrega = domicilio;
+                    let preference = await PedidoService.crearPedidoMercadopago(pedido);
+
+                    setPreferenceId(preference.id);
+                } else {
+                    setPreferenceId(preferenceId);
+                }
+            } else {
+                toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
+            }
+        }
+
     }
 
     useEffect(() => {
@@ -147,7 +236,7 @@ const Pago = () => {
                     <h3>&mdash; Detalle del pedido y pago &mdash;</h3>
                     <div id="detalle-producto"></div>
                     <label style={{ fontWeight: 'bold', color: '#2C2C2C', fontSize: '18px' }}>Tipo de entrega:</label>
-                    <select className="tipo-envio" name="tipoEnvio" id="tipoEnvio" onChange={e => setTipoEnvio(e.target.value)}>
+                    <select className="tipo-envio" value={envio} name="tipoEnvio" id="tipoEnvio" onChange={e => { setTipoEnvio(parseInt(e.target.value)); crearPreferencia() }}>
                         <option value={EnumTipoEnvio.DELIVERY}>Delivery</option>
                         <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Retiro en tienda</option>
                     </select>
@@ -196,17 +285,18 @@ const Pago = () => {
                     </div>
 
 
-                    {envio === 'DELIVERY' ? (
+                    {envio === EnumTipoEnvio.DELIVERY ? (
                         <div className="total">
                             <h2><strong>Total:</strong> ${carrito?.totalPrecio}</h2>
 
-                            <button
-                                type="submit"
-                                className="checkout-btn"
-                                onClick={realizarPago}
-                            >
-                                Pagar con MercadoPago
-                            </button>
+                            <div className={isVisible ? "divVisible" : "divInvisible"}>
+                                {preferenceId && preferenceId.length > 2 && (
+                                    <Wallet
+                                        initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
+                                        customization={{ texts: { valueProp: "smart_option" } }}
+                                    />
+                                )}
+                            </div>
                             <button
                                 type="submit"
                                 className="cancelar-btn"
@@ -244,3 +334,4 @@ const Pago = () => {
 }
 
 export default Pago;
+

@@ -46,6 +46,7 @@ public class PromocionController {
     }
 
     @PostMapping("/promocion/create/{idSucursal}")
+    @CrossOrigin
     @Transactional
     public ResponseEntity<String> crearPromocion(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
         Optional<Promocion> promocionDB = promocionRepository.findByNameAndIdSucursal(promocionDetails.getNombre(), idSucursal);
@@ -84,6 +85,7 @@ public class PromocionController {
         }
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/promocion/imagenes/{idSucursal}")
     public ResponseEntity<String> crearImagenPromocion(@RequestParam("file") MultipartFile file, @RequestParam("nombrePromocion") String nombrePromocion, @PathVariable("idSucursal") Long idSucursal) {
@@ -141,6 +143,7 @@ public class PromocionController {
         }
     }
 
+    @CrossOrigin
     @Transactional
     @PutMapping("/promocion/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagenPromocion(@PathVariable("id") Long id) {
@@ -159,6 +162,7 @@ public class PromocionController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CrossOrigin
     @PutMapping("/promocion/update/{idSucursal}")
     public ResponseEntity<String> updatePromocion(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
         Optional<Promocion> promocionDB = promocionRepository.findByIdPromocionAndIdSucursal(promocionDetails.getId(), idSucursal);

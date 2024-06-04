@@ -100,7 +100,7 @@ const Header = () => {
                                     )
                                 }
                                 < img className={`menu-icono-all ${isAccountOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-cuenta.png" alt="Cuenta" onClick={handleAccountClick} />
-                                {location.pathname !== '/pago' && (
+                                {isCartOpen && location.pathname !== '/pago' && (
                                     <div className="cart-dropdown">
                                         <h4>Carrito de compras</h4>
                                         <button className="close-cart" onClick={handleCloseCart}>X<strong>(cerrar)</strong></button>

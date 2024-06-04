@@ -73,6 +73,7 @@ export const StockIngredientesService = {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                mode: 'cors'
             })
             if (!response.ok) {
                 throw new Error(await response.text());

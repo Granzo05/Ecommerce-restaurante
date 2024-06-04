@@ -29,26 +29,28 @@ public class StockArticulosController {
         this.sucursalRepository = sucursalRepository;
     }
 
+    @CrossOrigin
     @GetMapping("/stockArticulos/{idSucursal}")
     public Set<StockArticuloVenta> getStock(@PathVariable("idSucursal") Long id) {
         return new HashSet<>(stockArticuloRepository.findAllByIdSucursal(id));
     }
-
+    @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}/stockArticulo/check/{idArticulo}/{cantidadNecesaria}")
-    public ResponseEntity<String> checkStock(@PathVariable("idArticulo") long idArticulo, @PathVariable("idSucursal") long idSucursal, @PathVariable("cantidadNecesaria") int cantidad) {
-
+    public boolean checkStock(@PathVariable("idArticulo") long idArticulo, @PathVariable("idSucursal") long idSucursal, @PathVariable("cantidadNecesaria") int cantidad) {
+        // True hay stock, false no
         Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloRepository.findByIdAndIdSucursal(idArticulo, idSucursal);
 
         if (stockArticuloVenta.isPresent()) {
             if (stockArticuloVenta.get().getCantidadActual() < cantidad) {
-                return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
+                return false;
             }
         }
 
-        return new ResponseEntity<>("El stock es suficiente", HttpStatus.OK);
+        return true;
     }
 
 
+    @CrossOrigin
     @PostMapping("/sucursal/{idSucursal}/stockArticuloVenta/create")
     public ResponseEntity<String> crearStock(@RequestBody StockArticuloVenta stockDetail, @PathVariable("idSucursal") long id) {
         System.out.println(stockDetail);
@@ -84,6 +86,7 @@ public class StockArticulosController {
         }
     }
 
+    @CrossOrigin
     @PutMapping("sucursal/{idSucursal}/stockArticulo/update")
     public ResponseEntity<String> actualizarStock(@RequestBody StockArticuloVenta stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente

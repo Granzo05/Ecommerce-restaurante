@@ -24,6 +24,7 @@ public class FacturaController {
         this.pedidoRepository = pedidoRepository;
     }
 
+    @CrossOrigin
     @PostMapping("/factura/create")
     public void crearFactura(@RequestBody Pedido pedido) {
 
@@ -42,6 +43,7 @@ public class FacturaController {
         facturaRepository.save(factura);
     }
 
+    @CrossOrigin
     @GetMapping("/facturas/cliente/{id}")
     public Set<Factura> getFacturas(@PathVariable("id") Long id) {
         List<Factura> facturas = facturaRepository.findByIdCliente(id);

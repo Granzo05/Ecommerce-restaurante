@@ -44,6 +44,7 @@ public class ArticuloMenuController {
 
     // Busca por id de menu
     @GetMapping("/menus/{idSucursal}")
+    @CrossOrigin
     public Set<ArticuloMenu> getMenusDisponibles(@PathVariable("idSucursal") Long idSucursal) {
         List<ArticuloMenu> menus = articuloMenuRepository.findAllBySucursal(idSucursal);
 
@@ -56,6 +57,7 @@ public class ArticuloMenuController {
     }
 
     @Transactional
+    @CrossOrigin
     @PostMapping("/menu/create/{idSucursal}")
     public ResponseEntity<String> crearMenu(@RequestBody ArticuloMenu articuloMenu, @PathVariable("idSucursal") Long idSucursal) {
         Optional<ArticuloMenu> menuDB = articuloMenuRepository.findByName(articuloMenu.getNombre());
@@ -105,14 +107,13 @@ public class ArticuloMenuController {
                 return ResponseEntity.badRequest().body("Hubo un error al cargar el menú");
 
             }
-
-
         } else {
             return ResponseEntity.badRequest().body("Hay un menú existente con ese nombre");
         }
     }
 
     @Transactional
+    @CrossOrigin
     @PostMapping("/menu/imagenes/{idSucursal}")
     public ResponseEntity<String> crearImagenMenu(@RequestParam("file") MultipartFile file, @RequestParam("nombreMenu") String nombreMenu, @PathVariable("idSucursal") Long idSucursal) {
         HashSet<Imagenes> listaImagenes = new HashSet<>();
@@ -170,6 +171,7 @@ public class ArticuloMenuController {
     }
 
     @Transactional
+    @CrossOrigin
     @PutMapping("/menu/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagenMenu(@PathVariable("id") Long id) {
         Optional<Imagenes> imagen = imagenesRepository.findById(id);
@@ -187,6 +189,7 @@ public class ArticuloMenuController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CrossOrigin
     @GetMapping("/menu/tipo/{categoria}/{idSucursal}")
     public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
@@ -206,6 +209,7 @@ public class ArticuloMenuController {
     }
 
     @Transactional
+    @CrossOrigin
     @PutMapping("/menu/update/{idSucursal}")
     public ResponseEntity<String> actualizarMenu(@RequestBody ArticuloMenu articuloMenuDetail, @PathVariable("idSucursal") Long id) {
         Optional<ArticuloMenu> menuEncontrado = articuloMenuRepository.findByIdMenuAndIdSucursal(articuloMenuDetail.getId(), id);

@@ -23,11 +23,13 @@ public class MedidaController {
     }
 
 
+    @CrossOrigin
     @GetMapping("/medidas/{idSucursal}")
     public Set<Medida> getMedidas(@PathVariable("idSucursal") Long idSucursal) {
         return new HashSet<>(medidaRepository.findAllByIdSucursal(idSucursal));
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/medida/create/{idSucursal}")
     public ResponseEntity<String> crearMedida(@RequestBody Medida medidaDetails, @PathVariable("idSucursal") Long idSucursal) {
@@ -45,6 +47,7 @@ public class MedidaController {
         return ResponseEntity.badRequest().body("Hay una medida existente con ese nombre");
     }
 
+    @CrossOrigin
     @Transactional
     @PutMapping("/medida/update/{idSucursal}")
     public ResponseEntity<String> actualizarMedida(@RequestBody Medida medida, @PathVariable("idSucursal") Long idSucursal) {

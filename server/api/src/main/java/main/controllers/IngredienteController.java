@@ -31,11 +31,13 @@ public class IngredienteController {
         this.medidaRepository = medidaRepository;
     }
 
+    @CrossOrigin
     @GetMapping("/ingredientes/{idSucursal}")
     public Set<Ingrediente> getIngredientes(@PathVariable("idSucursal") Long idSucursal) {
         return new HashSet<>(ingredienteRepository.findAllByIdSucursal(idSucursal));
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/ingrediente/create/{idSucursal}")
     public ResponseEntity<String> crearIngrediente(@RequestBody Ingrediente ingredienteDetails, @PathVariable("idSucursal") Long idSucursal) {
@@ -96,6 +98,7 @@ public class IngredienteController {
         }
     }
 
+    @CrossOrigin
     @PutMapping("/ingrediente/update/{idSucursal}")
     public ResponseEntity<String> actualizarIngrediente(@RequestBody Ingrediente ingrediente, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Ingrediente> ingredienteEncontrado = ingredienteRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);

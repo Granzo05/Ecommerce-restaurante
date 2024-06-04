@@ -1,7 +1,7 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.controllers.EncryptMD5.Encrypt;
+import main.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.repositories.ClienteRepository;
@@ -29,6 +29,7 @@ public class ClienteController {
     }
 
     @Transactional
+    @CrossOrigin
     @PostMapping("/cliente/create")
     public Cliente crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
@@ -40,17 +41,10 @@ public class ClienteController {
                 domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setCliente(clienteDetails);
             }
-
+            clienteDetails.setBorrado("NO");
             clienteDetails = clienteRepository.save(clienteDetails);
 
-            Cliente Cliente = new Cliente();
-
-            Cliente.setId(clienteDetails.getId());
-            Cliente.setNombre(clienteDetails.getNombre());
-            Cliente.setTelefono(clienteDetails.getTelefono());
-            Cliente.setEmail(clienteDetails.getEmail());
-
-            return Cliente;
+            return clienteDetails;
         } else {
             return null;
         }
@@ -60,7 +54,6 @@ public class ClienteController {
     @GetMapping("/cliente/login/{email}/{password}")
     public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-
         if (cliente.isPresent()) {
             return cliente.get();
         } else return null;
@@ -84,6 +77,7 @@ public class ClienteController {
         return new HashSet<>(domicilios);
     }
 
+    @CrossOrigin
     @PutMapping("/cliente/update")
     public ResponseEntity<String> updateCliente(@RequestBody Cliente clienteDetails) throws Exception {
         Optional<Cliente> clienteOptional = clienteRepository.findById(clienteDetails.getId());
@@ -127,6 +121,7 @@ public class ClienteController {
         return ResponseEntity.ok("Cuenta actualizada con éxito");
     }
 
+    @CrossOrigin
     @DeleteMapping("/cliente/{id}/delete")
     public ResponseEntity<?> borrarCliente(@RequestBody Cliente user) {
         Optional<Cliente> cliente = clienteRepository.findById(user.getId());

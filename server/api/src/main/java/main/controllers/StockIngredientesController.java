@@ -31,12 +31,14 @@ public class StockIngredientesController {
         this.medidaRepository = medidaRepository;
     }
 
+    @CrossOrigin
     @GetMapping("/stockIngredientes/{idSucursal}")
     public Set<StockIngredientes> getStock(@PathVariable("idSucursal") long id) {
         return new HashSet<>(stockIngredientesRepository.findAllByIdSucursal(id));
     }
 
 
+    @CrossOrigin
     @GetMapping("sucursal/{idSucursal}/stockIngredientes/{nombre}/{cantidad}")
     public ResponseEntity<String> getStockPorNombre(@PathVariable("nombre") String nombre, @PathVariable("cantidad") int cantidad, @PathVariable("idSucursal") long id) {
         // Recibimos el nombre del menu y la cantidad pedida del mismo
@@ -75,28 +77,30 @@ public class StockIngredientesController {
         return new ResponseEntity<>("El stockIngredientes es suficiente", HttpStatus.CREATED);
     }
 
+    @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}/stockIngredientes/check/{idIngrediente}/{idMedida}/{cantidadNecesaria}")
-    public ResponseEntity<String> checkStock(@PathVariable("idIngrediente") long idIngrediente, @PathVariable("idSucursal") long idSucursal, @PathVariable("idMedida") Long idMedida, @PathVariable("cantidadNecesaria") int cantidad) {
-
+    public boolean checkStock(@PathVariable("idIngrediente") long idIngrediente, @PathVariable("idSucursal") long idSucursal, @PathVariable("idMedida") Long idMedida, @PathVariable("cantidadNecesaria") int cantidad) {
+        // True hay stock, false no
         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(idIngrediente, idSucursal);
 
         if (stockIngrediente.isPresent()) {
             Medida medida = medidaRepository.findById(idMedida).get();
             // Si el ingrediente tiene la misma medida que el stockIngredientes almacenado entonces se calcula a la misma medida.
             if (stockIngrediente.get().getMedida().equals(medida) && stockIngrediente.get().getCantidadActual() < cantidad) {
-                return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
+                return false;
             } else if (stockIngrediente.get().getMedida().equals("Kg") && medida.equals("Gramos")) {
                 // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
                 if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad) {
-                    return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
+                    return false;
                 }
             }
         }
 
-        return new ResponseEntity<>("El stock es suficiente", HttpStatus.OK);
+        return true;
     }
 
 
+    @CrossOrigin
     @PostMapping("sucursal/{idSucursal}/stockIngredientes/create")
     public ResponseEntity<String> crearStock(@RequestBody StockIngredientes stockDetail, @PathVariable("idSucursal") long id) {
         Optional<Ingrediente> ingredienteDb = ingredienteRepository.findByNameAndIdSucursal(stockDetail.getIngrediente().getNombre(), id);
@@ -139,6 +143,7 @@ public class StockIngredientesController {
         return ResponseEntity.ofNullable("El stock ya existe");
     }
 
+    @CrossOrigin
     @PutMapping("sucursal/{idSucursal}/stockIngrediente/update")
     public ResponseEntity<String> actualizarStock(@RequestBody StockIngredientes stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente

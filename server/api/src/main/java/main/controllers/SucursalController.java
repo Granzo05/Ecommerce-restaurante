@@ -1,7 +1,7 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.controllers.EncryptMD5.Encrypt;
+import main.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Ingredientes.Categoria;
@@ -125,6 +125,7 @@ public class SucursalController {
     }
 
     @PostMapping("/sucursal/create")
+    @CrossOrigin
     @Transactional
     public ResponseEntity<String> crearSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {
         Optional<Sucursal> sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
@@ -183,6 +184,7 @@ public class SucursalController {
         }
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/sucursal/imagenes")
     public ResponseEntity<String> crearImagenSucursal(@RequestParam("file") MultipartFile file, @RequestParam("nombreSucursal") String nombreSucursal) {
@@ -239,6 +241,7 @@ public class SucursalController {
         }
     }
 
+    @CrossOrigin
     @Transactional
     @PutMapping("/sucursal/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagenSucursal(@PathVariable("id") Long id) {
@@ -257,6 +260,7 @@ public class SucursalController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CrossOrigin
     @Transactional
     @PutMapping("/sucursal/update")
     public ResponseEntity<String> updateSucursal(@RequestBody Sucursal sucursalDetails) throws Exception {

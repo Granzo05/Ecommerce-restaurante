@@ -60,7 +60,7 @@ dependencies {
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.4.1'
 
     // Mercadopago
-    implementation group: 'com.mercadopago', name: 'sdk-java', version: '2.1.22'
+    implementation group: 'com.mercadopago', name: 'sdk-java', version: '2.1.24'
 
     runtimeOnly 'mysql:mysql-connector-java'
     implementation 'mysql:mysql-connector-java:8.0.32'

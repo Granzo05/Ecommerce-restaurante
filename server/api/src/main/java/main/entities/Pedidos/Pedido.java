@@ -7,6 +7,7 @@ import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Factura.Factura;
 import main.entities.Restaurante.Sucursal;
+import main.utility.PreferenceMP;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -70,4 +71,7 @@ public class Pedido implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
+
+    @Column(name = "preferencia_mp")
+    private String preferencia;
 }

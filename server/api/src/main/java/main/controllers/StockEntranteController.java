@@ -33,6 +33,7 @@ public class StockEntranteController {
         this.medidaRepository = medidaRepository;
     }
 
+    @CrossOrigin
     @GetMapping("/stockEntrante/{idSucursal}")
     public Set<StockEntrante> getStock(@PathVariable("idSucursal") long id) {
         List<StockEntrante> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
@@ -49,6 +50,7 @@ public class StockEntranteController {
         return new HashSet<>(stocksEntrantes);
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/sucursal/{idSucursal}/StockEntrante/create")
     public ResponseEntity<String> crearStock(@RequestBody StockEntrante stockDetail, @PathVariable("idSucursal") long id) {
@@ -125,6 +127,7 @@ public class StockEntranteController {
         return true;
     }
 
+    @CrossOrigin
     @PutMapping("sucursal/{idSucursal}/stockEntrante/update")
     public ResponseEntity<String> actualizarStock(@RequestBody StockEntrante stockEntrante, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente

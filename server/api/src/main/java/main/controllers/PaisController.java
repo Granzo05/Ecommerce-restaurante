@@ -1,6 +1,6 @@
 package main.controllers;
 
-import main.controllers.EncryptMD5.Encrypt;
+import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Departamento;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Domicilio.Localidad;

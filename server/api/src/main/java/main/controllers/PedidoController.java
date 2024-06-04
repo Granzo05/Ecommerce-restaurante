@@ -5,6 +5,15 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
+import com.mercadopago.client.preference.PreferenceClient;
+import com.mercadopago.client.preference.PreferenceItemRequest;
+import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.core.MPRequestOptions;
+import com.mercadopago.exceptions.MPApiException;
+import com.mercadopago.exceptions.MPException;
+import com.mercadopago.resources.preference.Preference;
 import jakarta.transaction.Transactional;
 import main.entities.Factura.Factura;
 import main.entities.Ingredientes.IngredienteMenu;
@@ -16,7 +25,8 @@ import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
-import main.utility.gmail.Gmail;
+import main.utility.Gmail;
+import main.utility.PreferenceMP;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,11 +36,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class PedidoController {
@@ -54,6 +62,7 @@ public class PedidoController {
         this.stockIngredientesRepository = stockIngredientesRepository;
     }
 
+    @CrossOrigin
     @GetMapping("/cliente/{id}/pedidos")
     public Set<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
         List<Pedido> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
@@ -61,6 +70,7 @@ public class PedidoController {
         return new HashSet<>(pedidos);
     }
 
+    @CrossOrigin
     @GetMapping("/pedidos/{idSucursal}")
     public Set<Pedido> getPedidosPorNegocio(@PathVariable("idSucursal") Long idSucursal) {
         List<Pedido> pedidos = pedidoRepository.findAllByIdSucursal(idSucursal);
@@ -68,6 +78,7 @@ public class PedidoController {
         return new HashSet<>(pedidos);
     }
 
+    @CrossOrigin
     @GetMapping("/pedidos/{estado}/{idSucursal}")
     public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") int estadoValue, @PathVariable("idSucursal") Long idSucursal) {
         EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
@@ -77,6 +88,7 @@ public class PedidoController {
     }
 
     //Funcion para cargar pdfs
+    @CrossOrigin
     @GetMapping("/pedido/{idPedido}/pdf")
     public ResponseEntity<byte[]> generarPedidoPDF(@PathVariable Long idCliente, @PathVariable Long idPedido) {
         // Lógica para obtener el pedido y su factura desde la base de datos
@@ -122,35 +134,142 @@ public class PedidoController {
                 .body(pdfBytes);
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/pedido/create/{idSucursal}")
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
 
-        for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
-            detallesPedido.setPedido(pedido);
-            descontarStock(detallesPedido, idSucursal);
+        Optional<Pedido> pedidoDB = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
+
+        if (pedidoDB.isEmpty()) {
+            for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
+                detallesPedido.setPedido(pedido);
+                descontarStock(detallesPedido, idSucursal);
+            }
+
+            Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
+            pedido.getSucursales().add(sucursal);
+
+            // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
+            if (pedido.getDomicilioEntrega() == null) {
+                pedido.setDomicilioEntrega(sucursal.getDomicilio());
+            }
+
+            pedidoRepository.save(pedido);
+
+            return ResponseEntity.ok("Pedido creado con éxito");
         }
 
-        Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
-        pedido.getSucursales().add(sucursal);
+        return ResponseEntity.badRequest().body("Ocurrió un error al generar el pedido");
+
+    }
+
+    @Transactional
+    @CrossOrigin
+    @PostMapping("/pedido/create/mercadopago/{idSucursal}")
+    public PreferenceMP crearPedidoMercadopago(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
+
+        Optional<Pedido> pedidoDB = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
+
+        if (pedidoDB.isEmpty() && pedido.getPreferencia() == null) {
+            for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
+                detallesPedido.setPedido(pedido);
+                descontarStock(detallesPedido, idSucursal);
+            }
+
+            Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
+            pedido.getSucursales().add(sucursal);
 
 
-        // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
-        if (pedido.getDomicilioEntrega() == null) {
-            pedido.setDomicilioEntrega(sucursal.getDomicilio());
+            // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
+            if (pedido.getDomicilioEntrega() == null) {
+                pedido.setDomicilioEntrega(sucursal.getDomicilio());
+            }
+
+            pedidoRepository.save(pedido);
+
+            try {
+                MercadoPagoConfig.setAccessToken("TEST-4348060094658217-052007-d8458fa36a2d40dd8023bfcb9f27fd4e-1819307913");
+
+                List<PreferenceItemRequest> items = new ArrayList<>();
+
+                for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
+
+                    if (detallesPedido.getArticuloMenu() != null) {
+                        PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
+                                .id(String.valueOf(detallesPedido.getArticuloMenu().getId()))
+                                .title(detallesPedido.getArticuloMenu().getNombre())
+                                .categoryId(String.valueOf(detallesPedido.getArticuloMenu().getCategoria().getId()))
+                                .quantity(detallesPedido.getCantidad())
+                                .currencyId("ARS")
+                                .unitPrice(new BigDecimal(detallesPedido.getArticuloMenu().getPrecioVenta()))
+                                .build();
+                        items.add(itemRequest);
+                    } else if (detallesPedido.getArticuloVenta() != null) {
+                        PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
+                                .id(String.valueOf(detallesPedido.getArticuloVenta().getId()))
+                                .title(detallesPedido.getArticuloVenta().getNombre())
+                                .categoryId(String.valueOf(detallesPedido.getArticuloVenta().getCategoria().getId()))
+                                .quantity(detallesPedido.getCantidad())
+                                .currencyId("ARS")
+                                .unitPrice(new BigDecimal(detallesPedido.getArticuloVenta().getPrecioVenta()))
+                                .build();
+                        items.add(itemRequest);
+                    }
+                }
+
+                PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+                        .success("http://localhost:5173/compra-exitosa")
+                        .failure("http://localhost:5173/pago")
+                        .pending("http://localhost:5173/pago")
+                        .build();
+
+                PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                        .autoReturn("approved")
+                        .externalReference(String.valueOf(pedido.getId()))
+                        .items(items)
+                        .backUrls(backUrls)
+                        .build();
+                PreferenceClient client = new PreferenceClient();
+
+                MPRequestOptions options = MPRequestOptions.builder()
+                        .connectionTimeout(120000)
+                        .build();
+
+                Preference preference = client.create(preferenceRequest, options);
+
+                PreferenceMP mpPreference = new PreferenceMP();
+                mpPreference.setStatusCode(preference.getResponse().getStatusCode());
+                mpPreference.setId(preference.getId());
+
+                pedido.setPreferencia(mpPreference.getId());
+
+                pedidoRepository.save(pedido);
+
+                return mpPreference;
+
+            } catch (MPException | MPApiException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            PreferenceMP mpPreference = new PreferenceMP();
+            mpPreference.setStatusCode(200);
+            mpPreference.setId(pedido.getPreferencia());
+
+            return mpPreference;
         }
-
-        pedidoRepository.save(pedido);
-
-        return new ResponseEntity<>("La pedido ha sido cargado correctamente", HttpStatus.CREATED);
     }
 
     private void descontarStock(DetallesPedido detallesPedido, Long idSucursal) {
-        Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detallesPedido.getArticuloVenta().getId(), idSucursal);
+        if (detallesPedido.getArticuloVenta() != null) {
+            Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detallesPedido.getArticuloVenta().getId(), idSucursal);
 
-        if (stockArticuloVenta.isPresent()) {
-            stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() - detallesPedido.getCantidad());
-        } else {
+            if (stockArticuloVenta.isPresent()) {
+                stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() - detallesPedido.getCantidad());
+            }
+        }
+
+        if (detallesPedido.getArticuloMenu() != null) {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
 
@@ -158,9 +277,11 @@ public class PedidoController {
                     stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - detallesPedido.getCantidad());
                 }
             }
+
         }
     }
 
+    @CrossOrigin
     @PutMapping("/pedido/delete/{id}/{idSucursal}")
     public ResponseEntity<?> borrarPedido(@PathVariable Long id, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Pedido> pedido = pedidoRepository.findById(id);
@@ -173,6 +294,7 @@ public class PedidoController {
     }
 
     @Transactional
+    @CrossOrigin
     @PutMapping("/pedido/update/{idSucursal}")
     public ResponseEntity<?> updatePedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
         pedidoRepository.save(pedido);
@@ -180,8 +302,10 @@ public class PedidoController {
     }
 
     @PutMapping("/pedido/update/estado/{idSucursal}")
+    @CrossOrigin
     @Transactional
-    public ResponseEntity<String> updateEstadoPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) throws GeneralSecurityException, IOException, MessagingException {
+    public ResponseEntity<String> updateEstadoPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long
+            idSucursal) throws GeneralSecurityException, IOException, MessagingException {
         Optional<Pedido> pedidoDb = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
 
         if (pedidoDb.isEmpty()) {

@@ -35,6 +35,7 @@ public class CategoriaController {
     }
 
 
+    @CrossOrigin
     @GetMapping("/categorias/{idSucursal}")
     public Set<Categoria> getCategorias(@PathVariable("idSucursal") Long idSucursal) {
         List<Categoria> categorias = categoriaRepository.findAllByIdSucursal(idSucursal);
@@ -46,6 +47,7 @@ public class CategoriaController {
         return new HashSet<>(categorias);
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/categoria/create/{idSucursal}")
     public ResponseEntity<String> crearCategoria(@RequestBody Categoria categoriaDetails, @PathVariable("idSucursal") Long idSucursal) {
@@ -63,6 +65,7 @@ public class CategoriaController {
         return ResponseEntity.badRequest().body("Hay una categoria existente con ese nombre");
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/categoria/imagenes/{idSucursal}")
     public ResponseEntity<String> crearImagenSucursal(@RequestParam("file") MultipartFile file, @RequestParam("nombreCategoria") String nombreCategoria, @PathVariable("idSucursal") Long idSucursal) {
@@ -120,6 +123,7 @@ public class CategoriaController {
         }
     }
 
+    @CrossOrigin
     @Transactional
     @PutMapping("/categoria/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagenSucursal(@PathVariable("id") Long id) {
@@ -138,6 +142,7 @@ public class CategoriaController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CrossOrigin
     @PutMapping("/categoria/update/{idSucursal}")
     public ResponseEntity<String> actualizarCategoria(@RequestBody Categoria categoria, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByIdCategoriaAndIdSucursal(categoria.getId(), idSucursal);

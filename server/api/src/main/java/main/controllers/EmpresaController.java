@@ -1,7 +1,7 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.controllers.EncryptMD5.Encrypt;
+import main.EncryptMD5.Encrypt;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Empresa;
 import main.repositories.EmpresaRepository;
@@ -54,6 +54,7 @@ public class EmpresaController {
     }
 
     @PostMapping("/empresa/create")
+    @CrossOrigin
     @Transactional
     public ResponseEntity<String> crearEmpresa(@RequestBody Empresa empresaDetails) throws Exception {
         Optional<Empresa> empresaDB = empresaRepository.findByCuit(empresaDetails.getCuit());
@@ -72,6 +73,7 @@ public class EmpresaController {
         }
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/empresa/imagenes/")
     public ResponseEntity<String> crearImagenEmpresa(@RequestParam("file") MultipartFile file, @RequestParam("razonSocialEmpresa") String razonSocialEmpresa) {
@@ -128,6 +130,7 @@ public class EmpresaController {
         }
     }
 
+    @CrossOrigin
     @Transactional
     @PutMapping("/empresa/imagen/{id}/delete")
     public ResponseEntity<String> eliminarImagenEmpresa(@PathVariable("id") Long id) {
@@ -146,6 +149,7 @@ public class EmpresaController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CrossOrigin
     @Transactional
     @PutMapping("/empresa/update")
     public ResponseEntity<String> updateEmpresa(@RequestBody Empresa empresaDetails) throws Exception {
@@ -188,6 +192,7 @@ public class EmpresaController {
         }
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/empresa/imagenes")
     public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("cuit") String cuit) {

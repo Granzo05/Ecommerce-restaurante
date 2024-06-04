@@ -22,16 +22,19 @@ public class SubcategoriaController {
         this.sucursalRepository = sucursalRepository;
     }
 
+    @CrossOrigin
     @GetMapping("/subcategorias/{idSucursal}")
     public Set<Subcategoria> getCategorias(@PathVariable("idSucursal") Long idSucursal) {
         return new HashSet<>(subcategoriaRepository.findAllByIdSucursal(idSucursal));
     }
 
+    @CrossOrigin
     @GetMapping("categoria/{idCategoria}/subcategorias/{idSucursal}")
     public Set<Subcategoria> getCategoriasByCategoriaId(@PathVariable("idCategoria") Long idCategoria, @PathVariable("idSucursal") Long idSucursal) {
         return new HashSet<>(subcategoriaRepository.findAllByIdCategoriaAndIdSucursal(idCategoria, idSucursal));
     }
 
+    @CrossOrigin
     @Transactional
     @PostMapping("/subcategoria/create/{idSucursal}")
     public ResponseEntity<String> crearCategoria(@RequestBody Subcategoria categoriaDetails, @PathVariable("idSucursal") Long idSucursal) {
@@ -49,6 +52,7 @@ public class SubcategoriaController {
         return ResponseEntity.ofNullable("El subcategoria ya existe");
     }
 
+    @CrossOrigin
     @Transactional
     @PutMapping("/subcategoria/update/{idSucursal}")
     public ResponseEntity<String> actualizarCategoria(@RequestBody Subcategoria subcategoria, @PathVariable("idSucursal") Long idSucursal) {
