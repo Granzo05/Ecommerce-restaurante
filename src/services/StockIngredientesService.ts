@@ -1,4 +1,3 @@
-import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 import { StockArticuloVenta } from '../types/Stock/StockArticuloVenta';
 import { StockIngredientes } from '../types/Stock/StockIngredientes';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
@@ -67,24 +66,19 @@ export const StockIngredientesService = {
         }
     },
 
-    checkStock: async (menus: ArticuloMenu[]): Promise<string> => {
+    checkStock: async (idIngrediente: number): Promise<boolean> => {
         try {
-            const queryString = menus.map(menu => `id=${menu.id}`).join('&');
-
-            // Construir la URL con los parámetros de consulta
-            const url = `${URL_API}sucursal/${sucursalId}/stockIngredientes/check?${queryString}`;
-            const response = await fetch(url, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockArticulo/${idIngrediente}/check`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
-                }
-            });
+                },
+            })
             if (!response.ok) {
                 throw new Error(await response.text());
             }
 
-            return await response.text();
-
+            return await response.json();
 
         } catch (error) {
             console.error('Error:', error);
@@ -93,8 +87,7 @@ export const StockIngredientesService = {
     },
 
     updateStock: async (stock: StockArticuloVenta | StockIngredientes): Promise<string> => {
-      console.log(stock);
-      try {
+        try {
             const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngrediente/update`, {
                 method: 'PUT',
                 headers: {

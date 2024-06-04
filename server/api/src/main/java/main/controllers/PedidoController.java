@@ -7,11 +7,14 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
 import main.entities.Factura.Factura;
+import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Pedidos.Pedido;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import main.utility.gmail.Gmail;
 import org.springframework.http.HttpHeaders;
@@ -36,15 +39,19 @@ public class PedidoController {
     private final SucursalRepository sucursalRepository;
     private final FacturaRepository facturaRepository;
     private final DetallePedidoRepository detallePedidoRepository;
+    private final StockArticuloVentaRepository stockArticuloVentaRepository;
+    private final StockIngredientesRepository stockIngredientesRepository;
 
     public PedidoController(PedidoRepository pedidoRepository,
                             ClienteRepository clienteRepository,
-                            SucursalRepository sucursalRepository, FacturaRepository facturaRepository, DetallePedidoRepository detallePedidoRepository) {
+                            SucursalRepository sucursalRepository, FacturaRepository facturaRepository, DetallePedidoRepository detallePedidoRepository, StockArticuloVentaRepository stockArticuloVentaRepository, StockIngredientesRepository stockIngredientesRepository) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
         this.sucursalRepository = sucursalRepository;
         this.facturaRepository = facturaRepository;
         this.detallePedidoRepository = detallePedidoRepository;
+        this.stockArticuloVentaRepository = stockArticuloVentaRepository;
+        this.stockIngredientesRepository = stockIngredientesRepository;
     }
 
     @GetMapping("/cliente/{id}/pedidos")
@@ -121,6 +128,7 @@ public class PedidoController {
 
         for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
             detallesPedido.setPedido(pedido);
+            descontarStock(detallesPedido, idSucursal);
         }
 
         Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
@@ -135,6 +143,22 @@ public class PedidoController {
         pedidoRepository.save(pedido);
 
         return new ResponseEntity<>("La pedido ha sido cargado correctamente", HttpStatus.CREATED);
+    }
+
+    private void descontarStock(DetallesPedido detallesPedido, Long idSucursal) {
+        Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detallesPedido.getArticuloVenta().getId(), idSucursal);
+
+        if (stockArticuloVenta.isPresent()) {
+            stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() - detallesPedido.getCantidad());
+        } else {
+            for (IngredienteMenu ingrediente: detallesPedido.getArticuloMenu().getIngredientesMenu()) {
+                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
+
+                if (stockIngrediente.isPresent()) {
+                    stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - detallesPedido.getCantidad());
+                }
+            }
+        }
     }
 
     @PutMapping("/pedido/delete/{id}/{idSucursal}")

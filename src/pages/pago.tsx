@@ -13,6 +13,10 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import InputComponent from "../components/InputFiltroComponent";
 import ModalFlotanteRecomendacionesDomicilios from "../hooks/ModalFlotanteFiltroDomicilios";
+import { StockArticuloVentaService } from "../services/StockArticulosService";
+import { StockIngredientesService } from "../services/StockIngredientesService";
+import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
+import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 
 const Pago = () => {
     const [carrito, setCarrito] = useState<Carrito | null>(null);
@@ -48,6 +52,34 @@ const Pago = () => {
 
     async function enviarPedidoARestaurante() {
         let hayStock = true;
+        let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
+
+        // Verificar stock de ArticuloMenu
+        if (carrito?.articuloMenu) {
+            for (const producto of carrito.articuloMenu) {
+                for (const ingrediente of producto.ingredientesMenu) {
+                    hayStock = await StockIngredientesService.checkStock(ingrediente.id);
+
+                    if (!hayStock) {
+                        productoFaltante = producto;
+                        break;
+                    }
+                }
+                if (!hayStock) break;
+            }
+        }
+
+        // Verificar stock de ArticuloVenta
+        if (hayStock && carrito?.articuloVenta) {
+            for (const articulo of carrito.articuloVenta) {
+                hayStock = await StockArticuloVentaService.checkStock(articulo.id);
+
+                if (!hayStock) {
+                    productoFaltante = articulo;
+                    break;
+                }
+            }
+        }
 
         if (hayStock) {
             let pedido = new Pedido();
@@ -91,11 +123,11 @@ const Pago = () => {
                     return message;
                 },
             });
-
         } else {
-            console.error('No hay suficiente stock para completar el pedido');
+            toast.error('No hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
         }
     }
+
 
     function realizarPago() {
         // Logica para mercadopago
