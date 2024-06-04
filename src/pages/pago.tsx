@@ -58,7 +58,7 @@ const Pago = () => {
         if (carrito?.articuloMenu) {
             for (const producto of carrito.articuloMenu) {
                 for (const ingrediente of producto.ingredientesMenu) {
-                    hayStock = await StockIngredientesService.checkStock(ingrediente.id);
+                    hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
 
                     if (!hayStock) {
                         productoFaltante = producto;
@@ -72,7 +72,7 @@ const Pago = () => {
         // Verificar stock de ArticuloVenta
         if (hayStock && carrito?.articuloVenta) {
             for (const articulo of carrito.articuloVenta) {
-                hayStock = await StockArticuloVentaService.checkStock(articulo.id);
+                hayStock = await StockArticuloVentaService.checkStock(articulo.id, articulo.cantidad);
 
                 if (!hayStock) {
                     productoFaltante = articulo;
@@ -124,7 +124,7 @@ const Pago = () => {
                 },
             });
         } else {
-            toast.error('No hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
+            toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
         }
     }
 

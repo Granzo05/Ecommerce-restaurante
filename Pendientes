@@ -63,6 +63,8 @@
 [] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
 [] Calcular tiempo de entrega de un menu al realizar un pedido
 [] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
+[] Mostrar productos solo si hay stock
+[] Mostrar categorias solo si hay productos con stock que la completen
 
 Pruebas
 [x] Carga empresa [] Probar validación

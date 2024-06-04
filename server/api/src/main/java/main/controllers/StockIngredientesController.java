@@ -2,22 +2,21 @@ package main.controllers;
 
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockIngredientes;
-import main.repositories.ArticuloMenuRepository;
-import main.repositories.IngredienteRepository;
-import main.repositories.StockIngredientesRepository;
-import main.repositories.SucursalRepository;
+import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 public class StockIngredientesController {
@@ -25,12 +24,14 @@ public class StockIngredientesController {
     private final IngredienteRepository ingredienteRepository;
     private final ArticuloMenuRepository articuloMenuRepository;
     private final SucursalRepository sucursalRepository;
+    private final MedidaRepository medidaRepository;
 
-    public StockIngredientesController(StockIngredientesRepository stockIngredientesRepository, IngredienteRepository ingredienteRepository, ArticuloMenuRepository articuloMenuRepository, SucursalRepository sucursalRepository) {
+    public StockIngredientesController(StockIngredientesRepository stockIngredientesRepository, IngredienteRepository ingredienteRepository, ArticuloMenuRepository articuloMenuRepository, SucursalRepository sucursalRepository, MedidaRepository medidaRepository) {
         this.stockIngredientesRepository = stockIngredientesRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.articuloMenuRepository = articuloMenuRepository;
         this.sucursalRepository = sucursalRepository;
+        this.medidaRepository = medidaRepository;
     }
 
     @GetMapping("/stockIngredientes/{idSucursal}")
@@ -77,29 +78,25 @@ public class StockIngredientesController {
         return new ResponseEntity<>("El stockIngredientes es suficiente", HttpStatus.CREATED);
     }
 
-    @GetMapping("/sucursal/{idSucursal}/stockIngredientes/check")
-    public ResponseEntity<String> checkStock(@RequestParam(value = "articuloMenus") List<ArticuloMenu> articuloMenus, @PathVariable("idSucursal") long id) {
-        System.out.println(articuloMenus);
-        for (ArticuloMenu articuloMenu : articuloMenus) {
-            for (IngredienteMenu ingrediente : articuloMenu.getIngredientesMenu()) {
-                Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getIngrediente().getId(), id);
+    @GetMapping("/sucursal/{idSucursal}/stockIngredientes/check/{idIngrediente}/{idMedida}/{cantidadNecesaria}")
+    public ResponseEntity<String> checkStock(@PathVariable("idIngrediente") long idIngrediente, @PathVariable("idSucursal") long idSucursal, @PathVariable("idMedida") Long idMedida, @PathVariable("cantidadNecesaria") int cantidad) {
 
-                if (stockEncontrado.isPresent()) {
-                    System.out.println("StockIngredientes db medida: " + stockEncontrado.get().getMedida() + " y cantidad: " + stockEncontrado.get().getCantidadActual());
-                    System.out.println("StockIngredientes db cliente medida: " + ingrediente.getMedida() + " y cantidad: " + ingrediente.getCantidad());
-                    // Si el ingrediente tiene la misma medida que el stockIngredientes almacenado entonces se calcula a la misma medida.
-                    if (stockEncontrado.get().getMedida().equals(ingrediente.getMedida()) && stockEncontrado.get().getCantidadActual() < ingrediente.getCantidad()) {
-                        return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
-                    } else if (!stockEncontrado.get().getMedida().equals("Kg") && ingrediente.getMedida().equals("Gramos")) {
-                        // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
-                        if (stockEncontrado.get().getCantidadActual() * 1000 < ingrediente.getCantidad()) {
-                            return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
-                        }
-                    }
+        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(idIngrediente, idSucursal);
+
+        if (stockIngrediente.isPresent()) {
+            Medida medida = medidaRepository.findById(idMedida).get();
+            // Si el ingrediente tiene la misma medida que el stockIngredientes almacenado entonces se calcula a la misma medida.
+            if (stockIngrediente.get().getMedida().equals(medida) && stockIngrediente.get().getCantidadActual() < cantidad) {
+                return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
+            } else if (stockIngrediente.get().getMedida().equals("Kg") && medida.equals("Gramos")) {
+                // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
+                if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad) {
+                    return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
                 }
             }
         }
-        return new ResponseEntity<>("El stockIngredientes es suficiente", HttpStatus.CREATED);
+
+        return new ResponseEntity<>("El stock es suficiente", HttpStatus.OK);
     }
 
 

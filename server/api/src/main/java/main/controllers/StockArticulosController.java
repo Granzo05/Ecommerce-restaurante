@@ -1,9 +1,11 @@
 package main.controllers;
 
+import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.Stock;
 import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.ArticuloVentaRepository;
 import main.repositories.IngredienteRepository;
 import main.repositories.StockArticuloVentaRepository;
@@ -36,18 +38,18 @@ public class StockArticulosController {
         return new HashSet<>(stockArticuloRepository.findAllByIdSucursal(id));
     }
 
-    @GetMapping("/sucursal/{idSucursal}/stockArticuloVenta/check")
-    public ResponseEntity<String> checkStock(@RequestParam(value = "articuloMenus") List<ArticuloVenta> articuloVentas, @PathVariable("idSucursal") long id) {
-        for (ArticuloVenta articulo : articuloVentas) {
-            Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findStockByProductNameAndIdSucursal(articulo.getNombre(), id);
+    @GetMapping("/sucursal/{idSucursal}/stockArticulo/check/{idArticulo}/{cantidadNecesaria}")
+    public ResponseEntity<String> checkStock(@PathVariable("idArticulo") long idArticulo, @PathVariable("idSucursal") long idSucursal, @PathVariable("cantidadNecesaria") int cantidad) {
 
-            if (stockEncontrado.isPresent()) {
-                if (stockEncontrado.get().getCantidadActual() < articulo.getCantidadMedida()) {
-                    return new ResponseEntity<>("El stockArticuloVenta no es suficiente", HttpStatus.BAD_REQUEST);
-                }
+        Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloRepository.findByIdAndIdSucursal(idArticulo, idSucursal);
+
+        if (stockArticuloVenta.isPresent()) {
+            if (stockArticuloVenta.get().getCantidadActual() < cantidad) {
+                return new ResponseEntity<>("El stock no es suficiente", HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<>("El stockArticuloVenta es suficiente", HttpStatus.OK);
+
+        return new ResponseEntity<>("El stock es suficiente", HttpStatus.OK);
     }
 
 
