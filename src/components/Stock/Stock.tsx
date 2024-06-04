@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import EliminarStock from "./EliminarStock";
 import EditarStock from "./EditarStock";
-import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
 import { StockIngredientesService } from "../../services/StockIngredientesService";
 import { StockArticuloVentaService } from "../../services/StockArticulosService";
@@ -29,36 +28,32 @@ const Stocks = () => {
     const [selectedStock, setSelectedStock] = useState<StockArticuloVenta | StockIngredientes>();
 
     useEffect(() => {
-        fetchData();
-        fetchStocks();
+        getIngredientes();
+        getArticulos();
     }, []);
 
-    const fetchData = async () => {
-        try {
-            await EmpleadoService.checkUser();
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
-    const fetchStocks = async () => {
+    const getIngredientes = async () => {
         StockIngredientesService.getStock()
             .then(data => {
+                console.log(data);
                 setStockIngredientes(data);
             })
             .catch(error => {
                 console.error('Error:', error);
             });
+    };
 
+    const getArticulos = async () => {
         StockArticuloVentaService.getStock()
             .then(data => {
-                setStockArticulos(data);
-                console.log(data)
+                console.log(data);
+                setStockArticulos(data)
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     };
+
 
     const handleAgregarIngrediente = () => {
         setShowAgregarStockModalIngrediente(true);
@@ -99,7 +94,8 @@ const Stocks = () => {
         setShowActivarStockModal(false);
 
         setMostrarStocks(true);
-        fetchStocks();
+        getArticulos();
+        getIngredientes();
     };
 
     return (
@@ -133,7 +129,6 @@ const Stocks = () => {
                 {selectedStock && <EditarStock stockOriginal={selectedStock} tipo={tipo} />}
             </ModalFlotante>
 
-
             {mostrarStocks && (
                 <div id="stocks">
                     <table>
@@ -148,6 +143,7 @@ const Stocks = () => {
                                 <th>Acciones</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {stockIngredientes.map(stock => (
                                 <tr key={stock.id}>
@@ -179,7 +175,7 @@ const Stocks = () => {
                             ))}
                             {stockArticulos.map(stock => (
                                 <tr key={stock.id}>
-                                    <td>{stock.articuloVenta.nombre}</td>
+                                    <td>{stock.articuloVenta?.nombre}</td>
                                     <td>{stock.cantidadActual}</td>
                                     <td>{stock.cantidadMinima}</td>
                                     <td>{stock.cantidadMaxima}</td>

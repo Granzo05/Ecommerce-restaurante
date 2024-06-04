@@ -1,9 +1,7 @@
 package main.controllers;
 
-import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.Stock;
 import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockIngredientes;
 import main.repositories.ArticuloVentaRepository;
@@ -15,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,7 +31,7 @@ public class StockArticulosController {
     }
 
     @GetMapping("/stockArticulos/{idSucursal}")
-    public Set<StockArticuloVenta> getStock(@PathVariable("idSucursal") long id) {
+    public Set<StockArticuloVenta> getStock(@PathVariable("idSucursal") Long id) {
         return new HashSet<>(stockArticuloRepository.findAllByIdSucursal(id));
     }
 
@@ -75,7 +72,7 @@ public class StockArticulosController {
                 ArticuloVenta articulo = articuloVentaRepository.findByName(stockDetail.getArticuloVenta().getNombre()).get();
                 stock.setArticuloVenta(articulo);
                 Sucursal sucursal = sucursalRepository.findById(id).get();
-                stock.setSucursal(sucursal);
+                stock.getSucursales().add(sucursal);
 
                 stockArticuloRepository.save(stock);
 
@@ -89,7 +86,7 @@ public class StockArticulosController {
     }
 
     @PutMapping("sucursal/{idSucursal}/stockArticulo/update")
-    public ResponseEntity<String> actualizarStock(@RequestBody Stock stockIngredientes, @PathVariable("idSucursal") long id) {
+    public ResponseEntity<String> actualizarStock(@RequestBody StockArticuloVenta stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
         Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
 

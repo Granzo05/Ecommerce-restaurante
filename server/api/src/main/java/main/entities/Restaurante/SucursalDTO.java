@@ -1,17 +1,10 @@
 package main.entities.Restaurante;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.Medida;
-import main.entities.Productos.ArticuloMenu;
-import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Productos.Promocion;
-import main.entities.Stock.Stock;
-import main.entities.Stock.StockEntrante;
 
 import java.time.LocalTime;
 import java.util.HashSet;

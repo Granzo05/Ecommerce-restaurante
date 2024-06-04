@@ -12,7 +12,7 @@ const HeaderHomePage: React.FC = () => {
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
     const [isAccountOpen, setIsAccountOpen] = useState(false); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
     const navigate = useNavigate();
-    const [cliente, setCliente] = useState<Cliente>(); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
+    const [cliente, setCliente] = useState<Cliente | null>(null);
 
     useEffect(() => {
         cargarUsuario();
@@ -44,7 +44,8 @@ const HeaderHomePage: React.FC = () => {
     };
 
     const handleLogout = () => {
-        setIsAccountOpen(false); // Oculta la ventana de preferencias de cuenta al cerrar sesión
+        localStorage.removeItem('usuario');
+        setCliente(null)
     };
 
     const [carrito, setCarrito] = useState<Carrito>(new Carrito());

@@ -2,13 +2,18 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Ingrediente;
+import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.IngredienteRepository;
+import main.repositories.MedidaRepository;
+import main.repositories.StockIngredientesRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,10 +21,14 @@ import java.util.Set;
 public class IngredienteController {
     private final IngredienteRepository ingredienteRepository;
     private final SucursalRepository sucursalRepository;
+    private final StockIngredientesRepository stockIngredientesRepository;
+    private final MedidaRepository medidaRepository;
 
-    public IngredienteController(IngredienteRepository ingredienteRepository, SucursalRepository sucursalRepository) {
+    public IngredienteController(IngredienteRepository ingredienteRepository, SucursalRepository sucursalRepository, StockIngredientesRepository stockIngredientesRepository, MedidaRepository medidaRepository) {
         this.ingredienteRepository = ingredienteRepository;
         this.sucursalRepository = sucursalRepository;
+        this.stockIngredientesRepository = stockIngredientesRepository;
+        this.medidaRepository = medidaRepository;
     }
 
     @GetMapping("/ingredientes/{idSucursal}")
@@ -34,16 +43,57 @@ public class IngredienteController {
         Optional<Ingrediente> ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteDetails.getNombre(), idSucursal);
 
         if (ingredienteDB.isEmpty()) {
-            Ingrediente ingrediente = new Ingrediente();
-            ingrediente.setNombre(ingredienteDetails.getNombre());
-            ingrediente.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+            if (idSucursal == 1) {
+                List<Sucursal> sucursales = sucursalRepository.findAll();
+                for (Sucursal sucursal : sucursales) {
+                    Optional<Ingrediente> ingredienteSucursal = ingredienteRepository.findByNameAndIdSucursal(ingredienteDetails.getNombre(), sucursal.getId());
 
-            ingredienteRepository.save(ingrediente);
+                    if (ingredienteSucursal.isEmpty()) {
+                        sucursal.getIngredientes().add(ingredienteDetails);
+                        ingredienteDetails.getSucursales().add(sucursal);
+                    }
+                }
+            } else {
+                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                if (sucursalOpt.isPresent()) {
+                    Sucursal sucursal = sucursalOpt.get();
+                    if (!sucursal.getIngredientes().contains(ingredienteDetails)) {
+                        Optional<Ingrediente> ingredienteSucursal = ingredienteRepository.findByNameAndIdSucursal(ingredienteDetails.getNombre(), sucursal.getId());
 
-            return new ResponseEntity<>("El ingrediente ha sido añadido correctamente", HttpStatus.CREATED);
+                        if (ingredienteSucursal.isEmpty()) {
+                            sucursal.getIngredientes().add(ingredienteDetails);
+                            ingredienteDetails.getSucursales().add(sucursal);
+                        }
+                    }
+                } else {
+                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                }
+            }
+
+            Ingrediente ingrediente = ingredienteRepository.save(ingredienteDetails);
+
+            if (idSucursal == 1) {
+                StockIngredientes stockIngredientes = new StockIngredientes();
+
+                stockIngredientes.setCantidadActual(0);
+                stockIngredientes.setCantidadMinima(0);
+                stockIngredientes.setCantidadMaxima(0);
+                stockIngredientes.setPrecioCompra(0);
+                stockIngredientes.setIngrediente(ingrediente);
+                stockIngredientes.setBorrado("NO");
+
+                for (Sucursal sucursal : sucursalRepository.findAll()) {
+                    stockIngredientes.getSucursales().add(sucursal);
+                    sucursal.getStocksIngredientes().add(stockIngredientes);
+                }
+
+                stockIngredientesRepository.save(stockIngredientes);
+            }
+
+            return new ResponseEntity<>("El ingrediente ha sido añadido correctamente", HttpStatus.OK);
+        } else {
+            return ResponseEntity.badRequest().body("Hay un ingrediente existente con ese nombre");
         }
-
-        return ResponseEntity.badRequest().body("El ingrediente ya existe");
     }
 
     @PutMapping("/ingrediente/update/{idSucursal}")

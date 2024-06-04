@@ -5,7 +5,6 @@ import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.Stock;
 import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 public class StockIngredientesController {
@@ -132,7 +129,7 @@ public class StockIngredientesController {
             stock.setIngrediente(ingrediente);
 
             Sucursal sucursal = sucursalRepository.findById(id).get();
-            stock.setSucursal(sucursal);
+            stock.getSucursales().add(sucursal);
 
             stockIngredientesRepository.save(stock);
 
@@ -143,7 +140,7 @@ public class StockIngredientesController {
     }
 
     @PutMapping("sucursal/{idSucursal}/stockIngrediente/update")
-    public ResponseEntity<String> actualizarStock(@RequestBody Stock stockIngredientes, @PathVariable("idSucursal") long id) {
+    public ResponseEntity<String> actualizarStock(@RequestBody StockIngredientes stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
         Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
         if (stockEncontrado.isPresent()) {

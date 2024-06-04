@@ -64,7 +64,7 @@ public class StockEntranteController {
 
         // Obtener la sucursal y asignarla al stockDetail
         Sucursal sucursal = sucursalRepository.findById(id).get();
-        stockDetail.setSucursal(sucursal);
+        stockDetail.getSucursales().add(sucursal);
 
         // Crear nuevos DetalleStock y asociarlos al stockDetail
         List<DetalleStock> nuevosDetalles = new ArrayList<>();

@@ -1,6 +1,7 @@
 package main.repositories;
 
 import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockIngredientes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,15 +13,15 @@ import java.util.Optional;
 @Repository
 public interface StockArticuloVentaRepository extends JpaRepository<StockArticuloVenta, Long> {
 
-    @Query("SELECT s FROM StockArticuloVenta s WHERE s.articuloVenta.nombre = :nombre AND s.sucursal.id = :idSucursal AND s.borrado = 'NO'")
+    @Query("SELECT s FROM StockArticuloVenta s JOIN s.sucursales suc WHERE s.articuloVenta.nombre = :nombre AND suc.id = :idSucursal")
     Optional<StockArticuloVenta> findStockByProductNameAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT s FROM StockArticuloVenta s WHERE s.articuloVenta.id = :id AND s.sucursal.id = :idSucursal")
+    @Query("SELECT s FROM StockArticuloVenta s JOIN s.sucursales suc WHERE s.articuloVenta.id = :id AND suc.id = :idSucursal")
     Optional<StockArticuloVenta> findByIdArticuloAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT s FROM StockArticuloVenta s WHERE s.sucursal.id = :id")
+    @Query("SELECT s FROM StockArticuloVenta s JOIN s.sucursales suc WHERE suc.id = :id")
     List<StockArticuloVenta> findAllByIdSucursal(@Param("id") Long id);
 
-    @Query("SELECT s FROM StockArticuloVenta s WHERE s.id = :id AND s.sucursal.id = :idSucursal")
+    @Query("SELECT s FROM StockArticuloVenta s JOIN s.sucursales suc WHERE s.id = :id AND suc.id = :idSucursal")
     Optional<StockArticuloVenta> findByIdAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);
 }

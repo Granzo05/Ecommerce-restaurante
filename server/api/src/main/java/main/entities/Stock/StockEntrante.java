@@ -27,10 +27,13 @@ public class StockEntrante {
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_sucursal")
-    private Sucursal sucursal;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "stock_entrante_sucursales",
+            joinColumns = @JoinColumn(name = "id_stock_entrante"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
+    private Set<Sucursal> sucursales = new HashSet<>();
     @JsonIgnoreProperties(value = {"sucursal", "stockEntrante"}, allowSetters = true)
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "stockEntrante", cascade = CascadeType.ALL)
     private Set<DetalleStock> detallesStock = new HashSet<>();

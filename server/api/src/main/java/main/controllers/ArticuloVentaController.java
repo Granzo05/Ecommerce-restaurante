@@ -1,11 +1,13 @@
 package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.Ingrediente;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,32 +70,60 @@ public class ArticuloVentaController {
     @Transactional
     @PostMapping("/articulo/create/{idSucursal}")
     public ResponseEntity<String> crearArticulo(@RequestBody ArticuloVenta articuloVenta, @PathVariable("idSucursal") Long idSucursal) {
-        Optional<ArticuloVenta> articuloDB = articuloVentaRepository.findByName(articuloVenta.getNombre());
+        Optional<ArticuloVenta> articuloDB = articuloVentaRepository.findByNameArticuloAndIdSucursal(articuloVenta.getNombre(), idSucursal);
+
         if (articuloDB.isEmpty()) {
-            // Si la sucursal coincide con los privilegios del admin o de la empresa que agregue todas las sucursales al menu
-            if (idSucursal == 0) {
+            if (idSucursal == 1) {
                 List<Sucursal> sucursales = sucursalRepository.findAll();
                 for (Sucursal sucursal : sucursales) {
-                    sucursal.getArticulosVenta().add(articuloVenta);
-                    articuloVenta.getSucursales().add(sucursal);
+                    Optional<ArticuloVenta> articuloSucursal = articuloVentaRepository.findByNameArticuloAndIdSucursal(articuloVenta.getNombre(), sucursal.getId());
+                    if (articuloSucursal.isEmpty()) {
+                        sucursal.getArticulosVenta().add(articuloVenta);
+                        articuloVenta.getSucursales().add(sucursal);
+                    }
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
-                    sucursal.getArticulosVenta().add(articuloVenta);
-                    articuloVenta.getSucursales().add(sucursal);
+                    if (!sucursal.getArticulosVenta().contains(articuloVenta)) {
+                        Optional<ArticuloVenta> articuloSucursal = articuloVentaRepository.findByNameArticuloAndIdSucursal(articuloVenta.getNombre(), sucursal.getId());
+                        if (articuloSucursal.isEmpty()) {
+                            sucursal.getArticulosVenta().add(articuloVenta);
+                            articuloVenta.getSucursales().add(sucursal);
+                        }
+                    }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
                 }
             }
-            articuloVentaRepository.save(articuloVenta);
 
-            return new ResponseEntity<>("El articulo ha sido añadido correctamente", HttpStatus.OK);
+            ArticuloVenta articulo = articuloVentaRepository.save(articuloVenta);
+
+            if (idSucursal == 1) {
+                StockArticuloVenta stockArticuloVenta = new StockArticuloVenta();
+                stockArticuloVenta.setCantidadActual(0);
+                stockArticuloVenta.setCantidadMinima(0);
+                stockArticuloVenta.setCantidadMaxima(0);
+                stockArticuloVenta.setPrecioCompra(0);
+                stockArticuloVenta.setArticuloVenta(articulo);
+                stockArticuloVenta.setBorrado("NO");
+
+                StockArticuloVenta stock = stockArticuloVentaRepository.save(stockArticuloVenta);
+
+                for (Sucursal sucursal : sucursalRepository.findAll()) {
+                    stock.getSucursales().add(sucursal);
+                    sucursal.getStocksArticulo().add(stock);
+                    sucursalRepository.save(sucursal); // Save the changes to the sucursales
+                }
+            }
+
+            return new ResponseEntity<>("El artículo ha sido añadido correctamente", HttpStatus.OK);
         } else {
-            return ResponseEntity.badRequest().body("Hay un articulo existente con ese nombre");
+            return ResponseEntity.badRequest().body("Hay un artículo existente con ese nombre");
         }
     }
+
 
     @Transactional
     @PostMapping("/articulo/imagenes/{idSucursal}")

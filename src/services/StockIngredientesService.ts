@@ -68,7 +68,7 @@ export const StockIngredientesService = {
 
     checkStock: async (idIngrediente: number, medidaId: number, cantidadNecesaria: number): Promise<boolean> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockArticulo/check/${idIngrediente}/${medidaId}/${cantidadNecesaria}`, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockIngredientes/check/${idIngrediente}/${medidaId}/${cantidadNecesaria}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

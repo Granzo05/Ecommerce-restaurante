@@ -5,12 +5,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Productos.Promocion;
-import main.entities.Stock.Stock;
+import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockEntrante;
 
 import java.io.Serializable;
@@ -18,13 +19,7 @@ import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
+import main.entities.Stock.StockIngredientes;
 
 @Setter
 @AllArgsConstructor
@@ -76,12 +71,25 @@ public class Sucursal implements Serializable {
     @Column(name = "borrado")
     private String borrado = "NO";
 
-    @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
-    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
-    private Set<Stock> stocksSucursal = new HashSet<>();
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY)
+    private Set<StockIngredientes> stocksIngredientes = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
-    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY)
+    private Set<StockArticuloVenta> stocksArticulo = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ingredientes_sucursales",
+            joinColumns = @JoinColumn(name = "id_sucursal"),
+            inverseJoinColumns = @JoinColumn(name = "id_ingrediente")
+    )
+    private Set<Ingrediente> ingredientes = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY)
     private Set<StockEntrante> stocksEntranteSucursal = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)

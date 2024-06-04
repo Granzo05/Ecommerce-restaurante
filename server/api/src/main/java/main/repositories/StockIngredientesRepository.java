@@ -11,16 +11,16 @@ import java.util.Optional;
 
 @Repository
 public interface StockIngredientesRepository extends JpaRepository<StockIngredientes, Long> {
-    @Query("SELECT s FROM StockIngredientes s WHERE s.sucursal.id = :id")
+    @Query("SELECT s FROM StockIngredientes s JOIN s.sucursales suc WHERE suc.id = :id")
     List<StockIngredientes> findAllByIdSucursal(@Param("id") Long id);
 
-    @Query("SELECT s FROM StockIngredientes s WHERE s.ingrediente.nombre = :nombre AND s.borrado = 'NO'")
-    Optional<StockIngredientes> findStockByProductName(@Param("nombre") String nombre);
+    @Query("SELECT s FROM StockIngredientes s JOIN s.sucursales suc WHERE s.ingrediente.nombre = :nombre AND suc.id = :idSucursal")
+    Optional<StockIngredientes> findStockByIngredienteNameAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT s FROM StockIngredientes s WHERE s.ingrediente.id = :id AND s.sucursal.id = :idSucursal")
+    @Query("SELECT s FROM StockIngredientes s JOIN s.sucursales suc WHERE s.ingrediente.id = :id AND suc.id = :idSucursal")
     Optional<StockIngredientes> findByIdIngredienteAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT s FROM StockIngredientes s WHERE s.id = :id AND s.sucursal.id = :idSucursal")
+    @Query("SELECT s FROM StockIngredientes s JOIN s.sucursales suc WHERE s.id = :id AND suc.id = :idSucursal")
     Optional<StockIngredientes> findByIdAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);
 
 }

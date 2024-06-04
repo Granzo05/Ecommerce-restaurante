@@ -65,6 +65,7 @@
 [] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
 [] Mostrar productos solo si hay stock
 [] Mostrar categorias solo si hay productos con stock que la completen
+[] Arreglar eso de que cuando cambias de paso en el modal se borra lo del anterior (hay que poner los values en cada input del atributo que ocupan)
 
 Pruebas
 [x] Carga empresa [] Probar validación
