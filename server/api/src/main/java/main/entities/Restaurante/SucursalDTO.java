@@ -1,6 +1,9 @@
 package main.entities.Restaurante;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Productos.Imagenes;

@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -22,6 +20,7 @@ public abstract class Articulo implements Serializable {
     private Long id;
     @Column(name = "precio_venta")
     private double precioVenta;
+
     public Articulo(double precioVenta) {
         this.precioVenta = precioVenta;
     }

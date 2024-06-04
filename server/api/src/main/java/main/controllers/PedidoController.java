@@ -136,7 +136,7 @@ public class PedidoController {
 
 
         // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
-        if(pedido.getDomicilioEntrega() == null) {
+        if (pedido.getDomicilioEntrega() == null) {
             pedido.setDomicilioEntrega(sucursal.getDomicilio());
         }
 
@@ -151,7 +151,7 @@ public class PedidoController {
         if (stockArticuloVenta.isPresent()) {
             stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() - detallesPedido.getCantidad());
         } else {
-            for (IngredienteMenu ingrediente: detallesPedido.getArticuloMenu().getIngredientesMenu()) {
+            for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
 
                 if (stockIngrediente.isPresent()) {

@@ -76,7 +76,7 @@ public class SucursalController {
     public SucursalDTO getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
         Optional<SucursalDTO> sucursalDB = sucursalRepository.findByIdDTO(idSucursal);
 
-        if(sucursalDB.isPresent()) {
+        if (sucursalDB.isPresent()) {
             SucursalDTO sucursal = sucursalDB.get();
 
             sucursal.setCategorias(new HashSet<>(categoriaRepository.findAllByIdSucursal(idSucursal)));

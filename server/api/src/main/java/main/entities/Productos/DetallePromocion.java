@@ -3,9 +3,7 @@ package main.entities.Productos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.Medida;
-import main.entities.Stock.StockEntrante;
 
 import java.io.Serializable;
 

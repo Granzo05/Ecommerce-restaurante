@@ -101,7 +101,7 @@ public class ArticuloMenuController {
                 articuloMenuRepository.save(articuloMenu);
 
                 return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.OK);
-            } catch (Exception e ) {
+            } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Hubo un error al cargar el menú");
 
             }

@@ -15,6 +15,7 @@ public interface LocalidadDeliveryRepository extends JpaRepository<LocalidadDeli
 
     @Query("SELECT l FROM LocalidadDelivery l WHERE l.sucursal.id = :id")
     List<LocalidadDelivery> findByIdSucursal(@Param("id") Long id);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM LocalidadDelivery i WHERE i.sucursal.id = :id")

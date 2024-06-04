@@ -3,7 +3,6 @@ package main.controllers;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
-import main.entities.Stock.StockIngredientes;
 import main.repositories.ArticuloVentaRepository;
 import main.repositories.IngredienteRepository;
 import main.repositories.StockArticuloVentaRepository;

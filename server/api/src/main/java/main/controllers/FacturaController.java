@@ -3,7 +3,6 @@ package main.controllers;
 import main.entities.Factura.EnumMetodoPago;
 import main.entities.Factura.EnumTipoFactura;
 import main.entities.Factura.Factura;
-import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Pedidos.Pedido;
 import main.repositories.FacturaRepository;

@@ -1,7 +1,9 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Productos.*;
+import main.entities.Productos.DetallePromocion;
+import main.entities.Productos.Imagenes;
+import main.entities.Productos.Promocion;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.DetallePromocionRepository;
 import main.repositories.ImagenesRepository;
@@ -52,7 +54,7 @@ public class PromocionController {
             promocionDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
 
             Set<DetallePromocion> detalles = new HashSet<>();
-            for(DetallePromocion detallePromocion: promocionDetails.getDetallesPromocion()) {
+            for (DetallePromocion detallePromocion : promocionDetails.getDetallesPromocion()) {
                 if (detallePromocion.getArticuloMenu().getNombre().length() > 2) {
                     DetallePromocion detalleNuevo = new DetallePromocion();
                     detalleNuevo.setMedida(detallePromocion.getMedida());
@@ -61,7 +63,7 @@ public class PromocionController {
                     detalleNuevo.setPromocion(promocionDetails);
 
                     detalles.add(detalleNuevo);
-                } else if(detallePromocion.getArticuloVenta().getNombre().length() > 2 ) {
+                } else if (detallePromocion.getArticuloVenta().getNombre().length() > 2) {
                     DetallePromocion detalleNuevo = new DetallePromocion();
                     detalleNuevo.setMedida(detallePromocion.getMedida());
                     detalleNuevo.setCantidad(detallePromocion.getCantidad());
@@ -179,7 +181,7 @@ public class PromocionController {
                 promocion.setFechaDesde(LocalDateTime.parse(promocionDetails.getFechaDesde().toString()));
                 promocion.setFechaHasta(LocalDateTime.parse(promocionDetails.getFechaHasta().toString()));
 
-                for(DetallePromocion detallePromocion: promocionDetails.getDetallesPromocion()) {
+                for (DetallePromocion detallePromocion : promocionDetails.getDetallesPromocion()) {
                     detallePromocion.setPromocion(promocionDetails);
                 }
 

@@ -13,13 +13,12 @@ import main.entities.Productos.Imagenes;
 import main.entities.Productos.Promocion;
 import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockEntrante;
+import main.entities.Stock.StockIngredientes;
 
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
-
-import main.entities.Stock.StockIngredientes;
 
 @Setter
 @AllArgsConstructor

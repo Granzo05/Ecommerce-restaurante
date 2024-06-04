@@ -61,7 +61,7 @@ public class ClienteController {
     public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
 
-        if(cliente.isPresent()) {
+        if (cliente.isPresent()) {
             return cliente.get();
         } else return null;
     }
