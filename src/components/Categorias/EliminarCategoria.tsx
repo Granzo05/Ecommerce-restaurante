@@ -13,7 +13,7 @@ const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ categoriaOriginal
 
   const onConfirm = () => {
     categoriaOriginal.borrado = 'SI';
-    toast.promise(CategoriaService.updateCategoria(categoriaOriginal), {
+    toast.promise(CategoriaService.updateCategoriaBorrado(categoriaOriginal), {
       loading: 'Eliminando Categoria...',
       success: (message) => {
         setTimeout(() => {
