@@ -88,8 +88,11 @@ public class PedidoController {
         EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
         List<Pedido> pedidos = pedidoRepository.findPedidosByEstadoAndIdSucursal(estado, idSucursal);
 
-        for(Pedido pedido: pedidos) {
-            pedido.getDomicilioEntrega().setCalle(Encrypt.desencriptarString(pedido.getDomicilioEntrega().getCalle()));
+        for (Pedido pedido : pedidos) {
+            try {
+                pedido.getDomicilioEntrega().setCalle(Encrypt.desencriptarString(pedido.getDomicilioEntrega().getCalle()));
+            } catch (IllegalArgumentException ignored) {
+            }
         }
 
         return new HashSet<>(pedidos);
@@ -294,6 +297,27 @@ public class PedidoController {
         }
     }
 
+    private void reponerStock(DetallesPedido detallesPedido, Long idSucursal) {
+        if (detallesPedido.getArticuloVenta() != null) {
+            Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detallesPedido.getArticuloVenta().getId(), idSucursal);
+
+            if (stockArticuloVenta.isPresent()) {
+                stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() + detallesPedido.getCantidad());
+            }
+        }
+
+        if (detallesPedido.getArticuloMenu() != null) {
+            for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
+                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
+
+                if (stockIngrediente.isPresent()) {
+                    stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + detallesPedido.getCantidad());
+                }
+            }
+
+        }
+    }
+
     @Transactional
     @CrossOrigin
     @PutMapping("/pedido/update/{idSucursal}")
@@ -352,14 +376,22 @@ public class PedidoController {
 
         return new ResponseEntity<>("El pedido ha sido recibido por el restaurante", HttpStatus.ACCEPTED);
     }
+
     @Transactional
     @CrossOrigin
-    @DeleteMapping("/pedido/delete/{preference}")
-    public void deletePedidoFallido(@PathVariable("preference") String preference) {
+    @DeleteMapping("/pedido/delete/{preference}/{idSucursal}")
+    public void deletePedidoFallido(@PathVariable("preference") String preference, @PathVariable("idSucursal") Long idSucursal) {
 
         Optional<Pedido> pedido = pedidoRepository.findByPreference(preference);
 
-        if(pedido.isPresent()) pedidoRepository.delete(pedido.get());
+        if (pedido.isPresent()) {
+
+            for (DetallesPedido detallesPedido : pedido.get().getDetallesPedido()) {
+                reponerStock(detallesPedido, idSucursal);
+            }
+
+            pedidoRepository.delete(pedido.get());
+        }
     }
 
     public ResponseEntity<byte[]> generarFacturaPDF(Long idPedido) {

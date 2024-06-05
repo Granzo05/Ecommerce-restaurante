@@ -1,10 +1,13 @@
 package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.IngredienteMenu;
+import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -207,13 +210,28 @@ public class ArticuloVentaController {
     public Set<ArticuloVenta> getArticulosPorTipo(@PathVariable("tipoArticulo") String categoria, @PathVariable("idSucursal") Long id) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, id);
 
+        Set<ArticuloVenta> articulos = new HashSet<>();
         if (categoriaDB.isPresent()) {
             Set<ArticuloVenta> articuloVentas = (new HashSet<>(articuloVentaRepository.findByCategoriaNameAndIdSucursal(categoriaDB.get().getNombre(), id)));
 
-            for (ArticuloVenta articuloVenta : articuloVentas) {
-                articuloVenta.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articuloVenta.getId())));
+
+            for (ArticuloVenta articulo : articuloVentas) {
+                boolean hayStock = true;
+
+                Optional<StockArticuloVenta> stock = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(articulo.getId(), id);
+
+                // Verificamos si hay stock
+                if(stock.isPresent() && stock.get().getCantidadActual() < stock.get().getCantidadMinima()) {
+                    hayStock = false;
+                }
+
+                if(hayStock) {
+                    articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));
+                    articulos.add(articulo);
+                }
             }
-            return articuloVentas;
+
+            return articulos;
         }
         return null;
     }

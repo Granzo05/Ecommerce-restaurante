@@ -122,8 +122,8 @@ public class ClienteController {
     }
 
     @CrossOrigin
-    @DeleteMapping("/cliente/{id}/delete")
-    public ResponseEntity<?> borrarCliente(@RequestBody Cliente user) {
+    @PutMapping("/cliente/{id}/delete")
+    public ResponseEntity<String> borrarCliente(@RequestBody Cliente user) {
         Optional<Cliente> cliente = clienteRepository.findById(user.getId());
         if (!cliente.isPresent()) {
             return new ResponseEntity<>("El usuario no existe o ya ha sido borrado", HttpStatus.BAD_REQUEST);

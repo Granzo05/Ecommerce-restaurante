@@ -22,7 +22,6 @@ const HeaderHomePage: React.FC = () => {
         const clienteString = localStorage.getItem('usuario');
         let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
 
-        console.log(clienteMem)
         setCliente(clienteMem);
     }
 

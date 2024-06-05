@@ -6,6 +6,7 @@ import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,10 @@ public class ArticuloMenuController {
     private final SucursalRepository sucursalRepository;
     private final CategoriaRepository categoriaRepository;
     private final SubcategoriaRepository subcategoriaRepository;
+    private final StockIngredientesRepository stockIngredientesRepository;
 
 
-    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository, CategoriaRepository categoriaRepository, SubcategoriaRepository subcategoriaRepository) {
+    public ArticuloMenuController(ArticuloMenuRepository articuloMenuRepository, IngredienteMenuRepository ingredienteMenuRepository, IngredienteRepository ingredienteRepository, ImagenesRepository imagenesRepository, SucursalRepository sucursalRepository, CategoriaRepository categoriaRepository, SubcategoriaRepository subcategoriaRepository, StockIngredientesRepository stockIngredientesRepository) {
         this.articuloMenuRepository = articuloMenuRepository;
         this.ingredienteMenuRepository = ingredienteMenuRepository;
         this.ingredienteRepository = ingredienteRepository;
@@ -40,6 +42,7 @@ public class ArticuloMenuController {
         this.sucursalRepository = sucursalRepository;
         this.categoriaRepository = categoriaRepository;
         this.subcategoriaRepository = subcategoriaRepository;
+        this.stockIngredientesRepository = stockIngredientesRepository;
     }
 
     // Busca por id de menu
@@ -194,15 +197,32 @@ public class ArticuloMenuController {
     public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
 
+        Set<ArticuloMenu> menus = new HashSet<>();
         if (categoriaDB.isPresent()) {
             List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByCategoriaAndIdSucursal(categoriaDB.get().getId(), idSucursal);
 
             for (ArticuloMenu menu : articuloMenus) {
-                menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
+                boolean hayStock = true;
+
                 menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
+
+                for (IngredienteMenu ingredienteMenu : menu.getIngredientesMenu()) {
+                    Optional<StockIngredientes> stock = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingredienteMenu.getId(), idSucursal);
+
+                    // Verificamos si hay stock
+                    if (stock.isPresent() && stock.get().getCantidadActual() < stock.get().getCantidadMinima()) {
+                        System.out.println("no hay stock de " + ingredienteMenu.getIngrediente().getNombre());
+                        hayStock = false;
+                    }
+                }
+
+                if (hayStock) {
+                    menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
+                    menus.add(menu);
+                }
             }
 
-            return new HashSet<>(articuloMenus);
+            return menus;
         }
 
         return null;

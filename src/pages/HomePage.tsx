@@ -37,7 +37,6 @@ export default function MainMenu() {
     useEffect(() => {
         SucursalService.getSucursalDTOById(1)
             .then(async sucursal => {
-                console.log(sucursal)
                 if (sucursal) setSucursal(sucursal);
             })
             .catch(error => {
