@@ -106,7 +106,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
   return (
     <div className="modal-info">
       <Toaster />
-      <h2>Editar menú</h2>
+      <h2>&mdash; Editar empresa &mdash;</h2>
       <div className="slider-container">
         <button onClick={prevImage} className="slider-button prev">◀</button>
         <div className='imagenes-wrapper'>

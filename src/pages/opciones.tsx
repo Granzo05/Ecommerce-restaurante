@@ -26,6 +26,7 @@ import Medidas from '../components/Medidas/Medidas';
 import Preferencias from '../components/Preferencias';
 import Promociones from '../components/Promociones/Promociones';
 import Empresas from '../components/Empresas/Empresas';
+import Reportes from '../components/Reportes/Reportes'
 
 const Opciones = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState<number>(0);
@@ -132,6 +133,8 @@ const Opciones = () => {
             return <Promociones />;
         } else if (opcionSeleccionada === 17) {
             return <Empresas />;
+        } else if (opcionSeleccionada === 18) {
+            return <Reportes />;
         }
     };
 
@@ -253,6 +256,9 @@ const Opciones = () => {
                                 </h4>
                                 <h4 className={opcionSeleccionada === 17 ? 'selected' : ''} onClick={() => handleOpcionClick(17)}>
                                     Empresas
+                                </h4>
+                                <h4 className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
+                                    Reportes
                                 </h4>
                             </div>
                         ) : (

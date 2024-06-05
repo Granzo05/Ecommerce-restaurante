@@ -87,7 +87,7 @@ const Header = () => {
                         <li><a href="#contactos">Contactos</a></li>
                     </ul>
                     <ul>
-                        {cliente && cliente?.email.length > 0 ? (
+                        {cliente && cliente?.email?.length > 0 ? (
                             <>
                                 {
                                     location.pathname !== '/pago' && (

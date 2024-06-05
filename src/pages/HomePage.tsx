@@ -8,6 +8,8 @@ import DetallesPromocion from '../components/Promociones/DetallesPromocion';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 import HeaderHomePage from '../components/headerHomePage';
 import Footer from '../components/Footer';
+import '../styles/loginRestaurante.css'
+
 
 export default function MainMenu() {
     const convertirFecha = (date: Date) => {
