@@ -33,6 +33,7 @@ const Opciones = () => {
     const [isVisible, setVisible] = useState<boolean>(true);
     const [pedidosVisible, setPedidosVisible] = useState(false);
     const [stockVisible, setStockVisible] = useState(false);
+    const [reportesVisible, setReportesVisible] = useState(false);
     const [optionsVisible, setOptionsVisible] = useState(false);
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [categoriaVisible, setCategoriaVisible] = useState(false);
@@ -51,6 +52,14 @@ const Opciones = () => {
         setStockVisible(!stockVisible);
         setStockIcon(stockVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
         if (!stockVisible && opcionSeleccionada >= 5 && opcionSeleccionada <= 6) {
+            setOpcionSeleccionada(opcionSeleccionada);
+        }
+    };
+
+    const toggleReportesVisibility = () => {
+        setReportesVisible(!reportesVisible);
+        setStockIcon(reportesVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
+        if (!reportesVisible && opcionSeleccionada >= 18 && opcionSeleccionada <= 18) {
             setOpcionSeleccionada(opcionSeleccionada);
         }
     };
@@ -257,9 +266,19 @@ const Opciones = () => {
                                 <h4 className={opcionSeleccionada === 17 ? 'selected' : ''} onClick={() => handleOpcionClick(17)}>
                                     Empresas
                                 </h4>
-                                <h4 className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
-                                    Reportes
-                                </h4>
+                                <div className="reportes">
+                                    <h4 onClick={toggleReportesVisibility} className={opcionSeleccionada >= 18 && opcionSeleccionada <= 18 ? 'h4-selected' : ''}>
+                                        Reportes
+                                        {stockIcon}
+                                    </h4>
+                                    {reportesVisible && (
+                                        <>
+                                            <p className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
+                                                Reportes de ventas
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         ) : (
                             <div className="main-options">

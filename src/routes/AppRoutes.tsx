@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react"
 import { Route, Routes } from "react-router-dom"
 import MainMenu from "../pages/HomePage";
 import Opciones from "../pages/opciones";
+import OpcionesCliente from "../pages/opcionesCliente";
 const LoginNegocio = lazy(() => import('../pages/loginRestaurante'));
 const LoginCliente = lazy(() => import('../pages/loginCliente'));
 const Pago = lazy(() => import('../pages/pago'));
@@ -44,6 +45,9 @@ const AppRoutes: React.FC = () => {
         </Route>
 
         <Route path="/acceso-denegado" element={<AccesoDenegado />}>
+        </Route>
+
+        <Route path="/cliente" element={<OpcionesCliente />}>
         </Route>
 
         <Route path="/cliente/pedidos" element={<PedidosCliente />}>
