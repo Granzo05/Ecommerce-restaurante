@@ -67,6 +67,7 @@
 [] Mostrar categorias solo si hay productos con stock que la completen
 [] Arreglar eso de que cuando cambias de paso en el modal se borra lo del anterior (hay que poner los values en cada input del atributo que ocupan)
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
+[] Arreglar login del cliente para que no cree usuarios con el mismo mail
 
 Pruebas
 [x] Carga empresa [] Probar validación
