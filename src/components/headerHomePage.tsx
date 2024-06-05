@@ -85,7 +85,7 @@ const HeaderHomePage: React.FC = () => {
                     </ul>
                     {/* Renderizado condicional basado en si se hizo clic en "Iniciar sesión" */}
                     <ul>
-                        {cliente && cliente?.email.length > 0 ? (
+                        {cliente && cliente?.email?.length > 0 ? (
                             <>
                                 <>
                                     {carrito && carrito?.totalProductos > 0 && (
