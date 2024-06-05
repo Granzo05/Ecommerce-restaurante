@@ -62,7 +62,7 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_empresa")
     )
     private Empresa empresa;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToOne
     @JoinTable(
             name = "imagenes_sucursal",

@@ -18,7 +18,7 @@ public class LocalidadDelivery {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToOne
     @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     @JoinColumn(name = "id_sucursal")

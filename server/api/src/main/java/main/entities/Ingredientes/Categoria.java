@@ -29,7 +29,7 @@ public class Categoria implements Serializable {
     @JsonIgnoreProperties(value = {"sucursales", "categoria"}, allowSetters = true)
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
     private Set<Subcategoria> subcategorias = new HashSet<>();
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "categorias_sucursales",

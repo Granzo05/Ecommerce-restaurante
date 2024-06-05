@@ -166,7 +166,6 @@ const Pago = () => {
 
 
     async function crearPreferencia(domicilio: Domicilio) {
-        console.log(envio)
         if (envio === 0) {
             let hayStock = true;
             let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
@@ -199,7 +198,6 @@ const Pago = () => {
             }
 
             if (hayStock) {
-                console.log(domicilio)
                 if (preferenceId === null && domicilio) {
                     let pedido = new Pedido();
                     if (cliente) pedido.cliente = cliente;
