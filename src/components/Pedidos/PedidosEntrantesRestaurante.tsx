@@ -122,15 +122,20 @@ const PedidosEntrantes = () => {
                                     </div>
                                 </td>
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
-                                    <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></td>
+                                    <td>
+                                        <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                    </td>
                                 ) : (
-                                    <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</td>
+                                    <td>
+                                        <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                        <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p>
+                                    </td>
+
                                 )}
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
-                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre} </p>
-                                            <p>{detalle.cantidad} - {detalle.articuloVenta?.nombre} </p>
+                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre} {detalle.articuloVenta?.nombre} </p>
                                         </div>
                                     ))}
                                 </td>

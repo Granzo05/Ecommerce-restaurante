@@ -22,6 +22,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query("SELECT p FROM Pedido p JOIN p.sucursales s WHERE s.id = :idSucursal AND p.preferencia = :preference AND p.id = :idPedido")
     Optional<Pedido> findByIdPedidoAndPreferenceAndIdSucursal(@Param("idPedido") Long idPedido, @Param("preference") String preference, @Param("idSucursal") Long idSucursal);
 
+    @Query("SELECT p FROM Pedido p WHERE p.preferencia = :preference")
+    Optional<Pedido> findByPreference(@Param("preference") String preference);
+
     @Query("SELECT p FROM Pedido p JOIN p.sucursales s WHERE s.id = :idSucursal AND p.id = :idPedido")
     Optional<Pedido> findByIdAndIdSucursal(@Param("idPedido") Long idPedido, @Param("idSucursal") Long idSucursal);
 

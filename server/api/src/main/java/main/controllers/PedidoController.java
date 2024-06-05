@@ -15,6 +15,7 @@ import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
 import jakarta.transaction.Transactional;
+import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Factura.Factura;
 import main.entities.Ingredientes.IngredienteMenu;
@@ -83,9 +84,13 @@ public class PedidoController {
 
     @CrossOrigin
     @GetMapping("/pedidos/{estado}/{idSucursal}")
-    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") int estadoValue, @PathVariable("idSucursal") Long idSucursal) {
+    public Set<Pedido> getPedidosPorEstado(@PathVariable("estado") int estadoValue, @PathVariable("idSucursal") Long idSucursal) throws Exception {
         EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
         List<Pedido> pedidos = pedidoRepository.findPedidosByEstadoAndIdSucursal(estado, idSucursal);
+
+        for(Pedido pedido: pedidos) {
+            pedido.getDomicilioEntrega().setCalle(Encrypt.desencriptarString(pedido.getDomicilioEntrega().getCalle()));
+        }
 
         return new HashSet<>(pedidos);
     }
@@ -335,10 +340,8 @@ public class PedidoController {
     @CrossOrigin
     @Transactional
     public ResponseEntity<String> updateEstadoPedido(@PathVariable("idPedido") Long idPedido, @PathVariable("preference") String preference, @PathVariable("idSucursal") Long idSucursal) {
-        System.out.println(idPedido);
-        System.out.println(preference);
         Optional<Pedido> pedidoDb = pedidoRepository.findByIdPedidoAndPreferenceAndIdSucursal(idPedido, preference, idSucursal);
-        System.out.println(pedidoDb);
+
         if (pedidoDb.isEmpty()) {
             return new ResponseEntity<>("La pedido no se encontró", HttpStatus.BAD_REQUEST);
         }
@@ -351,10 +354,10 @@ public class PedidoController {
     }
     @Transactional
     @CrossOrigin
-    @PutMapping("/pedido/delete/{idPedido}/{preference}")
-    public void deletePedidoFallido(@PathVariable("idPedido") Long idPedido, @PathVariable("preference") String preference) {
+    @DeleteMapping("/pedido/delete/{preference}")
+    public void deletePedidoFallido(@PathVariable("preference") String preference) {
 
-        Optional<Pedido> pedido = pedidoRepository.findByIdAndPreference(idPedido, preference);
+        Optional<Pedido> pedido = pedidoRepository.findByPreference(preference);
 
         if(pedido.isPresent()) pedidoRepository.delete(pedido.get());
     }

@@ -36,16 +36,15 @@ const Pago = () => {
     // Con esto podemos verificar si el pedido vuelve luego de un fallo en mercadopago para eliminarlo
     let query = useQuery();
 
-    const externalReference = query.get('external_reference');
     const preference = query.get('preference_id');
 
     useEffect(() => {
-        if (externalReference && parseInt(externalReference) > 0 && preference && preference.length > 0) {
-            PedidoService.eliminarPedidoFallido(parseInt(externalReference), preference);
+        // Preference que se capta en caso de ser un pago fallido, el cual vuelve acá. Por lo tanto borramos el pedido que no se va a realizar
+        if (preference && preference.length > 0) {
+            PedidoService.eliminarPedidoFallido(preference);
+            setPreferenceId('');
         }
-        console.log(externalReference)
-        console.log(preference)
-    }, [externalReference, preference]);
+    }, [preference]);
 
 
     const handleModalClose = () => {
@@ -147,6 +146,11 @@ const Pago = () => {
 
             if (envio === EnumTipoEnvio.RETIRO_EN_TIENDA) {
                 pedido.domicilioEntrega = null;
+            }
+
+            if (preferenceId) {
+            console.log(preferenceId)
+            PedidoService.eliminarPedidoFallido(preferenceId);
             }
 
             toast.promise(PedidoService.crearPedido(pedido), {

@@ -11,9 +11,10 @@ import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 interface EditarStockProps {
   stockOriginal: StockArticuloVenta | StockIngredientes;
   tipo: string;
+  nombre: string | undefined;
 }
 
-const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo }) => {
+const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }) => {
 
   const [cantidadActual, setCantidadActual] = useState(stockOriginal.cantidadActual);
   const [cantidadMinima, setCantidadMinima] = useState(stockOriginal.cantidadMinima);
@@ -99,7 +100,8 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo }) => {
   return (
     <div className="modal-info">
       <Toaster />
-      <h2>Editar ingrediente</h2>
+      
+      <h3>Edición de {nombre}</h3>
       <div className="inputBox">
         <input type="number" required={true} value={cantidadMinima | 0} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
         <span>Cantidad mínima del ingrediente</span>
@@ -113,7 +115,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo }) => {
         <span>Cantidad actual del ingrediente</span>
       </div><br />
       <div className="input-filtrado">
-        <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida.nombre ?? ''} />
+        <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida?.nombre ?? ''} />
         {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
       </div>
       <br /><br />

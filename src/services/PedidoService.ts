@@ -160,9 +160,9 @@ export const PedidoService = {
     },
 
 
-    eliminarPedidoFallido: async (idPedido: number, preference: string): Promise<string> => {
+    eliminarPedidoFallido: async (preference: string): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `pedido/delete/${idPedido}/${preference}`, {
+            const response = await fetch(URL_API + `pedido/delete/${preference}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'

@@ -39,14 +39,14 @@
 [x] Muestra sin repetidas de subcategorias por cada categoria existente al crear, editar o borrar.
 [x] Que se genere la factura al entregarlo.
 [] Boton en pedidos del cliente para poder repetir un pedido anterior
-[] Mercadopago
+[x] Mercadopago
 [] Descontar stock al comprar
 [] Cancelacion de pedido
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Ver tema del auth para privilegios y esas cosas
 [] Mostrar receta de cada menu
-[] Avisar que el menu está en traslado junto con el envio de la factura
+[x] Avisar que el menu está en traslado junto con el envio de la factura
 [] Precio sugerido segun ingredientes y los costos
 [] Que el modal de recomendaciones no muestre alguna de las opciones si ya esta seleccionada en un input previo, por ej si ya seleccione el ingrediente 'carne' que al poner otro no muestre este como recomendacion
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
@@ -68,6 +68,7 @@
 [] Arreglar eso de que cuando cambias de paso en el modal se borra lo del anterior (hay que poner los values en cada input del atributo que ocupan)
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Arreglar login del cliente para que no cree usuarios con el mismo mail
+[] Mostrar cartel una vez se carga un articulo venta o un ingrediente de si el usuario quiere añadir stock del mismo
 
 Pruebas
 [x] Carga empresa [] Probar validación

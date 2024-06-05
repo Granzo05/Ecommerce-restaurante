@@ -24,6 +24,7 @@ const Stocks = () => {
     const [showEliminarStockModal, setShowEliminarStockModal] = useState(false);
     const [showActivarStockModal, setShowActivarStockModal] = useState(false);
     const [tipo, setTipo] = useState('');
+    const [nombre, setNombre] = useState<string | undefined>();
 
     const [selectedStock, setSelectedStock] = useState<StockArticuloVenta | StockIngredientes>();
 
@@ -35,7 +36,6 @@ const Stocks = () => {
     const getIngredientes = async () => {
         StockIngredientesService.getStock()
             .then(data => {
-                console.log(data);
                 setStockIngredientes(data);
             })
             .catch(error => {
@@ -46,7 +46,6 @@ const Stocks = () => {
     const getArticulos = async () => {
         StockArticuloVentaService.getStock()
             .then(data => {
-                console.log(data);
                 setStockArticulos(data)
             })
             .catch(error => {
@@ -67,7 +66,6 @@ const Stocks = () => {
 
     const handleEditarStock = (stock: StockArticuloVenta | StockIngredientes) => {
         setSelectedStock(stock);
-
         setShowEditarStockModal(true);
         setMostrarStocks(false);
     };
@@ -126,7 +124,7 @@ const Stocks = () => {
             </ModalFlotante>
 
             <ModalFlotante isOpen={showEditarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EditarStock stockOriginal={selectedStock} tipo={tipo} />}
+                {selectedStock && <EditarStock stockOriginal={selectedStock} tipo={tipo} nombre={nombre} />}
             </ModalFlotante>
 
             {mostrarStocks && (
@@ -152,11 +150,11 @@ const Stocks = () => {
                                     <td>{stock.cantidadMinima}</td>
                                     <td>{stock.cantidadMaxima}</td>
                                     <td>{stock.precioCompra}</td>
-                                    <td>{"Aca la fecha"}</td>
+                                    <td>{'No hay próximas entradas'}</td>
                                     {stock.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente') }}>EDITAR</button>
+                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
 
                                                 <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('ingrediente') }}>ELIMINAR</button>
 
@@ -165,7 +163,7 @@ const Stocks = () => {
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente') }}>EDITAR</button>
+                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
 
                                                 <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('ingrediente') }}>ACTIVAR</button>
                                             </div>
@@ -180,12 +178,12 @@ const Stocks = () => {
                                     <td>{stock.cantidadMinima}</td>
                                     <td>{stock.cantidadMaxima}</td>
                                     <td>{stock.precioCompra}</td>
-                                    <td>{"Aca la fecha"}</td>
+                                    <td>{'No hay próximas entradas'}</td>
 
                                     {stock.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones-stock">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo') }}>EDITAR</button>
+                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
 
                                                 <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('ingrediente') }}>ELIMINAR</button>
 
@@ -194,7 +192,7 @@ const Stocks = () => {
                                     ) : (
                                         <td>
                                             <div className="btns-acciones-stock">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente') }}>EDITAR</button>
+                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
 
                                                 <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('ingrediente') }}>ACTIVAR</button>
                                             </div>

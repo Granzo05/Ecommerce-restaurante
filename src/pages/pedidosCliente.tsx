@@ -4,7 +4,6 @@ import { PedidoService } from '../services/PedidoService';
 import { Pedido } from '../types/Pedidos/Pedido';
 import '../styles/pedidos.css';
 import { useLocation } from 'react-router-dom';
-import { EnumEstadoPedido } from '../types/Pedidos/EnumEstadoPedido';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -27,8 +26,6 @@ const PedidosCliente = () => {
         if (externalReference && parseInt(externalReference) > 0 && preference && preference.length > 0) {
             PedidoService.updateEstadoPedidoMercadopago(parseInt(externalReference), preference);
         }
-        console.log(externalReference)
-        console.log(preference)
     }, [externalReference, preference]);
 
     useEffect(() => {
