@@ -18,6 +18,11 @@ import { StockIngredientesService } from "../services/StockIngredientesService";
 import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import { useLocation } from "react-router-dom";
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 const Pago = () => {
     const [carrito, setCarrito] = useState<Carrito | null>(null);
@@ -26,8 +31,21 @@ const Pago = () => {
     const [envio, setTipoEnvio] = useState<EnumTipoEnvio>(EnumTipoEnvio.RETIRO_EN_TIENDA);
     const [isVisible, setIsVisible] = useState(false);
     const [preferenceId, setPreferenceId] = useState<string | null>(null);
-
     const [modalBusquedaDomicilio, setModalBusquedaDomicilio] = useState<boolean>(false);
+
+    // Con esto podemos verificar si el pedido vuelve luego de un fallo en mercadopago para eliminarlo
+    let query = useQuery();
+
+    const externalReference = query.get('external_reference');
+    const preference = query.get('preference_id');
+
+    useEffect(() => {
+        if (externalReference && parseInt(externalReference) > 0 && preference && preference.length > 0) {
+            PedidoService.eliminarPedidoFallido(parseInt(externalReference), preference);
+        }
+        console.log(externalReference)
+        console.log(preference)
+    }, [externalReference, preference]);
 
 
     const handleModalClose = () => {
@@ -147,8 +165,9 @@ const Pago = () => {
     }
 
 
-    async function crearPreferencia() {
-        if (envio === 1) {
+    async function crearPreferencia(domicilio: Domicilio) {
+        console.log(envio)
+        if (envio === 0) {
             let hayStock = true;
             let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
 
@@ -180,7 +199,8 @@ const Pago = () => {
             }
 
             if (hayStock) {
-                if (preferenceId === null) {
+                console.log(domicilio)
+                if (preferenceId === null && domicilio) {
                     let pedido = new Pedido();
                     if (cliente) pedido.cliente = cliente;
                     pedido.tipoEnvio = envio;
@@ -205,10 +225,10 @@ const Pago = () => {
 
                     pedido.factura = null;
                     pedido.detallesPedido = detalles;
-                    pedido.estado = EnumEstadoPedido.ENTRANTES;
                     pedido.borrado = 'NO';
 
-                    if (domicilio) pedido.domicilioEntrega = domicilio;
+                    pedido.domicilioEntrega = domicilio;
+
                     let preference = await PedidoService.crearPedidoMercadopago(pedido);
 
                     setPreferenceId(preference.id);
@@ -236,7 +256,7 @@ const Pago = () => {
                     <h3>&mdash; Detalle del pedido y pago &mdash;</h3>
                     <div id="detalle-producto"></div>
                     <label style={{ fontWeight: 'bold', color: '#2C2C2C', fontSize: '18px' }}>Tipo de entrega:</label>
-                    <select className="tipo-envio" value={envio} name="tipoEnvio" id="tipoEnvio" onChange={e => { setTipoEnvio(parseInt(e.target.value)); crearPreferencia() }}>
+                    <select className="tipo-envio" value={envio} name="tipoEnvio" id="tipoEnvio" onChange={e => setTipoEnvio(parseInt(e.target.value))}>
                         <option value={EnumTipoEnvio.DELIVERY}>Delivery</option>
                         <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Retiro en tienda</option>
                     </select>
@@ -245,7 +265,7 @@ const Pago = () => {
                     {envio === EnumTipoEnvio.DELIVERY && (
                         <>
                             <InputComponent placeHolder='Seleccionar domicilio...' onInputClick={() => setModalBusquedaDomicilio(true)} selectedProduct={domicilio?.calle ?? ''} disabled={false} />
-                            {modalBusquedaDomicilio && <ModalFlotanteRecomendacionesDomicilios onCloseModal={handleModalClose} onSelectedDomicilio={(domicilio) => { setDomicilio(domicilio); handleModalClose(); }} cliente={cliente} />}
+                            {modalBusquedaDomicilio && <ModalFlotanteRecomendacionesDomicilios onCloseModal={handleModalClose} onSelectedDomicilio={(domicilio) => { setDomicilio(domicilio); handleModalClose(); crearPreferencia(domicilio) }} cliente={cliente} />}
 
                         </>
                     )}
@@ -289,14 +309,19 @@ const Pago = () => {
                         <div className="total">
                             <h2><strong>Total:</strong> ${carrito?.totalPrecio}</h2>
 
-                            <div className={isVisible ? "divVisible" : "divInvisible"}>
-                                {preferenceId && preferenceId.length > 2 && (
-                                    <Wallet
-                                        initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
-                                        customization={{ texts: { valueProp: "smart_option" } }}
-                                    />
-                                )}
-                            </div>
+                            {domicilio && domicilio?.calle?.length > 0 ? (
+                                <div className={isVisible ? "divVisible" : "divInvisible"}>
+                                    {preferenceId && preferenceId.length > 2 && (
+                                        <Wallet
+                                            initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
+                                            customization={{ texts: { valueProp: "smart_option" } }}
+                                        />
+                                    )}
+                                </div>
+                            ) : (
+                                <p>El botón de pago se mostrará una vez que se asigne un domicilio de entrega</p>
+                            )}
+
                             <button
                                 type="submit"
                                 className="cancelar-btn"

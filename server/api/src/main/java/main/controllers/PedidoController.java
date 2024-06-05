@@ -15,6 +15,7 @@ import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
 import jakarta.transaction.Transactional;
+import main.entities.Domicilio.Domicilio;
 import main.entities.Factura.Factura;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Pedidos.DetallesPedido;
@@ -49,10 +50,11 @@ public class PedidoController {
     private final DetallePedidoRepository detallePedidoRepository;
     private final StockArticuloVentaRepository stockArticuloVentaRepository;
     private final StockIngredientesRepository stockIngredientesRepository;
+    private final DomicilioRepository domicilioRepository;
 
     public PedidoController(PedidoRepository pedidoRepository,
                             ClienteRepository clienteRepository,
-                            SucursalRepository sucursalRepository, FacturaRepository facturaRepository, DetallePedidoRepository detallePedidoRepository, StockArticuloVentaRepository stockArticuloVentaRepository, StockIngredientesRepository stockIngredientesRepository) {
+                            SucursalRepository sucursalRepository, FacturaRepository facturaRepository, DetallePedidoRepository detallePedidoRepository, StockArticuloVentaRepository stockArticuloVentaRepository, StockIngredientesRepository stockIngredientesRepository, DomicilioRepository domicilioRepository) {
         this.pedidoRepository = pedidoRepository;
         this.clienteRepository = clienteRepository;
         this.sucursalRepository = sucursalRepository;
@@ -60,6 +62,7 @@ public class PedidoController {
         this.detallePedidoRepository = detallePedidoRepository;
         this.stockArticuloVentaRepository = stockArticuloVentaRepository;
         this.stockIngredientesRepository = stockIngredientesRepository;
+        this.domicilioRepository = domicilioRepository;
     }
 
     @CrossOrigin
@@ -177,13 +180,18 @@ public class PedidoController {
                 descontarStock(detallesPedido, idSucursal);
             }
 
+            pedido.setEstado(EnumEstadoPedido.PROCESO_DE_PAGO);
+
             Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
             pedido.getSucursales().add(sucursal);
-
 
             // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
             if (pedido.getDomicilioEntrega() == null) {
                 pedido.setDomicilioEntrega(sucursal.getDomicilio());
+            } else {
+                Domicilio domicilio = domicilioRepository.findById(pedido.getDomicilioEntrega().getId())
+                        .orElseThrow(() -> new IllegalArgumentException("Domicilio no encontrado"));
+                pedido.setDomicilioEntrega(domicilio);
             }
 
             pedidoRepository.save(pedido);
@@ -219,7 +227,7 @@ public class PedidoController {
                 }
 
                 PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                        .success("http://localhost:5173/compra-exitosa")
+                        .success("http://localhost:5173/cliente/pedidos")
                         .failure("http://localhost:5173/pago")
                         .pending("http://localhost:5173/pago")
                         .build();
@@ -281,18 +289,6 @@ public class PedidoController {
         }
     }
 
-    @CrossOrigin
-    @PutMapping("/pedido/delete/{id}/{idSucursal}")
-    public ResponseEntity<?> borrarPedido(@PathVariable Long id, @PathVariable("idSucursal") Long idSucursal) {
-        Optional<Pedido> pedido = pedidoRepository.findById(id);
-        if (pedido.isEmpty()) {
-            return new ResponseEntity<>("La pedido ya ha sido borrado previamente", HttpStatus.BAD_REQUEST);
-        }
-        pedido.get().setBorrado("SI");
-        pedidoRepository.save(pedido.get());
-        return new ResponseEntity<>("El pedido ha sido eliminado correctamente", HttpStatus.ACCEPTED);
-    }
-
     @Transactional
     @CrossOrigin
     @PutMapping("/pedido/update/{idSucursal}")
@@ -333,6 +329,34 @@ public class PedidoController {
         pedidoRepository.save(pedidoDb.get());
 
         return new ResponseEntity<>("El pedido ha sido actualizado correctamente", HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/pedido/{idPedido}/update/{preference}/{idSucursal}")
+    @CrossOrigin
+    @Transactional
+    public ResponseEntity<String> updateEstadoPedido(@PathVariable("idPedido") Long idPedido, @PathVariable("preference") String preference, @PathVariable("idSucursal") Long idSucursal) {
+        System.out.println(idPedido);
+        System.out.println(preference);
+        Optional<Pedido> pedidoDb = pedidoRepository.findByIdPedidoAndPreferenceAndIdSucursal(idPedido, preference, idSucursal);
+        System.out.println(pedidoDb);
+        if (pedidoDb.isEmpty()) {
+            return new ResponseEntity<>("La pedido no se encontró", HttpStatus.BAD_REQUEST);
+        }
+
+        pedidoDb.get().setEstado(EnumEstadoPedido.ENTRANTES);
+
+        pedidoRepository.save(pedidoDb.get());
+
+        return new ResponseEntity<>("El pedido ha sido recibido por el restaurante", HttpStatus.ACCEPTED);
+    }
+    @Transactional
+    @CrossOrigin
+    @PutMapping("/pedido/delete/{idPedido}/{preference}")
+    public void deletePedidoFallido(@PathVariable("idPedido") Long idPedido, @PathVariable("preference") String preference) {
+
+        Optional<Pedido> pedido = pedidoRepository.findByIdAndPreference(idPedido, preference);
+
+        if(pedido.isPresent()) pedidoRepository.delete(pedido.get());
     }
 
     public ResponseEntity<byte[]> generarFacturaPDF(Long idPedido) {

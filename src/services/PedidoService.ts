@@ -137,4 +137,47 @@ export const PedidoService = {
 
     },
 
+    updateEstadoPedidoMercadopago: async (idPedido: number, preference: string): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + `pedido/${idPedido}/update/${preference}/${sucursalId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
+    },
+
+
+    eliminarPedidoFallido: async (idPedido: number, preference: string): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + `pedido/delete/${idPedido}/${preference}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+
+            return await response.text();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 }

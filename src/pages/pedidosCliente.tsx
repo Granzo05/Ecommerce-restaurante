@@ -3,7 +3,12 @@ import { useEffect, useState } from 'react';
 import { PedidoService } from '../services/PedidoService';
 import { Pedido } from '../types/Pedidos/Pedido';
 import '../styles/pedidos.css';
+import { useLocation } from 'react-router-dom';
+import { EnumEstadoPedido } from '../types/Pedidos/EnumEstadoPedido';
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 const PedidosCliente = () => {
     const [pedidosEntregados, setPedidosEntregados] = useState<Pedido[]>([]);
@@ -13,9 +18,21 @@ const PedidosCliente = () => {
     const [segundosRestantes, setSegundosRestantes] = useState<number>(0);
     const [horaFinalizacion, setHoraFinalizacion] = useState<string>('');
 
+    let query = useQuery();
+
+    const externalReference = query.get('external_reference');
+    const preference = query.get('preference_id');
 
     useEffect(() => {
-        buscarPedidos();
+        if (externalReference && parseInt(externalReference) > 0 && preference && preference.length > 0) {
+            PedidoService.updateEstadoPedidoMercadopago(parseInt(externalReference), preference);
+        }
+        console.log(externalReference)
+        console.log(preference)
+    }, [externalReference, preference]);
+
+    useEffect(() => {
+        //buscarPedidos();
 
         const actualizarTiempoRestante = () => {
             if (horaFinalizacion) {

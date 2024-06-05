@@ -6,7 +6,8 @@ public enum EnumEstadoPedido {
     COCINADOS(2),
     ENTREGADOS(3),
     RECHAZADOS(4),
-    EN_CAMINO(5);
+    EN_CAMINO(5),
+    PROCESO_DE_PAGO(6);
 
     private final int value;
 
