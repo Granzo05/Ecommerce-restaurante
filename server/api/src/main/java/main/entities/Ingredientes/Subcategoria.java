@@ -21,15 +21,19 @@ public class Subcategoria implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "nombre")
     private String nombre;
+
     @Column(name = "borrado")
     private String borrado = "NO";
+
     @JsonIgnoreProperties(value = {"sucursales", "subcategorias"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     @JsonBackReference
     private Categoria categoria;
+
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

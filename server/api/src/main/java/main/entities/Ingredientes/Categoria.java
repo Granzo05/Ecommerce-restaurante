@@ -26,9 +26,15 @@ public class Categoria implements Serializable {
     private String nombre;
     @Column(name = "borrado")
     private String borrado = "NO";
+
     @JsonIgnoreProperties(value = {"sucursales", "categoria"}, allowSetters = true)
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
     private Set<Subcategoria> subcategorias = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
+    @ManyToMany(mappedBy = "categorias", fetch = FetchType.EAGER)
+    private Set<Imagenes> imagenes = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -37,7 +43,4 @@ public class Categoria implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
-    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
-    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
-    private Set<Imagenes> imagenes = new HashSet<>();
 }

@@ -40,6 +40,12 @@ function AgregarStockArticulo() {
     } else if (!cantidadActual || cantidadActual < 0) {
       toast.error("Por favor, es necesaria la cantidad actual");
       return;
+    } else if (cantidadActual > cantidadMaxima) {
+      toast.error("Por favor, la cantidad actual no puede ser mayor a la maxima");
+      return;
+    } else if (cantidadActual < cantidadMinima) {
+      toast.error("Por favor, la cantidad actual no puede ser menor a la minima");
+      return;
     } else if (!medida) {
       toast.error("Por favor, es necesario la medida");
       return;
@@ -108,9 +114,9 @@ function AgregarStockArticulo() {
           <span>Costo ($)</span>
         </div>
       </label>
-          <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
-          {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-        
+      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+
       <br />
       <button type="button" onClick={agregarStock}>Agregar</button>
     </div>

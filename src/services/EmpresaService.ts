@@ -12,11 +12,12 @@ export const EmpresaService = {
             body: JSON.stringify(empresa)
         })
 
+        let cargarImagenes = true;
+        
         if (!response.ok) {
+            cargarImagenes = false;
             throw new Error(await response.text());
         }
-
-        let cargarImagenes = true;
 
         // Cargar imágenes solo si se debe hacer
         if (cargarImagenes) {
@@ -108,11 +109,13 @@ export const EmpresaService = {
                 },
                 body: JSON.stringify(empresa)
             })
-            if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
-            }
 
             let cargarImagenes = true;
+
+            if (!response.ok) {
+                cargarImagenes = false;
+                throw new Error(await response.text());
+            }
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes && (imagenes || imagenesEliminadas)) {

@@ -1,7 +1,6 @@
 package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.Imagenes;
@@ -66,21 +65,9 @@ public class ArticuloMenuController {
         Optional<ArticuloMenu> menuDB = articuloMenuRepository.findByName(articuloMenu.getNombre());
         if (menuDB.isEmpty()) {
             try {
-                Set<IngredienteMenu> ingredientes = new HashSet<>();
-
                 for (IngredienteMenu ingredienteMenu : articuloMenu.getIngredientesMenu()) {
-                    Ingrediente ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteMenu.getIngrediente().getNombre(), idSucursal).get();
-                    IngredienteMenu ingredienteMenu1 = new IngredienteMenu();
-
-                    ingredienteMenu1.setIngrediente(ingredienteDB);
-                    ingredienteMenu1.setCantidad(ingredienteMenu.getCantidad());
-                    ingredienteMenu1.setArticuloMenu(articuloMenu);
-                    ingredienteMenu1.setMedida(ingredienteMenu.getMedida());
-
-                    ingredientes.add(ingredienteMenu1);
+                    ingredienteMenu.setArticuloMenu(articuloMenu);
                 }
-                articuloMenu.getIngredientesMenu().clear();
-                articuloMenu.setIngredientesMenu(ingredientes);
 
                 articuloMenu.setBorrado("NO");
 
@@ -89,12 +76,16 @@ public class ArticuloMenuController {
                     List<Sucursal> sucursales = sucursalRepository.findAll();
                     for (Sucursal sucursal : sucursales) {
                         sucursal.getArticulosMenu().add(articuloMenu);
+                        articuloMenu.getSucursales().add(sucursal);
+                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                     if (sucursalOpt.isPresent()) {
                         Sucursal sucursal = sucursalOpt.get();
                         sucursal.getArticulosMenu().add(articuloMenu);
+                        articuloMenu.getSucursales().add(sucursal);
+                        sucursalRepository.save(sucursal);
                     } else {
                         return ResponseEntity.badRequest().body("Sucursal no encontrada");
                     }
@@ -155,8 +146,8 @@ public class ArticuloMenuController {
                     if (menu.isEmpty()) {
                         return new ResponseEntity<>("menu vacio", HttpStatus.NOT_FOUND);
                     }
-                    imagenProducto.setArticuloMenu(menu.get());
-                    imagenProducto.setSucursal(sucursalRepository.findById(idSucursal).get());
+                    imagenProducto.getArticulosMenu().add(menu.get());
+                    imagenProducto.getSucursales().add(sucursalRepository.findById(idSucursal).get());
                     imagenesRepository.save(imagenProducto);
                 }
 

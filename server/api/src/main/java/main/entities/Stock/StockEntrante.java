@@ -19,14 +19,16 @@ import java.util.Set;
 @ToString
 @Table(name = "stock_entrante", schema = "buen_sabor")
 public class StockEntrante {
+    @Column(name = "fecha_llegada", nullable = false)
+    public LocalDate fechaLlegada;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "fecha_llegada", nullable = false)
-    public LocalDate fechaLlegada;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
+
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "stock_entrante_sucursales",
@@ -34,7 +36,8 @@ public class StockEntrante {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"sucursal", "stockEntrante"}, allowSetters = true)
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "stockEntrante", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "stockEntrante", cascade = CascadeType.ALL)
     private Set<DetalleStock> detallesStock = new HashSet<>();
 }

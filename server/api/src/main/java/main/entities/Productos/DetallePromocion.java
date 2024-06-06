@@ -18,22 +18,27 @@ public class DetallePromocion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "cantidad")
     private int cantidad;
+
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
+
     @ManyToOne
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @JoinColumn(name = "id_menu")
     private ArticuloMenu articuloMenu;
+
     @ManyToOne
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
+
     @JsonIgnoreProperties(value = {"detallesPromocion", "sucursales", "imagenes"}, allowSetters = true)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_promocion")
     private Promocion promocion;
 }

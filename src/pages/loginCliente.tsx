@@ -65,6 +65,7 @@ const LoginCliente = () => {
             toast.error("Por favor, es necesaria la contraseña");
             return;
         } else if (!telefono.replace(/\D/g, '')) {
+            // /\D/g, reemplaza todos las letras
             toast.error("Por favor, es necesario el telefono");
             return;
         } else if (!fechaNacimiento) {

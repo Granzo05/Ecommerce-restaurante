@@ -23,22 +23,6 @@ import java.util.Set;
 @ToString
 @Table(name = "clientes", schema = "buen_sabor")
 public class Cliente implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long id;
-    @Column(name = "nombre")
-    private String nombre;
-    @Column(name = "email")
-    private String email;
-    @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"}, allowSetters = true)
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Domicilio> domicilios = new HashSet<>();
-    @Column(name = "telefono")
-    private long telefono;
-    @JsonIgnore
-    @Column(name = "contraseña")
-    private String contraseña;
     @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -47,14 +31,31 @@ public class Cliente implements Serializable {
     @JsonIgnore
     @Column(name = "fecha_nacimiento", nullable = false)
     public LocalDate fechaNacimiento;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "nombre")
+    private String nombre;
+    @Column(name = "email")
+    private String email;
+    @JsonIgnoreProperties(value = {"domicilios"}, allowSetters = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
+    private Set<Domicilio> domicilios = new HashSet<>();
+    @Column(name = "telefono")
+    private long telefono;
+    @JsonIgnore
+    @Column(name = "contraseña")
+    private String contraseña;
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
+
     @JsonIgnoreProperties(value = {
             "factura", "cliente", "sucursales", "detallesPedido",
-            "tipoEnvio", "estado"
+            "tipoEnvio", "estado", "domicilioEntrega"
     }, allowSetters = true)
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
     private Set<Pedido> pedidos = new HashSet<>();
 }
 

@@ -363,7 +363,7 @@ public class PedidoController {
     @PutMapping("/pedido/{idPedido}/update/{preference}/{idSucursal}")
     @CrossOrigin
     @Transactional
-    public ResponseEntity<String> updateEstadoPedido(@PathVariable("idPedido") Long idPedido, @PathVariable("preference") String preference, @PathVariable("idSucursal") Long idSucursal) {
+    public ResponseEntity<String> updateEstadoPedidoMercadopago(@PathVariable("idPedido") Long idPedido, @PathVariable("preference") String preference, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Pedido> pedidoDb = pedidoRepository.findByIdPedidoAndPreferenceAndIdSucursal(idPedido, preference, idSucursal);
 
         if (pedidoDb.isEmpty()) {
@@ -431,8 +431,12 @@ public class PedidoController {
                 // Agregar cada detalle como una fila en la tabla
                 table.addCell(detalle.getArticuloMenu().getNombre());
                 table.addCell(String.valueOf(detalle.getCantidad()));
-                table.addCell(String.valueOf(detalle.getSubTotal()));
-                total += detalle.getSubTotal();
+                if (detalle.getArticuloVenta() != null) {
+                    table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta()));
+                } else if (detalle.getArticuloMenu() != null) {
+                    table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta()));
+                }
+
             }
 
             document.add(table);

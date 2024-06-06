@@ -125,8 +125,8 @@ public class PromocionController {
                     if (promocion.isEmpty()) {
                         return new ResponseEntity<>("promocion vacio", HttpStatus.NOT_FOUND);
                     }
-                    imagenProducto.setPromocion(promocion.get());
-                    imagenProducto.setSucursal(sucursalRepository.findById(idSucursal).get());
+                    imagenProducto.getPromociones().add(promocion.get());
+                    imagenProducto.getSucursales().add(sucursalRepository.findById(idSucursal).get());
                     imagenesRepository.save(imagenProducto);
                 }
 

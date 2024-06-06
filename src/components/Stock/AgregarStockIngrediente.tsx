@@ -18,11 +18,11 @@ function AgregarStockIngrediente() {
   const [medida, setMedida] = useState<Medida>(new Medida());
   const [costoIngrediente, setCostoIngrediente] = useState(0);
   const [nombreIngrediente] = useState('0');
-  
+
   const [ingrediente, setIngrediente] = useState<Ingrediente>(new Ingrediente());
 
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
-  
+
   const [modalBusquedaIngrediente, setModalBusquedaIngrediente] = useState<boolean>(false);
 
 
@@ -56,6 +56,12 @@ function AgregarStockIngrediente() {
       return;
     } else if (!nombreIngrediente) {
       toast.error("Por favor, es necesario el nombre del ingrediente");
+      return;
+    } else if (cantidadActual > cantidadMaxima) {
+      toast.error("Por favor, la cantidad actual no puede ser mayor a la maxima");
+      return;
+    } else if (cantidadActual < cantidadMinima) {
+      toast.error("Por favor, la cantidad actual no puede ser menor a la minima");
       return;
     }
 
@@ -92,12 +98,12 @@ function AgregarStockIngrediente() {
       <Toaster />
       <h2>&mdash; Agregar ingrediente &mdash;</h2>
       <div>
-      <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
         {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
-      
+
       </div>
-        
+
       <label>
         <div className="inputBox">
           <input type="text" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
@@ -118,14 +124,14 @@ function AgregarStockIngrediente() {
         </div>
 
       </label>
-          <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
-          {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-        
-        <div className="inputBox">
-          <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-          <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
-        </div>
-        <hr />
+      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+
+      <div className="inputBox">
+        <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+        <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
+      </div>
+      <hr />
       <button onClick={crearStockIngrediente}>Agregar</button>
     </div>
   )

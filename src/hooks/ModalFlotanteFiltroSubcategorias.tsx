@@ -25,7 +25,6 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
   const [showAgregarSubcategoriaModal, setShowAgregarSubcategoriaModal] = useState(false);
 
   useEffect(() => {
-    console.log(categoria.id)
     SubcategoriaService.getSubcategoriasByCategoriaId(categoria.id)
       .then(subcategorias => {
         setRecomendaciones(subcategorias);

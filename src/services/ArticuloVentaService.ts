@@ -29,9 +29,9 @@ export const ArticuloVentaService = {
 
             let cargarImagenes = true;
 
-            if (menuResponse.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
+            if (!menuResponse.ok) {
                 cargarImagenes = false;
-                return menuResponse.text();
+                throw new Error(await menuResponse.text());
             }
 
             // Cargar imágenes solo si se debe hacer
@@ -70,6 +70,11 @@ export const ArticuloVentaService = {
             })
 
             let cargarImagenes = true;
+
+            if (!response.ok) {
+                cargarImagenes = false;
+                throw new Error(await response.text());
+            }
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes && (imagenes || imagenesEliminadas)) {

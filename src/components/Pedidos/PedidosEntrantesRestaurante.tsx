@@ -54,6 +54,7 @@ const PedidosEntrantes = () => {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ACEPTADOS), {
             loading: 'Enviando pedido a cocina...',
             success: (message) => {
+                buscarPedidos();
                 return message;
             },
             error: (message) => {
@@ -61,7 +62,6 @@ const PedidosEntrantes = () => {
             },
         });
 
-        buscarPedidos();
     }
 
 

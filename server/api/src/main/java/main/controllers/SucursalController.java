@@ -137,7 +137,6 @@ public class SucursalController {
             domicilio.setNumero(sucursalDetails.getDomicilio().getNumero());
             domicilio.setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
             domicilio.setSucursal(sucursalDetails);
-
             sucursalDetails.setDomicilio(domicilio);
 
             sucursalDetails.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
@@ -224,7 +223,7 @@ public class SucursalController {
                     if (sucursal.isEmpty()) {
                         return new ResponseEntity<>("sucursal vacio", HttpStatus.NOT_FOUND);
                     }
-                    imagenProducto.setSucursal(sucursal.get());
+                    imagenProducto.getSucursales().add(sucursal.get());
                     imagenesRepository.save(imagenProducto);
                 }
 
@@ -280,7 +279,6 @@ public class SucursalController {
                 sucursal.getDomicilio().setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
                 sucursal.getDomicilio().setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
                 sucursal.getDomicilio().setNumero(sucursalDetails.getDomicilio().getNumero());
-                sucursal.getDomicilio().setSucursal(sucursalDetails);
                 sucursal.getDomicilio().setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
 
                 // Actualizar contraseña

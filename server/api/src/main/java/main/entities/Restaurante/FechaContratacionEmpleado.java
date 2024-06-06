@@ -26,7 +26,7 @@ public class FechaContratacionEmpleado {
     private LocalDateTime fechaContratacion;
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "articulosMenu", "articulosVenta", "medidas", "categorias"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;
 

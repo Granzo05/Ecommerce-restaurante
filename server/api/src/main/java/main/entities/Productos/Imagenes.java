@@ -8,6 +8,8 @@ import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.Sucursal;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,51 +33,56 @@ public class Imagenes implements Serializable {
     @Column(name = "borrado")
     private String borrado = "NO";
     @JsonIgnoreProperties(value = {"imagenes", "sucursales"}, allowSetters = true)
-    @ManyToOne
+    @ManyToMany
     @JoinTable(
             name = "imagenes_menu",
             joinColumns = @JoinColumn(name = "id_imagen"),
             inverseJoinColumns = @JoinColumn(name = "id_menu")
     )
-    private ArticuloMenu articuloMenu;
+    private Set<ArticuloMenu> articulosMenu = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"imagenes", "sucursales"}, allowSetters = true)
-    @ManyToOne
+    @ManyToMany
     @JoinTable(
             name = "imagenes_articulo",
             joinColumns = @JoinColumn(name = "id_imagen"),
             inverseJoinColumns = @JoinColumn(name = "id_articulo")
     )
-    private ArticuloVenta articuloVenta;
+    private Set<ArticuloVenta> articulosVenta = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"imagenes", "sucursales"}, allowSetters = true)
-    @ManyToOne
+    @ManyToMany
     @JoinTable(
             name = "imagenes_promocion",
             joinColumns = @JoinColumn(name = "id_imagen"),
             inverseJoinColumns = @JoinColumn(name = "id_promocion")
     )
-    private Promocion promocion;
+    private Set<Promocion> promociones = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"sucursales", "imagenes"}, allowSetters = true)
-    @ManyToOne
+    @ManyToMany
     @JoinTable(
             name = "imagenes_empresa",
             joinColumns = @JoinColumn(name = "id_imagen"),
             inverseJoinColumns = @JoinColumn(name = "id_empresa")
     )
-    private Empresa empresa;
+    private Set<Empresa> empresas = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToOne
+    @ManyToMany
     @JoinTable(
             name = "imagenes_sucursal",
             joinColumns = @JoinColumn(name = "id_imagen"),
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
-    private Sucursal sucursal;
+    private Set<Sucursal> sucursales = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"subcategorias", "sucursales"}, allowSetters = true)
-    @ManyToOne
+    @ManyToMany
     @JoinTable(
             name = "imagenes_categoria",
             joinColumns = @JoinColumn(name = "id_imagen"),
             inverseJoinColumns = @JoinColumn(name = "id_categoria")
     )
-    private Categoria categoria;
+    private Set<Categoria> categorias = new HashSet<>();
 }

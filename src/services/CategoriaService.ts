@@ -34,7 +34,7 @@ export const CategoriaService = {
 
             let cargarImagenes = true;
 
-            if (response.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
+            if (!response.ok) {
                 cargarImagenes = false;
                 throw new Error(await response.text());
             }
@@ -73,11 +73,12 @@ export const CategoriaService = {
                 body: JSON.stringify(categoria)
             })
 
+            let cargarImagenes = true;
+
             if (!response.ok) {
+                cargarImagenes = false;
                 throw new Error(await response.text());
             }
-
-            let cargarImagenes = true;
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes && (imagenes || imagenesEliminadas)) {

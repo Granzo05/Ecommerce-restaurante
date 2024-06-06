@@ -1,11 +1,7 @@
 import '../styles/footer.css';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
 
-const Footer = () => {
-
-
-  
-
+const Footer = () => { 
   return (
     <footer id='contactos' className='footer'>
       <div className="footer-content container">

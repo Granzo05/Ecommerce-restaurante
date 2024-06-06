@@ -23,12 +23,14 @@ public class Departamento {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
+
     @JsonIgnoreProperties(value = {"departamentos"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_provincia")
     private Provincia provincia;
+
     @JsonIgnoreProperties(value = {"departamento"}, allowSetters = true)
-    @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Localidad> localidades = new HashSet<>();
 
 }

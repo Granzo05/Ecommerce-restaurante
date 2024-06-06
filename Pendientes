@@ -41,8 +41,11 @@
 [x] Mercadopago
 [x] Cancelacion de pedido
 [x] Avisar que el menu está en traslado junto con el envio de la factura
-[] Boton en pedidos del cliente para poder repetir un pedido anterior
-[] Descontar stock al comprar
+[x] Mostrar productos solo si hay stock
+[x] Boton en pedidos del cliente para poder repetir un pedido anterior
+[x] Arreglar login del cliente para que no cree usuarios con el mismo mail
+[x] Calcular tiempo de entrega de un menu al realizar un pedido
+[x] Descontar stock al comprar
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Ver tema del auth para privilegios y esas cosas
@@ -61,14 +64,13 @@
 [] Configurar rutas privadas
 [] Revisar la carga de subcategorias
 [] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
-[] Calcular tiempo de entrega de un menu al realizar un pedido
 [] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
-[] Mostrar productos solo si hay stock
 [] Mostrar categorias solo si hay productos con stock que la completen
 [] Arreglar eso de que cuando cambias de paso en el modal se borra lo del anterior (hay que poner los values en cada input del atributo que ocupan)
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
-[x] Arreglar login del cliente para que no cree usuarios con el mismo mail
 [] Mostrar cartel una vez se carga un articulo venta o un ingrediente de si el usuario quiere añadir stock del mismo
+[] Mejorar el suspense del appRoutes
+[] Agregar imagenes al empleado
 
 Pruebas
 [x] Carga empresa [] Probar validación

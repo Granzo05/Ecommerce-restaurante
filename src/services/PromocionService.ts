@@ -15,9 +15,9 @@ export const PromocionService = {
 
             let cargarImagenes = true;
 
-            if (response.status === 302) { // 302 Found (Error que arroja si el articuloVenta ya existe)
+            if (!response.ok) {
                 cargarImagenes = false;
-                return response.text();
+                throw new Error(await response.text());
             }
 
             // Cargar imágenes solo si se debe hacer
@@ -76,6 +76,11 @@ export const PromocionService = {
             })
 
             let cargarImagenes = true;
+
+            if (!response.ok) {
+                cargarImagenes = false;
+                throw new Error(await response.text());
+            }
 
             // Cargar imágenes solo si se debe hacer
             if (cargarImagenes && (imagenes || imagenesEliminadas)) {

@@ -28,9 +28,9 @@ export const MenuService = {
 
             let cargarImagenes = true;
 
-            if (menuResponse.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
+            if (!menuResponse.ok) {
                 cargarImagenes = false;
-                return 'Menu existente';
+                throw new Error(await menuResponse.text());
             }
 
             // Cargar imágenes solo si se debe hacer
@@ -71,10 +71,9 @@ export const MenuService = {
 
             let cargarImagenes = true;
 
-
-            if (response.status === 302) { // 302 Found (Error que arroja si el menu ya existe)
+            if (!response.ok) {
                 cargarImagenes = false;
-                return 'Menu existente';
+                throw new Error(await response.text());
             }
 
             // Cargar imágenes solo si se debe hacer

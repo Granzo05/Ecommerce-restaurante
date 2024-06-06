@@ -105,8 +105,8 @@ public class CategoriaController {
                     if (categoria.isEmpty()) {
                         return new ResponseEntity<>("sucursal vacio", HttpStatus.NOT_FOUND);
                     }
-                    imagenProducto.setCategoria(categoria.get());
-                    imagenProducto.setSucursal(sucursalRepository.findById(idSucursal).get());
+                    imagenProducto.getCategorias().add(categoria.get());
+                    imagenProducto.getSucursales().add(sucursalRepository.findById(idSucursal).get());
                     imagenesRepository.save(imagenProducto);
                 }
 
@@ -163,7 +163,6 @@ public class CategoriaController {
             // Creación de subcategorias
             for (Subcategoria subcategoria : categoria.getSubcategorias()) {
                 subcategoriaRepository.deleteById(subcategoria.getId());
-                subcategoria.setCategoria(categoriaDB.get());
                 subcategoria.getSucursales().add(sucursalRepository.findById(idSucursal).get());
             }
 

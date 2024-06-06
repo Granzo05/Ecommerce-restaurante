@@ -15,8 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.mail.MessagingException;
 import java.io.BufferedReader;
@@ -30,10 +28,8 @@ import java.util.Optional;
 @EntityScan("main.entities")
 @ComponentScan(basePackages = {"main.controllers", "main.repositories", "main.*"})
 public class Main {
-    public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
-        SpringApplication.run(Main.class, args);
-    }
-
+    private final String RUTACSV = "C://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
+    private final String SEPARACIONCSV = ";";
     @Autowired(required = true)
     private PaisRepository paisRepository;
     @Autowired(required = true)
@@ -46,8 +42,10 @@ public class Main {
     private CategoriaRepository categoriaRepository;
     @Autowired(required = true)
     private MedidaRepository medidaRepository;
-    private final String RUTACSV = "C://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
-    private final String SEPARACIONCSV = ";";
+
+    public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
+        SpringApplication.run(Main.class, args);
+    }
 
     @Bean
     CommandLineRunner init() {
@@ -96,7 +94,6 @@ public class Main {
                 Optional<Localidad> localidad = localidadRepository.findByName("GODOY CRUZ");
                 domicilio.setLocalidad(localidad.get());
                 domicilio.setSucursal(sucursal);
-
                 sucursal.setDomicilio(domicilio);
 
                 Categoria categoria = new Categoria();

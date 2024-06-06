@@ -5,7 +5,5 @@ export enum EnumEstadoPedido {
     ENTREGADOS = 3,
     RECHAZADOS = 4,
     EN_CAMINO = 5,
-    PROCESO_DE_PAGO = 6,
-    PENDIENTES,
-    REALIZADOS
+    PROCESO_DE_PAGO = 6
 }

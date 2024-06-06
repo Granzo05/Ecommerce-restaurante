@@ -32,22 +32,27 @@ public class Empleado {
     private String cuil;
     @Column(name = "telefono")
     private Long telefono;
-    @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"}, allowSetters = true)
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+
+    @JsonIgnoreProperties(value = {"domicilios"}, allowSetters = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "empleado", cascade = CascadeType.ALL)
     private Set<Domicilio> domicilios = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
+
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
+
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
     @JsonIgnore
     @Column(name = "privilegios")
     private String privilegios;
+
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sucursal")
     private Sucursal sucursal;
 }

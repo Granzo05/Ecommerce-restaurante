@@ -19,6 +19,7 @@ import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useLocation } from "react-router-dom";
+import { CarritoService } from "../services/CarritoService";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -149,14 +150,14 @@ const Pago = () => {
             }
 
             if (preferenceId) {
-            console.log(preferenceId)
-            PedidoService.eliminarPedidoFallido(preferenceId);
+                console.log(preferenceId)
+                PedidoService.eliminarPedidoFallido(preferenceId);
             }
 
             toast.promise(PedidoService.crearPedido(pedido), {
                 loading: 'Creando pedido...',
                 success: (message) => {
-                    //localStorage.removeItem('carrito');
+                    CarritoService.limpiarCarrito();
                     return message;
                 },
                 error: (message) => {
@@ -250,7 +251,7 @@ const Pago = () => {
 
     return (
         <>
-            <Header></Header>
+            <Header/>
             <div className="container-pago">
                 <Toaster />
                 <div className="div-pago">
@@ -355,7 +356,7 @@ const Pago = () => {
                     )}
                 </div>
             </div >
-            <Footer></Footer>
+            <Footer/>
         </>
     )
 }

@@ -51,6 +51,12 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
     } else if (cantidadMaxima < cantidadMinima) {
       toast.error("Por favor, la cantidad mínima no puede ser mayor a la máxima");
       return;
+    } else if (cantidadActual > cantidadMaxima) {
+      toast.error("Por favor, la cantidad actual no puede ser mayor a la maxima");
+      return;
+    } else if (cantidadActual < cantidadMinima) {
+      toast.error("Por favor, la cantidad actual no puede ser menor a la minima");
+      return;
     }
 
     if (tipo === 'ingrediente') {
@@ -100,7 +106,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
   return (
     <div className="modal-info">
       <Toaster />
-      
+
       <h3>Edición de {nombre}</h3>
       <div className="inputBox">
         <input type="number" required={true} value={cantidadMinima | 0} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />

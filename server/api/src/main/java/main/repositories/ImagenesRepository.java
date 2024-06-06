@@ -11,18 +11,18 @@ import java.util.List;
 @Repository
 public interface ImagenesRepository extends JpaRepository<Imagenes, Long> {
 
-    @Query("SELECT i FROM Imagenes i WHERE i.articuloMenu.id = :id ")
+    @Query("SELECT i FROM Imagenes i JOIN i.articulosMenu a WHERE a.id = :id ")
     List<Imagenes> findByIdMenu(@Param("id") Long id);
 
-    @Query("SELECT i FROM Imagenes i WHERE i.articuloVenta.id = :id")
+    @Query("SELECT i FROM Imagenes i JOIN i.articulosVenta a WHERE a.id = :id")
     List<Imagenes> findByIdArticulo(@Param("id") Long id);
 
-    @Query("SELECT i FROM Imagenes i WHERE i.categoria.id = :id")
+    @Query("SELECT i FROM Imagenes i JOIN i.categorias c WHERE c.id = :id")
     List<Imagenes> findByIdCategoria(@Param("id") Long id);
 
-    @Query("SELECT i FROM Imagenes i WHERE i.sucursal.id = :id")
+    @Query("SELECT i FROM Imagenes i JOIN i.sucursales s WHERE s.id = :id")
     List<Imagenes> findByIdSucursal(@Param("id") Long id);
 
-    @Query("SELECT i FROM Imagenes i WHERE i.empresa.id = :id")
+    @Query("SELECT i FROM Imagenes i JOIN i.empresas e WHERE e.id = :id")
     List<Imagenes> findByIdEmpresa(@Param("id") Long id);
 }

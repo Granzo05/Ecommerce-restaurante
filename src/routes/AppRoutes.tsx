@@ -6,7 +6,6 @@ import OpcionesCliente from "../pages/opcionesCliente";
 const LoginNegocio = lazy(() => import('../pages/loginRestaurante'));
 const LoginCliente = lazy(() => import('../pages/loginCliente'));
 const Pago = lazy(() => import('../pages/pago'));
-const AccesoDenegado = lazy(() => import('../pages/accesoDenegado'));
 const PedidosCliente = lazy(() => import('../pages/pedidosCliente'));
 const CambioContra = lazy(() => import('../components/PasswordResetForm'));
 const Menu = lazy(() => import('../pages/menu'));
@@ -42,9 +41,6 @@ const AppRoutes: React.FC = () => {
         </Route>
 
         <Route path="/opciones" element={<Opciones />}>
-        </Route>
-
-        <Route path="/acceso-denegado" element={<AccesoDenegado />}>
         </Route>
 
         <Route path="/cliente" element={<OpcionesCliente />}>

@@ -21,30 +21,33 @@ public class StockIngredientes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
+
     @Column(name = "precio_compra")
     private double precioCompra;
+
     @Column(name = "cantidad_actual")
     private int cantidadActual;
+
     @Column(name = "cantidad_minima")
     private int cantidadMinima;
+
     @Column(name = "cantidad_maxima")
     private int cantidadMaxima;
+
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
+
     @Column(name = "borrado")
     private String borrado = "NO";
 
-    @JsonIgnoreProperties(value = {
-            "empleados", "empresa", "contraseña", "stocksSucursal",
-            "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery",
-            "articulosMenu", "articulosVenta", "medidas", "categorias"
-    }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "stock_ingredientes_sucursales",

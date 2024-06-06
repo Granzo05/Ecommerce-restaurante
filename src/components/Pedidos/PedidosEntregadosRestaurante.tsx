@@ -3,6 +3,7 @@ import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
+import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 
 const PedidosEntregados = () => {
     const [pedidosEntregados, setPedidos] = useState<Pedido[]>([]);
@@ -53,24 +54,21 @@ const PedidosEntregados = () => {
                                 <td>
                                     <div>
                                         <p>{pedido.cliente?.nombre}</p>
-                                        <p>{pedido.domicilioEnvio?.calle} {pedido.domicilioEnvio?.numero}, {pedido.domicilioEnvio?.localidad?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
                                     </div>
                                 </td>
-                                <td>{pedido.tipoEnvio}</td>
-                                <td>
-                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                        <div key={detalle.id}>
-                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
-                                        </div>
-                                    ))}
-                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                        <div key={detalle.id}>
-                                            <p>{detalle.articuloVenta?.nombre} - {detalle.cantidad}</p>
-                                        </div>
-                                    ))}
-                                </td>
+                                {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
+                                    <td>
+                                        <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                    </td>
+                                ) : (
+                                    <td>
+                                        <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                        <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p>
+                                    </td>
+
+                                )}
                             </tr>
                         ))}
                     </tbody>

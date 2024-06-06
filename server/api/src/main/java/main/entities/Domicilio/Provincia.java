@@ -20,13 +20,16 @@ public class Provincia {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "nombre")
     private String nombre;
+
     @JsonIgnoreProperties(value = {"provincias"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_pais")
     private Pais pais;
+
     @JsonIgnoreProperties(value = {"provincia"}, allowSetters = true)
-    @OneToMany(mappedBy = "provincia", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "provincia", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Departamento> departamentos = new HashSet<>();
 }

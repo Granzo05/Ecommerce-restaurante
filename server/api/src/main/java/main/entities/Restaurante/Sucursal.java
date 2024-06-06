@@ -33,8 +33,8 @@ public class Sucursal implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JsonIgnoreProperties(value = {"cliente", "sucursal", "empleado"})
-    @OneToOne(mappedBy = "sucursal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"domicilios", "cliente", "empleado", "sucursal"}, allowSetters = true)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Domicilio domicilio;
 
     @Column(name = "contraseña")
@@ -59,7 +59,7 @@ public class Sucursal implements Serializable {
     private LocalTime horarioCierre;
 
     @JsonIgnoreProperties(value = {"domicilios", "sucursal"}, allowSetters = true)
-    @OneToMany(mappedBy = "sucursal")
+    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
     private Set<Empleado> empleados = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales", "imagenes"}, allowSetters = true)
@@ -79,12 +79,7 @@ public class Sucursal implements Serializable {
     private Set<StockArticuloVenta> stocksArticulo = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "ingredientes_sucursales",
-            joinColumns = @JoinColumn(name = "id_sucursal"),
-            inverseJoinColumns = @JoinColumn(name = "id_ingrediente")
-    )
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY)
     private Set<Ingrediente> ingredientes = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
@@ -96,37 +91,27 @@ public class Sucursal implements Serializable {
     private Set<Promocion> promociones = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
-    @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"imagenes", "sucursales"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "articulos_menu_sucursal",
-            joinColumns = @JoinColumn(name = "id_sucursal"),
-            inverseJoinColumns = @JoinColumn(name = "id_articulo_menu")
-    )
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
+    @ManyToMany(mappedBy = "sucursales", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ArticuloMenu> articulosMenu = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"imagenes", "sucursales"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "articulos_venta_sucursal",
-            joinColumns = @JoinColumn(name = "id_sucursal"),
-            inverseJoinColumns = @JoinColumn(name = "id_articulo_venta")
-    )
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
+    @ManyToMany(mappedBy = "sucursales", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
-    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.EAGER)
     private Set<Imagenes> imagenes = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Medida> medidas = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"sucursales", "subcategorias", "imagenes"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = {"sucursales", "subcategorias"}, allowSetters = true)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Categoria> categorias = new HashSet<>();
 
 }

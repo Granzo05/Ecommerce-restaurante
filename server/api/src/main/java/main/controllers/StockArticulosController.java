@@ -34,6 +34,7 @@ public class StockArticulosController {
     public Set<StockArticuloVenta> getStock(@PathVariable("idSucursal") Long id) {
         return new HashSet<>(stockArticuloRepository.findAllByIdSucursal(id));
     }
+
     @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}/stockArticulo/check/{idArticulo}/{cantidadNecesaria}")
     public boolean checkStock(@PathVariable("idArticulo") long idArticulo, @PathVariable("idSucursal") long idSucursal, @PathVariable("cantidadNecesaria") int cantidad) {

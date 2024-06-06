@@ -15,10 +15,6 @@ public enum EnumEstadoPedido {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
-    }
-
     public static EnumEstadoPedido fromValue(int value) {
         for (EnumEstadoPedido estado : EnumEstadoPedido.values()) {
             if (estado.getValue() == value) {
@@ -26,6 +22,10 @@ public enum EnumEstadoPedido {
             }
         }
         throw new IllegalArgumentException("Invalid EnumEstadoPedido value: " + value);
+    }
+
+    public int getValue() {
+        return value;
     }
 }
 

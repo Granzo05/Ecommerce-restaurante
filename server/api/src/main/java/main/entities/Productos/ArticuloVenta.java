@@ -19,32 +19,48 @@ import java.util.Set;
 @Entity
 @ToString
 @Table(name = "articulos_venta", schema = "buen_sabor")
-public class ArticuloVenta extends Articulo implements Serializable {
+public class ArticuloVenta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @JsonIgnoreProperties(value = {"subcategorias", "sucursales", "imagenes"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
+
     @JsonIgnoreProperties(value = {"categoria", "sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_subcategoria")
     private Subcategoria subcategoria;
+
     @Column(name = "nombre")
     private String nombre;
+
+    @Column(name = "precio_venta")
+    private double precioVenta;
+
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
+
     @Column(name = "cantidad_medida")
     private int cantidadMedida;
+
     @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
-    @OneToMany(mappedBy = "articuloVenta", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.EAGER)
     private Set<Imagenes> imagenes = new HashSet<>();
+
     @Column(name = "borrado")
     private String borrado = "NO";
+
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany(mappedBy = "articulosVenta", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "articulos_venta_sucursales",
+            joinColumns = @JoinColumn(name = "id_articulo"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
     private Set<Sucursal> sucursales = new HashSet<>();
 }

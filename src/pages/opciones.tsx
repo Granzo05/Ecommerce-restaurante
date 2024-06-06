@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PedidosEntrantes from '../components/Pedidos/PedidosEntrantesRestaurante';
 import PedidosAceptados from '../components/Pedidos/PedidosAceptadosRestaurante';
 import PedidosEntregados from '../components/Pedidos/PedidosEntregadosRestaurante';
-import PedidosCocinados from '../components/Pedidos/PedidosCocinadosRestaurante';
+import PedidosParaEntregar from '../components/Pedidos/PedidosParaEntregarRestaurante';
 import Stock from '../components/Stock/Stock';
 import Empleados from '../components/Empleados/Empleados';
 import Menus from '../components/Menus/Menus';
@@ -106,7 +106,7 @@ const Opciones = () => {
         } else if (opcionSeleccionada === 2) {
             return <PedidosAceptados />;
         } else if (opcionSeleccionada === 3) {
-            return <PedidosCocinados />;
+            return <PedidosParaEntregar />;
         } else if (opcionSeleccionada === 4) {
             return <PedidosEntregados />;
         } else if (opcionSeleccionada === 5) {

@@ -7,7 +7,6 @@ import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Factura.Factura;
 import main.entities.Restaurante.Sucursal;
-import main.utility.PreferenceMP;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -46,7 +45,7 @@ public class Pedido implements Serializable {
     private String horaFinalizacion;
 
     @JsonIgnoreProperties(value = {"pedido"}, allowSetters = true)
-    @OneToOne(mappedBy = "pedido", optional = true, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Factura factura;
 
     @JsonIgnoreProperties(value = {"pedidos"}, allowSetters = true)

@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 import { PedidoService } from '../services/PedidoService';
 import { Pedido } from '../types/Pedidos/Pedido';
 import '../styles/pedidos.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { CarritoService } from '../services/CarritoService';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -12,33 +15,29 @@ function useQuery() {
 const PedidosCliente = () => {
     const [pedidosEntregados, setPedidosEntregados] = useState<Pedido[]>([]);
     const [pedidosPendientes, setPedidosPendientes] = useState<Pedido[]>([]);
-    const [, setTiempoRestante] = useState<number>(0);
-    const [minutosRestantes, setMinutosRestantes] = useState<number>(0);
-    const [segundosRestantes, setSegundosRestantes] = useState<number>(0);
-    const [horaFinalizacion, setHoraFinalizacion] = useState<string>('');
-
-    let query = useQuery();
+    const [horaFinalizacion, setHoraFinalizacion] = useState<string[]>([]);
+    const [tiempoRestante, setTiempoRestante] = useState<number[]>([]);
+    const navigate = useNavigate();
+    const query = useQuery();
 
     const externalReference = query.get('external_reference');
     const preference = query.get('preference_id');
 
     useEffect(() => {
-        if (externalReference && parseInt(externalReference) > 0 && preference && preference.length > 0) {
+        if (externalReference && parseInt(externalReference) > 0 && preference) {
             PedidoService.updateEstadoPedidoMercadopago(parseInt(externalReference), preference);
+            CarritoService.limpiarCarrito();
         }
     }, [externalReference, preference]);
 
     useEffect(() => {
-        //buscarPedidos();
+        buscarPedidos();
+    }, []);
 
-        const actualizarTiempoRestante = () => {
-            if (horaFinalizacion) {
-                const tiempoRestante = calcularTiempoRestante();
-                setTiempoRestante(tiempoRestante);
-            }
-        };
-
-        const intervalo = setInterval(actualizarTiempoRestante, 1000);
+    useEffect(() => {
+        const intervalo = setInterval(() => {
+            actualizarTiempoRestante();
+        }, 1000);
 
         return () => clearInterval(intervalo);
     }, [horaFinalizacion]);
@@ -47,122 +46,174 @@ const PedidosCliente = () => {
         try {
             const data = await PedidoService.getPedidosClientes();
             if (data) {
-                const entregados = data.filter(pedido => pedido.estado?.toString().includes('entregados'));
-                const pendientes = data.filter(pedido => !pedido.estado?.toString().includes('entregados'));
+                const entregados = [];
+                const pendientes = [];
+                const horasFinalizacion = [];
+
+                for (const pedido of data) {
+                    const estado = pedido.estado?.toString().trim().toLowerCase();
+                    if (estado === 'entregados') {
+                        entregados.push(pedido);
+                    } else {
+                        pendientes.push(pedido);
+                        if (pedido.horaFinalizacion) {
+                            horasFinalizacion.push(pedido.horaFinalizacion);
+                        }
+                    }
+                }
+
                 setPedidosEntregados(entregados);
                 setPedidosPendientes(pendientes);
-
-                if (pendientes.length > 0) {
-                    setHoraFinalizacion(pendientes[0].horaFinalizacion);
-                }
-            } else {
-                console.log('No hay pedidos');
+                setHoraFinalizacion(horasFinalizacion);
             }
         } catch (error) {
             console.error('Error:', error);
         }
     }
 
-    function calcularTiempoRestante() {
-        const [horas, minutos] = horaFinalizacion.split(':').map(Number);
+    const actualizarTiempoRestante = () => {
+        const tiemposRestantes = horaFinalizacion.map(hora => calcularTiempoRestante(hora));
+        setTiempoRestante(tiemposRestantes);
+    }
 
-        const horaFinalizacionPedido = new Date();
-        horaFinalizacionPedido.setHours(horas);
-        horaFinalizacionPedido.setMinutes(minutos);
-        horaFinalizacionPedido.setSeconds(0);
+    const calcularTiempoRestante = (horaFinalizacion: string) => {
+        if (horaFinalizacion) {
+            const [horas, minutos] = horaFinalizacion.split(':').map(Number);
 
-        const horaActual = new Date();
+            const horaFinalizacionPedido = new Date();
+            horaFinalizacionPedido.setHours(horas);
+            horaFinalizacionPedido.setMinutes(minutos);
+            horaFinalizacionPedido.setSeconds(0);
 
-        const tiempoRestante = Math.max(0, (horaFinalizacionPedido.getTime() - horaActual.getTime()) / 1000);
+            const horaActual = new Date();
 
-        setMinutosRestantes(Math.floor(tiempoRestante / 60));
-        setSegundosRestantes(tiempoRestante % 60);
+            const tiempoRestante = Math.max(0, (horaFinalizacionPedido.getTime() - horaActual.getTime()) / 1000);
 
-        return tiempoRestante;
+            return tiempoRestante;
+        }
+        return 0;
+    }
+
+    function repetirPedido(pedido: Pedido) {
+        pedido.detallesPedido.forEach(detalle => {
+            if (detalle.articuloMenu) {
+                CarritoService.agregarAlCarrito(detalle.articuloMenu, null, detalle.cantidad);
+            } else if (detalle.articuloVenta) {
+                CarritoService.agregarAlCarrito(null, detalle.articuloVenta, detalle.cantidad);
+            }
+        });
+
+        navigate('/pago')
     }
 
     return (
-        <div className="opciones-pantallas">
-            {pedidosEntregados.length > 0 || pedidosPendientes.length > 0 && (
-                <div id="pedidos-anteriores">
-                    {pedidosPendientes.length > 0 && (
-                        <div id="pedidos-pendientes">
-                            <h1>Pedidos pendientes</h1>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Tipo de envío</th>
-                                        <th>Menu</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {pedidosPendientes.map(pedido => (
-                                        <tr key={pedido.id}>
-                                            <td>{pedido.tipoEnvio}</td>
-                                            <td>
-                                                {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                                    <div key={detalle.id}>
-                                                        <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
-                                                        <p>{detalle.articuloVenta?.nombre} - {detalle.cantidad}</p>
-                                                    </div>
-                                                ))}
-                                            </td>
+        <>
+            <Header />
+            <div className="opciones-pantallas">
+                {(pedidosEntregados.length > 0 || pedidosPendientes.length > 0) && (
+                    <div id="pedidos-anteriores">
+                        {pedidosPendientes.length > 0 && (
+                            <div id="pedidos-pendientes">
+                                <h1>Pedidos pendientes</h1>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de envío</th>
+                                            <th>Menu</th>
+                                            <th>Estado</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-
-                            <p>El restaurante está preparando tu pedido</p>
-
-                            <video width="600" height="400" autoPlay loop muted >
-                                <source src="src\pages\delivery.mp4" type="video/mp4"></source>
-                            </video>
-
-                            <p>Tiempo restante: {minutosRestantes}:{segundosRestantes}</p>
-
-                        </div>
-                    )}
-
-                    <h1>Tus pedidos</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Tipo de envío</th>
-                                <th>Menu</th>
-                                <th>Aceptar</th>
-                                <th>Rechazar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pedidosEntregados.map(pedido => (
-                                <tr key={pedido.id}>
-                                    <td>
-                                        <div>
-                                            <p>{pedido.cliente?.nombre}</p>
-                                            <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></td>
-                                            <p>{pedido.cliente?.telefono}</p>
-                                            <p>{pedido.cliente?.email}</p>
-                                        </div>
-                                    </td>
-                                    <td>{pedido.tipoEnvio}</td>
-                                    <td>
-                                        {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                            <div key={detalle.id}>
-                                                <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
-                                                <p>{detalle.articuloVenta?.nombre} - {detalle.cantidad}</p>
-                                            </div>
+                                    </thead>
+                                    <tbody>
+                                        {pedidosPendientes.map((pedido, index) => (
+                                            <tr key={pedido.id}>
+                                                <td>
+                                                    <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                                    {tiempoRestante[index] > 0 && pedido.estado !== 'ENTREGADOS' ? (
+                                                        <>
+                                                            <p>El restaurante está preparando tu pedido</p>
+                                                            <p>Tiempo restante: {Math.floor(tiempoRestante[index] / 60)}:{(Math.floor(tiempoRestante[index] % 60)).toString().padStart(2, '0')}</p>
+                                                        </>
+                                                    ) : (
+                                                        <p>El pedido está listo para recoger</p>
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
+                                                        <div key={detalle.id}>
+                                                            <p>{detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} - {detalle.cantidad}</p>
+                                                        </div>
+                                                    ))}
+                                                </td>
+                                                <td>
+                                                    {pedido.estado === 'ENTRANTES' ? (
+                                                        <p>El restaurante aún no procesa el pedido</p>
+                                                    ) : pedido.estado === 'ACEPTADOS' ? (
+                                                        <p>El pedido se está preparando</p>
+                                                    ) : pedido.estado === 'COCINADOS' ? (
+                                                        <p>El pedido ya está listo</p>
+                                                    ) : pedido.estado === 'ENTREGADOS' ? (
+                                                        <p>El pedido ha sido entregado</p>
+                                                    ) : pedido.estado === 'EN_CAMINO' ? (
+                                                        <p>El pedido está en camino al domicilio</p>
+                                                    ) : pedido.estado === 'RECHAZADOS' ? (
+                                                        <p>El pedido ha sido rechazado por el restaurante</p>
+                                                    ) : pedido.estado === 'PROCESO_DE_PAGO' && (
+                                                        <p>El proceso de pago no ha finalizado correctamente</p>
+                                                    )}
+                                                </td>
+                                            </tr>
                                         ))}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
 
-        </div >
+                        {pedidosEntregados.length > 0 && (
+                            <>
+                                <h1>Tus pedidos</h1>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <th>Tipo de envío</th>
+                                            <th>Menu</th>
+                                            <th>Repetir</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {pedidosEntregados.map(pedido => (
+                                            <tr key={pedido.id}>
+                                                <td>
+                                                    <div>
+                                                        <p>{pedido.cliente?.nombre}</p>
+                                                        <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></p>
+                                                        <p>{pedido.cliente?.telefono}</p>
+                                                        <p>{pedido.cliente?.email}</p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                                </td>
+                                                <td>
+                                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
+                                                        <div key={detalle.id}>
+                                                            <p>{detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} - {detalle.cantidad}</p>
+                                                        </div>
+                                                    ))}
+                                                </td>
+                                                <td><button onClick={() => repetirPedido(pedido)}>Repetir pedido</button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </>
+                        )}
+                    </div>
+                )}
+            </div>
+            <Footer/>
+        </>
+
     )
 }
-
 export default PedidosCliente

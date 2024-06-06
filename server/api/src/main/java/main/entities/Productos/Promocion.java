@@ -23,24 +23,33 @@ public class Promocion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "nombre")
     private String nombre;
+
     @Column(name = "descripcion")
     private String descripcion;
+
     @Column(name = "fecha_desde")
     private LocalDateTime fechaDesde;
+
     @Column(name = "fecha_hasta")
     private LocalDateTime fechaHasta;
+
     @JsonIgnoreProperties(value = {"promocion"}, allowSetters = true)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "promocion", cascade = CascadeType.ALL)
     private Set<DetallePromocion> detallesPromocion = new HashSet<>();
+
     @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
-    @OneToMany(mappedBy = "promocion")
+    @ManyToMany(mappedBy = "promociones", fetch = FetchType.EAGER)
     private Set<Imagenes> imagenes = new HashSet<>();
+
     @Column(name = "precio_promocion")
     private double precio;
+
     @Column(name = "borrado")
     private String borrado = "NO";
+
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

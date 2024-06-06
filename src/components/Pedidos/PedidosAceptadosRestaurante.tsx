@@ -25,13 +25,13 @@ const PedidosAceptados = () => {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.COCINADOS), {
             loading: 'Enviando pedido al administrador...',
             success: (message) => {
+                buscarPedidos();
                 return message;
             },
             error: (message) => {
                 return message;
             },
         });
-        buscarPedidos();
     }
 
     return (

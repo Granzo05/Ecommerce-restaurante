@@ -22,24 +22,21 @@ public class DetallesPedido implements Serializable {
     @Column(name = "cantidad", nullable = false)
     private int cantidad;
 
-    @Column(name = "subtotal", nullable = false)
-    private double subTotal;
-
     @JsonIgnoreProperties({"sucursales"})
-    @ManyToOne(optional = true)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_menu")
     private ArticuloMenu articuloMenu;
 
     @JsonIgnoreProperties({"sucursales"})
-    @ManyToOne(optional = true)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
 
     @JsonIgnoreProperties({
             "factura", "cliente", "sucursales", "detallesPedido",
-            "tipoEnvio", "estado"
+            "tipoEnvio", "estado", "domicilioEntrega"
     })
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido", nullable = false)
     private Pedido pedido;
 }

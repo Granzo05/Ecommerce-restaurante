@@ -8,7 +8,7 @@ import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 
 
-const PedidosEntrantes = () => {
+const PedidosParaEntregar = () => {
     const [pedidosEntrantes, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
@@ -48,6 +48,7 @@ const PedidosEntrantes = () => {
         toast.promise(PedidoService.updateEstadoPedido(pedido, estadoPedido), {
             loading: 'Entregando el pedido...',
             success: (message) => {
+                buscarPedidos();
                 return message;
             },
             error: (message) => {
@@ -61,13 +62,13 @@ const PedidosEntrantes = () => {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
             loading: 'Rechazando el pedido...',
             success: (message) => {
+                buscarPedidos();
                 return message;
             },
             error: (message) => {
                 return message;
             },
         });
-        buscarPedidos();
     }
 
     return (
@@ -105,8 +106,7 @@ const PedidosEntrantes = () => {
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
-                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre} </p>
-                                            <p>{detalle.cantidad} - {detalle.articuloVenta?.nombre} </p>
+                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} </p>
                                         </div>
                                     ))}
                                 </td>
@@ -123,4 +123,4 @@ const PedidosEntrantes = () => {
     )
 }
 
-export default PedidosEntrantes
+export default PedidosParaEntregar

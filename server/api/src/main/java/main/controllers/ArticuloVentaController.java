@@ -1,13 +1,10 @@
 package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.IngredienteMenu;
-import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
-import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -168,8 +165,8 @@ public class ArticuloVentaController {
                     if (articuloVenta.isEmpty()) {
                         return new ResponseEntity<>("articuloVenta vacio", HttpStatus.NOT_FOUND);
                     }
-                    imagenProducto.setArticuloVenta(articuloVenta.get());
-                    imagenProducto.setSucursal(sucursalRepository.findById(idSucursal).get());
+                    imagenProducto.getArticulosVenta().add(articuloVenta.get());
+                    imagenProducto.getSucursales().add(sucursalRepository.findById(idSucursal).get());
                     imagenesRepository.save(imagenProducto);
                 }
 
@@ -221,11 +218,11 @@ public class ArticuloVentaController {
                 Optional<StockArticuloVenta> stock = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(articulo.getId(), id);
 
                 // Verificamos si hay stock
-                if(stock.isPresent() && stock.get().getCantidadActual() < stock.get().getCantidadMinima()) {
+                if (stock.isPresent() && stock.get().getCantidadActual() < stock.get().getCantidadMinima()) {
                     hayStock = false;
                 }
 
-                if(hayStock) {
+                if (hayStock) {
                     articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));
                     articulos.add(articulo);
                 }

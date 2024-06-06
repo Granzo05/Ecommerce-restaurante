@@ -20,11 +20,19 @@ public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "nombre")
     private String nombre;
+
     @Column(name = "borrado")
     private String borrado = "NO";
+
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany(mappedBy = "ingredientes", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ingredientes_sucursales",
+            joinColumns = @JoinColumn(name = "id_ingrediente"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
     private Set<Sucursal> sucursales = new HashSet<>();
 }

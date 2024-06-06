@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
 import ModalFlotante from '../ModalFlotante';
@@ -31,12 +31,17 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
-  const [categoria, setCategoria] = useState<Categoria>(menuOriginal.categoria);
+  const [categoria, setCategoria] = useState<Categoria>(new Categoria());
+  const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
   const [comensales, setComensales] = useState(menuOriginal.comensales);
   const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
   const [nombre, setNombre] = useState(menuOriginal.nombre);
   const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
-  const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
+
+  useEffect(() => {
+    setCategoria(menuOriginal.categoria);
+    setSubcategoria(menuOriginal.subcategoria);
+  }, [menuOriginal]);
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -186,6 +191,11 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       return;
     }
 
+    if (!categoria.subcategorias.find(sub => sub.nombre === subcategoria.nombre)) {
+      toast.error("Por favor, la subcategoría no corresponde a esa categoría");
+      return;
+    }
+
     for (let i = 0; i < ingredientes.length; i++) {
       const ingrediente = ingredientes[i].ingrediente;
       const cantidad = ingredientes[i].cantidad;
@@ -309,11 +319,11 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
         <span>Minutos de coccion</span>
       </div>
       <div className="input-filtrado">
-        <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+        <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
         {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
       </div>
       <div className="input-filtrado">
-        <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
+        <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
         {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
       </div>
       <div className="inputBox">

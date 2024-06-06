@@ -37,6 +37,7 @@ export default function MainMenu() {
     useEffect(() => {
         SucursalService.getSucursalDTOById(1)
             .then(async sucursal => {
+                console.log(sucursal)
                 if (sucursal) setSucursal(sucursal);
             })
             .catch(error => {
@@ -82,7 +83,7 @@ export default function MainMenu() {
                     </div>
                 </div>
             </section>
-            {sucursal && sucursal.promociones.map.length > 0 && (
+            {sucursal && sucursal.promociones?.length > 0 && (
                 <>
                     <section className='our'>
                         <div id='ofertas' className="container">
@@ -117,7 +118,7 @@ export default function MainMenu() {
                 <h2>Menús</h2>
                 <span>Categorías</span>
                 <div className="food-content">
-                    {sucursal && sucursal.categorias.length > 0 && (
+                    {sucursal && sucursal.categorias?.length > 0 && (
                         <>
                             <div className="left">
                                 {sucursal && sucursal.categorias.map((categoria, index) => {
