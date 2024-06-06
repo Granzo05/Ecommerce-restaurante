@@ -86,11 +86,11 @@ public class StockIngredientesController {
         if (stockIngrediente.isPresent()) {
             Medida medida = medidaRepository.findById(idMedida).get();
             // Si el ingrediente tiene la misma medida que el stockIngredientes almacenado entonces se calcula a la misma medida.
-            if (stockIngrediente.get().getMedida() != null && stockIngrediente.get().getMedida().equals(medida) && stockIngrediente.get().getCantidadActual() < cantidad) {
+            if (stockIngrediente.get().getMedida() != null && stockIngrediente.get().getMedida().equals(medida) && stockIngrediente.get().getCantidadActual() < cantidad || stockIngrediente.get().getCantidadActual() - cantidad <= 0) {
                 return false;
             } else if (stockIngrediente.get().getMedida().equals("Kg") && medida.equals("Gramos")) {
                 // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
-                if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad) {
+                if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad || stockIngrediente.get().getCantidadActual() * 1000 - cantidad <= 0) {
                     return false;
                 }
             }

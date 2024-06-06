@@ -41,7 +41,8 @@ public class StockArticulosController {
         Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloRepository.findByIdAndIdSucursal(idArticulo, idSucursal);
 
         if (stockArticuloVenta.isPresent()) {
-            if (stockArticuloVenta.get().getCantidadActual() < cantidad) {
+            // Si el stock actual es menor a la cantidad, o descontando la cantidad el stock es 0
+            if (stockArticuloVenta.get().getCantidadActual() < cantidad || stockArticuloVenta.get().getCantidadActual() - cantidad <= 0) {
                 return false;
             }
         }
