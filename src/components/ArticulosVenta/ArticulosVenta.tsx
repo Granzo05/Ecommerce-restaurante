@@ -119,7 +119,7 @@ const ArticuloVentas = () => {
                             {articulosVenta.length > 0 && articulosVenta.map(articulo => (
                                 <tr key={articulo.id}>
                                     <td>{articulo.nombre}</td>
-                                    <td>{articulo.cantidadMedida} {articulo.medida.nombre?.toLowerCase()}</td>
+                                    <td>{articulo.cantidadMedida} {articulo.medida.nombre?.toString().replace(/_/g, ' ')}</td>
                                     <td>${articulo.precioVenta}</td>
 
                                     {articulo.borrado === 'NO' ? (

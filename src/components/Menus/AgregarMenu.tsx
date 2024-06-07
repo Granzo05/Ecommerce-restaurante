@@ -18,9 +18,10 @@ import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteF
 import ModalCrud from '../ModalCrud';
 
 function AgregarMenu() {
-  const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
+  const [ingredientesMenu, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
+  const [precioSugerido, setPrecioSugerido] = useState<number>(0);
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -46,7 +47,7 @@ function AgregarMenu() {
 
   // Ingredientes
   const handleIngredienteChange = (index: number, ingrediente: Ingrediente) => {
-    const nuevosIngredientes = [...ingredientes];
+    const nuevosIngredientes = [...ingredientesMenu];
     if (nuevosIngredientes && nuevosIngredientes[index].ingrediente) {
       nuevosIngredientes[index].ingrediente = ingrediente;
       setIngredientes(nuevosIngredientes);
@@ -54,35 +55,53 @@ function AgregarMenu() {
   };
 
   const handleCantidadIngredienteChange = (index: number, cantidad: number) => {
-    const nuevosIngredientes = [...ingredientes];
+    const nuevosIngredientes = [...ingredientesMenu];
     nuevosIngredientes[index].cantidad = cantidad;
     setIngredientes(nuevosIngredientes);
   };
 
   const handleMedidaIngredienteChange = (index: number, medida: Medida) => {
-    const nuevosIngredientes = [...ingredientes];
+    const nuevosIngredientes = [...ingredientesMenu];
     nuevosIngredientes[index].medida = medida;
     setIngredientes(nuevosIngredientes);
   };
 
   const añadirCampoIngrediente = () => {
-    // SI no hay ingredientes que genere en valor 0 de index
-    if (ingredientes.length === 0) {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
+    // SI no hay ingredientesMenu que genere en valor 0 de index
+    if (ingredientesMenu.length === 0) {
+      setIngredientes([...ingredientesMenu, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
     } else {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
+      setIngredientes([...ingredientesMenu, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
     }
   };
 
   const quitarCampoIngrediente = (index: number) => {
-    if (ingredientes.length > 0) {
-      const nuevosIngredientes = [...ingredientes];
+    if (ingredientesMenu.length > 0) {
+      const nuevosIngredientes = [...ingredientesMenu];
       nuevosIngredientes.splice(index, 1);
       setIngredientes(nuevosIngredientes);
     } else {
       setIngredientes([]);
     }
   };
+
+  function calcularCostos() {
+    let precioRecomendado: number = 0;
+    console.log(ingredientesMenu)
+    if (ingredientesMenu[0].ingrediente?.nombre?.length > 0 && precioSugerido === 0) {
+      ingredientesMenu.forEach(ingredienteMenu => {
+        if (ingredienteMenu.medida?.nombre === ingredienteMenu.ingrediente?.stockIngrediente?.medida?.nombre) {
+          // Si coinciden las medidas, ej gramos y gramos entonces se calcula por igual
+          precioRecomendado += ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad;
+        } else if (ingredienteMenu?.medida?.nombre !== ingredienteMenu?.ingrediente?.stockIngrediente?.medida?.nombre && ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra) {
+          // Si no coinciden entonces hay que llevar la medida al mimso tipo ya que el precio se calcula por unidad de medida del stock
+          precioRecomendado += (ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad) / 1000;
+        }
+      });
+
+      setPrecioSugerido(precioRecomendado);
+    }
+  }
 
 
   // Modal flotante de ingrediente
@@ -140,13 +159,13 @@ function AgregarMenu() {
       return;
     }
 
-    for (let i = 0; i < ingredientes.length; i++) {
-      const ingrediente = ingredientes[i].ingrediente;
-      const cantidad = ingredientes[i].cantidad;
-      const medida = ingredientes[i].medida;
+    for (let i = 0; i < ingredientesMenu.length; i++) {
+      const ingrediente = ingredientesMenu[i].ingrediente;
+      const cantidad = ingredientesMenu[i].cantidad;
+      const medida = ingredientesMenu[i].medida;
 
       if (!ingrediente?.nombre || cantidad === 0 || !medida) {
-        toast.info("Por favor, los ingredientes deben contener todos los campos");
+        toast.info("Por favor, los ingredientesMenu deben contener todos los campos");
         return;
       }
     }
@@ -160,7 +179,7 @@ function AgregarMenu() {
     menu.comensales = comensales;
     menu.precioVenta = precio;
     menu.descripcion = descripcion;
-    menu.ingredientesMenu = ingredientes;
+    menu.ingredientesMenu = ingredientesMenu;
     menu.borrado = 'NO';
 
     toast.promise(MenuService.createMenu(menu, imagenes), {
@@ -179,6 +198,7 @@ function AgregarMenu() {
 
   const nextStep = () => {
     setStep(step + 1);
+    calcularCostos();
   };
 
   const prevStep = () => {
@@ -209,18 +229,11 @@ function AgregarMenu() {
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
               {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
-
             </div>
-
-
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { handleSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-              <span>Precio</span>
             </div>
             <div className="inputBox">
               <input type="number" required={true} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
@@ -240,14 +253,14 @@ function AgregarMenu() {
               <ModalCrud isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
                 <AgregarIngrediente />
               </ModalCrud>
-              {ingredientes.map((ingredienteMenu, index) => (
+              {ingredientesMenu.map((ingredienteMenu, index) => (
                 <div key={index}>
                   <hr />
                   <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
                   <h4 style={{ fontSize: '18px' }}>Ingrediente {index + 1}</h4>
                   <div>
                     <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-                    <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredientes[index].ingrediente?.nombre ?? ''} />
+                    <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredientesMenu[index].ingrediente?.nombre ?? ''} />
                     {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente); handleModalClose() }} />}
                   </div>
                   <div className="inputBox">
@@ -255,7 +268,7 @@ function AgregarMenu() {
                     <span>Cantidad necesaria</span>
                   </div>
                   <div className="input-filtrado">
-                    <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredientes[index].medida?.nombre ?? ''} />
+                    <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredientesMenu[index].medida?.nombre ?? ''} />
                     {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
                   </div>
                 </div>
@@ -276,10 +289,20 @@ function AgregarMenu() {
       case 3:
         return (
           <>
-            <h4>Paso final - Imagen</h4>
+            <h4>Paso final</h4>
+            {precioSugerido !== undefined && precioSugerido > 0 && (
+              <>
+                <p>Costo por ingredientes: ${precioSugerido}</p>
+                <input type="number" placeholder='% de ganancia buscado' onChange={(e) => setPrecio((1 + parseInt(e.target.value) / 100) * precioSugerido)} />
+              </>
+            )}
+            <div className="inputBox">
+              <input type="number" required={true} value={precio | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <span>Precio</span>
+            </div>
+
             <div>
               {imagenes.map((imagen, index) => (
-
                 <div className='inputBox' key={index}>
                   <hr />
                   <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>

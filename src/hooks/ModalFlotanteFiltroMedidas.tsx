@@ -4,7 +4,6 @@ import '../styles/modalFlotante.css'
 import '../styles/modalCrud.css'
 import { Medida } from "../types/Ingredientes/Medida";
 import { MedidaService } from "../services/MedidaService";
-import ModalFlotante from "../components/ModalFlotante";
 import AgregarMedida from "../components/Medidas/AgregarMedida";
 import ModalCrud from "../components/ModalCrud";
 

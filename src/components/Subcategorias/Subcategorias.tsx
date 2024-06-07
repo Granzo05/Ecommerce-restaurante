@@ -111,10 +111,10 @@ const Subcategorias = () => {
                         <tbody>
                             {categorias.map(categoria => (
                                 <tr key={categoria.id}>
-                                    <td>{categoria.nombre}</td>
+                                    <td>{categoria.nombre.toString().replace(/_/g, ' ')}</td>
                                     {categoria.subcategorias.map(subcategoria => (
                                         <tr key={subcategoria.id}>
-                                            <td>{subcategoria.nombre}</td>
+                                            <td>{subcategoria.nombre.toString().replace(/_/g, ' ')}</td>
                                             {subcategoria.borrado === 'NO' ? (
                                                 <td>
                                                     <div className="btns-acciones">

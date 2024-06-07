@@ -3,7 +3,6 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockIngredientes;
 import main.repositories.IngredienteRepository;
 import main.repositories.MedidaRepository;
 import main.repositories.StockIngredientesRepository;
@@ -72,25 +71,9 @@ public class IngredienteController {
                 }
             }
 
-            Ingrediente ingrediente = ingredienteRepository.save(ingredienteDetails);
+            ingredienteDetails.setBorrado("NO");
 
-            if (idSucursal == 1) {
-                StockIngredientes stockIngredientes = new StockIngredientes();
-
-                stockIngredientes.setCantidadActual(0);
-                stockIngredientes.setCantidadMinima(0);
-                stockIngredientes.setCantidadMaxima(0);
-                stockIngredientes.setPrecioCompra(0);
-                stockIngredientes.setIngrediente(ingrediente);
-                stockIngredientes.setBorrado("NO");
-
-                for (Sucursal sucursal : sucursalRepository.findAll()) {
-                    stockIngredientes.getSucursales().add(sucursal);
-                    sucursal.getStocksIngredientes().add(stockIngredientes);
-                }
-
-                stockIngredientesRepository.save(stockIngredientes);
-            }
+            ingredienteRepository.save(ingredienteDetails);
 
             return new ResponseEntity<>("El ingrediente ha sido añadido correctamente", HttpStatus.OK);
         } else {

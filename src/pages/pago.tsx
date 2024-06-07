@@ -117,55 +117,60 @@ const Pago = () => {
             }
         }
 
-        if (hayStock) {
-            let pedido = new Pedido();
-            if (cliente) pedido.cliente = cliente;
-            pedido.tipoEnvio = envio;
+        if (cliente && cliente?.email?.length > 0) {
 
-            let detalles: DetallesPedido[] = [];
+            if (hayStock) {
+                let pedido = new Pedido();
+                if (cliente) pedido.cliente = cliente;
+                pedido.tipoEnvio = envio;
 
-            carrito?.articuloMenu?.forEach(producto => {
-                let detalle = new DetallesPedido();
-                detalle.articuloMenu = producto;
-                detalle.cantidad = producto.cantidad;
-                detalle.subTotal = producto.cantidad * producto.precioVenta;
-                detalles.push(detalle);
-            });
+                let detalles: DetallesPedido[] = [];
 
-            carrito?.articuloVenta?.forEach(producto => {
-                let detalle = new DetallesPedido();
-                detalle.articuloVenta = producto;
-                detalle.cantidad = producto.cantidad;
-                detalle.subTotal = producto.cantidad * producto.precioVenta;
-                detalles.push(detalle);
-            });
+                carrito?.articuloMenu?.forEach(producto => {
+                    let detalle = new DetallesPedido();
+                    detalle.articuloMenu = producto;
+                    detalle.cantidad = producto.cantidad;
+                    detalle.subTotal = producto.cantidad * producto.precioVenta;
+                    detalles.push(detalle);
+                });
 
-            pedido.factura = null;
-            pedido.detallesPedido = detalles;
-            pedido.estado = EnumEstadoPedido.ENTRANTES;
-            pedido.borrado = 'NO';
+                carrito?.articuloVenta?.forEach(producto => {
+                    let detalle = new DetallesPedido();
+                    detalle.articuloVenta = producto;
+                    detalle.cantidad = producto.cantidad;
+                    detalle.subTotal = producto.cantidad * producto.precioVenta;
+                    detalles.push(detalle);
+                });
 
-            if (envio === EnumTipoEnvio.RETIRO_EN_TIENDA) {
-                pedido.domicilioEntrega = null;
+                pedido.factura = null;
+                pedido.detallesPedido = detalles;
+                pedido.estado = EnumEstadoPedido.ENTRANTES;
+                pedido.borrado = 'NO';
+
+                if (envio === EnumTipoEnvio.RETIRO_EN_TIENDA) {
+                    pedido.domicilioEntrega = null;
+                }
+
+                if (preferenceId) {
+                    console.log(preferenceId)
+                    PedidoService.eliminarPedidoFallido(preferenceId);
+                }
+
+                toast.promise(PedidoService.crearPedido(pedido), {
+                    loading: 'Creando pedido...',
+                    success: (message) => {
+                        CarritoService.limpiarCarrito();
+                        return message;
+                    },
+                    error: (message) => {
+                        return message;
+                    },
+                });
+            } else {
+                toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
             }
-
-            if (preferenceId) {
-                console.log(preferenceId)
-                PedidoService.eliminarPedidoFallido(preferenceId);
-            }
-
-            toast.promise(PedidoService.crearPedido(pedido), {
-                loading: 'Creando pedido...',
-                success: (message) => {
-                    CarritoService.limpiarCarrito();
-                    return message;
-                },
-                error: (message) => {
-                    return message;
-                },
-            });
         } else {
-            toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
+            toast.error('Debe estar logueado para realizar su pedido');
         }
     }
 
@@ -202,44 +207,48 @@ const Pago = () => {
                 }
             }
 
-            if (hayStock) {
-                if (preferenceId === null && domicilio) {
-                    let pedido = new Pedido();
-                    if (cliente) pedido.cliente = cliente;
-                    pedido.tipoEnvio = envio;
+            if (cliente && cliente?.email?.length > 0) {
+                if (hayStock) {
+                    if (preferenceId === null && domicilio) {
+                        let pedido = new Pedido();
+                        if (cliente) pedido.cliente = cliente;
+                        pedido.tipoEnvio = envio;
 
-                    let detalles: DetallesPedido[] = [];
+                        let detalles: DetallesPedido[] = [];
 
-                    carrito?.articuloMenu?.forEach(producto => {
-                        let detalle = new DetallesPedido();
-                        detalle.articuloMenu = producto;
-                        detalle.cantidad = producto.cantidad;
-                        detalle.subTotal = producto.cantidad * producto.precioVenta;
-                        detalles.push(detalle);
-                    });
+                        carrito?.articuloMenu?.forEach(producto => {
+                            let detalle = new DetallesPedido();
+                            detalle.articuloMenu = producto;
+                            detalle.cantidad = producto.cantidad;
+                            detalle.subTotal = producto.cantidad * producto.precioVenta;
+                            detalles.push(detalle);
+                        });
 
-                    carrito?.articuloVenta?.forEach(producto => {
-                        let detalle = new DetallesPedido();
-                        detalle.articuloVenta = producto;
-                        detalle.cantidad = producto.cantidad;
-                        detalle.subTotal = producto.cantidad * producto.precioVenta;
-                        detalles.push(detalle);
-                    });
+                        carrito?.articuloVenta?.forEach(producto => {
+                            let detalle = new DetallesPedido();
+                            detalle.articuloVenta = producto;
+                            detalle.cantidad = producto.cantidad;
+                            detalle.subTotal = producto.cantidad * producto.precioVenta;
+                            detalles.push(detalle);
+                        });
 
-                    pedido.factura = null;
-                    pedido.detallesPedido = detalles;
-                    pedido.borrado = 'NO';
+                        pedido.factura = null;
+                        pedido.detallesPedido = detalles;
+                        pedido.borrado = 'NO';
 
-                    pedido.domicilioEntrega = domicilio;
+                        pedido.domicilioEntrega = domicilio;
 
-                    let preference = await PedidoService.crearPedidoMercadopago(pedido);
+                        let preference = await PedidoService.crearPedidoMercadopago(pedido);
 
-                    setPreferenceId(preference.id);
+                        setPreferenceId(preference.id);
+                    } else {
+                        setPreferenceId(preferenceId);
+                    }
                 } else {
-                    setPreferenceId(preferenceId);
+                    toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
                 }
             } else {
-                toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
+                toast.error('Debe estar logueado para realizar su pedido');
             }
         }
 
@@ -251,7 +260,7 @@ const Pago = () => {
 
     return (
         <>
-            <Header/>
+            <Header />
             <div className="container-pago">
                 <Toaster />
                 <div className="div-pago">
@@ -356,7 +365,7 @@ const Pago = () => {
                     )}
                 </div>
             </div >
-            <Footer/>
+            <Footer />
         </>
     )
 }

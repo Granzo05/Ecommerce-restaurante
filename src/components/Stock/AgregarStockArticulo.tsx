@@ -67,7 +67,7 @@ function AgregarStockArticulo() {
     stock.cantidadMaxima = cantidadMaxima;
     stock.precioCompra = precio;
     stock.borrado = 'NO';
-    console.log(stock)
+
     toast.promise(StockArticuloVentaService.createStock(stock), {
       loading: 'Creando stock...',
       success: (message) => {

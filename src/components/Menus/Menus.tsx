@@ -127,7 +127,7 @@ const Menus = () => {
                                     <td>
                                         {menu.ingredientesMenu?.map((ingrediente, index) => (
                                             <span key={index}>
-                                                {ingrediente.ingrediente.nombre} - {ingrediente.cantidad} {ingrediente.medida.nombre}<br />
+                                                {ingrediente.ingrediente.nombre} - {ingrediente.cantidad} {ingrediente.medida.nombre.toString().replace(/_/g, ' ')}<br />
                                             </span>
                                         ))}
                                     </td>

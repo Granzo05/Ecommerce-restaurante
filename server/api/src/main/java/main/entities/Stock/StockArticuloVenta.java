@@ -46,7 +46,7 @@ public class StockArticuloVenta implements Serializable {
     private String borrado = "NO";
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
 

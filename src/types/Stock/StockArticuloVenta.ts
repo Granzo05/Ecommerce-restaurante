@@ -1,12 +1,16 @@
+import { Medida } from "../Ingredientes/Medida";
 import { ArticuloVenta } from "../Productos/ArticuloVenta";
-import { Stock } from "./Stock";
 
-export class StockArticuloVenta extends Stock {
+export class StockArticuloVenta {
     id: number = 0;
     articuloVenta: ArticuloVenta = new ArticuloVenta();
+    precioCompra: number = 0;
+    cantidadActual: number = 0;
+    cantidadMinima: number = 0;
+    cantidadMaxima: number = 0;
+    medida: Medida | null = null;
     borrado: string = '';
 
     constructor() {
-        super();
     }
 }

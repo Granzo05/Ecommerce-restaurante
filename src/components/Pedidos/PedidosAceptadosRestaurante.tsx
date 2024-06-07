@@ -52,16 +52,11 @@ const PedidosAceptados = () => {
                     <tbody>
                         {PedidosAceptados.map(pedido => (
                             <tr key={pedido.id}>
-                                <td>{pedido.tipoEnvio}</td>
+                                <td>{pedido.tipoEnvio.toString().replace(/_/g, ' ')}</td>
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
-                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
-                                        </div>
-                                    ))}
-                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                        <div key={detalle.id}>
-                                            <p>{detalle.articuloMenu?.nombre} - {detalle.cantidad}</p>
+                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} </p>
                                         </div>
                                     ))}
                                 </td>

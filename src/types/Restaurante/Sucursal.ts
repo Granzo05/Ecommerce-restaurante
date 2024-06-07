@@ -4,6 +4,7 @@ import { ArticuloMenu } from "../Productos/ArticuloMenu";
 import { ArticuloVenta } from "../Productos/ArticuloVenta";
 import { Imagenes } from "../Productos/Imagenes";
 import { Promocion } from "../Productos/Promocion";
+import { Empresa } from "./Empresa";
 import { LocalidadDelivery } from "./LocalidadDelivery";
 
 export class Sucursal {
@@ -20,6 +21,7 @@ export class Sucursal {
     promociones: Promocion[] = [];
     articulosMenu: ArticuloMenu[] = [];
     articulosVenta: ArticuloVenta[] = [];
+    empresa: Empresa = new Empresa();
     categorias: Categoria[] = [];
     imagenes: Imagenes[] = [];
     borrado: string = '';

@@ -23,7 +23,7 @@ public class StockIngredientes {
     private Long id;
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_ingrediente")
     private Ingrediente ingrediente;
 

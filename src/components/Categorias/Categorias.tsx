@@ -113,7 +113,7 @@ const Categorias = () => {
                         <tbody>
                             {categorias.map(categoria => (
                                 <tr key={categoria.id}>
-                                    <td>{categoria.nombre}</td>
+                                    <td>{categoria.nombre.toString().replace(/_/g, ' ')}</td>
 
                                     {categoria.borrado === 'NO' ? (
                                         <td>

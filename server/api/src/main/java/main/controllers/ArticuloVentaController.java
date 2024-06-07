@@ -57,8 +57,8 @@ public class ArticuloVentaController {
         if (categoriaDB.isPresent()) {
             List<ArticuloVenta> articulos = articuloVentaRepository.findByCategoriaNameAndIdSucursal(categoriaDB.get().getNombre(), idSucursal);
 
-            for (ArticuloVenta menu : articulos) {
-                menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
+            for (ArticuloVenta articulo : articulos) {
+                articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));
             }
 
             return new HashSet<>(articulos);
@@ -98,25 +98,7 @@ public class ArticuloVentaController {
                 }
             }
 
-            ArticuloVenta articulo = articuloVentaRepository.save(articuloVenta);
-
-            if (idSucursal == 1) {
-                StockArticuloVenta stockArticuloVenta = new StockArticuloVenta();
-                stockArticuloVenta.setCantidadActual(0);
-                stockArticuloVenta.setCantidadMinima(0);
-                stockArticuloVenta.setCantidadMaxima(0);
-                stockArticuloVenta.setPrecioCompra(0);
-                stockArticuloVenta.setArticuloVenta(articulo);
-                stockArticuloVenta.setBorrado("NO");
-
-                StockArticuloVenta stock = stockArticuloVentaRepository.save(stockArticuloVenta);
-
-                for (Sucursal sucursal : sucursalRepository.findAll()) {
-                    stock.getSucursales().add(sucursal);
-                    sucursal.getStocksArticulo().add(stock);
-                    sucursalRepository.save(sucursal); // Save the changes to the sucursales
-                }
-            }
+            articuloVentaRepository.save(articuloVenta);
 
             return new ResponseEntity<>("El artículo ha sido añadido correctamente", HttpStatus.OK);
         } else {

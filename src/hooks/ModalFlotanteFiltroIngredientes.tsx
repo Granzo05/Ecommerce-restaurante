@@ -4,6 +4,8 @@ import '../styles/modalFlotante.css'
 import '../styles/modalCrud.css'
 import { Ingrediente } from "../types/Ingredientes/Ingrediente";
 import { IngredienteService } from "../services/IngredienteService";
+import ModalCrud from "../components/ModalCrud";
+import AgregarIngrediente from "../components/Ingrediente/AgregarIngrediente";
 
 const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => void, onSelectIngrediente: (ingrediente: Ingrediente) => void }> = ({ onCloseModal, onSelectIngrediente }) => {
   const handleModalClose = () => {
@@ -16,6 +18,10 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
   const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Ingrediente[]>([]);
 
   useEffect(() => {
+    buscarIngredientes();
+  }, []);
+
+  async function buscarIngredientes() {
     IngredienteService.getIngredientes()
       .then(async ingredientes => {
         setRecomendaciones(ingredientes);
@@ -24,7 +30,7 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
       .catch(error => {
         console.error('Error:', error);
       })
-  }, []);
+  }
 
   function filtrarRecomendaciones(filtro: string) {
     if (filtro.length > 0) {
@@ -34,13 +40,22 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
     }
   }
 
+  const [showAgregarModalIngrediente, setShowAgregarModalIngrediente] = useState(false);
+
+  const handleAgregarIngrediente = () => {
+    setShowAgregarModalIngrediente(true);
+  };
+
   return (
     <div>
       <div className="modal-overlay">
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-
+          <ModalCrud isOpen={showAgregarModalIngrediente} onClose={buscarIngredientes}>
+            <AgregarIngrediente />
+          </ModalCrud>
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
+          <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
           <h2>&mdash; Filtrar ingredientes &mdash;</h2>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />

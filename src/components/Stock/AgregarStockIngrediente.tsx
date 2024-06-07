@@ -90,7 +90,6 @@ function AgregarStockIngrediente() {
       },
     });
 
-
   }
 
   return (
@@ -101,7 +100,6 @@ function AgregarStockIngrediente() {
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
         {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
-
       </div>
 
       <label>
@@ -129,7 +127,7 @@ function AgregarStockIngrediente() {
 
       <div className="inputBox">
         <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-        <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
+        <span>Costo del ingrediente por una unidad de medida ($)</span>
       </div>
       <hr />
       <button onClick={crearStockIngrediente}>Agregar</button>

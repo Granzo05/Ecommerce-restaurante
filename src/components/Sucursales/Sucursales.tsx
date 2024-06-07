@@ -78,7 +78,7 @@ const Sucursales = () => {
             <h1>- Sucursales -</h1>
             <div className="btns-sucursales">
 
-            <button className="btn-agregar" onClick={() => handleAgregarSucursal()}> + Agregar sucursal</button>
+                <button className="btn-agregar" onClick={() => handleAgregarSucursal()}> + Agregar sucursal</button>
             </div>
             <hr />
             <ModalCrud isOpen={showAgregarSucursalModal} onClose={handleModalClose}>
@@ -99,28 +99,26 @@ const Sucursales = () => {
                         <tbody>
                             {sucursales.map(sucursal => (
                                 <tr key={sucursal.id}>
-                                    <td>Buen sabor de {sucursal.domicilio?.localidad?.nombre}, {sucursal.domicilio?.localidad?.departamento?.provincia?.nombre}</td>
+                                    <td>{sucursal.empresa.nombre} de {sucursal.domicilio?.localidad?.nombre}, {sucursal.domicilio?.localidad?.departamento?.provincia?.nombre}</td>
                                     <td>{sucursal.telefono}</td>
                                     <td>{sucursal.horarioApertura}</td>
                                     <td>{sucursal.horarioCierre}</td>
                                     {sucursal.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                            <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
-                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarSucursal(sucursal)}>ELIMINAR</button>
+                                                <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                                <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
+                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarSucursal(sucursal)}>ELIMINAR</button>
                                             </div>
-                                            
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                            <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
-                                            <button className="btn-accion-activar" onClick={() => handleActivarSucursal(sucursal)}>ACTIVAR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
-                                            
+                                                <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                                <button className="btn-accion-activar" onClick={() => handleActivarSucursal(sucursal)}>ACTIVAR</button>
+                                                <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
+
                                             </div>
-                                            
                                         </td>
                                     )}
                                 </tr>

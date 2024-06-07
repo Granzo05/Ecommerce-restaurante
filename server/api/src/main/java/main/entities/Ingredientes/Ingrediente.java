@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockIngredientes;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,4 +36,8 @@ public class Ingrediente {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"ingrediente", "sucursales"}, allowSetters = true)
+    @ManyToOne
+    private StockIngredientes stockIngrediente;
 }

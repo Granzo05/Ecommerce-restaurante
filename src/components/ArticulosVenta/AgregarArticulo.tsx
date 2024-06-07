@@ -11,10 +11,17 @@ import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltro
 import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFiltroCategorias';
 import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
+import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
+import { StockArticuloVentaService } from '../../services/StockArticulosService';
 
 function AgregarArticuloVenta() {
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
+  const [cantidadActual, setCantidadActual] = useState(0);
+  const [cantidadMinima, setCantidadMinima] = useState(0);
+  const [cantidadMaxima, setCantidadMaxima] = useState(0);
+  const [precioStock, setPrecioStock] = useState(0);
+  const [medidaStock, setMedidaStock] = useState<Medida>(new Medida());
 
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
@@ -45,7 +52,7 @@ function AgregarArticuloVenta() {
   const [precio, setPrecio] = useState(0);
   const [nombre, setNombre] = useState('');
   const [medida, setMedida] = useState<Medida>(new Medida);
-  const [cantidad, setCantidad] = useState(0);
+  const [cantidadMedida, setCantidadMedida] = useState(0);
 
   async function agregarArticulo() {
     if (imagenes.length === 0) {
@@ -63,9 +70,37 @@ function AgregarArticuloVenta() {
     } else if (!medida) {
       toast.error("Por favor, es necesaria la medida");
       return;
-    } else if (!cantidad) {
-      toast.error("Por favor, es necesaria la cantidad");
+    } else if (!cantidadMedida) {
+      toast.error("Por favor, es necesaria la cantidad de la medida del artículo");
       return;
+    }
+
+    if (cantidadMinima > 0 || cantidadActual > 0 || cantidadMaxima > 0 || medidaStock.nombre.length > 0 || precioStock > 0) {
+      if (!cantidadMinima || cantidadMinima < 0) {
+        toast.error("Por favor, los datos con opcionales en conjunto, es necesaria la cantidad mínima");
+        return;
+      } else if (!cantidadMaxima || cantidadMaxima < 0) {
+        toast.error("Por favor, los datos con opcionales en conjunto, es necesaria la cantidad máxima");
+        return;
+      } else if (!cantidadActual || cantidadActual < 0) {
+        toast.error("Por favor, los datos con opcionales en conjunto, es necesaria la cantidad actual");
+        return;
+      } else if (cantidadActual > cantidadMaxima) {
+        toast.error("Por favor, los datos con opcionales en conjunto, la cantidad actual no puede ser mayor a la maxima");
+        return;
+      } else if (cantidadActual < cantidadMinima) {
+        toast.error("Por favor, los datos con opcionales en conjunto, la cantidad actual no puede ser menor a la minima");
+        return;
+      } else if (!medidaStock) {
+        toast.error("Por favor, los datos con opcionales en conjunto, es necesario la medida");
+        return;
+      } else if (!precioStock || precioStock < 0) {
+        toast.error("Por favor, los datos con opcionales en conjunto, es necesario el precio del ingrediente");
+        return;
+      } else if (cantidadMaxima < cantidadMinima) {
+        toast.error("Por favor, los datos con opcionales en conjunto, la cantidad mínima no puede ser mayor a la máxima");
+        return;
+      }
     }
 
     const articulo: ArticuloVenta = new ArticuloVenta();
@@ -74,13 +109,28 @@ function AgregarArticuloVenta() {
     articulo.categoria = categoria;
     articulo.precioVenta = precio;
     articulo.medida = medida;
-    articulo.cantidadMedida = cantidad;
+    articulo.cantidadMedida = cantidadMedida;
     articulo.borrado = 'NO';
     articulo.subcategoria = subcategoria;
+
+    const stockArticuloVenta: StockArticuloVenta = new StockArticuloVenta();
+
+    stockArticuloVenta.cantidadActual = cantidadActual;
+    stockArticuloVenta.cantidadMinima = cantidadMinima;
+    stockArticuloVenta.cantidadMaxima = cantidadMaxima;
+    stockArticuloVenta.precioCompra = precioStock;
+
+    stockArticuloVenta.medida = medidaStock;
+
+    let articuloStock: ArticuloVenta = new ArticuloVenta();
+    articuloStock.nombre = articulo.nombre;
+
+    stockArticuloVenta.articuloVenta = articuloStock;
 
     toast.promise(ArticuloVentaService.createArticulo(articulo, imagenes), {
       loading: 'Creando articulo...',
       success: (message) => {
+        StockArticuloVentaService.createStock(stockArticuloVenta);
         return message;
       },
       error: (message) => {
@@ -117,14 +167,14 @@ function AgregarArticuloVenta() {
       case 1:
         return (
           <>
-          <h4>Paso 1 - Datos</h4>
+            <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
               <hr />
-              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del articulo</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
+              <input type="number" required={true} value={precio} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
               <span>Precio ($)</span>
             </div>
             <div>
@@ -143,7 +193,7 @@ function AgregarArticuloVenta() {
               {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
             </div>
             <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => setCantidad(parseFloat(e.target.value))} />
+              <input type="number" required={true} value={cantidadMedida} onChange={(e) => setCantidadMedida(parseFloat(e.target.value))} />
               <span>Cantidad de la medida</span>
             </div>
             <div className="btns-pasos">
@@ -154,21 +204,30 @@ function AgregarArticuloVenta() {
       case 2:
         return (
           <>
-          <h4>Paso final - Imagen</h4>
+            <h4>Paso final - Imagen</h4>
             <div >
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
                   <hr />
-                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-                  <h4 style={{fontSize: '18px'}}>Imagen {index+1}</h4>
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                  <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
                   <br />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    maxLength={10048576}
-                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-                  />
-
+                  <div className="file-input-wrapper">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`}
+                      className="file-input"
+                      onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                    />
+                    <label htmlFor={`file-input-${index}`} className="file-input-label">
+                      {imagen.file ? (
+                        <p>Archivo seleccionado: {imagen.file.name}</p>
+                      ) : (
+                        <p>Seleccionar un archivo</p>
+                      )}
+                    </label>
+                  </div>
                 </div>
               ))}
 
@@ -177,8 +236,46 @@ function AgregarArticuloVenta() {
             <br />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Agregar stock ⭢</button>
               <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
-              
+
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h4>Paso opcional - Stock</h4>
+            <label>
+              <div className="inputBox">
+                <input type="number" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+                <span>Cantidad mínima del articulo (opcional)</span>
+              </div>
+            </label>
+            <label>
+              <div className="inputBox">
+                <input type="number" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+                <span>Cantidad máxima del articulo (opcional)</span>
+              </div>
+            </label>
+            <label>
+              <div className="inputBox">
+                <input type="number" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+                <span>Cantidad actual del articulo (opcional)</span>
+              </div>
+            </label>
+            <label>
+              <div className="inputBox">
+                <input type="number" required onChange={(e) => { setPrecioStock(parseFloat(e.target.value)) }} />
+                <span>Costo por unidad ($) (opcional)</span>
+              </div>
+            </label>
+            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medidaStock.nombre ?? ''} />
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedidaStock(medida); handleModalClose(); }} />}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
+
             </div>
           </>
         );

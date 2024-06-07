@@ -120,22 +120,19 @@ public class StockIngredientesController {
 
         // Si no hay stock creado entonces necesitamos recuperar el ingrediente creado
         if (stockIngrediente.isEmpty()) {
-            StockIngredientes stock = new StockIngredientes();
-
             stockDetail.setIngrediente(ingrediente);
 
-            stock.setCantidadMinima(stockDetail.getCantidadMinima());
-            stock.setCantidadMaxima(stockDetail.getCantidadMaxima());
-            stock.setCantidadActual(stockDetail.getCantidadActual());
-            stock.setPrecioCompra(stockDetail.getPrecioCompra());
-            stock.setMedida(stockDetail.getMedida());
-
-            stock.setIngrediente(ingrediente);
+            ingrediente.setStockIngrediente(stockDetail);
 
             Sucursal sucursal = sucursalRepository.findById(id).get();
-            stock.getSucursales().add(sucursal);
 
-            stockIngredientesRepository.save(stock);
+            stockDetail.getSucursales().add(sucursal);
+
+            if (stockDetail.getMedida().getNombre().isEmpty()) {
+                stockDetail.setMedida(medidaRepository.findById(1l).get());
+            }
+
+            stockIngredientesRepository.save(stockDetail);
 
             return ResponseEntity.ok("El stock del ingrediente ha sido añadido correctamente");
         }

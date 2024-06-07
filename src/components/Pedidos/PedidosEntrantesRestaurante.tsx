@@ -92,6 +92,17 @@ const PedidosEntrantes = () => {
         buscarPedidos();
     }
 
+    const parseDate = (dateOriginal: string) => {
+        const date = new Date(dateOriginal);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+
+        return `${day}/${month}/${year}  ${hours}:${minutes}`
+    };
+
     return (
 
         <div className="opciones-pantallas">
@@ -118,7 +129,7 @@ const PedidosEntrantes = () => {
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
 
-                                        <p>{pedido.fechaPedido.toString()}</p>
+                                        <p>{parseDate(pedido.fechaPedido.toString())}</p>
                                     </div>
                                 </td>
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
@@ -135,7 +146,7 @@ const PedidosEntrantes = () => {
                                 <td>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
-                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre} {detalle.articuloVenta?.nombre} </p>
+                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} </p>
                                         </div>
                                     ))}
                                 </td>

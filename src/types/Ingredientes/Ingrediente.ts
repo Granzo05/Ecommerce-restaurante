@@ -1,3 +1,4 @@
+import { StockIngredientes } from "../Stock/StockIngredientes";
 import { Medida } from "./Medida";
 
 export class Ingrediente {
@@ -5,7 +6,8 @@ export class Ingrediente {
     nombre: string = '';
     medida: Medida = new Medida();
     borrado: string = '';
-    
+    stockIngrediente: StockIngredientes | null = null;
+
     constructor() {
     }
 }

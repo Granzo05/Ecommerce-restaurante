@@ -110,7 +110,7 @@ const Medidas = () => {
                         <tbody>
                             {medidas.map(medida => (
                                 <tr key={medida.id}>
-                                    <td>{medida.nombre}</td>
+                                    <td>{medida.nombre.toString().replace(/_/g, ' ')}</td>
 
                                     {medida.borrado === 'NO' ? (
                                         <td>

@@ -149,7 +149,6 @@ public class PedidoController {
     @Transactional
     @PostMapping("/pedido/create/{idSucursal}")
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
-
         Optional<Pedido> pedidoDB = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
 
         if (pedidoDB.isEmpty()) {
@@ -429,14 +428,13 @@ public class PedidoController {
 
             for (DetallesPedido detalle : pedido.getDetallesPedido()) {
                 // Agregar cada detalle como una fila en la tabla
-                table.addCell(detalle.getArticuloMenu().getNombre());
-                table.addCell(String.valueOf(detalle.getCantidad()));
                 if (detalle.getArticuloVenta() != null) {
+                    table.addCell(detalle.getArticuloVenta().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta()));
                 } else if (detalle.getArticuloMenu() != null) {
+                    table.addCell(detalle.getArticuloMenu().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta()));
                 }
-
             }
 
             document.add(table);

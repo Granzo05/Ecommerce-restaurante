@@ -3,10 +3,7 @@ package main.controllers;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
-import main.repositories.ArticuloVentaRepository;
-import main.repositories.IngredienteRepository;
-import main.repositories.StockArticuloVentaRepository;
-import main.repositories.SucursalRepository;
+import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +18,14 @@ public class StockArticulosController {
     private final IngredienteRepository ingredienteRepository;
     private final ArticuloVentaRepository articuloVentaRepository;
     private final SucursalRepository sucursalRepository;
+    private final MedidaRepository medidaRepository;
 
-    public StockArticulosController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository) {
+    public StockArticulosController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, MedidaRepository medidaRepository) {
         this.stockArticuloRepository = stockArticuloRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.articuloVentaRepository = articuloVentaRepository;
         this.sucursalRepository = sucursalRepository;
+        this.medidaRepository = medidaRepository;
     }
 
     @CrossOrigin
@@ -55,7 +54,6 @@ public class StockArticulosController {
     @CrossOrigin
     @PostMapping("/sucursal/{idSucursal}/stockArticuloVenta/create")
     public ResponseEntity<String> crearStock(@RequestBody StockArticuloVenta stockDetail, @PathVariable("idSucursal") long id) {
-        System.out.println(stockDetail);
         Optional<ArticuloVenta> articuloDB = articuloVentaRepository.findByName(stockDetail.getArticuloVenta().getNombre());
 
         if (articuloDB.isPresent()) {
@@ -64,20 +62,21 @@ public class StockArticulosController {
 
             // Si no hay stockArticuloVenta del producto cargado, entonces creamos uno nuevo. Caso contrario utilizamos y editamos el que ya está cargado en la base de datos
             if (stockArticuloDB.isEmpty()) {
-                StockArticuloVenta stock = new StockArticuloVenta();
-
-                stock.setCantidadMinima(stockDetail.getCantidadMinima());
-                stock.setCantidadMaxima(stockDetail.getCantidadMaxima());
-                stock.setCantidadActual(stockDetail.getCantidadActual());
-                stock.setPrecioCompra(stockDetail.getPrecioCompra());
-                stock.setMedida(stockDetail.getMedida());
-
                 ArticuloVenta articulo = articuloVentaRepository.findByName(stockDetail.getArticuloVenta().getNombre()).get();
-                stock.setArticuloVenta(articulo);
-                Sucursal sucursal = sucursalRepository.findById(id).get();
-                stock.getSucursales().add(sucursal);
 
-                stockArticuloRepository.save(stock);
+                stockDetail.setArticuloVenta(articulo);
+
+                articulo.setStockArticuloVenta(stockDetail);
+
+                Sucursal sucursal = sucursalRepository.findById(id).get();
+
+                stockDetail.getSucursales().add(sucursal);
+
+                if (stockDetail.getMedida().getNombre().isEmpty()) {
+                    stockDetail.setMedida(medidaRepository.findById(1l).get());
+                }
+
+                stockArticuloRepository.save(stockDetail);
 
                 return new ResponseEntity<>("El stockArticuloVenta ha sido añadido correctamente", HttpStatus.CREATED);
             } else {

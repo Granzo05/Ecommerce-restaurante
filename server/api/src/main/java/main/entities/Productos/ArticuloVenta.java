@@ -7,6 +7,7 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.Subcategoria;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockArticuloVenta;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -56,11 +57,15 @@ public class ArticuloVenta implements Serializable {
     private String borrado = "NO";
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "articulos_venta_sucursales",
             joinColumns = @JoinColumn(name = "id_articulo"),
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"articuloVenta", "sucursales"}, allowSetters = true)
+    @ManyToOne
+    private StockArticuloVenta stockArticuloVenta;
 }
