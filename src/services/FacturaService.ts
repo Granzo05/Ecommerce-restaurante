@@ -25,7 +25,7 @@ export const FacturaService = {
         }
     },
 
-    getBill: async (userId: number): Promise<Factura[]> => {
+    getFactura: async (userId: number): Promise<Factura[]> => {
         try {
             const response = await fetch(URL_API + `facturas/cliente/${userId}`, {
                 method: 'GET',
@@ -48,11 +48,33 @@ export const FacturaService = {
     },
 
 
-    getPDFBill: async (orderId: number): Promise<Uint8Array> => {
-        // Hacemos la peticion del pdf
-        const response = await fetch(`/ api / pdf / bill / ${orderId} / pdf`);
-        // La llamada devuelve un array de bytes, los cuales transformamos para que pueda ser leído
-        const byteArray = await response.arrayBuffer();
-        return new Uint8Array(byteArray);
+    getPdfFactura: async (idPedido: number) => {
+        try {
+            const response = await fetch(URL_API + `pdf/factura/${idPedido}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `factura_${idPedido}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
     }
 }

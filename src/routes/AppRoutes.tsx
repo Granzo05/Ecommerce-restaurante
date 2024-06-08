@@ -1,12 +1,13 @@
 import { lazy, Suspense } from "react"
 import { Route, Routes } from "react-router-dom"
 import MainMenu from "../pages/HomePage";
-import Opciones from "../pages/opciones";
-import OpcionesCliente from "../pages/opcionesCliente";
+const Opciones = lazy(() => import('../pages/opciones'));
+const OpcionesCliente = lazy(() => import('../pages/opcionesCliente'));
 const LoginNegocio = lazy(() => import('../pages/loginRestaurante'));
 const LoginCliente = lazy(() => import('../pages/loginCliente'));
 const Pago = lazy(() => import('../pages/pago'));
-const PedidosCliente = lazy(() => import('../pages/pedidosCliente'));
+const PedidosPendientes = lazy(() => import('../components/Cliente/PedidosPendientes'));
+const PedidosRealizados = lazy(() => import('../components/Cliente/PedidosRealizados'));
 const CambioContra = lazy(() => import('../components/PasswordResetForm'));
 const Menu = lazy(() => import('../pages/menu'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
@@ -46,7 +47,10 @@ const AppRoutes: React.FC = () => {
         <Route path="/cliente" element={<OpcionesCliente />}>
         </Route>
 
-        <Route path="/cliente/pedidos" element={<PedidosCliente />}>
+        <Route path="/cliente/pedidos-pendientes" element={<PedidosPendientes />}>
+        </Route>
+
+        <Route path="/cliente/pedidos-realizados" element={<PedidosRealizados />}>
         </Route>
 
         <Route path="/cliente/preferencias" element={<Preferencias />}>

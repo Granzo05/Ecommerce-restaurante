@@ -4,6 +4,8 @@ import { Pedido } from '../../types/Pedidos/Pedido';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
+import FacturaIMG from '../../assets/icons/facturas.png'
+import { FacturaService } from '../../services/FacturaService';
 
 const PedidosEntregados = () => {
     const [pedidosEntregados, setPedidos] = useState<Pedido[]>([]);
@@ -33,6 +35,9 @@ const PedidosEntregados = () => {
             });
     }
 
+    async function descargarFactura(idPedido: number) {
+        await FacturaService.getPdfFactura(idPedido);
+    }
 
     return (
 
@@ -45,7 +50,7 @@ const PedidosEntregados = () => {
                         <tr>
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
-                            <th>Menu</th>
+                            <th>Factura de la compra</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +74,7 @@ const PedidosEntregados = () => {
                                     </td>
 
                                 )}
+                                <td onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
                             </tr>
                         ))}
                     </tbody>

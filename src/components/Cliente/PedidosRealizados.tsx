@@ -3,18 +3,22 @@ import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
-import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
+import { FacturaService } from '../../services/FacturaService';
+import FacturaIMG from '../../assets/icons/facturas.png'
+import { CarritoService } from '../../services/CarritoService';
+import { useNavigate } from 'react-router-dom';
 
 const PedidosRealizados = () => {
     const [pedidosRealizados, setPedidosRealizados] = useState<Pedido[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         buscarPedidosRealizados();
     }, []);
 
     const buscarPedidosRealizados = async () => {
-        PedidoService.getPedidos(EnumEstadoPedido.REALIZADOS)
+        PedidoService.getPedidos(EnumEstadoPedido.ENTREGADOS)
             .then(data => {
                 setPedidosRealizados(data);
             })
@@ -23,9 +27,24 @@ const PedidosRealizados = () => {
             });
     }
 
+    async function descargarFactura(idPedido: number) {
+        await FacturaService.getPdfFactura(idPedido);
+    }
+
+    function repetirPedido(pedido: Pedido) {
+        pedido.detallesPedido.forEach(detalle => {
+            if (detalle.articuloMenu) {
+                CarritoService.agregarAlCarrito(detalle.articuloMenu, null, detalle.cantidad);
+            } else if (detalle.articuloVenta) {
+                CarritoService.agregarAlCarrito(null, detalle.articuloVenta, detalle.cantidad);
+            }
+        });
+
+        navigate('/pago')
+    }
+
     return (
         <div className="opciones-pantallas">
-            <Toaster />
             <h1>- Pedidos realizados -</h1>
             <hr />
             <div id="pedidos">
@@ -35,6 +54,7 @@ const PedidosRealizados = () => {
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
                             <th>Menu</th>
+                            <th>Volver a pedir</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,22 +65,21 @@ const PedidosRealizados = () => {
                                         <p>{pedido.cliente?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
-                                        <p>{new Date(pedido.fechaPedido).toLocaleString()}</p>
                                     </div>
                                 </td>
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
-                                    <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></td>
+                                    <td>
+                                        <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                    </td>
                                 ) : (
-                                    <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</td>
+                                    <td>
+                                        <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                        <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p>
+                                    </td>
+
                                 )}
-                                <td>
-                                    {pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                        <div key={detalle.id}>
-                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre} </p>
-                                            <p>{detalle.cantidad} - {detalle.articuloVenta?.nombre} </p>
-                                        </div>
-                                    ))}
-                                </td>
+                                <td onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
+                                <td><button onClick={() => repetirPedido(pedido)}>Repetir pedido</button></td>
                             </tr>
                         ))}
                     </tbody>

@@ -104,19 +104,19 @@ function AgregarEmpresa() {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input autoComplete='false' type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <input autoComplete='false' type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre</span>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setRazonSocial(e.target.value) }} />
+              <input type="text" required={true} value={razonSocial} onChange={(e) => { setRazonSocial(e.target.value) }} />
               <span>Razón social</span>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setCuit(e.target.value) }} />
+              <input type="text" required={true} value={cuit} onChange={(e) => { setCuit(e.target.value) }} />
               <span>Cuit</span>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+              <input type="text" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
               <span>Contraseña</span>
             </div>
             <div className="btns-pasos">
@@ -129,17 +129,27 @@ function AgregarEmpresa() {
           <>
             <div>
               {imagenes.map((imagen, index) => (
-
-                <div className='inputBox' key={index}>
-
+                <div key={index} className='inputBox'>
                   <hr />
-                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    maxLength={10048576}
-                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-                  />
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                  <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
+                  <br />
+                  <div className="file-input-wrapper">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`}
+                      className="file-input"
+                      onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                    />
+                    <label htmlFor={`file-input-${index}`} className="file-input-label">
+                      {imagen.file ? (
+                        <p>Archivo seleccionado: {imagen.file.name}</p>
+                      ) : (
+                        <p>Seleccionar un archivo</p>
+                      )}
+                    </label>
+                  </div>
                 </div>
               ))}
             </div>

@@ -46,31 +46,37 @@
 [x] Arreglar login del cliente para que no cree usuarios con el mismo mail
 [x] Calcular tiempo de entrega de un menu al realizar un pedido
 [x] Descontar stock al comprar
+[x] Precio sugerido segun ingredientes y los costos
+[x] Mostrar ingredientes de cada menu en cocina
+[] Ver tema del auth para privilegios y esas cosas
+[] Mostrar paises al seleccionar domicilio
+[x] Revisar que los inputs que se muestran con informacion de la db(los editar mas que nada) muestren arriba de cada input de que valor es la info dentro del input (label o algo)
+[] Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
+[] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
+[x] Arreglar eso de que cuando cambias de paso en el modal se borra lo del anterior (hay que poner los values en cada input del atributo que ocupan)
+[] Mostrar categorias solo si hay productos con stock que la completen
+[x] Mostrar cartel una vez se carga un articulo venta o un ingrediente de si el usuario quiere añadir stock del mismo
+[] Pasar de pago a pedido pendientes del cliente
+
+[] Que el modal de recomendaciones no muestre alguna de las opciones si ya esta seleccionada en un input previo, por ej si ya seleccione el ingrediente 'carne' que al poner otro no muestre este como recomendacion
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
-[] Ver tema del auth para privilegios y esas cosas
-[] Mostrar receta de cada menu
-[] Precio sugerido segun ingredientes y los costos
-[] Que el modal de recomendaciones no muestre alguna de las opciones si ya esta seleccionada en un input previo, por ej si ya seleccione el ingrediente 'carne' que al poner otro no muestre este como recomendacion
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
-[] Mostrar paises al seleccionar domicilio
 [] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
-[] Revisar que los inputs que se muestran con informacion de la db(los editar mas que nada) muestren arriba de cada input de que valor es la info dentro del input (label o algo)
 [] Validar que no se pueda pedir nada fuera del horario de atencion de la sucursal
 [] Modal con checkboxs para elegir sucursales, provincias, etc (Promocion necesita sucursales)
 [] Poner tipo de date para promociones con seleccion de horario ademas del dia
-[] Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 [] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [] Configurar rutas privadas
 [] Revisar la carga de subcategorias
 [] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
-[] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
-[] Mostrar categorias solo si hay productos con stock que la completen
-[] Arreglar eso de que cuando cambias de paso en el modal se borra lo del anterior (hay que poner los values en cada input del atributo que ocupan)
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
-[] Mostrar cartel una vez se carga un articulo venta o un ingrediente de si el usuario quiere añadir stock del mismo
 [] Mejorar el suspense del appRoutes
 [] Agregar imagenes al empleado
+[] Arregla el tema de añadir varios domicilios con los inputs que se van a repetir y cambiar en caso de ser varios domicilios(inputProvincia e inputDepartamento) hacer un handle domicilio para asignar esos al domicilio creado
+[] Revisar el muestreo de fechas al crear promocion porque con el value se va a romper, stockEntrante tambien, loginCliente tambien
+[] Formatear y mejorar la legibilidad del codigo
+[] Si llegamos mostrar recetas de los menus
 
 Pruebas
 [x] Carga empresa [] Probar validación

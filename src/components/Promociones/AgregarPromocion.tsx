@@ -237,24 +237,24 @@ function AgregarPromocion() {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => setNombre(e.target.value)} />
+              <input type="text" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
               <span>Nombre de la promoción</span>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => setDescripcion(e.target.value)} />
+              <input type="text" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
               <span>Descrición de la promoción</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => setTotal(parseFloat(e.target.value))} />
+              <input type="number" required={true} value={total} onChange={(e) => setTotal(parseFloat(e.target.value))} />
               <span>Precio ($)</span>
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
-              <input type="date" required={true} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
+              <input type="date" required={true} value={fechaDesde.toString()} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
-              <input type="date" required={true} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
+              <input type="date" required={true} value={fechaDesde.toString()} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
@@ -269,14 +269,14 @@ function AgregarPromocion() {
               <div key={index}>
                 <hr />
                 <p className='cierre-ingrediente' onClick={quitarCampoArticuloMenu}>X</p>
-                <h4>Menú {index+1}</h4>
+                <h4>Menú {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar menú...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
                   {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
                 </div>
                 <div>
-                <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
+                  <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida?.nombre ?? ''} />
                   {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
                 </div>
@@ -292,7 +292,7 @@ function AgregarPromocion() {
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-              
+
             </div>
           </>
         );
@@ -304,14 +304,14 @@ function AgregarPromocion() {
               <div key={index}>
                 <hr />
                 <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
-                <h4>Artículo {index+1}</h4>
+                <h4>Artículo {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Artículo:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />
                   {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
                 </div>
                 <div>
-                <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
+                  <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida?.nombre ?? ''} />
                   {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
                 </div>
@@ -326,28 +326,37 @@ function AgregarPromocion() {
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-              
+
             </div>
           </>
         );
       case 4:
         return (
           <>
-          <h4>Paso final - Imagen</h4>
+            <h4>Paso final - Imagen</h4>
             <div>
               {imagenes.map((imagen, index) => (
-                
-                <div className='inputBox' key={index}>
+                <div key={index} className='inputBox'>
                   <hr />
-                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-                  <h4 style={{fontSize: '18px'}}>Imagen {index+1}</h4>
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                  <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
                   <br />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    maxLength={10048576}
-                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-                  />
+                  <div className="file-input-wrapper">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`}
+                      className="file-input"
+                      onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                    />
+                    <label htmlFor={`file-input-${index}`} className="file-input-label">
+                      {imagen.file ? (
+                        <p>Archivo seleccionado: {imagen.file.name}</p>
+                      ) : (
+                        <p>Seleccionar un archivo</p>
+                      )}
+                    </label>
+                  </div>
                 </div>
               ))}
             </div>
@@ -356,7 +365,7 @@ function AgregarPromocion() {
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={agregarStockEntrante}>Agregar promoción ✓</button>
-              
+
             </div>
           </>
         );

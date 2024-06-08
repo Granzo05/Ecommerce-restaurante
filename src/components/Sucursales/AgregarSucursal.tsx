@@ -231,25 +231,25 @@ function AgregarSucursal() {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input autoComplete='false' type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
+              <input autoComplete='false' type="text" value={email} required={true} onChange={(e) => { setEmail(e.target.value) }} />
               <span>Correo electrónico</span>
             </div>
             <div className="inputBox">
-              <input type="password" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+              <input type="password" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
               <span>Contraseña</span>
             </div>
             <div className="inputBox">
-              <input type="phone" required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+              <input type="phone" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
               <span>Telefono</span>
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de apertura:</label>
-              <input type="time" required={true} onChange={(e) => { setHorarioApertura(e.target.value) }} />
+              <input type="time" required={true} value={horarioApertura} onChange={(e) => { setHorarioApertura(e.target.value) }} />
 
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de cierre:</label>
-              <input type="time" required={true} onChange={(e) => { setHorarioCierre(e.target.value) }} />
+              <input type="time" required={true} value={horarioCierre} onChange={(e) => { setHorarioCierre(e.target.value) }} />
 
             </div>
             <div className="btns-pasos">
@@ -262,15 +262,15 @@ function AgregarSucursal() {
           <>
             <h4>Paso 2 - Domicilio</h4>
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setCalle(e.target.value) }} />
+              <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
               <span>Nombre de calle</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
+              <input type="number" required={true} value={numeroCalle} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
               <span>Número de domicilio</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+              <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
               <span>Código Postal</span>
             </div>
             <div>
@@ -377,17 +377,28 @@ function AgregarSucursal() {
             <div >
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
-                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    maxLength={10048576}
-                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-                  />
-
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                  <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
+                  <br />
+                  <div className="file-input-wrapper">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`}
+                      className="file-input"
+                      onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                    />
+                    <label htmlFor={`file-input-${index}`} className="file-input-label">
+                      {imagen.file ? (
+                        <p>Archivo seleccionado: {imagen.file.name}</p>
+                      ) : (
+                        <p>Seleccionar un archivo</p>
+                      )}
+                    </label>
+                  </div>
                 </div>
               ))}
-
             </div>
             <button onClick={añadirCampoImagen}>Añadir imagen</button>
             <hr />

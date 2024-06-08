@@ -12,6 +12,8 @@ import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotante
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
 
 import '../../styles/inputLabel.css'
+import { Provincia } from '../../types/Domicilio/Provincia';
+import { Departamento } from '../../types/Domicilio/Departamento';
 
 function AgregarEmpleado() {
 
@@ -24,10 +26,6 @@ function AgregarEmpleado() {
   const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
   const [indexDomicilio, setIndexDomicilio] = useState<number>(0);
 
-  const [inputProvincia, setInputProvincia] = useState<string>('');
-  const [inputDepartamento, setInputDepartamento] = useState<string>('');
-
-  
   const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
   const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
@@ -54,6 +52,22 @@ function AgregarEmpleado() {
     const nuevosDomicilios = [...domicilios];
     nuevosDomicilios[index].codigoPostal = codigoPostal;
     setDomicilios(nuevosDomicilios);
+  };
+
+  const handleChangeProvincia = (index: number, provincia: Provincia) => {
+    const nuevosDomicilios = [...domicilios];
+    if (provincia) {
+      nuevosDomicilios[index].localidad.departamento.provincia = provincia;
+      setDomicilios(nuevosDomicilios);
+    }
+  };
+
+  const handleChangeDepartamento = (index: number, departamento: Departamento) => {
+    const nuevosDomicilios = [...domicilios];
+    if (departamento) {
+      nuevosDomicilios[index].localidad.departamento = departamento;
+      setDomicilios(nuevosDomicilios);
+    }
   };
 
 
@@ -173,77 +187,77 @@ function AgregarEmpleado() {
       case 1:
         return (
           <>
-          <h4>Paso 1 - Datos</h4>
-          <div className="inputBox">
-          <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
-          <span>Nombre del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
-          <span>Email del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setCuit(e.target.value) }} />
-          <span>Cuil del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
-          <span>Contraseña del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-          <span>Telefono del empleado</span>
-        </div>
-        <div className="inputBox">
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
-          <input type="date" required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
-          <hr />
-        </div>
-          <div className="btns-pasos">
+            <h4>Paso 1 - Datos</h4>
+            <div className="inputBox">
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
+              <span>Email del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} value={cuil} onChange={(e) => { setCuit(e.target.value) }} />
+              <span>Cuil del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
+              <span>Contraseña del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+              <span>Telefono del empleado</span>
+            </div>
+            <div className="inputBox">
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
+              <input type="date" value={fechaNacimiento.toString()} required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+              <hr />
+            </div>
+            <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-          </div>
+            </div>
           </>
         );
       case 2:
         return (
           <>
-          <h4>Paso final - Domicilio/os</h4>
-          {domicilios && domicilios.map((domicilio, index) => (
-          <div key={index}>
-            <hr />
-            <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
-            <h4 style={{fontSize: '18px'}}>Domicilio {index + 1}</h4>
+            <h4>Paso final - Domicilio/os</h4>
+            {domicilios && domicilios.map((domicilio, index) => (
+              <div key={index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilio(index)}>X</p>
+                <h4 style={{ fontSize: '18px' }}>Domicilio {index + 1}</h4>
 
-            <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
-              <span>Nombre de calle</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
-              <span>Número de domicilio</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
-              <span>Código Postal</span>
-            </div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-            <InputComponent disabled={false} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
-            {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
-            <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
-            {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
-            <InputComponent disabled={inputDepartamento.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
-            {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+                <div className="inputBox">
+                  <input type="text" required={true} value={domicilio?.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
+                  <span>Nombre de calle</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={domicilio?.numero} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
+                  <span>Número de domicilio</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={domicilio?.codigoPostal} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
+                  <span>Código Postal</span>
+                </div>
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
+                <InputComponent disabled={false} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
+                {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
+                <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />
+                {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { handleChangeDepartamento(index, departamento); handleModalClose(); }} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
+                <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
+                {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+                <hr />
+              </div>
+            ))}
+            <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
             <hr />
-          </div>
-        ))}
-        <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
-        <hr />
-        <div className="btns-pasos">
+            <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
-              
+
             </div>
           </>
         );
@@ -257,7 +271,7 @@ function AgregarEmpleado() {
       <Toaster />
       {renderStep()}
 
-        
+
 
 
     </div>

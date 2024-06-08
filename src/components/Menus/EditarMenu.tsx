@@ -293,14 +293,26 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       <br />
       {imagenes.map((imagen, index) => (
         <div key={index} className='inputBox'>
-          <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
-          <input
-            type="file"
-            accept="image/*"
-            maxLength={10048576}
-            onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-          />
-
+          <hr />
+          <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+          <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
+          <br />
+          <div className="file-input-wrapper">
+            <input
+              type="file"
+              accept="image/*"
+              id={`file-input-${index}`}
+              className="file-input"
+              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+            />
+            <label htmlFor={`file-input-${index}`} className="file-input-label">
+              {imagen.file ? (
+                <p>Archivo seleccionado: {imagen.file.name}</p>
+              ) : (
+                <p>Seleccionar un archivo</p>
+              )}
+            </label>
+          </div>
         </div>
       ))}
       <br />

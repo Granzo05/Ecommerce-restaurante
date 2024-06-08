@@ -179,17 +179,17 @@ function AgregarArticuloVenta() {
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
-              <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
               {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
-              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
-              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida?.nombre ?? ''} />
               {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
             </div>
             <div className="inputBox">
@@ -248,25 +248,25 @@ function AgregarArticuloVenta() {
             <h4>Paso opcional - Stock</h4>
             <label>
               <div className="inputBox">
-                <input type="number" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+                <input type="number" required value={cantidadMinima} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
                 <span>Cantidad mínima del articulo (opcional)</span>
               </div>
             </label>
             <label>
               <div className="inputBox">
-                <input type="number" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+                <input type="number" required value={cantidadMaxima} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
                 <span>Cantidad máxima del articulo (opcional)</span>
               </div>
             </label>
             <label>
               <div className="inputBox">
-                <input type="number" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+                <input type="number" required value={cantidadActual} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
                 <span>Cantidad actual del articulo (opcional)</span>
               </div>
             </label>
             <label>
               <div className="inputBox">
-                <input type="number" required onChange={(e) => { setPrecioStock(parseFloat(e.target.value)) }} />
+                <input type="number" required value={precioStock} onChange={(e) => { setPrecioStock(parseFloat(e.target.value)) }} />
                 <span>Costo por unidad ($) (opcional)</span>
               </div>
             </label>

@@ -213,30 +213,30 @@ function AgregarMenu() {
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
               <hr />
-              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del menu</span>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setDescripcion(e.target.value) }} />
+              <input type="text" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
               <span>Descripción del menu</span>
             </div>
 
             <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+              <input type="number" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
               <span>Minutos de coccion</span>
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
-              <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
               {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
-              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { handleSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
+              <input type="number" required={true} value={comensales} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
               <span>Comensales</span>
               <hr />
             </div>
@@ -303,17 +303,27 @@ function AgregarMenu() {
 
             <div>
               {imagenes.map((imagen, index) => (
-                <div className='inputBox' key={index}>
+                <div key={index} className='inputBox'>
                   <hr />
-                  <p className='cierre-ingrediente' onClick={quitarCampoImagen}>X</p>
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
                   <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
                   <br />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    maxLength={10048576}
-                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-                  />
+                  <div className="file-input-wrapper">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`}
+                      className="file-input"
+                      onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                    />
+                    <label htmlFor={`file-input-${index}`} className="file-input-label">
+                      {imagen.file ? (
+                        <p>Archivo seleccionado: {imagen.file.name}</p>
+                      ) : (
+                        <p>Seleccionar un archivo</p>
+                      )}
+                    </label>
+                  </div>
                 </div>
               ))}
             </div>

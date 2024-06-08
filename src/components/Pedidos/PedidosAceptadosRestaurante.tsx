@@ -3,6 +3,8 @@ import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 import { toast, Toaster } from 'sonner';
+import ModalCrud from '../ModalCrud';
+import DetallesPedido from './DetallesPedido';
 
 const PedidosAceptados = () => {
     const [PedidosAceptados, setPedidos] = useState<Pedido[]>([]);
@@ -34,12 +36,22 @@ const PedidosAceptados = () => {
         });
     }
 
+    const [showDetallesPedido, setShowDetallesPedido] = useState(false);
+    const [selectedPedido, setSelectedPedido] = useState<Pedido>(new Pedido());
+
+    const handleModalClose = () => {
+        setShowDetallesPedido(false);
+    };
+
     return (
 
         <div className="opciones-pantallas">
             <Toaster />
             <h1>- Pedidos aceptados -</h1>
             <hr />
+            <ModalCrud isOpen={showDetallesPedido} onClose={handleModalClose}>
+                <DetallesPedido pedido={selectedPedido} />
+            </ModalCrud>
             <div id="pedidos">
                 <table>
                     <thead>
@@ -53,7 +65,7 @@ const PedidosAceptados = () => {
                         {PedidosAceptados.map(pedido => (
                             <tr key={pedido.id}>
                                 <td>{pedido.tipoEnvio.toString().replace(/_/g, ' ')}</td>
-                                <td>
+                                <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                         <div key={detalle.id}>
                                             <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} </p>

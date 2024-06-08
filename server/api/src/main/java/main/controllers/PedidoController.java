@@ -98,53 +98,6 @@ public class PedidoController {
         return new HashSet<>(pedidos);
     }
 
-    //Funcion para cargar pdfs
-    @CrossOrigin
-    @GetMapping("/pedido/{idPedido}/pdf")
-    public ResponseEntity<byte[]> generarPedidoPDF(@PathVariable Long idCliente, @PathVariable Long idPedido) {
-        // Lógica para obtener el pedido y su factura desde la base de datos
-        Pedido pedido = pedidoRepository.findById(idPedido).orElse(null);
-
-        if (pedido == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        // Crear un nuevo documento PDF
-        Document document = new Document();
-
-        // Crear un flujo de bytes para almacenar el PDF generado
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        try {
-            PdfWriter.getInstance(document, baos);
-            document.open();
-            double total = 0;
-            // Agregar contenido al PDF
-            document.add(new Paragraph("Información del Pedido"));
-            document.add(new Paragraph("Fecha: " + pedido.getFechaPedido()));
-            document.add(new Paragraph("Tipo de Envío: " + pedido.getTipoEnvio()));
-            document.add(new Paragraph(""));
-            document.add(new Paragraph("Detalles de la factura"));
-
-            document.add(new Paragraph("Total: " + total));
-
-            document.close();
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
-
-        // Obtener los bytes del PDF generado
-        byte[] pdfBytes = baos.toByteArray();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=pedido.pdf");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(pdfBytes);
-    }
-
     @CrossOrigin
     @Transactional
     @PostMapping("/pedido/create/{idSucursal}")
@@ -234,9 +187,8 @@ public class PedidoController {
                 }
 
                 PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                        .success("http://localhost:5173/cliente/pedidos")
+                        .success("http://localhost:5173/cliente/pedidos-pendientes")
                         .failure("http://localhost:5173/pago")
-                        .pending("http://localhost:5173/pago")
                         .build();
 
                 PreferenceRequest preferenceRequest = PreferenceRequest.builder()
@@ -378,7 +330,7 @@ public class PedidoController {
 
     @Transactional
     @CrossOrigin
-    @DeleteMapping("/pedido/delete/{preference}/{idSucursal}")
+    @PutMapping("/pedido/delete/{preference}/{idSucursal}")
     public void deletePedidoFallido(@PathVariable("preference") String preference, @PathVariable("idSucursal") Long idSucursal) {
 
         Optional<Pedido> pedido = pedidoRepository.findByPreference(preference);
@@ -389,27 +341,32 @@ public class PedidoController {
                 reponerStock(detallesPedido, idSucursal);
             }
 
-            pedidoRepository.delete(pedido.get());
+            pedido.get().setBorrado("SI");
+            pedidoRepository.save(pedido.get());
         }
     }
 
-    public ResponseEntity<byte[]> generarFacturaPDF(Long idPedido) {
+    @GetMapping("/pdf/factura/{idPedido}")
+    @CrossOrigin
+    public ResponseEntity<byte[]> generarFacturaPDF(@PathVariable Long idPedido) {
         Optional<Pedido> pedidoDB = pedidoRepository.findById(idPedido);
 
         if (pedidoDB.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        // Crear un nuevo documento PDF
-        Document document = new Document();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Pedido pedido = pedidoDB.get();
-
         Optional<Factura> factura = facturaRepository.findByIdPedido(pedido.getId());
 
-        try {
+        if (factura.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            Document document = new Document();
             PdfWriter.getInstance(document, baos);
             document.open();
+
             double total = 0;
 
             document.add(new Paragraph("Factura del Pedido"));
@@ -418,7 +375,6 @@ public class PedidoController {
             document.add(new Paragraph(""));
             document.add(new Paragraph("Detalles de la factura"));
 
-            // Crear la tabla para los detalles de la factura
             PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
 
@@ -427,34 +383,36 @@ public class PedidoController {
             table.addCell("Subtotal");
 
             for (DetallesPedido detalle : pedido.getDetallesPedido()) {
-                // Agregar cada detalle como una fila en la tabla
                 if (detalle.getArticuloVenta() != null) {
                     table.addCell(detalle.getArticuloVenta().getNombre());
+                    table.addCell(String.valueOf(detalle.getCantidad()));
                     table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta()));
+                    total += detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta();
                 } else if (detalle.getArticuloMenu() != null) {
                     table.addCell(detalle.getArticuloMenu().getNombre());
+                    table.addCell(String.valueOf(detalle.getCantidad()));
                     table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta()));
+                    total += detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta();
                 }
             }
 
             document.add(table);
-
             document.add(new Paragraph("Total: " + total));
-
             document.close();
-        } catch (DocumentException e) {
+
+            byte[] pdfBytes = baos.toByteArray();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=factura" + factura.get().getId() + ".pdf");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdfBytes);
+        } catch (DocumentException | IOException e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        // Obtener los bytes del PDF generado
-        byte[] pdfBytes = baos.toByteArray();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=factura.pdf");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(pdfBytes);
     }
+
 }

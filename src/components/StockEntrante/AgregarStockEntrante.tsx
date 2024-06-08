@@ -199,91 +199,91 @@ function AgregarStockEntrante() {
   const renderStep = () => {
     switch (step) {
       case 1:
-        return(
+        return (
           <>
-          <h4>Paso 1 - Datos</h4>
-          <div className="inputBox">
-        <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
-        <input type="date" required={true} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
-      </div>
-      <div className="btns-pasos">
+            <h4>Paso 1 - Datos</h4>
+            <div className="inputBox">
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
+              <input type="date" required={true} value={fecha.toString()} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
+            </div>
+            <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
       case 2:
-        return(
+        return (
           <>
-          <h4>Paso 2 - Agregar ingrediente al stock entrante</h4>
-          {detallesIngredienteStock.map((ingrediente, index) => (
-        <div key={index}>
-          <hr />
-          <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
-          <h4>Ingrediente {index+1}</h4>
-          <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-            <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={detallesIngredienteStock[index].ingrediente?.nombre ?? ''} />
-            {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleModalClose(); }} />}
-          </div>
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
-            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesIngredienteStock[index]?.medida.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
-          
-          <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
-            <span>Cantidad de unidades</span>
-          </div>
-          <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarSubTotalIngrediente(parseFloat(e.target.value), index)} />
-            <span>Costo unitario ($)</span>
-          </div>
-        </div>
-      ))}
-        <button onClick={añadirCampoIngrediente}>+ Añadir ingrediente</button>
-        <br />
-        <div className="btns-pasos">
+            <h4>Paso 2 - Agregar ingrediente al stock entrante</h4>
+            {detallesIngredienteStock.map((ingrediente, index) => (
+              <div key={index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
+                <h4>Ingrediente {index + 1}</h4>
+                <div>
+                  <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+                  <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={detallesIngredienteStock[index].ingrediente?.nombre ?? ''} />
+                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleModalClose(); }} />}
+                </div>
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesIngredienteStock[index]?.medida.nombre ?? ''} />
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
+
+                <div className="inputBox">
+                  <input type="number" required={true} value={detallesIngredienteStock[index]?.cantidad} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
+                  <span>Cantidad de unidades</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={detallesIngredienteStock[index]?.costoUnitario} onChange={(e) => almacenarSubTotalIngrediente(parseFloat(e.target.value), index)} />
+                  <span>Costo unitario ($)</span>
+                </div>
+              </div>
+            ))}
+            <button onClick={añadirCampoIngrediente}>+ Añadir ingrediente</button>
+            <br />
+            <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-              
+
             </div>
           </>
         );
       case 3:
-        return(
+        return (
           <>
-          <h4>Paso final - Agregar artículo al stock entrante</h4>
-          {detallesArticuloStock.map((articulo, index) => (
-        <div key={index}>
-          <hr />
-          <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
-          <h4>Artículo {index+1}</h4>
-          <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-            <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.nombre ?? ''} />
-            {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
-          </div>
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
-            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloStock[index]?.medida.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
-          
-          <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />
-            <span>Cantidad de unidades</span>
-          </div>
+            <h4>Paso final - Agregar artículo al stock entrante</h4>
+            {detallesArticuloStock.map((articulo, index) => (
+              <div key={index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
+                <h4>Artículo {index + 1}</h4>
+                <div>
+                  <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+                  <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.nombre ?? ''} />
+                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
+                </div>
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloStock[index]?.medida.nombre ?? ''} />
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
 
-          <div className="inputBox">
-            <input type="number" required={true} onChange={(e) => almacenarSubTotalArticulo(parseFloat(e.target.value), index)} />
-            <span>Costo unitario ($)</span>
-          </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={detallesArticuloStock[index]?.cantidad} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />
+                  <span>Cantidad de unidades</span>
+                </div>
 
-        </div>
-      ))}
-      <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
-      <hr />
-      <div className="btns-pasos">
+                <div className="inputBox">
+                  <input type="number" required={true} value={detallesArticuloStock[index]?.subtotal} onChange={(e) => almacenarSubTotalArticulo(parseFloat(e.target.value), index)} />
+                  <span>Costo unitario ($)</span>
+                </div>
+
+              </div>
+            ))}
+            <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
+            <hr />
+            <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={agregarStockEntrante}>Agregar stock entrante ✓</button>
-              
+
             </div>
           </>
         );

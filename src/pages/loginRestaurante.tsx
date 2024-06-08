@@ -16,11 +16,11 @@ const LoginNegocio = () => {
     SetShowResetContraModal(false);
 
 
-};
+  };
 
-const handleAgregarArticulo = () => {
-  SetShowResetContraModal(true);
-};
+  const handleAgregarArticulo = () => {
+    SetShowResetContraModal(true);
+  };
 
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
@@ -65,107 +65,107 @@ const handleAgregarArticulo = () => {
 
   return (
     <>
-    <HeaderLogin></HeaderLogin>
-    <div className="form-wrapper">
-      
-      <aside className="info-side">
-        <div className="blockquote-wrapper">
-          <img id='comida-img'
-            src={comidaImg}
-            alt="Returns"
-            className="returns"
-          />
-          <blockquote id='frase'>~&nbsp;
-            {frase}&nbsp;~
-          </blockquote>
-          <div className="author">
-            <img id='autor-img' src={autorImg} alt="Avatar" className="avatar" />
-            <span className="author-name" id='nombre-autor'>{autor}</span>
-          </div>
-        </div>
-      </aside>
-      <main className="form-side">
-      <Toaster />
-        <div className="my-form">
-          <div className="form-welcome-row">
-            <h1>¡Bienvenido, otra vez! &#128079;</h1>
-            <h2>- Ingresa a tu cuenta -</h2>
-          </div>
-          <div className="text-field">
-            <label htmlFor="email">E-mail:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              autoComplete="off"
-              placeholder="tu@ejemplo.com"
-              required
-              onChange={(e) => setEmail(e.target.value)}
+      <HeaderLogin></HeaderLogin>
+      <div className="form-wrapper">
+
+        <aside className="info-side">
+          <div className="blockquote-wrapper">
+            <img id='comida-img'
+              src={comidaImg}
+              alt="Returns"
+              className="returns"
             />
-
-            <div className="error-message">Formato incorrecto de e-mail.</div>
-          </div>
-          <div className="text-field">
-            <label htmlFor="password">Contraseña:</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="tu contraseña"
-              title="Minimum 6 characters at least 1 Alphabet and 1 Number"
-              //pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
-              onChange={(e) => setContraseña(e.target.value)}
-              required
-            />
-            <div className="error-message">Mínimo 6 caracteres. 1 letra y 1 número.</div>
-          </div>
-          <div className="my-form__actions">
-            <div className="my-form__row_contra">
-              <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={handleAgregarArticulo}>
-                Reestablecela
-              </a></span>
-              <ModalCrud isOpen={showResetContraModal} onClose={handleModalClose}>
-                <ReestablecerContra />
-              </ModalCrud>
-              <div>
-                <Modal
-                  isOpen={modalIsOpenP}
-                  onRequestClose={closeModalP}
-                  shouldCloseOnOverlayClick={false}
-                >
-                  <div className="modal-info">
-                    <p className='cierre-ingrediente' onClick={closeModalP}>X</p>
-                    <h2>Restablecer Contraseña</h2>
-                    <p>Por favor, ingresa tu correo electrónico para restablecer tu contraseña.</p>
-                    <div>
-                      <div className="inputBox">
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          autoComplete="off"
-                          required
-                        />
-                        <span>E-mail de recuperación:</span>
-                        <div className="error-message">Formato incorrecto de e-mail.</div>
-                      </div>
-                      <button>Enviar</button>
-                    </div>
-
-                  </div>
-                </Modal>
-              </div>
-
+            <blockquote id='frase'>~&nbsp;
+              {frase}&nbsp;~
+            </blockquote>
+            <div className="author">
+              <img id='autor-img' src={autorImg} alt="Avatar" className="avatar" />
+              <span className="author-name" id='nombre-autor'>{autor}</span>
             </div>
           </div>
-          <button type='button' className="my-form__button" onClick={handleIniciarSesionNegocio}>
-            Ingresar
-          </button>
-        </div>
-      </main>
-    </div>
+        </aside>
+        <main className="form-side">
+          <Toaster />
+          <div className="my-form">
+            <div className="form-welcome-row">
+              <h1>¡Bienvenido, otra vez! &#128079;</h1>
+              <h2>- Ingresa a tu cuenta -</h2>
+            </div>
+            <div className="text-field">
+              <label htmlFor="email">E-mail:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autoComplete="off"
+                placeholder="tu@ejemplo.com"
+                required
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <div className="error-message">Formato incorrecto de e-mail.</div>
+            </div>
+            <div className="text-field">
+              <label htmlFor="password">Contraseña:</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="tu contraseña"
+                title="Minimum 6 characters at least 1 Alphabet and 1 Number"
+                //pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+                onChange={(e) => setContraseña(e.target.value)}
+                required
+              />
+              <div className="error-message">Mínimo 6 caracteres. 1 letra y 1 número.</div>
+            </div>
+            <div className="my-form__actions">
+              <div className="my-form__row_contra">
+                <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={handleAgregarArticulo}>
+                  Reestablecela
+                </a></span>
+                <ModalCrud isOpen={showResetContraModal} onClose={handleModalClose}>
+                  <ReestablecerContra />
+                </ModalCrud>
+                <div>
+                  <Modal
+                    isOpen={modalIsOpenP}
+                    onRequestClose={closeModalP}
+                    shouldCloseOnOverlayClick={false}
+                  >
+                    <div className="modal-info">
+                      <p className='cierre-ingrediente' onClick={closeModalP}>X</p>
+                      <h2>Restablecer Contraseña</h2>
+                      <p>Por favor, ingresa tu correo electrónico para restablecer tu contraseña.</p>
+                      <div>
+                        <div className="inputBox">
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            autoComplete="off"
+                            required
+                          />
+                          <span>E-mail de recuperación:</span>
+                          <div className="error-message">Formato incorrecto de e-mail.</div>
+                        </div>
+                        <button>Enviar</button>
+                      </div>
+
+                    </div>
+                  </Modal>
+                </div>
+
+              </div>
+            </div>
+            <button type='button' className="my-form__button" onClick={handleIniciarSesionNegocio}>
+              Ingresar
+            </button>
+          </div>
+        </main>
+      </div>
     </>
-    
+
   )
 }
 

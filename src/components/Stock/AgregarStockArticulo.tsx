@@ -87,7 +87,7 @@ function AgregarStockArticulo() {
       <h2>&mdash; Agregar artículo &mdash;</h2>
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-        <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={articulo.nombre ?? ''} />
+        <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={articulo?.nombre ?? ''} />
         {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { setArticulo(articulo); handleModalClose(); }} />}
       </div>
       <label>

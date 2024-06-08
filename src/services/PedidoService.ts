@@ -163,7 +163,7 @@ export const PedidoService = {
     eliminarPedidoFallido: async (preference: string): Promise<string> => {
         try {
             const response = await fetch(URL_API + `pedido/delete/${preference}/${sucursalId}`, {
-                method: 'DELETE',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },

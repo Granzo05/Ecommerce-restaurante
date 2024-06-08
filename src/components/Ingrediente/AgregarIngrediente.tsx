@@ -102,7 +102,7 @@ function AgregarIngrediente() {
       <h2>&mdash; Cargar nuevo ingrediente &mdash;</h2>
       <Toaster />
       <div className="inputBox">
-        <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+        <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
         <span>Nombre del ingrediente</span>
       </div>
       <label>

@@ -164,7 +164,7 @@ const LoginCliente = () => {
                         </div>
                         <div className="inputBox">
                             <label style={{ display: 'flex', fontWeight: 'bold', marginTop: '-5px' }}>Fecha de nacimiento:</label>
-                            <input type='date' required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+                            <input type='date' required={true} value={fechaNacimiento.toString()} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
                         </div>
                         <div className="btns-crear-cuenta">
                             <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
@@ -211,7 +211,6 @@ const LoginCliente = () => {
                             <input type="text" required={true} value={numeroCasa} onChange={(e) => { setNumeroCasa(e.target.value) }} />
                             <span>Número de la casa</span>
                         </div>
-                        {/* Aquí van los componentes para seleccionar provincia, departamento y localidad */}
                         <label style={{ display: 'flex', fontWeight: 'bold', marginTop: '-5px' }}>Provincia:</label>
                         <InputComponent placeHolder='Seleccionar provincia...' disabled={false} onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
                         {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
@@ -223,7 +222,7 @@ const LoginCliente = () => {
                         {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
                         <div className="inputBox">
-                            <input type="number" required={true} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+                            <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
                             <span>Código postal</span>
                         </div>
                         <div className="btns-crear-cuenta">
