@@ -5,7 +5,9 @@ import main.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Ingredientes.Categoria;
+import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.Medida;
+import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.*;
 import main.repositories.*;
@@ -34,8 +36,10 @@ public class SucursalController {
     private final CategoriaRepository categoriaRepository;
     private final ImagenesRepository imagenesRepository;
     private final PromocionRepository promocionRepository;
+    private final ArticuloMenuRepository articuloMenuRepository;
+    private final ArticuloVentaRepository articuloVentaRepository;
 
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository, ImagenesRepository imagenesRepository, PromocionRepository promocionRepository) {
+    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository, ImagenesRepository imagenesRepository, PromocionRepository promocionRepository, ArticuloMenuRepository articuloMenuRepository, ArticuloVentaRepository articuloVentaRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
@@ -46,6 +50,8 @@ public class SucursalController {
         this.categoriaRepository = categoriaRepository;
         this.imagenesRepository = imagenesRepository;
         this.promocionRepository = promocionRepository;
+        this.articuloMenuRepository = articuloMenuRepository;
+        this.articuloVentaRepository = articuloVentaRepository;
     }
 
 
@@ -79,7 +85,48 @@ public class SucursalController {
         if (sucursalDB.isPresent()) {
             SucursalDTO sucursal = sucursalDB.get();
 
-            sucursal.setCategorias(new HashSet<>(categoriaRepository.findAllByIdSucursal(idSucursal)));
+            Set<Categoria> categorias = new HashSet<>();
+
+            for (Categoria categoria : categoriaRepository.findAllByIdSucursal(idSucursal)) {
+                boolean articulaVentaExistente = false;
+                // Es menos trabajo buscar un articulo ya que no involucra ingredientes, por lo tanto es mejor filtrar que en caso que exista un articulo venta
+                // no va a existir un menú en la misma categoría
+                int cantidadArticulosDisponibles = articuloVentaRepository.findCantidadDisponiblesByIdCategoriaAndIdSucursal(categoria.getId(), idSucursal);
+
+                // Si se encuentra minimo un articulo, entonces añadimos la categoria y evitamos que se busquen los menus
+                if (cantidadArticulosDisponibles > 0) {
+                    categorias.add(categoria);
+                    articulaVentaExistente = true;
+                }
+                // En caso que el articulo no existe entonces si revisamos que haya por lo menos un menu mostrable con stock
+                if (!articulaVentaExistente) {
+                    for (ArticuloMenu menu : articuloMenuRepository.findByIdCategoriaAndIdSucursal(categoria.getId(), idSucursal)) {
+                        // Vemos si hay stock de cada ingrediente del menu
+                        int ingredientesEncontrados = 0;
+
+                        // Vemos que exista stock de cada ingrediente necesario para el menú
+                        for (IngredienteMenu ingredienteMenu : menu.getIngredientesMenu()) {
+                            ingredientesEncontrados += articuloMenuRepository.findCantidadDisponiblesByIdCategoriaAndIdSucursal(categoria.getId(), ingredienteMenu.getId(), idSucursal);
+
+                            // Si la cantidad disponible es 0 entonces no cargamos la categoria, con un ingrediente que falte ya falla
+                            if (ingredientesEncontrados == 0) {
+                                break;
+                            }
+                        }
+
+                        // si la cantidad es igual a los ingredientes del menu entonces si cargamos esta categoria
+                        if (ingredientesEncontrados == menu.getIngredientesMenu().size()) {
+                            categorias.add(categoria);
+                            // Rompemos el for de menu ya que con un solo menu existente ya debo mostrar la categoría
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            sucursal.setCategorias(categorias);
+
             sucursal.setImagenes(new HashSet<>(imagenesRepository.findByIdSucursal(idSucursal)));
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(idSucursal)));
             sucursal.setPromociones(new HashSet<>(promocionRepository.findAllByIdSucursal(idSucursal)));

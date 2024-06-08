@@ -3,11 +3,9 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Subcategoria;
+import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.Imagenes;
-import main.repositories.CategoriaRepository;
-import main.repositories.ImagenesRepository;
-import main.repositories.SubcategoriaRepository;
-import main.repositories.SucursalRepository;
+import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,6 @@ public class CategoriaController {
     private final SubcategoriaRepository subcategoriaRepository;
     private final SucursalRepository sucursalRepository;
     private final ImagenesRepository imagenesRepository;
-
     public CategoriaController(CategoriaRepository categoriaRepository, SubcategoriaRepository subcategoriaRepository, SucursalRepository sucursalRepository, ImagenesRepository imagenesRepository) {
         this.categoriaRepository = categoriaRepository;
         this.subcategoriaRepository = subcategoriaRepository;

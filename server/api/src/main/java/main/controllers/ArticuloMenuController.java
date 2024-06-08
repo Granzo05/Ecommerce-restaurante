@@ -190,7 +190,7 @@ public class ArticuloMenuController {
 
         Set<ArticuloMenu> menus = new HashSet<>();
         if (categoriaDB.isPresent()) {
-            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByCategoriaAndIdSucursal(categoriaDB.get().getId(), idSucursal);
+            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByIdCategoriaAndIdSucursal(categoriaDB.get().getId(), idSucursal);
 
             for (ArticuloMenu menu : articuloMenus) {
                 boolean hayStock = true;

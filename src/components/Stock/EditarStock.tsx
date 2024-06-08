@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
 import { toast, Toaster } from 'sonner';
@@ -7,6 +7,7 @@ import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import { StockIngredientes } from '../../types/Stock/StockIngredientes';
 import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
+import { Medida } from '../../types/Ingredientes/Medida';
 
 interface EditarStockProps {
   stockOriginal: StockArticuloVenta | StockIngredientes;
@@ -19,7 +20,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
   const [cantidadActual, setCantidadActual] = useState(stockOriginal.cantidadActual);
   const [cantidadMinima, setCantidadMinima] = useState(stockOriginal.cantidadMinima);
   const [cantidadMaxima, setCantidadMaxima] = useState(stockOriginal.cantidadMaxima);
-  const [medida, setMedida] = useState(stockOriginal.medida);
+  const [medida, setMedida] = useState<Medida>();
   const [costo, setCosto] = useState(stockOriginal.precioCompra);
 
   const [modalBusqueda, setModalBusqueda] = useState<boolean>(false);
@@ -31,6 +32,11 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
   const handleModalClose = () => {
     setModalBusqueda(false)
   };
+
+  useEffect(() => {
+    if (stockOriginal.medida) setMedida(stockOriginal.medida);
+  }, []);
+
 
   function editarStock() {
     if (!cantidadMinima || cantidadMinima < 0) {
@@ -69,6 +75,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
       stock.cantidadMaxima = cantidadMaxima;
       stock.borrado = 'NO';
       stock.precioCompra = costo;
+
       toast.promise(StockIngredientesService.updateStock(stock), {
         loading: 'Creando stock del ingrediente...',
         success: (message) => {
@@ -89,7 +96,8 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
       stock.precioCompra = costo;
       stock.id = stockOriginal.id;
       stock.borrado = 'NO';
-      console.log(stock)
+
+      console.log(stock);
       toast.promise(StockArticuloVentaService.updateStock(stock), {
         loading: 'Editando stock del artículo...',
         success: (message) => {

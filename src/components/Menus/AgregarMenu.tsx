@@ -88,7 +88,7 @@ function AgregarMenu() {
   function calcularCostos() {
     let precioRecomendado: number = 0;
     console.log(ingredientesMenu)
-    if (ingredientesMenu[0].ingrediente?.nombre?.length > 0 && precioSugerido === 0) {
+    if (ingredientesMenu[0]?.ingrediente?.nombre?.length > 0 && precioSugerido === 0) {
       ingredientesMenu.forEach(ingredienteMenu => {
         if (ingredienteMenu.medida?.nombre === ingredienteMenu.ingrediente?.stockIngrediente?.medida?.nombre) {
           // Si coinciden las medidas, ej gramos y gramos entonces se calcula por igual

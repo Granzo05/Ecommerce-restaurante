@@ -1,4 +1,5 @@
 # Logs
+Granzo y Augusto
 logs
 *.log
 npm-debug.log*
@@ -23,7 +24,10 @@ dist-ssr
 *.sln
 *.sw?
 
-Email: contactodelbuensabor@gmail.com || 1234567qQ@
-
 !**/src/main/resources/
 server/api/src/main/resources/
+
+
+
+
+

@@ -49,7 +49,7 @@ export function descargarPedido(idPedido: number, fechaPedido: string) {
             a.download = "factura" + fechaPedido + ".pdf";
             document.body.appendChild(a);
             a.click();
-            window.URL.revokeObjectURL(url); // Liberar la URL del objeto Blob
+            window.URL.revokeObjectURL(url); 
         })
         .catch(error => {
             console.error("Error:", error);

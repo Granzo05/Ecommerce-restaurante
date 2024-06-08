@@ -177,7 +177,7 @@ public class StockIngredientesController {
             stockIngredientesRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
         } else {
-            return ResponseEntity.ofNullable("El stock no existe");
+            return ResponseEntity.ofNullable("El stock no existe o está desactivado");
         }
     }
 

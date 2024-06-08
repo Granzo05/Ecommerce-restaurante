@@ -26,4 +26,6 @@ public interface ArticuloVentaRepository extends JpaRepository<ArticuloVenta, Lo
     @Query("SELECT a FROM ArticuloVenta a JOIN a.sucursales s WHERE a.categoria.nombre = :nombre AND s.id = :idSucursal")
     List<ArticuloVenta> findByCategoriaNameAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 
+    @Query("SELECT count(a) FROM ArticuloVenta a JOIN a.sucursales sucursal JOIN sucursal.stocksArticulo stock WHERE a.categoria.id = :idCategoria AND sucursal.id = :idSucursal AND stock.articuloVenta.categoria.id = :idCategoria AND stock.cantidadActual > stock.cantidadMinima AND stock.cantidadActual > 0")
+    int findCantidadDisponiblesByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 }

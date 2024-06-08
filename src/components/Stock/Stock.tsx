@@ -37,7 +37,6 @@ const Stocks = () => {
     const getIngredientes = async () => {
         StockIngredientesService.getStock()
             .then(data => {
-                console.log(data)
                 setStockIngredientes(data);
             })
             .catch(error => {
@@ -192,16 +191,16 @@ const Stocks = () => {
                                             <div className="btns-acciones-stock">
                                                 <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
 
-                                                <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('ingrediente') }}>ELIMINAR</button>
+                                                <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('articulo') }}>ELIMINAR</button>
 
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones-stock">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
+                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
 
-                                                <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('ingrediente') }}>ACTIVAR</button>
+                                                <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('articulo') }}>ACTIVAR</button>
                                             </div>
                                         </td>
                                     )

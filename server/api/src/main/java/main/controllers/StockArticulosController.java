@@ -95,6 +95,8 @@ public class StockArticulosController {
                     stockDetail.setMedida(medidaRepository.findById(1l).get());
                 }
 
+                stockDetail.setBorrado("NO");
+
                 stockArticuloRepository.save(stockDetail);
 
                 return new ResponseEntity<>("El stockArticuloVenta ha sido añadido correctamente", HttpStatus.CREATED);
@@ -108,32 +110,32 @@ public class StockArticulosController {
 
     @CrossOrigin
     @PutMapping("sucursal/{idSucursal}/stockArticulo/update")
-    public ResponseEntity<String> actualizarStock(@RequestBody StockArticuloVenta stockIngredientes, @PathVariable("idSucursal") long id) {
+    public ResponseEntity<String> actualizarStock(@RequestBody StockArticuloVenta stockArticuloVenta, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
-        Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
+        Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findByIdAndIdSucursal(stockArticuloVenta.getId(), id);
 
-        if (stockEncontrado.isPresent() && stockEncontrado.get().getBorrado().equals(stockIngredientes.getBorrado())) {
+        if (stockEncontrado.isPresent() && stockEncontrado.get().getBorrado().equals(stockArticuloVenta.getBorrado())) {
             StockArticuloVenta stock = stockEncontrado.get();
 
-            stock.setCantidadMinima(stockIngredientes.getCantidadMinima());
-            stock.setCantidadMaxima(stockIngredientes.getCantidadMaxima());
-            stock.setCantidadActual(stockIngredientes.getCantidadActual());
-            stock.setPrecioCompra(stockIngredientes.getPrecioCompra());
-            stock.setMedida(stockIngredientes.getMedida());
+            stock.setCantidadMinima(stockArticuloVenta.getCantidadMinima());
+            stock.setCantidadMaxima(stockArticuloVenta.getCantidadMaxima());
+            stock.setCantidadActual(stockArticuloVenta.getCantidadActual());
+            stock.setPrecioCompra(stockArticuloVenta.getPrecioCompra());
+            stock.setMedida(stockArticuloVenta.getMedida());
 
             stockArticuloRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
-        } else if (stockEncontrado.isPresent() && !stockEncontrado.get().getBorrado().equals(stockIngredientes.getBorrado())) {
+        } else if (stockEncontrado.isPresent() && !stockEncontrado.get().getBorrado().equals(stockArticuloVenta.getBorrado())) {
             StockArticuloVenta stock = stockEncontrado.get();
 
-            stock.setBorrado(stockIngredientes.getBorrado());
+            stock.setBorrado(stockArticuloVenta.getBorrado());
 
             stockArticuloRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
 
         }
 
-        return ResponseEntity.ofNullable("El stock no existe");
+        return ResponseEntity.ofNullable("El stock no existe o está desactivado");
     }
 
 }
