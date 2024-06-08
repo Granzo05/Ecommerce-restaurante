@@ -177,7 +177,7 @@ const HeaderHomePage: React.FC = () => {
             </div>
             <div className="header-content container">
                 <div className="header-txt">
-                    <h1>El Buen Sabor</h1>
+                    <h1>&mdash; El Buen Sabor &mdash;</h1>
                     <p>¡Donde lo buenardo es rutina!</p>
                 </div>
             </div>

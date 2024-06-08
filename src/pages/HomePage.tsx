@@ -8,7 +8,6 @@ import DetallesPromocion from '../components/Promociones/DetallesPromocion';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 import HeaderHomePage from '../components/headerHomePage';
 import Footer from '../components/Footer';
-import '../styles/loginRestaurante.css'
 
 
 export default function MainMenu() {
@@ -60,9 +59,8 @@ export default function MainMenu() {
                 <div className="information-content">
                     <div className='information-1'>
                         <div className="information-c1">
-                            <h3>Historia</h3>
-                            <p>"El Buen Sabor", fundado en 2000 por Carlos Rodríguez, ofrece una experiencia culinaria única y auténtica en nuestro país.</p>
-                            <a href="" className='btn-1'>Conocer historia</a>
+                            <h3>&mdash; Historia &mdash;</h3>
+                            <p>"El Buen Sabor", fundado en 2000 por Carlos Rodríguez, ofrece una experiencia culinaria auténtica y única en nuestro país. Desde entonces, nos dedicamos a brindar platos que reflejan nuestra tradición gastronómica.</p>
                         </div>
                         <div className="information-a1">
                             <img src="../src/assets/img/restaurante-bg.avif" alt="" />
@@ -73,12 +71,8 @@ export default function MainMenu() {
                             <img src="../src/assets/img/meseros.jpg" alt="" />
                         </div>
                         <div className="information-c1">
-                            <h3>Sobre nosotros</h3>
-                            <p>Somos "El Buen Sabor", un lugar de comidas dedicado a ofrecer lo mejor de la gastronomía local.
-                                Nuestro compromiso es brindar platos deliciosos con ingredientes frescos
-                                y de alta calidad, en un ambiente acogedor y familiar.
-                            </p>
-                            <a href="" className='btn-1'>Más sobre nosotros</a>
+                            <h3>&mdash; Sobre nosotros &mdash;</h3>
+                            <p>Somos "El Buen Sabor", un lugar de comidas dedicado a ofrecer lo mejor de la gastronomía local. Nuestro compromiso es brindar platos deliciosos con ingredientes frescos y de alta calidad, en un ambiente acogedor y familiar. Nos enorgullece presentar una selección de especialidades que resaltan los sabores auténticos de nuestra región, elaborados con pasión y cuidado por nuestros chefs expertos. En "El Buen Sabor", cada comida es una celebración de la tradición culinaria y un momento para disfrutar en compañía de seres queridos.</p>
                         </div>
                     </div>
                 </div>
@@ -87,7 +81,7 @@ export default function MainMenu() {
                 <>
                     <section className='our'>
                         <div id='ofertas' className="container">
-                            <h2>Nuestras promociones</h2>
+                            <h3>&mdash; Nuestras promociones &mdash;</h3>
                         </div>
                     </section>
                     <section className="oferts">
@@ -115,7 +109,7 @@ export default function MainMenu() {
                 <ModalFlotante isOpen={showDetallePromocionModal} onClose={handleModalClose}>
                     <DetallesPromocion selectedPromocion={selectedPromocion} />
                 </ModalFlotante>
-                <h2>Menús</h2>
+                <h2>&mdash; Menús &mdash;</h2>
                 <span>Categorías</span>
                 <div className="food-content">
                     {sucursal && sucursal.categorias?.length > 0 && (

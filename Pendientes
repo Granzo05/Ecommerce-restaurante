@@ -54,10 +54,13 @@
 [x] Mostrar paises al seleccionar domicilio
 [x] Pasar de pago a pedido pendientes del cliente
 [x] Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
-[] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
-[] Mostrar categorias solo si hay productos con stock que la completen
-[] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
+[x] Mostrar categorias solo si hay productos con stock que la completen
+[x] Arregla el tema de añadir varios domicilios con los inputs que se van a repetir y cambiar en caso de ser varios domicilios(inputProvincia e inputDepartamento) hacer un handle domicilio para asignar esos al domicilio creado
+[] Mejorar el suspense del appRoutes
+[] Revisar el muestreo de fechas al crear promocion porque con el value se va a romper, stockEntrante tambien, loginCliente tambien (STOCK ENTRANTE EJ FUNCIONAL) 
 [] Que el modal de recomendaciones no muestre alguna de las opciones si ya esta seleccionada en un input previo, por ej si ya seleccione el ingrediente 'carne' que al poner otro no muestre este como recomendacion
+[] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
+[] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
 [] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
@@ -70,14 +73,10 @@
 [] Revisar la carga de subcategorias
 [] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
-[] Mejorar el suspense del appRoutes
 [] Agregar imagenes al empleado
-[] Arregla el tema de añadir varios domicilios con los inputs que se van a repetir y cambiar en caso de ser varios domicilios(inputProvincia e inputDepartamento) hacer un handle domicilio para asignar esos al domicilio creado
-[] Revisar el muestreo de fechas al crear promocion porque con el value se va a romper, stockEntrante tambien, loginCliente tambien
 [] Formatear y mejorar la legibilidad del codigo
 [] Si llegamos mostrar recetas de los menus
 
-[] Ver tema del auth para privilegios y esas cosas
 
 Pruebas
 [x] Carga empresa [] Probar validación

@@ -1,37 +1,62 @@
 import '../styles/footer.css';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
+import React, { useState } from 'react';
 
 const Footer = () => { 
+  const [selectedBranch, setSelectedBranch] = useState(null);
+
+  // Datos de ejemplo para una sucursal seleccionada
+  const branchData = {
+    location: "Calle Falsa 123, Springfield",
+    schedule: {
+      weekdays: "Lunes a sábado: 9am - 11pm",
+      sunday: "Domingo: 11am - 9pm"
+    }
+  };
+
   return (
     <footer id='contactos' className='footer'>
       <div className="footer-content container">
         <div className="link">
-          <a className="logo-footer"><img src={Logo} alt="Logo" /></a>
-        </div>
-        <div className="link">
           <ul>
             <li>
-              - Contacto -
+              <h3 style={{fontSize:'19px', color: '#FFFFFF'}}>&mdash; Contacto &mdash;</h3>
               <ul>
-                <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-                <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a></li>
-                <li><a href="">WhatsApp</a></li>
+                <li><a href="https://instagram.com" style={{textDecoration: 'underline'}} target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                <li><a href="https://twitter.com" style={{textDecoration: 'underline'}} target="_blank" rel="noopener noreferrer">Twitter</a></li>
+                <li><a href="https://whatsapp.com" style={{textDecoration: 'underline'}}>WhatsApp</a></li>
               </ul>
             </li>
             <li>
-              - Ubicación -
+              <h3 style={{fontSize:'19px', color: '#FFFFFF'}}>&mdash; Ubicación &mdash;</h3>
               <ul>
-                <li><a>NO HA SELECCIONADO UNA SUCURSAL.</a><a href="/selec-sucursal">HÁGALO AHORA</a></li>
-                <li><a href="https://maps.google.com" target="_blank" rel="noopener noreferrer">Google Maps</a></li>
-                <li><a href="https://www.yelp.com" target="_blank" rel="noopener noreferrer">Yelp</a></li>
+                {selectedBranch ? (
+                  <>
+                    <li><a>{branchData.location}</a></li>
+                    <li><a href="https://maps.google.com" target="_blank" rel="noopener noreferrer">Google Maps</a></li>
+                    <li><a href="https://www.yelp.com" target="_blank" rel="noopener noreferrer">Yelp</a></li>
+                  </>
+                ) : (
+                  <>
+                    <li><a>NO HA SELECCIONADO UNA SUCURSAL. </a><a href="/selec-sucursal" style={{textDecoration: 'underline'}}>HÁGALO AHORA</a></li>
+                 </>
+                )}
               </ul>
             </li>
             <li>
-              - Horario -
+              <h3 style={{fontSize:'19px', color: '#FFFFFF'}}>&mdash; Horario &mdash;</h3>
               <ul>
-                <li><a>NO HA SELECCIONADO UNA SUCURSAL.</a><a href="/selec-sucursal">HÁGALO AHORA</a></li>
-                <li><a >Lunes a sábado: 9am - 11pm</a></li>
-                <li><a >Domingo: 11am - 9pm</a></li>
+                {selectedBranch ? (
+                  <>
+                    <li><a>{branchData.schedule.weekdays}</a></li>
+                    <li><a>{branchData.schedule.sunday}</a></li>
+                  </>
+                ) : (
+                  <>
+                    <li><a>NO HA SELECCIONADO UNA SUCURSAL. </a><a href="/selec-sucursal" style={{textDecoration: 'underline'}}>HÁGALO AHORA</a></li>
+                   
+                  </>
+                )}
               </ul>
             </li>
           </ul>
@@ -42,6 +67,7 @@ const Footer = () => {
 }
 
 export default Footer;
+
 
 
 /*<footer className="footer">
