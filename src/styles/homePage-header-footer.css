@@ -72,6 +72,13 @@ img{
     font-weight: 600;
 }
 
+.nombre-email-usuario{
+    position: absolute;
+    top: 32px;
+    right: -92px;
+    font-size: 16px;
+}
+
 /*-----------MENU----------------*/
 
 .menu{

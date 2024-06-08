@@ -1,14 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Cliente } from '../../types/Cliente/Cliente';
 
 const Cuenta = () => {
     const [editEmail, setEditEmail] = useState(false);
     const [editPassword, setEditPassword] = useState(false);
-    const [currentEmail, setCurrentEmail] = useState('usuario@ejemplo.com');
+    const [currentEmail, setCurrentEmail] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
-    const [currentPassword, setCurrentPassword] = useState('123456');
+    const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [cliente, setCliente] = useState<Cliente | null>(null);
+
+    useEffect(() => {
+        cargarUsuario();
+    }, []);
+
+    const cargarUsuario = async () => {
+        const clienteString = localStorage.getItem('usuario');
+        let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+
+        setCliente(clienteMem);
+        setCurrentEmail(clienteMem?.email);
+        setCurrentPassword(clienteMem?.contraseña);
+    }
+
+            
 
     const handleEditEmail = () => {
         setEditEmail(true);
@@ -20,6 +37,7 @@ const Cuenta = () => {
             setEditEmail(false);
             setNewEmail('');
             setConfirmEmail('');
+            updateLocalStorage();
         } else {
             alert('Los correos electrónicos no coinciden');
         }
@@ -35,9 +53,15 @@ const Cuenta = () => {
             setEditPassword(false);
             setNewPassword('');
             setConfirmPassword('');
+            updateLocalStorage();
         } else {
             alert('Las contraseñas no coinciden');
         }
+    };
+
+    const updateLocalStorage = () => {
+        const profile = { email: currentEmail, password: currentPassword };
+        localStorage.setItem('profile', JSON.stringify(profile));
     };
 
     const maskedEmail = `${currentEmail.slice(0, 4)}****@${currentEmail.split('@')[1]}`;
@@ -56,7 +80,8 @@ const Cuenta = () => {
                                     <input
                                         type="email"
                                         placeholder="Correo actual"
-                                        value=''
+                                        value={currentEmail}
+                                        readOnly
                                     />
                                     <input
                                         type="email"
@@ -92,7 +117,8 @@ const Cuenta = () => {
                                     <input
                                         type="password"
                                         placeholder="Contraseña actual"
-                                        value=''
+                                        value={currentPassword}
+                                        readOnly
                                     />
                                     <input
                                         type="password"
@@ -113,7 +139,7 @@ const Cuenta = () => {
                                     Contraseña:
                                     <input className='current-pass'
                                         type="password"
-                                        value={currentPassword}
+                                        value="********"
                                         readOnly
                                     />
                                     <button onClick={handleEditPassword}>Editar contraseña</button>

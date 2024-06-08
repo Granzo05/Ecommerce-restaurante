@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import '../styles/homePage-header-footer.css'
 import { SucursalService } from '../services/SucursalService';
 import { useParams } from 'react-router-dom';
 import { Promocion } from '../types/Productos/Promocion';

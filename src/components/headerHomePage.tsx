@@ -31,20 +31,35 @@ const HeaderHomePage: React.FC = () => {
 
     const handleCartClick = () => {
         setIsCartOpen(!isCartOpen); // Alterna la visibilidad del carrito
+        setIsAccountOpen(false);
     };
 
     const handleCloseCart = () => {
         setIsCartOpen(false);
+
     };
 
     const handleAccountClick = () => {
         // Muestra la ventana de preferencias de cuenta
         setIsAccountOpen(!isAccountOpen);
+        setIsCartOpen(false);
     };
 
     const handleLogout = () => {
         localStorage.removeItem('usuario');
         setCliente(null)
+    };
+
+    const handleEditarPerfilClick = () => {
+        navigate('/cliente', { state: { opcionSeleccionada: 4 } });
+    };
+
+    const handleEditarDomiciliosClick = () => {
+        navigate('/cliente', { state: { opcionSeleccionada: 3 } });
+    };
+
+    const handlePedidosClick = () => {
+        navigate('/cliente', { state: { opcionSeleccionada: 2 } });
     };
 
     const [carrito, setCarrito] = useState<Carrito>(new Carrito());
@@ -94,6 +109,10 @@ const HeaderHomePage: React.FC = () => {
                                 <img className='menu-icono' src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
 
                                 <img className='menu-icono' src="../src/assets/icons/header-icono-cuenta.png" alt="Cuenta" onClick={handleAccountClick} />
+                                <p className='nombre-email-usuario' style={{color: 'white'}}>{cliente.nombre ? cliente.nombre : cliente.email}</p>
+
+
+
                                 {isCartOpen && location.pathname !== '/pago' && (
                                     <div className="cart-dropdown">
                                         <h4>Carrito de compras</h4>
@@ -159,9 +178,9 @@ const HeaderHomePage: React.FC = () => {
                                     <div className="account-dropdown">
                                         <h4>Preferencias de cuenta</h4>
                                         <ul className="preferences-list">
-                                            <li><button onClick={() => navigate('/cliente/preferencias')}>Editar perfil</button></li>
-                                            <li><button onClick={() => navigate('/cliente/pedidos')}>Editar domicilios</button></li>
-                                            <li><button onClick={() => navigate('/cliente/pedidos')}>Pedidos</button></li>
+                                            <li><button onClick={handleEditarPerfilClick}>Editar perfil</button></li>
+                                            <li><button onClick={handleEditarDomiciliosClick}>Editar domicilios</button></li>
+                                            <li><button onClick={handlePedidosClick}>Pedidos</button></li>
                                         </ul>
                                         <div className='button-logout-div'>
                                             <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>

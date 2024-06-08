@@ -16,9 +16,13 @@ import PedidosRealizados from '../components/Cliente/PedidosRealizados';
 import Cuenta from '../components/Cliente/Cuenta';
 import Perfil from '../components/Cliente/Perfil';
 import Header from '../components/Header';
+import { Cliente } from '../types/Cliente/Cliente';
+import { useLocation } from 'react-router-dom';
 
 const OpcionesCliente = () => {
-    const [opcionSeleccionada, setOpcionSeleccionada] = useState<number>(0);
+    const location = useLocation();
+    const state = location.state as { opcionSeleccionada: number } | null;
+    const [opcionSeleccionada, setOpcionSeleccionada] = useState<number>(state?.opcionSeleccionada || 0);
     const [isVisible, setVisible] = useState<boolean>(true);
     const [pedidosVisible, setPedidosVisible] = useState(false);
     const [settingsVisible, setSettingsVisible] = useState(false);
@@ -31,12 +35,27 @@ const OpcionesCliente = () => {
     const [settingsBg, setSettingsBg] = useState('');
     const [sidebarBg, setSidebarBg] = useState('');
 
+    const [cliente, setCliente] = useState<Cliente | null>(null);
+
+    useEffect(() => {
+        cargarUsuario();
+    }, []);
+
+    const cargarUsuario = async () => {
+        const clienteString = localStorage.getItem('usuario');
+        let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+
+        setCliente(clienteMem);
+    }
+    
+
     const togglePedidosVisibility = () => {
         setPedidosVisible(!pedidosVisible);
         setPedidosIcon(pedidosVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
         if (!pedidosVisible && opcionSeleccionada >= 1 && opcionSeleccionada <= 4) {
             setOpcionSeleccionada(opcionSeleccionada);
         }
+
     };
 
     const toggleMenuVisibility = () => {
@@ -57,7 +76,7 @@ const OpcionesCliente = () => {
             case 2:
                 return <PedidosRealizados />;
             case 3:
-                    return <Perfil />;
+                return <Perfil />;
             case 4:
                 return <Cuenta />;
         }
@@ -78,6 +97,8 @@ const OpcionesCliente = () => {
     useEffect(() => {
         document.title = 'Administración y opciones';
     }, []);
+
+    
 
     return (
         <>
@@ -127,7 +148,7 @@ const OpcionesCliente = () => {
                     <div className="perfil-employee">
                         <PersonIcon style={{ fontSize: '38px', display: 'inline' }} />
                         <div className="account-info">
-                            <label className="name-account">Augusto David Ficara Vargas</label>
+                            <label className="name-account">{cliente?.nombre}</label>
                         </div>
                         <LogoutIcon onClick={() => window.location.href = 'http://localhost:5173/login-negocio'} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
                     </div>
@@ -137,7 +158,7 @@ const OpcionesCliente = () => {
                 </div>
             </div>
 
-            <div className={`table-info ${menuVisible ? '' : 'expanded'}`} style={{ flex: 1 }}>
+            <div className={`table-info ${menuVisible ? '' : 'expanded'}`} style={{ flex: 1, backgroundColor: 'white' }}>
                 {renderInformacion()}
             </div>
         </div>

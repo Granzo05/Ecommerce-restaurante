@@ -1,19 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../styles/perfil.css'
+import { Cliente } from '../../types/Cliente/Cliente';
+import { Domicilio } from '../../types/Domicilio/Domicilio';
 
 const Perfil = () => {
     const [editNombre, setEditNombre] = useState(false);
     const [editTelefono, setEditTelefono] = useState(false);
     const [editDomicilio, setEditDomicilio] = useState(false);
-
-    const [currentNombre, setCurrentNombre] = useState('Nombre de Usuario');
+    const [currentNombre, setCurrentNombre] = useState('');
     const [newNombre, setNewNombre] = useState('');
 
-    const [currentTelefono, setCurrentTelefono] = useState('1234567890');
+    const [currentTelefono, setCurrentTelefono] = useState();
     const [newTelefono, setNewTelefono] = useState('');
 
-    const [currentDomicilio, setCurrentDomicilio] = useState('Calle Falsa 123');
+    const [currentDomicilio, setCurrentDomicilio] = useState('');
     const [newDomicilio, setNewDomicilio] = useState('');
+
+    const [cliente, setCliente] = useState<Cliente | null>(null);
+
+    useEffect(() => {
+        cargarUsuario();
+    }, []);
+
+    const cargarUsuario = async () => {
+        const clienteString = localStorage.getItem('usuario');
+        let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+
+        setCliente(clienteMem);
+        setCurrentNombre(clienteMem?.nombre);
+        setCurrentTelefono(clienteMem?.telefono);
+        setCurrentDomicilio(clienteMem?.domicilios)
+    }
+
+    
 
     const handleEditNombre = () => {
         setEditNombre(true);

@@ -14,6 +14,7 @@ import ModalFlotanteRecomendacionesDepartamentos from '../hooks/ModalFlotanteFil
 import ModalFlotanteRecomendacionesLocalidades from '../hooks/ModalFlotanteFiltroLocalidades';
 import HeaderLogin from '../components/headerLogin';
 import ModalFlotanteRecomendacionesPais from '../hooks/ModalFlotanteFiltroPais';
+import { formatearFechaYYYYMMDD } from '../utils/global_variables/functions';
 
 const LoginCliente = () => {
     const [step, setStep] = useState(1);
@@ -152,6 +153,8 @@ const LoginCliente = () => {
         document.title = 'El Buen Sabor - Iniciar sesión';
     }, []);
 
+    const [fecha, setFecha] = useState(new Date());
+
     const renderStep = () => {
         switch (step) {
             case 1:
@@ -168,7 +171,7 @@ const LoginCliente = () => {
                         </div>
                         <div className="inputBox">
                             <label style={{ display: 'flex', fontWeight: 'bold', marginTop: '-5px' }}>Fecha de nacimiento:</label>
-                            <input type='date' required={true} value={fechaNacimiento.toString()} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+                            <input type='date' required={true} value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
                         </div>
                         <div className="btns-crear-cuenta">
                             <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
