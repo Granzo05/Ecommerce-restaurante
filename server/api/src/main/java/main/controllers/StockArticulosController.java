@@ -3,12 +3,17 @@ package main.controllers;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockEntrante;
 import main.repositories.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,19 +24,33 @@ public class StockArticulosController {
     private final ArticuloVentaRepository articuloVentaRepository;
     private final SucursalRepository sucursalRepository;
     private final MedidaRepository medidaRepository;
+    private final StockEntranteRepository stockEntranteRepository;
 
-    public StockArticulosController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, MedidaRepository medidaRepository) {
+    public StockArticulosController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, MedidaRepository medidaRepository, StockEntranteRepository stockEntranteRepository) {
         this.stockArticuloRepository = stockArticuloRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.articuloVentaRepository = articuloVentaRepository;
         this.sucursalRepository = sucursalRepository;
         this.medidaRepository = medidaRepository;
+        this.stockEntranteRepository = stockEntranteRepository;
     }
 
     @CrossOrigin
     @GetMapping("/stockArticulos/{idSucursal}")
     public Set<StockArticuloVenta> getStock(@PathVariable("idSucursal") Long id) {
-        return new HashSet<>(stockArticuloRepository.findAllByIdSucursal(id));
+        List<StockArticuloVenta> stocks = stockArticuloRepository.findAllByIdSucursal(id);
+
+        for (StockArticuloVenta stock : stocks) {
+            // Busco el stock entrante más cercano en cuanto a fechaLlegada
+            PageRequest pageable = PageRequest.of(0, 1);
+            Page<StockEntrante> stockEntrante = stockEntranteRepository.findByIdArticuloAndIdSucursal(stock.getArticuloVenta().getId(), id, pageable);
+
+            if (!stockEntrante.isEmpty()) {
+                stock.setFechaLlegadaProxima(stockEntrante.get().toList().get(0).getFechaLlegada());
+            }
+        }
+
+        return new HashSet<>(stocks);
     }
 
     @CrossOrigin

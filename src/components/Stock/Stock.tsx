@@ -11,6 +11,7 @@ import ActivarStock from "./ActivarStock";
 import ModalCrud from "../ModalCrud";
 import { StockArticuloVenta } from "../../types/Stock/StockArticuloVenta";
 import { StockIngredientes } from "../../types/Stock/StockIngredientes";
+import { fomatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 
 
 const Stocks = () => {
@@ -36,6 +37,7 @@ const Stocks = () => {
     const getIngredientes = async () => {
         StockIngredientesService.getStock()
             .then(data => {
+                console.log(data)
                 setStockIngredientes(data);
             })
             .catch(error => {
@@ -150,7 +152,12 @@ const Stocks = () => {
                                     <td>{stock.cantidadMinima}</td>
                                     <td>{stock.cantidadMaxima}</td>
                                     <td>{stock.precioCompra}</td>
-                                    <td>{'No hay próximas entradas'}</td>
+                                    <td>{stock.fechaLlegadaProxima ? (
+                                        fomatearFechaDDMMYYYY(new Date(stock.fechaLlegadaProxima))
+                                    ) : (
+                                        <p>No hay próximas entradas</p>
+                                    )}
+                                    </td>
                                     {stock.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">

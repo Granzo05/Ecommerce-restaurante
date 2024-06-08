@@ -19,14 +19,15 @@ import java.util.Set;
 @ToString
 @Table(name = "stock_entrante", schema = "buen_sabor")
 public class StockEntrante {
-    @Column(name = "fecha_llegada", nullable = false)
-    public LocalDate fechaLlegada;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @JsonIgnore
+
     @Column(name = "borrado")
     private String borrado = "NO";
+
+    @Column(name = "fecha_llegada", nullable = false)
+    private LocalDate fechaLlegada;
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)

@@ -6,6 +6,7 @@ import EliminarPromocionEntrante from "./EliminarPromocion";
 import { PromocionService } from "../../services/PromocionService";
 import { Promocion } from "../../types/Productos/Promocion";
 import AgregarPromocion from "./AgregarPromocion";
+import { fomatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 
 const Promociones = () => {
     const [promociones, setPromociones] = useState<Promocion[]>([]);
@@ -17,17 +18,6 @@ const Promociones = () => {
     const [showActivarPromocionModal, setShowActivarPromocionModal] = useState(false);
 
     const [selectedPromocion, setSelectedPromocion] = useState<Promocion>(new Promocion());
-
-    const formatDate = (date: Date) => {
-        const dia = date.getDate() + 1;
-        const mes = date.getMonth() + 1;
-        const año = date.getFullYear();
-
-        const diaFormateado = dia < 10 ? `0${dia}` : dia;
-        const mesFormateado = mes < 10 ? `0${mes}` : mes;
-
-        return `${diaFormateado}/${mesFormateado}/${año}`;
-    };
 
     useEffect(() => {
         buscarPromociones();
@@ -140,8 +130,8 @@ const Promociones = () => {
                             {promociones.map(promocion => (
                                 <tr key={promocion.id}>
                                     <td>
-                                        {formatDate(new Date(promocion.fechaDesde.toString()))} -
-                                        {formatDate(new Date(promocion.fechaHasta.toString()))}
+                                        {fomatearFechaDDMMYYYY(new Date(promocion.fechaDesde.toString()))} -
+                                        {fomatearFechaDDMMYYYY(new Date(promocion.fechaHasta.toString()))}
                                         (Quedan {diasRestantes(promocion.fechaHasta.toString())} días)
                                     </td>
                                     <td>

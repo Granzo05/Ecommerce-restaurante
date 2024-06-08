@@ -14,6 +14,7 @@ import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFi
 import { DepartamentoService } from '../../services/DepartamentoService';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Imagenes } from '../../types/Productos/Imagenes';
+import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
 
 function AgregarSucursal() {
   // Atributos necesarios para Sucursal
@@ -39,6 +40,8 @@ function AgregarSucursal() {
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
   const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
   const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
+  const [modalBusquedaPais, setModalBusquedaPais] = useState<boolean>(false);
+  const [inputPais, setInputPais] = useState<string>('');
   const [inputProvincia, setInputProvincia] = useState<string>('');
   const [inputDepartamento, setInputDepartamento] = useState<string>('');
   const [localidadSucursal, setLocalidadSucursal] = useState<Localidad>(new Localidad());
@@ -67,6 +70,7 @@ function AgregarSucursal() {
     setModalBusquedaLocalidad(false)
     setModalBusquedaDepartamento(false)
     setModalBusquedaProvincia(false)
+    setModalBusquedaPais(false)
   };
 
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
@@ -274,8 +278,13 @@ function AgregarSucursal() {
               <span>Código Postal</span>
             </div>
             <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
+              <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={inputPais ?? ''} />
+              {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { setInputPais(pais.nombre); handleModalClose(); }} />}
+            </div>
+            <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-              <InputComponent disabled={false} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
+              <InputComponent disabled={inputPais.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
               {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
 
             </div>

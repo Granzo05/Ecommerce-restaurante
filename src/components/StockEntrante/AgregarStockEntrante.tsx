@@ -11,6 +11,7 @@ import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
 import ModalFlotanteRecomendacionesArticulo from '../../hooks/ModalFlotanteFiltroArticuloVenta';
+import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 
 function AgregarStockEntrante() {
 
@@ -204,7 +205,7 @@ function AgregarStockEntrante() {
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
-              <input type="date" required={true} value={fecha.toString()} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
+              <input type="date" required={true} value={formatearFechaYYYYMMDD(fecha)} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>

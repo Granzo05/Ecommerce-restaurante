@@ -7,6 +7,7 @@ import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.Medida;
 import main.entities.Restaurante.Sucursal;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,4 +56,7 @@ public class StockIngredientes {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
+
+    @Transient
+    private LocalDate fechaLlegadaProxima;
 }

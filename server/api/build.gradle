@@ -68,7 +68,6 @@ dependencies {
     // CSV
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
 
-
 }
 
 tasks.named('test') {

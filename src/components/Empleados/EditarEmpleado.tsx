@@ -10,6 +10,10 @@ import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotante
 import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
 import ModalFlotanteRecomendacionesSucursales from '../../hooks/ModalFlotanteFiltroSucursales';
+import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
+import { Departamento } from '../../types/Domicilio/Departamento';
+import { Provincia } from '../../types/Domicilio/Provincia';
+import { Pais } from '../../types/Domicilio/Pais';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -66,6 +70,31 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     setDomicilios(nuevosDomicilios);
   };
 
+  const handleChangePais = (index: number, pais: Pais) => {
+    const nuevosDomicilios = [...domicilios];
+    if (pais) {
+      nuevosDomicilios[index].localidad.departamento.provincia.pais = pais;
+      setDomicilios(nuevosDomicilios);
+    }
+  };
+
+  const handleChangeProvincia = (index: number, provincia: Provincia) => {
+    const nuevosDomicilios = [...domicilios];
+    if (provincia) {
+      nuevosDomicilios[index].localidad.departamento.provincia = provincia;
+      setDomicilios(nuevosDomicilios);
+    }
+  };
+
+  const handleChangeDepartamento = (index: number, departamento: Departamento) => {
+    const nuevosDomicilios = [...domicilios];
+    if (departamento) {
+      nuevosDomicilios[index].localidad.departamento = departamento;
+      setDomicilios(nuevosDomicilios);
+    }
+  };
+
+
   const handleChangeLocalidad = (index: number, localidad: Localidad) => {
     const nuevosDomicilios = [...domicilios];
     if (localidad) {
@@ -115,19 +144,17 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
     }
   };
 
-  const [inputProvincia, setInputProvincia] = useState<string>('');
-  const [inputDepartamento, setInputDepartamento] = useState<string>('');
-
+  const [modalBusquedaSucursal, setModalBusquedaSucursal] = useState<boolean>(false);
   const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
   const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
-  const [modalBusquedaSucursal, setModalBusquedaSucursal] = useState<boolean>(false);
+  const [modalBusquedaPais, setModalBusquedaPais] = useState<boolean>(false);
 
   const handleModalClose = () => {
     setModalBusquedaProvincia(false)
     setModalBusquedaDepartamento(false)
     setModalBusquedaLocalidad(false)
-    setModalBusquedaSucursal(false)
+    setModalBusquedaPais(false)
   };
 
   const formatDate = (date: Date) => {
@@ -274,15 +301,19 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
               <input type="number" required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
               <span>Código Postal</span>
             </div>
-            <h2>Provincia</h2>
-            <InputComponent disabled={false} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
-            {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
-
-            <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
-            {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
-
-            <InputComponent disabled={inputDepartamento.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
-            {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
+            <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.pais?.nombre ?? ''} />
+            {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { handleChangePais(index, pais); handleModalClose(); }} />}
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
+            <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.pais.nombre.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
+            {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
+            <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />
+            {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { handleChangeDepartamento(index, departamento); handleModalClose(); }} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
+            <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
+            {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+            <hr />
             <hr /><p onClick={() => quitarCampoDomicilio(index)}>X</p>
           </div>
         ))}

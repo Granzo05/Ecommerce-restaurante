@@ -5,26 +5,33 @@ import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockArticuloVenta;
+import main.entities.Stock.StockEntrante;
 import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @RestController
 public class StockIngredientesController {
     private final StockIngredientesRepository stockIngredientesRepository;
+    private final StockEntranteRepository stockEntranteRepository;
     private final IngredienteRepository ingredienteRepository;
     private final ArticuloMenuRepository articuloMenuRepository;
     private final SucursalRepository sucursalRepository;
     private final MedidaRepository medidaRepository;
 
-    public StockIngredientesController(StockIngredientesRepository stockIngredientesRepository, IngredienteRepository ingredienteRepository, ArticuloMenuRepository articuloMenuRepository, SucursalRepository sucursalRepository, MedidaRepository medidaRepository) {
+    public StockIngredientesController(StockIngredientesRepository stockIngredientesRepository, StockEntranteRepository stockEntranteRepository, IngredienteRepository ingredienteRepository, ArticuloMenuRepository articuloMenuRepository, SucursalRepository sucursalRepository, MedidaRepository medidaRepository) {
         this.stockIngredientesRepository = stockIngredientesRepository;
+        this.stockEntranteRepository = stockEntranteRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.articuloMenuRepository = articuloMenuRepository;
         this.sucursalRepository = sucursalRepository;
@@ -34,7 +41,19 @@ public class StockIngredientesController {
     @CrossOrigin
     @GetMapping("/stockIngredientes/{idSucursal}")
     public Set<StockIngredientes> getStock(@PathVariable("idSucursal") long id) {
-        return new HashSet<>(stockIngredientesRepository.findAllByIdSucursal(id));
+        List<StockIngredientes> stockIngredientes = stockIngredientesRepository.findAllByIdSucursal(id);
+
+        for (StockIngredientes stock : stockIngredientes) {
+            // Busco el stock entrante más cercano en cuanto a fechaLlegada
+            PageRequest pageable = PageRequest.of(0, 1);
+            Page<StockEntrante> stockEntrante = stockEntranteRepository.findByIdIngredienteAndIdSucursal(stock.getIngrediente().getId(), id, pageable);
+
+            if (!stockEntrante.isEmpty()) {
+                stock.setFechaLlegadaProxima(stockEntrante.get().toList().get(0).getFechaLlegada());
+            }
+        }
+
+        return new HashSet<>(stockIngredientes);
     }
 
 

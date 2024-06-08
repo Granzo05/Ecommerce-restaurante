@@ -1,10 +1,7 @@
 package main.controllers;
 
 import main.EncryptMD5.Encrypt;
-import main.entities.Domicilio.Departamento;
-import main.entities.Domicilio.Domicilio;
-import main.entities.Domicilio.Localidad;
-import main.entities.Domicilio.Provincia;
+import main.entities.Domicilio.*;
 import main.repositories.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +28,14 @@ public class PaisController {
         this.provinciaRepository = provinciaRepository;
         this.paisRepository = paisRepository;
         this.domicilioRepository = domicilioRepository;
+    }
+
+    @CrossOrigin
+    @GetMapping("/paises")
+    public Set<Pais> getPaises() throws Exception {
+        List<Pais> paises = paisRepository.findAll();
+
+        return new HashSet<>(paises);
     }
 
     @CrossOrigin

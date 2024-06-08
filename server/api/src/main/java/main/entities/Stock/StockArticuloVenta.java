@@ -11,6 +11,7 @@ import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,6 +50,9 @@ public class StockArticuloVenta implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
+
+    @Transient
+    private LocalDate fechaLlegadaProxima;
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

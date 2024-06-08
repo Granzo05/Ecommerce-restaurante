@@ -6,7 +6,9 @@ import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.DetalleStock;
+import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockEntrante;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.*;
 @RestController
 public class StockEntranteController {
     private final StockArticuloVentaRepository stockArticuloRepository;
+    private final StockIngredientesRepository stockIngredientesRepository;
     private final IngredienteRepository ingredienteRepository;
     private final ArticuloVentaRepository articuloVentaRepository;
     private final SucursalRepository sucursalRepository;
@@ -23,8 +26,9 @@ public class StockEntranteController {
     private final DetalleStockRepository detalleStockRepository;
     private final MedidaRepository medidaRepository;
 
-    public StockEntranteController(StockArticuloVentaRepository stockArticuloRepository, IngredienteRepository ingredienteRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, StockEntranteRepository stockEntranteRepository, DetalleStockRepository detalleStockRepository, MedidaRepository medidaRepository) {
+    public StockEntranteController(StockArticuloVentaRepository stockArticuloRepository, StockIngredientesRepository stockIngredientesRepository, IngredienteRepository ingredienteRepository, ArticuloVentaRepository articuloVentaRepository, SucursalRepository sucursalRepository, StockEntranteRepository stockEntranteRepository, DetalleStockRepository detalleStockRepository, MedidaRepository medidaRepository) {
         this.stockArticuloRepository = stockArticuloRepository;
+        this.stockIngredientesRepository = stockIngredientesRepository;
         this.ingredienteRepository = ingredienteRepository;
         this.articuloVentaRepository = articuloVentaRepository;
         this.sucursalRepository = sucursalRepository;
@@ -83,9 +87,35 @@ public class StockEntranteController {
             if (detalle.getArticuloVenta() != null && detalle.getArticuloVenta().getNombre().length() > 2) {
                 ArticuloVenta articulo = articuloVentaRepository.findByName(detalle.getArticuloVenta().getNombre()).get();
                 nuevoDetalle.setArticuloVenta(articulo);
+
+                // Buscamos el stock almacenado del articulo
+                Optional<StockArticuloVenta> stockArticulo = stockArticuloRepository.findByIdArticuloAndIdSucursal(articulo.getId(), id);
+
+                // Comparamos el precio almacenado de compra con la nueva compra
+                if(stockArticulo.isPresent()) {
+                    // Si los precios son distintos, asignamos el precio de compra nuevo para poder calcular mejor el costo de los menus y no perder plata
+                    if(stockArticulo.get().getPrecioCompra() != detalle.getCostoUnitario()) {
+                        stockArticulo.get().setPrecioCompra(detalle.getCostoUnitario());
+
+                        stockArticuloRepository.save(stockArticulo.get());
+                    }
+                }
             } else if (detalle.getIngrediente() != null && detalle.getIngrediente().getNombre().length() > 2) {
                 Ingrediente ingrediente = ingredienteRepository.findByNameAndIdSucursal(detalle.getIngrediente().getNombre(), id).get();
                 nuevoDetalle.setIngrediente(ingrediente);
+
+                // Buscamos el stock almacenado del articulo
+                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findStockByIngredienteNameAndIdSucursal(ingrediente.getNombre(), id);
+
+                // Comparamos el precio almacenado de compra con la nueva compra
+                if(stockIngrediente.isPresent()) {
+                    // Si los precios son distintos, asignamos el precio de compra nuevo para poder calcular mejor el costo de los menus y no perder plata
+                    if(stockIngrediente.get().getPrecioCompra() != detalle.getCostoUnitario()) {
+                        stockIngrediente.get().setPrecioCompra(detalle.getCostoUnitario());
+
+                        stockIngredientesRepository.save(stockIngrediente.get());
+                    }
+                }
             } else {
                 return ResponseEntity.badRequest().body("No se han recibido los articulos correctamente");
             }

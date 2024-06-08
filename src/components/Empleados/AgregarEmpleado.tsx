@@ -14,6 +14,8 @@ import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFi
 import '../../styles/inputLabel.css'
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { Departamento } from '../../types/Domicilio/Departamento';
+import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
+import { Pais } from '../../types/Domicilio/Pais';
 
 function AgregarEmpleado() {
 
@@ -29,11 +31,13 @@ function AgregarEmpleado() {
   const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
   const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
+  const [modalBusquedaPais, setModalBusquedaPais] = useState<boolean>(false);
 
   const handleModalClose = () => {
     setModalBusquedaProvincia(false)
     setModalBusquedaDepartamento(false)
     setModalBusquedaLocalidad(false)
+    setModalBusquedaPais(false)
   };
 
   const handleChangeCalle = (index: number, calle: string) => {
@@ -52,6 +56,14 @@ function AgregarEmpleado() {
     const nuevosDomicilios = [...domicilios];
     nuevosDomicilios[index].codigoPostal = codigoPostal;
     setDomicilios(nuevosDomicilios);
+  };
+
+  const handleChangePais = (index: number, pais: Pais) => {
+    const nuevosDomicilios = [...domicilios];
+    if (pais) {
+      nuevosDomicilios[index].localidad.departamento.provincia.pais = pais;
+      setDomicilios(nuevosDomicilios);
+    }
   };
 
   const handleChangeProvincia = (index: number, provincia: Provincia) => {
@@ -161,11 +173,11 @@ function AgregarEmpleado() {
     empleado.borrado = 'NO';
     toast.promise(EmpleadoService.createEmpleado(empleado), {
       loading: 'Creando empleado...',
-      success: (message) => {
+      success: (message: string) => {
         //clearInputs();
         return message;
       },
-      error: (message) => {
+      error: (message: string) => {
         return message;
       },
     });
@@ -240,8 +252,11 @@ function AgregarEmpleado() {
                   <input type="number" required={true} value={domicilio?.codigoPostal} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
                   <span>Código Postal</span>
                 </div>
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
+                <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.pais?.nombre ?? ''} />
+                {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { handleChangePais(index, pais); handleModalClose(); }} />}
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-                <InputComponent disabled={false} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
+                <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.pais.nombre.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
                 {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
                 <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />

@@ -10,6 +10,7 @@ export class StockArticuloVenta {
     cantidadMaxima: number = 0;
     medida: Medida | null = null;
     borrado: string = '';
+    fechaLlegadaProxima: Date | null = null;
 
     constructor() {
     }
