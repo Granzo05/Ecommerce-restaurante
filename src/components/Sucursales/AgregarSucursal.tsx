@@ -187,8 +187,9 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     domicilio.numero = numeroCalle;
     domicilio.codigoPostal = codigoPostal;
     domicilio.localidad = localidadSucursal;
+    domicilio.borrado = 'NO';
 
-    sucursal.domicilio = domicilio;
+    sucursal.domicilios.push(domicilio);
 
     sucursal.nombre = nombre;
 
@@ -215,6 +216,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
 
     sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
     sucursal.borrado = 'NO';
+
     toast.promise(SucursalService.createSucursal(sucursal, imagenes), {
       loading: 'Guardando sucursal...',
       success: (message) => {

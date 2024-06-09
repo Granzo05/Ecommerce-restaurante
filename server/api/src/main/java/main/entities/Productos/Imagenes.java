@@ -42,7 +42,7 @@ public class Imagenes implements Serializable {
     private Set<ArticuloMenu> articulosMenu = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"imagenes", "sucursales"}, allowSetters = true)
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "imagenes_articulo",
             joinColumns = @JoinColumn(name = "id_imagen"),
@@ -51,7 +51,7 @@ public class Imagenes implements Serializable {
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"imagenes", "sucursales"}, allowSetters = true)
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "imagenes_promocion",
             joinColumns = @JoinColumn(name = "id_imagen"),
@@ -60,7 +60,7 @@ public class Imagenes implements Serializable {
     private Set<Promocion> promociones = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales", "imagenes"}, allowSetters = true)
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "imagenes_empresa",
             joinColumns = @JoinColumn(name = "id_imagen"),
@@ -69,7 +69,7 @@ public class Imagenes implements Serializable {
     private Set<Empresa> empresas = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "imagenes_sucursal",
             joinColumns = @JoinColumn(name = "id_imagen"),
@@ -78,7 +78,7 @@ public class Imagenes implements Serializable {
     private Set<Sucursal> sucursales = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"subcategorias", "sucursales"}, allowSetters = true)
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "imagenes_categoria",
             joinColumns = @JoinColumn(name = "id_imagen"),

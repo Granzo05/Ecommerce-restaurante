@@ -89,7 +89,7 @@ const Sucursales = () => {
                     <table>
                         <thead>
                             <tr>
-                                <th>Domicilio</th>
+                                <th>Nombre</th>
                                 <th>Telefono</th>
                                 <th>Horario apertura</th>
                                 <th>Horario cierre</th>
@@ -99,7 +99,7 @@ const Sucursales = () => {
                         <tbody>
                             {sucursales.map(sucursal => (
                                 <tr key={sucursal.id}>
-                                    <td>{sucursal.empresa.nombre} de {sucursal.domicilio?.localidad?.nombre}, {sucursal.domicilio?.localidad?.departamento?.provincia?.nombre}</td>
+                                    <td>{sucursal.nombre}</td>
                                     <td>{sucursal.telefono}</td>
                                     <td>{sucursal.horarioApertura}</td>
                                     <td>{sucursal.horarioCierre}</td>

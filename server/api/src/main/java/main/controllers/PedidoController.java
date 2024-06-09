@@ -115,7 +115,8 @@ public class PedidoController {
 
             // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
             if (pedido.getDomicilioEntrega() == null) {
-                pedido.setDomicilioEntrega(sucursal.getDomicilio());
+                // Que se no borrado quiere decir que es el domicilio actual de la sucursal
+                pedido.setDomicilioEntrega(domicilioRepository.findByIdSucursalNotBorrado(sucursal.getId()));
             }
 
             pedidoRepository.save(pedido);
@@ -147,7 +148,7 @@ public class PedidoController {
 
             // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
             if (pedido.getDomicilioEntrega() == null) {
-                pedido.setDomicilioEntrega(sucursal.getDomicilio());
+                pedido.setDomicilioEntrega(domicilioRepository.findByIdSucursalNotBorrado(sucursal.getId()));
             } else {
                 Domicilio domicilio = domicilioRepository.findById(pedido.getDomicilioEntrega().getId())
                         .orElseThrow(() -> new IllegalArgumentException("Domicilio no encontrado"));

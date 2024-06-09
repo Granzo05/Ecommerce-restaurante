@@ -78,6 +78,8 @@
 [] Si llegamos mostrar recetas de los menus
 [] Ajustar el horario estimado
 [] Hacer la recuperacion de contraseña
+[] Filtro de lugares al cargar la sucursal para las localidadesDelivery
+[] Validar que 2 sucursales no puedan tener el mismo domicilio al mismo tiempo
 
 CERRAR MODALS AL CREAR COSAS[x]
 NO PODER CARGAR SUBCATEGORIAS POR EL BUG DE CATEGORIAS[x]

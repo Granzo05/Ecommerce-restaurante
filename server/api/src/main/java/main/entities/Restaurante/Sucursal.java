@@ -33,9 +33,9 @@ public class Sucursal implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JsonIgnoreProperties(value = {"domicilios", "cliente", "empleado", "sucursal"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Domicilio domicilio;
+    @JsonIgnoreProperties(value = {"cliente", "empleado", "sucursal"}, allowSetters = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sucursal", cascade = CascadeType.ALL)
+    private Set<Domicilio> domicilios = new HashSet<>();
 
     @Column(name = "contraseña")
     private String contraseña;

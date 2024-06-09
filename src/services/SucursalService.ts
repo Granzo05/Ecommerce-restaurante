@@ -30,8 +30,8 @@ export const SucursalService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreSucursal', sucursal.nombre);
 
-                        await fetch(URL_API + 'sucursal/imagenes/', {
-                            method: 'POST',
+                        await fetch(URL_API + 'sucursal/imagenes', {
+                            method: 'POST',        
                             body: formData
                         });
                     }
@@ -85,7 +85,7 @@ export const SucursalService = {
 
     getSucursales: async (): Promise<Sucursal[]> => {
         try {
-            const response = await fetch(URL_API + 'sucursales/' + 1, {
+            const response = await fetch(URL_API + 'sucursales', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ export const SucursalService = {
                 },
                 body: JSON.stringify(sucursal)
             })
-            
+
             let cargarImagenes = true;
 
             if (!response.ok) {

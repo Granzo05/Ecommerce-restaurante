@@ -130,7 +130,8 @@ public class CategoriaController {
 
         if (imagen.isPresent()) {
             try {
-                imagenesRepository.delete(imagen.get());
+                imagen.get().setBorrado("SI");
+                imagenesRepository.save(imagen.get());
                 return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
             } catch (Exception e) {

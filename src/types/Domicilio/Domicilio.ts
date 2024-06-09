@@ -5,6 +5,7 @@ export class Domicilio {
     calle: string = '';
     numero: number = 0;
     codigoPostal: number = 0;
+    borrado: string = '';
     localidad: Localidad = new Localidad();
 
     constructor() {

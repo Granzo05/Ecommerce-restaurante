@@ -24,6 +24,9 @@ public interface DomicilioRepository extends JpaRepository<Domicilio, Long> {
     @Query("SELECT d FROM Domicilio d WHERE d.sucursal.id = :id")
     Domicilio findByIdSucursal(@Param("id") Long id);
 
+    @Query("SELECT d FROM Domicilio d WHERE d.sucursal.id = :id AND d.borrado = 'NO'")
+    Domicilio findByIdSucursalNotBorrado(@Param("id") Long id);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM Domicilio d WHERE d.empleado.id = :id")

@@ -32,6 +32,9 @@ public class Domicilio implements Serializable {
     @Column(name = "codigo_postal")
     private int codigoPostal;
 
+    @Column(name = "borrado")
+    private String borrado = "NO";
+
     @Cascade(org.hibernate.annotations.CascadeType.DETACH)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_localidad")
@@ -46,7 +49,7 @@ public class Domicilio implements Serializable {
     )
     private Cliente cliente;
 
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksSucursal", "stocksEntranteSucursal", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToOne
     @JoinTable(
             name = "domicilios_sucursales",

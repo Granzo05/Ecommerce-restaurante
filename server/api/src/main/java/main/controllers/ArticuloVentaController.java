@@ -76,22 +76,16 @@ public class ArticuloVentaController {
             if (idSucursal == 1) {
                 List<Sucursal> sucursales = sucursalRepository.findAll();
                 for (Sucursal sucursal : sucursales) {
-                    Optional<ArticuloVenta> articuloSucursal = articuloVentaRepository.findByNameArticuloAndIdSucursal(articuloVenta.getNombre(), sucursal.getId());
-                    if (articuloSucursal.isEmpty()) {
-                        sucursal.getArticulosVenta().add(articuloVenta);
-                        articuloVenta.getSucursales().add(sucursal);
-                    }
+                    sucursal.getArticulosVenta().add(articuloVenta);
+                    articuloVenta.getSucursales().add(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
                     if (!sucursal.getArticulosVenta().contains(articuloVenta)) {
-                        Optional<ArticuloVenta> articuloSucursal = articuloVentaRepository.findByNameArticuloAndIdSucursal(articuloVenta.getNombre(), sucursal.getId());
-                        if (articuloSucursal.isEmpty()) {
-                            sucursal.getArticulosVenta().add(articuloVenta);
-                            articuloVenta.getSucursales().add(sucursal);
-                        }
+                        sucursal.getArticulosVenta().add(articuloVenta);
+                        articuloVenta.getSucursales().add(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
@@ -149,6 +143,7 @@ public class ArticuloVentaController {
                     }
                     imagenProducto.getArticulosVenta().add(articuloVenta.get());
                     imagenProducto.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+
                     imagenesRepository.save(imagenProducto);
                 }
 
@@ -173,7 +168,8 @@ public class ArticuloVentaController {
 
         if (imagen.isPresent()) {
             try {
-                imagenesRepository.delete(imagen.get());
+                imagen.get().setBorrado("SI");
+                imagenesRepository.save(imagen.get());
                 return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
             } catch (Exception e) {

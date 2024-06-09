@@ -28,25 +28,33 @@ public class Cliente implements Serializable {
     @CreationTimestamp
     @Column(name = "fecha_registro", updatable = false, nullable = false)
     public LocalDateTime fechaRegistro;
+
     @JsonIgnore
     @Column(name = "fecha_nacimiento", nullable = false)
     public LocalDate fechaNacimiento;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "nombre")
     private String nombre;
+
     @Column(name = "email")
     private String email;
+
     @JsonIgnoreProperties(value = {"domicilios"}, allowSetters = true)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
     private Set<Domicilio> domicilios = new HashSet<>();
+
     @Column(name = "telefono")
     private long telefono;
+
     @JsonIgnore
     @Column(name = "contraseña")
     private String contraseña;
+
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";

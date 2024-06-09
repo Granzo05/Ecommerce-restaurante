@@ -8,6 +8,7 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.*;
 import main.repositories.*;
@@ -19,10 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class SucursalController {
@@ -70,7 +68,7 @@ public class SucursalController {
 
         for (Sucursal sucursal : sucursales) {
             Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
-            sucursal.setDomicilio(domicilio);
+            sucursal.getDomicilios().add(domicilio);
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
         }
 
@@ -79,11 +77,11 @@ public class SucursalController {
 
     @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}")
-    public SucursalDTO getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
-        Optional<SucursalDTO> sucursalDB = sucursalRepository.findByIdDTO(idSucursal);
+    public Sucursal getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
+        Optional<Sucursal> sucursalDB = sucursalRepository.findById(idSucursal);
 
         if (sucursalDB.isPresent()) {
-            SucursalDTO sucursal = sucursalDB.get();
+            Sucursal sucursal = sucursalDB.get();
 
             Set<Categoria> categorias = new HashSet<>();
 
@@ -178,7 +176,11 @@ public class SucursalController {
         Optional<Sucursal> sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
         if (sucursalDB.isEmpty()) {
-            sucursalDetails.getDomicilio().setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
+            for (Domicilio domicilio: sucursalDetails.getDomicilios()) {
+                domicilio.setSucursal(sucursalDetails);
+                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
+                domicilio.setBorrado("NO");
+            }
 
             sucursalDetails.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
 
@@ -227,7 +229,7 @@ public class SucursalController {
     }
 
     @CrossOrigin
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     @PostMapping("/sucursal/imagenes")
     public ResponseEntity<String> crearImagenSucursal(@RequestParam("file") MultipartFile file, @RequestParam("nombreSucursal") String nombreSucursal) {
         HashSet<Imagenes> listaImagenes = new HashSet<>();
@@ -235,7 +237,7 @@ public class SucursalController {
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
             String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesSucursal" + File.separator + nombreSucursal.replaceAll(" ", "") + File.separator;
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesSucursales" + File.separator + nombreSucursal.replaceAll(" ", "") + File.separator;
 
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);
@@ -247,7 +249,7 @@ public class SucursalController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("imagesSucursal/")
+                    .path("imagesSucursales/")
                     .path(nombreSucursal.replaceAll(" ", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();
@@ -266,7 +268,9 @@ public class SucursalController {
                     if (sucursal.isEmpty()) {
                         return new ResponseEntity<>("sucursal vacio", HttpStatus.NOT_FOUND);
                     }
+                    sucursal.get().getImagenes().add(imagenProducto);
                     imagenProducto.getSucursales().add(sucursal.get());
+
                     imagenesRepository.save(imagenProducto);
                 }
 
@@ -291,7 +295,8 @@ public class SucursalController {
 
         if (imagen.isPresent()) {
             try {
-                imagenesRepository.delete(imagen.get());
+                imagen.get().setBorrado("SI");
+                imagenesRepository.save(imagen.get());
                 return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
             } catch (Exception e) {
@@ -318,11 +323,36 @@ public class SucursalController {
             Sucursal sucursal = sucursalDb.get();
 
             if (sucursal.getBorrado().equals(sucursalDetails.getBorrado())) {
-                // Actualizar domicilio
-                sucursal.getDomicilio().setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
-                sucursal.getDomicilio().setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
-                sucursal.getDomicilio().setNumero(sucursalDetails.getDomicilio().getNumero());
-                sucursal.getDomicilio().setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
+                // Crear un conjunto de domicilios en sucursalDetails para comparación
+                Set<Domicilio> domiciliosDetailsSet = new HashSet<>(sucursalDetails.getDomicilios());
+
+                // Crear una lista de domicilios para actualizar la sucursal después de la iteración
+                List<Domicilio> domiciliosActualizados = new ArrayList<>();
+
+                // Recorrer cada domicilio en la sucursal almacenada previamente
+                for (Domicilio domicilio : sucursal.getDomicilios()) {
+                    // Comparamos los domicilios guardados antes, si está entonces no pasa nada, si no está entonces se marca como borrado
+                    if (!domiciliosDetailsSet.contains(domicilio)) {
+                        domicilio.setBorrado("SI");
+                    } else {
+                        // Si está presente, agregarlo a la lista actualizada
+                        domiciliosActualizados.add(domicilio);
+                    }
+                }
+
+                // Actualizar domicilios en sucursalDetails
+                for (Domicilio domicilio : sucursalDetails.getDomicilios()) {
+                    domicilio.setSucursal(sucursal);
+                    domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
+
+                    // Añadir a la lista actualizada si no está presente
+                    if (!domiciliosActualizados.contains(domicilio)) {
+                        domiciliosActualizados.add(domicilio);
+                    }
+                }
+
+                // Reemplazar la lista de domicilios en la sucursal con la lista actualizada
+                sucursal.setDomicilios(new HashSet<>(domiciliosActualizados));
 
                 // Actualizar contraseña
                 if (sucursalDetails.getContraseña().length() > 1) {

@@ -89,9 +89,9 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const añadirCampoDomicilio = () => {
     // SI no hay ingredientes que genere en valor 0 de index
     if (domicilios.length === 0) {
-      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad() }]);
+      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
     } else {
-      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad() }]);
+      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
       setIndexDomicilio(prevIndex => prevIndex + 1);
     }
   };

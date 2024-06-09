@@ -98,7 +98,7 @@ public class Main {
                 Optional<Localidad> localidad = localidadRepository.findByName("GODOY CRUZ");
                 domicilio.setLocalidad(localidad.get());
                 domicilio.setSucursal(sucursal);
-                sucursal.setDomicilio(domicilio);
+                sucursal.getDomicilios().add(domicilio);
 
                 Categoria categoria = new Categoria();
                 categoria.setNombre("HAMBURGUESAS");
