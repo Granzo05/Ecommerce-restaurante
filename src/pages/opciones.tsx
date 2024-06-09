@@ -126,8 +126,8 @@ const Opciones = () => {
         } else if (opcionSeleccionada === 0) {
             return (
                 <div className="welcome-employee">
-                    <img id="main-employee" src="../src/assets/img/HatchfulExport-All/logo_transparent.png" alt="" />
-                    <h1 id="welcome">¡BIENVENIDO, AUGUSTO!</h1>
+                    <br /><br /><br /><br /><br /><br /><br /><br />
+                   <h1 id="welcome">¡BIENVENIDO, AUGUSTO!</h1>
                 </div>
             );
         } else if (opcionSeleccionada === 12) {
@@ -173,9 +173,6 @@ const Opciones = () => {
                     <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/opciones'}/>
                         
 
-                    <div className="icon-sidebar" onClick={toggleMenuVisibility}>
-                        {sidebarIcon}
-                    </div>
                 </div>
 
                 <hr />
@@ -333,9 +330,6 @@ const Opciones = () => {
                         </div>
 
                         <LogoutIcon onClick={() => window.location.href = 'http://localhost:5173/login-negocio'} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
-                    </div>
-                    <div className="icon-topbar" onClick={toggleMenuVisibility}>
-                        {topIcon}
                     </div>
                 </div>
             </div>

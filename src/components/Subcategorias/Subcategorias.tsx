@@ -9,6 +9,7 @@ import EditarSubcategoria from "./EditarSubcategoria";
 import AgregarSubcategoria from "./AgregarSubcategoria";
 import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from "../../types/Ingredientes/Categoria";
+import React from "react";
 
 const Subcategorias = () => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -19,12 +20,11 @@ const Subcategorias = () => {
     const [showEliminarCategoriaModal, setShowEliminarCategoriaModal] = useState(false);
     const [showActivarCategoriaModal, setShowActivarCategoriaModal] = useState(false);
 
-    const [selectedCategoria, setSelectedCategoria] = useState<Subcategoria>();
+    const [selectedCategoria, setSelectedCategoria] = useState<Subcategoria | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Esto retorna true o false
                 await EmpleadoService.checkUser();
             } catch (error) {
                 console.error('Error:', error);
@@ -37,13 +37,8 @@ const Subcategorias = () => {
 
     const fetchCategorias = async () => {
         try {
-            CategoriaService.getCategorias()
-                .then(data => {
-                    setCategorias(data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            const data = await CategoriaService.getCategorias();
+            setCategorias(data);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -57,7 +52,6 @@ const Subcategorias = () => {
     };
 
     const handleEditarCategoria = (subcategoria: Subcategoria) => {
-        console.log(subcategoria)
         setSelectedCategoria(subcategoria);
         setShowAgregarModalCategoria(false);
         setShowEliminarCategoriaModal(false);
@@ -94,9 +88,9 @@ const Subcategorias = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>- Subcategorias -</h1>
+            <h1>- Subcategorías -</h1>
             <div className="btns-categorias">
-                <button className="btn-agregar" onClick={() => handleAgregarCategoria()}> + Agregar subcategoria</button>
+                <button className="btn-agregar" onClick={handleAgregarCategoria}> + Agregar subcategoría</button>
             </div>
             <hr />
             {mostrarCategorias && (
@@ -104,38 +98,35 @@ const Subcategorias = () => {
                     <table>
                         <thead>
                             <tr>
-                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Subcategoría</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {categorias.map(categoria => (
-                                <tr key={categoria.id}>
-                                    <td>{categoria.nombre.toString().replace(/_/g, ' ')}</td>
-                                    {categoria.subcategorias.map(subcategoria => (
+                                <React.Fragment key={categoria.id}>
+                                    {categoria.subcategorias.map((subcategoria, index) => (
                                         <tr key={subcategoria.id}>
-                                            <td>{subcategoria.nombre.toString().replace(/_/g, ' ')}</td>
-                                            {subcategoria.borrado === 'NO' ? (
-                                                <td>
-                                                    <div className="btns-acciones">
-
-                                                        <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
-                                                        <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(subcategoria)}>ELIMINAR</button>
-                                                    </div>
-
-                                                </td>
-                                            ) : (
-                                                <td>
-                                                    <div className="btns-acciones">
-
-                                                        <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
-                                                        <button className="btn-accion-activar" onClick={() => handleActivarCategoria(subcategoria)}>ACTIVAR</button>
-                                                    </div>
+                                            {index === 0 && (
+                                                <td rowSpan={categoria.subcategorias.length}>
+                                                    {categoria.nombre.toString().replace(/_/g, ' ')}
                                                 </td>
                                             )}
+                                            <td>{subcategoria.nombre.toString().replace(/_/g, ' ')}</td>
+                                            <td>
+                                                <div className="btns-acciones">
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
+                                                    {subcategoria.borrado === 'NO' ? (
+                                                        <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(subcategoria)}>ELIMINAR</button>
+                                                    ) : (
+                                                        <button className="btn-accion-activar" onClick={() => handleActivarCategoria(subcategoria)}>ACTIVAR</button>
+                                                    )}
+                                                </div>
+                                            </td>
                                         </tr>
                                     ))}
-                                </tr>
+                                </React.Fragment>
                             ))}
                         </tbody>
                     </table>
@@ -157,7 +148,7 @@ const Subcategorias = () => {
                 {selectedCategoria && <EditarSubcategoria subcategoriaOriginal={selectedCategoria} onCloseModal={handleModalClose} />}
             </ModalCrud>
         </div>
-    )
-}
+    );
+};
 
-export default Subcategorias
+export default Subcategorias;
