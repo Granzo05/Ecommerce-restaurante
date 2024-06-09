@@ -59,7 +59,7 @@ public class Sucursal implements Serializable {
     private LocalTime horarioCierre;
 
     @JsonIgnoreProperties(value = {"domicilios", "sucursal"}, allowSetters = true)
-    @OneToMany(mappedBy = "sucursal", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY)
     private Set<Empleado> empleados = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales", "imagenes"}, allowSetters = true)

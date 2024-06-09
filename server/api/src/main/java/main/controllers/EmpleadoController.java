@@ -5,6 +5,7 @@ import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.FechaContratacionEmpleado;
+import main.entities.Restaurante.Sucursal;
 import main.repositories.DomicilioRepository;
 import main.repositories.EmpleadoRepository;
 import main.repositories.FechaContratacionRepository;
@@ -13,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class EmpleadoController {
@@ -51,9 +49,9 @@ public class EmpleadoController {
 
     @Transactional
     @CrossOrigin
-    @PostMapping("/empleado/create")
-    public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
-        Optional<Empleado> empleadoDB = empleadoRepository.findByCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
+    @PostMapping("/empleado/create/{idSucursal}")
+    public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
+        Optional<Empleado> empleadoDB = empleadoRepository.findByCuilAndIdSucursal(Encrypt.encriptarString(empleadoDetails.getCuil()), idSucursal);
 
         if (empleadoDB.isEmpty()) {
             empleadoDetails.setNombre(Encrypt.encriptarString(empleadoDetails.getNombre()));
@@ -67,7 +65,7 @@ public class EmpleadoController {
                 domicilio.setEmpleado(empleadoDetails);
             }
 
-            empleadoDetails.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
+            empleadoDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
             empleadoDetails.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
 
             FechaContratacionEmpleado fecha = new FechaContratacionEmpleado();
@@ -111,9 +109,9 @@ public class EmpleadoController {
 
     @Transactional
     @CrossOrigin
-    @PutMapping("/empleado/update")
-    public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails) throws Exception {
-        Optional<Empleado> empleadoOptional = empleadoRepository.findById(empleadoDetails.getId());
+    @PutMapping("/empleado/update/{idSucursal}")
+    public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
+        Optional<Empleado> empleadoOptional = empleadoRepository.findByCuilAndIdSucursal(empleadoDetails.getCuil(), idSucursal);
 
         if (empleadoOptional.isPresent() && empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
             // Comparo cada uno de los datos a ver si ha cambiado, ya que clienteDetails viene de un DTO y no contiene los mismos datos del empleadoDB entonces hay valores nulos
@@ -139,17 +137,48 @@ public class EmpleadoController {
             LocalDate fechaNacimiento = empleadoDetails.getFechaNacimiento();
             empleadoDb.setFechaNacimiento(fechaNacimiento);
 
-            empleadoDb.setSucursal(sucursalRepository.findById(empleadoDetails.getSucursal().getId()).get());
+            // Si el empleado no contiene la sucursal entonces quiere decir que se le asignó una nueva
+            if(!empleadoDb.getSucursales().contains(empleadoDetails.getSucursales().stream().toList().get(0))) {
+                for (Sucursal sucursal: empleadoDb.getSucursales()) {
+                    sucursal.setBorrado("SI");
+                }
+
+                Sucursal nuevaSucursal = sucursalRepository.findById(idSucursal).get();
+                nuevaSucursal.getEmpleados().add(empleadoDb);
+                empleadoDb.getSucursales().add(nuevaSucursal);
+            }
 
             empleadoDb.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
 
-            domicilioRepository.deleteAllByEmpleadoId(empleadoDb.getId());
-            empleadoDetails.getDomicilios().size();
-            for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
-                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
-                domicilio.setEmpleado(empleadoDetails);
-                empleadoDb.getDomicilios().add(domicilio);
+            Set<Domicilio> domiciliosDetailsSet = new HashSet<>(empleadoDetails.getDomicilios());
+
+            // Crear una lista de domicilios para actualizar la sucursal después de la iteración
+            List<Domicilio> domiciliosActualizados = new ArrayList<>();
+
+            // Recorrer cada domicilio en la sucursal almacenada previamente
+            for (Domicilio domicilio : empleadoDb.getDomicilios()) {
+                // Comparamos los domicilios guardados antes, si está entonces no pasa nada, si no está entonces se marca como borrado
+                if (!domiciliosDetailsSet.contains(domicilio)) {
+                    domicilio.setBorrado("SI");
+                } else {
+                    // Si está presente, agregarlo a la lista actualizada
+                    domiciliosActualizados.add(domicilio);
+                }
             }
+
+            // Actualizar domicilios en sucursalDetails
+            for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
+                domicilio.setEmpleado(empleadoDb);
+                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
+
+                // Añadir a la lista actualizada si no está presente
+                if (!domiciliosActualizados.contains(domicilio)) {
+                    domiciliosActualizados.add(domicilio);
+                }
+            }
+
+            // Reemplazar la lista de domicilios en la sucursal con la lista actualizada
+            empleadoDb.setDomicilios(new HashSet<>(domiciliosActualizados));
 
             empleadoRepository.save(empleadoDb);
 

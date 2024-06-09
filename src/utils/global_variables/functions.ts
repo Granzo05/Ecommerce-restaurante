@@ -13,7 +13,7 @@ export function clearInputs() {
 }
 
 
-export const fomatearFechaDDMMYYYY = (date: Date) => {
+export const formatearFechaDDMMYYYY = (date: Date) => {
   const dia = date.getDate() + 1;
   const mes = date.getMonth() + 1;
   const año = date.getFullYear();

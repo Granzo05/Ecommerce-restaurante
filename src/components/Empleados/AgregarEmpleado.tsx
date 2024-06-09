@@ -100,9 +100,9 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   const añadirCampoDomicilio = () => {
     // SI no hay ingredientes que genere en valor 0 de index
     if (domicilios.length === 0) {
-      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad() }]);
+      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
     } else {
-      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad() }]);
+      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
       setIndexDomicilio(prevIndex => prevIndex + 1);
     }
   };
@@ -180,7 +180,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     toast.promise(EmpleadoService.createEmpleado(empleado), {
       loading: 'Creando empleado...',
       success: (message: string) => {
-      setTimeout(() => {
+        setTimeout(() => {
           onCloseModal();
         }, 800);
         return message;
@@ -225,7 +225,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
               <span>Contraseña del empleado</span>
             </div>
             <div className="inputBox">
-              <input defaultValue={''} type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+              <input type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
               <span>Telefono del empleado</span>
             </div>
             <div className="inputBox">

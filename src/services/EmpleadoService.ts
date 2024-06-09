@@ -1,10 +1,10 @@
 import { Empleado } from '../types/Restaurante/Empleado'
-import { URL_API } from '../utils/global_variables/const';
+import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
     createEmpleado: async (empleado: Empleado): Promise<string> => {
         try {
-            let response = await fetch(URL_API + 'empleado/create', {
+            let response = await fetch(URL_API + 'empleado/create/' + sucursalId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -12,13 +12,11 @@ export const EmpleadoService = {
                 body: JSON.stringify(empleado)
             })
 
-            if (response.ok) {
-                const message = await response.text();
-                return message;
-            } else {
-                const errorMessage = await response.text();
-                return errorMessage;
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
             }
+
+            return await response.text();
 
         } catch (error) {
             return 'Error al intentar cargar el empleado';
@@ -26,7 +24,7 @@ export const EmpleadoService = {
     },
 
     getEmpleado: async (email: string, contraseña: string) => {
-        fetch(URL_API + 'restaurant/login/' + email + '/' + contraseña, {
+        fetch(URL_API + 'empleado/login/' + email + '/' + contraseña, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,7 +56,7 @@ export const EmpleadoService = {
 
     getEmpleados: async (): Promise<Empleado[]> => {
         try {
-            const response = await fetch(URL_API + 'empleados', {
+            const response = await fetch(URL_API + 'empleados/' + sucursalId, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -79,7 +77,7 @@ export const EmpleadoService = {
 
     updateEmpleado: async (empleado: Empleado): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/update', {
+            const response = await fetch(URL_API + 'empleado/update/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -101,7 +99,7 @@ export const EmpleadoService = {
 
     deleteEmpleado: async (cuilEmpleado: string): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/' + cuilEmpleado + '/delete', {
+            const response = await fetch(URL_API + 'empleado/' + cuilEmpleado + '/delete/' + sucursalId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

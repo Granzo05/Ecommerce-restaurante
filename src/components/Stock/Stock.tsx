@@ -11,7 +11,7 @@ import ActivarStock from "./ActivarStock";
 import ModalCrud from "../ModalCrud";
 import { StockArticuloVenta } from "../../types/Stock/StockArticuloVenta";
 import { StockIngredientes } from "../../types/Stock/StockIngredientes";
-import { fomatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
+import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 
 
 const Stocks = () => {
@@ -155,7 +155,7 @@ const Stocks = () => {
                                     <td style={{textTransform: 'lowercase'}}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
                                     <td>${stock.precioCompra}</td>
                                     <td>{stock.fechaLlegadaProxima ? (
-                                        fomatearFechaDDMMYYYY(new Date(stock.fechaLlegadaProxima))
+                                        formatearFechaDDMMYYYY(new Date(stock.fechaLlegadaProxima))
                                     ) : (
                                         <p>No hay próximas entradas</p>
                                     )}

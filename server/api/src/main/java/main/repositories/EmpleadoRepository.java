@@ -15,10 +15,10 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
     @Query("SELECT e FROM Empleado e WHERE e.email = :email")
     Optional<Empleado> findByEmail(@Param("email") String email);
 
-    @Query("SELECT e FROM Empleado e WHERE e.cuil = :cuil")
-    Optional<Empleado> findByCuil(@Param("cuil") String cuil);
+    @Query("SELECT e FROM Empleado e JOIN e.sucursales s WHERE s.id = :id AND e.cuil = :cuil")
+    Optional<Empleado> findByCuilAndIdSucursal(@Param("cuil") String cuil, @Param("id") Long id);
 
-    @Query("SELECT e FROM Empleado e JOIN e.sucursal s WHERE s.id = :id")
+    @Query("SELECT e FROM Empleado e JOIN e.sucursales s WHERE s.id = :id")
     List<Empleado> findAllByIdSucursal(@Param("id") Long id);
 
     @Query("SELECT e FROM Empleado e WHERE e.email = :email AND e.contraseña = :contraseña AND e.borrado = 'NO'")

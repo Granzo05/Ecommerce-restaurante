@@ -38,7 +38,7 @@ public class Empleado {
     private Set<Domicilio> domicilios = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
 
     @Column(name = "fecha_nacimiento", nullable = false)
@@ -52,7 +52,11 @@ public class Empleado {
     private String privilegios;
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_sucursal")
-    private Sucursal sucursal;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "empleados_sucursales",
+            joinColumns = @JoinColumn(name = "id_empleado"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
+    private Set<Sucursal> sucursales = new HashSet<>();
 }

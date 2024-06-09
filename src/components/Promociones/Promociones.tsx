@@ -6,7 +6,7 @@ import EliminarPromocionEntrante from "./EliminarPromocion";
 import { PromocionService } from "../../services/PromocionService";
 import { Promocion } from "../../types/Productos/Promocion";
 import AgregarPromocion from "./AgregarPromocion";
-import { fomatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
+import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 
 const Promociones = () => {
     const [promociones, setPromociones] = useState<Promocion[]>([]);
@@ -130,8 +130,8 @@ const Promociones = () => {
                             {promociones.map(promocion => (
                                 <tr key={promocion.id}>
                                     <td>
-                                        {fomatearFechaDDMMYYYY(new Date(promocion.fechaDesde.toString()))} -
-                                        {fomatearFechaDDMMYYYY(new Date(promocion.fechaHasta.toString()))}
+                                        {formatearFechaDDMMYYYY(new Date(promocion.fechaDesde.toString()))} -
+                                        {formatearFechaDDMMYYYY(new Date(promocion.fechaHasta.toString()))}
                                         (Quedan {diasRestantes(promocion.fechaHasta.toString())} días)
                                     </td>
                                     <td>

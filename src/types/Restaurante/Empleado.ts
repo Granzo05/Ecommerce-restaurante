@@ -10,7 +10,7 @@ export class Empleado {
     cuil: string = '';
     telefono: number = 0;
     domicilios: Domicilio[] = [];
-    fechaContratacionEmpleado: FechaContratacionEmpleado[] = [];
+    fechaContratacion: FechaContratacionEmpleado[] = [];
     fechaNacimiento: Date = new Date();
     privilegios: string = '';
     sucursal: Sucursal | null = null;
