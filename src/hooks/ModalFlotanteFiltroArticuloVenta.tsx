@@ -5,7 +5,7 @@ import '../styles/modalCrud.css'
 import { ArticuloVentaService } from "../services/ArticuloVentaService";
 import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 
-const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void, onSelectArticuloVenta: (articulo: ArticuloVenta) => void }> = ({ onCloseModal, onSelectArticuloVenta }) => {
+const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void, onSelectArticuloVenta: (articulo: ArticuloVenta) => void, datosOmitidos: string[] | string }> = ({ onCloseModal, onSelectArticuloVenta, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -18,8 +18,12 @@ const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void,
   useEffect(() => {
     ArticuloVentaService.getArticulos()
       .then(async articulos => {
-        setRecomendaciones(articulos);
-        setRecomendacionesFiltradas(articulos);
+        const articulosFiltrados = articulos.filter(articulo =>
+          !datosOmitidos.includes(articulo.nombre)
+        );
+
+        setRecomendaciones(articulosFiltrados);
+        setRecomendacionesFiltradas(articulosFiltrados);
       })
       .catch(error => {
         console.error('Error:', error);

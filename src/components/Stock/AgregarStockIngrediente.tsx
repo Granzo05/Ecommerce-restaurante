@@ -99,7 +99,7 @@ function AgregarStockIngrediente() {
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
-        {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
+        {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={ingrediente?.nombre} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
       </div>
 
       <label>
@@ -123,7 +123,7 @@ function AgregarStockIngrediente() {
 
       </label>
       <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
-      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
 
       <div className="inputBox">
         <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />

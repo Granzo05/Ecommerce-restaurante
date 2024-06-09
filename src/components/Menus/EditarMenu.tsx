@@ -37,6 +37,8 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
   const [nombre, setNombre] = useState(menuOriginal.nombre);
   const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
+  
+  const [nombresIngredientes, setNombresIngredientes] = useState<string[]>([]);
 
   useEffect(() => {
     setCategoria(menuOriginal.categoria);
@@ -97,6 +99,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     if (nuevosIngredientes && nuevosIngredientes[index].ingrediente) {
       nuevosIngredientes[index].ingrediente = ingrediente;
       setIngredientes(nuevosIngredientes);
+
+      const nuevosNombresIngredientes = [...nombresIngredientes];
+      nuevosNombresIngredientes[index] = ingrediente.nombre;
+      setNombresIngredientes(nuevosNombresIngredientes);
     }
   };
 
@@ -332,11 +338,11 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       </div>
       <div className="input-filtrado">
         <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
       </div>
       <div className="input-filtrado">
         <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
-        {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
+        {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
       </div>
       <div className="inputBox">
         <input type="number" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
@@ -366,7 +372,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             </div>
             <div className="input-filtrado">
               <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.medida.nombre ?? ''} />
-              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteMostrableChange(index, medida); handleModalClose(); }} />}
+              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteMostrableChange(index, medida); handleModalClose(); }} />}
             </div>
           </div>
         ))}
@@ -376,7 +382,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
               <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
-              {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
+              {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
             </div>
             <div className="inputBox">
               <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
@@ -384,7 +390,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
             </div>
             <div className="input-filtrado">
               <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente?.medida.nombre ?? ''} />
-              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
+              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.ingrediente?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
             </div>
           </div>
         ))}

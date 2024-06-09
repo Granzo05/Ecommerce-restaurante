@@ -56,8 +56,8 @@
 [x] Mostrar lista de fecha de stock, en lo que seria el stock actual mostrar la fecha próxima pero a parte mostrar una lista con todos los detalles stock y su fecha
 [x] Mostrar categorias solo si hay productos con stock que la completen
 [x] Arregla el tema de añadir varios domicilios con los inputs que se van a repetir y cambiar en caso de ser varios domicilios(inputProvincia e inputDepartamento) hacer un handle domicilio para asignar esos al domicilio creado
+[x] Revisar el muestreo de fechas al crear promocion porque con el value se va a romper, stockEntrante tambien, loginCliente tambien (STOCK ENTRANTE EJ FUNCIONAL) 
 [] Mejorar el suspense del appRoutes
-[] Revisar el muestreo de fechas al crear promocion porque con el value se va a romper, stockEntrante tambien, loginCliente tambien (STOCK ENTRANTE EJ FUNCIONAL) 
 [] Que el modal de recomendaciones no muestre alguna de las opciones si ya esta seleccionada en un input previo, por ej si ya seleccione el ingrediente 'carne' que al poner otro no muestre este como recomendacion
 [] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
 [] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
@@ -76,6 +76,7 @@
 [] Agregar imagenes al empleado
 [] Formatear y mejorar la legibilidad del codigo
 [] Si llegamos mostrar recetas de los menus
+[] Ajustar el horario estimado
 
 CERRAR MODALS AL CREAR COSAS[]
 CUANDO AÑADIS INGREDIENTES AL MENU, TE DEBERIA TRAER DIRECTAMENTE SU MEDIDA[]
@@ -93,6 +94,11 @@ NO ANDA EDITAR EMPRESA[]
 EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[]
 EL HOME SE ROMPE Y NO TRAE A VECES LAS PROMOCIONES Y LAS CATEGORIAS[]
 
+
+
+                                                                            MERCADOPAGO
+                                                                            TESTUSER1528571974
+                                                                            5Yeclsr88o
 
 
 Pruebas

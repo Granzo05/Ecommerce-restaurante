@@ -5,7 +5,7 @@ import '../styles/modalCrud.css'
 import { Sucursal } from "../types/Restaurante/Sucursal";
 import { SucursalService } from "../services/SucursalService";
 
-const ModalFlotanteRecomendacionesSucursales: React.FC<{ onCloseModal: () => void, onSelectSucursal: (sucursal: Sucursal) => void }> = ({ onCloseModal, onSelectSucursal }) => {
+const ModalFlotanteRecomendacionesSucursales: React.FC<{ onCloseModal: () => void, onSelectSucursal: (sucursal: Sucursal) => void, datosOmitidos: string }> = ({ onCloseModal, onSelectSucursal, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -18,8 +18,12 @@ const ModalFlotanteRecomendacionesSucursales: React.FC<{ onCloseModal: () => voi
   useEffect(() => {
     SucursalService.getSucursales()
       .then(async sucursales => {
-        setRecomendaciones(sucursales);
-        setRecomendacionesFiltradas(sucursales);
+        const sucursalesFiltrados = sucursales.filter(articulo =>
+          !datosOmitidos.includes(articulo.nombre)
+        );
+
+        setRecomendaciones(sucursalesFiltrados);
+        setRecomendacionesFiltradas(sucursalesFiltrados);
       })
       .catch(error => {
         console.error('Error:', error);

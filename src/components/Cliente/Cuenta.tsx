@@ -23,9 +23,7 @@ const Cuenta = () => {
         setCliente(clienteMem);
         setCurrentEmail(clienteMem?.email);
         setCurrentPassword(clienteMem?.contraseña);
-    }
-
-            
+    }            
 
     const handleEditEmail = () => {
         setEditEmail(true);

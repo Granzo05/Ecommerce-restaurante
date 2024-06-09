@@ -7,7 +7,7 @@ import { MedidaService } from "../services/MedidaService";
 import AgregarMedida from "../components/Medidas/AgregarMedida";
 import ModalCrud from "../components/ModalCrud";
 
-const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, onSelectMedida: (medida: Medida) => void }> = ({ onCloseModal, onSelectMedida }) => {
+const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, onSelectMedida: (medida: Medida) => void, datosOmitidos: string }> = ({ onCloseModal, onSelectMedida, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -24,8 +24,12 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
   useEffect(() => {
     MedidaService.getMedidas()
       .then(async medidas => {
-        setRecomendaciones(medidas);
-        setRecomendacionesFiltradas(medidas);
+        const medidasFiltradas = medidas.filter(articulo =>
+          !datosOmitidos.includes(articulo.nombre)
+        );
+
+        setRecomendaciones(medidasFiltradas);
+        setRecomendacionesFiltradas(medidasFiltradas);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -42,24 +46,24 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
 
   const [showAgregarMedidaModal, setShowAgregarMedidaModal] = useState<boolean>(false);
 
-    
+
 
   return (
     <div>
       <div className="modal-overlay">
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          
+
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar unidades de medidas &mdash;</h2>
           <div className="btns-stock">
-          
-          <button onClick={() => setShowAgregarMedidaModal(true)}>Añadir unidad de medida</button>
+
+            <button onClick={() => setShowAgregarMedidaModal(true)}>Añadir unidad de medida</button>
           </div>
           <hr />
           <ModalCrud isOpen={showAgregarMedidaModal} onClose={handleModalCargarMedidaClose}>
-        <AgregarMedida />
-      </ModalCrud>
+            <AgregarMedida />
+          </ModalCrud>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>

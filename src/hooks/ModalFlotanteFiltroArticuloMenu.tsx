@@ -5,7 +5,7 @@ import '../styles/modalCrud.css'
 import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 import { MenuService } from "../services/MenuService";
 
-const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => void, onSelectArticuloMenu: (articulo: ArticuloMenu) => void }> = ({ onCloseModal, onSelectArticuloMenu }) => {
+const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => void, onSelectArticuloMenu: (articulo: ArticuloMenu) => void, datosOmitidos: string[] | string }> = ({ onCloseModal, onSelectArticuloMenu, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -18,13 +18,18 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
   useEffect(() => {
     MenuService.getMenus()
       .then(async articulos => {
-        setRecomendaciones(articulos);
-        setRecomendacionesFiltradas(articulos);
+        // Filtramos los artículos para excluir los que están en datosOmitidos
+        const articulosFiltrados = articulos.filter(articulo =>
+          !datosOmitidos.includes(articulo.nombre)
+        );
+
+        setRecomendaciones(articulosFiltrados);
+        setRecomendacionesFiltradas(articulosFiltrados);
       })
       .catch(error => {
         console.error('Error:', error);
-      })
-  }, []);
+      });
+  }, []); 
 
   function filtrarRecomendaciones(filtro: string) {
     if (filtro.length > 0) {

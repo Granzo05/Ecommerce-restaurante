@@ -14,6 +14,7 @@ import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPai
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { Pais } from '../../types/Domicilio/Pais';
+import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -32,25 +33,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
   const [indexDomicilioModificable, setIndexDomicilioModificable] = useState<number>(0);
   const [domiciliosModificable, setDomiciliosModificable] = useState<Domicilio[]>(empleadoOriginal.domicilios);
   const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
-
-  const isValidDate = (dateString: string): boolean => {
-    const regex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!regex.test(dateString)) {
-      return false;
-    }
-
-    const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day);
-    return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
-  };
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dateString = e.target.value;
-
-    if (isValidDate(dateString)) {
-      setFechaNacimiento(dateString);
-    }
-  };
 
   const handleChangeCalle = (index: number, calle: string) => {
     const nuevosDomicilios = [...domicilios];
@@ -260,7 +242,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
           <span>Telefono del empleado</span>
         </div>
         <div className="inputBox">
-          <input type="date" required={true} value={fechaNacimiento} onChange={handleDateChange} />
+          <input type="date" required={true} value={formatearFechaYYYYMMDD(new Date(fechaNacimiento))} onChange={(e) => setFechaNacimiento(e.target.value)} />
           <span>Fecha de nacimiento</span>
         </div>
         {domiciliosModificable && domiciliosModificable.map((domicilio, index) => (
@@ -320,8 +302,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
       </form>
       <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
       <br />
-      <InputComponent disabled={false} placeHolder='Seleccionar sucursal...' onInputClick={() => setModalBusquedaSucursal(true)} selectedProduct={sucursal?.id.toString() ?? ''} />
-      {modalBusquedaSucursal && <ModalFlotanteRecomendacionesSucursales onCloseModal={handleModalClose} onSelectSucursal={(sucursal) => { setSucursal(sucursal); handleModalClose(); }} />}
+      <InputComponent disabled={false} placeHolder='Seleccionar sucursal...' onInputClick={() => setModalBusquedaSucursal(true)} selectedProduct={sucursal?.nombre ?? ''} />
+      {modalBusquedaSucursal && <ModalFlotanteRecomendacionesSucursales datosOmitidos={sucursal?.nombre ?? ''} onCloseModal={handleModalClose} onSelectSucursal={(sucursal) => { setSucursal(sucursal); handleModalClose(); }} />}
       <hr />
       <button className='button-form' type='button' onClick={editarEmpleado}>Editar empleado</button>
     </div>

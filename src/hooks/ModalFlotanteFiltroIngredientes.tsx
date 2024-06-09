@@ -7,7 +7,7 @@ import { IngredienteService } from "../services/IngredienteService";
 import ModalCrud from "../components/ModalCrud";
 import AgregarIngrediente from "../components/Ingrediente/AgregarIngrediente";
 
-const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => void, onSelectIngrediente: (ingrediente: Ingrediente) => void }> = ({ onCloseModal, onSelectIngrediente }) => {
+const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => void, onSelectIngrediente: (ingrediente: Ingrediente) => void, datosOmitidos: string[] | string }> = ({ onCloseModal, onSelectIngrediente, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -24,8 +24,12 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
   async function buscarIngredientes() {
     IngredienteService.getIngredientes()
       .then(async ingredientes => {
-        setRecomendaciones(ingredientes);
-        setRecomendacionesFiltradas(ingredientes);
+        const ingredientesFiltrados = ingredientes.filter(articulo =>
+          !datosOmitidos.includes(articulo.nombre)
+        );
+
+        setRecomendaciones(ingredientesFiltrados);
+        setRecomendacionesFiltradas(ingredientesFiltrados);
       })
       .catch(error => {
         console.error('Error:', error);

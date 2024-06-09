@@ -180,17 +180,17 @@ function AgregarArticuloVenta() {
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
-              {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
+              {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida?.nombre ?? ''} />
-              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
             </div>
             <div className="inputBox">
               <input type="number" required={true} value={cantidadMedida} onChange={(e) => setCantidadMedida(parseFloat(e.target.value))} />
@@ -271,7 +271,7 @@ function AgregarArticuloVenta() {
               </div>
             </label>
             <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medidaStock.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedidaStock(medida); handleModalClose(); }} />}
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medidaStock?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedidaStock(medida); handleModalClose(); }} />}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>

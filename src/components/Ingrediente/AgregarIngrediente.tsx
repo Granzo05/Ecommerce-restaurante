@@ -129,7 +129,7 @@ function AgregarIngrediente() {
 
       </label>
       <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida... (opcional)'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
-      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
 
       <div className="inputBox">
         <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />

@@ -88,7 +88,7 @@ function AgregarStockArticulo() {
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={articulo?.nombre ?? ''} />
-        {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { setArticulo(articulo); handleModalClose(); }} />}
+        {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={articulo?.nombre} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { setArticulo(articulo); handleModalClose(); }} />}
       </div>
       <label>
         <div className="inputBox">
@@ -115,7 +115,7 @@ function AgregarStockArticulo() {
         </div>
       </label>
       <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
-      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
 
       <br />
       <button type="button" onClick={agregarStock}>Agregar</button>

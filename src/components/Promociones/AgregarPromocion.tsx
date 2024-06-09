@@ -25,6 +25,10 @@ function AgregarPromocion() {
   const [detallesArticuloMenu, setDetallesArticulosMenu] = useState<DetallePromocion[]>([])
   const [detallesArticuloVenta, setDetallesArticuloVenta] = useState<DetallePromocion[]>([])
 
+  const [nombresArticulos, setNombresArticulos] = useState<string[]>([]);
+  const [nombresMenus, setNombresMenus] = useState<string[]>([]);
+
+
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   let [selectIndexImagenes, setSelectIndexImagenes] = useState<number>(0);
 
@@ -62,6 +66,11 @@ function AgregarPromocion() {
     setDetallesArticulosMenu(prevState => {
       const newState = [...prevState];
       newState[index].articuloMenu = articuloMenu;
+
+      const nuevosNombresArticulos = [...nombresArticulos];
+      nuevosNombresArticulos[index] = articuloMenu.nombre;
+      setNombresMenus(nuevosNombresArticulos);
+
       return newState;
     });
   };
@@ -90,6 +99,11 @@ function AgregarPromocion() {
     setDetallesArticuloVenta(prevState => {
       const newState = [...prevState];
       newState[index].articuloVenta = articulo;
+
+      const nuevosNombresArticulos = [...nombresArticulos];
+      nuevosNombresArticulos[index] = articulo.nombre;
+      setNombresArticulos(nuevosNombresArticulos);
+
       return newState;
     });
   };
@@ -273,12 +287,12 @@ function AgregarPromocion() {
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar menú...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
-                  {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
+                  {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu datosOmitidos={nombresMenus} onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
                 </div>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida?.nombre ?? ''} />
-                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloMenu[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
                 </div>
                 <div className="inputBox">
                   <input type="number" required={true} onChange={(e) => handleCantidadArticuloMenu(parseFloat(e.target.value), index)} />
@@ -308,12 +322,12 @@ function AgregarPromocion() {
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Artículo:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />
-                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
+                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={nombresArticulos} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
                 </div>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida?.nombre ?? ''} />
-                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloVenta[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
                 </div>
                 <div className="inputBox">
                   <input type="number" required={true} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />

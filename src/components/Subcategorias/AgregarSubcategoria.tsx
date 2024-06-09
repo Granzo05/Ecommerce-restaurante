@@ -57,7 +57,7 @@ function AgregarSubcategoria() {
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
         <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre ?? ''} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
       </div>
       <div className="inputBox">
         <input type="text" required={true} value={nombreSubcategoria} onChange={(e) => { setNombreSubcategoria(e.target.value) }} />

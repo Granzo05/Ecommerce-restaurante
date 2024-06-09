@@ -8,7 +8,7 @@ import { SubcategoriaService } from "../services/SubcategoriaService";
 import ModalCrud from "../components/ModalCrud";
 import AgregarSubcategoria from "../components/Subcategorias/AgregarSubcategoria";
 
-const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => void, onSelectSubcategoria: (subcategoria: Subcategoria) => void, categoria: Categoria }> = ({ onCloseModal, onSelectSubcategoria, categoria }) => {
+const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => void, onSelectSubcategoria: (subcategoria: Subcategoria) => void, categoria: Categoria, datosOmitidos: string }> = ({ onCloseModal, onSelectSubcategoria, categoria, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -21,19 +21,23 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
 
   const [recomendaciones, setRecomendaciones] = useState<Subcategoria[]>([]);
   const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Subcategoria[]>([]);
-  
+
   const [showAgregarSubcategoriaModal, setShowAgregarSubcategoriaModal] = useState(false);
 
   useEffect(() => {
     SubcategoriaService.getSubcategoriasByCategoriaId(categoria.id)
       .then(subcategorias => {
-        setRecomendaciones(subcategorias);
-        setRecomendacionesFiltradas(subcategorias);
+        const subcategoriasFiltrados = subcategorias.filter(articulo =>
+          !datosOmitidos.includes(articulo.nombre)
+        );
+
+        setRecomendaciones(subcategoriasFiltrados);
+        setRecomendacionesFiltradas(subcategoriasFiltrados);
       })
       .catch(error => {
         console.error('Error:', error);
       });
-  }, [categoria]);
+  }, []);
 
   function filtrarRecomendaciones(filtro: string) {
     if (filtro.length > 0) {
@@ -52,13 +56,13 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar subcategorías &mdash;</h2>
           <div className="btns-stock">
-          <button onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar nueva subcategoria</button>
-          
+            <button onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar nueva subcategoria</button>
+
           </div>
           <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={handleModalAddSubClose}>
-        <AgregarSubcategoria />
-      </ModalCrud>
-         <hr />
+            <AgregarSubcategoria />
+          </ModalCrud>
+          <hr />
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>

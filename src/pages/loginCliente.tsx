@@ -164,8 +164,6 @@ const LoginCliente = () => {
         document.title = 'El Buen Sabor - Iniciar sesión';
     }, []);
 
-    const [fecha, setFecha] = useState(new Date());
-
     const renderStep = () => {
         switch (step) {
             case 1:
