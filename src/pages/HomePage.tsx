@@ -8,6 +8,7 @@ import DetallesPromocion from '../components/Promociones/DetallesPromocion';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 import HeaderHomePage from '../components/headerHomePage';
 import Footer from '../components/Footer';
+import ModalCrud from '../components/ModalCrud';
 
 
 
@@ -82,7 +83,7 @@ export default function MainMenu() {
                 <>
                     <section className='our'>
                         <div id='ofertas' className="container">
-                            <h3>&mdash; Nuestras promociones &mdash;</h3>
+                            <h2 className='nuestras-promociones'>&mdash; Nuestras promociones &mdash;</h2>
                         </div>
                     </section>
                     <section className="oferts">
@@ -107,9 +108,9 @@ export default function MainMenu() {
 
             <section className='bg'></section>
             <section id='menus' className='food container'>
-                <ModalFlotante isOpen={showDetallePromocionModal} onClose={handleModalClose}>
+                <ModalCrud isOpen={showDetallePromocionModal} onClose={handleModalClose}>
                     <DetallesPromocion selectedPromocion={selectedPromocion} />
-                </ModalFlotante>
+                </ModalCrud>
                 <h2>&mdash; Menús &mdash;</h2>
                 <span>Categorías</span>
                 <div className="food-content">
