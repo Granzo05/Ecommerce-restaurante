@@ -374,8 +374,8 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
           </div>
           <br />
           <div className="input-filtrado">
-            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalleMenu?.medida.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleMenu?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
+            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalleMenu?.medida?.nombre ?? ''} />
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleMenu?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
           </div>
           <br />
           <div className="inputBox">
@@ -397,8 +397,8 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
           <br />
           <br />
           <div className="input-filtrado">
-            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalleArticulo?.medida.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleArticulo?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalleArticulo?.medida?.nombre ?? ''} />
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleArticulo?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
           </div>
           <br />
           <br />
@@ -422,8 +422,8 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
           <br />
           <br />
           <div className="input-filtrado">
-            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloMenu[index]?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
+            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida?.nombre ?? ''} />
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloMenu[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
           </div>
           <br />
           <div className="inputBox">
@@ -449,8 +449,8 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
           <br />
           <br />
           <div className="input-filtrado">
-            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida.nombre ?? ''} />
-            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloVenta[index]?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+            <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida?.nombre ?? ''} />
+            {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloVenta[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
           </div>
           <br />
           <br />

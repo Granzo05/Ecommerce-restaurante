@@ -39,7 +39,7 @@ export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion }) => {
         <ul>
           {selectedPromocion.detallesPromocion?.map((detalle) => (
             <>
-              <li key={detalle.id}>* {detalle.articuloMenu?.nombre} {detalle.articuloVenta?.nombre} - {detalle.cantidad} - {detalle.medida.nombre}</li>
+              <li key={detalle.id}>* {detalle.articuloMenu?.nombre} {detalle.articuloVenta?.nombre} - {detalle.cantidad} - {detalle.medida?.nombre}</li>
             </>
           ))}
         </ul>

@@ -127,7 +127,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
         </div>
 
       </label>
-      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingrediente.medida.nombre ?? medida.nombre ?? ''} />
+      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingrediente.medida?.nombre ?? medida.nombre ?? ''} />
       {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
 
       <div className="inputBox">

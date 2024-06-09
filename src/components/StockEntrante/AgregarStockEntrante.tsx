@@ -247,8 +247,8 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
                   {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleModalClose(); }} />}
                 </div>
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
-                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesIngredienteStock[index]?.ingrediente.medida.nombre ?? detallesIngredienteStock[index]?.medida.nombre ?? ''} />
-                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesIngredienteStock[index]?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesIngredienteStock[index]?.ingrediente.medida?.nombre ?? detallesIngredienteStock[index]?.medida?.nombre ?? ''} />
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesIngredienteStock[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
 
                 <div className="inputBox">
                   <input type="number" required={true} value={detallesIngredienteStock[index]?.cantidad} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
@@ -284,8 +284,8 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
                   {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={nombresArticulos} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
                 </div>
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
-                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.medida.nombre ?? detallesArticuloStock[index]?.medida.nombre ?? ''} />
-                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloStock[index]?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.medida?.nombre ?? detallesArticuloStock[index]?.medida?.nombre ?? ''} />
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloStock[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
 
                 <div className="inputBox">
                   <input type="number" required={true} value={detallesArticuloStock[index]?.cantidad} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />

@@ -77,6 +77,7 @@
 [] Formatear y mejorar la legibilidad del codigo
 [] Si llegamos mostrar recetas de los menus
 [] Ajustar el horario estimado
+[] Hacer la recuperacion de contraseña
 
 CERRAR MODALS AL CREAR COSAS[x]
 CUANDO AÑADIS INGREDIENTES AL MENU, TE DEBERIA TRAER DIRECTAMENTE SU MEDIDA[x] 
@@ -196,3 +197,47 @@ Pruebas
 
 [] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle), telefono)
 
+
+CONTRASEÑA
+
+[11:18, 9/6/2024] Augusto Ficara: 
+const requestPasswordReset = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error('El usuario no existe');
+  }
+
+  // Genera un token único
+  const token = crypto.randomBytes(20).toString('hex');
+  const resetLink = http://tu-app.com/reset-password/${token};
+
+  // Guarda el token en la base de datos
+  user.resetPasswordToken = token;
+  user.resetPasswordExpires = Date.now() + 3600000; // 1 hora
+  await user.save();
+
+  // Envía el correo
+  const mailOptions = {
+    to: user.email,
+    from: 'tu-email@gmail.com',
+    subject: 'Restablecer contraseña',
+    text: `Estás recibiendo este correo porque tú (o alguien más) solicitó restablecer la contraseña de tu cuenta.\n\n
+           Por favor, haz clic en el siguiente enlace, o pégalo en tu navegador para completar el proceso:\n\n
+           ${resetLink}\n\n
+           Si no solicitaste esto, ignora este correo y tu contraseña permanecerá sin cambios.\n`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+[11:18, 9/6/2024] Augusto Ficara: const express = require('express');
+const router = express.Router();
+const { requestPasswordReset } = require('../services/authService');
+
+router.post('/forgot-password', async (req, res) => {
+  try {
+    await requestPasswordReset(req.body.email);
+    res.status(200).send('Correo de recuperación enviado');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});

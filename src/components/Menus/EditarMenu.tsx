@@ -375,7 +375,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
               <span>Cantidad necesaria</span>
             </div>
             <div className="input-filtrado">
-              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente.medida.nombre ?? ingredienteMenu.medida.nombre ?? ''} />
+              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente.medida?.nombre ?? ingredienteMenu.medida?.nombre ?? ''} />
               {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteMostrableChange(index, medida); handleModalClose(); }} />}
             </div>
           </div>
@@ -393,8 +393,8 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
               <span>Cantidad necesaria</span>
             </div>
             <div className="input-filtrado">
-              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente?.medida.nombre ?? ''} />
-              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.ingrediente?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
+              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente?.medida?.nombre ?? ''} />
+              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.ingrediente?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
             </div>
           </div>
         ))}

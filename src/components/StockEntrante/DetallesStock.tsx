@@ -20,7 +20,7 @@ export const DetallesStock: React.FC<Props> = ({ detallesOriginal }) => {
         <div key={detalle.id} className="grid-item-modal">
           <h2>{detalle.articuloVenta?.nombre}</h2>
           <h2>{detalle.ingrediente?.nombre}</h2>
-          <p>Cantidad: {detalle.cantidad} {detalle.medida.nombre.toString().replace(/_/g, ' ')}</p>
+          <p>Cantidad: {detalle.cantidad} {detalle.medida?.nombre.toString().replace(/_/g, ' ')}</p>
           <p>Costo por unidad: ${detalle.costoUnitario.toLocaleString('es-AR')}</p>
           <p>Subtotal: ${detalle.subtotal.toLocaleString('es-AR')}</p>
         </div>
