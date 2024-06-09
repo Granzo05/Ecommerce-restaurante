@@ -20,12 +20,16 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
   useEffect(() => {
     CategoriaService.getCategorias()
       .then(async categorias => {
-        const categoriasFiltradas = categorias.filter(articulo =>
-          !datosOmitidos.includes(articulo.nombre)
-        );
-
-        setRecomendaciones(categoriasFiltradas);
-        setRecomendacionesFiltradas(categoriasFiltradas);
+        if (datosOmitidos?.length > 0) {
+          const categoriasFiltradas = categorias.filter(articulo =>
+            !datosOmitidos.includes(articulo.nombre)
+          );
+          setRecomendaciones(categoriasFiltradas);
+          setRecomendacionesFiltradas(categoriasFiltradas);
+        } else {
+          setRecomendaciones(categorias);
+          setRecomendacionesFiltradas(categorias);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
@@ -40,7 +44,7 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
     }
   }
 
-  
+
   const [showAgregarCategoriaModal, setShowAgregarCategoriaModal] = useState(false);
 
   const handleModalAddCategoriaClose = () => {
@@ -58,13 +62,13 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar categorías &mdash;</h2>
           <div className="btns-stock">
-          <button onClick={() => setShowAgregarCategoriaModal(true)}>Cargar nueva categoria</button>
-          
+            <button onClick={() => setShowAgregarCategoriaModal(true)}>Cargar nueva categoria</button>
+
           </div>
           <hr />
           <ModalCrud isOpen={showAgregarCategoriaModal} onClose={handleModalAddCategoriaClose}>
-        <AgregarCategoria />
-      </ModalCrud>
+            <AgregarCategoria onCloseModal={handleModalClose}/>
+          </ModalCrud>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>

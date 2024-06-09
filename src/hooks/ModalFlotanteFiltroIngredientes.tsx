@@ -24,12 +24,17 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
   async function buscarIngredientes() {
     IngredienteService.getIngredientes()
       .then(async ingredientes => {
-        const ingredientesFiltrados = ingredientes.filter(articulo =>
-          !datosOmitidos.includes(articulo.nombre)
-        );
+        if (datosOmitidos?.length > 0) {
+          const ingredientesFiltrados = ingredientes.filter(articulo =>
+            !datosOmitidos.includes(articulo.nombre)
+          );
 
-        setRecomendaciones(ingredientesFiltrados);
-        setRecomendacionesFiltradas(ingredientesFiltrados);
+          setRecomendaciones(ingredientesFiltrados);
+          setRecomendacionesFiltradas(ingredientesFiltrados);
+        } else {
+          setRecomendaciones(ingredientes);
+          setRecomendacionesFiltradas(ingredientes);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
@@ -56,7 +61,7 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <ModalCrud isOpen={showAgregarModalIngrediente} onClose={buscarIngredientes}>
-            <AgregarIngrediente />
+            <AgregarIngrediente onCloseModal={handleModalClose}/>
           </ModalCrud>
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>

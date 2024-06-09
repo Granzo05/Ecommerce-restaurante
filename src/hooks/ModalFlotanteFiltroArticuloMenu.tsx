@@ -18,18 +18,22 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
   useEffect(() => {
     MenuService.getMenus()
       .then(async articulos => {
-        // Filtramos los artículos para excluir los que están en datosOmitidos
-        const articulosFiltrados = articulos.filter(articulo =>
-          !datosOmitidos.includes(articulo.nombre)
-        );
+        if (datosOmitidos?.length > 0) {
+          const articulosFiltrados = articulos.filter(articulo =>
+            !datosOmitidos.includes(articulo.nombre)
+          );
 
-        setRecomendaciones(articulosFiltrados);
-        setRecomendacionesFiltradas(articulosFiltrados);
+          setRecomendaciones(articulosFiltrados);
+          setRecomendacionesFiltradas(articulosFiltrados);
+        } else {
+          setRecomendaciones(articulos);
+          setRecomendacionesFiltradas(articulos);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
       });
-  }, []); 
+  }, []);
 
   function filtrarRecomendaciones(filtro: string) {
     if (filtro.length > 0) {

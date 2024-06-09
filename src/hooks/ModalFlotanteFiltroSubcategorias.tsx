@@ -27,12 +27,16 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
   useEffect(() => {
     SubcategoriaService.getSubcategoriasByCategoriaId(categoria.id)
       .then(subcategorias => {
-        const subcategoriasFiltrados = subcategorias.filter(articulo =>
-          !datosOmitidos.includes(articulo.nombre)
-        );
-
-        setRecomendaciones(subcategoriasFiltrados);
-        setRecomendacionesFiltradas(subcategoriasFiltrados);
+        if (datosOmitidos?.length > 0) {
+          const subcategoriasFiltrados = subcategorias.filter(articulo =>
+            !datosOmitidos.includes(articulo.nombre)
+          );
+          setRecomendaciones(subcategoriasFiltrados);
+          setRecomendacionesFiltradas(subcategoriasFiltrados);
+        } else {
+          setRecomendaciones(subcategorias);
+          setRecomendacionesFiltradas(subcategorias);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
@@ -60,7 +64,7 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
 
           </div>
           <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={handleModalAddSubClose}>
-            <AgregarSubcategoria />
+            <AgregarSubcategoria onCloseModal={handleModalClose}/>
           </ModalCrud>
           <hr />
           <div className="inputBox">

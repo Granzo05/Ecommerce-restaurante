@@ -24,12 +24,16 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
   useEffect(() => {
     MedidaService.getMedidas()
       .then(async medidas => {
-        const medidasFiltradas = medidas.filter(articulo =>
-          !datosOmitidos.includes(articulo.nombre)
-        );
-
-        setRecomendaciones(medidasFiltradas);
-        setRecomendacionesFiltradas(medidasFiltradas);
+        if (datosOmitidos?.length > 0) {
+          const medidasFiltradas = medidas.filter(articulo =>
+            !datosOmitidos.includes(articulo.nombre)
+          );
+          setRecomendaciones(medidasFiltradas);
+          setRecomendacionesFiltradas(medidasFiltradas);
+        } else {
+          setRecomendaciones(medidas);
+          setRecomendacionesFiltradas(medidas);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
@@ -62,7 +66,7 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
           </div>
           <hr />
           <ModalCrud isOpen={showAgregarMedidaModal} onClose={handleModalCargarMedidaClose}>
-            <AgregarMedida />
+            <AgregarMedida onCloseModal={handleModalClose}/>
           </ModalCrud>
           <div className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />

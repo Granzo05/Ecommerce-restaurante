@@ -6,7 +6,7 @@ import { Domicilio } from "../types/Domicilio/Domicilio";
 import { Cliente } from "../types/Cliente/Cliente";
 import { ClienteService } from "../services/ClienteService";
 
-const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => void, onSelectedDomicilio: (domicilio: Domicilio) => void, cliente: Cliente | null }> = ({ onCloseModal, onSelectedDomicilio, cliente }) => {
+const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => void, onSelectedDomicilio: (domicilio: Domicilio) => void, cliente: Cliente | null, datosOmitidos: string[] }> = ({ onCloseModal, onSelectedDomicilio, cliente, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -20,8 +20,17 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
     if (cliente) {
       ClienteService.getDomicilios(cliente.id)
         .then(async domicilios => {
-          setRecomendaciones(domicilios);
-          setRecomendacionesFiltradas(domicilios);
+          if (datosOmitidos?.length > 0) {
+            const domiciliosFiltrados = domicilios.filter(articulo =>
+              !datosOmitidos.includes(articulo.calle)
+            );
+
+            setRecomendaciones(domiciliosFiltrados);
+            setRecomendacionesFiltradas(domiciliosFiltrados);
+          } else {
+            setRecomendaciones(domicilios);
+            setRecomendacionesFiltradas(domicilios);
+          }
         })
         .catch(error => {
           console.error('Error:', error);

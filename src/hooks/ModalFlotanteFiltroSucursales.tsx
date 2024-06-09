@@ -18,12 +18,16 @@ const ModalFlotanteRecomendacionesSucursales: React.FC<{ onCloseModal: () => voi
   useEffect(() => {
     SucursalService.getSucursales()
       .then(async sucursales => {
-        const sucursalesFiltrados = sucursales.filter(articulo =>
-          !datosOmitidos.includes(articulo.nombre)
-        );
-
-        setRecomendaciones(sucursalesFiltrados);
-        setRecomendacionesFiltradas(sucursalesFiltrados);
+        if (datosOmitidos?.length > 0) {
+          const sucursalesFiltrados = sucursales.filter(articulo =>
+            !datosOmitidos.includes(articulo.nombre)
+          );
+          setRecomendaciones(sucursalesFiltrados);
+          setRecomendacionesFiltradas(sucursalesFiltrados);
+        } else {
+          setRecomendaciones(sucursales);
+          setRecomendacionesFiltradas(sucursales);
+        }
       })
       .catch(error => {
         console.error('Error:', error);

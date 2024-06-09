@@ -18,12 +18,16 @@ const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void,
   useEffect(() => {
     ArticuloVentaService.getArticulos()
       .then(async articulos => {
-        const articulosFiltrados = articulos.filter(articulo =>
-          !datosOmitidos.includes(articulo.nombre)
-        );
-
-        setRecomendaciones(articulosFiltrados);
-        setRecomendacionesFiltradas(articulosFiltrados);
+        if (datosOmitidos?.length > 0) {
+          const articulosFiltrados = articulos.filter(articulo =>
+            !datosOmitidos.includes(articulo.nombre)
+          );
+          setRecomendaciones(articulosFiltrados);
+          setRecomendacionesFiltradas(articulosFiltrados);
+        } else {
+          setRecomendaciones(articulos);
+          setRecomendacionesFiltradas(articulos);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
