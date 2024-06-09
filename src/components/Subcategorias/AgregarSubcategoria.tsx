@@ -44,6 +44,8 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
       categoria.subcategorias.push(subcategoria);
     }
 
+    console.log(categoria)
+
     toast.promise(CategoriaService.updateCategoriaBorrado(categoria), {
       loading: 'Creando subcategoria...',
       success: (message) => {

@@ -38,7 +38,9 @@ public class CategoriaController {
         List<Categoria> categorias = categoriaRepository.findAllByIdSucursal(idSucursal);
 
         for (Categoria Categoria : categorias) {
-            Categoria.setSubcategorias(new HashSet<>(subcategoriaRepository.findAllByIdCategoria(Categoria.getId())));
+            List<Subcategoria> subcategorias = subcategoriaRepository.findAllByIdCategoria(Categoria.getId());
+
+            if(!subcategorias.isEmpty()) Categoria.setSubcategorias(new HashSet<>(subcategorias));
         }
 
         return new HashSet<>(categorias);
@@ -161,6 +163,7 @@ public class CategoriaController {
             for (Subcategoria subcategoria : categoria.getSubcategorias()) {
                 subcategoriaRepository.deleteById(subcategoria.getId());
                 subcategoria.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+                subcategoria.setCategoria(categoriaDB.get());
             }
 
             categoriaDB.get().setSubcategorias(categoria.getSubcategorias());
