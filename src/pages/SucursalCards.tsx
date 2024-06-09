@@ -4,6 +4,7 @@ import HeaderLogin from '../components/headerLogin';
 import { URL_API } from '../utils/global_variables/const';
 import { SucursalService } from '../services/SucursalService';
 import { Sucursal } from '../types/Restaurante/Sucursal';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -11,6 +12,9 @@ const SucursalCards: React.FC = () => {
 
   const [sucursales, setSucursales] = useState<Sucursal[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  
 
   useEffect(() => {
     if (sucursales.length === 0) fetchSucursales();
@@ -28,11 +32,14 @@ const fetchSucursales = async () => {
 
 
   const handleSucursalClick = (id: number) => {
-    if (id === 0) {
+    if (window.location.href.includes('/selec-sucursal#login')) {
+      navigate('/login-cliente');
+    } else if (id === 0) {
       window.location.href = '/';
     } else {
       window.location.href = `/#sucursal-${id}`;
     }
+    
   };
 
 

@@ -50,7 +50,7 @@ const LoginCliente = () => {
 
     const handleIniciarSesionUsuario = () => {
         ClienteService.getUser(email, contraseña);
-        
+
     };
 
     // Modal flotante de ingrediente
@@ -269,15 +269,15 @@ const LoginCliente = () => {
 
     const handlePasswordResetRequest = async () => {
         try {
-          await ClienteService.requestPasswordReset(email);
-          toast.success('Correo de recuperación enviado');
-          return;
+            await ClienteService.requestPasswordReset(email);
+            toast.success('Correo de recuperación enviado');
+            return;
         } catch (error) {
-          toast.error('Error al enviar el correo de recuperación');
-          return;
+            toast.error('Error al enviar el correo de recuperación');
+            return;
         }
-      };
-      
+    };
+
 
 
     return (
@@ -286,8 +286,10 @@ const LoginCliente = () => {
             <HeaderLogin></HeaderLogin>
             <Toaster />
             {/*INICIAR SESION*/}
+
             <section className="form-main" style={{ display: mostrarIniciarSesion ? '' : 'none' }}>
                 <div className="form-content">
+                    <button style={{marginBottom: '20px'}} className='btn' onClick={() => window.location.href = '/selec-sucursal#login'}>SELECCIONAR SUCURSAL</button>
                     <div className="box">
                         <h3>- BIENVENIDO -</h3>
                         <p id='subtitle'>¡Si ya tienes una cuenta, inicia sesión con tus datos!</p>
@@ -318,7 +320,7 @@ const LoginCliente = () => {
             <section className="form-main" style={{ display: mostrarReestablecerContraseña ? '' : 'none' }}>
                 <div className="form-content">
                     <div className="box">
-                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></h2>
+                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a href=""><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
                         <h3>- REESTABLECER CONTRASEÑA -</h3>
                         <p id='subtitle'>¡Necesitamos que coloques un correo electrónico para ayudarte a reestablecer tu contraseña!</p>
                         <form action="">
@@ -341,7 +343,7 @@ const LoginCliente = () => {
                         <h3>- CREAR UNA CUENTA -</h3>
                         <p id='subtitle'>o registrate con: <img id='icon-gmail' src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new" /></p>
                         {renderStep()}
-                        <p id='subtitle'>¿Ya tienes una cuenta?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('iniciarSesion')}>Iniciar sesión</a></p>
+                        <p id='subtitle'>¿Ya tienes una cuenta?&nbsp;<a href="" className='gradient-text' onClick={() => mostrarSeccion('iniciarSesion')}>Iniciar sesión</a></p>
                     </div>
                 </div>
             </section>
