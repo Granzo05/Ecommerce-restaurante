@@ -147,10 +147,10 @@ const Stocks = () => {
                             {stockIngredientes.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{stock.ingrediente?.nombre}</td>
-                                    <td>{stock.cantidadActual}</td>
-                                    <td>{stock.cantidadMinima}</td>
-                                    <td>{stock.cantidadMaxima}</td>
-                                    <td>{stock.precioCompra}</td>
+                                    <td style={{textTransform: 'lowercase'}}>{stock.cantidadActual} {stock.medida?.nombre}</td>
+                                    <td style={{textTransform: 'lowercase'}}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
+                                    <td style={{textTransform: 'lowercase'}}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
+                                    <td>${stock.precioCompra}</td>
                                     <td>{stock.fechaLlegadaProxima ? (
                                         fomatearFechaDDMMYYYY(new Date(stock.fechaLlegadaProxima))
                                     ) : (

@@ -93,8 +93,8 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
       success: (message) => {
         StockIngredientesService.createStock(stockIngredientes)
         setTimeout(() => {
-          onCloseModal();
         }, 800);
+        onCloseModal();
         return message;
       },
       error: (message) => {
