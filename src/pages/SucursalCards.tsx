@@ -35,9 +35,6 @@ const fetchSucursales = async () => {
     }
   };
 
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
 
 
   return (
@@ -55,8 +52,14 @@ const fetchSucursales = async () => {
               >
                 <h2>{sucursal.nombre}</h2>
                 {sucursal.domicilios.map((domicilio, index) => (
-                    <p key={index}>{domicilio.calle}, {domicilio.numero}</p>
-                  ))}
+                  <>
+                  
+                  <p style={{textAlign: 'left', textTransform: 'uppercase'}} key={index}><strong>DIRECCIÓN:</strong> {domicilio.calle}, {domicilio.numero}</p>
+                  <p style={{textAlign: 'left'}} key={index}><strong>LOCALIDAD:</strong> {domicilio.localidad.nombre}, {domicilio.localidad.departamento.nombre}, {domicilio.localidad.departamento.provincia.nombre}</p>
+                  <p style={{textAlign: 'left'}} key={index}><strong>TELÉFONO:</strong> {sucursal.telefono}</p>
+                  </>
+                  
+                ))}
               </div>
             ))}
             <div className="sucursal-card" onClick={() => handleSucursalClick(0)}>

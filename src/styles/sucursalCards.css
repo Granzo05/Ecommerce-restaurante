@@ -15,10 +15,13 @@
     box-shadow: 0 4px 40px black; /* Sombra para dar efecto de elevación */
     text-align: center;
     margin: 10px;
+    
+    width: 56%;
   }
   
   .header-sucursal-card {
     margin-bottom: 20px;
+    
   }
   
   .sucursal-card-container {
@@ -36,7 +39,7 @@
     text-align: center;
     cursor: pointer;
     transition: transform 0.2s;
-    width: 30%; /* Añadido para mantener las tarjetas con un tamaño uniforme */
+    width: 40%; /* Añadido para mantener las tarjetas con un tamaño uniforme */
     background-color: #fafafa; /* Fondo blanco de las tarjetas */
   }
   
@@ -46,7 +49,7 @@
   }
   
   .sucursal-card h2 {
-    font-size: 18px;
+    font-size: 25px;
   }
   
   .sucursal-card p {
