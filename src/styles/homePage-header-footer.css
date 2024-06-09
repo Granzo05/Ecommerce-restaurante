@@ -37,6 +37,12 @@ img{
     }
 }
 
+.our .nuestras-promociones{
+    font-size: 52px;
+    font-family: 'Satisfy', cursive;
+    text-transform: capitalize;
+}
+
 .header{
     background: linear-gradient(
         rgba(0,0,0,0.4),

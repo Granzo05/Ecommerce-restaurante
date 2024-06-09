@@ -82,7 +82,7 @@ export default function MainMenu() {
                 <>
                     <section className='our'>
                         <div id='ofertas' className="container">
-                            <h3>&mdash; Nuestras promociones &mdash;</h3>
+                            <h2 className='nuestras-promociones'>&mdash; Nuestras promociones &mdash;</h2>
                         </div>
                     </section>
                     <section className="oferts">
