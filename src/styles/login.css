@@ -212,3 +212,40 @@ a {
 .btns-crear-cuenta .btn-accion-registrarse:hover, .btns-stock .btn-accion-registrarse:hover{
     background-color: rgb(1, 73, 1);
 }
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .form-content {
+        padding: 20px;
+    }
+
+    .form-content .box {
+        padding: 30px;
+    }
+
+    .form-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .form-content .btn {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-content {
+        padding: 10px;
+    }
+
+    .form-content .box {
+        padding: 10px 30px;
+    }
+
+    .form-content h3 {
+        font-size: 1.2rem;
+    }
+
+    .form-content .btn {
+        font-size: 12px;
+    }
+}

@@ -29,6 +29,9 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<MainMenu />}>
         </Route>
 
+        <Route path="/${id}" element={<MainMenu />}>
+        </Route>
+
         <Route path="/login-cliente" element={<LoginCliente />}>
         </Route>
 

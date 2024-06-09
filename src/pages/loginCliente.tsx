@@ -15,6 +15,7 @@ import ModalFlotanteRecomendacionesLocalidades from '../hooks/ModalFlotanteFiltr
 import HeaderLogin from '../components/headerLogin';
 import ModalFlotanteRecomendacionesPais from '../hooks/ModalFlotanteFiltroPais';
 import { formatearFechaYYYYMMDD } from '../utils/global_variables/functions';
+import { useNavigate } from 'react-router-dom'; // Importa useHistory desde React Route
 
 const LoginCliente = () => {
     const [step, setStep] = useState(1);
@@ -26,6 +27,16 @@ const LoginCliente = () => {
     const prevStep = () => {
         setStep(step - 1);
     };
+
+    /*const history = useNavigate(); // Obtiene el objeto history
+
+    useEffect(() => {
+        const sucursalSeleccionada = localStorage.getItem('sucursal'); // Verifica si hay una sucursal seleccionada en el localStorage
+        if (!sucursalSeleccionada) {
+            // Si no hay una sucursal seleccionada, redirige al usuario a la página selec-sucursal
+            history('/selec-sucursal');
+        }
+    }, [history]);*/
 
     const [nombre, setNombre] = useState('');
     const [email, setEmail] = useState('');

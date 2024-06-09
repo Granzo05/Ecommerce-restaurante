@@ -26,7 +26,7 @@ const SucursalCards: React.FC = () => {
   };
 
   useEffect(() => {
-    document.title = 'EBS - Seleccionar sucursal';
+    document.title = 'El Buen Sabor - Seleccionar sucursal';
   }, []);
 
   return (
@@ -43,7 +43,7 @@ const SucursalCards: React.FC = () => {
             </div>
           ))}
           <div className="sucursal-card" onClick={() => handleSucursalClick(0)}>
-            <h2 onClick={() => window.location.href = '/'}>INGRESAR SIN SELECCIONAR UNA SUCURSAL ESPECÍFICA</h2>
+            <h2 onClick={() => window.location.href = '/'}>Ingresar sin sucursal</h2>
           </div>
         </div>
       </div>

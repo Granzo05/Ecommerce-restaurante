@@ -73,7 +73,7 @@ export default function MainMenu() {
                         </div>
                         <div className="information-c1">
                             <h3>&mdash; Sobre nosotros &mdash;</h3>
-                            <p>Somos "El Buen Sabor", un lugar de comidas dedicado a ofrecer lo mejor de la gastronomía local. Nuestro compromiso es brindar platos deliciosos con ingredientes frescos y de alta calidad, en un ambiente acogedor y familiar. Nos enorgullece presentar una selección de especialidades que resaltan los sabores auténticos de nuestra región, elaborados con pasión y cuidado por nuestros chefs expertos. En "El Buen Sabor", cada comida es una celebración de la tradición culinaria y un momento para disfrutar en compañía de seres queridos.</p>
+                            <p>"El Buen Sabor", un lugar de comidas dedicado a ofrecer lo mejor de la gastronomía local. Brindamos platos deliciosos con ingredientes frescos y de alta calidad, en un ambiente acogedor y familiar. Nos enorgullece presentar una selección de especialidades que resaltan los sabores auténticos de nuestra región, elaborados con pasión y cuidado por nuestros chefs expertos. En "El Buen Sabor", cada comida es una celebración de la tradición culinaria y un momento para disfrutar en compañía de seres queridos.</p>
                         </div>
                     </div>
                 </div>

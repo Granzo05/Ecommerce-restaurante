@@ -87,7 +87,7 @@ const HeaderHomePage: React.FC = () => {
                 <a href="" className="logo"><img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="" /></a>
                 <input type="checkbox" id="menu" />
                 <label htmlFor="menu">
-                    <img src="../src/assets/icons/header-icono-responsive.png" className="menu-icono" alt="menu" />
+                    <img src="../src/assets/icons/header-icono-responsive.png" className="menu-icono-responsive" alt="menu" />
                 </label>
                 <nav className="navbar">
                     <ul>
@@ -107,10 +107,11 @@ const HeaderHomePage: React.FC = () => {
                                     )}
                                 </>
                                 <img className='menu-icono' src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
+                                <li className="text-replacement" onClick={handleCartClick}><a>Carrito</a></li>
 
                                 <img className='menu-icono' src="../src/assets/icons/header-icono-cuenta.png" alt="Cuenta" onClick={handleAccountClick} />
                                 <p className='nombre-email-usuario' style={{color: 'white'}}>{cliente.nombre ? cliente.nombre : cliente.email}</p>
-
+                                <li className="text-replacement" onClick={handleAccountClick}><a>Cuenta: {cliente.nombre ? cliente.nombre : cliente.email}</a></li>
 
 
                                 {isCartOpen && location.pathname !== '/pago' && (

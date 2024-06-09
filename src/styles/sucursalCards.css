@@ -14,6 +14,7 @@
     padding: 20px;
     box-shadow: 0 4px 40px black; /* Sombra para dar efecto de elevación */
     text-align: center;
+    margin: 10px;
   }
   
   .header-sucursal-card {
@@ -52,4 +53,39 @@
     font-size: 14px;
     color: #555;
   }
+
+  /* Media Queries para hacer el diseño responsivo */
+@media (max-width: 1200px) {
+  .sucursal-card {
+    width: 45%; /* Dos tarjetas por fila en pantallas medianas */
+  }
+}
+
+@media (max-width: 768px) or (max-height: 664px) {
+  #header-login{
+    display: none;
+  }
+  
+  .sucursal-card-container {
+    height: auto; /* Permitir que la altura se ajuste automáticamente en pantallas pequeñas */
+  }
+  .sucursal-card {
+    width: 100%; /* Una tarjeta por fila en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  .inner-container-sucursal-card {
+    padding: 10px; /* Reducir padding en pantallas muy pequeñas */
+  }
+  .sucursal-card {
+    padding: 10px; /* Reducir padding en tarjetas en pantallas muy pequeñas */
+  }
+  .sucursal-card h2 {
+    font-size: 16px; /* Ajustar tamaño de fuente en pantallas muy pequeñas */
+  }
+  .sucursal-card p {
+    font-size: 12px; /* Ajustar tamaño de fuente en pantallas muy pequeñas */
+  }
+}
   
