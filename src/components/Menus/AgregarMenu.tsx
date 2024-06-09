@@ -282,7 +282,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
                     <span>Cantidad necesaria</span>
                   </div>
                   <div className="input-filtrado">
-                    <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredientesMenu[index].medida?.nombre ?? ''} />
+                    <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredientesMenu[index].ingrediente?.medida.nombre ?? ingredientesMenu[index].medida?.nombre ?? ''} />
                     {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
                   </div>
                 </div>

@@ -120,7 +120,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
           <span>Costo ($)</span>
         </div>
       </label>
-      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={articulo.medida.nombre ?? medida.nombre ?? ''} />
       {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
 
       <br />
