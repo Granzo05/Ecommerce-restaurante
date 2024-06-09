@@ -42,8 +42,16 @@ const StocksEntrantes = () => {
 
     function buscarStocks() {
         StockEntranteService.getStock()
-            .then(data => {
-                setStockEntrante(data);
+            .then((stocks: StockEntrante[]) => {
+                setStockEntrante(stocks);
+                stocks.forEach(stock => {
+                    let suma = 0;
+
+                    stock.detallesStock.forEach(detalle => {
+                        suma += detalle.costoUnitario * detalle.cantidad;
+                        stock.costo = suma.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    });
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -120,7 +128,7 @@ const StocksEntrantes = () => {
 
             <hr />
             <ModalCrud isOpen={showAgregarStockModal} onClose={handleModalClose}>
-                <AgregarStockEntrante onCloseModal={handleModalClose}/>
+                <AgregarStockEntrante onCloseModal={handleModalClose} />
             </ModalCrud>
 
             <ModalFlotante isOpen={showDetallesStock} onClose={handleModalClose}>
@@ -136,7 +144,7 @@ const StocksEntrantes = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EditarStock stockEntrante={selectedStock} onCloseModal={handleModalClose}/>}
+                {selectedStock && <EditarStock stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
             </ModalCrud>
 
             {mostrarStocks && (
@@ -146,6 +154,7 @@ const StocksEntrantes = () => {
                             <tr>
                                 <th>Fecha</th>
                                 <th>Costo</th>
+                                <th>Detalles</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -153,6 +162,7 @@ const StocksEntrantes = () => {
                             {stockEntrante.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{formatDate(new Date(stock.fechaLlegada.toString()))}</td>
+                                    <td>{stock.costo}</td>
                                     <td onClick={() => handleMostrarDetalles(stock.detallesStock)}>Detalle stock</td>
 
                                     {stock.borrado === 'NO' ? (

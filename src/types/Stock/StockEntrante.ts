@@ -4,7 +4,8 @@ import { DetalleStock } from "./DetalleStock";
 export class StockEntrante {
     id: number = 0;
     fechaLlegada: Date = new Date();
-    costo: number = 0;
+    // String para parsearlo a formato de $ ars
+    costo: string = '';
     detallesStock: DetalleStock[] = [];
     sucursal: Sucursal | null = null;
     borrado: string = '';

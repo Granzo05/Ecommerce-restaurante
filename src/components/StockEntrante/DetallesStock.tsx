@@ -10,7 +10,7 @@ export const DetallesStock: React.FC<Props> = ({ detallesOriginal }) => {
   const [total, setTotal] = useState<number>(0);
 
   useEffect(() => {
-    const newTotal = detallesOriginal.reduce((acc, detalle) => acc + detalle.subtotal, 0);
+    const newTotal = detallesOriginal.reduce((acc, detalle) => acc + detalle.cantidad * detalle.costoUnitario, 0);
     setTotal(newTotal);
   }, [detallesOriginal]);
 
@@ -22,7 +22,7 @@ export const DetallesStock: React.FC<Props> = ({ detallesOriginal }) => {
           <h2>{detalle.ingrediente?.nombre}</h2>
           <p>Cantidad: {detalle.cantidad} {detalle.medida?.nombre.toString().replace(/_/g, ' ')}</p>
           <p>Costo por unidad: ${detalle.costoUnitario.toLocaleString('es-AR')}</p>
-          <p>Subtotal: ${detalle.subtotal.toLocaleString('es-AR')}</p>
+          <p>Subtotal: ${(detalle.cantidad * detalle.costoUnitario).toLocaleString('es-AR')}</p>
         </div>
       ))}
 
