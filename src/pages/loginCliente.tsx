@@ -48,8 +48,20 @@ const LoginCliente = () => {
     const [apellido, setApellido] = useState('');
     const [telefono, setTelefono] = useState('');
 
-    const handleIniciarSesionUsuario = () => {
-        ClienteService.getUser(email, contraseña);
+    const handleIniciarSesionUsuario = async () => {
+        try {
+            const user = await ClienteService.getUser(email, contraseña);
+            if (user) {
+                loading: 'Iniciando sesión....'
+                toast.success('Inicio de sesión exitoso');
+                // Aquí puedes redirigir al usuario a la página principal o realizar otras acciones
+                window.location.href = '/'
+            } else {
+                toast.error('Correo o contraseña incorrectos');
+            }
+        } catch (error) {
+            toast.error('Correo o contraseña incorrectos');
+        }
     };
 
     // Modal flotante de ingrediente
@@ -270,8 +282,10 @@ const LoginCliente = () => {
         try {
           await ClienteService.requestPasswordReset(email);
           toast.success('Correo de recuperación enviado');
+          return;
         } catch (error) {
           toast.error('Error al enviar el correo de recuperación');
+          return;
         }
       };
       
