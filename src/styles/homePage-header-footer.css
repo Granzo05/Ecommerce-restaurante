@@ -79,10 +79,11 @@ img{
 }
 
 .nombre-email-usuario{
-    position: absolute;
-    top: 32px;
-    right: -92px;
+    text-align: center;
     font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0;
 }
 
 /*-----------MENU----------------*/

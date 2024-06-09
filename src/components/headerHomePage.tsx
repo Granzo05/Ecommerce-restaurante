@@ -115,7 +115,7 @@ const HeaderHomePage: React.FC = () => {
                                 <li  style={{cursor: 'pointer'}} className="text-replacement" onClick={handleCartClick}><a>Carrito</a></li>
 
                                 <img className='menu-icono' src="../src/assets/icons/header-icono-cuenta.png" alt="Cuenta" onClick={handleAccountClick} />
-                                <p className='nombre-email-usuario' style={{color: 'white'}}>{cliente.nombre ? cliente.nombre : cliente.email}</p>
+                                
                                 <li style={{cursor: 'pointer'}} className="text-replacement" onClick={handleAccountClick}><a>Cuenta: {cliente.nombre ? cliente.nombre : cliente.email}</a></li>
 
 
@@ -183,6 +183,9 @@ const HeaderHomePage: React.FC = () => {
                                 {isAccountOpen && (
                                     <div className="account-dropdown">
                                         <h4>Preferencias de cuenta</h4>
+                                        
+                                        <p className='nombre-email-usuario'>- {cliente.nombre ? cliente.nombre : cliente.email} -</p>
+                                        
                                         <ul className="preferences-list">
                                             <li><button onClick={handleEditarPerfilClick}>Editar perfil</button></li>
                                             <li><button onClick={handleEditarDomiciliosClick}>Editar domicilios</button></li>
