@@ -5,6 +5,7 @@ import main.entities.Domicilio.*;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.Subcategoria;
+import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
@@ -15,6 +16,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.mail.MessagingException;
 import java.io.BufferedReader;
@@ -41,7 +45,7 @@ public class Main {
     @Autowired(required = true)
     private CategoriaRepository categoriaRepository;
     @Autowired(required = true)
-    private MedidaRepository medidaRepository;
+    private ImagenesRepository imagenesRepository;
 
     public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
         SpringApplication.run(Main.class, args);
@@ -120,6 +124,14 @@ public class Main {
                 categoria.getSubcategorias().add(subcategoria1);
                 categoria.getSubcategorias().add(subcategoria2);
 
+                Imagenes imagen = new Imagenes();
+                imagen.setNombre("hamburguesas.png");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria);
+                imagen.getSucursales().add(sucursal);
+
+                categoria.getImagenes().add(imagen);
+
                 sucursal.getCategorias().add(categoria);
 
                 Categoria categoria1 = new Categoria();
@@ -145,6 +157,14 @@ public class Main {
                 categoria1.getSubcategorias().add(subcategoria10);
                 categoria1.getSubcategorias().add(subcategoria11);
                 categoria1.getSubcategorias().add(subcategoria12);
+
+                imagen = new Imagenes();
+                imagen.setNombre("panchos.webp");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria1.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria1);
+                imagen.getSucursales().add(sucursal);
+
+                categoria1.getImagenes().add(imagen);
 
                 sucursal.getCategorias().add(categoria1);
 
@@ -172,6 +192,14 @@ public class Main {
                 categoria2.getSubcategorias().add(subcategoria21);
                 categoria2.getSubcategorias().add(subcategoria22);
 
+                imagen = new Imagenes();
+                imagen.setNombre("empanadas.jpg");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria2.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria2);
+                imagen.getSucursales().add(sucursal);
+
+                categoria2.getImagenes().add(imagen);
+
                 sucursal.getCategorias().add(categoria2);
 
                 Categoria categoria3 = new Categoria();
@@ -197,6 +225,14 @@ public class Main {
                 categoria3.getSubcategorias().add(subcategoria30);
                 categoria3.getSubcategorias().add(subcategoria31);
                 categoria3.getSubcategorias().add(subcategoria32);
+
+                imagen = new Imagenes();
+                imagen.setNombre("pizzas.png");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria3.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria3);
+                imagen.getSucursales().add(sucursal);
+
+                categoria3.getImagenes().add(imagen);
 
                 sucursal.getCategorias().add(categoria3);
 
@@ -224,6 +260,14 @@ public class Main {
                 categoria4.getSubcategorias().add(subcategoria41);
                 categoria4.getSubcategorias().add(subcategoria42);
 
+                imagen = new Imagenes();
+                imagen.setNombre("lomos.avif");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria4.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria4);
+                imagen.getSucursales().add(sucursal);
+
+                categoria4.getImagenes().add(imagen);
+
                 sucursal.getCategorias().add(categoria4);
 
                 Categoria categoria5 = new Categoria();
@@ -241,14 +285,16 @@ public class Main {
                 subcategoria51.setNombre("Al agua");
                 subcategoria51.getSucursales().add(sucursal);
 
-                Subcategoria subcategoria52 = new Subcategoria();
-                subcategoria52.setCategoria(categoria5);
-                subcategoria52.setNombre("Postre");
-                subcategoria52.getSucursales().add(sucursal);
-
                 categoria5.getSubcategorias().add(subcategoria50);
                 categoria5.getSubcategorias().add(subcategoria51);
-                categoria5.getSubcategorias().add(subcategoria52);
+
+                imagen = new Imagenes();
+                imagen.setNombre("helados.jpg");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria5.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria5);
+                imagen.getSucursales().add(sucursal);
+
+                categoria5.getImagenes().add(imagen);
 
                 sucursal.getCategorias().add(categoria5);
 
@@ -276,6 +322,14 @@ public class Main {
                 categoria6.getSubcategorias().add(subcategoria61);
                 categoria6.getSubcategorias().add(subcategoria62);
 
+                imagen = new Imagenes();
+                imagen.setNombre("parrilla.avif");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria6.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria6);
+                imagen.getSucursales().add(sucursal);
+
+                categoria6.getImagenes().add(imagen);
+
                 sucursal.getCategorias().add(categoria6);
 
                 Categoria categoria7 = new Categoria();
@@ -302,18 +356,44 @@ public class Main {
                 categoria7.getSubcategorias().add(subcategoria71);
                 categoria7.getSubcategorias().add(subcategoria72);
 
+                imagen = new Imagenes();
+                imagen.setNombre("pastas.jpeg");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria7.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria7);
+                imagen.getSucursales().add(sucursal);
+
+                categoria7.getImagenes().add(imagen);
+
                 sucursal.getCategorias().add(categoria7);
 
                 Categoria categoria8 = new Categoria();
                 categoria8.setNombre("SUSHI");
                 categoria8.setBorrado("NO");
                 categoria8.getSucursales().add(sucursal);
+
+                imagen = new Imagenes();
+                imagen.setNombre("sushi.jpg");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria8.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria8);
+                imagen.getSucursales().add(sucursal);
+
+                categoria8.getImagenes().add(imagen);
+
                 sucursal.getCategorias().add(categoria8);
 
                 Categoria categoria9 = new Categoria();
                 categoria9.setNombre("MILANESAS");
                 categoria9.setBorrado("NO");
                 categoria9.getSucursales().add(sucursal);
+
+                imagen = new Imagenes();
+                imagen.setNombre("milanesas.png");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria9.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria9);
+                imagen.getSucursales().add(sucursal);
+
+                categoria9.getImagenes().add(imagen);
+
                 sucursal.getCategorias().add(categoria9);
 
                 Categoria categoria10 = new Categoria();
@@ -340,6 +420,14 @@ public class Main {
                 categoria10.getSubcategorias().add(subcategoria101);
                 categoria10.getSubcategorias().add(subcategoria102);
 
+                imagen = new Imagenes();
+                imagen.setNombre("sin-alcohol.jpg");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria10.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria10);
+                imagen.getSucursales().add(sucursal);
+
+                categoria10.getImagenes().add(imagen);
+
                 sucursal.getCategorias().add(categoria10);
 
                 Categoria categoria11 = new Categoria();
@@ -365,6 +453,14 @@ public class Main {
                 categoria11.getSubcategorias().add(subcategoria110);
                 categoria11.getSubcategorias().add(subcategoria111);
                 categoria11.getSubcategorias().add(subcategoria112);
+
+                imagen = new Imagenes();
+                imagen.setNombre("alcohol.jpg");
+                imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria11.getNombre() + "/" + imagen.getNombre());
+                imagen.getCategorias().add(categoria11);
+                imagen.getSucursales().add(sucursal);
+
+                categoria11.getImagenes().add(imagen);
 
                 sucursal.getCategorias().add(categoria11);
 
