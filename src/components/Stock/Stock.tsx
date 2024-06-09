@@ -105,6 +105,8 @@ const Stocks = () => {
                 <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
                 <button className="btn-agregar" onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
             </div>
+            <p><span className="cuadrado venta"></span>Artículos para venta</p>
+            <p><span className="cuadrado noventa"></span>Artículos para no venta</p>
 
             <hr />
 
@@ -139,6 +141,7 @@ const Stocks = () => {
                                 <th>Cantidad máxima</th>
                                 <th>Costo</th>
                                 <th>Fecha próximo ingreso</th>
+                                <th>¿Venta?</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -157,6 +160,7 @@ const Stocks = () => {
                                         <p>No hay próximas entradas</p>
                                     )}
                                     </td>
+                                    <td style={{backgroundColor: '#f51a1a'}}>NO</td>
                                     {stock.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
@@ -180,15 +184,15 @@ const Stocks = () => {
                             {stockArticulos.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{stock.articuloVenta?.nombre}</td>
-                                    <td>{stock.cantidadActual}</td>
-                                    <td>{stock.cantidadMinima}</td>
-                                    <td>{stock.cantidadMaxima}</td>
-                                    <td>{stock.precioCompra}</td>
+                                    <td style={{textTransform: 'lowercase'}}>{stock.cantidadActual} {stock.medida?.nombre}</td>
+                                    <td  style={{textTransform: 'lowercase'}}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
+                                    <td  style={{textTransform: 'lowercase'}}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
+                                    <td>${stock.precioCompra}</td>
                                     <td>{'No hay próximas entradas'}</td>
-
+                                    <td style={{backgroundColor: '#19cc37'}}>SI</td>
                                     {stock.borrado === 'NO' ? (
                                         <td>
-                                            <div className="btns-acciones-stock">
+                                            <div className="btns-acciones">
                                                 <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
 
                                                 <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('articulo') }}>ELIMINAR</button>
@@ -197,7 +201,7 @@ const Stocks = () => {
                                         </td>
                                     ) : (
                                         <td>
-                                            <div className="btns-acciones-stock">
+                                            <div className="btns-acciones">
                                                 <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
 
                                                 <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('articulo') }}>ACTIVAR</button>
