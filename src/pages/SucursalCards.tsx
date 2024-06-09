@@ -30,6 +30,10 @@ const fetchSucursales = async () => {
         });
 }
 
+useEffect(() => {
+  document.title = 'El Buen Sabor - Seleccionar sucursal';
+}, []);
+
 
   const handleSucursalClick = (id: number) => {
     if (window.location.href.includes('/selec-sucursal#login')) {
