@@ -90,11 +90,14 @@ function AgregarIngrediente() {
       success: (message) => {
         StockIngredientesService.createStock(stockIngredientes)
         return message;
+        handleModalClose();
       },
       error: (message) => {
         return message;
       },
     });
+
+    
   }
 
   return (

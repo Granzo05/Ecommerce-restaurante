@@ -11,6 +11,8 @@ import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFil
 import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
 
+import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
+
 import '../../styles/inputLabel.css'
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { Departamento } from '../../types/Domicilio/Departamento';
@@ -213,16 +215,16 @@ function AgregarEmpleado() {
               <span>Cuil del empleado</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
+              <input type="password" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
               <span>Contraseña del empleado</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+              <input defaultValue={''} type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
               <span>Telefono del empleado</span>
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
-              <input type="date" value={fechaNacimiento.toString()} required={true} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+              <input type="date" value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
               <hr />
             </div>
             <div className="btns-pasos">
