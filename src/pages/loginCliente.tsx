@@ -48,20 +48,9 @@ const LoginCliente = () => {
     const [apellido, setApellido] = useState('');
     const [telefono, setTelefono] = useState('');
 
-    const handleIniciarSesionUsuario = async () => {
-        try {
-            const user = await ClienteService.getUser(email, contraseña);
-            if (user) {
-                loading: 'Iniciando sesión....'
-                toast.success('Inicio de sesión exitoso');
-                // Aquí puedes redirigir al usuario a la página principal o realizar otras acciones
-                window.location.href = '/'
-            } else {
-                toast.error('Correo o contraseña incorrectos');
-            }
-        } catch (error) {
-            toast.error('Correo o contraseña incorrectos');
-        }
+    const handleIniciarSesionUsuario = () => {
+        ClienteService.getUser(email, contraseña);
+        
     };
 
     // Modal flotante de ingrediente
