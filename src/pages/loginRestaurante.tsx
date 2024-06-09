@@ -112,12 +112,11 @@ const LoginNegocio = () => {
                 type="password"
                 name="password"
                 placeholder="tu contraseña"
-                title="Minimum 6 characters at least 1 Alphabet and 1 Number"
-                //pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+                pattern=".{3,}"
                 onChange={(e) => setContraseña(e.target.value)}
                 required
               />
-              <div className="error-message">Mínimo 6 caracteres. 1 letra y 1 número.</div>
+              <div className="error-message">Mínimo 3 caracteres.</div>
             </div>
             <div className="my-form__actions">
               <div className="my-form__row_contra">
