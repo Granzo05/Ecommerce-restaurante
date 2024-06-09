@@ -266,6 +266,16 @@ const LoginCliente = () => {
         }
     };
 
+    const handlePasswordResetRequest = async () => {
+        try {
+          await ClienteService.requestPasswordReset(email);
+          toast.success('Correo de recuperación enviado');
+        } catch (error) {
+          toast.error('Error al enviar el correo de recuperación');
+        }
+      };
+      
+
 
     return (
 
@@ -314,7 +324,7 @@ const LoginCliente = () => {
                                 <span>Correo electrónico</span>
                             </div>
                             <br />
-                            <input type="button" className='btn' value="ENVIAR CORREO DE RECUPERACIÓN" onClick={handleIniciarSesionUsuario} style={{ marginTop: '0.5px' }} />
+                            <input type="button" className='btn' value="ENVIAR CORREO DE RECUPERACIÓN" onClick={handlePasswordResetRequest} style={{ marginTop: '0.5px' }} />
                         </form>
                     </div>
                 </div>
