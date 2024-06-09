@@ -121,3 +121,18 @@ h2 {
 .div-pago h3{
     text-align: center;
 }
+
+/* Estilos para pantallas grandes */
+@media screen and (min-width: 768px) {
+    .container-pago {
+        min-height: 100vh;
+    }
+}
+
+/* Estilos para pantallas pequeñas */
+@media screen and (max-width: 767px) {
+    .div-pago {
+        max-height: 90vh;
+        overflow-y: scroll;
+    }
+}
