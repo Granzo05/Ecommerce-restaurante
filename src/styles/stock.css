@@ -54,6 +54,22 @@ table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
+.cuadrado{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.venta{
+
+    background-color: #19cc37;
+}
+
+.noventa{
+    background-color: #f51a1a;
+}
+
 table tr:hover {
     background-color: #cccccc;
 }
@@ -122,3 +138,4 @@ table tr:hover {
 .btn-agregar:focus {
     outline: none;
 }
+

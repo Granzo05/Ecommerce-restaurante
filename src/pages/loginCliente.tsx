@@ -50,6 +50,7 @@ const LoginCliente = () => {
 
     const handleIniciarSesionUsuario = () => {
         ClienteService.getUser(email, contraseña);
+        
     };
 
     // Modal flotante de ingrediente
@@ -270,8 +271,10 @@ const LoginCliente = () => {
         try {
           await ClienteService.requestPasswordReset(email);
           toast.success('Correo de recuperación enviado');
+          return;
         } catch (error) {
           toast.error('Error al enviar el correo de recuperación');
+          return;
         }
       };
       

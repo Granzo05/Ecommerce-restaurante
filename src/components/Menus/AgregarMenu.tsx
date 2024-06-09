@@ -307,7 +307,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             {precioSugerido !== undefined && precioSugerido > 0 && (
               <>
                 <p>Costo por ingredientes: ${precioSugerido}</p>
+                <div className="inputBox">
                 <input type="number" placeholder='% de ganancia buscado' onChange={(e) => setPrecio((1 + parseInt(e.target.value) / 100) * precioSugerido)} />
+              
+                </div>
               </>
             )}
             <div className="inputBox">
