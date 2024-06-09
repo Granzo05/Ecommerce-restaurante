@@ -178,24 +178,20 @@ public class SucursalController {
         Optional<Sucursal> sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
         if (sucursalDB.isEmpty()) {
-            Domicilio domicilio = new Domicilio();
-            domicilio.setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
-            domicilio.setLocalidad(sucursalDetails.getDomicilio().getLocalidad());
-            domicilio.setNumero(sucursalDetails.getDomicilio().getNumero());
-            domicilio.setCodigoPostal(sucursalDetails.getDomicilio().getCodigoPostal());
-            domicilio.setSucursal(sucursalDetails);
-            sucursalDetails.setDomicilio(domicilio);
+            sucursalDetails.getDomicilio().setCalle(Encrypt.encriptarString(sucursalDetails.getDomicilio().getCalle()));
 
             sucursalDetails.setContraseña(Encrypt.cifrarPassword(sucursalDetails.getContraseña()));
 
             sucursalDetails.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
+
             sucursalDetails.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
+
             sucursalDetails.setPrivilegios("negocio");
 
-            Empresa empresa = empresaRepository.findById(1l).get();
+            sucursalDetails.setEmpresa(empresaRepository.findById(1l).get());
 
-            sucursalDetails.setEmpresa(empresa);
             sucursalDetails.setBorrado("NO");
+
             for (LocalidadDelivery localidad : sucursalDetails.getLocalidadesDisponiblesDelivery()) {
                 localidad.setSucursal(sucursalDetails);
             }

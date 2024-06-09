@@ -30,6 +30,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
   const [telefono, setTelefono] = useState(0);
   const [horarioApertura, setHorarioApertura] = useState('');
   const [horarioCierre, setHorarioCierre] = useState('');
+  const [nombre, setNombre] = useState('');
 
   const [localidadesProvincia, setLocalidadesProvincia] = useState<Localidad[]>([]);
 
@@ -150,6 +151,9 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     if (!email) {
       toast.error("Por favor, es necesario el email");
       return;
+    } else if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
     } else if (!contraseña) {
       toast.error("Por favor, es necesaria la contraseña");
       return;
@@ -185,6 +189,8 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     domicilio.localidad = localidadSucursal;
 
     sucursal.domicilio = domicilio;
+
+    sucursal.nombre = nombre;
 
     sucursal.contraseña = contraseña;
 
@@ -240,6 +246,10 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
         return (
           <>
             <h4>Paso 1 - Datos</h4>
+            <div className="inputBox">
+              <input autoComplete='false' type="text" value={nombre} required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre de la sucursal</span>
+            </div>
             <div className="inputBox">
               <input autoComplete='false' type="text" value={email} required={true} onChange={(e) => { setEmail(e.target.value) }} />
               <span>Correo electrónico</span>

@@ -85,7 +85,7 @@ export const SucursalService = {
 
     getSucursales: async (): Promise<Sucursal[]> => {
         try {
-            const response = await fetch(URL_API + 'sucursales', {
+            const response = await fetch(URL_API + 'sucursales/' + 1, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
