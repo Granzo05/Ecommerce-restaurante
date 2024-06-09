@@ -80,11 +80,14 @@ public class Main {
 
             if (empresaOp.isEmpty()) {
                 Empresa empresa = new Empresa();
+                empresa.setNombre("El Buen Sabor");
                 empresa.setCuit("201234566");
-                empresa.setRazonSocial("El buen sabor");
+                empresa.setRazonSocial("El Buen Sabor S.R.L.");
 
                 Sucursal sucursal = new Sucursal();
                 sucursal.setEmpresa(empresa);
+                sucursal.setNombre("Sucursal Capital");
+                sucursal.setTelefono(2634123456L);
                 sucursal.setHorarioApertura(LocalTime.of(18, 0));
                 sucursal.setHorarioCierre(LocalTime.of(23, 0));
                 sucursal.setEmail("a@gmail.com");

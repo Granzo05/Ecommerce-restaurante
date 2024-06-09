@@ -2,12 +2,9 @@ import React, { useEffect, useState } from 'react';
 import '../styles/sucursalCards.css';
 import HeaderLogin from '../components/headerLogin';
 import { URL_API } from '../utils/global_variables/const';
+import { SucursalService } from '../services/SucursalService';
+import { Sucursal } from '../types/Restaurante/Sucursal';
 
-interface Sucursal {
-  id: number;
-  nombre: string;
-  direccion: string;
-}
 
 
 const SucursalCards: React.FC = () => {
@@ -16,21 +13,18 @@ const SucursalCards: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSucursales = async () => {
-      try {
-        const response = await fetch(URL_API + 'sucursales/'+1);//ARREGLAR LA URL PARA QUE TRAIGA LAS SUCURSALES BIEN
-        const data = await response.json();
-        setSucursales(data);
-      } catch (error) {
-        console.error('Error fetching sucursales:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (sucursales.length === 0) fetchSucursales();
+}, [sucursales]);
 
-    fetchSucursales();
-    document.title = 'El Buen Sabor - Seleccionar sucursal';
-  }, []);
+const fetchSucursales = async () => {
+    SucursalService.getSucursales()
+        .then(data => {
+            setSucursales(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
 
   const handleSucursalClick = (id: number) => {
@@ -60,7 +54,9 @@ const SucursalCards: React.FC = () => {
                 onClick={() => handleSucursalClick(sucursal.id)}
               >
                 <h2>{sucursal.nombre}</h2>
-                <p>{sucursal.direccion}</p>
+                {sucursal.domicilios.map((domicilio, index) => (
+                    <p key={index}>{domicilio.calle}, {domicilio.numero}</p>
+                  ))}
               </div>
             ))}
             <div className="sucursal-card" onClick={() => handleSucursalClick(0)}>
