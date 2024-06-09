@@ -45,9 +45,11 @@ export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion }) => {
         </ul>
         <p>Precio: ${selectedPromocion.precio}</p>
 
-        <div className="inputBox">
+        <div style={{marginLeft: 'auto', marginRight: 'auto', width: '20%'}} className="inputBox">
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Cantidad:</label>
+
           <input type="number" required={true} value={cantidadPromocion} onChange={(e) => { setCantidadPromocion(parseInt(e.target.value)) }} />
-          <span>Cantidad</span>
+          
         </div>
         <button type='submit' onClick={() => handleAñadirPromocionAlCarrito(selectedPromocion)}>Añadir al carrito</button>
       </div>
