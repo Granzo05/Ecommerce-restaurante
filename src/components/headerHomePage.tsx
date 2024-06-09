@@ -36,7 +36,7 @@ const HeaderHomePage: React.FC = () => {
 
     const handleCloseCart = () => {
         setIsCartOpen(false);
-
+        setIsAccountOpen(false);
     };
 
     const handleAccountClick = () => {
@@ -183,7 +183,7 @@ const HeaderHomePage: React.FC = () => {
                                 {isAccountOpen && (
                                     <div className="account-dropdown">
                                         <h4>Preferencias de cuenta</h4>
-                                        
+                                        <button className="close-cart" onClick={handleCloseCart}>X<strong>(cerrar)</strong></button>
                                         <p className='nombre-email-usuario'>- {cliente.nombre ? cliente.nombre : cliente.email} -</p>
                                         
                                         <ul className="preferences-list">
