@@ -67,7 +67,6 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
       setDetallesIngredientesStock(prevState => {
         const newState = [...prevState];
         newState[index].costoUnitario = costo;
-        newState[index].subtotal = costo * newState[index].cantidad;
         return newState;
       });
     }
@@ -111,7 +110,6 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
       setDetallesArticuloStock(prevState => {
         const newState = [...prevState];
         newState[index].costoUnitario = costo;
-        newState[index].subtotal = costo * newState[index].cantidad;
         return newState;
       });
     }
@@ -293,7 +291,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
                 </div>
 
                 <div className="inputBox">
-                  <input type="number" required={true} value={detallesArticuloStock[index]?.subtotal} onChange={(e) => almacenarSubTotalArticulo(parseFloat(e.target.value), index)} />
+                  <input type="number" required={true} value={detallesArticuloStock[index]?.costoUnitario ?? 0} onChange={(e) => almacenarSubTotalArticulo(parseFloat(e.target.value), index)} />
                   <span>Costo unitario ($)</span>
                 </div>
 
