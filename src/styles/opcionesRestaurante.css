@@ -15,6 +15,12 @@
   background-color: #2b86c4;
 }
 
+.volver-menu:hover{
+  color: #2c2c2c;
+  text-decoration: underline;
+
+}
+
 .sidebar.white {
   background-color: white;
 }
@@ -57,14 +63,6 @@
 
 .spacer{
   flex-grow: 1;
-}
-
-.opciones-menu.hidden {
-  transform: translateX(-100%);
-}
-
-.opciones-menu.visible {
-  transform: translateX(0);
 }
 
 .main-options h4, .settings h4 {
@@ -257,6 +255,10 @@ p {
   #main-employee {
     width: 70%;
   }
+  .title-header img{
+    width: 210px;
+    height: 80px;
+  }
 }
 
 @media (max-width: 1025px) {
@@ -265,15 +267,6 @@ p {
     transition: .3s;
   }
 
-  .icon-sidebar {
-    display: flex;
-    position: absolute;
-    margin-left: 165px;
-    background-color: gray;
-    padding: 5px;
-    border-radius: 20px;
-    cursor: pointer;
-  }
 
   .opciones-menu.hidden .icon-sidebar {
     margin-left: 180px;
@@ -281,15 +274,16 @@ p {
     transition: .3s;
   }
 
-  .icon-sidebar:hover {
-    background-color: rgb(59, 59, 59);
-    transition: .3s;
-  }
 
 
   .title-header {
     display: flex;
     flex-direction: row;
+  }
+
+  .title-header img{
+    width: 200px;
+    height: 50px;
   }
 
 
@@ -320,14 +314,8 @@ p {
 }
 
 @media (max-width: 882px) and (min-width: 648px) {
-  .icon-sidebar {
-    display: flex;
-    position: absolute;
-    margin-left: 120px;
-    background-color: gray;
-    padding: 5px;
-    border-radius: 20px;
-    cursor: pointer;
+  .title-header img{
+    display: none;
   }
 
   .opciones-menu.hidden .icon-sidebar {
@@ -381,17 +369,13 @@ p {
     cursor: pointer;
   }
 
+  .title-header img{
+    display: none;
+  }
+
   .icon-topbar:hover {
     background-color: rgb(59, 59, 59);
     transition: .3s;
-  }
-
-  .opciones-menu {
-    transform: translateX(0);
-  }
-
-  .opciones-menu.hidden {
-    transform: translateY(-100%);
   }
 
 
@@ -401,9 +385,6 @@ p {
     transition: .3s;
   }
 
-  .icon-sidebar {
-    display: none;
-  }
 
   .sidebar {
     flex-direction: column;

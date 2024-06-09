@@ -103,12 +103,11 @@ const OpcionesCliente = () => {
     return (
         <>
         <div className={`sidebar ${sidebarBg}`}>
-            <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
+            <div className={`opciones-menu`}>
                 <div className="title-header">
+                <a href="/" className='volver-menu'>⭠ Volver</a>
                     <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" title='VOLVER AL MENU PRINCIPAL' className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/'}/>
-                    <div className="icon-sidebar" onClick={toggleMenuVisibility}>
-                        {sidebarIcon}
-                    </div>
+                    
                 </div>
                 <hr />
                 <label id="label" className={`opciones-link ${opcionesBg}`} onClick={() => setOpcionSeleccionada(0)}>
@@ -151,9 +150,6 @@ const OpcionesCliente = () => {
                             <label className="name-account">{cliente?.nombre}</label>
                         </div>
                         <LogoutIcon onClick={() => window.location.href = 'http://localhost:5173/login-negocio'} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
-                    </div>
-                    <div className="icon-topbar" onClick={toggleMenuVisibility}>
-                        {topIcon}
                     </div>
                 </div>
             </div>
