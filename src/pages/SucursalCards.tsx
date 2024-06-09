@@ -31,7 +31,7 @@ const fetchSucursales = async () => {
     if (id === 0) {
       window.location.href = '/';
     } else {
-      window.location.href = `/${id}`;
+      window.location.href = `/#sucursal-${id}`;
     }
   };
 
