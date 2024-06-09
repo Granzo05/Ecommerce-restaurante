@@ -6,9 +6,10 @@ import { EmpresaService } from '../../services/EmpresaService';
 
 interface EditarMenuProps {
   empresaOriginal: Empresa;
+  onCloseModal: () => void;
 }
 
-const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
+const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }) => {
   const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(empresaOriginal.imagenes);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>(empresaOriginal.imagenes);
@@ -83,6 +84,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal }) => {
     toast.promise(EmpresaService.updateEmpresa(empresa, imagenes, imagenesEliminadas), {
       loading: 'Editando empresa...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

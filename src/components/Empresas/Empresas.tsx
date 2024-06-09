@@ -83,7 +83,7 @@ const Empresas = () => {
             </div>
             <hr />
             <ModalCrud isOpen={showAgregarEmpresaModal} onClose={handleModalClose}>
-                <AgregarEmpresa />
+                <AgregarEmpresa onCloseModal={handleModalClose}/>
             </ModalCrud>
             {mostrarEmpresas && (
                 <div id="empresas">
@@ -127,7 +127,7 @@ const Empresas = () => {
                         </tbody>
                     </table>
                     <ModalCrud isOpen={showEditarEmpresaModal} onClose={handleModalClose}>
-                        <EditarEmpresa empresaOriginal={selectedEmpresa} />
+                        <EditarEmpresa empresaOriginal={selectedEmpresa} onCloseModal={handleModalClose}/>
                     </ModalCrud>
                     <ModalCrud isOpen={showEliminarEmpresaModal} onClose={handleModalClose}>
                         {selectedEmpresa && <EliminarEmpresa empresa={selectedEmpresa} onCloseModal={handleModalClose} />}

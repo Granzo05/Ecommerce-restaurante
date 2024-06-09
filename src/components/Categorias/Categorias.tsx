@@ -139,7 +139,7 @@ const Categorias = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalCategoria} onClose={handleModalClose}>
-                <AgregarCategoria />
+                <AgregarCategoria onCloseModal={handleModalClose}/>
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarCategoriaModal} onClose={handleModalClose}>

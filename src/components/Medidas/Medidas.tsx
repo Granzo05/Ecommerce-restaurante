@@ -137,7 +137,7 @@ const Medidas = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalMedida} onClose={handleModalClose}>
-                <AgregarMedida />
+                <AgregarMedida onCloseModal={handleModalClose}/>
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarMedidaModal} onClose={handleModalClose}>

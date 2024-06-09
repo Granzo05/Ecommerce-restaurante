@@ -7,7 +7,6 @@ import { Toaster, toast } from 'sonner'
 import { LocalidadDelivery } from '../../types/Restaurante/LocalidadDelivery';
 import InputComponent from '../InputFiltroComponent';
 import { LocalidadService } from '../../services/LocalidadService';
-import { clearInputs } from '../../utils/global_variables/functions';
 import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
 import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
@@ -16,7 +15,12 @@ import { Departamento } from '../../types/Domicilio/Departamento';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
 
-function AgregarSucursal() {
+interface AgregarSucursalProps {
+  onCloseModal: () => void;
+}
+
+
+const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
   // Atributos necesarios para Sucursal
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
@@ -208,14 +212,16 @@ function AgregarSucursal() {
     toast.promise(SucursalService.createSucursal(sucursal, imagenes), {
       loading: 'Guardando sucursal...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
         return message;
       },
     });
-  };
+  }
 
   //SEPARAR EN PASOS
   const [step, setStep] = useState(1);

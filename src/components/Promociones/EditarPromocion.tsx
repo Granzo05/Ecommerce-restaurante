@@ -17,9 +17,10 @@ import { Imagenes } from '../../types/Productos/Imagenes';
 
 interface EditarPromocionProps {
   promocion: Promocion;
+  onCloseModal: () => void;
 }
 
-const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion }) => {
+const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseModal }) => {
 
   const [fechaDesde, setFechaDesde] = useState(promocion.fechaDesde ? new Date(promocion.fechaDesde) : new Date());
   const [fechaHasta, setFechaHasta] = useState(promocion.fechaHasta ? new Date(promocion.fechaHasta) : new Date());
@@ -277,6 +278,9 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion }) => {
     toast.promise(PromocionService.updatePromocion(promocionUpdated, imagenes, imagenesEliminadas), {
       loading: 'Editando promoción...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -357,7 +361,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion }) => {
         <input type="date" required={true} value={fechaHasta.toISOString().substring(0, 10)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
       </div>
       <ModalFlotante isOpen={showAgregarMedidaModal} onClose={handleModalClose}>
-        <AgregarMedida />
+        <AgregarMedida onCloseModal={handleModalClose}/>
       </ModalFlotante>
       {detallesArticuloMenuMuestra.map((detalleMenu, index) => (
         <div key={index}>

@@ -18,9 +18,10 @@ import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
+  onCloseModal: () => void;
 }
 
-const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => {
+const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onCloseModal }) => {
   const [nombre, setNombre] = useState(empleadoOriginal.nombre);
   const [email, setEmail] = useState(empleadoOriginal.email);
   const [cuil, setCuit] = useState(empleadoOriginal.cuil);
@@ -209,10 +210,15 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal }) => 
 
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
       loading: 'Actualizando empleado...',
-      success: () => {
-        return `Empleado actualizado correctamente`;
+      success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
+        return message;
       },
-      error: 'Error',
+      error: (message) => {
+        return message;
+      },
     });
   }
 

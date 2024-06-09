@@ -8,8 +8,11 @@ import { StockIngredientes } from '../../types/Stock/StockIngredientes';
 import { Medida } from '../../types/Ingredientes/Medida';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 
-function AgregarIngrediente() {
+interface AgregarIngredienteProps {
+  onCloseModal: () => void;
+}
 
+const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal }) => {
   const [nombre, setNombre] = useState('');
   const [cantidadActual, setCantidadActual] = useState(0);
   const [cantidadMinima, setCantidadMinima] = useState(0);
@@ -89,15 +92,15 @@ function AgregarIngrediente() {
       loading: 'Creando Ingrediente...',
       success: (message) => {
         StockIngredientesService.createStock(stockIngredientes)
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
-        handleModalClose();
       },
       error: (message) => {
         return message;
       },
     });
-
-    
   }
 
   return (

@@ -120,7 +120,7 @@ const StocksEntrantes = () => {
 
             <hr />
             <ModalCrud isOpen={showAgregarStockModal} onClose={handleModalClose}>
-                <AgregarStockEntrante />
+                <AgregarStockEntrante onCloseModal={handleModalClose}/>
             </ModalCrud>
 
             <ModalFlotante isOpen={showDetallesStock} onClose={handleModalClose}>
@@ -136,7 +136,7 @@ const StocksEntrantes = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EditarStock stockEntrante={selectedStock} />}
+                {selectedStock && <EditarStock stockEntrante={selectedStock} onCloseModal={handleModalClose}/>}
             </ModalCrud>
 
             {mostrarStocks && (

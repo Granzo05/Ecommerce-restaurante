@@ -19,7 +19,11 @@ import { Departamento } from '../../types/Domicilio/Departamento';
 import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
 import { Pais } from '../../types/Domicilio/Pais';
 
-function AgregarEmpleado() {
+interface AgregarEmpleadoProps {
+  onCloseModal: () => void;
+}
+
+const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
@@ -176,10 +180,12 @@ function AgregarEmpleado() {
     toast.promise(EmpleadoService.createEmpleado(empleado), {
       loading: 'Creando empleado...',
       success: (message: string) => {
-        //clearInputs();
+      setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
-      error: (message: string) => {
+      error: (message) => {
         return message;
       },
     });

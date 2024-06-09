@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { Empresa } from '../../types/Restaurante/Empresa';
 import { EmpresaService } from '../../services/EmpresaService';
 import { Toaster, toast } from 'sonner'
-import { clearInputs } from '../../utils/global_variables/functions';
 import { Imagenes } from '../../types/Productos/Imagenes';
 
-function AgregarEmpresa() {
+interface AgregarEmpresaProps {
+  onCloseModal: () => void;
+}
+
+const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
   // Atributos necesarios para Empresa
   const [nombre, setNombre] = useState('');
   const [cuit, setCuit] = useState('');
@@ -77,14 +80,16 @@ function AgregarEmpresa() {
     toast.promise(EmpresaService.createEmpresa(empresa, imagenes), {
       loading: 'Creando empresa...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
         return message;
       },
     });
-  };
+  }
 
   //SEPARAR EN PASOS
   const [step, setStep] = useState(1);

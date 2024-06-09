@@ -9,7 +9,6 @@ import InputComponent from '../InputFiltroComponent';
 import { DepartamentoService } from '../../services/DepartamentoService';
 import { LocalidadService } from '../../services/LocalidadService';
 import { Departamento } from '../../types/Domicilio/Departamento';
-import { clearInputs } from '../../utils/global_variables/functions';
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
 import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
 import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
@@ -18,9 +17,10 @@ import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPai
 
 interface EditarSucursalProps {
   sucursalOriginal: Sucursal;
+  onCloseModal: () => void;
 }
 
-const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => {
+const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onCloseModal }) => {
   // Atributos necesarios para Sucursal
   const [email, setEmail] = useState(sucursalOriginal.email);
   const [contraseña, setContraseña] = useState('');
@@ -286,14 +286,16 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal }) => 
     toast.promise(SucursalService.updateSucursal(sucursal, imagenes, imagenesEliminadas), {
       loading: 'Actualizando la sucursal...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
         return message;
       },
     });
-  };
+  }
 
   return (
     <div className='modal-info'>

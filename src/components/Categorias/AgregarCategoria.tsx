@@ -4,7 +4,11 @@ import { Categoria } from '../../types/Ingredientes/Categoria';
 import { CategoriaService } from '../../services/CategoriaService';
 import { Imagenes } from '../../types/Productos/Imagenes';
 
-function AgregarCategoria() {
+interface AgregarCategoriaProps {
+  onCloseModal: () => void;
+}
+
+const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => {
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
@@ -48,7 +52,9 @@ function AgregarCategoria() {
     toast.promise(CategoriaService.createCategoria(categoria, imagenes), {
       loading: 'Creando Categoria...',
       success: (message) => {
-        setNombre('');
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

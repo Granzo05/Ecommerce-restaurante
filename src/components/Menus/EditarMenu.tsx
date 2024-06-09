@@ -19,9 +19,10 @@ import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 
 interface EditarMenuProps {
   menuOriginal: ArticuloMenu;
+  onCloseModal: () => void;
 }
 
-const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
+const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) => {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [ingredientesMuestra, setIngredientesMuestra] = useState<IngredienteMenu[]>(menuOriginal.ingredientesMenu);
   let [selectIndexIngredientes, setSelectIndexIngredientes] = useState<number>(0);
@@ -37,7 +38,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
   const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
   const [nombre, setNombre] = useState(menuOriginal.nombre);
   const [descripcion, setDescripcion] = useState(menuOriginal.descripcion);
-  
+
   const [nombresIngredientes, setNombresIngredientes] = useState<string[]>([]);
 
   useEffect(() => {
@@ -252,6 +253,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
     toast.promise(MenuService.updateMenu(menuActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando menu...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -356,7 +360,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal }) => {
       <div>
         <h2>Ingredientes</h2>
         <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
-          <AgregarIngrediente />
+          <AgregarIngrediente onCloseModal={handleModalClose} />
         </ModalFlotante>
         {ingredientesMuestra.map((ingredienteMenu, index) => (
           <div key={index}>

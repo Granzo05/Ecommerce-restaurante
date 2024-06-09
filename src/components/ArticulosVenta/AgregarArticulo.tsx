@@ -14,7 +14,11 @@ import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteF
 import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
 
-function AgregarArticuloVenta() {
+interface AgregarArticuloVentaProps {
+  onCloseModal: () => void;
+}
+
+const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModal }) => {
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
   const [cantidadActual, setCantidadActual] = useState(0);
@@ -131,13 +135,15 @@ function AgregarArticuloVenta() {
       loading: 'Creando articulo...',
       success: (message) => {
         StockArticuloVentaService.createStock(stockArticuloVenta);
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
         return message;
       },
     });
-
   }
 
   // Modal flotante de ingrediente
@@ -290,7 +296,7 @@ function AgregarArticuloVenta() {
       {renderStep()}
 
     </div >
-  )
+  );
 }
 
 export default AgregarArticuloVenta

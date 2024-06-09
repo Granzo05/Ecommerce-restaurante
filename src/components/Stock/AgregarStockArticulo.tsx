@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { toast, Toaster } from 'sonner';
 import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
@@ -10,7 +9,12 @@ import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltro
 import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesArticulo from '../../hooks/ModalFlotanteFiltroArticuloVenta';
 
-function AgregarStockArticulo() {
+interface AgregarStockArticuloProps {
+  onCloseModal: () => void;
+}
+
+
+const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModal }) => {
   const [modalBusquedaArticulo, setModalBusquedaArticulo] = useState<boolean>(false);
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
 
@@ -71,7 +75,9 @@ function AgregarStockArticulo() {
     toast.promise(StockArticuloVentaService.createStock(stock), {
       loading: 'Creando stock...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

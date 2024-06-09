@@ -5,9 +5,10 @@ import { StockEntrante } from '../../types/Stock/StockEntrante';
 
 interface EditarStockProps {
   stockEntrante: StockEntrante;
+  onCloseModal: () => void;
 }
 
-const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
+const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }) => {
   const formatDate = (date: Date) => {
     const dia = date.getDate() + 1;
     const mes = date.getMonth() + 1;
@@ -28,6 +29,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante }) => {
     toast.promise(StockEntranteService.updateStock(stockEntrante), {
       loading: 'Editando stock entrante...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

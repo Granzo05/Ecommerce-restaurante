@@ -128,7 +128,7 @@ const Ingredientes = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalIngrediente} onClose={handleModalClose}>
-                <AgregarIngrediente />
+                <AgregarIngrediente onCloseModal={handleModalClose}/>
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarIngredienteModal} onClose={handleModalClose}>
@@ -140,7 +140,7 @@ const Ingredientes = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarIngredienteModal} onClose={handleModalClose}>
-                {selectedIngrediente && <EditarIngrediente ingredienteOriginal={selectedIngrediente} />}
+                {selectedIngrediente && <EditarIngrediente ingredienteOriginal={selectedIngrediente} onCloseModal={handleModalClose}/>}
             </ModalCrud>
         </div>
     )

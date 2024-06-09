@@ -3,8 +3,12 @@ import { Toaster, toast } from 'sonner'
 import { Medida } from '../../types/Ingredientes/Medida';
 import { MedidaService } from '../../services/MedidaService';
 
-function AgregarMedida() {
+interface AgregarMedidaProps {
+  onCloseModal: () => void;
+}
 
+
+const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
   const [nombre, setNombre] = useState('');
 
   async function agregarMedida() {
@@ -21,7 +25,9 @@ function AgregarMedida() {
     toast.promise(MedidaService.createMedida(medida), {
       loading: 'Creando Medida...',
       success: (message) => {
-        setNombre('');
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

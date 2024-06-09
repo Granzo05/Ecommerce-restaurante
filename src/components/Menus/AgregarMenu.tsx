@@ -17,7 +17,12 @@ import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
 import ModalCrud from '../ModalCrud';
 
-function AgregarMenu() {
+interface AgregarMenuProps {
+  onCloseModal: () => void;
+}
+
+
+const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
   const [ingredientesMenu, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
@@ -191,6 +196,9 @@ function AgregarMenu() {
     toast.promise(MenuService.createMenu(menu, imagenes), {
       loading: 'Creando menu...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -257,7 +265,7 @@ function AgregarMenu() {
             <h4>Paso 2 - Agregar ingrediente al menú</h4>
             <div>
               <ModalCrud isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
-                <AgregarIngrediente />
+                <AgregarIngrediente onCloseModal={handleModalClose}/>
               </ModalCrud>
               {ingredientesMenu.map((ingredienteMenu, index) => (
                 <div key={index}>

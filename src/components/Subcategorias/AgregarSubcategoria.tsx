@@ -6,7 +6,12 @@ import InputComponent from '../InputFiltroComponent';
 import { Categoria } from '../../types/Ingredientes/Categoria';
 import { CategoriaService } from '../../services/CategoriaService';
 
-function AgregarSubcategoria() {
+interface AgregarSubcategoriaProps {
+  onCloseModal: () => void;
+}
+
+
+const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal }) => {
 
   const [categoria, setCategoria] = useState<Categoria>();
   const [nombreSubcategoria, setNombreSubcategoria] = useState<string>('');
@@ -42,6 +47,9 @@ function AgregarSubcategoria() {
     toast.promise(CategoriaService.updateCategoriaBorrado(categoria), {
       loading: 'Creando subcategoria...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

@@ -133,7 +133,7 @@ const Subcategorias = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalCategoria} onClose={handleModalClose}>
-                <AgregarSubcategoria />
+                <AgregarSubcategoria onCloseModal={handleModalClose}/>
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarCategoriaModal} onClose={handleModalClose}>

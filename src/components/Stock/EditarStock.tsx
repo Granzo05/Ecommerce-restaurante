@@ -13,9 +13,10 @@ interface EditarStockProps {
   stockOriginal: StockArticuloVenta | StockIngredientes;
   tipo: string;
   nombre: string | undefined;
+  onCloseModal: () => void;
 }
 
-const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }) => {
+const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, onCloseModal }) => {
 
   const [cantidadActual, setCantidadActual] = useState(stockOriginal.cantidadActual);
   const [cantidadMinima, setCantidadMinima] = useState(stockOriginal.cantidadMinima);
@@ -79,6 +80,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
       toast.promise(StockIngredientesService.updateStock(stock), {
         loading: 'Creando stock del ingrediente...',
         success: (message) => {
+          setTimeout(() => {
+            onCloseModal();
+          }, 800);
           return message;
         },
         error: (message) => {
@@ -101,6 +105,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
       toast.promise(StockArticuloVentaService.updateStock(stock), {
         loading: 'Editando stock del artículo...',
         success: (message) => {
+          setTimeout(() => {
+            onCloseModal();
+          }, 800);
           return message;
         },
         error: (message) => {
@@ -130,7 +137,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre }
       </div><br />
       <div className="input-filtrado">
         <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida?.nombre ?? ''} />
-        {modalBusqueda && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+        {modalBusqueda && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre ?? ''} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
       </div>
       <br /><br />
       <div className="inputBox">

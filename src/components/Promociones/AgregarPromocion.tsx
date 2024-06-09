@@ -13,8 +13,12 @@ import { PromocionService } from '../../services/PromocionService';
 import ModalFlotanteRecomendacionesArticuloMenu from '../../hooks/ModalFlotanteFiltroArticuloMenu';
 import { Imagenes } from '../../types/Productos/Imagenes';
 
-function AgregarPromocion() {
+interface AgregarPromocionProps {
+  onCloseModal: () => void;
+}
 
+
+const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => {
   const [fechaDesde, setFechaDesde] = useState(new Date());
   const [fechaHasta, setFechaHasta] = useState(new Date());
   const [total, setTotal] = useState(0);
@@ -225,6 +229,9 @@ function AgregarPromocion() {
     toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

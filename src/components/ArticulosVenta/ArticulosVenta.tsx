@@ -148,10 +148,10 @@ const ArticuloVentas = () => {
             )}
 
             <ModalCrud isOpen={showAgregarArticuloVentaModal} onClose={handleModalClose}>
-                <AgregarArticuloVenta />
+                <AgregarArticuloVenta onCloseModal={handleModalClose} />
             </ModalCrud>
             <ModalCrud isOpen={showEditarArticuloVentaModal} onClose={handleModalClose}>
-                {selectedArticuloVenta && <EditarArticuloVenta articuloOriginal={selectedArticuloVenta} />}
+                {selectedArticuloVenta && <EditarArticuloVenta articuloOriginal={selectedArticuloVenta} onCloseModal={handleModalClose} />}
             </ModalCrud>
             <ModalCrud isOpen={showEliminarArticuloVentaModal} onClose={handleModalClose}>
                 {selectedArticuloVenta && <EliminarArticuloVenta articuloOriginal={selectedArticuloVenta} onCloseModal={handleModalClose} />}

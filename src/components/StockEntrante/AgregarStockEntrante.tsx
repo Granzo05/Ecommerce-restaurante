@@ -13,19 +13,31 @@ import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteF
 import ModalFlotanteRecomendacionesArticulo from '../../hooks/ModalFlotanteFiltroArticuloVenta';
 import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 
-function AgregarStockEntrante() {
+interface AgregarStockEntranteProps {
+  onCloseModal: () => void;
+}
 
+
+const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModal }) => {
   const [fecha, setFecha] = useState(new Date());
 
   // Aca almaceno los detalles para el stock
   const [detallesIngredienteStock, setDetallesIngredientesStock] = useState<DetalleStock[]>([])
   const [detallesArticuloStock, setDetallesArticuloStock] = useState<DetalleStock[]>([])
 
+  const [nombresArticulos, setNombresArticulos] = useState<string[]>([]);
+  const [nombresIngredientes, setNombresIngredientes] = useState<string[]>([]);
+
   // Almacenaje de cada detalle por ingrediente
   const handleIngredienteChange = (ingrediente: Ingrediente, index: number) => {
     setDetallesIngredientesStock(prevState => {
       const newState = [...prevState];
       newState[index].ingrediente = ingrediente;
+
+      const nuevosNombresIngredientes = [...nombresIngredientes];
+      nuevosNombresIngredientes[index] = ingrediente.nombre;
+      setNombresIngredientes(nuevosNombresIngredientes);
+
       return newState;
     });
   };
@@ -65,6 +77,11 @@ function AgregarStockEntrante() {
     setDetallesArticuloStock(prevState => {
       const newState = [...prevState];
       newState[index].articuloVenta = articulo;
+
+      const nuevosNombresArticulos = [...nombresArticulos];
+      nuevosNombresArticulos[index] = articulo.nombre;
+      setNombresArticulos(nuevosNombresArticulos);
+
       return newState;
     });
   };
@@ -178,6 +195,9 @@ function AgregarStockEntrante() {
     toast.promise(StockEntranteService.createStock(stockEntrante), {
       loading: 'Creando stock entrante...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -224,11 +244,11 @@ function AgregarStockEntrante() {
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={detallesIngredienteStock[index].ingrediente?.nombre ?? ''} />
-                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleModalClose(); }} />}
+                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleModalClose(); }} />}
                 </div>
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
                 <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesIngredienteStock[index]?.medida.nombre ?? ''} />
-                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesIngredienteStock[index]?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
 
                 <div className="inputBox">
                   <input type="number" required={true} value={detallesIngredienteStock[index]?.cantidad} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
@@ -261,11 +281,11 @@ function AgregarStockEntrante() {
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.nombre ?? ''} />
-                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
+                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={nombresArticulos} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
                 </div>
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
                 <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloStock[index]?.medida.nombre ?? ''} />
-                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloStock[index]?.medida.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
 
                 <div className="inputBox">
                   <input type="number" required={true} value={detallesArticuloStock[index]?.cantidad} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />

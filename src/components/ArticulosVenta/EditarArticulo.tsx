@@ -15,9 +15,10 @@ import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 
 interface EditarArticuloVentaProps {
   articuloOriginal: ArticuloVenta;
+  onCloseModal: () => void;
 }
 
-const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOriginal }) => {
+const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOriginal, onCloseModal }) => {
   const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(articuloOriginal.imagenes);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
@@ -113,6 +114,9 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     toast.promise(ArticuloVentaService.updateArticulo(articuloActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando articulo...',
       success: (message) => {
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

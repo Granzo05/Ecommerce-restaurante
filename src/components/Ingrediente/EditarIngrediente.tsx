@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { Toaster, toast } from 'sonner'
 import { IngredienteService } from '../../services/IngredienteService';
 
 interface EditarIngredienteProps {
   ingredienteOriginal: Ingrediente;
+  onCloseModal: () => void;
 }
 
-const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOriginal }) => {
+const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOriginal, onCloseModal }) => {
 
   const [nombre, setNombre] = useState(ingredienteOriginal.nombre);
 
@@ -25,7 +25,9 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
     toast.promise(IngredienteService.updateIngrediente(ingrediente), {
       loading: 'Editando Ingrediente...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {

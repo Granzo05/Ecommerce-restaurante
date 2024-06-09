@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { clearInputs } from '../../utils/global_variables/functions';
 import { Toaster, toast } from 'sonner'
 import { StockIngredientesService } from '../../services/StockIngredientesService';
 import { StockIngredientes } from '../../types/Stock/StockIngredientes';
@@ -10,7 +9,12 @@ import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
 
-function AgregarStockIngrediente() {
+interface AgregarStockIngredienteProps {
+  onCloseModal: () => void;
+}
+
+
+const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onCloseModal }) => {
 
   const [cantidadActual, setCantidadActual] = useState(0);
   const [cantidadMinima, setCantidadMinima] = useState(0);
@@ -78,18 +82,19 @@ function AgregarStockIngrediente() {
 
     ingrediente.nombre = nombreIngrediente;
     stock.ingrediente = ingrediente;
-    console.log(stock)
+
     toast.promise(StockIngredientesService.createStock(stock), {
       loading: 'Creando stock...',
       success: (message) => {
-        clearInputs();
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
         return message;
       },
     });
-
   }
 
   return (

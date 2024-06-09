@@ -160,10 +160,10 @@ const Menus = () => {
             )}
 
             <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
-                <AgregarMenu />
+                <AgregarMenu onCloseModal={handleModalClose}/>
             </ModalCrud>
             <ModalCrud isOpen={showEditarMenuModal} onClose={handleModalClose}>
-                {selectedMenu && <EditarMenu menuOriginal={selectedMenu} />}
+                {selectedMenu && <EditarMenu menuOriginal={selectedMenu} onCloseModal={handleModalClose}/>}
             </ModalCrud>
             <ModalCrud isOpen={showEliminarMenuModal} onClose={handleModalClose}>
                 {selectedMenu && <EliminarMenu menuOriginal={selectedMenu} onCloseModal={handleModalClose} />}

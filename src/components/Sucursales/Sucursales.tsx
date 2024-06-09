@@ -82,7 +82,7 @@ const Sucursales = () => {
             </div>
             <hr />
             <ModalCrud isOpen={showAgregarSucursalModal} onClose={handleModalClose}>
-                <AgregarSucursal />
+                <AgregarSucursal onCloseModal={handleModalClose}/>
             </ModalCrud>
             {mostrarSucursales && (
                 <div id="sucursales">
@@ -126,7 +126,7 @@ const Sucursales = () => {
                         </tbody>
                     </table>
                     <ModalCrud isOpen={showEditarSucursalModal} onClose={handleModalClose}>
-                        <EditarSucursal sucursalOriginal={selectedSucursal} />
+                        <EditarSucursal sucursalOriginal={selectedSucursal} onCloseModal={handleModalClose}/>
                     </ModalCrud>
                     <ModalCrud isOpen={showEliminarSucursalModal} onClose={handleModalClose}>
                         {selectedSucursal && <EliminarSucursal sucursal={selectedSucursal} onCloseModal={handleModalClose} />}
