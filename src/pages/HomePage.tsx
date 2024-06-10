@@ -14,6 +14,22 @@ import { Sucursal } from '../types/Restaurante/Sucursal';
 
 
 export default function MainMenu() {
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const offset = window.scrollY;
+            setScrolled(offset > 0);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+
+
     const convertirFecha = (date: Date) => {
         const dia = date.getDate() + 1;
         const mes = date.getMonth() + 1;
@@ -66,7 +82,7 @@ const fetchSucursales = async () => {
 
     return (
         <>
-            <HeaderHomePage></HeaderHomePage>
+            <HeaderHomePage scrolled={scrolled}/>
             <section id='servicios' className='information container'>
                 <div className="information-content">
                     <div className='information-1'>
