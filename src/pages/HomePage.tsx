@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../styles/homePage-header-footer.css'
 import { SucursalService } from '../services/SucursalService';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Promocion } from '../types/Productos/Promocion';
 import ModalFlotante from '../components/ModalFlotante';
 import DetallesPromocion from '../components/Promociones/DetallesPromocion';
@@ -9,6 +9,7 @@ import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 import HeaderHomePage from '../components/headerHomePage';
 import Footer from '../components/Footer';
 import ModalCrud from '../components/ModalCrud';
+import { Sucursal } from '../types/Restaurante/Sucursal';
 
 
 
@@ -35,20 +36,29 @@ export default function MainMenu() {
         setShowDetallePromocionModal(false);
     };
 
-    useEffect(() => {
-        SucursalService.getSucursalDTOById(1)
-            .then(async sucursal => {
-                console.log(sucursal)
-                if (sucursal) setSucursal(sucursal);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            })
-    }, [id]);
+    const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  
+
+  useEffect(() => {
+    if (sucursales.length === 0) fetchSucursales();
+}, [sucursales]);
+
+const fetchSucursales = async () => {
+    SucursalService.getSucursales()
+        .then(data => {
+            setSucursales(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
     useEffect(() => {
         if (sucursal?.nombre) {
-            document.title = sucursal?.nombre;
+            document.title = 'El Buen Sabor - '+sucursal?.nombre;
         } else {
             document.title = 'El Buen Sabor';
         }
