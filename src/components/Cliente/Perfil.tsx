@@ -28,11 +28,10 @@ const Perfil = () => {
 
         setCliente(clienteMem);
         setCurrentNombre(clienteMem?.nombre);
-        setCurrentTelefono(clienteMem?.telefono);
-        setCurrentDomicilio(clienteMem?.domicilios)
+       
     }
 
-    
+
 
     const handleEditNombre = () => {
         setEditNombre(true);
@@ -49,7 +48,6 @@ const Perfil = () => {
     };
 
     const handleSaveTelefonoChanges = () => {
-        setCurrentTelefono(newTelefono);
         setEditTelefono(false);
         setNewTelefono('');
     };
@@ -113,7 +111,7 @@ const Perfil = () => {
                                     Teléfono:
                                     <input className='current-telefono'
                                         type="text"
-                                        value={currentTelefono}
+                                        value={cliente?.telefono}
                                         readOnly
                                     />
                                     <button onClick={handleEditTelefono}>Editar teléfono</button>
@@ -136,11 +134,13 @@ const Perfil = () => {
                             ) : (
                                 <>
                                     Domicilio:
-                                    <input className='current-domicilio'
-                                        type="text"
-                                        value={currentDomicilio}
-                                        readOnly
-                                    />
+                                        <div >
+                                            <input className='current-domicilio'
+                                                type="text"
+                                                value=''
+                                                readOnly
+                                            />
+                                        </div>
                                     <button onClick={handleEditDomicilio}>Editar domicilio</button>
                                 </>
                             )}
