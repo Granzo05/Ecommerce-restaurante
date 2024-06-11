@@ -1,18 +1,41 @@
 import { useEffect, useState } from 'react';
 import '../styles/homePage-header-footer.css'
 import { SucursalService } from '../services/SucursalService';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Promocion } from '../types/Productos/Promocion';
 import DetallesPromocion from '../components/Promociones/DetallesPromocion';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 import HeaderHomePage from '../components/headerHomePage';
 import Footer from '../components/Footer';
 import ModalCrud from '../components/ModalCrud';
+import { Sucursal } from '../types/Restaurante/Sucursal';
 import { formatearFechaDDMMYYYY } from '../utils/global_variables/functions';
 
 
 
 export default function MainMenu() {
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const offset = window.scrollY;
+            setScrolled(offset > 0);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+
+
+    const convertirFecha = (date: Date) => {
+        const dia = date.getDate() + 1;
+        const mes = date.getMonth() + 1;
+        const año = date.getFullYear();
+        return `${dia}/${mes}/${año}`;
+    };
     const { id } = useParams()
 
     const [sucursal, setSucursal] = useState<SucursalDTO>();
@@ -29,20 +52,29 @@ export default function MainMenu() {
         setShowDetallePromocionModal(false);
     };
 
-    useEffect(() => {
-        SucursalService.getSucursalDTOById(1)
-            .then(async sucursal => {
-                console.log(sucursal)
-                if (sucursal) setSucursal(sucursal);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            })
-    }, [id]);
+    const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  
+
+  useEffect(() => {
+    if (sucursales.length === 0) fetchSucursales();
+}, [sucursales]);
+
+const fetchSucursales = async () => {
+    SucursalService.getSucursales()
+        .then(data => {
+            setSucursales(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
     useEffect(() => {
         if (sucursal?.nombre) {
-            document.title = sucursal?.nombre;
+            document.title = 'El Buen Sabor - '+sucursal?.nombre;
         } else {
             document.title = 'El Buen Sabor';
         }
@@ -50,7 +82,7 @@ export default function MainMenu() {
 
     return (
         <>
-            <HeaderHomePage/>
+            <HeaderHomePage scrolled={scrolled}/>
             <section id='servicios' className='information container'>
                 <div className="information-content">
                     <div className='information-1'>

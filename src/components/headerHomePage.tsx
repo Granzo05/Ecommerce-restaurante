@@ -5,7 +5,11 @@ import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
 import { Cliente } from '../types/Cliente/Cliente';
 
-const HeaderHomePage: React.FC = () => {
+interface HeaderHomePageProps {
+    scrolled: boolean;
+}
+
+const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
 
     /*HEADER FUNCTIONS */
 
@@ -81,7 +85,7 @@ const HeaderHomePage: React.FC = () => {
     };
 
     return (
-        <header id='inicio' className="header">
+        <header id='inicio' className={`header ${scrolled ? 'scrolled' : ''}`}>
             <div className="menu container">
                 <a href="" className="logo"><img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="" /></a>
                 <input type="checkbox" id="menu" />

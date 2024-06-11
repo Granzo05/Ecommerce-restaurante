@@ -59,6 +59,15 @@ img{
     transition: background-color 0.3s ease;
 }
 
+.header-homepage {
+    transition: background-color 0.3s ease;
+  }
+  
+  .header-homepage.scrolled {
+    background-color: blue;
+  }
+  
+
 .header-txt{
     text-align: center;
 }
