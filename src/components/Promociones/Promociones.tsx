@@ -99,7 +99,7 @@ const Promociones = () => {
 
             <hr />
             <ModalCrud isOpen={showAgregarPromocionModal} onClose={handleModalClose}>
-                <AgregarPromocion onCloseModal={handleModalClose}/>
+                <AgregarPromocion onCloseModal={handleModalClose} />
             </ModalCrud>
 
 
@@ -112,7 +112,7 @@ const Promociones = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarPromocionModal} onClose={handleModalClose}>
-                {selectedPromocion && <EditarPromocion promocion={selectedPromocion} onCloseModal={handleModalClose}/>}
+                {selectedPromocion && <EditarPromocion promocion={selectedPromocion} onCloseModal={handleModalClose} />}
             </ModalCrud>
 
             {mostrarPromociones && (

@@ -6,7 +6,7 @@ import { Domicilio } from "../types/Domicilio/Domicilio";
 import { Cliente } from "../types/Cliente/Cliente";
 import { ClienteService } from "../services/ClienteService";
 
-const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => void, onSelectedDomicilio: (domicilio: Domicilio) => void, cliente: Cliente | null, datosOmitidos: string[] }> = ({ onCloseModal, onSelectedDomicilio, cliente, datosOmitidos }) => {
+const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => void, onSelectedDomicilio: (domicilio: Domicilio) => void, cliente: Cliente | null, datosOmitidos: string[] | string }> = ({ onCloseModal, onSelectedDomicilio, cliente, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])

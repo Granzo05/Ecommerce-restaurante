@@ -12,6 +12,7 @@ import { Promocion } from '../../types/Productos/Promocion';
 import { PromocionService } from '../../services/PromocionService';
 import ModalFlotanteRecomendacionesArticuloMenu from '../../hooks/ModalFlotanteFiltroArticuloMenu';
 import { Imagenes } from '../../types/Productos/Imagenes';
+import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 
 interface AgregarPromocionProps {
   onCloseModal: () => void;
@@ -21,9 +22,11 @@ interface AgregarPromocionProps {
 const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => {
   const [fechaDesde, setFechaDesde] = useState(new Date());
   const [fechaHasta, setFechaHasta] = useState(new Date());
-  const [total, setTotal] = useState(0);
   const [nombre, setNombre] = useState<string>('');
   const [descripcion, setDescripcion] = useState<string>('');
+  const [precioSugerido, setPrecioSugerido] = useState<number>(0);
+  const [descuento, setDescuento] = useState(0);
+  const [total, setTotal] = useState(precioSugerido);
 
   // Aca almaceno los detalles para el stock
   const [detallesArticuloMenu, setDetallesArticulosMenu] = useState<DetallePromocion[]>([])
@@ -31,6 +34,18 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
   const [nombresArticulos, setNombresArticulos] = useState<string[]>([]);
   const [nombresMenus, setNombresMenus] = useState<string[]>([]);
+
+  const handleDescuentoChange = (descuento: number) => {
+    const newTotal = (1 - descuento / 100) * precioSugerido;
+    setDescuento(descuento);
+    setTotal(newTotal);
+  };
+
+  const handleTotalChange = (total: number) => {
+    const newDescuento = ((precioSugerido - total) / precioSugerido) * 100;
+    setTotal(total);
+    setDescuento(parseFloat(newDescuento.toFixed(2)));
+  };
 
 
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
@@ -170,8 +185,25 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     setModalBusquedaArticuloMenu(false)
   };
 
+  function calcularCostos() {
+    let precioRecomendado: number = 0;
+
+    detallesArticuloMenu.forEach(detalle => {
+      if (detalle?.articuloMenu.nombre.length > 0) {
+        precioRecomendado += detalle?.articuloMenu?.precioVenta * detalle?.cantidad;
+      } else if (detalle?.articuloVenta.nombre.length > 0) {
+        precioRecomendado += detalle?.articuloVenta?.precioVenta * detalle?.cantidad;
+      }
+    });
+
+    setPrecioSugerido(precioRecomendado);
+  }
+
   async function agregarStockEntrante() {
     const hoy = new Date();
+
+    fechaDesde.setDate(fechaDesde.getDate() + 1);
+    fechaHasta.setDate(fechaHasta.getDate() + 1);
 
     if (!fechaDesde) {
       toast.error("Por favor, la fecha de inicio es necesaria");
@@ -224,7 +256,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
     promocion.descripcion = descripcion;
 
-    console.log(promocion)
+    promocion.descuento = descuento;
 
     toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
@@ -244,6 +276,9 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
   const [step, setStep] = useState(1);
 
   const nextStep = () => {
+    if (step === 3) {
+      calcularCostos();
+    }
     setStep(step + 1);
   };
 
@@ -266,16 +301,12 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
               <span>Descrición de la promoción</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={total} onChange={(e) => setTotal(parseFloat(e.target.value))} />
-              <span>Precio ($)</span>
-            </div>
-            <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
-              <input type="date" required={true} value={fechaDesde.toString()} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
+              <input type="date" required={true} value={formatearFechaYYYYMMDD(fechaDesde)} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
-              <input type="date" required={true} value={fechaDesde.toString()} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
+              <input type="date" required={true} value={formatearFechaYYYYMMDD(fechaHasta)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
@@ -354,7 +385,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
       case 4:
         return (
           <>
-            <h4>Paso final - Imagen</h4>
+            <h4>Paso 4 - Imagen</h4>
             <div>
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -382,6 +413,38 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
               ))}
             </div>
             <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+
+            </div>
+          </>
+        );
+      case 5:
+        return (
+          <>
+            <h4>Paso final - Precio</h4>
+            <div>
+              {precioSugerido !== undefined && precioSugerido > 0 ? (
+                <>
+                  <p>Precio de los artículos sin descuentos: ${precioSugerido.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                  <>
+                    <div className="inputBox">
+                      <input type="number" value={descuento} onChange={(e) => handleDescuentoChange(parseInt(e.target.value))} />
+                      <span>% de descuento buscado</span>
+                    </div>
+                  </>
+
+                  <div className="inputBox">
+                    <input type="number" required={true} value={total | 0} onChange={(e) => { handleTotalChange(parseFloat(e.target.value)) }} />
+                    <span>Precio</span>
+                  </div>
+                </>
+              ) : (
+                <p>No hay productos asignados aún</p>
+              )}
+            </div>
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>

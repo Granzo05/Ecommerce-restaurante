@@ -96,13 +96,13 @@ const Header = () => {
                                                 <span className="cart-item-count" onClick={handleCartClick}>{carrito?.totalProductos}</span>
                                             )}
                                             <img className={`menu-icono ${isCartOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-carrito.png" alt="Carrito" onClick={handleCartClick} />
-                                            <li  style={{cursor: 'pointer'}} className="text-replacement" onClick={handleCartClick}><a>Carrito</a></li>
+                                            <li style={{ cursor: 'pointer' }} className="text-replacement" onClick={handleCartClick}><a>Carrito</a></li>
                                         </>
                                     )
                                 }
                                 < img className={`menu-icono ${isAccountOpen ? 'cart-icon-open' : ''}`} src="../src/assets/icons/header-icono-cuenta.png" alt="Cuenta" onClick={handleAccountClick} />
-                                <p className='nombre-email-usuario' style={{color: 'white'}}>{cliente.nombre ? cliente.nombre : cliente.email}</p>
-                                <li style={{cursor: 'pointer'}} className="text-replacement" onClick={handleAccountClick}><a>Cuenta: {cliente.nombre ? cliente.nombre : cliente.email}</a></li>
+                                <p className='nombre-email-usuario' style={{ color: 'white' }}>{cliente.nombre ? cliente.nombre : cliente.email}</p>
+                                <li style={{ cursor: 'pointer' }} className="text-replacement" onClick={handleAccountClick}><a>Cuenta: {cliente.nombre ? cliente.nombre : cliente.email}</a></li>
 
                                 {isCartOpen && location.pathname !== '/pago' && (
                                     <div className="cart-dropdown">
@@ -116,7 +116,7 @@ const Header = () => {
                                                     <div key={item.id} className="cart-item">
                                                         <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
                                                         <p id="name-item">{item.nombre}</p>
-                                                        <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precioVenta)}</p>
+                                                        <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precioVenta * item.cantidad)}</p>
                                                         <div className="quantity-controls">
                                                             <p>Cantidad:&nbsp;</p>
                                                             <button
@@ -136,7 +136,7 @@ const Header = () => {
                                                         <div key={item.id} className="cart-item">
                                                             <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
                                                             <p id="name-item">{item.nombre}</p>
-                                                            <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precioVenta)}</p>
+                                                            <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precioVenta * item.cantidad)}</p>
                                                             <div className="quantity-controls">
                                                                 <p>Cantidad:&nbsp;</p>
                                                                 <button
@@ -152,14 +152,35 @@ const Header = () => {
                                                         </div>
                                                     ))
                                                 )}
+                                                {carrito?.promociones && carrito?.promociones?.length > 0 && (
+                                                    carrito?.promociones?.map((item) => (
+                                                        <div key={item.id} className="cart-item">
+                                                            <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
+                                                            <p id="name-item">{item.nombre}</p>
+                                                            <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precio * item.cantidad)}</p>
+                                                            <div className="quantity-controls">
+                                                                <p>Cantidad:&nbsp;</p>
+                                                                <button
+                                                                    className={item.cantidad === 1 ? 'disabled' : ''}
+                                                                    onClick={() => CarritoService.descontarPromocionAlCarrito(item, 1)}
+                                                                    disabled={item.cantidad === 1}
+                                                                >
+                                                                    -
+                                                                </button>
+                                                                <span>{item.cantidad}</span>
+                                                                <button onClick={() => CarritoService.incrementarPromocionAlCarrito(item, 1)}>+</button>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                )}
                                             </>
                                         )}
                                         {carrito && carrito?.totalProductos > 0 && (
                                             <div className="cart-total">
-                                                <p><strong>Precio final: </strong>${carrito?.totalPrecio}</p>
-                                                <button   style={{marginRight: '20px', color: 'red'}} className="finalizar-pedido" onClick={() => { setCarrito(new Carrito()); CarritoService.limpiarCarrito(); }}>Limpiar carrito</button>
+                                                <p><strong>Precio final: </strong>${formatPrice(carrito?.totalPrecio)}</p>
+                                                <button style={{ marginRight: '20px', color: 'red' }} className="finalizar-pedido" onClick={() => { setCarrito(new Carrito()); CarritoService.limpiarCarrito(); }}>Limpiar carrito</button>
                                                 <Link to="/pago">
-                                                    <button style={{ color: 'green'}} className="finalizar-pedido">Finalizar pedido</button>
+                                                    <button style={{ color: 'green' }} className="finalizar-pedido">Finalizar pedido</button>
                                                 </Link>
                                             </div>
                                         )}

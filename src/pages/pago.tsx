@@ -79,11 +79,9 @@ const Pago = () => {
         setCliente(clienteMem);
     }
 
-    function cargarPedido() {
-        const carritoString = localStorage.getItem('carrito');
-        let carrito: Carrito = carritoString ? JSON.parse(carritoString) : new Carrito();
-
-        setCarrito(carrito);
+    async function cargarPedido() {
+        console.log(await CarritoService.getCarrito())
+        setCarrito(await CarritoService.getCarrito());
     }
 
     async function enviarPedidoARestaurante() {
@@ -140,6 +138,32 @@ const Pago = () => {
                     detalle.cantidad = producto.cantidad;
                     detalle.subTotal = producto.cantidad * producto.precioVenta;
                     detalles.push(detalle);
+                });
+
+                carrito?.promociones?.forEach(promocion => {
+                    promocion.detallesPromocion.forEach(detallePromo => {
+                        if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
+                            let detalle = new DetallesPedido();
+                            detalle.articuloMenu = detallePromo.articuloMenu;
+                            detalle.cantidad = detallePromo.cantidad;
+
+                            // Aplicar el descuento correctamente
+                            let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
+                            detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                            detalles.push(detalle);
+                        } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
+                            let detalle = new DetallesPedido();
+                            detalle.articuloVenta = detallePromo.articuloVenta;
+                            detalle.cantidad = detallePromo.cantidad;
+
+                            // Aplicar el descuento correctamente
+                            let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
+                            detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                            detalles.push(detalle);
+                        }
+                    });
                 });
 
                 pedido.factura = null;
@@ -232,6 +256,32 @@ const Pago = () => {
                             detalles.push(detalle);
                         });
 
+                        carrito?.promociones?.forEach(promocion => {
+                            promocion.detallesPromocion.forEach(detallePromo => {
+                                if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
+                                    let detalle = new DetallesPedido();
+                                    detalle.articuloMenu = detallePromo.articuloMenu;
+                                    detalle.cantidad = detallePromo.cantidad;
+
+                                    // Aplicar el descuento correctamente
+                                    let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
+                                    detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                    detalles.push(detalle);
+                                } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
+                                    let detalle = new DetallesPedido();
+                                    detalle.articuloVenta = detallePromo.articuloVenta;
+                                    detalle.cantidad = detallePromo.cantidad;
+
+                                    // Aplicar el descuento correctamente
+                                    let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
+                                    detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                    detalles.push(detalle);
+                                }
+                            });
+                        });
+
                         pedido.factura = null;
                         pedido.detallesPedido = detalles;
                         pedido.borrado = 'NO';
@@ -277,7 +327,7 @@ const Pago = () => {
                     {envio === EnumTipoEnvio.DELIVERY && (
                         <>
                             <InputComponent placeHolder='Seleccionar domicilio...' onInputClick={() => setModalBusquedaDomicilio(true)} selectedProduct={domicilio?.calle ?? ''} disabled={false} />
-                            {modalBusquedaDomicilio && <ModalFlotanteRecomendacionesDomicilios onCloseModal={handleModalClose} onSelectedDomicilio={(domicilio) => { setDomicilio(domicilio); handleModalClose(); crearPreferencia(domicilio) }} cliente={cliente} />}
+                            {modalBusquedaDomicilio && <ModalFlotanteRecomendacionesDomicilios datosOmitidos={domicilio?.calle ?? ''} onCloseModal={handleModalClose} onSelectedDomicilio={(domicilio) => { setDomicilio(domicilio); handleModalClose(); crearPreferencia(domicilio) }} cliente={cliente} />}
 
                         </>
                     )}
@@ -308,9 +358,19 @@ const Pago = () => {
                                 <div className="cant-sub">
                                     <p className="cant-product"><strong>Cantidad:</strong> {carrito.articuloVenta[index].cantidad}</p>
                                     <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.articuloVenta[index].cantidad * carrito.articuloVenta[index].precioVenta}</p>
-
                                 </div>
-
+                            </div>
+                        ))}
+                        {carrito && carrito.promociones.map((producto, index) => (
+                            <div className="item-pago" key={index}>
+                                {producto?.imagenes[0] && (
+                                    <img src={producto?.imagenes[0]?.ruta} alt={producto?.nombre} />
+                                )}
+                                <p className="name-product">{producto.nombre}</p>
+                                <div className="cant-sub">
+                                    <p className="cant-product"><strong>Cantidad:</strong> {carrito.promociones[index].cantidad}</p>
+                                    <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.promociones[index].cantidad * carrito.promociones[index].precio}</p>
+                                </div>
                             </div>
                         ))}
                         <hr />

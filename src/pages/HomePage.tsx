@@ -3,22 +3,16 @@ import '../styles/homePage-header-footer.css'
 import { SucursalService } from '../services/SucursalService';
 import { useParams } from 'react-router-dom';
 import { Promocion } from '../types/Productos/Promocion';
-import ModalFlotante from '../components/ModalFlotante';
 import DetallesPromocion from '../components/Promociones/DetallesPromocion';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 import HeaderHomePage from '../components/headerHomePage';
 import Footer from '../components/Footer';
 import ModalCrud from '../components/ModalCrud';
+import { formatearFechaDDMMYYYY } from '../utils/global_variables/functions';
 
 
 
 export default function MainMenu() {
-    const convertirFecha = (date: Date) => {
-        const dia = date.getDate() + 1;
-        const mes = date.getMonth() + 1;
-        const año = date.getFullYear();
-        return `${dia}/${mes}/${año}`;
-    };
     const { id } = useParams()
 
     const [sucursal, setSucursal] = useState<SucursalDTO>();
@@ -56,7 +50,7 @@ export default function MainMenu() {
 
     return (
         <>
-            <HeaderHomePage></HeaderHomePage>
+            <HeaderHomePage/>
             <section id='servicios' className='information container'>
                 <div className="information-content">
                     <div className='information-1'>
@@ -92,8 +86,8 @@ export default function MainMenu() {
                                 <div key={promocion.id} className="ofert-1">
                                     <div className="ofert-txt">
                                         <h3>{promocion.nombre}</h3>
-                                        <p>Desde: {convertirFecha(new Date(promocion.fechaDesde))}</p>
-                                        <p>Hasta: {convertirFecha(new Date(promocion.fechaHasta))}</p>
+                                        <p>Desde: {formatearFechaDDMMYYYY(new Date(promocion.fechaDesde.toString()))}</p>
+                                        <p>Hasta: {formatearFechaDDMMYYYY(new Date(promocion.fechaHasta.toString()))}</p>
                                         <a className='btn-2' onClick={() => { setShowDetallePromocionModal(true); setSelectedPromocion(promocion) }}>Más Información</a>
                                     </div>
                                     <div className="ofert-img">
@@ -109,7 +103,7 @@ export default function MainMenu() {
             <section className='bg'></section>
             <section id='menus' className='food container'>
                 <ModalCrud isOpen={showDetallePromocionModal} onClose={handleModalClose}>
-                    <DetallesPromocion selectedPromocion={selectedPromocion} />
+                    <DetallesPromocion selectedPromocion={selectedPromocion} onCloseModal={handleModalClose}/>
                 </ModalCrud>
                 <h2>&mdash; Menús &mdash;</h2>
                 <span>Categorías</span>

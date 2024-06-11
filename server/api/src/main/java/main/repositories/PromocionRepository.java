@@ -8,11 +8,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PromocionRepository extends JpaRepository<Promocion, Long> {
+
+    @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :id AND :fechaActual BETWEEN p.fechaDesde AND p.fechaHasta")
+    List<Promocion> findAllInTimeByIdSucursal(@Param("id") Long id, @Param("fechaActual") LocalDateTime fechaActual);
 
     @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :id")
     List<Promocion> findAllByIdSucursal(@Param("id") Long id);
@@ -23,8 +28,4 @@ public interface PromocionRepository extends JpaRepository<Promocion, Long> {
     @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :idSucursal AND p.id = :idPromocion")
     Optional<Promocion> findByIdPromocionAndIdSucursal(@Param("idPromocion") Long idPromocion, @Param("idSucursal") Long idSucursal);
 
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Promocion p WHERE p.id = :id")
-    void deleteAllByPromocionId(@Param("id") Long id);
 }

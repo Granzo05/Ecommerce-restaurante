@@ -11,6 +11,8 @@ export class Promocion {
     imagenes: Imagenes[] = [];
     precio: number = 0;
     borrado: string = '';
+    cantidad: number = 0;
+    descuento: number = 0;
 
     constructor() {
     }

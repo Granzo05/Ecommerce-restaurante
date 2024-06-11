@@ -14,7 +14,7 @@ export function clearInputs() {
 
 
 export const formatearFechaDDMMYYYY = (date: Date) => {
-  const dia = date.getDate() + 1;
+  const dia = date.getDate() - 1;
   const mes = date.getMonth() + 1;
   const año = date.getFullYear();
 
@@ -25,7 +25,7 @@ export const formatearFechaDDMMYYYY = (date: Date) => {
 };
 
 export const formatearFechaYYYYMMDD = (date: Date) => {
-  const dia = date.getDate() + 1;
+  const dia = date.getDate() - 1;
   const mes = date.getMonth() + 1;
   const año = date.getFullYear();
 

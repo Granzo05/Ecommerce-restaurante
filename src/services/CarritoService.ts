@@ -19,7 +19,7 @@ export const CarritoService = {
 
         if (articuloMenu) {
             // Veo si el articulo entrante ya está cargado en el carrito
-            carrito.articuloMenu.forEach((producto, index) => {
+            carrito.articuloMenu?.forEach((producto, index) => {
                 if (producto.nombre === articuloMenu.nombre) {
                     // Si existe, simplemente sumamos la cantidad
                     carrito.articuloMenu[index].cantidad += cantidad;
@@ -35,7 +35,7 @@ export const CarritoService = {
                 carrito.articuloMenu.push(articuloMenu);
             }
         } else if (articuloVenta) {
-            carrito.articuloVenta.forEach((producto, index) => {
+            carrito.articuloVenta?.forEach((producto, index) => {
                 if (producto.nombre === articuloVenta.nombre) {
                     // Si existe, simplemente sumamos la cantidad
                     carrito.articuloVenta[index].cantidad += cantidad;
@@ -62,43 +62,21 @@ export const CarritoService = {
 
         let productoEnCarrito = false;
 
-        promocion.detallesPromocion.forEach(detalle => {
-            if (detalle.articuloMenu) {
-                // Veo si el articulo entrante ya está cargado en el carrito
-                carrito.articuloMenu.forEach((producto, index) => {
-                    if (producto.nombre === detalle.articuloMenu.nombre) {
-                        // Si existe, simplemente sumamos la cantidad
-                        carrito.articuloMenu[index].cantidad += cantidad;
-                        productoEnCarrito = true;
-                    }
-                });
 
-                if (!productoEnCarrito) {
-                    detalle.articuloMenu.cantidad = cantidad;
-
-                    carrito.totalProductos += cantidad;
-
-                    carrito.articuloMenu.push(detalle.articuloMenu);
-                }
-            } else if (detalle.articuloVenta) {
-                carrito.articuloVenta.forEach((producto, index) => {
-                    if (producto.nombre === detalle.articuloVenta.nombre) {
-                        // Si existe, simplemente sumamos la cantidad
-                        carrito.articuloVenta[index].cantidad += cantidad;
-                        productoEnCarrito = true;
-                    }
-                });
-
-                if (!productoEnCarrito) {
-
-                    detalle.articuloVenta.cantidad = cantidad;
-
-                    carrito.totalProductos += cantidad;
-
-                    carrito.articuloVenta.push(detalle.articuloVenta);
-                }
+        carrito.promociones?.forEach((promocionCarrito, index) => {
+            if (promocionCarrito.nombre === promocion.nombre) {
+                // Si existe, simplemente sumamos la cantidad
+                carrito.promociones[index].cantidad += cantidad;
+                carrito.totalProductos += cantidad;
+                productoEnCarrito = true;
             }
         });
+
+        if (!productoEnCarrito) {
+            promocion.cantidad = cantidad;
+            carrito.promociones?.push(promocion);
+            carrito.totalProductos += cantidad;
+        }
 
         CarritoService.actualizarCarrito(carrito);
     },
@@ -112,14 +90,47 @@ export const CarritoService = {
             carrito.articuloMenu.forEach((producto, index) => {
                 if (producto.nombre === articuloMenu.nombre) {
                     // Si existe, simplemente sumamos la cantidad
-                    if (carrito.articuloMenu[index].cantidad > 0) carrito.articuloMenu[index].cantidad -= cantidad;
+                    if (carrito.articuloMenu[index]?.cantidad > 0) carrito.articuloMenu[index].cantidad -= cantidad;
                 }
             });
         } else if (articuloVenta) {
             carrito.articuloVenta.forEach((producto, index) => {
                 if (producto.nombre === articuloVenta.nombre) {
-                    // Si existe, simplemente sumamos la cantidad
-                    if (carrito.articuloMenu[index].cantidad > 0) carrito.articuloVenta[index].cantidad -= cantidad;
+                    // Si existe, simplemente restamos la cantidad
+                    if (carrito.articuloMenu[index]?.cantidad > 0) carrito.articuloVenta[index].cantidad -= cantidad;
+                }
+            });
+        }
+        CarritoService.actualizarCarrito(carrito);
+    },
+
+    incrementarPromocionAlCarrito: async (promocion: Promocion, cantidad = 1) => {
+        // Busco el carrito existente
+        let carrito = await CarritoService.getCarrito();
+
+        if (promocion) {
+            // Veo si el articulo entrante ya está cargado en el carrito
+            carrito.promociones.forEach((producto, index) => {
+                if (producto.nombre === promocion.nombre) {
+                    // Si existe, simplemente restamos la cantidad
+                    if (carrito.promociones[index]?.cantidad > 0) carrito.promociones[index].cantidad += cantidad;
+                }
+            });
+        }
+        CarritoService.actualizarCarrito(carrito);
+    },
+
+
+    descontarPromocionAlCarrito: async (promocion: Promocion, cantidad = 1) => {
+        // Busco el carrito existente
+        let carrito = await CarritoService.getCarrito();
+
+        if (promocion) {
+            // Veo si el articulo entrante ya está cargado en el carrito
+            carrito.promociones.forEach((producto, index) => {
+                if (producto.nombre === promocion.nombre) {
+                    // Si existe, simplemente restamos la cantidad
+                    if (carrito.promociones[index]?.cantidad > 0) carrito.promociones[index].cantidad -= cantidad;
                 }
             });
         }
@@ -130,20 +141,27 @@ export const CarritoService = {
         carrito.totalPrecio = 0;
         carrito.totalProductos = 0;
 
-        carrito.articuloMenu.forEach(producto => {
+        carrito.articuloMenu?.forEach(producto => {
             carrito.totalPrecio += producto.precioVenta * producto.cantidad;
 
             carrito.totalProductos += producto.cantidad;
         });
 
-        carrito.articuloVenta.forEach(producto => {
+        carrito.articuloVenta?.forEach(producto => {
             carrito.totalPrecio += producto.precioVenta * producto.cantidad;
+
+            carrito.totalProductos += producto.cantidad;
+        });
+
+        carrito.promociones?.forEach(producto => {
+            carrito.totalPrecio += producto.precio * producto.cantidad;
 
             carrito.totalProductos += producto.cantidad;
         });
 
         localStorage.setItem('carrito', JSON.stringify(carrito));
     },
+
 
     limpiarCarrito: () => {
         localStorage.removeItem('carrito');

@@ -31,8 +31,8 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   // Aca almaceno los detalles para el stock
   const [detallesArticuloMenu, setDetallesArticulosMenu] = useState<DetallePromocion[]>([])
   const [detallesArticuloVenta, setDetallesArticuloVenta] = useState<DetallePromocion[]>([])
-  const [detallesArticuloMenuMuestra] = useState<DetallePromocion[]>([])
-  const [detallesArticuloVentaMuestra] = useState<DetallePromocion[]>([])
+  const [detallesArticuloMenuMuestra, setDetallesArticuloMenuMuestra] = useState<DetallePromocion[]>([])
+  const [detallesArticuloVentaMuestra, setDetallesArticuloVentaMuestra] = useState<DetallePromocion[]>([])
 
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(promocion.imagenes);
@@ -42,16 +42,31 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   const [nombresMenus, setNombresMenus] = useState<string[]>([]);
 
   useEffect(() => {
-    if (detallesArticuloMenuMuestra.length === 0 && detallesArticuloVentaMuestra.length === 0) {
-      promocion.detallesPromocion.forEach(detalle => {
-        if (detalle.articuloMenu) {
-          detallesArticuloMenuMuestra.push(detalle);
-        } else if (detalle.articuloVenta) {
-          detallesArticuloVentaMuestra.push(detalle);
-        }
-      });
+    fechaDesde.setDate(fechaDesde.getDate() - 1);
+    fechaHasta.setDate(fechaHasta.getDate() - 1);
+
+    if (promocion.detallesPromocion.length > 0) {
+      cargarDetalles();
     }
   }, []);
+
+  function cargarDetalles() {
+    const nuevosDetallesMenu: DetallePromocion[] = [];
+    const nuevosDetallesVenta: DetallePromocion[] = [];
+
+    promocion.detallesPromocion.forEach(detalle => {
+      if (detalle.articuloMenu?.nombre?.length > 0) {
+        nuevosDetallesMenu.push(detalle);
+      } else if (detalle.articuloVenta?.nombre?.length > 0) {
+        nuevosDetallesVenta.push(detalle);
+      }
+    });
+
+    setDetallesArticuloMenuMuestra(nuevosDetallesMenu);
+    setDetallesArticuloVentaMuestra(nuevosDetallesVenta);
+
+  }
+
 
   let [selectIndexImagenes, setSelectIndexImagenes] = useState<number>(0);
 
@@ -145,7 +160,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
       const nuevosNombresArticulos = [...nombresArticulos];
       nuevosNombresArticulos[index] = articulo.nombre;
       setNombresArticulos(nuevosNombresArticulos);
-      
+
       return newState;
     });
   };
@@ -213,6 +228,9 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
 
   async function editarPromocion() {
     const hoy = new Date();
+
+    fechaDesde.setDate(fechaDesde.getDate() + 1);
+    fechaHasta.setDate(fechaHasta.getDate() + 1);
 
     if (!fechaDesde) {
       toast.error("Por favor, la fecha de inicio es necesaria");
@@ -361,7 +379,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
         <input type="date" required={true} value={fechaHasta.toISOString().substring(0, 10)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
       </div>
       <ModalFlotante isOpen={showAgregarMedidaModal} onClose={handleModalClose}>
-        <AgregarMedida onCloseModal={handleModalClose}/>
+        <AgregarMedida onCloseModal={handleModalClose} />
       </ModalFlotante>
       {detallesArticuloMenuMuestra.map((detalleMenu, index) => (
         <div key={index}>

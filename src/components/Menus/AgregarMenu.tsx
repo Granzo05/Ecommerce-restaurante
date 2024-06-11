@@ -98,7 +98,6 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
 
   function calcularCostos() {
     let precioRecomendado: number = 0;
-    console.log(ingredientesMenu)
     if (ingredientesMenu[0]?.ingrediente?.nombre?.length > 0 && precioSugerido === 0) {
       ingredientesMenu.forEach(ingredienteMenu => {
         if (ingredienteMenu.medida?.nombre === ingredienteMenu.ingrediente?.stockIngrediente?.medida?.nombre) {
@@ -265,7 +264,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             <h4>Paso 2 - Agregar ingrediente al menú</h4>
             <div>
               <ModalCrud isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
-                <AgregarIngrediente onCloseModal={handleModalClose}/>
+                <AgregarIngrediente onCloseModal={handleModalClose} />
               </ModalCrud>
               {ingredientesMenu.map((ingredienteMenu, index) => (
                 <div key={index}>
@@ -303,21 +302,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
       case 3:
         return (
           <>
-            <h4>Paso final</h4>
-            {precioSugerido !== undefined && precioSugerido > 0 && (
-              <>
-                <p>Costo por ingredientes: ${precioSugerido}</p>
-                <div className="inputBox">
-                <input type="number" placeholder='% de ganancia buscado' onChange={(e) => setPrecio((1 + parseInt(e.target.value) / 100) * precioSugerido)} />
-              
-                </div>
-              </>
-            )}
-            <div className="inputBox">
-              <input type="number" required={true} value={precio | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-              <span>Precio</span>
-            </div>
-
+            <h4>Paso 3</h4>
             <div>
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -346,6 +331,29 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             </div>
             <button onClick={añadirCampoImagen}>Añadir imagen</button>
             <br />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <h4>Paso final</h4>
+            {precioSugerido !== undefined && precioSugerido > 0 && (
+              <>
+                <p>Costo por ingredientes: ${precioSugerido}</p>
+                <div className="inputBox">
+                  <input type="number" onChange={(e) => setPrecio((1 + parseInt(e.target.value) / 100) * precioSugerido)} />
+                  <span>% de ganancia buscado</span>
+                </div>
+              </>
+            )}
+            <div className="inputBox">
+              <input type="number" required={true} value={precio | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <span>Precio final</span>
+            </div>
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={agregarMenu}>Agregar menú ✓</button>

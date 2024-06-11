@@ -19,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @RestController
@@ -127,7 +129,8 @@ public class SucursalController {
 
             sucursal.setImagenes(new HashSet<>(imagenesRepository.findByIdSucursal(idSucursal)));
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(idSucursal)));
-            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllByIdSucursal(idSucursal)));
+
+            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now().plusDays(1))));
 
             return sucursal;
         }
