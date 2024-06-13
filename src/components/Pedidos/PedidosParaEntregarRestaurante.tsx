@@ -84,6 +84,7 @@ const PedidosParaEntregar = () => {
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
                             <th>Menu</th>
+                            <th>Total</th>
                             <th>Entregar</th>
                             <th>Cancelar</th>
                         </tr>

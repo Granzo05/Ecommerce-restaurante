@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react"
 import { Route, Routes } from "react-router-dom"
 import MainMenu from "../pages/HomePage";
+import NotFound from "../pages/notFound";
+import SpinnerSuspense from "../hooks/SpinnerSuspense";
 const Opciones = lazy(() => import('../pages/opciones'));
 const OpcionesCliente = lazy(() => import('../pages/opcionesCliente'));
 const LoginNegocio = lazy(() => import('../pages/loginRestaurante'));
@@ -14,53 +16,37 @@ const Empresas = lazy(() => import('../components/Empresas/Empresas'));
 const SucursalCards = lazy(() => import('../pages/SucursalCards'));
 const Preferencias = lazy(() => import('../components/Preferencias'));
 
-
 const AppRoutes: React.FC = () => {
   return (
-    <Suspense fallback={<div>cargando...</div>}>
+    <Suspense fallback={<SpinnerSuspense />}>
       <Routes>
+        <Route path="/selec-sucursal" element={<SucursalCards />} />
 
-        <Route path="/selec-sucursal" element={<SucursalCards />}>
-        </Route>
+        <Route path="/panel" element={<Empresas />} />
 
-        <Route path="/panel" element={<Empresas />}>
-        </Route>
+        <Route path="/" element={<MainMenu />} />
 
-        <Route path="/" element={<MainMenu />}>
-        </Route>
+        <Route path="/:id" element={<MainMenu />} />
 
-        <Route path="/${id}" element={<MainMenu />}>
-        </Route>
+        <Route path="/login-cliente" element={<LoginCliente />} />
 
-        <Route path="/login-cliente" element={<LoginCliente />}>
-        </Route>
+        <Route path="/login-negocio" element={<LoginNegocio />} />
 
-        <Route path="/login-negocio" element={<LoginNegocio />}>
-        </Route>
+        <Route path="/menu/:categoria" element={<Menu />} />
 
-        <Route path="/menu/:categoria" element={<Menu />}>
-        </Route>
+        <Route path="/pago" element={<Pago />} />
 
-        <Route path="/pago" element={<Pago />}>
-        </Route>
-
-        <Route path="/opciones" element={<Opciones />}>
-        </Route>
+        <Route path="/opciones" element={<Opciones />} />
 
         <Route path="/cliente" element={<OpcionesCliente />}>
+          <Route path="pedidos-pendientes" element={<PedidosPendientes />} />
+          <Route path="pedidos-realizados" element={<PedidosRealizados />} />
+          <Route path="preferencias" element={<Preferencias />} />
         </Route>
 
-        <Route path="/cliente/pedidos-pendientes" element={<PedidosPendientes />}>
-        </Route>
+        <Route path="/cambio-contra" element={<CambioContra />} />
 
-        <Route path="/cliente/pedidos-realizados" element={<PedidosRealizados />}>
-        </Route>
-
-        <Route path="/cliente/preferencias" element={<Preferencias />}>
-        </Route>
-
-        <Route path="/cambio-contra" element={<CambioContra />}>
-        </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   )
