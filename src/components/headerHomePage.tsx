@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import '../styles/homePage-header-footer.css'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
 import { Cliente } from '../types/Cliente/Cliente';
+import SearchIcon from '@mui/icons-material/Search';
+import { toast, Toaster } from 'sonner';
+import { getBaseUrl } from '../utils/global_variables/const';
 
 interface HeaderHomePageProps {
     scrolled: boolean;
@@ -17,7 +20,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
     const [isAccountOpen, setIsAccountOpen] = useState(false); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
     const navigate = useNavigate();
     const [cliente, setCliente] = useState<Cliente | null>(null);
-
+    const { id } = useParams();
     useEffect(() => {
         cargarUsuario();
     }, []);
@@ -25,7 +28,6 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
     const cargarUsuario = async () => {
         const clienteString = localStorage.getItem('usuario');
         let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
-
         setCliente(clienteMem);
     }
 
@@ -84,23 +86,39 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
         return price.toLocaleString('es-AR');
     };
 
+    const [comidaBuscada, setComidaBuscada] = useState<string>('');
+
+    function buscarProducto() {
+        if (comidaBuscada.length > 0) {
+            window.location.href = `${getBaseUrl()}/busqueda/${comidaBuscada}`;
+        } else {
+            toast.info('Debe colocar algún nombre para realizar la búsqueda')
+        }
+    }
+
     return (
         <header id='inicio' className={`header ${scrolled ? 'scrolled' : ''}`}>
+            <Toaster />
             <div className="menu container">
-                <a href="" className="logo"><img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="" /></a>
+                <a onClick={() => window.location.href = getBaseUrl()} className="logo"><img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="" /></a>
+
                 <input type="checkbox" id="menu" />
                 <label htmlFor="menu">
                     <img src="../src/assets/icons/header-icono-responsive.png" className="menu-icono-responsive" alt="menu" />
                 </label>
                 <nav className="navbar">
+                    <input type="text" className='search-input' placeholder='¿Que deseas comer hoy?' onChange={(e) => setComidaBuscada(e.target.value)} />
+                    <div onClick={buscarProducto} style={{ marginTop: '-7px', marginLeft: '7px', padding: '10px', cursor: 'pointer', color: 'white' }}>
+                        <SearchIcon fontSize='large' />
+                    </div>
                     <ul>
-                        <li><a href="#inicio">Inicio</a></li>
-                        <li><a href="#servicios">Nosotros</a></li>
-                        <li><a href="#ofertas">Promociones</a></li>
-                        <li><a href="#menus">Menús</a></li>
-                        <li><a href="#contactos">Contactos</a></li>
+                        <li><a href={`/${id ?? 1}/#inicio`}>Inicio</a></li>
+                        <li><a href={`/${id ?? 1}/#servicios`}>Nosotros</a></li>
+                        <li><a href={`/${id ?? 1}/#ofertas`}>Promociones</a></li>
+                        <li><a href={`/${id ?? 1}/#menus`}>Menús</a></li>
+                        <li><a href={`/${id ?? 1}/#contactos`}>Contactos</a></li>
+
                     </ul>
-                    {/* Renderizado condicional basado en si se hizo clic en "Iniciar sesión" */}
                     <ul>
                         {cliente && cliente?.email?.length > 0 ? (
                             <>
@@ -117,7 +135,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                                 <li style={{ cursor: 'pointer' }} className="text-replacement" onClick={handleAccountClick}><a>Cuenta: {cliente.nombre ? cliente.nombre : cliente.email}</a></li>
 
 
-                                {isCartOpen && location.pathname !== '/pago' && (
+                                {isCartOpen && location.pathname !== `${getBaseUrl()}/pago` && (
                                     <div className="cart-dropdown">
                                         <h4>Carrito de compras</h4>
                                         <button className="close-cart" onClick={handleCloseCart}>X<strong>(cerrar)</strong></button>
@@ -192,7 +210,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                                             <div className="cart-total">
                                                 <p><strong>Precio final: </strong>${formatPrice(carrito?.totalPrecio)}</p>
                                                 <button style={{ marginRight: '20px', color: 'red' }} className="finalizar-pedido" onClick={() => { setCarrito(new Carrito()); CarritoService.limpiarCarrito(); }}>Limpiar carrito</button>
-                                                <Link to="/pago">
+                                                <Link to={`${getBaseUrl()}/pago`}>
                                                     <button style={{ color: 'green' }} className="finalizar-pedido">Finalizar pedido</button>
                                                 </Link>
                                             </div>
@@ -228,7 +246,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                     <p>¡Donde lo buenardo es rutina!</p>
                 </div>
             </div>
-        </header>
+        </header >
     );
 }
 

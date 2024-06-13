@@ -298,9 +298,17 @@ public class PedidoController {
             Gmail gmail = new Gmail();
 
             if (pedido.getTipoEnvio().equals(EnumTipoEnvio.DELIVERY)) {
-                gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", pedido.getCliente().getEmail(), archivo.getBody());
+                Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
+
+                if(sucursal.isPresent()) {
+                    gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", pedido.getCliente().getEmail(), sucursal.get().getEmail(), archivo.getBody());
+                }
             } else {
-                gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", pedido.getCliente().getEmail(), archivo.getBody());
+                Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
+
+                if(sucursal.isPresent()) {
+                    gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", pedido.getCliente().getEmail(), sucursal.get().getEmail(), archivo.getBody());
+                }
             }
 
         }

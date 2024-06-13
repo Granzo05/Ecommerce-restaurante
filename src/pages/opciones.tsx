@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import PedidosEntrantes from '../components/Pedidos/PedidosEntrantesRestaurante';
-import PedidosAceptados from '../components/Pedidos/PedidosAceptadosRestaurante';
-import PedidosEntregados from '../components/Pedidos/PedidosEntregadosRestaurante';
-import PedidosParaEntregar from '../components/Pedidos/PedidosParaEntregarRestaurante';
+import { lazy, useEffect, useState } from 'react';
+
 import Stock from '../components/Stock/Stock';
-import Empleados from '../components/Empleados/Empleados';
-import Menus from '../components/Menus/Menus';
 import { EmpleadoService } from '../services/EmpleadoService';
 import '../styles/opcionesRestaurante.css';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-import StocksEntrantes from '../components/StockEntrante/StockEntrante';
-import Sucursales from '../components/Sucursales/Sucursales';
-import Ingredientes from '../components/Ingrediente/Ingredientes';
-import ArticuloVentas from '../components/ArticulosVenta/ArticulosVenta';
-import Categorias from '../components/Categorias/Categorias';
-import Subcategorias from '../components/Subcategorias/Subcategorias';
-import Medidas from '../components/Medidas/Medidas';
-import Preferencias from '../components/Preferencias';
-import Promociones from '../components/Promociones/Promociones';
-import Empresas from '../components/Empresas/Empresas';
-import Reportes from '../components/Reportes/Reportes'
+const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
+const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
+const Ingredientes = lazy(() => import('../components/Ingrediente/Ingredientes'));
+const ArticuloVentas = lazy(() => import('../components/ArticulosVenta/ArticulosVenta'));
+const Categorias = lazy(() => import('../components/Categorias/Categorias'));
+const Subcategorias = lazy(() => import('../components/Subcategorias/Subcategorias'));
+const Medidas = lazy(() => import('../components/Medidas/Medidas'));
+const Preferencias = lazy(() => import('../components/Preferencias'));
+const Promociones = lazy(() => import('../components/Promociones/Promociones'));
+const Empresas = lazy(() => import('../components/Empresas/Empresas'));
+const Reportes = lazy(() => import('../components/Reportes/Reportes'));
+const PedidosEntrantes = lazy(() => import('../components/Pedidos/PedidosEntrantesRestaurante'));
+const PedidosAceptados = lazy(() => import('../components/Pedidos/PedidosAceptadosRestaurante'));
+const PedidosEntregados = lazy(() => import('../components/Pedidos/PedidosEntregadosRestaurante'));
+const PedidosParaEntregar = lazy(() => import('../components/Pedidos/PedidosParaEntregarRestaurante'));
+const Empleados = lazy(() => import('../components/Empleados/Empleados'));
+const Menus = lazy(() => import('../components/Menus/Menus'));
 
 const Opciones = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState<number>(0);
@@ -42,9 +40,7 @@ const Opciones = () => {
     const [optionsIcon, setOptionsIcon] = useState(<KeyboardArrowRightIcon />);
     const [settingsIcon, setSettingsIcon] = useState(<KeyboardArrowRightIcon />);
     const [categoriaIcon, setCategoriaIcon] = useState(<KeyboardArrowRightIcon />);
-    const [sidebarIcon, setSidebarIcon] = useState(<ArrowForwardIosIcon />);
-    const [topIcon, setTopIcon] = useState(<KeyboardArrowDownIcon />);
-    const [menuVisible, setMenuVisible] = useState(true);
+    const [menuVisible] = useState(true);
     const [opcionesBg, setOpcionesBg] = useState('');
     const [settingsBg, setSettingsBg] = useState('');
 
@@ -89,11 +85,6 @@ const Opciones = () => {
         }
     };
 
-    const toggleMenuVisibility = () => {
-        setMenuVisible(!menuVisible);
-        setSidebarIcon(menuVisible ? <ArrowBackIosNewIcon /> : <ArrowForwardIosIcon />);
-        setTopIcon(menuVisible ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />);
-    };
 
     const handleOpcionClick = (opcion: number) => {
         setOpcionSeleccionada(opcion);
@@ -127,7 +118,7 @@ const Opciones = () => {
             return (
                 <div className="welcome-employee">
                     <br /><br /><br /><br /><br /><br /><br /><br />
-                   <h1 id="welcome">¡BIENVENIDO, AUGUSTO!</h1>
+                    <h1 id="welcome">¡BIENVENIDO, AUGUSTO!</h1>
                 </div>
             );
         } else if (opcionSeleccionada === 12) {
@@ -163,15 +154,15 @@ const Opciones = () => {
         document.title = 'Administración y opciones';
     }, []);
 
-    
+
     const [sidebarBg, setSidebarBg] = useState('');
 
     return (
         <div className={`sidebar ${sidebarBg}`}>
             <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
                 <div className="title-header">
-                    <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/opciones'}/>
-                        
+                    <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/opciones'} />
+
 
                 </div>
 

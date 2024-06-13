@@ -5,10 +5,10 @@ import { SucursalService } from '../services/SucursalService';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { useNavigate } from 'react-router-dom';
 import { Empresa } from '../types/Restaurante/Empresa';
+import { getBaseUrl } from '../utils/global_variables/const';
 
 const SucursalCards: React.FC = () => {
   const [sucursales, setSucursales] = useState<Sucursal[]>([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,20 +28,28 @@ const SucursalCards: React.FC = () => {
     document.title = 'El Buen Sabor - Seleccionar sucursal';
   }, []);
 
-  const handleSucursalClick = (sucursal: Sucursal) => {
+  async function handleSucursalClick(sucursal: Sucursal) {
     localStorage.setItem('selectedBranchId', sucursal.id.toString());
     localStorage.setItem('selectedBranchName', sucursal.nombre);
     localStorage.setItem('selectedBranchAddress', sucursal.domicilios[0]?.calle + ', ' + sucursal.domicilios[0]?.numero);
     localStorage.setItem('selectedBranchCity', sucursal.domicilios[0]?.localidad.nombre);
 
-    if (window.location.href.includes('/selec-sucursal#login')) {
+    // Seteamos el nuevo cambio de sucursal
+    const usuarioString = localStorage.getItem('usuario');
+
+    if (usuarioString) {
+      const usuario = JSON.parse(usuarioString);
+      usuario.idSucursal = sucursal.id;
+
+      localStorage.setItem('usuario', usuario);
+    }
+
+    if (window.location.href.includes('/sucursales')) {
       navigate('/login-cliente');
     } else if (sucursal.id === 0) {
-      window.location.href = '/';
-    } else {
-      window.location.href = `/#sucursal-${sucursal.id}`;
+      window.location.href = await getBaseUrl();
     }
-  };
+  }
 
   return (
     <>
@@ -59,9 +67,9 @@ const SucursalCards: React.FC = () => {
                 <h2>{sucursal.nombre}</h2>
                 {sucursal.domicilios.map((domicilio, index) => (
                   <div key={index}>
-                    <p style={{textAlign: 'left', textTransform: 'uppercase'}}><strong>DIRECCIÓN:</strong> {domicilio.calle}, {domicilio.numero}</p>
-                    <p style={{textAlign: 'left'}}><strong>LOCALIDAD:</strong> {domicilio.localidad.nombre}, {domicilio.localidad.departamento.nombre}, {domicilio.localidad.departamento.provincia.nombre}</p>
-                    <p style={{textAlign: 'left'}}><strong>TELÉFONO:</strong> {sucursal.telefono}</p>
+                    <p style={{ textAlign: 'left', textTransform: 'uppercase' }}><strong>DIRECCIÓN:</strong> {domicilio.calle}, {domicilio.numero}</p>
+                    <p style={{ textAlign: 'left' }}><strong>LOCALIDAD:</strong> {domicilio.localidad.nombre}, {domicilio.localidad.departamento.nombre}, {domicilio.localidad.departamento.provincia.nombre}</p>
+                    <p style={{ textAlign: 'left' }}><strong>TELÉFONO:</strong> {sucursal.telefono}</p>
                   </div>
                 ))}
               </div>

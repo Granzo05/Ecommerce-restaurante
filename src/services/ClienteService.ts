@@ -25,11 +25,16 @@ export const ClienteService = {
                     nombre: data.nombre,
                     email: data.email,
                     telefono: data.telefono,
+                    idSucursalRecomendada: data.idSucursalRecomendada
                 }
                 localStorage.setItem('usuario', JSON.stringify(cliente));
 
                 // Redirige al usuario al menú principal
-                window.location.href = '/'
+                if (cliente.idSucursalRecomendada > 0) {
+                    window.location.href = `/${cliente.idSucursalRecomendada}}`
+                } else {
+                    window.location.href = `/sucursales`
+                }
             })
             .catch(error => {
                 console.error('Error:', error)
@@ -40,15 +45,15 @@ export const ClienteService = {
 
     requestPasswordReset: async (email: string) => {
         const response = await fetch('/cliente/forgot-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
         });
-      
+
         if (!response.ok) {
-          throw new Error('Error al enviar la solicitud');
+            throw new Error('Error al enviar la solicitud');
         }
     },
 
@@ -72,12 +77,17 @@ export const ClienteService = {
                     id: data.id,
                     nombre: data.nombre,
                     email: data.email,
-                    telefono: data.telefono
+                    telefono: data.telefono,
+                    idSucursalRecomendada: data.idSucursalRecomendada
                 }
                 localStorage.setItem('usuario', JSON.stringify(cliente));
 
                 // Redirige al usuario al menú principal
-                window.location.href = '/'
+                if (cliente.idSucursalRecomendada > 0) {
+                    window.location.href = `/${cliente.idSucursalRecomendada}}`
+                } else {
+                    window.location.href = `/sucursales`
+                }
             })
             .catch(error => {
                 console.error('Error:', error)

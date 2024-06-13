@@ -13,8 +13,8 @@ import { SucursalService } from '../services/SucursalService';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 
 
-function ProductosPorCategoria() {
-  const { categoria } = useParams()
+function ProductosBuscados() {
+  const { nombre } = useParams()
   const { id } = useParams()
 
   const [menus, setMenus] = useState<ArticuloMenu[]>([]);
@@ -22,11 +22,11 @@ function ProductosPorCategoria() {
   const [sucursal, setSucursal] = useState<SucursalDTO>(new SucursalDTO());
 
   useEffect(() => {
-    if (categoria && id) {
-      MenuService.getMenusPorTipoAndIdSucursal(categoria, parseInt(id))
+    if (nombre && id) {
+      MenuService.getMenusPorNombreAndIdSucursal(nombre, parseInt(id))
         .then(menus => {
           if (menus.length === 0) {
-            ArticuloVentaService.getArticulosPorCategoriaAndIdSucursal(categoria, parseInt(id))
+            ArticuloVentaService.getArticulosPorNombreAndIdSucursal(nombre, parseInt(id))
               .then(articulos => {
                 setArticulos(articulos);
               })
@@ -41,25 +41,25 @@ function ProductosPorCategoria() {
           console.error("Error al obtener los menús:", error);
         });
     }
-  }, [categoria, id]);
+  }, [nombre, id]);
 
   useEffect(() => {
     if (id)
-        SucursalService.getSucursalDTOById(parseInt(id))
-            .then(async sucursal => {
-                if (sucursal) {
-                    setSucursal(sucursal);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-}, [id]);
+      SucursalService.getSucursalDTOById(parseInt(id))
+        .then(async sucursal => {
+          if (sucursal) {
+            setSucursal(sucursal);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+  }, [id]);
 
 
   useEffect(() => {
-    document.title = 'Menú - ' + categoria;
-  }, [categoria]);
+    document.title = 'Productos';
+  }, []);
 
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -72,8 +72,7 @@ function ProductosPorCategoria() {
       <Header></Header>
       <div className='menu-tipo'>
         <div className="heading">
-          <h1>Menú</h1>
-          <h3>&mdash;{categoria}&mdash;</h3>
+          <h1>Menús</h1>
         </div>
 
         {menus && menus?.map(menu =>
@@ -134,10 +133,10 @@ function ProductosPorCategoria() {
 
 
       </div>
-      <Footer sucursal={sucursal}/>
+      <Footer sucursal={sucursal} />
     </>
   );
 
 }
 
-export default ProductosPorCategoria;
+export default ProductosBuscados;

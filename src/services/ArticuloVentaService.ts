@@ -10,12 +10,17 @@ export const ArticuloVentaService = {
         return await response.json();
     },
 
-    getArticulosPorCategoria: async (nombreCategoria: string): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + `articulos/tipo/${nombreCategoria}/${sucursalId}`);
+    getArticulosPorCategoriaAndIdSucursal: async (nombreCategoria: string, idSucursal: number): Promise<ArticuloVenta[]> => {
+        const response = await fetch(URL_API + `articulos/tipo/${nombreCategoria}/${idSucursal}`);
 
         return await response.json();
     },
 
+    getArticulosPorNombreAndIdSucursal: async (nombre: string, idSucursal: number): Promise<ArticuloVenta[]> => {
+        const response = await fetch(URL_API + `articulos/busqueda/${nombre}/${idSucursal}`);
+
+        return await response.json();
+    },
 
     createArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[]): Promise<string> => {
         try {

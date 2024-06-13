@@ -58,6 +58,75 @@ public class ArticuloMenuController {
         return new HashSet<>(menus);
     }
 
+    @CrossOrigin
+    @GetMapping("/menu/tipo/{categoria}/{idSucursal}")
+    public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
+        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
+
+        Set<ArticuloMenu> menus = new HashSet<>();
+        if (categoriaDB.isPresent()) {
+            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByIdCategoriaAndIdSucursal(categoriaDB.get().getId(), idSucursal);
+
+            for (ArticuloMenu menu : articuloMenus) {
+                boolean hayStock = true;
+
+                menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
+
+                for (IngredienteMenu ingredienteMenu : menu.getIngredientesMenu()) {
+                    Optional<StockIngredientes> stock = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingredienteMenu.getId(), idSucursal);
+
+                    // Verificamos si hay stock
+                    if (stock.isPresent() && stock.get().getCantidadActual() < stock.get().getCantidadMinima()) {
+                        System.out.println("no hay stock de " + ingredienteMenu.getIngrediente().getNombre());
+                        hayStock = false;
+                    }
+                }
+
+                if (hayStock) {
+                    menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
+                    menus.add(menu);
+                }
+            }
+
+            return menus;
+        }
+
+        return null;
+    }
+
+    @CrossOrigin
+    @GetMapping("/menu/busqueda/{nombre}/{idSucursal}")
+    public Set<ArticuloMenu> getMenusPorNombre(@PathVariable("nombre") String nombre, @PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloMenu> menus = articuloMenuRepository.findByNameMenuAndIdSucursalEquals(nombre, idSucursal);
+
+        Set<ArticuloMenu> menusFiltrados = new HashSet<>();
+        if (!menus.isEmpty()) {
+            for (ArticuloMenu menu : menus) {
+                boolean hayStock = true;
+
+                menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
+
+                for (IngredienteMenu ingredienteMenu : menu.getIngredientesMenu()) {
+                    Optional<StockIngredientes> stock = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingredienteMenu.getId(), idSucursal);
+
+                    // Verificamos si hay stock
+                    if (stock.isPresent() && stock.get().getCantidadActual() < stock.get().getCantidadMinima()) {
+                        hayStock = false;
+                    }
+                }
+
+                if (hayStock) {
+                    menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
+                    menusFiltrados.add(menu);
+                }
+            }
+
+            return menusFiltrados;
+        }
+
+        return menusFiltrados;
+    }
+
     @Transactional
     @CrossOrigin
     @PostMapping("/menu/create/{idSucursal}")
@@ -182,42 +251,6 @@ public class ArticuloMenuController {
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @CrossOrigin
-    @GetMapping("/menu/tipo/{categoria}/{idSucursal}")
-    public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
-        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
-
-        Set<ArticuloMenu> menus = new HashSet<>();
-        if (categoriaDB.isPresent()) {
-            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByIdCategoriaAndIdSucursal(categoriaDB.get().getId(), idSucursal);
-
-            for (ArticuloMenu menu : articuloMenus) {
-                boolean hayStock = true;
-
-                menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
-
-                for (IngredienteMenu ingredienteMenu : menu.getIngredientesMenu()) {
-                    Optional<StockIngredientes> stock = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingredienteMenu.getId(), idSucursal);
-
-                    // Verificamos si hay stock
-                    if (stock.isPresent() && stock.get().getCantidadActual() < stock.get().getCantidadMinima()) {
-                        System.out.println("no hay stock de " + ingredienteMenu.getIngrediente().getNombre());
-                        hayStock = false;
-                    }
-                }
-
-                if (hayStock) {
-                    menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
-                    menus.add(menu);
-                }
-            }
-
-            return menus;
-        }
-
-        return null;
     }
 
     @Transactional

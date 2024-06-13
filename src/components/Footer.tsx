@@ -1,56 +1,22 @@
 import '../styles/footer.css';
-import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
-import React, { useEffect, useState } from 'react';
-import { SucursalService } from '../services/SucursalService';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
-import { useNavigate } from 'react-router-dom';
-import { Sucursal } from '../types/Restaurante/Sucursal';
 
-const Footer = () => {
-  const [sucursal, setSucursal] = useState<SucursalDTO | null>(null);
-  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+interface FooterProps {
+  sucursal: SucursalDTO;
+}
 
-  useEffect(() => {
-    const selectedBranchId = localStorage.getItem('selectedBranchId');
-    if (selectedBranchId) {
-      fetchSucursalById(parseInt(selectedBranchId));
-    }
-
-    if (sucursales.length === 0) {
-      fetchSucursales();
-    }
-  }, [sucursales]);
-
-  const fetchSucursales = async () => {
-    try {
-      const data = await SucursalService.getSucursales();
-      setSucursales(data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const fetchSucursalById = async (id: number) => {
-    try {
-      const sucursal = await SucursalService.getSucursalDTOById(id);
-      if (sucursal) setSucursal(sucursal);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+const Footer: React.FC<FooterProps> = ({ sucursal }) => {
 
   return (
     <footer id='contactos' className='footer'>
       <div className="footer-content container">
-      {sucursal && (
+        {sucursal && (
           <>
-          <div>
-          <h3 style={{ color: '#FFFFFF' }}>{sucursal.nombre}</h3>
-            <a className='selec-otra-sucur' style={{ textDecoration: 'underline', display: 'flex' }} onClick={() => window.location.href = '/selec-sucursal'}>SELECCIONAR OTRA SUCURSAL</a>
-          
-          </div>
+            <div>
+              <h3 style={{ color: '#FFFFFF' }}>{sucursal.nombre}</h3>
+              <a className='selec-otra-sucur' style={{ textDecoration: 'underline', display: 'flex' }} onClick={() => window.location.href = '/selec-sucursal'}>SELECCIONAR OTRA SUCURSAL</a>
+
+            </div>
           </>
         )}<div className="link">
           <ul>

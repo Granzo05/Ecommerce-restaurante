@@ -65,5 +65,8 @@ public class Cliente implements Serializable {
     }, allowSetters = true)
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
     private Set<Pedido> pedidos = new HashSet<>();
+
+    @Transient
+    private Long idSucursalRecomendada;
 }
 

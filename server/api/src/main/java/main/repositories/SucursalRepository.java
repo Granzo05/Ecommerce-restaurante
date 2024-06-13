@@ -23,6 +23,15 @@ public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
     @Query("SELECT s FROM Sucursal s WHERE s.empresa.id = :id")
     List<Sucursal> findByIdEmpresa(@Param("id") Long id);
 
+    @Query("SELECT s.id FROM Sucursal s JOIN s.domicilios dom WHERE dom.localidad.id = :idLocalidad")
+    List<Long> findIdByIdLocalidadDomicilio(@Param("idLocalidad") Long idLocalidad);
+
+    @Query("SELECT s.id FROM Sucursal s JOIN s.domicilios dom WHERE dom.localidad.departamento.id = :idDepartamento")
+    List<Long> findIdByIdDepartamentoDomicilio(@Param("idDepartamento") Long idDepartamento);
+
+    @Query("SELECT s.id FROM Sucursal s JOIN s.domicilios dom WHERE dom.localidad.departamento.provincia.id = :idProvincia")
+    List<Long> findIdByIdProvinciaDomicilio(@Param("idProvincia") Long idProvincia);
+
     @Query("SELECT s.localidadesDisponiblesDelivery FROM Sucursal s WHERE s.id = :id AND s.borrado = 'NO'")
     List<LocalidadDelivery> findLocalidadesByIdSucursal(@Param("id") Long id);
 

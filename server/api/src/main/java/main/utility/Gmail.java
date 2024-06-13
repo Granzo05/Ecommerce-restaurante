@@ -62,11 +62,11 @@ public class Gmail {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public void enviarCorreoConArchivo(String asunto, String mensaje, String emailCliente, byte[] file) throws MessagingException, IOException {
+    public void enviarCorreoConArchivo(String asunto, String mensaje, String emailCliente, String emailLocal, byte[] file) throws MessagingException, IOException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         MimeMessage email = new MimeMessage(session);
-        email.setFrom(new InternetAddress("contactodelbuensabor@gmail.com"));
+        email.setFrom(new InternetAddress(emailLocal));
         email.addRecipient(javax.mail.Message.RecipientType.TO,
                 new InternetAddress(emailCliente));
         email.setSubject(asunto);
@@ -106,12 +106,12 @@ public class Gmail {
         }
     }
 
-    public void enviarCorreo(String asunto, String mensaje, String emailCliente) throws MessagingException, IOException {
+    public void enviarCorreo(String asunto, String mensaje, String emailCliente, String emailLocal) throws MessagingException, IOException {
 
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         MimeMessage email = new MimeMessage(session);
-        email.setFrom(new InternetAddress("contactodelbuensabor@gmail.com"));
+        email.setFrom(new InternetAddress(emailLocal));
         email.addRecipient(javax.mail.Message.RecipientType.TO,
                 new InternetAddress(emailCliente));
         email.setSubject(asunto);

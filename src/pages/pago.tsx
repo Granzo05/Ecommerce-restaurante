@@ -18,8 +18,10 @@ import { StockIngredientesService } from "../services/StockIngredientesService";
 import { ArticuloVenta } from "../types/Productos/ArticuloVenta";
 import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { CarritoService } from "../services/CarritoService";
+import { SucursalService } from "../services/SucursalService";
+import { SucursalDTO } from "../types/Restaurante/SucursalDTO";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -46,6 +48,23 @@ const Pago = () => {
             setPreferenceId('');
         }
     }, [preference]);
+
+    const { id } = useParams()
+
+    const [sucursal, setSucursal] = useState<SucursalDTO>(new SucursalDTO());
+
+    useEffect(() => {
+        if (id)
+            SucursalService.getSucursalDTOById(parseInt(id))
+                .then(async sucursal => {
+                    if (sucursal) {
+                        setSucursal(sucursal);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+    }, [id]);
 
 
     const handleModalClose = () => {
@@ -80,127 +99,14 @@ const Pago = () => {
     }
 
     async function cargarPedido() {
-        console.log(await CarritoService.getCarrito())
         setCarrito(await CarritoService.getCarrito());
     }
 
     async function enviarPedidoARestaurante() {
-        let hayStock = true;
-        let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
+        const now = new Date();
+        const horaActual = now.toTimeString().slice(0, 5);
 
-        // Verificar stock de ArticuloMenu
-        if (carrito?.articuloMenu) {
-            for (const producto of carrito.articuloMenu) {
-                for (const ingrediente of producto.ingredientesMenu) {
-                    hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
-
-                    if (!hayStock) {
-                        productoFaltante = producto;
-                        break;
-                    }
-                }
-                if (!hayStock) break;
-            }
-        }
-
-        // Verificar stock de ArticuloVenta
-        if (hayStock && carrito?.articuloVenta) {
-            for (const articulo of carrito.articuloVenta) {
-                hayStock = await StockArticuloVentaService.checkStock(articulo.id, articulo.cantidad);
-
-                if (!hayStock) {
-                    productoFaltante = articulo;
-                    break;
-                }
-            }
-        }
-
-        if (cliente && cliente?.email?.length > 0) {
-
-            if (hayStock) {
-                let pedido = new Pedido();
-                if (cliente) pedido.cliente = cliente;
-                pedido.tipoEnvio = envio;
-
-                let detalles: DetallesPedido[] = [];
-
-                carrito?.articuloMenu?.forEach(producto => {
-                    let detalle = new DetallesPedido();
-                    detalle.articuloMenu = producto;
-                    detalle.cantidad = producto.cantidad;
-                    detalle.subTotal = producto.cantidad * producto.precioVenta;
-                    detalles.push(detalle);
-                });
-
-                carrito?.articuloVenta?.forEach(producto => {
-                    let detalle = new DetallesPedido();
-                    detalle.articuloVenta = producto;
-                    detalle.cantidad = producto.cantidad;
-                    detalle.subTotal = producto.cantidad * producto.precioVenta;
-                    detalles.push(detalle);
-                });
-
-                carrito?.promociones?.forEach(promocion => {
-                    promocion.detallesPromocion.forEach(detallePromo => {
-                        if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
-                            let detalle = new DetallesPedido();
-                            detalle.articuloMenu = detallePromo.articuloMenu;
-                            detalle.cantidad = detallePromo.cantidad;
-
-                            // Aplicar el descuento correctamente
-                            let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
-                            detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                            detalles.push(detalle);
-                        } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
-                            let detalle = new DetallesPedido();
-                            detalle.articuloVenta = detallePromo.articuloVenta;
-                            detalle.cantidad = detallePromo.cantidad;
-
-                            // Aplicar el descuento correctamente
-                            let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
-                            detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                            detalles.push(detalle);
-                        }
-                    });
-                });
-
-                pedido.factura = null;
-                pedido.detallesPedido = detalles;
-                pedido.estado = EnumEstadoPedido.ENTRANTES;
-                pedido.borrado = 'NO';
-
-                if (envio === EnumTipoEnvio.RETIRO_EN_TIENDA) {
-                    pedido.domicilioEntrega = null;
-                }
-
-                if (preferenceId) {
-                    console.log(preferenceId)
-                    PedidoService.eliminarPedidoFallido(preferenceId);
-                }
-
-                toast.promise(PedidoService.crearPedido(pedido), {
-                    loading: 'Creando pedido...',
-                    success: (message) => {
-                        CarritoService.limpiarCarrito();
-                        return message;
-                    },
-                    error: (message) => {
-                        return message;
-                    },
-                });
-            } else {
-                toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
-            }
-        } else {
-            toast.error('Debe estar logueado para realizar su pedido');
-        }
-    }
-
-
-    async function crearPreferencia(domicilio: Domicilio) {
-        if (envio === 0) {
+        if (sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual) {
             let hayStock = true;
             let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
 
@@ -232,74 +138,199 @@ const Pago = () => {
             }
 
             if (cliente && cliente?.email?.length > 0) {
+
                 if (hayStock) {
-                    if (preferenceId === null && domicilio) {
-                        let pedido = new Pedido();
-                        if (cliente) pedido.cliente = cliente;
-                        pedido.tipoEnvio = envio;
+                    let pedido = new Pedido();
+                    if (cliente) pedido.cliente = cliente;
+                    pedido.tipoEnvio = envio;
 
-                        let detalles: DetallesPedido[] = [];
+                    let detalles: DetallesPedido[] = [];
 
-                        carrito?.articuloMenu?.forEach(producto => {
-                            let detalle = new DetallesPedido();
-                            detalle.articuloMenu = producto;
-                            detalle.cantidad = producto.cantidad;
-                            detalle.subTotal = producto.cantidad * producto.precioVenta;
-                            detalles.push(detalle);
+                    carrito?.articuloMenu?.forEach(producto => {
+                        let detalle = new DetallesPedido();
+                        detalle.articuloMenu = producto;
+                        detalle.cantidad = producto.cantidad;
+                        detalle.subTotal = producto.cantidad * producto.precioVenta;
+                        detalles.push(detalle);
+                    });
+
+                    carrito?.articuloVenta?.forEach(producto => {
+                        let detalle = new DetallesPedido();
+                        detalle.articuloVenta = producto;
+                        detalle.cantidad = producto.cantidad;
+                        detalle.subTotal = producto.cantidad * producto.precioVenta;
+                        detalles.push(detalle);
+                    });
+
+                    carrito?.promociones?.forEach(promocion => {
+                        promocion.detallesPromocion.forEach(detallePromo => {
+                            if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
+                                let detalle = new DetallesPedido();
+                                detalle.articuloMenu = detallePromo.articuloMenu;
+                                detalle.cantidad = detallePromo.cantidad;
+
+                                // Aplicar el descuento correctamente
+                                let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
+                                detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                detalles.push(detalle);
+                            } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
+                                let detalle = new DetallesPedido();
+                                detalle.articuloVenta = detallePromo.articuloVenta;
+                                detalle.cantidad = detallePromo.cantidad;
+
+                                // Aplicar el descuento correctamente
+                                let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
+                                detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                detalles.push(detalle);
+                            }
                         });
+                    });
 
-                        carrito?.articuloVenta?.forEach(producto => {
-                            let detalle = new DetallesPedido();
-                            detalle.articuloVenta = producto;
-                            detalle.cantidad = producto.cantidad;
-                            detalle.subTotal = producto.cantidad * producto.precioVenta;
-                            detalles.push(detalle);
-                        });
+                    pedido.factura = null;
+                    pedido.detallesPedido = detalles;
+                    pedido.estado = EnumEstadoPedido.ENTRANTES;
+                    pedido.borrado = 'NO';
 
-                        carrito?.promociones?.forEach(promocion => {
-                            promocion.detallesPromocion.forEach(detallePromo => {
-                                if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
-                                    let detalle = new DetallesPedido();
-                                    detalle.articuloMenu = detallePromo.articuloMenu;
-                                    detalle.cantidad = detallePromo.cantidad;
-
-                                    // Aplicar el descuento correctamente
-                                    let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
-                                    detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                    detalles.push(detalle);
-                                } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
-                                    let detalle = new DetallesPedido();
-                                    detalle.articuloVenta = detallePromo.articuloVenta;
-                                    detalle.cantidad = detallePromo.cantidad;
-
-                                    // Aplicar el descuento correctamente
-                                    let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
-                                    detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                    detalles.push(detalle);
-                                }
-                            });
-                        });
-
-                        pedido.factura = null;
-                        pedido.detallesPedido = detalles;
-                        pedido.borrado = 'NO';
-
-                        pedido.domicilioEntrega = domicilio;
-
-                        let preference = await PedidoService.crearPedidoMercadopago(pedido);
-
-                        setPreferenceId(preference.id);
-                    } else {
-                        setPreferenceId(preferenceId);
+                    if (envio === EnumTipoEnvio.RETIRO_EN_TIENDA) {
+                        pedido.domicilioEntrega = null;
                     }
+
+                    if (preferenceId) {
+                        console.log(preferenceId)
+                        PedidoService.eliminarPedidoFallido(preferenceId);
+                    }
+
+                    toast.promise(PedidoService.crearPedido(pedido), {
+                        loading: 'Creando pedido...',
+                        success: (message) => {
+                            CarritoService.limpiarCarrito();
+                            return message;
+                        },
+                        error: (message) => {
+                            return message;
+                        },
+                    });
                 } else {
                     toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
                 }
             } else {
                 toast.error('Debe estar logueado para realizar su pedido');
             }
+        } else {
+            toast.info(`El local está cerrado, el horario de atención es entre las ${sucursal.horarioApertura} y las ${sucursal.horarioCierre}`);
+        }
+    }
+
+
+    async function crearPreferencia(domicilio: Domicilio) {
+        const now = new Date();
+        const horaActual = now.toTimeString().slice(0, 5);
+        if (sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual) {
+            if (envio === 0) {
+                let hayStock = true;
+                let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
+
+                // Verificar stock de ArticuloMenu
+                if (carrito?.articuloMenu) {
+                    for (const producto of carrito.articuloMenu) {
+                        for (const ingrediente of producto.ingredientesMenu) {
+                            hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
+
+                            if (!hayStock) {
+                                productoFaltante = producto;
+                                break;
+                            }
+                        }
+                        if (!hayStock) break;
+                    }
+                }
+
+                // Verificar stock de ArticuloVenta
+                if (hayStock && carrito?.articuloVenta) {
+                    for (const articulo of carrito.articuloVenta) {
+                        hayStock = await StockArticuloVentaService.checkStock(articulo.id, articulo.cantidad);
+
+                        if (!hayStock) {
+                            productoFaltante = articulo;
+                            break;
+                        }
+                    }
+                }
+
+                if (cliente && cliente?.email?.length > 0) {
+                    if (hayStock) {
+                        if (preferenceId === null && domicilio) {
+                            let pedido = new Pedido();
+                            if (cliente) pedido.cliente = cliente;
+                            pedido.tipoEnvio = envio;
+
+                            let detalles: DetallesPedido[] = [];
+
+                            carrito?.articuloMenu?.forEach(producto => {
+                                let detalle = new DetallesPedido();
+                                detalle.articuloMenu = producto;
+                                detalle.cantidad = producto.cantidad;
+                                detalle.subTotal = producto.cantidad * producto.precioVenta;
+                                detalles.push(detalle);
+                            });
+
+                            carrito?.articuloVenta?.forEach(producto => {
+                                let detalle = new DetallesPedido();
+                                detalle.articuloVenta = producto;
+                                detalle.cantidad = producto.cantidad;
+                                detalle.subTotal = producto.cantidad * producto.precioVenta;
+                                detalles.push(detalle);
+                            });
+
+                            carrito?.promociones?.forEach(promocion => {
+                                promocion.detallesPromocion.forEach(detallePromo => {
+                                    if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
+                                        let detalle = new DetallesPedido();
+                                        detalle.articuloMenu = detallePromo.articuloMenu;
+                                        detalle.cantidad = detallePromo.cantidad;
+
+                                        // Aplicar el descuento correctamente
+                                        let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
+                                        detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                        detalles.push(detalle);
+                                    } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
+                                        let detalle = new DetallesPedido();
+                                        detalle.articuloVenta = detallePromo.articuloVenta;
+                                        detalle.cantidad = detallePromo.cantidad;
+
+                                        // Aplicar el descuento correctamente
+                                        let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
+                                        detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                        detalles.push(detalle);
+                                    }
+                                });
+                            });
+
+                            pedido.factura = null;
+                            pedido.detallesPedido = detalles;
+                            pedido.borrado = 'NO';
+
+                            pedido.domicilioEntrega = domicilio;
+
+                            let preference = await PedidoService.crearPedidoMercadopago(pedido);
+
+                            setPreferenceId(preference.id);
+                        } else {
+                            setPreferenceId(preferenceId);
+                        }
+                    } else {
+                        toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
+                    }
+                } else {
+                    toast.error('Debe estar logueado para realizar su pedido');
+                }
+            }
+        } else {
+            toast.info(`El local está cerrado, el horario de atención es entre las ${sucursal.horarioApertura} y las ${sucursal.horarioCierre}`);
         }
 
     }
@@ -425,7 +456,7 @@ const Pago = () => {
                     )}
                 </div>
             </div >
-            <Footer />
+            <Footer sucursal={sucursal} />
         </>
     )
 }

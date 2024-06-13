@@ -1,7 +1,6 @@
 import '../styles/notFound.css'
 import '../styles/header.css';
 import Header from '../components/Header'
-import Footer from '../components/Footer';
 
 
 function NotFound() {
@@ -26,7 +25,6 @@ function NotFound() {
           </div>
         </div>
       </section>
-      <Footer />
     </>
   );
 

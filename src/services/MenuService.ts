@@ -10,8 +10,14 @@ export const MenuService = {
         return await response.json();
     },
 
-    getMenusPorTipo: async (tipoComida: string): Promise<ArticuloMenu[]> => {
-        const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + sucursalId);
+    getMenusPorTipoAndIdSucursal: async (tipoComida: string, idSucursal: number): Promise<ArticuloMenu[]> => {
+        const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + idSucursal);
+
+        return await response.json();
+    },
+
+    getMenusPorNombreAndIdSucursal: async (nombre: string, idSucursal: number): Promise<ArticuloMenu[]> => {
+        const response = await fetch(URL_API + 'menu/busqueda/' + nombre + '/' + idSucursal);
 
         return await response.json();
     },

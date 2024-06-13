@@ -1,16 +1,20 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
 import { useEffect, useState } from 'react';
 import '../styles/header.css';
 import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
 import { Cliente } from '../types/Cliente/Cliente';
+import { toast, Toaster } from 'sonner';
+import SearchIcon from '@mui/icons-material/Search';
+import { getBaseUrl } from '../utils/global_variables/const';
 
 const Header = () => {
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
     const [isAccountOpen, setIsAccountOpen] = useState(false); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
     const [cliente, setCliente] = useState<Cliente | null>(null);
     const navigate = useNavigate();
+    const { id } = useParams();
 
     useEffect(() => {
         cargarUsuario();
@@ -24,7 +28,7 @@ const Header = () => {
     }
 
     const handleCartClick = () => {
-        setIsCartOpen(!isCartOpen); // Alterna la visibilidad del carrito
+        setIsCartOpen(!isCartOpen);
         setIsAccountOpen(false);
     };
 
@@ -66,31 +70,46 @@ const Header = () => {
         return price.toLocaleString('es-AR');
     };
 
-    const location = useLocation(); // Obtiene la ruta actual
+    const location = useLocation();
+
+    const [comidaBuscada, setComidaBuscada] = useState<string>('');
+
+    function buscarProducto() {
+        if (comidaBuscada.length > 0) {
+            window.location.href = `${getBaseUrl()}/busqueda/${comidaBuscada}`;
+        } else {
+            toast.info('Debe colocar algún nombre para realizar la búsqueda')
+        }
+    }
 
     return (
         <header id="inicio" className="header-all">
+            <Toaster />
             <div className="menu container">
-                <a href="/" className="logo">
-                    <img src={Logo} alt="Logo" />
-                </a>
+                <a onClick={() => getBaseUrl()} className="logo"><img src={Logo} alt="" /></a>
+
                 <input type="checkbox" id="menu" />
                 <label htmlFor="menu">
                     <img src="../src/assets/icons/header-icono-responsive.png" className="menu-icono-responsive" alt="menu" />
                 </label>
+                <input type="text" className='search-input' placeholder='¿Que deseas comer hoy?' onChange={(e) => setComidaBuscada(e.target.value)} />
+                <div onClick={buscarProducto} style={{ marginTop: '-7px', marginLeft: '7px', padding: '10px', cursor: 'pointer', color: 'white' }}>
+                    <SearchIcon fontSize='large' />
+                </div>
                 <nav className="navbar">
                     <ul className='ul-header-all'>
-                        <li><a href="#inicio">Inicio</a></li>
-                        <li><a href="/#servicios">Nosotros</a></li>
-                        <li><a href="/#ofertas">Promociones</a></li>
-                        <li><a href="/#menus">Menús</a></li>
-                        <li><a href="#contactos">Contactos</a></li>
+                        <li><a href={`/${id ?? 1}/#inicio`}>Inicio</a></li>
+                        <li><a href={`/${id ?? 1}/#servicios`}>Nosotros</a></li>
+                        <li><a href={`/${id ?? 1}/#ofertas`}>Promociones</a></li>
+                        <li><a href={`/${id ?? 1}/#menus`}>Menús</a></li>
+                        <li><a href={`/${id ?? 1}/#contactos`}>Contactos</a></li>
+
                     </ul>
                     <ul>
                         {cliente && cliente?.email?.length > 0 ? (
                             <>
                                 {
-                                    location.pathname !== '/pago' && (
+                                    location.pathname !== `${getBaseUrl()}/pago` && (
                                         <>
                                             {carrito && carrito?.totalProductos > 0 && (
                                                 <span className="cart-item-count" onClick={handleCartClick}>{carrito?.totalProductos}</span>
@@ -104,7 +123,7 @@ const Header = () => {
                                 <p className='nombre-email-usuario' style={{ color: 'white' }}>{cliente.nombre ? cliente.nombre : cliente.email}</p>
                                 <li style={{ cursor: 'pointer' }} className="text-replacement" onClick={handleAccountClick}><a>Cuenta: {cliente.nombre ? cliente.nombre : cliente.email}</a></li>
 
-                                {isCartOpen && location.pathname !== '/pago' && (
+                                {isCartOpen && location.pathname !== `${getBaseUrl()}/pago` && (
                                     <div className="cart-dropdown">
                                         <h4>Carrito de compras</h4>
                                         <button className="close-cart" onClick={handleCloseCart}>X<strong>(cerrar)</strong></button>
@@ -179,7 +198,7 @@ const Header = () => {
                                             <div className="cart-total">
                                                 <p><strong>Precio final: </strong>${formatPrice(carrito?.totalPrecio)}</p>
                                                 <button style={{ marginRight: '20px', color: 'red' }} className="finalizar-pedido" onClick={() => { setCarrito(new Carrito()); CarritoService.limpiarCarrito(); }}>Limpiar carrito</button>
-                                                <Link to="/pago">
+                                                <Link to={`${getBaseUrl()}/pago`}>
                                                     <button style={{ color: 'green' }} className="finalizar-pedido">Finalizar pedido</button>
                                                 </Link>
                                             </div>

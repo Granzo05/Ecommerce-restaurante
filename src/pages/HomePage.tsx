@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../styles/homePage-header-footer.css'
 import { SucursalService } from '../services/SucursalService';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Promocion } from '../types/Productos/Promocion';
 import DetallesPromocion from '../components/Promociones/DetallesPromocion';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
@@ -11,10 +11,9 @@ import ModalCrud from '../components/ModalCrud';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { formatearFechaDDMMYYYY } from '../utils/global_variables/functions';
 
-
-
 export default function MainMenu() {
     const [scrolled, setScrolled] = useState(false);
+    const { id } = useParams()
 
     useEffect(() => {
         const handleScroll = () => {
@@ -28,53 +27,53 @@ export default function MainMenu() {
         };
     }, []);
 
+    useEffect(() => {
+        if (id)
+            SucursalService.getSucursalDTOById(parseInt(id))
+                .then(async sucursal => {
+                    if (sucursal) {
+                        setSucursal(sucursal);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+    }, [id]);
 
 
-    const convertirFecha = (date: Date) => {
-        const dia = date.getDate() + 1;
-        const mes = date.getMonth() + 1;
-        const año = date.getFullYear();
-        return `${dia}/${mes}/${año}`;
-    };
-    const { id } = useParams()
-
-    const [sucursal, setSucursal] = useState<SucursalDTO>();
+    const [sucursal, setSucursal] = useState<SucursalDTO>(new SucursalDTO());
 
     const [selectedPromocion, setSelectedPromocion] = useState<Promocion>(new Promocion());
     const [showDetallePromocionModal, setShowDetallePromocionModal] = useState<boolean>(false);
 
     function handleMenu(tipoComida: string) {
-        window.location.href = 'menu/' + tipoComida;
+        // Que asigne el id de la sucursal por si necesitamos traer otros datos
+        window.history.pushState({ path: `/${id}/menu/${tipoComida}` }, '', `/${id}/menu/${tipoComida}`);
     }
-
 
     const handleModalClose = () => {
         setShowDetallePromocionModal(false);
     };
 
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
-  
+    useEffect(() => {
+        if (sucursales.length === 0) fetchSucursales();
+    }, [sucursales]);
 
-  useEffect(() => {
-    if (sucursales.length === 0) fetchSucursales();
-}, [sucursales]);
-
-const fetchSucursales = async () => {
-    SucursalService.getSucursales()
-        .then(data => {
-            setSucursales(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
+    const fetchSucursales = async () => {
+        SucursalService.getSucursales()
+            .then(data => {
+                setSucursales(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
 
     useEffect(() => {
         if (sucursal?.nombre) {
-            document.title = 'El Buen Sabor - '+sucursal?.nombre;
+            document.title = 'El Buen Sabor - ' + sucursal?.nombre;
         } else {
             document.title = 'El Buen Sabor';
         }
@@ -82,7 +81,7 @@ const fetchSucursales = async () => {
 
     return (
         <>
-            <HeaderHomePage scrolled={scrolled}/>
+            <HeaderHomePage scrolled={scrolled} />
             <section id='servicios' className='information container'>
                 <div className="information-content">
                     <div className='information-1'>
@@ -135,7 +134,7 @@ const fetchSucursales = async () => {
             <section className='bg'></section>
             <section id='menus' className='food container'>
                 <ModalCrud isOpen={showDetallePromocionModal} onClose={handleModalClose}>
-                    <DetallesPromocion selectedPromocion={selectedPromocion} onCloseModal={handleModalClose}/>
+                    <DetallesPromocion selectedPromocion={selectedPromocion} onCloseModal={handleModalClose} />
                 </ModalCrud>
                 <h2>&mdash; Menús &mdash;</h2>
                 <span>Categorías</span>
@@ -196,7 +195,7 @@ const fetchSucursales = async () => {
                     )}
                 </div>
             </section>
-            <Footer></Footer>
+            <Footer sucursal={sucursal}></Footer>
         </>
     )
 }

@@ -15,12 +15,13 @@ const Menu = lazy(() => import('../pages/menu'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
 const SucursalCards = lazy(() => import('../pages/SucursalCards'));
 const Preferencias = lazy(() => import('../components/Preferencias'));
+const ProductosBuscados = lazy(() => import('../pages/menuBusqueda'));
 
 const AppRoutes: React.FC = () => {
   return (
     <Suspense fallback={<SpinnerSuspense />}>
       <Routes>
-        <Route path="/selec-sucursal" element={<SucursalCards />} />
+        <Route path="/sucursales" element={<SucursalCards />} />
 
         <Route path="/panel" element={<Empresas />} />
 
@@ -32,11 +33,13 @@ const AppRoutes: React.FC = () => {
 
         <Route path="/login-negocio" element={<LoginNegocio />} />
 
-        <Route path="/menu/:categoria" element={<Menu />} />
+        <Route path="/:id/producto/:categoria" element={<Menu />} />
 
-        <Route path="/pago" element={<Pago />} />
+        <Route path="/:id/busqueda/:nombre" element={<ProductosBuscados />} />
 
-        <Route path="/opciones" element={<Opciones />} />
+        <Route path="/:id/pago" element={<Pago />} />
+
+        <Route path="/:id/opciones" element={<Opciones />} />
 
         <Route path="/cliente" element={<OpcionesCliente />}>
           <Route path="pedidos-pendientes" element={<PedidosPendientes />} />

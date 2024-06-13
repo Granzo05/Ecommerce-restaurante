@@ -67,6 +67,21 @@ public class ArticuloVentaController {
     }
 
     @CrossOrigin
+    @GetMapping("/articulos/busqueda/{nombre}/{idSucursal}")
+    public Set<ArticuloVenta> getArticulosPorNombre(@PathVariable("nombre") String nombre, @PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloVenta> articulos = articuloVentaRepository.findByNameArticuloAndIdSucursalEquals(nombre, idSucursal);
+
+        if (!articulos.isEmpty()) {
+            for (ArticuloVenta articulo : articulos) {
+                articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));
+            }
+
+            return new HashSet<>(articulos);
+        }
+        return null;
+    }
+
+    @CrossOrigin
     @Transactional
     @PostMapping("/articulo/create/{idSucursal}")
     public ResponseEntity<String> crearArticulo(@RequestBody ArticuloVenta articuloVenta, @PathVariable("idSucursal") Long idSucursal) {

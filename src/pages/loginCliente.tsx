@@ -50,7 +50,6 @@ const LoginCliente = () => {
 
     const handleIniciarSesionUsuario = () => {
         ClienteService.getUser(email, contraseña);
-
     };
 
     // Modal flotante de ingrediente
@@ -289,7 +288,7 @@ const LoginCliente = () => {
 
             <section className="form-main" style={{ display: mostrarIniciarSesion ? '' : 'none' }}>
                 <div className="form-content">
-                    <button style={{marginBottom: '20px'}} className='btn' onClick={() => window.location.href = '/selec-sucursal#login'}>SELECCIONAR SUCURSAL</button>
+                    <button style={{ marginBottom: '20px' }} className='btn' onClick={() => window.location.href = '/selec-sucursal#login'}>SELECCIONAR SUCURSAL</button>
                     <div className="box">
                         <h3>- BIENVENIDO -</h3>
                         <p id='subtitle'>¡Si ya tienes una cuenta, inicia sesión con tus datos!</p>

@@ -1,14 +1,28 @@
+import { Cliente } from "../../types/Cliente/Cliente";
+
 export const URL_API = 'http://localhost:8080/';
 
-export let sucursalId: number | null = 1;
+export function sucursalId(): number {
+    const usuarioString = localStorage.getItem('usuario');
 
-const usuarioString = localStorage.getItem('usuario');
+    if (usuarioString) {
+        const usuario: Cliente = JSON.parse(usuarioString);
 
-if (usuarioString) {
-    const usuario = JSON.parse(usuarioString);
-    sucursalId = usuario.id;
+        if (usuario.idSucursal > 0 && usuario.idSucursal !== undefined) {
+            return usuario.idSucursal;
+        } else {
+            return 1;
+        }
+    }
+
+    return 1;
 }
 
+export function getBaseUrl(): string {
+    const idSucursal = sucursalId();
+
+    return `${window.location.protocol}//${window.location.host}/${idSucursal}`;
+}
 // Frases del login del restaurante
 
 export const frases = [

@@ -12,6 +12,7 @@ export class Cliente {
     privilegios: string = '';
     pedidos: Pedido[] = [];
     borrado: string = '';
+    idSucursal: number = 1;
 
     constructor(){
 

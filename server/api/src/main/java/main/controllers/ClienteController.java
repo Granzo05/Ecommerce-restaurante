@@ -7,6 +7,7 @@ import main.entities.Domicilio.Domicilio;
 import main.repositories.ClienteRepository;
 import main.repositories.DomicilioRepository;
 import main.repositories.LocalidadRepository;
+import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,12 @@ import java.util.Set;
 public class ClienteController {
     private final ClienteRepository clienteRepository;
     private final DomicilioRepository domicilioRepository;
-    private final LocalidadRepository localidadRepository;
+    private final SucursalRepository sucursalRepository;
 
-    public ClienteController(ClienteRepository clienteRepository, DomicilioRepository domicilioRepository, LocalidadRepository localidadRepository) {
+    public ClienteController(ClienteRepository clienteRepository, DomicilioRepository domicilioRepository, LocalidadRepository localidadRepository, SucursalRepository sucursalRepository) {
         this.clienteRepository = clienteRepository;
         this.domicilioRepository = domicilioRepository;
-        this.localidadRepository = localidadRepository;
+        this.sucursalRepository = sucursalRepository;
     }
 
     @Transactional
@@ -40,13 +41,39 @@ public class ClienteController {
                 domicilio.setLocalidad(domicilio.getLocalidad());
                 domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setCliente(clienteDetails);
+
+                // Buscamos si hay un restaurante en la localidad del cliente para enviarlo a esa sucursal en el main
+                if(domicilio.getBorrado() == "NO") clienteDetails.setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
             }
             clienteDetails.setBorrado("NO");
             clienteDetails = clienteRepository.save(clienteDetails);
 
+
             return clienteDetails;
         } else {
             return null;
+        }
+    }
+
+    private Long buscarRestauranteCercano(Domicilio domicilio) {
+        Long idSucursal = sucursalRepository.findIdByIdLocalidadDomicilio(domicilio.getLocalidad().getId()).get(0);
+        if(idSucursal > 0) {
+            return idSucursal;
+        } else {
+            // Si no encontramos localidad, entonces por departamento
+            idSucursal = sucursalRepository.findIdByIdDepartamentoDomicilio(domicilio.getLocalidad().getDepartamento().getId()).get(0);
+            if(idSucursal > 0) {
+                return idSucursal;
+            } else {
+                // finalmente por provincia
+                idSucursal = sucursalRepository.findIdByIdProvinciaDomicilio(domicilio.getLocalidad().getDepartamento().getProvincia().getId()).get(0);
+                if(idSucursal > 0) {
+                    return idSucursal;
+                } else {
+                    // En este caso se le avisa al cliente que no hay ningun restaurante en su provincia
+                    return 0l;
+                }
+            }
         }
     }
 
@@ -55,7 +82,13 @@ public class ClienteController {
     public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
         if (cliente.isPresent()) {
+            // Buscamos la sucursal más cercana a los domicilios existentes del usuario
+            for (Domicilio domicilio : cliente.get().getDomicilios()) {
+                if(domicilio.getBorrado() == "NO") cliente.get().setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
+            }
+
             return cliente.get();
+
         } else return null;
     }
 
