@@ -5,21 +5,37 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 export const ArticuloVentaService = {
 
     getArticulos: async (): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + `articulos/${sucursalId}`)
+        try {
+            const response = await fetch(URL_API + `articulos/${sucursalId}`)
 
-        return await response.json();
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
     },
 
     getArticulosPorCategoriaAndIdSucursal: async (nombreCategoria: string, idSucursal: number): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + `articulos/tipo/${nombreCategoria}/${idSucursal}`);
+        try {
+            const response = await fetch(URL_API + `articulos/tipo/${nombreCategoria}/${idSucursal}`);
 
-        return await response.json();
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     getArticulosPorNombreAndIdSucursal: async (nombre: string, idSucursal: number): Promise<ArticuloVenta[]> => {
-        const response = await fetch(URL_API + `articulos/busqueda/${nombre}/${idSucursal}`);
+        try {
+            const response = await fetch(URL_API + `articulos/busqueda/${nombre}/${idSucursal}`);
 
-        return await response.json();
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     createArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[]): Promise<string> => {

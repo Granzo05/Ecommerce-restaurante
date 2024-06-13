@@ -5,21 +5,38 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 export const MenuService = {
 
     getMenus: async (): Promise<ArticuloMenu[]> => {
-        const response = await fetch(URL_API + 'menus/' + sucursalId)
+        try {
+            const response = await fetch(URL_API + 'menus/' + sucursalId)
 
-        return await response.json();
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
     },
 
     getMenusPorTipoAndIdSucursal: async (tipoComida: string, idSucursal: number): Promise<ArticuloMenu[]> => {
-        const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + idSucursal);
+        try {
+            const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + idSucursal);
 
-        return await response.json();
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
     },
 
     getMenusPorNombreAndIdSucursal: async (nombre: string, idSucursal: number): Promise<ArticuloMenu[]> => {
-        const response = await fetch(URL_API + 'menu/busqueda/' + nombre + '/' + idSucursal);
+        try {
+            const response = await fetch(URL_API + 'menu/busqueda/' + nombre + '/' + idSucursal);
 
-        return await response.json();
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     createMenu: async (menu: ArticuloMenu, imagenes: Imagenes[]): Promise<string> => {
