@@ -59,11 +59,11 @@ const Opciones = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    if (DESACTIVAR_PRIVILEGIOS || ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id))) {
+    if (DESACTIVAR_PRIVILEGIOS && ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id))) {
         window.location.href = getBaseUrl() + '/opciones';
     }
 
-    if (DESACTIVAR_PRIVILEGIOS || ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id)) {
+    if (DESACTIVAR_PRIVILEGIOS && ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id)) {
         window.location.href = getBaseUrl() + '/opciones';
     }
 
@@ -434,7 +434,7 @@ const Opciones = () => {
                             <label className="name-account">{empleado?.nombre}</label>
                         </div>
 
-                        <LogoutIcon onClick={() => {localStorage.removeItem('sucursal'); localStorage.removeItem('empleado'); window.location.href = 'http://localhost:5173/login-negocio'}} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
+                        <LogoutIcon onClick={() => { localStorage.removeItem('sucursal'); localStorage.removeItem('empleado'); window.location.href = 'http://localhost:5173/login-negocio' }} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
                     </div>
                 </div>
             </div>
