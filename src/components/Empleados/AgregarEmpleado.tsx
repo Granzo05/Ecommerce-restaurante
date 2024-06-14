@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { Toaster, toast } from 'sonner'
@@ -6,18 +6,17 @@ import { Domicilio } from '../../types/Domicilio/Domicilio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import InputComponent from '../InputFiltroComponent';
 import { Localidad } from '../../types/Domicilio/Localidad';
-import '../../styles/modalCrud.css'
 import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
 import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
 import ModalFlotanteRecomendacionesLocalidades from '../../hooks/ModalFlotanteFiltroLocalidades';
-
 import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
-
-import '../../styles/inputLabel.css'
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
 import { Pais } from '../../types/Domicilio/Pais';
+import { Privilegios } from '../../types/Restaurante/Privilegios';
+import { PrivilegiosService } from '../../services/PrivilegiosService';
+import { EmpleadoPrivilegio } from '../../types/Restaurante/EmpleadoPrivilegio';
 
 interface AgregarEmpleadoProps {
   onCloseModal: () => void;
@@ -39,12 +38,57 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
   const [modalBusquedaPais, setModalBusquedaPais] = useState<boolean>(false);
 
+  const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [tarea: string]: string[] }>({});
+  const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+
   const handleModalClose = () => {
     setModalBusquedaProvincia(false)
     setModalBusquedaDepartamento(false)
     setModalBusquedaLocalidad(false)
     setModalBusquedaPais(false)
   };
+
+  useEffect(() => {
+    PrivilegiosService.getPrivilegios()
+      .then(data => {
+        setPrivilegios(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleModificarPrivilegios = (tarea: string, permiso: string) => {
+    setPrivilegiosElegidos((prev) => {
+      const permisosActuales = prev[tarea] || [];
+      if (permisosActuales.includes(permiso)) {
+        return {
+          ...prev,
+          [tarea]: permisosActuales.filter(p => p !== permiso)
+        };
+      } else {
+        return {
+          ...prev,
+          [tarea]: [...permisosActuales, permiso]
+        };
+      }
+    });
+  };
+
+  const desmarcarTarea = (tarea: string) => {
+    setPrivilegiosElegidos((prev) => {
+      const { [tarea]: _, ...rest } = prev;
+      return rest;
+    });
+  };
+
+  const marcarTarea = (tarea: string, permisos: string[]) => {
+    setPrivilegiosElegidos((prev) => ({
+      ...prev,
+      [tarea]: permisos,
+    }));
+  };
+
 
   const handleChangeCalle = (index: number, calle: string) => {
     const nuevosDomicilios = [...domicilios];
@@ -161,6 +205,11 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       }
     }
 
+    const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([tarea, permisos]) => {
+      const privilegio = new Privilegios(0, tarea, []);
+      return new EmpleadoPrivilegio(0, privilegio, permisos);
+    });
+
     const empleado = new Empleado();
     empleado.nombre = nombre;
     empleado.email = email;
@@ -168,7 +217,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     empleado.telefono = telefono;
     empleado.cuil = cuil;
     empleado.fechaNacimiento = fechaNacimiento;
-    empleado.privilegios = 'COCINERO';
+    empleado.empleadoPrivilegios = empleadoPrivilegios;
 
     const sucursalStr = localStorage.getItem('usuario');
     const sucursal = sucursalStr ? JSON.parse(sucursalStr) : new Sucursal();
@@ -279,8 +328,38 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h4>Paso final - Privilegios</h4>
+            {privilegios && privilegios.map((privilegio, index) => (
+              <div key={index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.tarea)}>Desmarcar todo</p>
+                <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.tarea, privilegio.permisos)}>Marcar todo</p>
+                <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.tarea}</h4>
+                {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
+                  <div key={permisoIndex}>
+                    <input
+                      type="checkbox"
+                      value={permiso}
+                      checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
+                      onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                    />
+                    <label>{permiso}</label>
+                  </div>
+                ))}
+                <hr />
+              </div>
+            ))}
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
-
             </div>
           </>
         );

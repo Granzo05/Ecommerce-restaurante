@@ -61,7 +61,7 @@ public class Domicilio implements Serializable {
     @JsonIgnoreProperties(value = {"domicilios"}, allowSetters = true)
     @ManyToOne
     @JoinTable(
-            name = "domicilios_empelados",
+            name = "domicilios_empleados",
             joinColumns = @JoinColumn(name = "id_domicilio"),
             inverseJoinColumns = @JoinColumn(name = "id_empleado")
     )

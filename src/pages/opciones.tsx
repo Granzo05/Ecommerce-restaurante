@@ -2,7 +2,6 @@ import { lazy, useEffect, useState } from 'react';
 
 import Stock from '../components/Stock/Stock';
 import { EmpleadoService } from '../services/EmpleadoService';
-import '../styles/opcionesRestaurante.css';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PersonIcon from '@mui/icons-material/Person';

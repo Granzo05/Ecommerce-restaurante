@@ -14,6 +14,7 @@ import { DepartamentoService } from '../../services/DepartamentoService';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
+import '../styles/opcionesRestaurante.css';
 
 interface AgregarSucursalProps {
   onCloseModal: () => void;
@@ -39,7 +40,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
   const [departamentosMostrablesCheckBox, setDepartamentosMostrablesCheckbox] = useState<Departamento[]>([]);
 
   const [idDepartamentosElegidos, setIdDepartamentosElegidos] = useState<Set<number>>(new Set<number>());
-
+  
   const [idLocalidadesElegidas, setIdLocalidadesElegidas] = useState<Set<number>>(new Set<number>());
 
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);

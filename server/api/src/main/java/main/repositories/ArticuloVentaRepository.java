@@ -26,6 +26,12 @@ public interface ArticuloVentaRepository extends JpaRepository<ArticuloVenta, Lo
     @Query("SELECT a FROM ArticuloVenta a JOIN a.sucursales s WHERE a.nombre LIKE %:nombre% AND s.id = :idSucursal")
     List<ArticuloVenta> findByNameArticuloAndIdSucursalEquals(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 
+    @Query("SELECT a FROM ArticuloVenta a JOIN a.sucursales s WHERE a.categoria.nombre LIKE %:nombre% AND s.id = :idSucursal")
+    List<ArticuloVenta> findByNameCategoriaAndIdSucursalEquals(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
+
+    @Query("SELECT a FROM ArticuloVenta a JOIN a.sucursales s WHERE a.subcategoria.nombre LIKE %:nombre% AND s.id = :idSucursal")
+    List<ArticuloVenta> findByNameSubcategoriaAndIdSucursalEquals(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
+
     @Query("SELECT a FROM ArticuloVenta a JOIN a.sucursales s WHERE a.categoria.nombre = :nombre AND s.id = :idSucursal")
     List<ArticuloVenta> findByCategoriaNameAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 

@@ -71,6 +71,15 @@ public class ArticuloVentaController {
     public Set<ArticuloVenta> getArticulosPorNombre(@PathVariable("nombre") String nombre, @PathVariable("idSucursal") Long idSucursal) {
         List<ArticuloVenta> articulos = articuloVentaRepository.findByNameArticuloAndIdSucursalEquals(nombre, idSucursal);
 
+        if(articulos.isEmpty()) {
+            articulos = articuloVentaRepository.findByNameCategoriaAndIdSucursalEquals(nombre, idSucursal);
+        }
+        // Hacemos el último intento
+
+        if(articulos.isEmpty()) {
+            articulos = articuloVentaRepository.findByNameSubcategoriaAndIdSucursalEquals(nombre, idSucursal);
+        }
+
         if (!articulos.isEmpty()) {
             for (ArticuloVenta articulo : articulos) {
                 articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));

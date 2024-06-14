@@ -100,6 +100,17 @@ public class ArticuloMenuController {
         List<ArticuloMenu> menus = articuloMenuRepository.findByNameMenuAndIdSucursalEquals(nombre, idSucursal);
 
         Set<ArticuloMenu> menusFiltrados = new HashSet<>();
+
+        // SI no se encuentra por nombre capaz se puede encontrar algo por categoria para intentar devolver todo lo posible
+        if(menus.isEmpty()) {
+            menus = articuloMenuRepository.findByNameCategoriaMenuAndIdSucursalEquals(nombre, idSucursal);
+        }
+        // Hacemos el último intento
+
+        if(menus.isEmpty()) {
+            menus = articuloMenuRepository.findByNameSubcategoriaMenuAndIdSucursalEquals(nombre, idSucursal);
+        }
+
         if (!menus.isEmpty()) {
             for (ArticuloMenu menu : menus) {
                 boolean hayStock = true;

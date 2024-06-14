@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -25,7 +24,6 @@ public class Empleado {
     private String nombre;
     @Column(name = "email")
     private String email;
-    @JsonIgnore
     @Column(name = "contraseña")
     private String contraseña;
     @Column(name = "cuil")
@@ -41,15 +39,15 @@ public class Empleado {
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
 
-    @Column(name = "fecha_nacimiento", nullable = false)
+    @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
-    @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";
-    @JsonIgnore
-    @Column(name = "privilegios")
-    private String privilegios;
+
+    @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EmpleadoPrivilegio> empleadoPrivilegios = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)

@@ -3,13 +3,8 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Restaurante.Empleado;
-import main.entities.Restaurante.FechaContratacionEmpleado;
-import main.entities.Restaurante.Sucursal;
-import main.repositories.DomicilioRepository;
-import main.repositories.EmpleadoRepository;
-import main.repositories.FechaContratacionRepository;
-import main.repositories.SucursalRepository;
+import main.entities.Restaurante.*;
+import main.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +17,14 @@ public class EmpleadoController {
     private final EmpleadoRepository empleadoRepository;
     private final FechaContratacionRepository fechaContratacionRepository;
     private final DomicilioRepository domicilioRepository;
+    private final PrivilegiosRepository privilegiosRepository;
 
-    public EmpleadoController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository) {
+    public EmpleadoController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, PrivilegiosRepository privilegiosRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.fechaContratacionRepository = fechaContratacionRepository;
         this.domicilioRepository = domicilioRepository;
+        this.privilegiosRepository = privilegiosRepository;
     }
 
 
@@ -63,6 +60,11 @@ public class EmpleadoController {
             for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
                 domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setEmpleado(empleadoDetails);
+            }
+
+            for (EmpleadoPrivilegio privilegio: empleadoDetails.getEmpleadoPrivilegios()) {
+                privilegio.setEmpleado(empleadoDetails);
+                privilegio.setPrivilegio(privilegiosRepository.findByTarea(privilegio.getPrivilegio().getTarea()).get());
             }
 
             empleadoDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());

@@ -1,11 +1,10 @@
 import { StockEntrante } from '../types/Stock/StockEntrante';
-import { StockEntranteDTO } from '../types/Stock/StockEntranteDTO';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const StockEntranteService = {
     createStock: async (stock: StockEntrante): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId}/StockEntrante/create`, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId()}/StockEntrante/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,9 +22,9 @@ export const StockEntranteService = {
         }
     },
 
-    getStock: async (): Promise<StockEntranteDTO[]> => {
+    getStock: async (): Promise<StockEntrante[]> => {
         try {
-            const response = await fetch(URL_API + 'stockEntrante/' + sucursalId, {
+            const response = await fetch(URL_API + 'stockEntrante/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,9 +42,9 @@ export const StockEntranteService = {
         }
     },
 
-    updateStock: async (stock: StockEntranteDTO): Promise<string> => {
+    updateStock: async (stock: StockEntrante): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId}/stockEntrante/update`, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId()}/stockEntrante/update`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

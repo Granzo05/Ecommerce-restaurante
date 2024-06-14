@@ -6,7 +6,7 @@ export const MenuService = {
 
     getMenus: async (): Promise<ArticuloMenu[]> => {
         try {
-            const response = await fetch(URL_API + 'menus/' + sucursalId)
+            const response = await fetch(URL_API + 'menus/' + sucursalId())
 
             return await response.json();
         } catch (error) {
@@ -41,7 +41,7 @@ export const MenuService = {
 
     createMenu: async (menu: ArticuloMenu, imagenes: Imagenes[]): Promise<string> => {
         try {
-            const menuResponse = await fetch(URL_API + 'menu/create/' + sucursalId, {
+            const menuResponse = await fetch(URL_API + 'menu/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -65,7 +65,7 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        await fetch(URL_API + 'menu/imagenes/' + sucursalId, {
+                        await fetch(URL_API + 'menu/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -84,7 +84,7 @@ export const MenuService = {
 
     updateMenu: async (menu: ArticuloMenu, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'menu/update/' + sucursalId, {
+            const response = await fetch(URL_API + 'menu/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        await fetch(URL_API + 'menu/imagenes/' + sucursalId, {
+                        await fetch(URL_API + 'menu/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -136,7 +136,7 @@ export const MenuService = {
 
     updateBorradoMenu: async (menu: ArticuloMenu): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'menu/update/' + sucursalId, {
+            const response = await fetch(URL_API + 'menu/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

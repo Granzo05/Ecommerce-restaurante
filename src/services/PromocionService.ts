@@ -5,7 +5,7 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 export const PromocionService = {
     createPromocion: async (promocion: Promocion, imagenes: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'promocion/create/' + sucursalId, {
+            const response = await fetch(URL_API + 'promocion/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -29,7 +29,7 @@ export const PromocionService = {
                         formData.append('file', imagen.file);
                         formData.append('nombrePromocion', promocion.nombre);
 
-                        await fetch(URL_API + 'promocion/imagenes/' + sucursalId, {
+                        await fetch(URL_API + 'promocion/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -47,7 +47,7 @@ export const PromocionService = {
 
     getPromociones: async (): Promise<Promocion[]> => {
         try {
-            const response = await fetch(URL_API + 'promociones/' + sucursalId, {
+            const response = await fetch(URL_API + 'promociones/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export const PromocionService = {
 
     updatePromocion: async (promocion: Promocion, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]) => {
         try {
-            const response = await fetch(URL_API + 'promocion/update/' + sucursalId, {
+            const response = await fetch(URL_API + 'promocion/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ export const PromocionService = {
                         formData.append('file', imagen.file);
                         formData.append('nombrePromocion', promocion.nombre);
 
-                        await fetch(URL_API + 'promocion/imagenes/' + sucursalId, {
+                        await fetch(URL_API + 'promocion/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -118,7 +118,7 @@ export const PromocionService = {
     updatePromocionBorrado: async (promocion: Promocion) => {
         console.log(promocion)
         try {
-            const response = await fetch(URL_API + 'promocion/update/' + sucursalId, {
+            const response = await fetch(URL_API + 'promocion/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

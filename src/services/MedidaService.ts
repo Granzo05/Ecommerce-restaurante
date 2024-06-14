@@ -4,7 +4,7 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 export const MedidaService = {
     getMedidas: async (): Promise<Medida[]> => {
         try {
-            const response = await fetch(URL_API + 'medidas/' + sucursalId, {
+            const response = await fetch(URL_API + 'medidas/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ export const MedidaService = {
 
     createMedida: async (medida: Medida): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'medida/create/' + sucursalId, {
+            const response = await fetch(URL_API + 'medida/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ export const MedidaService = {
 
     updateMedida: async (medida: Medida): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'medida/update/' + sucursalId, {
+            const response = await fetch(URL_API + 'medida/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

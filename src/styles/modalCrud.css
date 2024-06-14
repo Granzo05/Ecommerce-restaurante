@@ -3,34 +3,36 @@
     transform: translateY(-100%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
   }
 }
 
-.btns-pasos{
+.btns-pasos {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.btns-pasos .btn-accion-atras{
+.btns-pasos .btn-accion-atras {
   margin-right: 10px;
 }
 
-.btns-pasos .btn-accion-completar{
+.btns-pasos .btn-accion-completar {
   background-color: green;
 }
 
-.btns-pasos .btn-accion-completar:hover{
+.btns-pasos .btn-accion-completar:hover {
   background-color: rgb(1, 73, 1);
 }
 
 .slider-container {
   position: relative;
   width: 100%;
-  max-width: 400px; /* Ajusta según tus necesidades */
+  max-width: 400px;
+  /* Ajusta según tus necesidades */
   margin: auto;
   overflow: hidden;
 }
@@ -44,7 +46,8 @@
   min-width: 100%;
   box-sizing: border-box;
   display: none;
-  text-align: center; /* Para centrar el contenido dentro de cada imagen-muestra */
+  text-align: center;
+  /* Para centrar el contenido dentro de cada imagen-muestra */
 }
 
 .imagen-muestra.active {
@@ -72,7 +75,8 @@
 }
 
 .imagen-muestra img {
-  width: 100%; /* Ajusta según el tamaño deseado */
+  width: 100%;
+  /* Ajusta según el tamaño deseado */
   height: 76%;
   max-height: 400px;
   border-right: 1px solid black;
@@ -95,27 +99,32 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.678); /* Fondo gris transparente */
+  background-color: rgba(0, 0, 0, 0.678);
+  /* Fondo gris transparente */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Asegura que el modal esté por encima de otros elementos */
+  z-index: 1000;
+  /* Asegura que el modal esté por encima de otros elementos */
 }
 
 .modal-content {
   background-color: white;
-  width: 90%; /* Ajusta según sea necesario */
+  width: 90%;
+  /* Ajusta según sea necesario */
   height: auto;
   max-height: 90%;
   border-radius: 8px;
   padding: 20px;
   position: relative;
-  overflow-y: auto; /* Permite scroll si el contenido es demasiado grande */
-  animation: slide-down 0.3s ease-out; /* Aplica la animación */
+  overflow-y: auto;
+  /* Permite scroll si el contenido es demasiado grande */
+  animation: slide-down 0.3s ease-out;
+  /* Aplica la animación */
   box-shadow: 0 0 20px black;
 }
 
-.modal-content button{
+.modal-content button {
   width: 21%;
 }
 
@@ -157,7 +166,7 @@
   margin: 10px 50px 0 50px;
 }
 
-.modal-info .cierre-ingrediente{
+.modal-info .cierre-ingrediente {
   display: flex;
   justify-content: center;
   font-weight: bold;
@@ -166,7 +175,7 @@
   width: 17px;
 }
 
-.modal-info .cierre-ingrediente:hover{
+.modal-info .cierre-ingrediente:hover {
   background-color: gray;
   cursor: pointer;
 }

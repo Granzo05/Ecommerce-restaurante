@@ -40,7 +40,7 @@ export const PedidoService = {
 
     getPedidos: async (estado: EnumEstadoPedido): Promise<Pedido[]> => {
         try {
-            const response = await fetch(URL_API + `pedidos/${estado}/${sucursalId}`, {
+            const response = await fetch(URL_API + `pedidos/${estado}/${sucursalId()}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ export const PedidoService = {
 
     crearPedido: async (pedido: Pedido): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `pedido/create/${sucursalId}`, {
+            const response = await fetch(URL_API + `pedido/create/${sucursalId()}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ export const PedidoService = {
 
     crearPedidoMercadopago: async (pedido: Pedido): Promise<PreferenceMP> => {
         try {
-            const response = await fetch(`${URL_API}pedido/create/mercadopago/${sucursalId}`, {
+            const response = await fetch(`${URL_API}pedido/create/mercadopago/${sucursalId()}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -116,7 +116,7 @@ export const PedidoService = {
         }
 
         try {
-            const response = await fetch(URL_API + 'pedido/update/estado/' + sucursalId, {
+            const response = await fetch(URL_API + 'pedido/update/estado/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -139,7 +139,7 @@ export const PedidoService = {
 
     updateEstadoPedidoMercadopago: async (idPedido: number, preference: string): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `pedido/${idPedido}/update/${preference}/${sucursalId}`, {
+            const response = await fetch(URL_API + `pedido/${idPedido}/update/${preference}/${sucursalId()}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -162,7 +162,7 @@ export const PedidoService = {
 
     eliminarPedidoFallido: async (preference: string): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `pedido/delete/${preference}/${sucursalId}`, {
+            const response = await fetch(URL_API + `pedido/delete/${preference}/${sucursalId()}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

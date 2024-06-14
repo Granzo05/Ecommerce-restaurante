@@ -4,7 +4,7 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 export const EmpleadoService = {
     createEmpleado: async (empleado: Empleado): Promise<string> => {
         try {
-            let response = await fetch(URL_API + 'empleado/create/' + sucursalId, {
+            let response = await fetch(URL_API + 'empleado/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ export const EmpleadoService = {
 
     getEmpleados: async (): Promise<Empleado[]> => {
         try {
-            const response = await fetch(URL_API + 'empleados/' + sucursalId, {
+            const response = await fetch(URL_API + 'empleados/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ export const EmpleadoService = {
 
     updateEmpleado: async (empleado: Empleado): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/update/' + sucursalId, {
+            const response = await fetch(URL_API + 'empleado/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ export const EmpleadoService = {
 
     deleteEmpleado: async (cuilEmpleado: string): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/' + cuilEmpleado + '/delete/' + sucursalId, {
+            const response = await fetch(URL_API + 'empleado/' + cuilEmpleado + '/delete/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

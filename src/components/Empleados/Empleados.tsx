@@ -20,17 +20,8 @@ const Empleados = () => {
     const [showActivarEmpleadoModal, setShowActivarEmpleadoModal] = useState(false);
 
     useEffect(() => {
-        fetchData();
         fetchEmpleados();
     }, []);
-
-    const fetchData = async () => {
-        try {
-            await EmpleadoService.checkUser();
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     const fetchEmpleados = async () => {
         try {

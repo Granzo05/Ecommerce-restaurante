@@ -26,6 +26,12 @@ public interface ArticuloMenuRepository extends JpaRepository<ArticuloMenu, Long
     @Query("SELECT m FROM ArticuloMenu m JOIN m.sucursales s WHERE m.nombre LIKE %:nombre% AND s.id = :idSucursal")
     List<ArticuloMenu> findByNameMenuAndIdSucursalEquals(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 
+    @Query("SELECT m FROM ArticuloMenu m JOIN m.sucursales s WHERE m.categoria.nombre LIKE %:nombre% AND s.id = :idSucursal")
+    List<ArticuloMenu> findByNameCategoriaMenuAndIdSucursalEquals(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
+
+    @Query("SELECT m FROM ArticuloMenu m JOIN m.sucursales s WHERE m.subcategoria.nombre LIKE %:nombre% AND s.id = :idSucursal")
+    List<ArticuloMenu> findByNameSubcategoriaMenuAndIdSucursalEquals(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
+
     @Query("SELECT m FROM ArticuloMenu m JOIN m.sucursales s JOIN m.ingredientesMenu ing WHERE m.categoria.id = :idCategoria AND s.id = :idSucursal")
     List<ArticuloMenu> findByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 

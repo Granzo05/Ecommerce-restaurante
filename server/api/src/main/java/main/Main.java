@@ -6,8 +6,7 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.Subcategoria;
 import main.entities.Productos.Imagenes;
-import main.entities.Restaurante.Empresa;
-import main.entities.Restaurante.Sucursal;
+import main.entities.Restaurante.*;
 import main.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -26,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Optional;
 
 @SpringBootApplication
@@ -43,9 +43,9 @@ public class Main {
     @Autowired(required = true)
     private EmpresaRepository empresaRepository;
     @Autowired(required = true)
-    private CategoriaRepository categoriaRepository;
+    private PrivilegiosRepository privilegiosRepository;
     @Autowired(required = true)
-    private ImagenesRepository imagenesRepository;
+    private EmpleadoRepository empleadoRepository;
 
     public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
         SpringApplication.run(Main.class, args);
@@ -471,37 +471,142 @@ public class Main {
                 medida.setNombre("KILOGRAMOS");
                 medida.getSucursales().add(sucursal);
                 medida.setBorrado("NO");
+
                 sucursal.getMedidas().add(medida);
 
                 Medida medida1 = new Medida();
                 medida1.setNombre("GRAMOS");
                 medida1.getSucursales().add(sucursal);
                 medida1.setBorrado("NO");
+
                 sucursal.getMedidas().add(medida1);
 
                 Medida medida2 = new Medida();
                 medida2.setNombre("LITROS");
                 medida2.getSucursales().add(sucursal);
                 medida2.setBorrado("NO");
+
                 sucursal.getMedidas().add(medida2);
 
                 Medida medida3 = new Medida();
                 medida3.setNombre("CENTIMETROS_CUBICOS");
                 medida3.getSucursales().add(sucursal);
                 medida3.setBorrado("NO");
+
                 sucursal.getMedidas().add(medida3);
 
                 Medida medida4 = new Medida();
                 medida4.setNombre("PAQUETES");
                 medida4.getSucursales().add(sucursal);
                 medida4.setBorrado("NO");
+
                 sucursal.getMedidas().add(medida4);
 
                 Medida medida5 = new Medida();
                 medida5.setNombre("UNIDADES");
                 medida5.getSucursales().add(sucursal);
                 medida5.setBorrado("NO");
+
                 sucursal.getMedidas().add(medida5);
+
+                Empleado empleado = new Empleado();
+                empleado.setContraseña("123456789");
+                empleado.setEmail("pepe@gmail.com");
+
+                EmpleadoPrivilegio empleadoPrivilegio = new EmpleadoPrivilegio();
+                empleadoPrivilegio.setEmpleado(empleado);
+
+                Privilegios privilegios = new Privilegios();
+                privilegios.setTarea("Articulos de venta");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Artículos menú");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Stock");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Stock entrante");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Ingredientes");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Categorias");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Medidas");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Promociones");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Subcategorias");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Estadísticas");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Pedidos");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+                
+                empleado = empleadoRepository.save(empleado);
+
+                sucursal.getEmpleados().add(empleado);
 
                 empresa.getSucursales().add(sucursal);
 

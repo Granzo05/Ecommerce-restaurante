@@ -40,7 +40,7 @@ export const ArticuloVentaService = {
 
     createArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[]): Promise<string> => {
         try {
-            const menuResponse = await fetch(URL_API + 'articulo/create/' + sucursalId, {
+            const menuResponse = await fetch(URL_API + 'articulo/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ export const ArticuloVentaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        await fetch(URL_API + 'articulo/imagenes/' + sucursalId, {
+                        await fetch(URL_API + 'articulo/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -82,7 +82,7 @@ export const ArticuloVentaService = {
 
     updateArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'articulo/update/' + sucursalId, {
+            const response = await fetch(URL_API + 'articulo/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ export const ArticuloVentaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        await fetch(URL_API + 'articulo/imagenes/' + sucursalId, {
+                        await fetch(URL_API + 'articulo/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -133,7 +133,7 @@ export const ArticuloVentaService = {
 
     updateBorradoArticulo: async (articuloVenta: ArticuloVenta): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'articulo/update/' + sucursalId, {
+            const response = await fetch(URL_API + 'articulo/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
