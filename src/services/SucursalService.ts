@@ -61,8 +61,8 @@ export const SucursalService = {
             }
 
             const data = await response.json();
-
-            if (data !== null) {
+ 
+            if (data.id !== null) {
                 let sucursal = {
                     id: data.id
                 }

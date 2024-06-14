@@ -431,7 +431,7 @@ const Opciones = () => {
                     <div className="perfil-employee">
                         <PersonIcon style={{ fontSize: '38px', display: 'inline' }} />
                         <div className="account-info">
-                            <label className="name-account">Augusto David Ficara Vargas</label>
+                            <label className="name-account">{empleado?.nombre}</label>
                         </div>
 
                         <LogoutIcon onClick={() => window.location.href = 'http://localhost:5173/login-negocio'} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />

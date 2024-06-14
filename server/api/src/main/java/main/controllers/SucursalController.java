@@ -59,9 +59,7 @@ public class SucursalController {
     @GetMapping("/sucursal/login/{email}/{password}")
     public Sucursal loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<Sucursal> sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-        System.out.println(email);
-        System.out.println(password);
-        return sucursal.orElse(null);
+        return sucursal.orElse(new Sucursal());
     }
 
     @CrossOrigin
