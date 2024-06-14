@@ -6,6 +6,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Empleado } from '../types/Restaurante/Empleado';
+import { useParams } from 'react-router-dom';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -42,12 +43,20 @@ const Opciones = () => {
     const [menuVisible] = useState(true);
     const [opcionesBg, setOpcionesBg] = useState('');
     const [settingsBg, setSettingsBg] = useState('');
-
+    const {id} = useParams();
+    
     const [empleado] = useState<Empleado | null>(() => {
         const empleadoString = localStorage.getItem('empleado');
 
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
+
+    
+    if((id && empleado) && parseInt(id) !== empleado.sucursales[0].id) {
+        console.log("EL EMPLEADO NO DEBERIA TENER ACCESO ACÁ")
+        console.log("ID SUCURSAL" + id)
+        console.log("ID SUCURSAL ASIGNADA AL EMPLEADO" + empleado.sucursales[0].id)
+    }
 
     const toggleStockVisibility = () => {
         setStockVisible(!stockVisible);
