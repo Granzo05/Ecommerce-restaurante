@@ -1,10 +1,13 @@
 import { Cliente } from "../../types/Cliente/Cliente";
 import { Empleado } from "../../types/Restaurante/Empleado";
+import { Sucursal } from "../../types/Restaurante/Sucursal";
 
 export const URL_API = 'http://localhost:8080/';
 
 export function sucursalId(): number {
     const usuarioString = localStorage.getItem('usuario');
+    const empleadoString = localStorage.getItem('empleado');
+    const sucursalString = localStorage.getItem('sucursal');
 
     if (usuarioString) {
         const usuario: Cliente = JSON.parse(usuarioString);
@@ -14,13 +17,20 @@ export function sucursalId(): number {
         } else {
             return 1;
         }
-    } else {
-        const empleadoString = localStorage.getItem('empleado');
+    } else if (empleadoString) {
         if (empleadoString) {
             const empleado: Empleado = JSON.parse(empleadoString);
 
             if (empleado && empleado.sucursales && empleado.sucursales[0]?.id > 0 && empleado.sucursales[0]?.id !== undefined) {
                 return empleado.sucursales[0]?.id;
+            }
+        }
+    } else {
+        if (sucursalString) {
+            const sucursal: Sucursal = JSON.parse(sucursalString);
+
+            if (sucursal && sucursal.id && sucursal.id !== undefined && sucursal.id > 0) {
+                return sucursal.id;
             }
         }
     }

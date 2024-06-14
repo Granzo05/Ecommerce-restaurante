@@ -59,7 +59,8 @@ public class SucursalController {
     @GetMapping("/sucursal/login/{email}/{password}")
     public Sucursal loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<Sucursal> sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-
+        System.out.println(email);
+        System.out.println(password);
         return sucursal.orElse(null);
     }
 
@@ -190,8 +191,6 @@ public class SucursalController {
             sucursalDetails.setHorarioApertura(LocalTime.parse(sucursalDetails.getHorarioApertura().toString()));
 
             sucursalDetails.setHorarioCierre(LocalTime.parse(sucursalDetails.getHorarioCierre().toString()));
-
-            sucursalDetails.setPrivilegios("negocio");
 
             sucursalDetails.setEmpresa(empresaRepository.findById(1l).get());
 

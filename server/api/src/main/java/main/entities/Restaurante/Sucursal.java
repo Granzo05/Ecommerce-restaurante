@@ -49,9 +49,6 @@ public class Sucursal implements Serializable {
     @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "privilegios")
-    private String privilegios;
-
     @Column(name = "horario_apertura")
     private LocalTime horarioApertura;
 

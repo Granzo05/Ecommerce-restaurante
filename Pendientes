@@ -62,6 +62,7 @@
 [x] Validar que no se pueda pedir nada fuera del horario de atencion de la sucursal
 [x] Control de provincia en caso de no haber sucursal ahi avisar una vez que se crea el cliente o cuando se intenta agregar un producto al carrito, anular la posibilidad de pedir algo
 [x] Mejorar el suspense del appRoutes
+[x] Crear roles de empleados
 [x] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
 [] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
@@ -80,7 +81,8 @@
 [] Hacer la recuperacion de contraseña
 [] Filtro de lugares al cargar la sucursal para las localidadesDelivery
 [] Validar que 2 sucursales no puedan tener el mismo domicilio al mismo tiempo
-[] Crear roles de empleados
+[] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
+[] Arreglar los permisos de pedidos a entrantes, en camino, etc y poder aceptar o rechazar dependiendo el empleado
 
 CERRAR MODALS AL CREAR COSAS[x]
 NO PODER CARGAR SUBCATEGORIAS POR EL BUG DE CATEGORIAS[x]
@@ -88,14 +90,15 @@ CUANDO AÑADIS INGREDIENTES AL MENU, TE DEBERIA TRAER DIRECTAMENTE SU MEDIDA[x]
 COSTO STOCK ENTRANTE ARTICULO BUG[x]
 BUG EN CATEGORIAS Y SUBCATEGORIAS JAJAJAJ A VECES LAS TRAE, OTRAS NO, BUG[x]
 ERROR AL CREAR Y MOSTRAR SUCURSALES[x]
+ESTA BUG LO DE LA FECHA DE LAS PROMOCIONES[x]
 ERROR AL MOSTRAR EMPLEADOS EN OPCIONES EMPLEADOS[x]
+EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
+
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
-ESTA BUG LO DE LA FECHA DE LAS PROMOCIONES[]
 ERROR AL CARGAR EMPRESA[]
 TERMINAR REPORTES[]
 ARREGLAR PREFERENCIAS DE EMPLEADO[]
 NO ANDA EDITAR EMPRESA[]
-EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[]
 EL HOME SE ROMPE Y NO TRAE A VECES LAS PROMOCIONES Y LAS CATEGORIAS[]
 
 

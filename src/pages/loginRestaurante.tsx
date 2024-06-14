@@ -27,20 +27,9 @@ const LoginNegocio = () => {
 
   const handleIniciarSesionNegocio = () => {
     toast.promise(SucursalService.getSucursal(email, contraseña), {
-      loading: 'Iniciando sesión...',
-      success: (message: string) => {
-        window.location.href = '/opciones';
-        return message;
-      },
-      error: (message: string) => {
-        return message;
-      },
+      loading: 'Iniciando sesión...'
     });
-
-
   };
-
-  // Te movi las frases al utils/const.ts :D
 
   const [frase, setFrase] = useState('');
   const [autor, setAutor] = useState('');

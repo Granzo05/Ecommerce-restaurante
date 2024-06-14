@@ -7,6 +7,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Empleado } from '../types/Restaurante/Empleado';
 import { useParams } from 'react-router-dom';
+import { Sucursal } from '../types/Restaurante/Sucursal';
+import { getBaseUrl } from '../utils/global_variables/const';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -43,16 +45,26 @@ const Opciones = () => {
     const [menuVisible] = useState(true);
     const [opcionesBg, setOpcionesBg] = useState('');
     const [settingsBg, setSettingsBg] = useState('');
-    const {id} = useParams();
-    
+    const { id } = useParams();
+
     const [empleado] = useState<Empleado | null>(() => {
         const empleadoString = localStorage.getItem('empleado');
 
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
-    
-    if((id && empleado) && parseInt(id) !== empleado.sucursales[0].id) {
+
+    const [sucursal] = useState<Sucursal | null>(() => {
+        const sucursalString = localStorage.getItem('sucursal');
+
+        return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
+    });
+
+    if ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id)) {
+        window.location.href = getBaseUrl() + '/opciones';
+    }
+
+    if ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id) {
         console.log("EL EMPLEADO NO DEBERIA TENER ACCESO ACÁ")
         console.log("ID SUCURSAL" + id)
         console.log("ID SUCURSAL ASIGNADA AL EMPLEADO" + empleado.sucursales[0].id)

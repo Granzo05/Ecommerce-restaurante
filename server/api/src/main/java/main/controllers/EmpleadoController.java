@@ -3,7 +3,10 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Restaurante.*;
+import main.entities.Restaurante.Empleado;
+import main.entities.Restaurante.EmpleadoPrivilegio;
+import main.entities.Restaurante.FechaContratacionEmpleado;
+import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,15 +45,17 @@ public class EmpleadoController {
 
             Set<Sucursal> sucursal = new HashSet<>();
 
-            for(Sucursal sucursales: empleadoDb.get().getSucursales()) {
+            for (Sucursal sucursales : empleadoDb.get().getSucursales()) {
                 sucursal.clear();
                 sucursal.add(sucursales);
             }
 
             empleado.setSucursales(sucursal);
-        }
 
-        return empleadoDb.get();
+            return empleadoDb.get();
+
+        }
+        return null;
     }
 
     @Transactional
@@ -71,7 +76,7 @@ public class EmpleadoController {
                 domicilio.setEmpleado(empleadoDetails);
             }
 
-            for (EmpleadoPrivilegio privilegio: empleadoDetails.getEmpleadoPrivilegios()) {
+            for (EmpleadoPrivilegio privilegio : empleadoDetails.getEmpleadoPrivilegios()) {
                 privilegio.setEmpleado(empleadoDetails);
                 privilegio.setPrivilegio(privilegiosRepository.findByTarea(privilegio.getPrivilegio().getTarea()).get());
             }
@@ -149,8 +154,8 @@ public class EmpleadoController {
             empleadoDb.setFechaNacimiento(fechaNacimiento);
 
             // Si el empleado no contiene la sucursal entonces quiere decir que se le asignó una nueva
-            if(!empleadoDb.getSucursales().contains(empleadoDetails.getSucursales().stream().toList().get(0))) {
-                for (Sucursal sucursal: empleadoDb.getSucursales()) {
+            if (!empleadoDb.getSucursales().contains(empleadoDetails.getSucursales().stream().toList().get(0))) {
+                for (Sucursal sucursal : empleadoDb.getSucursales()) {
                     sucursal.setBorrado("SI");
                 }
 

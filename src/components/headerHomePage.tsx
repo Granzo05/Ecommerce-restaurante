@@ -7,6 +7,8 @@ import { Cliente } from '../types/Cliente/Cliente';
 import SearchIcon from '@mui/icons-material/Search';
 import { toast, Toaster } from 'sonner';
 import { getBaseUrl } from '../utils/global_variables/const';
+import { Empleado } from '../types/Restaurante/Empleado';
+import { Sucursal } from '../types/Restaurante/Sucursal';
 
 interface HeaderHomePageProps {
     scrolled: boolean;
@@ -19,16 +21,29 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
     const [isAccountOpen, setIsAccountOpen] = useState(false); // Estado para controlar la visibilidad de la ventana de preferencias de cuenta
     const navigate = useNavigate();
-    const [cliente, setCliente] = useState<Cliente | null>(null);
+    const [cliente, setCliente] = useState<Cliente | Sucursal | Empleado | null>(null);
     const { id } = useParams();
+
     useEffect(() => {
         cargarUsuario();
     }, []);
 
     const cargarUsuario = async () => {
         const clienteString = localStorage.getItem('usuario');
-        let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
-        setCliente(clienteMem);
+        const empleadoString = localStorage.getItem('empleado');
+        const sucursalString = localStorage.getItem('sucursal');
+
+        if (clienteString !== undefined) {
+            let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+            setCliente(clienteMem);
+        } else if (empleadoString !== undefined) {
+            let clienteMem: Empleado = empleadoString ? JSON.parse(empleadoString) : new Empleado();
+            setCliente(clienteMem);
+        } else if (sucursalString !== undefined) {
+            let clienteMem: Sucursal = sucursalString ? JSON.parse(sucursalString) : new Sucursal();
+            setCliente(clienteMem);
+        }
+
     }
 
     const handleLoginClick = () => {
@@ -120,7 +135,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
 
                     </ul>
                     <ul>
-                        {cliente && cliente?.email?.length > 0 ? (
+                        {cliente && cliente?.id > 0 ? (
                             <>
                                 <>
                                     {carrito && carrito?.totalProductos > 0 && (
