@@ -1,4 +1,5 @@
 import { Cliente } from "../../types/Cliente/Cliente";
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 export const URL_API = 'http://localhost:8080/';
 
@@ -12,6 +13,15 @@ export function sucursalId(): number {
             return usuario.idSucursal;
         } else {
             return 1;
+        }
+    } else {
+        const empleadoString = localStorage.getItem('empleado');
+        if (empleadoString) {
+            const empleado: Empleado = JSON.parse(empleadoString);
+
+            if (empleado && empleado.sucursales && empleado.sucursales[0]?.id > 0 && empleado.sucursales[0]?.id !== undefined) {
+                return empleado.sucursales[0]?.id;
+            }
         }
     }
 

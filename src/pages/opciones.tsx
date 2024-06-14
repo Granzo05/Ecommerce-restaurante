@@ -1,11 +1,11 @@
 import { lazy, useEffect, useState } from 'react';
 
 import Stock from '../components/Stock/Stock';
-import { EmpleadoService } from '../services/EmpleadoService';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Empleado } from '../types/Restaurante/Empleado';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -42,6 +42,12 @@ const Opciones = () => {
     const [menuVisible] = useState(true);
     const [opcionesBg, setOpcionesBg] = useState('');
     const [settingsBg, setSettingsBg] = useState('');
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
 
     const toggleStockVisibility = () => {
         setStockVisible(!stockVisible);
@@ -117,7 +123,7 @@ const Opciones = () => {
             return (
                 <div className="welcome-employee">
                     <br /><br /><br /><br /><br /><br /><br /><br />
-                    <h1 id="welcome">¡BIENVENIDO, AUGUSTO!</h1>
+                    <h1 id="welcome">¡BIENVENIDO {empleado?.nombre}!</h1>
                 </div>
             );
         } else if (opcionSeleccionada === 12) {
@@ -138,16 +144,61 @@ const Opciones = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setVisible(await EmpleadoService.checkUser());
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
+        checkPrivilegies();
     }, []);
+
+    const [articuloVentaVisibleEmpleado, setArticuloVentaVisibleEmpleado] = useState(true);
+    const [articuloMenuVisibleEmpleado, setArticuloMenuVisibleEmpleado] = useState(true);
+    const [stockVisibleEmpleado, setStockVisibleEmpleado] = useState(true);
+    const [stockEntranteVisibleEmpleado, setStockEntranteVisibleEmpleado] = useState(true);
+    const [ingredientesVisibleEmpleado, setIngredientesVisibleEmpleado] = useState(true);
+    const [categoriasVisibleEmpleado, setCategoriasVisibleEmpleado] = useState(true);
+    const [medidasVisibleEmpleado, setMedidasVisibleEmpleado] = useState(true);
+    const [promocionesVisibleEmpleado, setPromocionesVisibleEmpleado] = useState(true);
+    const [subcategoriasVisibleEmpleado, setSubcategoriasVisibleEmpleado] = useState(true);
+    const [estadisticasVisibleEmpleado, setEstadisticasVisibleEmpleado] = useState(true);
+    const [pedidosVisibleEmpleado, setPedidosVisibleEmpleado] = useState(true);
+    const [empleadosVisibleEmpleado, setEmpleadosVisibleEmpleado] = useState(true);
+    const [sucursalesVisibleEmpleado, setSucursalesVisibleEmpleado] = useState(true);
+    const [empresasVisibleEmpleado, setEmpresasVisibleEmpleado] = useState(true);
+
+    const checkPrivilegies = async () => {
+        try {
+            empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                    setArticuloVentaVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Artículos menú' && privilegio.permisos.includes('READ')) {
+                    setArticuloMenuVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Stock' && privilegio.permisos.includes('READ')) {
+                    setStockVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Stock entrante' && privilegio.permisos.includes('READ')) {
+                    setStockEntranteVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Ingredientes' && privilegio.permisos.includes('READ')) {
+                    setIngredientesVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Categorias' && privilegio.permisos.includes('READ')) {
+                    setCategoriasVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Medidas' && privilegio.permisos.includes('READ')) {
+                    setMedidasVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Promociones' && privilegio.permisos.includes('READ')) {
+                    setPromocionesVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Subcategorias' && privilegio.permisos.includes('READ')) {
+                    setSubcategoriasVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Estadísticas' && privilegio.permisos.includes('READ')) {
+                    setEstadisticasVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Pedidos' && privilegio.permisos.includes('READ')) {
+                    setPedidosVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                    setEmpleadosVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Sucursales' && privilegio.permisos.includes('READ')) {
+                    setSucursalesVisibleEmpleado(true);
+                } else if (privilegio.privilegio.tarea === 'Empresas' && privilegio.permisos.includes('READ')) {
+                    setEmpresasVisibleEmpleado(true);
+                }
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     useEffect(() => {
         document.title = 'Administración y opciones';
@@ -175,97 +226,140 @@ const Opciones = () => {
                     <>
                         {isVisible ? (
                             <div className="main-options">
-                                <div className="pedidos">
-                                    <h4 onClick={togglePedidosVisibility} className={opcionSeleccionada >= 1 && opcionSeleccionada <= 4 ? 'h4-selected' : ''}>
-                                        Pedidos
-                                        {pedidosIcon}
+                                {pedidosVisibleEmpleado && (
+                                    <div className="pedidos">
+                                        <h4 onClick={togglePedidosVisibility} className={opcionSeleccionada >= 1 && opcionSeleccionada <= 4 ? 'h4-selected' : ''}>
+                                            Pedidos
+                                            {pedidosIcon}
+                                        </h4>
+                                        {pedidosVisible && (
+                                            <>
+                                                <p className={opcionSeleccionada === 1 ? 'selected' : ''} onClick={() => handleOpcionClick(1)}>
+                                                    Pedidos entrantes
+                                                </p>
+                                                <p className={opcionSeleccionada === 2 ? 'selected' : ''} onClick={() => handleOpcionClick(2)}>
+                                                    Pedidos aceptados
+                                                </p>
+                                                <p className={opcionSeleccionada === 3 ? 'selected' : ''} onClick={() => handleOpcionClick(3)}>
+                                                    Pedidos para entregar
+                                                </p>
+                                                <p className={opcionSeleccionada === 4 ? 'selected' : ''} onClick={() => handleOpcionClick(4)}>
+                                                    Pedidos entregados
+                                                </p>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                                {stockVisibleEmpleado && (
+                                    <div className="stock">
+                                        <h4 onClick={toggleStockVisibility} className={opcionSeleccionada >= 5 && opcionSeleccionada <= 6 ? 'h4-selected' : ''}>
+                                            Stock
+                                            {stockIcon}
+                                        </h4>
+                                        {stockVisible && (
+                                            <>
+                                                <p className={opcionSeleccionada === 5 ? 'selected' : ''} onClick={() => handleOpcionClick(5)}>
+                                                    Stock
+                                                </p>
+                                                {stockEntranteVisibleEmpleado && (
+                                                    <p className={opcionSeleccionada === 6 ? 'selected' : ''} onClick={() => handleOpcionClick(6)}>
+                                                        Stock entrante
+                                                    </p>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+
+                                {articuloMenuVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 7 ? 'selected' : ''} onClick={() => handleOpcionClick(7)}>
+                                        Menus
                                     </h4>
-                                    {pedidosVisible && (
-                                        <>
-                                            <p className={opcionSeleccionada === 1 ? 'selected' : ''} onClick={() => handleOpcionClick(1)}>
-                                                Pedidos entrantes
-                                            </p>
-                                            <p className={opcionSeleccionada === 2 ? 'selected' : ''} onClick={() => handleOpcionClick(2)}>
-                                                Pedidos aceptados
-                                            </p>
-                                            <p className={opcionSeleccionada === 3 ? 'selected' : ''} onClick={() => handleOpcionClick(3)}>
-                                                Pedidos para entregar
-                                            </p>
-                                            <p className={opcionSeleccionada === 4 ? 'selected' : ''} onClick={() => handleOpcionClick(4)}>
-                                                Pedidos entregados
-                                            </p>
-                                        </>
-                                    )}
-                                </div>
-                                <div className="stock">
-                                    <h4 onClick={toggleStockVisibility} className={opcionSeleccionada >= 5 && opcionSeleccionada <= 6 ? 'h4-selected' : ''}>
-                                        Stock
-                                        {stockIcon}
+                                )}
+
+
+                                {articuloVentaVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 11 ? 'selected' : ''} onClick={() => handleOpcionClick(11)}>
+                                        Articulos
                                     </h4>
-                                    {stockVisible && (
-                                        <>
-                                            <p className={opcionSeleccionada === 5 ? 'selected' : ''} onClick={() => handleOpcionClick(5)}>
-                                                Stock
-                                            </p>
-                                            <p className={opcionSeleccionada === 6 ? 'selected' : ''} onClick={() => handleOpcionClick(6)}>
-                                                Stock entrante
-                                            </p>
-                                        </>
-                                    )}
-                                </div>
-                                <h4 className={opcionSeleccionada === 7 ? 'selected' : ''} onClick={() => handleOpcionClick(7)}>
-                                    Menus
-                                </h4>
-                                <h4 className={opcionSeleccionada === 11 ? 'selected' : ''} onClick={() => handleOpcionClick(11)}>
-                                    Articulos
-                                </h4>
-                                <h4 className={opcionSeleccionada === 8 ? 'selected' : ''} onClick={() => handleOpcionClick(8)}>
-                                    Empleados
-                                </h4>
-                                <h4 className={opcionSeleccionada === 9 ? 'selected' : ''} onClick={() => handleOpcionClick(9)}>
-                                    Sucursales
-                                </h4>
-                                <h4 className={opcionSeleccionada === 10 ? 'selected' : ''} onClick={() => handleOpcionClick(10)}>
-                                    Ingredientes
-                                </h4>
-                                <div className="categorias">
-                                    <h4 onClick={toggleCategoriaVisibility} className={opcionSeleccionada >= 12 && opcionSeleccionada <= 13 ? 'h4-selected' : ''}>
-                                        Categoria
-                                        {categoriaIcon}
+                                )}
+
+
+                                {empleadosVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 8 ? 'selected' : ''} onClick={() => handleOpcionClick(8)}>
+                                        Empleados
                                     </h4>
-                                    {categoriaVisible && (
-                                        <>
-                                            <p className={opcionSeleccionada === 12 ? 'selected' : ''} onClick={() => handleOpcionClick(12)}>
-                                                Categoria
-                                            </p>
-                                            <p className={opcionSeleccionada === 13 ? 'selected' : ''} onClick={() => handleOpcionClick(13)}>
-                                                Subcategoria
-                                            </p>
-                                        </>
-                                    )}
-                                </div>
-                                <h4 className={opcionSeleccionada === 14 ? 'selected' : ''} onClick={() => handleOpcionClick(14)}>
-                                    Medidas
-                                </h4>
-                                <h4 className={opcionSeleccionada === 16 ? 'selected' : ''} onClick={() => handleOpcionClick(16)}>
-                                    Promociones
-                                </h4>
-                                <h4 className={opcionSeleccionada === 17 ? 'selected' : ''} onClick={() => handleOpcionClick(17)}>
-                                    Empresas
-                                </h4>
-                                <div className="reportes">
-                                    <h4 onClick={toggleReportesVisibility} className={opcionSeleccionada >= 18 && opcionSeleccionada <= 18 ? 'h4-selected' : ''}>
-                                        Reportes
-                                        {stockIcon}
+                                )}
+
+                                {sucursalesVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 9 ? 'selected' : ''} onClick={() => handleOpcionClick(9)}>
+                                        Sucursales
                                     </h4>
-                                    {reportesVisible && (
-                                        <>
-                                            <p className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
-                                                Reportes de ventas
-                                            </p>
-                                        </>
-                                    )}
-                                </div>
+                                )}
+
+
+                                {ingredientesVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 10 ? 'selected' : ''} onClick={() => handleOpcionClick(10)}>
+                                        Ingredientes
+                                    </h4>
+                                )}
+
+                                {categoriasVisibleEmpleado && (
+                                    <div className="categorias">
+                                        <h4 onClick={toggleCategoriaVisibility} className={opcionSeleccionada >= 12 && opcionSeleccionada <= 13 ? 'h4-selected' : ''}>
+                                            Categoria
+                                            {categoriaIcon}
+                                        </h4>
+                                        {categoriaVisible && (
+                                            <>
+                                                <p className={opcionSeleccionada === 12 ? 'selected' : ''} onClick={() => handleOpcionClick(12)}>
+                                                    Categoria
+                                                </p>
+                                                {subcategoriasVisibleEmpleado && (
+                                                    <p className={opcionSeleccionada === 13 ? 'selected' : ''} onClick={() => handleOpcionClick(13)}>
+                                                        Subcategoria
+                                                    </p>
+                                                )}
+
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+
+                                {medidasVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 14 ? 'selected' : ''} onClick={() => handleOpcionClick(14)}>
+                                        Medidas
+                                    </h4>
+                                )}
+
+                                {promocionesVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 16 ? 'selected' : ''} onClick={() => handleOpcionClick(16)}>
+                                        Promociones
+                                    </h4>
+                                )}
+
+                                {empresasVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 17 ? 'selected' : ''} onClick={() => handleOpcionClick(17)}>
+                                        Empresas
+                                    </h4>
+                                )}
+
+                                {estadisticasVisibleEmpleado && (
+                                    <div className="reportes">
+                                        <h4 onClick={toggleReportesVisibility} className={opcionSeleccionada >= 18 && opcionSeleccionada <= 18 ? 'h4-selected' : ''}>
+                                            Reportes
+                                            {stockIcon}
+                                        </h4>
+                                        {reportesVisible && (
+                                            <>
+                                                <p className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
+                                                    Reportes de ventas
+                                                </p>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+
                             </div>
                         ) : (
                             <div className="main-options">

@@ -603,7 +603,31 @@ public class Main {
                 privilegios = privilegiosRepository.save(privilegios);
                 empleadoPrivilegio.setPrivilegio(privilegios);
                 empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Empleados");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Sucursales");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Empresas");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
                 empleado = empleadoRepository.save(empleado);
 
                 sucursal.getEmpleados().add(empleado);

@@ -57,4 +57,5 @@ public class Empleado {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
+
 }

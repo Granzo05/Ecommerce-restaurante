@@ -14,7 +14,7 @@ export class Empleado {
     fechaContratacion: FechaContratacionEmpleado[] = [];
     fechaNacimiento: Date = new Date();
     empleadoPrivilegios: EmpleadoPrivilegio[] = [];
-    sucursal: Sucursal | null = null;
+    sucursales: Sucursal[] = [];
     borrado: string = '';
 
     constructor() {

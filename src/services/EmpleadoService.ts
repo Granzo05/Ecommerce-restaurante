@@ -1,5 +1,5 @@
 import { Empleado } from '../types/Restaurante/Empleado'
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { getBaseUrl, sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
     createEmpleado: async (empleado: Empleado): Promise<string> => {
@@ -41,13 +41,14 @@ export const EmpleadoService = {
                     id: data.id,
                     nombre: data.nombre,
                     email: data.email,
-                    privilegios: data.privilegios
+                    privilegios: data.empleadoPrivilegios,
+                    sucursales: data.sucursales
                 }
 
-                localStorage.setItem('usuario', JSON.stringify(empleado));
+                localStorage.setItem('empleado', JSON.stringify(empleado));
 
                 // Redirige al usuario al menú principal
-                window.location.href = '/cocina'
+                window.location.href = getBaseUrl() + '/opciones';
             })
             .catch(error => {
                 console.error('Error:', error)

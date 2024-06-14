@@ -26,7 +26,6 @@ const Empleados = () => {
     const fetchEmpleados = async () => {
         try {
             let data = await EmpleadoService.getEmpleados();
-            console.log(data)
             setEmpleados(data);
         } catch (error) {
             console.error('Error al obtener empleados:', error);

@@ -39,6 +39,15 @@ public class EmpleadoController {
             empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
             empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
             empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
+
+            Set<Sucursal> sucursal = new HashSet<>();
+
+            for(Sucursal sucursales: empleadoDb.get().getSucursales()) {
+                sucursal.clear();
+                sucursal.add(sucursales);
+            }
+
+            empleado.setSucursales(sucursal);
         }
 
         return empleadoDb.get();
