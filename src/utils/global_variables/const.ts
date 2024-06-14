@@ -4,6 +4,8 @@ import { Sucursal } from "../../types/Restaurante/Sucursal";
 
 export const URL_API = 'http://localhost:8080/';
 
+export const DESACTIVAR_PRIVILEGIOS = true;
+
 export function sucursalId(): number {
     const usuarioString = localStorage.getItem('usuario');
     const empleadoString = localStorage.getItem('empleado');

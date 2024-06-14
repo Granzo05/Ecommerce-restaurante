@@ -8,7 +8,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Empleado } from '../types/Restaurante/Empleado';
 import { useParams } from 'react-router-dom';
 import { Sucursal } from '../types/Restaurante/Sucursal';
-import { getBaseUrl } from '../utils/global_variables/const';
+import { DESACTIVAR_PRIVILEGIOS, getBaseUrl } from '../utils/global_variables/const';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -59,11 +59,11 @@ const Opciones = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    if ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id)) {
+    if (DESACTIVAR_PRIVILEGIOS || ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id))) {
         window.location.href = getBaseUrl() + '/opciones';
     }
 
-    if ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id) {
+    if (DESACTIVAR_PRIVILEGIOS || ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id)) {
         window.location.href = getBaseUrl() + '/opciones';
     }
 
@@ -161,27 +161,27 @@ const Opciones = () => {
         }
     };
 
-    const [articuloVentaVisibleEmpleado, setArticuloVentaVisibleEmpleado] = useState(false);
-    const [articuloMenuVisibleEmpleado, setArticuloMenuVisibleEmpleado] = useState(false);
-    const [stockVisibleEmpleado, setStockVisibleEmpleado] = useState(false);
-    const [stockEntranteVisibleEmpleado, setStockEntranteVisibleEmpleado] = useState(false);
-    const [ingredientesVisibleEmpleado, setIngredientesVisibleEmpleado] = useState(false);
-    const [categoriasVisibleEmpleado, setCategoriasVisibleEmpleado] = useState(false);
-    const [medidasVisibleEmpleado, setMedidasVisibleEmpleado] = useState(false);
-    const [promocionesVisibleEmpleado, setPromocionesVisibleEmpleado] = useState(false);
-    const [subcategoriasVisibleEmpleado, setSubcategoriasVisibleEmpleado] = useState(false);
-    const [estadisticasVisibleEmpleado, setEstadisticasVisibleEmpleado] = useState(false);
-    const [pedidosVisibleEmpleado, setPedidosVisibleEmpleado] = useState(false);
-    const [empleadosVisibleEmpleado, setEmpleadosVisibleEmpleado] = useState(false);
-    const [sucursalesVisibleEmpleado, setSucursalesVisibleEmpleado] = useState(false);
-    const [empresasVisibleEmpleado, setEmpresasVisibleEmpleado] = useState(false);
+    const [articuloVentaVisibleEmpleado, setArticuloVentaVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [articuloMenuVisibleEmpleado, setArticuloMenuVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [stockVisibleEmpleado, setStockVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [stockEntranteVisibleEmpleado, setStockEntranteVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [ingredientesVisibleEmpleado, setIngredientesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [categoriasVisibleEmpleado, setCategoriasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [medidasVisibleEmpleado, setMedidasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [promocionesVisibleEmpleado, setPromocionesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [subcategoriasVisibleEmpleado, setSubcategoriasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [estadisticasVisibleEmpleado, setEstadisticasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [pedidosVisibleEmpleado, setPedidosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [empleadosVisibleEmpleado, setEmpleadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [sucursalesVisibleEmpleado, setSucursalesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [empresasVisibleEmpleado, setEmpresasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
 
     useEffect(() => {
         checkPrivilegies();
     }, []);
 
     async function checkPrivilegies() {
-        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+        if (!DESACTIVAR_PRIVILEGIOS && (empleado && empleado.empleadoPrivilegios?.length > 0)) {
             try {
                 setVisible(true);
                 empleado?.empleadoPrivilegios?.forEach(privilegio => {

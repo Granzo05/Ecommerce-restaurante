@@ -8,6 +8,9 @@ import { Sucursal } from "../../types/Restaurante/Sucursal";
 import ActivarSucursal from "./ActivarSucursal";
 import '../../styles/sucursales.css'
 import { Empleado } from "../../types/Restaurante/Empleado";
+import { PrivilegiosService } from "../../services/PrivilegiosService";
+import { Privilegios } from "../../types/Restaurante/Privilegios";
+import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 
 const Sucursales = () => {
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
@@ -33,13 +36,28 @@ const Sucursales = () => {
             });
     }
 
+
+    const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+
+    useEffect(() => {
+        PrivilegiosService.getPrivilegios()
+            .then(data => {
+                setPrivilegios(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, []);
+
+
     const handleAbrirSucursal = (idSucursal: number) => {
         let restaurante = {
             id: idSucursal,
-            privilegios: 'admin'
+            nombre: 'admin',
+            empleadoPrivilegios: privilegios
         }
 
-        localStorage.setItem('usuario', JSON.stringify(restaurante));
+        localStorage.setItem('sucursal', JSON.stringify(restaurante));
     };
 
     useEffect(() => {
@@ -52,10 +70,10 @@ const Sucursales = () => {
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(false);
-    const [updateVisible, setUpdateVisible] = useState(false);
-    const [deleteVisible, setDeleteVisible] = useState(false);
-    const [activateVisible, setActivateVisible] = useState(false);
+    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
     async function checkPrivilegies() {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {

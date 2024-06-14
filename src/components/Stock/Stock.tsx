@@ -13,6 +13,7 @@ import { StockArticuloVenta } from "../../types/Stock/StockArticuloVenta";
 import { StockIngredientes } from "../../types/Stock/StockIngredientes";
 import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
+import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 
 
 const Stocks = () => {
@@ -65,10 +66,10 @@ const Stocks = () => {
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(false);
-    const [updateVisible, setUpdateVisible] = useState(false);
-    const [deleteVisible, setDeleteVisible] = useState(false);
-    const [activateVisible, setActivateVisible] = useState(false);
+    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
     async function checkPrivilegies() {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
