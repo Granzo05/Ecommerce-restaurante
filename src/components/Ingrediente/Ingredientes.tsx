@@ -8,6 +8,7 @@ import EliminarIngrediente from "./EliminarIngrediente";
 import EditarIngrediente from "./EditarIngrediente";
 import AgregarIngrediente from "./AgregarIngrediente";
 import ActivarIngrediente from "./ActivarIngrediente";
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 const Ingredientes = () => {
     const [ingredientes, setIngredientes] = useState<Ingrediente[]>([]);
@@ -37,6 +38,43 @@ const Ingredientes = () => {
             console.error('Error:', error);
         }
     };
+
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
 
     const handleAgregarIngrediente = () => {
         setShowEditarIngredienteModal(false);
@@ -83,9 +121,11 @@ const Ingredientes = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Ingredientes -</h1>
-            <div className="btns-ingredientes">
-            <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
-            </div>
+
+            {createVisible && (
+                <div className="btns-ingredientes">
+                    <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
+                </div>)}
             <hr />
             {mostrarIngredientes && (
                 <div id="stocks">
@@ -106,18 +146,24 @@ const Ingredientes = () => {
                                     {ingrediente.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                
-                                            <button className="btn-accion-editar" onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
-                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarIngrediente(ingrediente)}>ELIMINAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => handleEliminarIngrediente(ingrediente)}>ELIMINAR</button>
+                                                )}
                                             </div>
-                                            
+
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                
-                                            <button className="btn-accion-editar" onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
-                                            <button className="btn-accion-activar" onClick={() => handleActivarIngrediente(ingrediente)}>ACTIVAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarIngrediente(ingrediente)}>EDITAR</button>
+                                                )}
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => handleActivarIngrediente(ingrediente)}>ACTIVAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     )}
@@ -128,7 +174,7 @@ const Ingredientes = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalIngrediente} onClose={handleModalClose}>
-                <AgregarIngrediente onCloseModal={handleModalClose}/>
+                <AgregarIngrediente onCloseModal={handleModalClose} />
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarIngredienteModal} onClose={handleModalClose}>
@@ -140,7 +186,7 @@ const Ingredientes = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarIngredienteModal} onClose={handleModalClose}>
-                {selectedIngrediente && <EditarIngrediente ingredienteOriginal={selectedIngrediente} onCloseModal={handleModalClose}/>}
+                {selectedIngrediente && <EditarIngrediente ingredienteOriginal={selectedIngrediente} onCloseModal={handleModalClose} />}
             </ModalCrud>
         </div>
     )

@@ -7,9 +7,9 @@ import EliminarMenu from "./EliminarMenu";
 import '../../styles/menuPorTipo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
-import { EmpleadoService } from "../../services/EmpleadoService";
 import ActivarMenu from "./ActivarMenu";
 import { ArticuloMenu } from "../../types/Productos/ArticuloMenu";
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 const Menus = () => {
     const [menus, setMenus] = useState<ArticuloMenu[]>([]);
@@ -23,20 +23,45 @@ const Menus = () => {
     const [selectedMenu, setSelectedMenu] = useState<ArticuloMenu>();
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    useEffect(() => {
         fetchMenu();
     }, []);
 
-    const fetchData = async () => {
-        try {
-            await EmpleadoService.checkUser();
-        } catch (error) {
-            console.error('Error:', error);
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
-    };
+    }
 
     const fetchMenu = async () => {
         try {
@@ -97,10 +122,11 @@ const Menus = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Menus -</h1>
-            <div className="btns-menu">
-                <button className="btn-agregar" onClick={() => handleAgregarMenu()}> + Agregar menu</button>
-            </div>
 
+            {createVisible && (
+                <div className="btns-menu">
+                    <button className="btn-agregar" onClick={() => handleAgregarMenu()}> + Agregar menu</button>
+                </div>)}
             <hr />
             {mostrarMenus && (
                 <div id="menus">
@@ -137,18 +163,23 @@ const Menus = () => {
                                     {menu.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones-stock">
-
-                                                <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
-
-                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarMenu(menu)}>ELIMINAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => handleEliminarMenu(menu)}>ELIMINAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones-stock">
-
-                                                <button className="btn-accion-activar" onClick={() => handleActivarMenu(menu)}>ACTIVAR</button>
-                                                <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => handleActivarMenu(menu)}>ACTIVAR</button>
+                                                )}
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     )}
@@ -160,10 +191,10 @@ const Menus = () => {
             )}
 
             <ModalCrud isOpen={showAgregarMenuModal} onClose={handleModalClose}>
-                <AgregarMenu onCloseModal={handleModalClose}/>
+                <AgregarMenu onCloseModal={handleModalClose} />
             </ModalCrud>
             <ModalCrud isOpen={showEditarMenuModal} onClose={handleModalClose}>
-                {selectedMenu && <EditarMenu menuOriginal={selectedMenu} onCloseModal={handleModalClose}/>}
+                {selectedMenu && <EditarMenu menuOriginal={selectedMenu} onCloseModal={handleModalClose} />}
             </ModalCrud>
             <ModalCrud isOpen={showEliminarMenuModal} onClose={handleModalClose}>
                 {selectedMenu && <EliminarMenu menuOriginal={selectedMenu} onCloseModal={handleModalClose} />}

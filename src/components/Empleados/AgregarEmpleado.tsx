@@ -221,7 +221,8 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
     const sucursalStr = localStorage.getItem('usuario');
     const sucursal = sucursalStr ? JSON.parse(sucursalStr) : new Sucursal();
-    empleado.sucursal = sucursal;
+    
+    empleado.sucursales.push(sucursal);
 
     empleado.domicilios = domicilios;
 

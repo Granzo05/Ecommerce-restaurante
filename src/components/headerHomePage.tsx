@@ -33,14 +33,17 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
         const empleadoString = localStorage.getItem('empleado');
         const sucursalString = localStorage.getItem('sucursal');
 
-        if (clienteString !== undefined) {
+        if (clienteString !== null) {
             let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
+            console.log(clienteMem)
             setCliente(clienteMem);
-        } else if (empleadoString !== undefined) {
+        } else if (empleadoString !== null) {
             let clienteMem: Empleado = empleadoString ? JSON.parse(empleadoString) : new Empleado();
+            console.log(clienteMem)
             setCliente(clienteMem);
-        } else if (sucursalString !== undefined) {
+        } else if (sucursalString !== null) {
             let clienteMem: Sucursal = sucursalString ? JSON.parse(sucursalString) : new Sucursal();
+            console.log(clienteMem)
             setCliente(clienteMem);
         }
 
@@ -68,6 +71,8 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
 
     const handleLogout = () => {
         localStorage.removeItem('usuario');
+        localStorage.removeItem('empleado');
+        localStorage.removeItem('sucursal');
         setCliente(null)
     };
 

@@ -37,11 +37,12 @@ export const EmpleadoService = {
                 return await response.json()
             })
             .then(data => {
+
                 let empleado = {
                     id: data.id,
                     nombre: data.nombre,
                     email: data.email,
-                    privilegios: data.empleadoPrivilegios,
+                    empleadoPrivilegios: data.empleadoPrivilegios,
                     sucursales: data.sucursales
                 }
 

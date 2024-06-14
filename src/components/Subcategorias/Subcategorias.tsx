@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
-import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
 import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 import EliminarSubcategoria from "./EliminarSubcategoria";
@@ -10,6 +9,7 @@ import AgregarSubcategoria from "./AgregarSubcategoria";
 import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from "../../types/Ingredientes/Categoria";
 import React from "react";
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 const Subcategorias = () => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -23,15 +23,6 @@ const Subcategorias = () => {
     const [selectedCategoria, setSelectedCategoria] = useState<Subcategoria | null>(null);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
         fetchCategorias();
     }, []);
 
@@ -43,6 +34,43 @@ const Subcategorias = () => {
             console.error('Error:', error);
         }
     };
+
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
 
     const handleAgregarCategoria = () => {
         setShowEditarCategoriaModal(false);
@@ -89,9 +117,11 @@ const Subcategorias = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Subcategorías -</h1>
-            <div className="btns-categorias">
-                <button className="btn-agregar" onClick={handleAgregarCategoria}> + Agregar subcategoría</button>
-            </div>
+            {createVisible && (
+                <div className="btns-categorias">
+                    <button className="btn-agregar" onClick={handleAgregarCategoria}> + Agregar subcategoría</button>
+                </div>)}
+
             <hr />
             {mostrarCategorias && (
                 <div id="stocks">
@@ -116,12 +146,14 @@ const Subcategorias = () => {
                                             <td>{subcategoria.nombre.toString().replace(/_/g, ' ')}</td>
                                             <td>
                                                 <div className="btns-acciones">
-                                                    <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
-                                                    {subcategoria.borrado === 'NO' ? (
-                                                        <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(subcategoria)}>ELIMINAR</button>
-                                                    ) : (
-                                                        <button className="btn-accion-activar" onClick={() => handleActivarCategoria(subcategoria)}>ACTIVAR</button>
+                                                    {updateVisible && (
+                                                        <button className="btn-accion-editar" onClick={() => handleEditarCategoria(subcategoria)}>EDITAR</button>
                                                     )}
+                                                    {subcategoria.borrado === 'NO' && deleteVisible ? (
+                                                        <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(subcategoria)}>ELIMINAR</button>
+                                                    ) : activateVisible ? (
+                                                        <button className="btn-accion-activar" onClick={() => handleActivarCategoria(subcategoria)}>ACTIVAR</button>
+                                                    ) : <></>}
                                                 </div>
                                             </td>
                                         </tr>
@@ -133,7 +165,7 @@ const Subcategorias = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalCategoria} onClose={handleModalClose}>
-                <AgregarSubcategoria onCloseModal={handleModalClose}/>
+                <AgregarSubcategoria onCloseModal={handleModalClose} />
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarCategoriaModal} onClose={handleModalClose}>

@@ -3,7 +3,6 @@ import ModalCrud from "../ModalCrud";
 import '../../styles/menuPorTipo.css';
 import '../../styles/modalCrud.css';
 import '../../styles/modalFlotante.css';
-import { EmpleadoService } from "../../services/EmpleadoService";
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import AgregarArticuloVenta from './AgregarArticulo';
@@ -11,6 +10,7 @@ import EditarArticuloVenta from './EditarArticulo';
 import EliminarArticuloVenta from './EliminarArticulo';
 import ActivarArticuloVenta from './ActivarArticulo';
 import '../../styles/articulosVenta.css'
+import { Empleado } from '../../types/Restaurante/Empleado';
 
 const ArticuloVentas = () => {
     const [articulosVenta, setArticulosVenta] = useState<ArticuloVenta[]>([]);
@@ -23,19 +23,42 @@ const ArticuloVentas = () => {
 
     const [selectedArticuloVenta, setSelectedArticuloVenta] = useState<ArticuloVenta | null>(null);
 
-    useEffect(() => {
-        fetchData();
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
 
-        fetchArticuloVenta();
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    useEffect(() => {
+        checkPrivilegies();
     }, []);
 
-    const fetchData = async () => {
-        try {
-            await EmpleadoService.checkUser();
-        } catch (error) {
-            console.error('Error:', error);
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
-    };
+    }
 
     const fetchArticuloVenta = async () => {
         try {
@@ -99,10 +122,12 @@ const ArticuloVentas = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Articulos -</h1>
-            <div className="btns-arts">
-            <button className='btn-agregar' onClick={() => handleAgregarArticuloVenta()}> + Agregar articulo</button>
-            
-            </div>
+            {createVisible && (
+                <div className="btns-arts">
+                    <button className='btn-agregar' onClick={() => handleAgregarArticuloVenta()}> + Agregar articulo</button>
+                </div>
+            )}
+
             <hr />
             {mostrarArticuloVenta && (
                 <div id="menus">
@@ -125,19 +150,25 @@ const ArticuloVentas = () => {
                                     {articulo.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-articulos">
-                                            <button className='btn-accion-editar' onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
-                                            <button className='btn-accion-eliminar' onClick={() => handleEliminarArticuloVenta(articulo)}>ELIMINAR</button>
-                                            
-                                        
+                                                {updateVisible && (
+                                                    <button className='btn-accion-editar' onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className='btn-accion-eliminar' onClick={() => handleEliminarArticuloVenta(articulo)}>ELIMINAR</button>
+                                                )}
+
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-articulos">
-                                            <button className='btn-accion-activar' onClick={() => handleActivarArticuloVenta(articulo)}>ACTIVAR</button>
-                                            <button className='btn-accion-editar' onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                                {activateVisible && (
+                                                    <button className='btn-accion-activar' onClick={() => handleActivarArticuloVenta(articulo)}>ACTIVAR</button>
+                                                )}
+                                                {updateVisible && (
+                                                    <button className='btn-accion-editar' onClick={() => handleEditarArticuloVenta(articulo)}>EDITAR</button>
+                                                )}
                                             </div>
-                                            
                                         </td>
                                     )}
                                 </tr>

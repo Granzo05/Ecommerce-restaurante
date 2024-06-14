@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
-import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
 import EliminarMedida from "./EliminarMedida";
 import EditarMedida from "./EditarMedida";
@@ -8,6 +7,7 @@ import AgregarMedida from "./AgregarMedida";
 import ActivarMedida from "./ActivarMedida";
 import { Medida } from "../../types/Ingredientes/Medida";
 import { MedidaService } from "../../services/MedidaService";
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 const Medidas = () => {
     const [medidas, setMedidas] = useState<Medida[]>([]);
@@ -21,16 +21,6 @@ const Medidas = () => {
     const [selectedMedida, setSelectedMedida] = useState<Medida>();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Esto retorna true o false
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
         fetchMedidas();
     }, []);
 
@@ -48,6 +38,43 @@ const Medidas = () => {
         }
     };
 
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
+
     const handleAgregarMedida = () => {
         setShowEditarMedidaModal(false);
         setShowEliminarMedidaModal(false);
@@ -56,7 +83,6 @@ const Medidas = () => {
     };
 
     const handleEditarMedida = (medida: Medida) => {
-        console.log(medida)
         setSelectedMedida(medida);
         setShowAgregarModalMedida(false);
         setShowEliminarMedidaModal(false);
@@ -94,9 +120,11 @@ const Medidas = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Medidas -</h1>
-            <div className="btns-categorias">
-                <button className="btn-agregar" onClick={() => handleAgregarMedida()}> + Agregar medida</button>
-            </div>
+
+            {createVisible && (
+                <div className="btns-categorias">
+                    <button className="btn-agregar" onClick={() => handleAgregarMedida()}> + Agregar medida</button>
+                </div>)}
             <hr />
             {mostrarMedidas && (
                 <div id="stocks">
@@ -115,18 +143,24 @@ const Medidas = () => {
                                     {medida.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-
-                                                <button className="btn-accion-editar" onClick={() => handleEditarMedida(medida)}>EDITAR</button>
-                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarMedida(medida)}>ELIMINAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarMedida(medida)}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => handleEliminarMedida(medida)}>ELIMINAR</button>
+                                                )}
                                             </div>
 
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-
-                                                <button className="btn-accion-editar" onClick={() => handleEditarMedida(medida)}>EDITAR</button>
-                                                <button className="btn-accion-activar" onClick={() => handleActivarMedida(medida)}>ACTIVAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarMedida(medida)}>EDITAR</button>
+                                                )}
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => handleActivarMedida(medida)}>ACTIVAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     )}
@@ -137,7 +171,7 @@ const Medidas = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalMedida} onClose={handleModalClose}>
-                <AgregarMedida onCloseModal={handleModalClose}/>
+                <AgregarMedida onCloseModal={handleModalClose} />
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarMedidaModal} onClose={handleModalClose}>

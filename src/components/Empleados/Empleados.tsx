@@ -32,6 +32,43 @@ const Empleados = () => {
         }
     };
 
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
+
 
     const handleAgregarEmpleado = () => {
         setShowAgregarEmpleadoModal(true);
@@ -78,10 +115,14 @@ const Empleados = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Empleados -</h1>
-            <div className="btns-empleados">
-                <button className="btn-agregar" onClick={() => handleAgregarEmpleado()}> + Agregar empleado</button>
+            {createVisible && (
+                <div className="btns-empleados">
+                    <button className="btn-agregar" onClick={() => handleAgregarEmpleado()}> + Agregar empleado</button>
 
-            </div>
+                </div>
+            )}
+
+
             <hr />
             <ModalCrud isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
                 <AgregarEmpleado onCloseModal={handleModalClose} />
@@ -122,18 +163,23 @@ const Empleados = () => {
                                     {empleado.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-empleados">
-
-                                                <button className="btn-accion-editar" onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
-                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarEmpleado(empleado)}>ELIMINAR</button>
-
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => handleEliminarEmpleado(empleado)}>ELIMINAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-empleados">
-                                                <button className="btn-accion-activar" onClick={() => handleActivarEmpleado(empleado)}>ACTIVAR</button>
-                                                <button className="btn-accion-editar" onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
-
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => handleActivarEmpleado(empleado)}>ACTIVAR</button>
+                                                )}
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     )}

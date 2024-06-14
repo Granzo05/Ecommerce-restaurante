@@ -10,6 +10,7 @@ import ModalFlotante from "../ModalFlotante";
 import DetallesStock from "./DetallesStock";
 import { DetalleStock } from "../../types/Stock/DetalleStock";
 import { StockEntrante } from "../../types/Stock/StockEntrante";
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 const StocksEntrantes = () => {
     const [stockEntrante, setStockEntrante] = useState<StockEntrante[]>([]);
@@ -56,6 +57,43 @@ const StocksEntrantes = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
+
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
     }
 
     const handleAgregarStock = () => {
@@ -122,10 +160,11 @@ const StocksEntrantes = () => {
         <div className="opciones-pantallas">
 
             <h1>- Stock entrante -</h1>
-            <div className="btns-stock">
-                <button className="btn-agregar" onClick={() => handleAgregarStock()}> + Agregar stock entrante</button>
-            </div>
 
+            {createVisible && (
+                <div className="btns-stock">
+                    <button className="btn-agregar" onClick={() => handleAgregarStock()}> + Agregar stock entrante</button>
+                </div>)}
             <hr />
             <ModalCrud isOpen={showAgregarStockModal} onClose={handleModalClose}>
                 <AgregarStockEntrante onCloseModal={handleModalClose} />
@@ -167,13 +206,21 @@ const StocksEntrantes = () => {
 
                                     {stock.borrado === 'NO' ? (
                                         <td>
-                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            {deleteVisible && (
+                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarStock(stock)}>ELIMINAR</button>
+                                            )}
+                                            {updateVisible && (
+                                                <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            )}
                                         </td>
                                     ) : (
                                         <td>
-                                            <button className="btn-accion-activar" onClick={() => handleActivarStock(stock)}>ACTIVAR</button>
-                                            <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            {activateVisible && (
+                                                <button className="btn-accion-activar" onClick={() => handleActivarStock(stock)}>ACTIVAR</button>
+                                            )}
+                                            {updateVisible && (
+                                                <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            )}
                                         </td>
                                     )}
                                 </tr>

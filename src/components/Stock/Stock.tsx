@@ -12,6 +12,7 @@ import ModalCrud from "../ModalCrud";
 import { StockArticuloVenta } from "../../types/Stock/StockArticuloVenta";
 import { StockIngredientes } from "../../types/Stock/StockIngredientes";
 import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 
 const Stocks = () => {
@@ -54,6 +55,42 @@ const Stocks = () => {
             });
     };
 
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
 
     const handleAgregarIngrediente = () => {
         setShowAgregarStockModalIngrediente(true);
@@ -101,10 +138,12 @@ const Stocks = () => {
         <div className="opciones-pantallas">
 
             <h1>- Stock -</h1>
-            <div className="btns-stock">
-                <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
-                <button className="btn-agregar" onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
-            </div>
+            {createVisible && (
+                <div className="btns-stock">
+                    <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
+                    <button className="btn-agregar" onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
+                </div>)}
+
             <p><span className="cuadrado venta"></span>Artículos para venta</p>
             <p><span className="cuadrado noventa"></span>Artículos para no venta</p>
 
@@ -127,7 +166,7 @@ const Stocks = () => {
             </ModalFlotante>
 
             <ModalFlotante isOpen={showEditarStockModal} onClose={handleModalClose}>
-                {selectedStock && <EditarStock onCloseModal={handleModalClose}  stockOriginal={selectedStock} tipo={tipo} nombre={nombre} />}
+                {selectedStock && <EditarStock onCloseModal={handleModalClose} stockOriginal={selectedStock} tipo={tipo} nombre={nombre} />}
             </ModalFlotante>
 
             {mostrarStocks && (
@@ -150,9 +189,9 @@ const Stocks = () => {
                             {stockIngredientes.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{stock.ingrediente?.nombre}</td>
-                                    <td style={{textTransform: 'lowercase'}}>{stock.cantidadActual} {stock.medida?.nombre}</td>
-                                    <td style={{textTransform: 'lowercase'}}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
-                                    <td style={{textTransform: 'lowercase'}}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadActual} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
                                     <td>${stock.precioCompra}</td>
                                     <td>{stock.fechaLlegadaProxima ? (
                                         formatearFechaDDMMYYYY(new Date(stock.fechaLlegadaProxima))
@@ -160,22 +199,27 @@ const Stocks = () => {
                                         <p>No hay próximas entradas</p>
                                     )}
                                     </td>
-                                    <td style={{backgroundColor: '#f51a1a'}}>NO</td>
+                                    <td style={{ backgroundColor: '#f51a1a' }}>NO</td>
                                     {stock.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
-
-                                                <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('ingrediente') }}>ELIMINAR</button>
-
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('ingrediente') }}>ELIMINAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
-
-                                                <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('ingrediente') }}>ACTIVAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
+                                                )}
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('ingrediente') }}>ACTIVAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     )}
@@ -184,27 +228,32 @@ const Stocks = () => {
                             {stockArticulos.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{stock.articuloVenta?.nombre}</td>
-                                    <td style={{textTransform: 'lowercase'}}>{stock.cantidadActual} {stock.medida?.nombre}</td>
-                                    <td  style={{textTransform: 'lowercase'}}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
-                                    <td  style={{textTransform: 'lowercase'}}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadActual} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
                                     <td>${stock.precioCompra}</td>
                                     <td>{'No hay próximas entradas'}</td>
-                                    <td style={{backgroundColor: '#19cc37'}}>SI</td>
+                                    <td style={{ backgroundColor: '#19cc37' }}>SI</td>
                                     {stock.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
-
-                                                <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('articulo') }}>ELIMINAR</button>
-
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('articulo') }}>ELIMINAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
-
-                                                <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('articulo') }}>ACTIVAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
+                                                )}
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('articulo') }}>ACTIVAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     )

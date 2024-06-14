@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import ModalCrud from "../ModalCrud";
-import { EmpleadoService } from "../../services/EmpleadoService";
 import '../../styles/stock.css';
 import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from '../../types/Ingredientes/Categoria';
@@ -9,6 +8,7 @@ import EditarCategoria from "./EditarCategoria";
 import AgregarCategoria from "./AgregarCategoria";
 import ActivarCategoria from "./ActivarCategoria";
 import '../../styles/categorias.css'
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 const Categorias = () => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -22,16 +22,6 @@ const Categorias = () => {
     const [selectedCategoria, setSelectedCategoria] = useState<Categoria>();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Esto retorna true o false
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
         fetchCategorias();
     }, []);
 
@@ -48,6 +38,43 @@ const Categorias = () => {
             console.error('Error:', error);
         }
     };
+
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
 
     const handleAgregarCategoria = () => {
         setShowEditarCategoriaModal(false);
@@ -95,9 +122,12 @@ const Categorias = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Categorias -</h1>
-            <div className="btns-categorias">
-                <button className="btn-agregar" onClick={() => handleAgregarCategoria()}> + Agregar categoria</button>
-            </div>
+
+            {createVisible && (
+                <div className="btns-categorias">
+                    <button className="btn-agregar" onClick={() => handleAgregarCategoria()}> + Agregar categoria</button>
+                </div>
+            )}
             <hr />
             {mostrarCategorias && (
                 <div id="stocks">
@@ -118,17 +148,24 @@ const Categorias = () => {
                                     {categoria.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                
-                                            <button className="btn-accion-editar" onClick={() => handleEditarCategoria(categoria)}>EDITAR</button>
-                                            <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(categoria)}>ELIMINAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarCategoria(categoria)}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(categoria)}>ELIMINAR</button>
+                                                )}
                                             </div>
-                                            
+
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                            <button className="btn-accion-editar" onClick={() => handleEditarCategoria(categoria)}>EDITAR</button>
-                                            <button className="btn-accion-activar" onClick={() => handleActivarCategoria(categoria)}>ACTIVAR</button>
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarCategoria(categoria)}>EDITAR</button>
+                                                )}
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => handleActivarCategoria(categoria)}>ACTIVAR</button>
+                                                )}
                                             </div>
                                         </td>
                                     )}
@@ -139,7 +176,7 @@ const Categorias = () => {
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalCategoria} onClose={handleModalClose}>
-                <AgregarCategoria onCloseModal={handleModalClose}/>
+                <AgregarCategoria onCloseModal={handleModalClose} />
             </ModalCrud>
 
             <ModalCrud isOpen={showEliminarCategoriaModal} onClose={handleModalClose}>
@@ -151,7 +188,7 @@ const Categorias = () => {
             </ModalCrud>
 
             <ModalCrud isOpen={showEditarCategoriaModal} onClose={handleModalClose}>
-                {selectedCategoria && <EditarCategoria categoriaOriginal={selectedCategoria} onCloseModal={handleModalClose}/>}
+                {selectedCategoria && <EditarCategoria categoriaOriginal={selectedCategoria} onCloseModal={handleModalClose} />}
             </ModalCrud>
         </div>
     )

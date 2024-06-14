@@ -7,6 +7,7 @@ import { PromocionService } from "../../services/PromocionService";
 import { Promocion } from "../../types/Productos/Promocion";
 import AgregarPromocion from "./AgregarPromocion";
 import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
+import { Empleado } from "../../types/Restaurante/Empleado";
 
 const Promociones = () => {
     const [promociones, setPromociones] = useState<Promocion[]>([]);
@@ -31,6 +32,43 @@ const Promociones = () => {
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
+
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
     }
 
     const handleAgregarPromocion = () => {
@@ -93,9 +131,10 @@ const Promociones = () => {
         <div className="opciones-pantallas">
 
             <h1>- Promoción entrante -</h1>
-            <div className="btns-stock">
-                <button className="btn-agregar" onClick={() => handleAgregarPromocion()}> + Agregar promoción</button>
-            </div>
+            {createVisible && (
+                <div className="btns-stock">
+                    <button className="btn-agregar" onClick={() => handleAgregarPromocion()}> + Agregar promoción</button>
+                </div>)}
 
             <hr />
             <ModalCrud isOpen={showAgregarPromocionModal} onClose={handleModalClose}>
@@ -145,13 +184,21 @@ const Promociones = () => {
                                     <td>
                                         {promocion.borrado === 'NO' ? (
                                             <>
-                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarPromocion(promocion)}>ELIMINAR</button>
-                                                <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => handleEliminarPromocion(promocion)}>ELIMINAR</button>
+                                                )}
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
+                                                )}
                                             </>
                                         ) : (
                                             <>
-                                                <button className="btn-accion-activar" onClick={() => handleActivarPromocion(promocion)}>ACTIVAR</button>
-                                                <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => handleActivarPromocion(promocion)}>ACTIVAR</button>
+                                                )}
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
+                                                )}
                                             </>
                                         )}
                                     </td>

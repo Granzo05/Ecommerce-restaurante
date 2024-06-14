@@ -6,6 +6,9 @@ import EditarEmpresa from "./EditarEmpresa";
 import { Empresa } from "../../types/Restaurante/Empresa";
 import ActivarEmpresa from "./ActivarEmpresa";
 import { EmpresaService } from "../../services/EmpresaService";
+import { Empleado } from "../../types/Restaurante/Empleado";
+import { PrivilegiosService } from "../../services/PrivilegiosService";
+import { Privilegios } from "../../types/Restaurante/Privilegios";
 
 const Empresas = () => {
     const [empresas, setEmpresas] = useState<Empresa[]>([]);
@@ -31,13 +34,64 @@ const Empresas = () => {
             });
     }
 
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        } else if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        } else if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
+
+    const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+
+    useEffect(() => {
+        PrivilegiosService.getPrivilegios()
+            .then(data => {
+                setPrivilegios(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, []);
+
+
     const handleAbrirEmpresa = (idEmpresa: number) => {
         let restaurante = {
             id: idEmpresa,
-            privilegios: 'admin'
+            nombre: 'admin',
+            empleadoPrivilegios: privilegios
         }
 
-        localStorage.setItem('usuario', JSON.stringify(restaurante));
+        localStorage.setItem('empleado', JSON.stringify(restaurante));
     };
 
     const handleAgregarEmpresa = () => {
@@ -72,18 +126,20 @@ const Empresas = () => {
         fetchEmpresas();
     };
 
-    
+
 
     return (
         <div className="opciones-pantallas">
             <h1>- Empresas -</h1>
-            <div className="btns-stock">
 
-                <button className="btn-agregar" onClick={() => handleAgregarEmpresa()}> + Agregar empresa</button>
-            </div>
+            {createVisible && (
+                <div className="btns-stock">
+                    <button className="btn-agregar" onClick={() => handleAgregarEmpresa()}> + Agregar empresa</button>
+                </div>
+            )}
             <hr />
             <ModalCrud isOpen={showAgregarEmpresaModal} onClose={handleModalClose}>
-                <AgregarEmpresa onCloseModal={handleModalClose}/>
+                <AgregarEmpresa onCloseModal={handleModalClose} />
             </ModalCrud>
             {mostrarEmpresas && (
                 <div id="empresas">
@@ -105,19 +161,30 @@ const Empresas = () => {
                                     {empresa.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                <button className="btn-accion-abrir" onClick={() => handleAbrirEmpresa(empresa.id)}>ABRIR</button>
-                                                <button className="btn-accion-editar" onClick={() => handleEditarEmpresa(empresa)}>EDITAR</button>
-                                                <button className="btn-accion-eliminar" onClick={() => handleEliminarEmpresa(empresa)}>ELIMINAR</button>
+                                                {createVisible && (
+                                                    <button className="btn-accion-abrir" onClick={() => handleAbrirEmpresa(empresa.id)}>ABRIR</button>
+                                                )}
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarEmpresa(empresa)}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => handleEliminarEmpresa(empresa)}>ELIMINAR</button>
+                                                )}
                                             </div>
 
                                         </td>
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                <button className="btn-accion-abrir" onClick={() => handleAbrirEmpresa(empresa.id)}>ABRIR</button>
-                                                <button className="btn-accion-activar" onClick={() => handleActivarEmpresa(empresa)}>ACTIVAR</button>
-                                                <button className="btn-accion-editar" onClick={() => handleEditarEmpresa(empresa)}>EDITAR</button>
-
+                                                {createVisible && (
+                                                    <button className="btn-accion-abrir" onClick={() => handleAbrirEmpresa(empresa.id)}>ABRIR</button>
+                                                )}
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => handleActivarEmpresa(empresa)}>ACTIVAR</button>
+                                                )}
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarEmpresa(empresa)}>EDITAR</button>
+                                                )}
                                             </div>
 
                                         </td>
@@ -127,7 +194,7 @@ const Empresas = () => {
                         </tbody>
                     </table>
                     <ModalCrud isOpen={showEditarEmpresaModal} onClose={handleModalClose}>
-                        <EditarEmpresa empresaOriginal={selectedEmpresa} onCloseModal={handleModalClose}/>
+                        <EditarEmpresa empresaOriginal={selectedEmpresa} onCloseModal={handleModalClose} />
                     </ModalCrud>
                     <ModalCrud isOpen={showEliminarEmpresaModal} onClose={handleModalClose}>
                         {selectedEmpresa && <EliminarEmpresa empresa={selectedEmpresa} onCloseModal={handleModalClose} />}

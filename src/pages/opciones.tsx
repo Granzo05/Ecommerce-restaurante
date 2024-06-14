@@ -53,7 +53,6 @@ const Opciones = () => {
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
-
     const [sucursal] = useState<Sucursal | null>(() => {
         const sucursalString = localStorage.getItem('sucursal');
 
@@ -65,9 +64,7 @@ const Opciones = () => {
     }
 
     if ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id) {
-        console.log("EL EMPLEADO NO DEBERIA TENER ACCESO ACÁ")
-        console.log("ID SUCURSAL" + id)
-        console.log("ID SUCURSAL ASIGNADA AL EMPLEADO" + empleado.sucursales[0].id)
+        window.location.href = getBaseUrl() + '/opciones';
     }
 
     const toggleStockVisibility = () => {
@@ -164,62 +161,65 @@ const Opciones = () => {
         }
     };
 
+    const [articuloVentaVisibleEmpleado, setArticuloVentaVisibleEmpleado] = useState(false);
+    const [articuloMenuVisibleEmpleado, setArticuloMenuVisibleEmpleado] = useState(false);
+    const [stockVisibleEmpleado, setStockVisibleEmpleado] = useState(false);
+    const [stockEntranteVisibleEmpleado, setStockEntranteVisibleEmpleado] = useState(false);
+    const [ingredientesVisibleEmpleado, setIngredientesVisibleEmpleado] = useState(false);
+    const [categoriasVisibleEmpleado, setCategoriasVisibleEmpleado] = useState(false);
+    const [medidasVisibleEmpleado, setMedidasVisibleEmpleado] = useState(false);
+    const [promocionesVisibleEmpleado, setPromocionesVisibleEmpleado] = useState(false);
+    const [subcategoriasVisibleEmpleado, setSubcategoriasVisibleEmpleado] = useState(false);
+    const [estadisticasVisibleEmpleado, setEstadisticasVisibleEmpleado] = useState(false);
+    const [pedidosVisibleEmpleado, setPedidosVisibleEmpleado] = useState(false);
+    const [empleadosVisibleEmpleado, setEmpleadosVisibleEmpleado] = useState(false);
+    const [sucursalesVisibleEmpleado, setSucursalesVisibleEmpleado] = useState(false);
+    const [empresasVisibleEmpleado, setEmpresasVisibleEmpleado] = useState(false);
+
     useEffect(() => {
         checkPrivilegies();
     }, []);
 
-    const [articuloVentaVisibleEmpleado, setArticuloVentaVisibleEmpleado] = useState(true);
-    const [articuloMenuVisibleEmpleado, setArticuloMenuVisibleEmpleado] = useState(true);
-    const [stockVisibleEmpleado, setStockVisibleEmpleado] = useState(true);
-    const [stockEntranteVisibleEmpleado, setStockEntranteVisibleEmpleado] = useState(true);
-    const [ingredientesVisibleEmpleado, setIngredientesVisibleEmpleado] = useState(true);
-    const [categoriasVisibleEmpleado, setCategoriasVisibleEmpleado] = useState(true);
-    const [medidasVisibleEmpleado, setMedidasVisibleEmpleado] = useState(true);
-    const [promocionesVisibleEmpleado, setPromocionesVisibleEmpleado] = useState(true);
-    const [subcategoriasVisibleEmpleado, setSubcategoriasVisibleEmpleado] = useState(true);
-    const [estadisticasVisibleEmpleado, setEstadisticasVisibleEmpleado] = useState(true);
-    const [pedidosVisibleEmpleado, setPedidosVisibleEmpleado] = useState(true);
-    const [empleadosVisibleEmpleado, setEmpleadosVisibleEmpleado] = useState(true);
-    const [sucursalesVisibleEmpleado, setSucursalesVisibleEmpleado] = useState(true);
-    const [empresasVisibleEmpleado, setEmpresasVisibleEmpleado] = useState(true);
-
-    const checkPrivilegies = async () => {
-        try {
-            empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
-                    setArticuloVentaVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Artículos menú' && privilegio.permisos.includes('READ')) {
-                    setArticuloMenuVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Stock' && privilegio.permisos.includes('READ')) {
-                    setStockVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Stock entrante' && privilegio.permisos.includes('READ')) {
-                    setStockEntranteVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Ingredientes' && privilegio.permisos.includes('READ')) {
-                    setIngredientesVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Categorias' && privilegio.permisos.includes('READ')) {
-                    setCategoriasVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Medidas' && privilegio.permisos.includes('READ')) {
-                    setMedidasVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Promociones' && privilegio.permisos.includes('READ')) {
-                    setPromocionesVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Subcategorias' && privilegio.permisos.includes('READ')) {
-                    setSubcategoriasVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Estadísticas' && privilegio.permisos.includes('READ')) {
-                    setEstadisticasVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Pedidos' && privilegio.permisos.includes('READ')) {
-                    setPedidosVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
-                    setEmpleadosVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Sucursales' && privilegio.permisos.includes('READ')) {
-                    setSucursalesVisibleEmpleado(true);
-                } else if (privilegio.privilegio.tarea === 'Empresas' && privilegio.permisos.includes('READ')) {
-                    setEmpresasVisibleEmpleado(true);
-                }
-            });
-        } catch (error) {
-            console.error('Error:', error);
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                setVisible(true);
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                        setArticuloVentaVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Artículos menú' && privilegio.permisos.includes('READ')) {
+                        setArticuloMenuVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Stock' && privilegio.permisos.includes('READ')) {
+                        setStockVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Stock entrante' && privilegio.permisos.includes('READ')) {
+                        setStockEntranteVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Ingredientes' && privilegio.permisos.includes('READ')) {
+                        setIngredientesVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Categorias' && privilegio.permisos.includes('READ')) {
+                        setCategoriasVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Medidas' && privilegio.permisos.includes('READ')) {
+                        setMedidasVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Promociones' && privilegio.permisos.includes('READ')) {
+                        setPromocionesVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Subcategorias' && privilegio.permisos.includes('READ')) {
+                        setSubcategoriasVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Estadísticas' && privilegio.permisos.includes('READ')) {
+                        setEstadisticasVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Pedidos' && privilegio.permisos.includes('READ')) {
+                        setPedidosVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                        setEmpleadosVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Sucursales' && privilegio.permisos.includes('READ')) {
+                        setSucursalesVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Empresas' && privilegio.permisos.includes('READ')) {
+                        setEmpresasVisibleEmpleado(true);
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
-    };
+    }
 
     useEffect(() => {
         document.title = 'Administración y opciones';
@@ -434,7 +434,7 @@ const Opciones = () => {
                             <label className="name-account">{empleado?.nombre}</label>
                         </div>
 
-                        <LogoutIcon onClick={() => window.location.href = 'http://localhost:5173/login-negocio'} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
+                        <LogoutIcon onClick={() => {localStorage.removeItem('sucursal'); localStorage.removeItem('empleado'); window.location.href = 'http://localhost:5173/login-negocio'}} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
                     </div>
                 </div>
             </div>
