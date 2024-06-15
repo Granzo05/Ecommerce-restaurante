@@ -51,7 +51,6 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   useEffect(() => {
     PrivilegiosService.getPrivilegios()
       .then(data => {
-        console.log(data)
         setPrivilegios(data);
       })
       .catch(err => {
@@ -78,6 +77,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
   const desmarcarTarea = (tarea: string) => {
     setPrivilegiosElegidos((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [tarea]: _, ...rest } = prev; // Da error pero ta bien
       return rest;
     });
@@ -89,7 +89,6 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       [tarea]: permisos,
     }));
   };
-
 
   const handleChangeCalle = (index: number, calle: string) => {
     const nuevosDomicilios = [...domicilios];
@@ -415,10 +414,6 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       <h2>&mdash; Agregar empleado &mdash;</h2>
       <Toaster />
       {renderStep()}
-
-
-
-
     </div>
   )
 }

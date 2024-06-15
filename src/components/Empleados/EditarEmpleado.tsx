@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EmpleadoService } from '../../services/EmpleadoService';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import '../../styles/empleados.css';
@@ -15,6 +15,9 @@ import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { Pais } from '../../types/Domicilio/Pais';
 import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
+import { Privilegios } from '../../types/Restaurante/Privilegios';
+import { EmpleadoPrivilegio } from '../../types/Restaurante/EmpleadoPrivilegio';
+import { PrivilegiosService } from '../../services/PrivilegiosService';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -28,12 +31,15 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [contraseña, setContraseña] = useState('');
   const [telefono, setTelefono] = useState(empleadoOriginal.telefono);
   const [fechaNacimiento, setFechaNacimiento] = useState<string>(empleadoOriginal.fechaNacimiento.toString());
-  const [sucursal, setSucursal] = useState(empleadoOriginal.sucursal);
+  const [sucursal, setSucursal] = useState(empleadoOriginal.sucursales[0]);
 
   const [indexDomicilio, setIndexDomicilio] = useState<number>(0);
   const [indexDomicilioModificable, setIndexDomicilioModificable] = useState<number>(0);
   const [domiciliosModificable, setDomiciliosModificable] = useState<Domicilio[]>(empleadoOriginal.domicilios);
   const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
+
+  const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [tarea: string]: string[] }>({});
+  const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
 
   const handleChangeCalle = (index: number, calle: string) => {
     const nuevosDomicilios = [...domicilios];
@@ -127,6 +133,56 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     }
   };
 
+  useEffect(() => {
+    PrivilegiosService.getPrivilegios()
+      .then(data => {
+        const nuevoPrivilegiosElegidos = empleadoOriginal.empleadoPrivilegios.reduce((acc: { [tarea: string]: string[] }, empleadoPrivilegio) => {
+          acc[empleadoPrivilegio.privilegio.tarea] = empleadoPrivilegio.permisos;
+          return acc;
+        }, {});
+
+        setPrivilegiosElegidos(nuevoPrivilegiosElegidos);
+
+        setPrivilegios(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleModificarPrivilegios = (tarea: string, permiso: string) => {
+    setPrivilegiosElegidos((prev) => {
+      const permisosActuales = prev[tarea] || [];
+      if (permisosActuales.includes(permiso)) {
+        return {
+          ...prev,
+          [tarea]: permisosActuales.filter(p => p !== permiso)
+        };
+      } else {
+        return {
+          ...prev,
+          [tarea]: [...permisosActuales, permiso]
+        };
+      }
+    });
+  };
+
+  const desmarcarTarea = (tarea: string) => {
+    setPrivilegiosElegidos((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [tarea]: _, ...rest } = prev; // Da error pero ta bien
+      return rest;
+    });
+  };
+
+  const marcarTarea = (tarea: string, permisos: string[]) => {
+    setPrivilegiosElegidos((prev) => ({
+      ...prev,
+      [tarea]: permisos,
+    }));
+  };
+
   const [modalBusquedaSucursal, setModalBusquedaSucursal] = useState<boolean>(false);
   const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
   const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
@@ -202,9 +258,16 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       }
     });
 
+    const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([tarea, permisos]) => {
+      const privilegio = new Privilegios(0, tarea, []);
+      return new EmpleadoPrivilegio(0, privilegio, permisos);
+    });
+
     empleadoActualizado.domicilios = domicilios;
 
-    if (sucursal) empleadoActualizado.sucursal = sucursal;
+    empleadoActualizado.empleadoPrivilegios = empleadoPrivilegios
+
+    if (sucursal) empleadoActualizado.sucursales.push(sucursal);
 
     empleadoActualizado.borrado = 'NO';
 
@@ -222,96 +285,201 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     });
   }
 
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <h4>Datos</h4>
+            <div className="inputBox">
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
+              <span>Email del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} value={cuil} onChange={(e) => { setCuit(e.target.value) }} />
+              <span>Cuil del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+              <span>Contraseña del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+              <span>Telefono del empleado</span>
+            </div>
+            <div className="inputBox">
+              <input type="date" required={true} value={formatearFechaYYYYMMDD(new Date(fechaNacimiento))} onChange={(e) => setFechaNacimiento(e.target.value)} />
+              <span>Fecha de nacimiento</span>
+            </div>
+            <InputComponent disabled={false} placeHolder='Seleccionar sucursal...' onInputClick={() => setModalBusquedaSucursal(true)} selectedProduct={sucursal?.nombre ?? ''} />
+            {modalBusquedaSucursal && <ModalFlotanteRecomendacionesSucursales datosOmitidos={sucursal?.nombre ?? ''} onCloseModal={handleModalClose} onSelectSucursal={(sucursal) => { setSucursal(sucursal); handleModalClose(); }} />}
+            <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h4>Domicilio/os</h4>
+            {domiciliosModificable && domiciliosModificable.map((domicilio, index) => (
+              <div key={'domicilioMod' + index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilioModificable(index)}>X</p>
+
+                <h2>Domicilio {index + 1}</h2>
+
+                <div className="inputBox">
+                  <input type="text" required={true} value={domicilio.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
+                  <span>Nombre de calle</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={domicilio.numero} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
+                  <span>Número de domicilio</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={domicilio.codigoPostal} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
+                  <span>Código Postal</span>
+                </div>
+                <div className="inputBox">
+                  <input type="text" disabled required={true} value={domicilio.localidad?.nombre} />
+                </div>
+              </div>
+            ))}
+            {domicilios && indexDomicilio > 0 && domicilios.map((domicilio, index) => (
+              <div key={'domicilio' + index}>
+                <div className="inputBox">
+                  <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
+                  <span>Nombre de calle</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
+                  <span>Número de domicilio</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
+                  <span>Código Postal</span>
+                </div>
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
+                <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.pais?.nombre ?? ''} />
+                {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { handleChangePais(index, pais); handleModalClose(); }} />}
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
+                <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.pais.nombre.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
+                {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
+                <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />
+                {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { handleChangeDepartamento(index, departamento); handleModalClose(); }} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
+                <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
+                {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+                <hr />
+                <hr /><p onClick={() => quitarCampoDomicilio(index)}>X</p>
+              </div>
+            ))}
+            <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h4>Privilegios comúnes</h4>
+            {privilegios && privilegios.map((privilegio, index) => (
+              <div key={index}>
+                {privilegio.tarea !== 'Empleados' && privilegio.tarea !== 'Sucursales' && privilegio.tarea !== 'Estadísticas' && privilegio.tarea !== 'Empresas' && (
+                  <>
+                    <hr />
+                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.tarea)}>Desmarcar todo</p>
+                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.tarea, privilegio.permisos)}>Marcar todo</p>
+                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.tarea}</h4>
+                    {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
+                      <div key={permisoIndex}>
+                        <input
+                          type="checkbox"
+                          value={permiso}
+                          checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
+                          onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                        />
+                        <label>{permiso}</label>
+                      </div>
+                    ))}
+                    <hr />
+                  </>
+                )}
+              </div>
+            ))}
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={editarEmpleado}>Editar empleado ✓</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <h4>Privilegios sensibles</h4>
+            <p>Recomendamos que estos privilegios estén deshabilitados ya que pueden dar acceso a datos sensibles</p>
+            {privilegios && privilegios.map((privilegio, index) => (
+              <div key={index}>
+                {(privilegio.tarea === 'Empleados' || privilegio.tarea === 'Sucursales' || privilegio.tarea === 'Estadísticas' || privilegio.tarea === 'Empresas') && (
+                  <>
+                    <hr />
+                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.tarea)}>Desmarcar todo</p>
+                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.tarea, privilegio.permisos)}>Marcar todo</p>
+                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.tarea}</h4>
+                    {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
+                      <div key={permisoIndex}>
+                        <input
+                          type="checkbox"
+                          value={permiso}
+                          checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
+                          onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                        />
+                        <label>{permiso}</label>
+                      </div>
+                    ))}
+                    <hr />
+                  </>
+                )}
+              </div>
+            ))}
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={editarEmpleado}>Editar empleado ✓</button>
+            </div>
+          </>
+        )
+    }
+  }
+
   return (
     <div className="modal-info">
-      <h2>Editar empleado</h2>
+      <h2>&mdash; Agregar empleado &mdash;</h2>
       <Toaster />
-      <form>
-        <div className="inputBox">
-          <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-          <span>Nombre del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="text" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
-          <span>Email del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} value={cuil} onChange={(e) => { setCuit(e.target.value) }} />
-          <span>Cuil del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
-          <span>Contraseña del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-          <span>Telefono del empleado</span>
-        </div>
-        <div className="inputBox">
-          <input type="date" required={true} value={formatearFechaYYYYMMDD(new Date(fechaNacimiento))} onChange={(e) => setFechaNacimiento(e.target.value)} />
-          <span>Fecha de nacimiento</span>
-        </div>
-        {domiciliosModificable && domiciliosModificable.map((domicilio, index) => (
-          <div key={'domicilioMod' + index}>
-            <hr />
-            <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilioModificable(index)}>X</p>
-
-            <h2>Domicilio {index + 1}</h2>
-
-            <div className="inputBox">
-              <input type="text" required={true} value={domicilio.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
-              <span>Nombre de calle</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} value={domicilio.numero} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
-              <span>Número de domicilio</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} value={domicilio.codigoPostal} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
-              <span>Código Postal</span>
-            </div>
-            <div className="inputBox">
-              <input type="text" disabled required={true} value={domicilio.localidad?.nombre} />
-            </div>
-          </div>
-        ))}
-        {domicilios && indexDomicilio > 0 && domicilios.map((domicilio, index) => (
-          <div key={'domicilio' + index}>
-            <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
-              <span>Nombre de calle</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
-              <span>Número de domicilio</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
-              <span>Código Postal</span>
-            </div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
-            <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.pais?.nombre ?? ''} />
-            {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { handleChangePais(index, pais); handleModalClose(); }} />}
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-            <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.pais.nombre.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
-            {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
-            <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />
-            {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { handleChangeDepartamento(index, departamento); handleModalClose(); }} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
-            <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
-            {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
-            <hr />
-            <hr /><p onClick={() => quitarCampoDomicilio(index)}>X</p>
-          </div>
-        ))}
-      </form>
-      <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
-      <br />
-      <InputComponent disabled={false} placeHolder='Seleccionar sucursal...' onInputClick={() => setModalBusquedaSucursal(true)} selectedProduct={sucursal?.nombre ?? ''} />
-      {modalBusquedaSucursal && <ModalFlotanteRecomendacionesSucursales datosOmitidos={sucursal?.nombre ?? ''} onCloseModal={handleModalClose} onSelectSucursal={(sucursal) => { setSucursal(sucursal); handleModalClose(); }} />}
-      <hr />
-      <button className='button-form' type='button' onClick={editarEmpleado}>Editar empleado</button>
+      {renderStep()}
     </div>
   )
 }

@@ -178,6 +178,7 @@ const Opciones = () => {
 
     useEffect(() => {
         checkPrivilegies();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function checkPrivilegies() {
