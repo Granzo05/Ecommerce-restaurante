@@ -66,11 +66,11 @@ const Opciones = () => {
         return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
     });
 
-    if (DESACTIVAR_PRIVILEGIOS && ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id))) {
+    if (DESACTIVAR_PRIVILEGIOS || ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id))) {
         window.location.href = getBaseUrl() + '/opciones';
     }
 
-    if (DESACTIVAR_PRIVILEGIOS && ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id)) {
+    if (DESACTIVAR_PRIVILEGIOS || ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id)) {
         window.location.href = getBaseUrl() + '/opciones';
     }
 
@@ -189,9 +189,9 @@ const Opciones = () => {
     }, []);
 
     async function checkPrivilegies() {
-        if (!DESACTIVAR_PRIVILEGIOS && (empleado && empleado.empleadoPrivilegios?.length > 0)) {
+        console.log(empleado)
+        if (!DESACTIVAR_PRIVILEGIOS && (empleado !== null && empleado.empleadoPrivilegios?.length > 0)) {
             try {
-                setVisible(true);
                 empleado?.empleadoPrivilegios?.forEach(privilegio => {
                     if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
                         setArticuloVentaVisibleEmpleado(true);
@@ -226,6 +226,21 @@ const Opciones = () => {
             } catch (error) {
                 console.error('Error:', error);
             }
+        } else if (sucursal !== null && !DESACTIVAR_PRIVILEGIOS) {
+            setArticuloVentaVisibleEmpleado(true);
+            setArticuloMenuVisibleEmpleado(true);
+            setStockVisibleEmpleado(true);
+            setStockEntranteVisibleEmpleado(true);
+            setIngredientesVisibleEmpleado(true);
+            setCategoriasVisibleEmpleado(true);
+            setMedidasVisibleEmpleado(true);
+            setPromocionesVisibleEmpleado(true);
+            setSubcategoriasVisibleEmpleado(true);
+            setEstadisticasVisibleEmpleado(true);
+            setPedidosVisibleEmpleado(true);
+            setEmpleadosVisibleEmpleado(true);
+            setSucursalesVisibleEmpleado(true);
+            setEmpresasVisibleEmpleado(true);
         }
     }
 

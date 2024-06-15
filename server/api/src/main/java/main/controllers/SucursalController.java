@@ -145,32 +145,6 @@ public class SucursalController {
         return new HashSet<>(localidades);
     }
 
-    @CrossOrigin
-    @GetMapping("/check/{email}")
-    public boolean checkPrivilegios(@PathVariable("email") String email) {
-        Optional<Sucursal> sucursal = sucursalRepository.findByEmail(email);
-
-        // Sucursal tiene acceso a todo, por lo tanto si el email coincide entonces se concede acceso
-        if (sucursal != null) {
-            return true;
-        }
-
-        // Recibo un email y para chequear si se puede dar acceso o no
-        Optional<Cliente> cliente = clienteRepository.findByEmail(email);
-        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
-        if (cliente.isPresent()) {
-            return false;
-        }
-
-        Optional<Empleado> empleado = empleadoRepository.findByEmail(email);
-        // De entrada un cliente no va a poder acceder, asi que si el email coincide se descarta automaticamente
-        if (empleado.isPresent()) {
-            return true;
-        }
-
-        return false;
-    }
-
     @PostMapping("/sucursal/create")
     @CrossOrigin
     @Transactional
