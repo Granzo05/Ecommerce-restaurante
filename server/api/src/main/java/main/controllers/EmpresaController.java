@@ -32,6 +32,7 @@ public class EmpresaController {
     @CrossOrigin
     @GetMapping("/empresa/login/{variable}/{password}")
     public Empresa loginEmpresa(@PathVariable("variable") String variable, @PathVariable("password") String password) throws Exception {
+        // Variable trabaja como un nombre de usuario donde puede ingresar el cuil o nombre de la empresa para loguearse
         Optional<Empresa> empresa = empresaRepository.findByCuitOrNombreAndPassword(variable, Encrypt.cifrarPassword(password));
 
         if (empresa.isPresent()) {

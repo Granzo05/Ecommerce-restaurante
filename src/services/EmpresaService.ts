@@ -1,6 +1,6 @@
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Empresa } from '../types/Restaurante/Empresa';
-import { URL_API } from '../utils/global_variables/const';
+import { getBaseUrl, limpiarCredenciales, URL_API } from '../utils/global_variables/const';
 
 export const EmpresaService = {
     createEmpresa: async (empresa: Empresa, imagenes: Imagenes[]): Promise<string> => {
@@ -13,7 +13,7 @@ export const EmpresaService = {
         })
 
         let cargarImagenes = true;
-        
+
         if (!response.ok) {
             cargarImagenes = false;
             throw new Error(await response.text());
@@ -43,7 +43,7 @@ export const EmpresaService = {
         return await response.text();
     },
 
-    getEmpresa: async (email: string, contraseña: string): Promise<string> => {
+    getEmpresa: async (email: string, contraseña: string) => {
         try {
             const response = await fetch(URL_API + 'empresa/login/' + email + '/' + contraseña, {
                 method: 'GET',
@@ -63,14 +63,14 @@ export const EmpresaService = {
             } else {
                 let restaurante = {
                     id: data.id,
-                    email: data.email,
-                    telefono: data.telefono,
-                    privilegios: data.privilegios
+                    razonSocial: data.razonSocial
                 }
 
-                localStorage.setItem('usuario', JSON.stringify(restaurante));
+                limpiarCredenciales();
 
-                return 'Sesión iniciada correctamente';
+                localStorage.setItem('empresa', JSON.stringify(restaurante));
+                
+                window.location.href = getBaseUrl() + '/empresa'
             }
         } catch (error) {
             console.error('Error:', error);

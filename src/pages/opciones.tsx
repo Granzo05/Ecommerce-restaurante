@@ -424,6 +424,13 @@ const Opciones = () => {
                             >
                                 Preferencias
                             </h4>
+                            {sucursal && sucursal.empresa.id > 0 && (
+                                <h4
+                                    onClick={() => { localStorage.removeItem('sucursal'); window.location.href = getBaseUrl() + '/panel' }}
+                                >
+                                    Salir de la sucursal
+                                </h4>
+                            )}
                         </div>
                     )}
 

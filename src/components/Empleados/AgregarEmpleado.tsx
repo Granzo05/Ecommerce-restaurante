@@ -51,6 +51,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   useEffect(() => {
     PrivilegiosService.getPrivilegios()
       .then(data => {
+        console.log(data)
         setPrivilegios(data);
       })
       .catch(err => {
@@ -77,7 +78,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
   const desmarcarTarea = (tarea: string) => {
     setPrivilegiosElegidos((prev) => {
-      const { [tarea]: _, ...rest } = prev;
+      const { [tarea]: _, ...rest } = prev; // Da error pero ta bien
       return rest;
     });
   };
@@ -221,7 +222,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
     const sucursalStr = localStorage.getItem('usuario');
     const sucursal = sucursalStr ? JSON.parse(sucursalStr) : new Sucursal();
-    
+
     empleado.sucursales.push(sucursal);
 
     empleado.domicilios = domicilios;
@@ -336,25 +337,66 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       case 3:
         return (
           <>
-            <h4>Paso final - Privilegios</h4>
+            <h4>Privilegios comúnes</h4>
             {privilegios && privilegios.map((privilegio, index) => (
               <div key={index}>
-                <hr />
-                <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.tarea)}>Desmarcar todo</p>
-                <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.tarea, privilegio.permisos)}>Marcar todo</p>
-                <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.tarea}</h4>
-                {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
-                  <div key={permisoIndex}>
-                    <input
-                      type="checkbox"
-                      value={permiso}
-                      checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
-                      onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
-                    />
-                    <label>{permiso}</label>
-                  </div>
-                ))}
-                <hr />
+                {privilegio.tarea !== 'Empleados' && privilegio.tarea !== 'Sucursales' && privilegio.tarea !== 'Estadísticas' && privilegio.tarea !== 'Empresas' && (
+                  <>
+                    <hr />
+                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.tarea)}>Desmarcar todo</p>
+                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.tarea, privilegio.permisos)}>Marcar todo</p>
+                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.tarea}</h4>
+                    {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
+                      <div key={permisoIndex}>
+                        <input
+                          type="checkbox"
+                          value={permiso}
+                          checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
+                          onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                        />
+                        <label>{permiso}</label>
+                      </div>
+                    ))}
+                    <hr />
+                  </>
+                )}
+              </div>
+            ))}
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <h4>Privilegios sensibles</h4>
+            <p>Recomendamos que estos privilegios estén deshabilitados ya que pueden dar acceso a datos sensibles</p>
+            {privilegios && privilegios.map((privilegio, index) => (
+              <div key={index}>
+                {(privilegio.tarea === 'Empleados' || privilegio.tarea === 'Sucursales' || privilegio.tarea === 'Estadísticas' || privilegio.tarea === 'Empresas') && (
+                  <>
+                    <hr />
+                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.tarea)}>Desmarcar todo</p>
+                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.tarea, privilegio.permisos)}>Marcar todo</p>
+                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.tarea}</h4>
+                    {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
+                      <div key={permisoIndex}>
+                        <input
+                          type="checkbox"
+                          value={permiso}
+                          checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
+                          onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                        />
+                        <label>{permiso}</label>
+                      </div>
+                    ))}
+                    <hr />
+                  </>
+                )}
               </div>
             ))}
             <hr />

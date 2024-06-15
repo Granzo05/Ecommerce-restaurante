@@ -9,7 +9,7 @@ import { EmpresaService } from "../../services/EmpresaService";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { PrivilegiosService } from "../../services/PrivilegiosService";
 import { Privilegios } from "../../types/Restaurante/Privilegios";
-import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
+import { DESACTIVAR_PRIVILEGIOS, getBaseUrl } from "../../utils/global_variables/const";
 
 const Empresas = () => {
     const [empresas, setEmpresas] = useState<Empresa[]>([]);
@@ -96,6 +96,8 @@ const Empresas = () => {
         }
 
         localStorage.setItem('empresa', JSON.stringify(restaurante));
+
+        window.location.href = getBaseUrl() + '/admin'
     };
 
     const handleAgregarEmpresa = () => {
@@ -165,7 +167,7 @@ const Empresas = () => {
                                     {empresa.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                {createVisible && (
+                                                {createVisible && activateVisible && updateVisible && deleteVisible && (
                                                     <button className="btn-accion-abrir" onClick={() => handleAbrirEmpresa(empresa.id)}>ABRIR</button>
                                                 )}
                                                 {updateVisible && (
@@ -180,7 +182,7 @@ const Empresas = () => {
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                {createVisible && (
+                                                {createVisible && activateVisible && updateVisible && deleteVisible && (
                                                     <button className="btn-accion-abrir" onClick={() => handleAbrirEmpresa(empresa.id)}>ABRIR</button>
                                                 )}
                                                 {activateVisible && (

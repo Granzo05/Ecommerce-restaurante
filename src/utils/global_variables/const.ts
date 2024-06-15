@@ -1,5 +1,6 @@
 import { Cliente } from "../../types/Cliente/Cliente";
 import { Empleado } from "../../types/Restaurante/Empleado";
+import { Empresa } from "../../types/Restaurante/Empresa";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 
 export const URL_API = 'http://localhost:8080/';
@@ -10,6 +11,7 @@ export function sucursalId(): number {
     const usuarioString = localStorage.getItem('usuario');
     const empleadoString = localStorage.getItem('empleado');
     const sucursalString = localStorage.getItem('sucursal');
+    const empresaString = localStorage.getItem('empresa');
 
     if (usuarioString) {
         const usuario: Cliente = JSON.parse(usuarioString);
@@ -27,17 +29,21 @@ export function sucursalId(): number {
                 return empleado.sucursales[0]?.id;
             }
         }
-    } else {
-        if (sucursalString) {
-            const sucursal: Sucursal = JSON.parse(sucursalString);
+    } else if (sucursalString) {
+        const sucursal: Sucursal = JSON.parse(sucursalString);
 
-            if (sucursal && sucursal.id && sucursal.id !== undefined && sucursal.id > 0) {
-                return sucursal.id;
-            }
+        if (sucursal && sucursal.id && sucursal.id !== undefined && sucursal.id > 0) {
+            return sucursal.id;
+        }
+    } else if (empresaString) {
+        const empresa: Empresa = JSON.parse(empresaString);
+
+        if (empresa && empresa.id && empresa.id !== undefined && empresa.id > 0) {
+            return empresa.id;
         }
     }
 
-    return 1;
+    return 0;
 }
 
 export function getBaseUrl(): string {
@@ -45,6 +51,11 @@ export function getBaseUrl(): string {
 
     return `${window.location.protocol}//${window.location.host}/${idSucursal}`;
 }
+
+export function limpiarCredenciales() {
+    localStorage.clear();
+}
+
 // Frases del login del restaurante
 
 export const frases = [

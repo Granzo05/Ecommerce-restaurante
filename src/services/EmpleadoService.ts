@@ -1,5 +1,5 @@
 import { Empleado } from '../types/Restaurante/Empleado'
-import { getBaseUrl, sucursalId, URL_API } from '../utils/global_variables/const';
+import { getBaseUrl, limpiarCredenciales, sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
     createEmpleado: async (empleado: Empleado): Promise<string> => {
@@ -45,6 +45,8 @@ export const EmpleadoService = {
                     empleadoPrivilegios: data.empleadoPrivilegios,
                     sucursales: data.sucursales
                 }
+
+                limpiarCredenciales();
 
                 localStorage.setItem('empleado', JSON.stringify(empleado));
 

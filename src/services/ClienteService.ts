@@ -1,6 +1,6 @@
 import { Cliente } from '../types/Cliente/Cliente'
 import { Domicilio } from '../types/Domicilio/Domicilio';
-import { URL_API } from '../utils/global_variables/const';
+import { limpiarCredenciales, URL_API } from '../utils/global_variables/const';
 
 export const ClienteService = {
     createUser: async (cliente: Cliente) => {
@@ -27,6 +27,9 @@ export const ClienteService = {
                     telefono: data.telefono,
                     idSucursalRecomendada: data.idSucursalRecomendada
                 }
+
+                limpiarCredenciales();
+
                 localStorage.setItem('usuario', JSON.stringify(cliente));
 
                 // Redirige al usuario al menú principal
@@ -80,6 +83,9 @@ export const ClienteService = {
                     telefono: data.telefono,
                     idSucursalRecomendada: data.idSucursalRecomendada
                 }
+
+                limpiarCredenciales();
+
                 localStorage.setItem('usuario', JSON.stringify(cliente));
 
                 // Redirige al usuario al menú principal

@@ -25,6 +25,8 @@ const AppRoutes: React.FC = () => {
 
         <Route path="/panel" element={<Empresas />} />
 
+        <Route path=":id/empresa" element={<Opciones />} />
+
         <Route path="/" element={<MainMenu />} />
 
         <Route path="/:id" element={<MainMenu />} />

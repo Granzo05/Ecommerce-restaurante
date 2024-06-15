@@ -11,6 +11,7 @@ import { Empleado } from "../../types/Restaurante/Empleado";
 import { PrivilegiosService } from "../../services/PrivilegiosService";
 import { Privilegios } from "../../types/Restaurante/Privilegios";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
+import { Empresa } from "../../types/Restaurante/Empresa";
 
 const Sucursales = () => {
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
@@ -49,12 +50,18 @@ const Sucursales = () => {
             });
     }, []);
 
+    const [empresa] = useState<Empresa | null>(() => {
+        const empleadoString = localStorage.getItem('empresa');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empresa) : null;
+    });
 
     const handleAbrirSucursal = (idSucursal: number) => {
         let restaurante = {
             id: idSucursal,
-            nombre: 'admin',
-            empleadoPrivilegios: privilegios
+            nombre: empresa?.razonSocial,
+            empleadoPrivilegios: privilegios,
+            empresa: empresa
         }
 
         localStorage.setItem('sucursal', JSON.stringify(restaurante));
@@ -167,7 +174,7 @@ const Sucursales = () => {
                                     {sucursal.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
-                                                {createVisible && (
+                                                {createVisible && activateVisible && updateVisible && deleteVisible && (
                                                     <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
                                                 )}
                                                 {updateVisible && (
@@ -181,7 +188,7 @@ const Sucursales = () => {
                                     ) : (
                                         <td>
                                             <div className="btns-acciones">
-                                                {updateVisible && (
+                                                {createVisible && activateVisible && updateVisible && deleteVisible && (
                                                     <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
                                                 )}
                                                 {activateVisible && (
