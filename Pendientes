@@ -79,7 +79,7 @@
 [] Si llegamos mostrar recetas de los menus
 [] Ajustar el horario estimado
 [] Hacer la recuperacion de contraseña
-[] Filtro de lugares al cargar la sucursal para las localidadesDelivery
+[] Filtro de lugares al cargar la sucursal para las localidadesDelivery para buscar por nombre de la localidad
 [] Validar que 2 sucursales no puedan tener el mismo domicilio al mismo tiempo
 [] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
 [] Arreglar los permisos de pedidos a entrantes, en camino, etc y poder aceptar o rechazar dependiendo el empleado

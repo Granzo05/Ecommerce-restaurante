@@ -52,14 +52,17 @@ const Empleados = () => {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
                 empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('CREATE')) {
                             setCreateVisible(true);
-                        } else if (privilegio.permisos.includes('UPDATE')) {
+                        }
+                        if (privilegio.permisos.includes('UPDATE')) {
                             setUpdateVisible(true);
-                        } else if (privilegio.permisos.includes('DELETE')) {
+                        }
+                        if (privilegio.permisos.includes('DELETE')) {
                             setDeleteVisible(true);
-                        } else if (privilegio.permisos.includes('ACTIVATE')) {
+                        }
+                        if (privilegio.permisos.includes('ACTIVATE')) {
                             setActivateVisible(true);
                         }
                     }
