@@ -12,6 +12,7 @@ import ActivarArticuloVenta from './ActivarArticulo';
 import '../../styles/articulosVenta.css'
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
 
 const ArticuloVentas = () => {
     const [articulosVenta, setArticulosVenta] = useState<ArticuloVenta[]>([]);
@@ -24,15 +25,21 @@ const ArticuloVentas = () => {
 
     const [selectedArticuloVenta, setSelectedArticuloVenta] = useState<ArticuloVenta | null>(null);
 
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
     const [empleado] = useState<Empleado | null>(() => {
         const empleadoString = localStorage.getItem('empleado');
 
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
-    useEffect(() => {
-        checkPrivilegies();
-    }, []);
+    const [sucursal] = useState<Sucursal | null>(() => {
+        const sucursalString = localStorage.getItem('sucursal');
+
+        return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
+    });
 
     const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
@@ -43,7 +50,7 @@ const ArticuloVentas = () => {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
                 empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('CREATE')) {
                             setCreateVisible(true);
                         }
@@ -61,6 +68,11 @@ const ArticuloVentas = () => {
             } catch (error) {
                 console.error('Error:', error);
             }
+        } else if (sucursal && sucursal.id > 0) {
+            setCreateVisible(true);
+            setActivateVisible(true);
+            setDeleteVisible(true);
+            setUpdateVisible(true);
         }
     }
 

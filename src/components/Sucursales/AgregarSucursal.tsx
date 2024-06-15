@@ -14,7 +14,6 @@ import { DepartamentoService } from '../../services/DepartamentoService';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
-import '../styles/opcionesRestaurante.css';
 
 interface AgregarSucursalProps {
   onCloseModal: () => void;

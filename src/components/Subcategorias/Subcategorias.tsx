@@ -11,6 +11,7 @@ import { Categoria } from "../../types/Ingredientes/Categoria";
 import React from "react";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
+import { Sucursal } from "../../types/Restaurante/Sucursal";
 
 const Subcategorias = () => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -46,6 +47,12 @@ const Subcategorias = () => {
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
+    const [sucursal] = useState<Sucursal | null>(() => {
+        const sucursalString = localStorage.getItem('sucursal');
+
+        return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
+    });
+
     const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
@@ -55,7 +62,7 @@ const Subcategorias = () => {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
                 empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Subcategorias' && privilegio.permisos.includes('READ')) {
+                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('CREATE')) {
                             setCreateVisible(true);
                         }
@@ -73,6 +80,11 @@ const Subcategorias = () => {
             } catch (error) {
                 console.error('Error:', error);
             }
+        } else if (sucursal && sucursal.id > 0) {
+            setCreateVisible(true);
+            setActivateVisible(true);
+            setDeleteVisible(true);
+            setUpdateVisible(true);
         }
     }
 

@@ -9,6 +9,7 @@ import EliminarEmpleado from "./EliminarEmpleado";
 import ActivarEmpleado from "./ActivarEmpleado";
 import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
+import { Sucursal } from "../../types/Restaurante/Sucursal";
 
 const Empleados = () => {
     const [empleados, setEmpleados] = useState<Empleado[]>([]);
@@ -43,6 +44,12 @@ const Empleados = () => {
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
+    const [sucursal] = useState<Sucursal | null>(() => {
+        const sucursalString = localStorage.getItem('sucursal');
+
+        return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
+    });
+
     const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
@@ -70,9 +77,13 @@ const Empleados = () => {
             } catch (error) {
                 console.error('Error:', error);
             }
+        } else if (sucursal && sucursal.id > 0) {
+            setCreateVisible(true);
+            setActivateVisible(true);
+            setDeleteVisible(true);
+            setUpdateVisible(true);
         }
     }
-
 
     const handleAgregarEmpleado = () => {
         setShowAgregarEmpleadoModal(true);

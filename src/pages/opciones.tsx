@@ -239,8 +239,8 @@ const Opciones = () => {
             setEstadisticasVisibleEmpleado(true);
             setPedidosVisibleEmpleado(true);
             setEmpleadosVisibleEmpleado(true);
-            setSucursalesVisibleEmpleado(true);
-            setEmpresasVisibleEmpleado(true);
+            setSucursalesVisibleEmpleado(false);
+            setEmpresasVisibleEmpleado(false);
         }
     }
 
