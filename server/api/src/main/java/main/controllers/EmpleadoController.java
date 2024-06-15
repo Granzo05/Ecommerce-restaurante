@@ -55,7 +55,8 @@ public class EmpleadoController {
             return empleadoDb.get();
 
         }
-        return null;
+
+        return new Empleado();
     }
 
     @Transactional

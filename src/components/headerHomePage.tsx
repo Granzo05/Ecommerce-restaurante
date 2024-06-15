@@ -6,7 +6,7 @@ import { CarritoService } from '../services/CarritoService';
 import { Cliente } from '../types/Cliente/Cliente';
 import SearchIcon from '@mui/icons-material/Search';
 import { toast, Toaster } from 'sonner';
-import { getBaseUrl } from '../utils/global_variables/const';
+import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { Empleado } from '../types/Restaurante/Empleado';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 
@@ -70,9 +70,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('usuario');
-        localStorage.removeItem('empleado');
-        localStorage.removeItem('sucursal');
+        limpiarCredenciales();
         setCliente(null)
     };
 

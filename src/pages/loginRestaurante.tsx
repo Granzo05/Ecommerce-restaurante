@@ -26,8 +26,19 @@ const LoginNegocio = () => {
   const [contraseña, setContraseña] = useState('');
 
   const handleIniciarSesionNegocio = () => {
+    if (email.length === 0) {
+      toast.error('Debe ingresar una email');
+      return;
+    } else if (contraseña.length === 0) {
+      toast.error('Debe ingresar una contraseña');
+      return;
+    }
+
     toast.promise(SucursalService.getSucursal(email, contraseña), {
-      loading: 'Iniciando sesión...'
+      loading: 'Iniciando sesión...',
+      success: (message) => {
+        return message;
+      },
     });
   };
 

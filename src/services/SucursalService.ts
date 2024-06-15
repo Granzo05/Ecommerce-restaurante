@@ -61,23 +61,25 @@ export const SucursalService = {
             }
 
             const data = await response.json();
- 
+
             if (data.id !== null) {
                 let sucursal = {
-                    id: data.id
+                    id: data.id,
+                    nombre: data.nombre
                 }
 
                 localStorage.setItem('sucursal', JSON.stringify(sucursal));
-                
-                window.location.href = getBaseUrl() + '/opciones';
 
+                window.location.href = getBaseUrl() + '/opciones';
+                return;
             } else {
                 EmpleadoService.getEmpleado(email, contraseña);
             }
 
+            return 'Los datos ingresados no corresponden a una cuenta activa';
+
         } catch (error) {
             console.error('Error:', error);
-            throw new Error('Credenciales inválidas');
         }
     },
 

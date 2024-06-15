@@ -83,6 +83,7 @@ public class Main {
                 empresa.setNombre("El Buen Sabor");
                 empresa.setCuit("201234566");
                 empresa.setRazonSocial("El Buen Sabor S.R.L.");
+                empresa.setContraseña("123456");
 
                 Sucursal sucursal = new Sucursal();
                 sucursal.setEmpresa(empresa);

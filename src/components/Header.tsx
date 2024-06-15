@@ -7,7 +7,7 @@ import { CarritoService } from '../services/CarritoService';
 import { Cliente } from '../types/Cliente/Cliente';
 import { toast, Toaster } from 'sonner';
 import SearchIcon from '@mui/icons-material/Search';
-import { getBaseUrl } from '../utils/global_variables/const';
+import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 
 const Header = () => {
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
@@ -48,7 +48,7 @@ const Header = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('usuario');
+        limpiarCredenciales();
         setCliente(null)
     };
 

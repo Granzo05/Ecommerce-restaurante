@@ -8,7 +8,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Empleado } from '../types/Restaurante/Empleado';
 import { useParams } from 'react-router-dom';
 import { Sucursal } from '../types/Restaurante/Sucursal';
-import { DESACTIVAR_PRIVILEGIOS, getBaseUrl } from '../utils/global_variables/const';
+import { DESACTIVAR_PRIVILEGIOS, getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
+import { Empresa } from '../types/Restaurante/Empresa';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -57,6 +58,12 @@ const Opciones = () => {
         const sucursalString = localStorage.getItem('sucursal');
 
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
+    });
+
+    const [empresa] = useState<Empresa | null>(() => {
+        const empresaString = localStorage.getItem('empresa');
+
+        return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
     });
 
     if (DESACTIVAR_PRIVILEGIOS && ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id))) {
@@ -141,7 +148,7 @@ const Opciones = () => {
             return (
                 <div className="welcome-employee">
                     <br /><br /><br /><br /><br /><br /><br /><br />
-                    <h1 id="welcome">¡BIENVENIDO {empleado?.nombre}!</h1>
+                    <h1 id="welcome">¡BIENVENIDO {empleado?.nombre}{sucursal?.nombre}{empresa?.razonSocial}!</h1>
                 </div>
             );
         } else if (opcionSeleccionada === 12) {
@@ -425,13 +432,6 @@ const Opciones = () => {
                             >
                                 Preferencias
                             </h4>
-                            {sucursal && sucursal.empresa.id > 0 && (
-                                <h4
-                                    onClick={() => { localStorage.removeItem('sucursal'); window.location.href = getBaseUrl() + '/panel' }}
-                                >
-                                    Salir de la sucursal
-                                </h4>
-                            )}
                         </div>
                     )}
 
@@ -442,7 +442,11 @@ const Opciones = () => {
                             <label className="name-account">{empleado?.nombre}</label>
                         </div>
 
-                        <LogoutIcon onClick={() => { localStorage.removeItem('sucursal'); localStorage.removeItem('empleado'); window.location.href = 'http://localhost:5173/login-negocio' }} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
+                        {empresa ? (
+                            <LogoutIcon onClick={() => { localStorage.removeItem('sucursal'); window.location.href = getBaseUrl() + '/empresa' }} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
+                        ) : (
+                            <LogoutIcon onClick={() => { limpiarCredenciales(); window.location.href = 'http://localhost:5173/login-negocio' }} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
+                        )}
                     </div>
                 </div>
             </div>

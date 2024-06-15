@@ -37,21 +37,23 @@ export const EmpleadoService = {
                 return await response.json()
             })
             .then(data => {
+                if (data.id !== null) {
+                    let empleado = {
+                        id: data.id,
+                        nombre: data.nombre,
+                        email: data.email,
+                        empleadoPrivilegios: data.empleadoPrivilegios,
+                        sucursales: data.sucursales
+                    }
 
-                let empleado = {
-                    id: data.id,
-                    nombre: data.nombre,
-                    email: data.email,
-                    empleadoPrivilegios: data.empleadoPrivilegios,
-                    sucursales: data.sucursales
+                    limpiarCredenciales();
+
+                    localStorage.setItem('empleado', JSON.stringify(empleado));
+
+                    // Redirige al usuario al menú principal
+                    window.location.href = getBaseUrl() + '/opciones';
+                    return;
                 }
-
-                limpiarCredenciales();
-
-                localStorage.setItem('empleado', JSON.stringify(empleado));
-
-                // Redirige al usuario al menú principal
-                window.location.href = getBaseUrl() + '/opciones';
             })
             .catch(error => {
                 console.error('Error:', error)
