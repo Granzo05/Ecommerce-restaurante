@@ -70,14 +70,14 @@ function ProductosPorCategoria() {
   return (
     <>
       <Header></Header>
-      <div className='menu-tipo'>
+      <div className='menu-tipo' >
         <div className="heading">
           <h1>Menú</h1>
           <h3>&mdash;{categoria}&mdash;</h3>
         </div>
 
         {menus && menus?.map(menu =>
-          <div key={menu.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+          <div key={menu.id}  className={`food-items ${isFlipped ? 'flipped' : ''}`}>
             <div className="front">
               <div className='img-food'>
                 <img src={menu.imagenes[0].ruta} alt={menu.descripcion} />

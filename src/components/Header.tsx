@@ -92,18 +92,28 @@ const Header = () => {
                 <label htmlFor="menu">
                     <img src="../src/assets/icons/header-icono-responsive.png" className="menu-icono-responsive" alt="menu" />
                 </label>
-                <input type="text" className='search-input' placeholder='¿Que deseas comer hoy?' onChange={(e) => setComidaBuscada(e.target.value)} />
-                <div onClick={buscarProducto} style={{ marginTop: '-7px', marginLeft: '7px', padding: '10px', cursor: 'pointer', color: 'white' }}>
-                    <SearchIcon fontSize='large' />
-                </div>
+
                 <nav className="navbar">
+                    <input
+                        type="text"
+                        className='search-input'
+                        placeholder='¿Que deseas comer hoy?'
+                        onChange={(e) => setComidaBuscada(e.target.value)}
+                        style={{ display: location.pathname !== ':id/pago' ? 'none' : 'block' }} // Ocultar campo de búsqueda en /pago
+                    />
+                    <img
+                        className='menu-icono-search-header-normal'
+                        src="../../src/assets/icons/header-icono-busqueda.png"
+                        alt="Carrito"
+                        onClick={handleCartClick}
+                        style={{ display: location.pathname !== ':id/pago' ? 'none' : 'block' }} // Ocultar ícono de búsqueda en /pago
+                    />
                     <ul className='ul-header-all'>
                         <li><a href={`/${id ?? 1}/#inicio`}>Inicio</a></li>
                         <li><a href={`/${id ?? 1}/#servicios`}>Nosotros</a></li>
                         <li><a href={`/${id ?? 1}/#ofertas`}>Promociones</a></li>
                         <li><a href={`/${id ?? 1}/#menus`}>Menús</a></li>
                         <li><a href={`/${id ?? 1}/#contactos`}>Contactos</a></li>
-
                     </ul>
                     <ul>
                         {cliente && cliente?.email?.length > 0 ? (

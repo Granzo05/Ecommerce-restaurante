@@ -22,6 +22,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { CarritoService } from "../services/CarritoService";
 import { SucursalService } from "../services/SucursalService";
 import { SucursalDTO } from "../types/Restaurante/SucursalDTO";
+import ModalCrud from "../components/ModalCrud";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -339,6 +340,31 @@ const Pago = () => {
         document.title = 'Detalle del pedido y pago';
     }, []);
 
+    const [showExitModal, setShowExitModal] = useState(false);
+
+    useEffect(() => {
+        const handleBeforeUnload = (event: { preventDefault: () => void; returnValue: string; }) => {
+                event.preventDefault();
+                event.returnValue = ''; // Este mensaje no se muestra en todos los navegadores
+                setShowExitModal(true);
+                return '';
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [carrito]);
+
+    const handleExitConfirm = () => {
+        setShowExitModal(false);
+        window.location.href = '/'; // Redirigir al usuario a la página de inicio o a otra página
+    };
+
+    const handleExitCancel = () => {
+        setShowExitModal(false);
+    };
     return (
         <>
             <Header />
@@ -457,6 +483,22 @@ const Pago = () => {
                 </div>
             </div >
             <Footer sucursal={sucursal} />
+            {/* Modal de confirmación de salida */}
+            {showExitModal && (
+                <ModalCrud
+                    isOpen={showExitModal}
+                    onClose={handleExitCancel}
+                >
+                    
+                    <div className="modal-info">
+                    <h2>Si sales ahora, perderás todos los productos agregados al carrito. ¿Deseas continuar?</h2>
+                        <button onClick={handleExitConfirm}>Sí, salir</button>
+                        <br />
+                        <br />
+                        <button onClick={handleExitCancel}>No, quedarse</button>
+                    </div>
+                </ModalCrud>
+            )}
         </>
     )
 }

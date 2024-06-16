@@ -16,6 +16,12 @@
   background-color: #2b86c4;
 }
 
+.volver-menu{
+  color: #FFFFFF;
+  text-decoration: none;
+
+}
+
 .volver-menu:hover{
   color: #2c2c2c;
   text-decoration: underline;

@@ -37,7 +37,7 @@ const Footer: React.FC<FooterProps> = ({ sucursal }) => {
                   </>
                 ) : (
                   <>
-                    <li><a>NO HA SELECCIONADO UNA SUCURSAL. </a><a href="/selec-sucursal" style={{ textDecoration: 'underline' }}>HÁGALO AHORA</a></li>
+                    <li><a>NO HA SELECCIONADO UNA SUCURSAL. </a><a href="/sucursales" style={{ textDecoration: 'underline' }}>HÁGALO AHORA</a></li>
                   </>
                 )}
               </ul>
@@ -55,7 +55,7 @@ const Footer: React.FC<FooterProps> = ({ sucursal }) => {
                 </>
               ) : (
                 <><ul>
-                  <li><a>NO HA SELECCIONADO UNA SUCURSAL. </a><a href="/selec-sucursal" style={{ textDecoration: 'underline' }}>HÁGALO AHORA</a></li>
+                  <li><a>NO HA SELECCIONADO UNA SUCURSAL. </a><a href="/sucursales" style={{ textDecoration: 'underline' }}>HÁGALO AHORA</a></li>
                 </ul>
                 </>
               )}
