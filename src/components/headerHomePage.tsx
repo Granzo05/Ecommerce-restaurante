@@ -126,9 +126,8 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                 </label>
                 <nav className="navbar">
                     <input type="text" className='search-input' placeholder='¿Que deseas comer hoy?' onChange={(e) => setComidaBuscada(e.target.value)} />
-                    <div onClick={buscarProducto} style={{ marginTop: '-7px', marginLeft: '7px', padding: '10px', cursor: 'pointer', color: 'white' }}>
-                        <SearchIcon fontSize='large' />
-                    </div>
+                    <img className='menu-icono-search' src="../src/assets/icons/header-icono-busqueda.png" alt="Carrito" onClick={handleCartClick} />
+                         
                     <ul>
                         <li><a href={`/${id ?? 1}/#inicio`}>Inicio</a></li>
                         <li><a href={`/${id ?? 1}/#servicios`}>Nosotros</a></li>

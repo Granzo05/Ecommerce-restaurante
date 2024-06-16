@@ -162,6 +162,7 @@ img {
     color: #FFFFFF;
     display: block;
     font-weight: 600;
+    text-decoration: none;
 }
 
 .menu .navbar ul li a:hover {
@@ -179,6 +180,22 @@ img {
     margin-right: 30px;
     padding: 2px;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.menu-icono-search{
+    width: 40px;
+    margin-right: 30px;
+    margin-left: 5px;
+    margin-bottom: 11px;
+    padding: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.menu-icono-search:hover {
+    background-color: #2b87c4c7;
+    transition: .3s;
     cursor: pointer;
 }
 

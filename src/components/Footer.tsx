@@ -14,7 +14,7 @@ const Footer: React.FC<FooterProps> = ({ sucursal }) => {
           <>
             <div>
               <h3 style={{ color: '#FFFFFF' }}>{sucursal.nombre}</h3>
-              <a className='selec-otra-sucur' style={{ textDecoration: 'underline', display: 'flex' }} onClick={() => window.location.href = '/selec-sucursal'}>SELECCIONAR OTRA SUCURSAL</a>
+              <a className='selec-otra-sucur' style={{ textDecoration: 'underline', display: 'flex' }} onClick={() => window.location.href = '/sucursales'}>SELECCIONAR OTRA SUCURSAL</a>
 
             </div>
           </>

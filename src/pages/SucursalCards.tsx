@@ -44,7 +44,7 @@ const SucursalCards: React.FC = () => {
       localStorage.setItem('usuario', usuario);
     }
 
-    if (window.location.href.includes('/sucursales')) {
+    if (window.location.href.includes('/sucursales#login')) {
       navigate('/login-cliente');
     } else if (sucursal.id === 0) {
       window.location.href = await getBaseUrl();
