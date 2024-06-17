@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { DESACTIVAR_PRIVILEGIOS, getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { Empresa } from '../types/Restaurante/Empresa';
+import ModalFlotante from '../components/ModalFlotante';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -144,7 +145,11 @@ const Opciones = () => {
             return (
                 <div className="welcome-employee">
                     <br /><br /><br /><br /><br /><br /><br /><br />
-                    <h1 id="welcome">¡BIENVENIDO {empleado?.nombre}{sucursal?.nombre}{empresa?.razonSocial}!</h1>
+                    {empresa && empresa?.nombre?.length > 0 ? (
+                        <h1 id="welcome">¡BIENVENIDO {empresa?.nombre}!</h1>
+                    ) : (
+                        <h1 id="welcome">¡BIENVENIDO {empleado?.nombre}{sucursal?.nombre}!</h1>
+                    )}
                 </div>
             );
         } else if (opcionSeleccionada === 12) {
@@ -185,7 +190,6 @@ const Opciones = () => {
     }, []);
 
     async function checkPrivilegies() {
-        console.log(empleado)
         if (!DESACTIVAR_PRIVILEGIOS && (empleado !== null && empleado.empleadoPrivilegios?.length > 0)) {
             try {
                 empleado?.empleadoPrivilegios?.forEach(privilegio => {
@@ -244,11 +248,27 @@ const Opciones = () => {
         document.title = 'Administración y opciones';
     }, []);
 
+    const handleModalClose = () => {
+        setShowDecisionEmpresa(false);
+    };
 
     const [sidebarBg, setSidebarBg] = useState('');
+    const [showDecisionEmpresa, setShowDecisionEmpresa] = useState(false);
 
     return (
         <div className={`sidebar ${sidebarBg}`}>
+            {showDecisionEmpresa && (
+                <ModalFlotante isOpen={showDecisionEmpresa} onClose={handleModalClose}>
+                    <div className="modal-info">
+                        <>
+                            <h2>¿Qué desea hacer?</h2>
+                            <button onClick={limpiarCredenciales}>Cerrar sesión</button>
+                            <br />
+                            <button onClick={() => { localStorage.removeItem('sucursal'); window.location.href = getBaseUrl() + '/empresa' }}>Volver a cuenta de empresa</button>
+                        </>
+                    </div>
+                </ModalFlotante>
+            )}
             <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
                 <div className="title-header">
                     <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/opciones'} />
@@ -450,11 +470,11 @@ const Opciones = () => {
                     <div className="perfil-employee">
                         <PersonIcon style={{ fontSize: '38px', display: 'inline' }} />
                         <div className="account-info">
-                            <label className="name-account">{empleado?.nombre}</label>
+                            <label className="name-account">{empleado?.nombre}{sucursal?.nombre}{empresa?.nombre}</label>
                         </div>
 
                         {empresa ? (
-                            <LogoutIcon onClick={() => { localStorage.removeItem('sucursal'); window.location.href = getBaseUrl() + '/empresa' }} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
+                            <LogoutIcon onClick={() => setShowDecisionEmpresa(true)} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
                         ) : (
                             <LogoutIcon onClick={() => { limpiarCredenciales(); window.location.href = 'http://localhost:5173/login-negocio' }} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
                         )}

@@ -1,6 +1,7 @@
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Empresa } from '../types/Restaurante/Empresa';
 import { getBaseUrl, limpiarCredenciales, URL_API } from '../utils/global_variables/const';
+import { SucursalService } from './SucursalService';
 
 export const EmpresaService = {
     createEmpresa: async (empresa: Empresa, imagenes: Imagenes[]): Promise<string> => {
@@ -58,9 +59,7 @@ export const EmpresaService = {
 
             const data = await response.json();
 
-            if (data.id === null) {
-                throw new Error('Credenciales inválidas');
-            } else {
+            if (data.id > 0) {
                 let restaurante = {
                     id: data.id,
                     razonSocial: data.razonSocial
@@ -69,16 +68,49 @@ export const EmpresaService = {
                 limpiarCredenciales();
 
                 localStorage.setItem('empresa', JSON.stringify(restaurante));
-                
+
                 window.location.href = getBaseUrl() + '/empresa'
+
+                return;
+            } else {
+                SucursalService.getSucursal(email, contraseña)
             }
+
+            return 'Los datos ingresados no corresponden a una cuenta activa';
+
         } catch (error) {
             console.error('Error:', error);
             throw new Error('Credenciales inválidas');
         }
     },
 
+    getEmpresaCredentials: async (cuit: string, contraseña: string) => {
+        try {
+            const response = await fetch(URL_API + 'empresa/login/' + cuit + '/' + contraseña, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
 
+            if (!response.ok) {
+                throw new Error('Usuario no encontrado');
+            }
+
+            const data = await response.json();
+
+            if (data.id > 0) {
+                window.location.href = getBaseUrl() + '/empresa'
+
+                return 'Acceso concedido';
+            } else {
+                throw new Error('Los datos ingresados no corresponden a una empresa');
+            }
+
+        } catch (error) {
+            throw new Error('Los datos ingresados no corresponden a una empresa');
+        }
+    },
 
     getEmpresas: async (): Promise<Empresa[]> => {
         try {

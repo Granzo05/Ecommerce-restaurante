@@ -67,9 +67,9 @@
 [x] Poner tipo de date para promociones con seleccion de horario ademas del dia
 [x] Revisar la carga de subcategorias
 [x] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
-[] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
+[x] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
+[x] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
-[] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
 [] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [] Configurar rutas privadas
 [] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent

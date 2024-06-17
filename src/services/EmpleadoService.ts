@@ -37,7 +37,7 @@ export const EmpleadoService = {
                 return await response.json()
             })
             .then(data => {
-                if (data.id !== null) {
+                if (data.id > 0) {
                     let empleado = {
                         id: data.id,
                         nombre: data.nombre,
@@ -52,6 +52,7 @@ export const EmpleadoService = {
 
                     // Redirige al usuario al menú principal
                     window.location.href = getBaseUrl() + '/opciones';
+                    
                     return;
                 }
             })

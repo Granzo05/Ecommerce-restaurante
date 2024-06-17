@@ -62,7 +62,7 @@ export const SucursalService = {
 
             const data = await response.json();
 
-            if (data.id !== null) {
+            if (data.id > 0) {
                 let sucursal = {
                     id: data.id,
                     nombre: data.nombre
@@ -75,8 +75,6 @@ export const SucursalService = {
             } else {
                 EmpleadoService.getEmpleado(email, contraseña);
             }
-
-            return 'Los datos ingresados no corresponden a una cuenta activa';
 
         } catch (error) {
             console.error('Error:', error);

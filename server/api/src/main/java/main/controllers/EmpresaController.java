@@ -39,7 +39,7 @@ public class EmpresaController {
             return empresa.get();
         }
 
-        return null;
+        return new Empresa();
     }
 
     @CrossOrigin

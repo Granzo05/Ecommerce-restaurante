@@ -7,6 +7,7 @@ import { frases } from '../utils/global_variables/const';
 import ReestablecerContra from '../components/ReestablecerContra';
 import ModalCrud from '../components/ModalCrud';
 import HeaderLogin from '../components/headerLogin';
+import { EmpresaService } from '../services/EmpresaService';
 
 const LoginNegocio = () => {
 
@@ -34,7 +35,7 @@ const LoginNegocio = () => {
       return;
     }
 
-    toast.promise(SucursalService.getSucursal(email, contraseña), {
+    toast.promise(EmpresaService.getEmpresa(email, contraseña), {
       loading: 'Iniciando sesión...',
       success: (message) => {
         return message;
@@ -92,7 +93,7 @@ const LoginNegocio = () => {
               <h2>- Ingresa a tu cuenta -</h2>
             </div>
             <div className="text-field">
-              <label htmlFor="email">E-mail:</label>
+              <label htmlFor="email">E-mail o cuil:</label>
               <input
                 type="email"
                 id="email"

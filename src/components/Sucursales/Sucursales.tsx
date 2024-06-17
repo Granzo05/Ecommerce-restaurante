@@ -10,8 +10,11 @@ import '../../styles/sucursales.css'
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { PrivilegiosService } from "../../services/PrivilegiosService";
 import { Privilegios } from "../../types/Restaurante/Privilegios";
-import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
+import { DESACTIVAR_PRIVILEGIOS, getBaseUrl } from "../../utils/global_variables/const";
 import { Empresa } from "../../types/Restaurante/Empresa";
+import { toast, Toaster } from "sonner";
+import { EmpresaService } from "../../services/EmpresaService";
+import ModalFlotante from "../ModalFlotante";
 
 const Sucursales = () => {
     const [sucursales, setSucursales] = useState<Sucursal[]>([]);
@@ -39,6 +42,7 @@ const Sucursales = () => {
 
 
     const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+    const [idSucursalElegida, setIdSucursalElegida] = useState<number>();
 
     useEffect(() => {
         PrivilegiosService.getPrivilegios()
@@ -56,15 +60,44 @@ const Sucursales = () => {
         return empleadoString ? (JSON.parse(empleadoString) as Empresa) : null;
     });
 
-    const handleAbrirSucursal = (idSucursal: number) => {
+
+    const [cuit, setCuit] = useState('');
+    const [contraseña, setContraseña] = useState('');
+    const [showSolicitarCredenciales, setShowSolicitarCredencialesModal] = useState(false);
+
+    const checkCredentials = () => {
+        if (cuit.length === 0) {
+            toast.error('Debe ingresar un cuit');
+            return;
+        } else if (contraseña.length === 0) {
+            toast.error('Debe ingresar una contraseña');
+            return;
+        }
+
+        toast.promise(EmpresaService.getEmpresaCredentials(cuit, contraseña), {
+            loading: 'Revisando las credenciales...',
+            success: (message) => {
+                handleModalClose();
+                handleAbrirSucursal();
+                return message;
+            },
+            error: (message) => {
+                return message;
+            }
+        });
+    };
+
+    const handleAbrirSucursal = () => {
         let restaurante = {
-            id: idSucursal,
+            id: idSucursalElegida,
             nombre: empresa?.razonSocial,
             empleadoPrivilegios: privilegios,
             empresa: empresa
         }
 
         localStorage.setItem('sucursal', JSON.stringify(restaurante));
+
+        window.location.href = getBaseUrl() + '/opciones'
     };
 
     useEffect(() => {
@@ -136,6 +169,7 @@ const Sucursales = () => {
         setShowEditarSucursalModal(false);
         setShowEliminarSucursalModal(false);
         setShowActivarSucursalModal(false);
+        setShowSolicitarCredencialesModal(false);
         setMostrarSucursales(true);
         fetchSucursales();
     };
@@ -158,8 +192,28 @@ const Sucursales = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>- Sucursales -</h1>
+            <Toaster/>
+            {showSolicitarCredenciales && (
+                <ModalFlotante isOpen={showSolicitarCredenciales} onClose={handleModalClose}>
+                    <div className='modal-info'>
+                        <h2>Para acceder necesitamos que ingreses las credenciales de la empresa</h2>
+                        <div className="inputBox">
+                            <input autoComplete='false' type="text" value={cuit} required={true} onChange={(e) => { setCuit(e.target.value) }} />
+                            <span>Cuit</span>
+                        </div>
 
+                        <div className="inputBox">
+                            <input autoComplete='false' type="text" value={contraseña} required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+                            <span>Contraseña</span>
+                        </div>
+                        <button onClick={checkCredentials}>Confirmar</button>
+                        <br />
+                        <button onClick={handleModalClose}>Cancelar</button>
+                    </div>
+                </ModalFlotante>
+            )}
+
+            <h1>- Sucursales -</h1>
             {createVisible && (
                 <div className="btns-sucursales">
                     <button className="btn-agregar" onClick={() => handleAgregarSucursal()}> + Agregar sucursal</button>
@@ -199,7 +253,7 @@ const Sucursales = () => {
                                         <td>
                                             <div className="btns-acciones">
                                                 {createVisible && activateVisible && updateVisible && deleteVisible && (
-                                                    <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                                    <button className="btn-accion-abrir" onClick={() => { setIdSucursalElegida(sucursal.id); setShowSolicitarCredencialesModal(true) }}>ABRIR</button>
                                                 )}
                                                 {updateVisible && (
                                                     <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
@@ -213,7 +267,7 @@ const Sucursales = () => {
                                         <td>
                                             <div className="btns-acciones">
                                                 {createVisible && activateVisible && updateVisible && deleteVisible && (
-                                                    <button className="btn-accion-abrir" onClick={() => handleAbrirSucursal(sucursal.id)}>ABRIR</button>
+                                                    <button className="btn-accion-abrir" onClick={() => { setIdSucursalElegida(sucursal.id); setShowSolicitarCredencialesModal(true) }}>ABRIR</button>
                                                 )}
                                                 {activateVisible && (
                                                     <button className="btn-accion-activar" onClick={() => handleActivarSucursal(sucursal)}>ACTIVAR</button>
