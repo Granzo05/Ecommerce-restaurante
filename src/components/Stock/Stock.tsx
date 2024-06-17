@@ -78,6 +78,24 @@ const Stocks = () => {
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
+
+    const [paginaActual, setPaginaActual] = useState(0);
+    const [productosMostrables, setProductosMostrables] = useState<number>(10);
+
+    // Calcular el índice del primer y último elemento de la página actual
+    const indexUltimoProducto = paginaActual * productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
+
+    // Obtener los elementos de la página actual
+    const stocks = [...stockArticulos, ...stockIngredientes];
+
+    const stocksFiltrados = stocks.slice(indexUltimoProducto, indexPrimerProducto);
+
+    const paginasTotales = Math.ceil(stocks.length / productosMostrables);
+
+    // Cambiar de página
+    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+
     async function checkPrivilegies() {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
@@ -187,6 +205,14 @@ const Stocks = () => {
 
             {mostrarStocks && (
                 <div id="stocks">
+                    <select name="cantidadProductos" value={10} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={75}>75</option>
+                        <option value={100}>100</option>
+                    </select>
                     <table>
                         <thead>
                             <tr>
@@ -202,9 +228,9 @@ const Stocks = () => {
                         </thead>
 
                         <tbody>
-                            {stockIngredientes.map(stock => (
+                            {stocksFiltrados.map(stock => (
                                 <tr key={stock.id}>
-                                    <td>{stock.ingrediente?.nombre}</td>
+                                    <td>{stock.ingrediente?.nombre}{stock.articuloVenta?.nombre}</td>
                                     <td style={{ textTransform: 'lowercase' }}>{stock.cantidadActual} {stock.medida?.nombre}</td>
                                     <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
                                     <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
@@ -215,7 +241,11 @@ const Stocks = () => {
                                         <p>No hay próximas entradas</p>
                                     )}
                                     </td>
-                                    <td style={{ backgroundColor: '#f51a1a' }}>NO</td>
+                                    {stock.ingrediente && stock.ingrediente.nombre.length > 0 ? (
+                                        <td style={{ backgroundColor: '#f51a1a' }}>NO</td>
+                                    ) : (
+                                        <td style={{ backgroundColor: '#19cc37' }}>SI</td>
+                                    )}
                                     {stock.borrado === 'NO' ? (
                                         <td>
                                             <div className="btns-acciones">
@@ -241,43 +271,15 @@ const Stocks = () => {
                                     )}
                                 </tr>
                             ))}
-                            {stockArticulos.map(stock => (
-                                <tr key={stock.id}>
-                                    <td>{stock.articuloVenta?.nombre}</td>
-                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadActual} {stock.medida?.nombre}</td>
-                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
-                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
-                                    <td>${stock.precioCompra}</td>
-                                    <td>{'No hay próximas entradas'}</td>
-                                    <td style={{ backgroundColor: '#19cc37' }}>SI</td>
-                                    {stock.borrado === 'NO' ? (
-                                        <td>
-                                            <div className="btns-acciones">
-                                                {updateVisible && (
-                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
-                                                )}
-                                                {deleteVisible && (
-                                                    <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('articulo') }}>ELIMINAR</button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    ) : (
-                                        <td>
-                                            <div className="btns-acciones">
-                                                {updateVisible && (
-                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('articulo'); setNombre(stock.articuloVenta?.nombre) }}>EDITAR</button>
-                                                )}
-                                                {activateVisible && (
-                                                    <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('articulo') }}>ACTIVAR</button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    )
-                                    }
-                                </tr >
-                            ))}
                         </tbody >
                     </table >
+                    <div className="pagination">
+                        {Array.from({ length: paginasTotales }, (_, index) => (
+                            <button key={index + 1} onClick={() => paginate(index + 1)} disabled={paginaActual === index + 1}>
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
                 </div >
             )}
 

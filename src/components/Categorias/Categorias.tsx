@@ -62,6 +62,21 @@ const Categorias = () => {
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
+    const [paginaActual, setPaginaActual] = useState(0);
+    const [productosMostrables, setProductosMostrables] = useState<number>(10);
+
+    // Calcular el índice del primer y último elemento de la página actual
+    const indexUltimoProducto = paginaActual * productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
+
+    // Obtener los elementos de la página actual
+    const categoriasFIltradas = categorias.slice(indexUltimoProducto, indexPrimerProducto);
+
+    const paginasTotales = Math.ceil(categorias.length / productosMostrables);
+
+    // Cambiar de página
+    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+
     async function checkPrivilegies() {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
@@ -100,7 +115,6 @@ const Categorias = () => {
     };
 
     const handleEditarCategoria = (categoria: Categoria) => {
-        console.log(categoria)
         setSelectedCategoria(categoria);
         setShowAgregarModalCategoria(false);
         setShowEliminarCategoriaModal(false);
@@ -147,8 +161,14 @@ const Categorias = () => {
             <hr />
             {mostrarCategorias && (
                 <div id="stocks">
-
-
+                    <select name="cantidadProductos" value={10} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={75}>75</option>
+                        <option value={100}>100</option>
+                    </select>
                     <table>
                         <thead>
                             <tr>
@@ -157,7 +177,7 @@ const Categorias = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {categorias.map(categoria => (
+                            {categoriasFIltradas.map(categoria => (
                                 <tr key={categoria.id}>
                                     <td>{categoria.nombre.toString().replace(/_/g, ' ')}</td>
 
@@ -189,6 +209,13 @@ const Categorias = () => {
                             ))}
                         </tbody>
                     </table>
+                    <div className="pagination">
+                        {Array.from({ length: paginasTotales }, (_, index) => (
+                            <button key={index + 1} onClick={() => paginate(index + 1)} disabled={paginaActual === index + 1}>
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             )}
             <ModalCrud isOpen={showAgregarModalCategoria} onClose={handleModalClose}>

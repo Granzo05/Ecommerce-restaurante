@@ -27,6 +27,7 @@ const ArticuloVentas = () => {
 
     useEffect(() => {
         checkPrivilegies();
+        fetchArticuloVenta();
     }, []);
 
     const [empleado] = useState<Empleado | null>(() => {
@@ -80,7 +81,6 @@ const ArticuloVentas = () => {
         try {
             ArticuloVentaService.getArticulos()
                 .then(data => {
-                    console.log(data)
                     setArticulosVenta(data);
                 })
                 .catch(error => {
@@ -135,16 +135,16 @@ const ArticuloVentas = () => {
         fetchArticuloVenta();
     };
 
-    const [paginaActual, setPaginaActual] = useState(1);
+    const [paginaActual, setPaginaActual] = useState(0);
     const [productosMostrables, setProductosMostrables] = useState<number>(10);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
 
     // Obtener los elementos de la página actual
     const productos = articulosVenta.slice(indexUltimoProducto, indexPrimerProducto);
-
+ 
     const paginasTotales = Math.ceil(articulosVenta.length / productosMostrables);
 
     // Cambiar de página
@@ -161,7 +161,7 @@ const ArticuloVentas = () => {
             <hr />
             {mostrarArticuloVenta && (
                 <div id="menus">
-                    <select name="cantidadProductos" onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select name="cantidadProductos" value={10} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
                         <option value={25}>25</option>

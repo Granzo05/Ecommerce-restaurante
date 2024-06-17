@@ -64,7 +64,7 @@
 [x] Mejorar el suspense del appRoutes
 [x] Crear roles de empleados
 [x] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
-[] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
+[x] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
 [] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte

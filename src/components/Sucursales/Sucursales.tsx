@@ -140,6 +140,22 @@ const Sucursales = () => {
         fetchSucursales();
     };
 
+
+    const [paginaActual, setPaginaActual] = useState(0);
+    const [productosMostrables, setProductosMostrables] = useState<number>(10);
+
+    // Calcular el índice del primer y último elemento de la página actual
+    const indexUltimoProducto = paginaActual * productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
+
+    // Obtener los elementos de la página actual
+    const sucursalesFiltradas = sucursales.slice(indexUltimoProducto, indexPrimerProducto);
+
+    const paginasTotales = Math.ceil(sucursales.length / productosMostrables);
+
+    // Cambiar de página
+    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+
     return (
         <div className="opciones-pantallas">
             <h1>- Sucursales -</h1>
@@ -154,6 +170,14 @@ const Sucursales = () => {
             </ModalCrud>
             {mostrarSucursales && (
                 <div id="sucursales">
+                    <select name="cantidadProductos" value={10} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={75}>75</option>
+                        <option value={100}>100</option>
+                    </select>
                     <table>
                         <thead>
                             <tr>
@@ -165,7 +189,7 @@ const Sucursales = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sucursales.map(sucursal => (
+                            {sucursalesFiltradas.map(sucursal => (
                                 <tr key={sucursal.id}>
                                     <td>{sucursal.nombre}</td>
                                     <td>{sucursal.telefono}</td>
@@ -204,6 +228,13 @@ const Sucursales = () => {
                             ))}
                         </tbody>
                     </table>
+                    <div className="pagination">
+                        {Array.from({ length: paginasTotales }, (_, index) => (
+                            <button key={index + 1} onClick={() => paginate(index + 1)} disabled={paginaActual === index + 1}>
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
                     <ModalCrud isOpen={showEditarSucursalModal} onClose={handleModalClose}>
                         <EditarSucursal sucursalOriginal={selectedSucursal} onCloseModal={handleModalClose} />
                     </ModalCrud>

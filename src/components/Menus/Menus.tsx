@@ -49,6 +49,22 @@ const Menus = () => {
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
+
+    const [paginaActual, setPaginaActual] = useState(0);
+    const [productosMostrables, setProductosMostrables] = useState<number>(10);
+
+    // Calcular el índice del primer y último elemento de la página actual
+    const indexUltimoProducto = paginaActual * productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
+
+    // Obtener los elementos de la página actual
+    const menusFiltrados = menus.slice(indexUltimoProducto, indexPrimerProducto);
+
+    const paginasTotales = Math.ceil(menus.length / productosMostrables);
+
+    // Cambiar de página
+    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+
     async function checkPrivilegies() {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
@@ -146,6 +162,14 @@ const Menus = () => {
             <hr />
             {mostrarMenus && (
                 <div id="menus">
+                    <select name="cantidadProductos" value={10} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={75}>75</option>
+                        <option value={100}>100</option>
+                    </select>
                     <table>
                         <thead>
                             <tr>
@@ -160,7 +184,7 @@ const Menus = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {menus.length > 0 && menus.map(menu => (
+                            {menusFiltrados.length > 0 && menus.map(menu => (
                                 <tr key={menu.id}>
                                     <td>{menu.nombre}</td>
                                     <td>{menu.tiempoCoccion} minutos</td>
@@ -203,6 +227,13 @@ const Menus = () => {
                             ))}
                         </tbody>
                     </table>
+                    <div className="pagination">
+                        {Array.from({ length: paginasTotales }, (_, index) => (
+                            <button key={index + 1} onClick={() => paginate(index + 1)} disabled={paginaActual === index + 1}>
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             )}
 

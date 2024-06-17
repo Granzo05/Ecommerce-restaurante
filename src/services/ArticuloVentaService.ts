@@ -5,8 +5,9 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 export const ArticuloVentaService = {
 
     getArticulos: async (): Promise<ArticuloVenta[]> => {
+        console.log(sucursalId())
         try {
-            const response = await fetch(URL_API + `articulos/${sucursalId}`)
+            const response = await fetch(URL_API + `articulos/${sucursalId()}`)
 
             return await response.json();
         } catch (error) {
