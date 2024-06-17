@@ -20,6 +20,9 @@ public interface StockIngredientesRepository extends JpaRepository<StockIngredie
     @Query("SELECT s FROM StockIngredientes s JOIN s.sucursales suc WHERE s.ingrediente.id = :id AND suc.id = :idSucursal")
     Optional<StockIngredientes> findByIdIngredienteAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);
 
+    @Query("SELECT s FROM StockIngredientes s JOIN s.sucursales suc WHERE s.ingrediente.nombre = :nombre AND suc.id = :idSucursal")
+    Optional<StockIngredientes> findByNameIngredienteAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
+
     @Query("SELECT s FROM StockIngredientes s JOIN s.sucursales suc WHERE s.id = :id AND suc.id = :idSucursal")
     Optional<StockIngredientes> findByIdAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);
 

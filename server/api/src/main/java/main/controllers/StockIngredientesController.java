@@ -3,6 +3,7 @@ package main.controllers;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.Medida;
+import main.entities.Pedidos.DetallesPedido;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
@@ -70,18 +71,12 @@ public class StockIngredientesController {
                 Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getIngrediente().getId(), id);
 
                 if (stockEncontrado.isPresent()) {
-                    System.out.println("StockIngredientes db medida: " + stockEncontrado.get().getMedida() + " y cantidad: " + stockEncontrado.get().getCantidadActual());
-                    System.out.println("StockIngredientes db cliente medida: " + ingrediente.getMedida() + " y cantidad: " + ingrediente.getCantidad());
-                    // Si el ingrediente tiene la misma medida que el stockIngredientes almacenado entonces se calcula a la misma medida.
 
                     // Si hay stockIngredientes, entonces se multiplica por la cantidad del menu requerida, si para un menu necesito 300 gramos de X ingrediente, si estoy pidiendo
                     // 4 menus, entonces necesitaría en total 1200 gramos de eso
-
                     if (stockEncontrado.get().getMedida().equals(ingrediente.getMedida()) && stockEncontrado.get().getCantidadActual() < ingrediente.getCantidad() * cantidad) {
                         return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
-
                     } else if (!stockEncontrado.get().getMedida().equals("Kg") && ingrediente.getMedida().equals("Gramos")) {
-
                         // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
                         if (stockEncontrado.get().getCantidadActual() * 1000 < ingrediente.getCantidad() * cantidad) {
                             return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
@@ -157,6 +152,23 @@ public class StockIngredientesController {
         }
 
         return ResponseEntity.ofNullable("El stock ya existe");
+    }
+    @CrossOrigin
+    @PutMapping("sucursal/{idSucursal}/stockIngredientes/{nombreIngrediente}/cantidad/{cantidad}")
+    public ResponseEntity<String> reponerStock(@PathVariable("nombreIngrediente") String nombreIngrediente, @PathVariable("cantidad") int cantidad, @PathVariable("idSucursal") long id) {
+        // Busco el stockIngredientes de ese ingrediente
+        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(nombreIngrediente, id);
+
+        if (stockEncontrado.isPresent()) {
+            StockIngredientes stock = stockEncontrado.get();
+
+            stock.setCantidadActual(stock.getCantidadActual() + cantidad);
+
+            stockIngredientesRepository.save(stock);
+            return ResponseEntity.ok("El stock ha sido actualizado correctamente");
+        }
+
+        return ResponseEntity.ofNullable("El stock no existe o está desactivado");
     }
 
     @CrossOrigin

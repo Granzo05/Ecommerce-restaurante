@@ -4,6 +4,7 @@ import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockEntrante;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -106,6 +107,24 @@ public class StockArticulosController {
         } else {
             return ResponseEntity.badRequest().body("No existe ningun articulo con ese nombre, debe crearlo antes de asignarle un stock");
         }
+    }
+
+    @CrossOrigin
+    @PutMapping("sucursal/{idSucursal}/stockArticulos/{articulo}/cantidad/{cantidad}")
+    public ResponseEntity<String> reponerStock(@PathVariable("articulo") String nombreArticulo, @PathVariable("cantidad") int cantidad, @PathVariable("idSucursal") long id) {
+        // Busco el stockIngredientes de ese ingrediente
+        Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findByArticuloNameAndIdSucursal(nombreArticulo, id);
+
+        if (stockEncontrado.isPresent()) {
+            StockArticuloVenta stock = stockEncontrado.get();
+
+            stock.setCantidadActual(stock.getCantidadActual() + cantidad);
+
+            stockArticuloRepository.save(stock);
+            return ResponseEntity.ok("El stock ha sido actualizado correctamente");
+        }
+
+        return ResponseEntity.ofNullable("El stock no existe o está desactivado");
     }
 
     @CrossOrigin

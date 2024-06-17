@@ -69,8 +69,9 @@
 [x] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
 [x] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [x] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
+[x] Arreglar los permisos de pedidos a entrantes, en camino, etc y poder aceptar o rechazar dependiendo el empleado
+[x] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
-[] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [] Configurar rutas privadas
 [] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
@@ -80,9 +81,7 @@
 [] Ajustar el horario estimado
 [] Hacer la recuperacion de contraseña
 [] Filtro de lugares al cargar la sucursal para las localidadesDelivery para buscar por nombre de la localidad
-[] Validar que 2 sucursales no puedan tener el mismo domicilio al mismo tiempo
 [] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
-[] Arreglar los permisos de pedidos a entrantes, en camino, etc y poder aceptar o rechazar dependiendo el empleado
 
 CERRAR MODALS AL CREAR COSAS[x]
 NO PODER CARGAR SUBCATEGORIAS POR EL BUG DE CATEGORIAS[x]

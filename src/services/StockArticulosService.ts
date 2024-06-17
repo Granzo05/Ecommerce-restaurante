@@ -106,4 +106,24 @@ export const StockArticuloVentaService = {
             throw error;
         }
     },
+
+    reponerStock: async (ingrediente: string, cantidad: number): Promise<string> => {
+        try {
+            const response = await fetch(URL_API + `sucursal/${sucursalId()}/stockArticulos/${ingrediente}/cantidad/${cantidad}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }            })
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+
+            return await response.text();
+
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 }

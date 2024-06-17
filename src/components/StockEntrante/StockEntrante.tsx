@@ -13,6 +13,9 @@ import { StockEntrante } from "../../types/Stock/StockEntrante";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
+import { toast } from "sonner";
+import { StockArticuloVentaService } from "../../services/StockArticulosService";
+import { StockIngredientesService } from "../../services/StockIngredientesService";
 
 const StocksEntrantes = () => {
     const [stockEntrante, setStockEntrante] = useState<StockEntrante[]>([]);
@@ -147,6 +150,27 @@ const StocksEntrantes = () => {
         setMostrarStocks(false);
     };
 
+    const handleCargarStock = (stock: StockEntrante) => {
+        setSelectedStock(stock);
+
+        const promises = stock.detallesStock.map(detalle => {
+            if (detalle.ingrediente?.nombre?.length > 0 && detalle.cantidad > 0) {
+                return StockIngredientesService.reponerStock(detalle.ingrediente.nombre, detalle.cantidad);
+            } else if (detalle.articuloVenta?.nombre?.length > 0 && detalle.cantidad > 0) {
+                return StockArticuloVentaService.reponerStock(detalle.articuloVenta.nombre, detalle.cantidad);
+            }
+        }).filter(Boolean);
+
+        toast.promise(
+            Promise.all(promises),
+            {
+                loading: 'Actualizando el stock...',
+                success: 'Stock actualizado correctamente!',
+                error: 'Hubo un error al actualizar el stock.',
+            }
+        );
+    };
+
     const handleEliminarStock = (stock: StockEntrante) => {
         setSelectedStock(stock);
         setShowAgregarStockModal(false);
@@ -237,7 +261,7 @@ const StocksEntrantes = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {stockEntrante.map(stock => (
+                            {stockFiltrado.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{formatDate(new Date(stock.fechaLlegada.toString()))}</td>
                                     <td>{stock.costo}</td>
@@ -250,6 +274,9 @@ const StocksEntrantes = () => {
                                             )}
                                             {updateVisible && (
                                                 <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            )}
+                                            {updateVisible && (
+                                                <button className="btn-accion-editar" onClick={() => handleCargarStock(stock)}>MARCAR COMO ENTREGADO</button>
                                             )}
                                         </td>
                                     ) : (

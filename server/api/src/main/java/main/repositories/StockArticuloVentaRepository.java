@@ -23,4 +23,7 @@ public interface StockArticuloVentaRepository extends JpaRepository<StockArticul
 
     @Query("SELECT s FROM StockArticuloVenta s JOIN s.sucursales suc WHERE s.id = :id AND suc.id = :idSucursal")
     Optional<StockArticuloVenta> findByIdAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);
+
+    @Query("SELECT s FROM StockArticuloVenta s JOIN s.sucursales suc WHERE s.articuloVenta.nombre = :nombre AND suc.id = :idSucursal")
+    Optional<StockArticuloVenta> findByArticuloNameAndIdSucursal(@Param("nombre") String nombre, @Param("idSucursal") Long idSucursal);
 }
