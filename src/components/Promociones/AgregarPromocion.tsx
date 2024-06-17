@@ -12,7 +12,7 @@ import { Promocion } from '../../types/Productos/Promocion';
 import { PromocionService } from '../../services/PromocionService';
 import ModalFlotanteRecomendacionesArticuloMenu from '../../hooks/ModalFlotanteFiltroArticuloMenu';
 import { Imagenes } from '../../types/Productos/Imagenes';
-import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
+import { formatearFechaYYYYMMDD, formatearFechaYYYYMMDDHHMM } from '../../utils/global_variables/functions';
 
 interface AgregarPromocionProps {
   onCloseModal: () => void;
@@ -302,11 +302,11 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
-              <input type="date" required={true} value={formatearFechaYYYYMMDD(fechaDesde)} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
+              <input type="datetime-local" required={true} value={formatearFechaYYYYMMDDHHMM(fechaDesde)} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
-              <input type="date" required={true} value={formatearFechaYYYYMMDD(fechaHasta)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
+              <input type="datetime-local" required={true} value={formatearFechaYYYYMMDDHHMM(fechaHasta)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>

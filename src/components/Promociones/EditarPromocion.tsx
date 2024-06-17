@@ -372,11 +372,11 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
       </div>
       <div className="inputBox">
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
-        <input type="date" value={fechaDesde.toISOString().substring(0, 10)} required={true} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
+        <input type="datetime-local" value={fechaDesde.toISOString().substring(0, 10)} required={true} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
       </div>
       <div className="inputBox">
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
-        <input type="date" required={true} value={fechaHasta.toISOString().substring(0, 10)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
+        <input type="datetime-local" required={true} value={fechaHasta.toISOString().substring(0, 10)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
       </div>
       <ModalFlotante isOpen={showAgregarMedidaModal} onClose={handleModalClose}>
         <AgregarMedida onCloseModal={handleModalClose} />

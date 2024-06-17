@@ -64,14 +64,14 @@
 [x] Mejorar el suspense del appRoutes
 [x] Crear roles de empleados
 [x] Terminar de configurar la direccion del mail en Java para que sea automatica dependiendo de la sucursal que lo envia usando su email
+[x] Poner tipo de date para promociones con seleccion de horario ademas del dia
+[x] Revisar la carga de subcategorias
 [x] Paginacion de todos los mostrables (categorias, stocks, productos para mostrar pocos)
 [] Lógica para que cuando abra una sucursal como admin se muestre un boton para volver al estado de admin, algo con los privilegios
 [] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
 [] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
-[] Poner tipo de date para promociones con seleccion de horario ademas del dia
 [] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [] Configurar rutas privadas
-[] Revisar la carga de subcategorias
 [] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Agregar imagenes al empleado
