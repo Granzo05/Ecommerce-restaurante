@@ -66,11 +66,7 @@ const Opciones = () => {
         return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
     });
 
-    if (DESACTIVAR_PRIVILEGIOS || ((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id))) {
-        window.location.href = getBaseUrl() + '/opciones';
-    }
-
-    if (DESACTIVAR_PRIVILEGIOS || ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id)) {
+    if (((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id) || ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id))) {
         window.location.href = getBaseUrl() + '/opciones';
     }
 
