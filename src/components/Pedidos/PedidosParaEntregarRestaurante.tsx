@@ -6,6 +6,9 @@ import '../../styles/pedidos.css';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
+import { Empleado } from '../../types/Restaurante/Empleado';
+import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
 
 
 const PedidosParaEntregar = () => {
@@ -25,6 +28,42 @@ const PedidosParaEntregar = () => {
         buscarPedidos();
 
     }, []);
+
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } else if (sucursal && sucursal.id > 0) {
+            setUpdateVisible(true);
+        }
+    }
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [sucursal] = useState<Sucursal | null>(() => {
+        const sucursalString = localStorage.getItem('sucursal');
+
+        return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
+    });
+
+    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
     const buscarPedidos = async () => {
         PedidoService.getPedidos(EnumEstadoPedido.COCINADOS)
@@ -135,8 +174,12 @@ const PedidosParaEntregar = () => {
                                         </div>
                                     ))}
                                 </td>
-                                <td><button onClick={() => handleEntregarPedido(pedido)}>Entregar</button></td>
-                                <td><button onClick={() => handleCancelarPedido(pedido)}>Cancelar</button></td>
+                                {updateVisible && (
+                                    <td><button onClick={() => handleEntregarPedido(pedido)}>Entregar</button></td>
+                                )}
+                                {updateVisible && (
+                                    <td><button onClick={() => handleCancelarPedido(pedido)}>Cancelar</button></td>
+                                )}
                             </tr>
                         ))}
 

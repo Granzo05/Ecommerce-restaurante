@@ -6,6 +6,9 @@ import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 import FacturaIMG from '../../assets/icons/facturas.png'
 import { FacturaService } from '../../services/FacturaService';
+import { Empleado } from '../../types/Restaurante/Empleado';
+import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
 
 const PedidosEntregados = () => {
     const [pedidosEntregados, setPedidos] = useState<Pedido[]>([]);

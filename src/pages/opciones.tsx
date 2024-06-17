@@ -11,6 +11,7 @@ import { Sucursal } from '../types/Restaurante/Sucursal';
 import { DESACTIVAR_PRIVILEGIOS, getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { Empresa } from '../types/Restaurante/Empresa';
 import ModalFlotante from '../components/ModalFlotante';
+import PedidosEnCamino from '../components/Pedidos/PedidosEnCamino';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -166,6 +167,8 @@ const Opciones = () => {
             return <Empresas />;
         } else if (opcionSeleccionada === 18) {
             return <Reportes />;
+        } else if (opcionSeleccionada === 18) {
+            return <PedidosEnCamino />;
         }
     };
 
@@ -179,10 +182,14 @@ const Opciones = () => {
     const [promocionesVisibleEmpleado, setPromocionesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [subcategoriasVisibleEmpleado, setSubcategoriasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [estadisticasVisibleEmpleado, setEstadisticasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [pedidosVisibleEmpleado, setPedidosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [empleadosVisibleEmpleado, setEmpleadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [sucursalesVisibleEmpleado, setSucursalesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [empresasVisibleEmpleado, setEmpresasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [pedidosEntrantesVisibleEmpleado, setPedidosEntrantesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [pedidosAceptadosVisibleEmpleado, setPedidosAceptadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [pedidosCocinadosVisibleEmpleado, setPedidosCocinadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [pedidosEntregadosVisibleEmpleado, setPedidosEntregadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [pedidosEnCaminoVisibleEmpleado, setPedidosEnCaminoVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
 
     useEffect(() => {
         checkPrivilegies();
@@ -213,8 +220,16 @@ const Opciones = () => {
                         setSubcategoriasVisibleEmpleado(true);
                     } else if (privilegio.privilegio.tarea === 'Estadísticas' && privilegio.permisos.includes('READ')) {
                         setEstadisticasVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Pedidos' && privilegio.permisos.includes('READ')) {
-                        setPedidosVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Pedidos entrantes' && privilegio.permisos.includes('READ')) {
+                        setPedidosEntrantesVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Pedidos aceptados' && privilegio.permisos.includes('READ')) {
+                        setPedidosAceptadosVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Pedidos cocinados' && privilegio.permisos.includes('READ')) {
+                        setPedidosCocinadosVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Pedidos entregados' && privilegio.permisos.includes('READ')) {
+                        setPedidosEntregadosVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Pedidos en camino' && privilegio.permisos.includes('READ')) {
+                        setPedidosEnCaminoVisibleEmpleado(true);
                     } else if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
                         setEmpleadosVisibleEmpleado(true);
                     } else if (privilegio.privilegio.tarea === 'Sucursales' && privilegio.permisos.includes('READ')) {
@@ -237,10 +252,14 @@ const Opciones = () => {
             setPromocionesVisibleEmpleado(true);
             setSubcategoriasVisibleEmpleado(true);
             setEstadisticasVisibleEmpleado(true);
-            setPedidosVisibleEmpleado(true);
             setEmpleadosVisibleEmpleado(true);
             setSucursalesVisibleEmpleado(false);
             setEmpresasVisibleEmpleado(false);
+            setPedidosEntrantesVisibleEmpleado(true);
+            setPedidosAceptadosVisibleEmpleado(true);
+            setPedidosCocinadosVisibleEmpleado(true);
+            setPedidosEntregadosVisibleEmpleado(true);
+            setPedidosEnCaminoVisibleEmpleado(true);
         }
     }
 
@@ -286,30 +305,44 @@ const Opciones = () => {
                     <>
                         {isVisible ? (
                             <div className="main-options">
-                                {pedidosVisibleEmpleado && (
-                                    <div className="pedidos">
-                                        <h4 onClick={togglePedidosVisibility} className={opcionSeleccionada >= 1 && opcionSeleccionada <= 4 ? 'h4-selected' : ''}>
-                                            Pedidos
-                                            {pedidosIcon}
-                                        </h4>
-                                        {pedidosVisible && (
-                                            <>
+                                <div className="pedidos">
+                                    <h4 onClick={togglePedidosVisibility} className={opcionSeleccionada >= 1 && opcionSeleccionada <= 4 ? 'h4-selected' : ''}>
+                                        Pedidos
+                                        {pedidosIcon}
+                                    </h4>
+                                    {pedidosVisible && (
+                                        <>
+                                            {pedidosEntrantesVisibleEmpleado && (
                                                 <p className={opcionSeleccionada === 1 ? 'selected' : ''} onClick={() => handleOpcionClick(1)}>
                                                     Pedidos entrantes
                                                 </p>
+                                            )}
+
+                                            {pedidosAceptadosVisibleEmpleado && (
                                                 <p className={opcionSeleccionada === 2 ? 'selected' : ''} onClick={() => handleOpcionClick(2)}>
                                                     Pedidos aceptados
                                                 </p>
+                                            )}
+
+                                            {pedidosCocinadosVisibleEmpleado && (
                                                 <p className={opcionSeleccionada === 3 ? 'selected' : ''} onClick={() => handleOpcionClick(3)}>
                                                     Pedidos para entregar
                                                 </p>
+                                            )}
+
+                                            {pedidosEntregadosVisibleEmpleado && (
                                                 <p className={opcionSeleccionada === 4 ? 'selected' : ''} onClick={() => handleOpcionClick(4)}>
                                                     Pedidos entregados
                                                 </p>
-                                            </>
-                                        )}
-                                    </div>
-                                )}
+                                            )}
+                                            {pedidosEnCaminoVisibleEmpleado && (
+                                                <p className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
+                                                    Pedidos en camino
+                                                </p>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
                                 {stockVisibleEmpleado && (
                                     <div className="stock">
                                         <h4 onClick={toggleStockVisibility} className={opcionSeleccionada >= 5 && opcionSeleccionada <= 6 ? 'h4-selected' : ''}>
@@ -423,9 +456,12 @@ const Opciones = () => {
                             </div>
                         ) : (
                             <div className="main-options">
-                                <p className={opcionSeleccionada === 2 ? 'selected' : ''} onClick={() => handleOpcionClick(2)}>
-                                    Pedidos aceptados
-                                </p>
+                                {pedidosAceptadosVisibleEmpleado && (
+                                    <p className={opcionSeleccionada === 2 ? 'selected' : ''} onClick={() => handleOpcionClick(2)}>
+                                        Pedidos aceptados
+                                    </p>
+                                )}
+
                                 <p className={opcionSeleccionada === 5 ? 'selected' : ''} onClick={() => handleOpcionClick(5)}>
                                     Stock
                                 </p>

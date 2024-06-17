@@ -597,7 +597,39 @@ public class Main {
                 empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
 
                 privilegios = new Privilegios();
-                privilegios.setTarea("Pedidos");
+                privilegios.setTarea("Pedidos entrantes");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Pedidos aceptados");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Pedidos cocinados");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Pedidos entregados");
+                privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                privilegios = privilegiosRepository.save(privilegios);
+                empleadoPrivilegio.setPrivilegio(privilegios);
+                empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
+
+                privilegios = new Privilegios();
+                privilegios.setTarea("Pedidos en camino");
                 privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
                 privilegios = privilegiosRepository.save(privilegios);
