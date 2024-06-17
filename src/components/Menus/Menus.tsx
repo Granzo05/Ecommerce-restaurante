@@ -162,7 +162,7 @@ const Menus = () => {
             <hr />
             {mostrarMenus && (
                 <div id="menus">
-                    <select name="cantidadProductos" value={10} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
                         <option value={25}>25</option>
