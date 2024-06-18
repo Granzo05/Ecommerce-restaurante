@@ -281,7 +281,7 @@ const Opciones = () => {
                     <div className="modal-info">
                         <>
                             <h2>¿Qué desea hacer?</h2>
-                            <button onClick={limpiarCredenciales}>Cerrar sesión</button>
+                            <button onClick={() => {limpiarCredenciales; window.location.href = getBaseUrl() }}>Cerrar sesión</button>
                             <br />
                             <button onClick={() => { localStorage.removeItem('sucursal'); window.location.href = getBaseUrl() + '/empresa' }}>Volver a cuenta de empresa</button>
                         </>
