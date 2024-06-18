@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
 
 @SpringBootApplication
@@ -510,9 +511,9 @@ public class Main {
                 sucursal.getMedidas().add(medida5);
 
                 Empleado empleado = new Empleado();
-                empleado.setContraseña("123456789");
-                empleado.setEmail("pepe@gmail.com");
-                empleado.getSucursales().add(sucursal);
+                empleado.setContraseña(Encrypt.cifrarPassword("123456789"));
+                empleado.setEmail(Encrypt.encriptarString("pepe@gmail.com"));
+                empleado.setNombre(Encrypt.encriptarString("Pepito"));
 
                 EmpleadoPrivilegio empleadoPrivilegio = new EmpleadoPrivilegio();
                 empleadoPrivilegio.setEmpleado(empleado);
@@ -661,7 +662,8 @@ public class Main {
                 empleadoPrivilegio.setPrivilegio(privilegios);
                 empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
 
-                //empleado = empleadoRepository.save(empleado);
+                empleado.setCuil(Encrypt.encriptarString("20425148887"));
+                empleado.getSucursales().add(sucursal);
 
                 sucursal.getEmpleados().add(empleado);
 

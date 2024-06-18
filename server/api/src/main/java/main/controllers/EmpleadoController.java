@@ -105,9 +105,12 @@ public class EmpleadoController {
         List<Empleado> empleados = empleadoRepository.findAllByIdSucursal(idSucursal);
 
         for (Empleado empleado : empleados) {
-            empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
-            empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
-            empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
+            try {
+                empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
+                empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
+                empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
+            } catch (NullPointerException ignored) {}
+
 
             List<Domicilio> domicilios = domicilioRepository.findByIdEmpleado(empleado.getId());
 
