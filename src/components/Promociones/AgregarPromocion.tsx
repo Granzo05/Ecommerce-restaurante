@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import { toast, Toaster } from 'sonner';
 import InputComponent from '../InputFiltroComponent';
@@ -13,6 +13,9 @@ import { PromocionService } from '../../services/PromocionService';
 import ModalFlotanteRecomendacionesArticuloMenu from '../../hooks/ModalFlotanteFiltroArticuloMenu';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { formatearFechaYYYYMMDD, formatearFechaYYYYMMDDHHMM } from '../../utils/global_variables/functions';
+import { SucursalService } from '../../services/SucursalService';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
+import { Empresa } from '../../types/Restaurante/Empresa';
 
 interface AgregarPromocionProps {
   onCloseModal: () => void;
@@ -198,6 +201,43 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
     setPrecioSugerido(precioRecomendado);
   }
+
+  const [empresa] = useState<Empresa | null>(() => {
+    const empresaString = localStorage.getItem('empresa');
+
+    return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
+  });
+
+  const [idsSucursalesElegidas, setIdsSucursalesElegidas] = useState<Set<number>>(new Set<number>());
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+
+  useEffect(() => {
+    SucursalService.getSucursales()
+      .then(data => {
+        setSucursales(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleSucursalesElegidas = (sucursalId: number) => {
+    const updatedSelectedSucursales = new Set(idsSucursalesElegidas);
+    if (updatedSelectedSucursales.has(sucursalId)) {
+      updatedSelectedSucursales.delete(sucursalId);
+    } else {
+      updatedSelectedSucursales.add(sucursalId);
+    }
+    setIdsSucursalesElegidas(updatedSelectedSucursales);
+  };
+
+  const marcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set(sucursales.map(sucursal => sucursal.id)));
+  };
+
+  const desmarcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set());
+  };
 
   async function agregarStockEntrante() {
     const hoy = new Date();
@@ -448,8 +488,38 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-completar' onClick={agregarStockEntrante}>Agregar promoción ✓</button>
+              )}
+            </div>
+          </>
+        );
+      case 6:
+        return (
+          <>
+            <h4>Sucursales</h4>
+            {sucursales && sucursales.map((sucursal, index) => (
+              <div key={index}>
+                <>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => desmarcarSucursales()}>Desmarcar todas</p>
+                  <p className='cierre-ingrediente' onClick={() => marcarSucursales()}>Marcar todas</p>
+                  <h4 style={{ fontSize: '18px' }}>Sucursal: {sucursal.nombre}</h4>
+                  <input
+                    type="checkbox"
+                    value={sucursal.id}
+                    checked={idsSucursalesElegidas.has(sucursal.id) || false}
+                    onChange={() => handleSucursalesElegidas(sucursal.id)}
+                  />
+                  <label>{sucursal.nombre}</label>
+                </>
+              </div>
+            ))}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={agregarStockEntrante}>Agregar promoción ✓</button>
-
             </div>
           </>
         );

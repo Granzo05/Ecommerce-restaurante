@@ -16,6 +16,9 @@ import { Medida } from '../../types/Ingredientes/Medida';
 import { ArticuloMenu } from '../../types/Productos/ArticuloMenu';
 import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
 import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
+import { SucursalService } from '../../services/SucursalService';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
+import { Empresa } from '../../types/Restaurante/Empresa';
 
 interface EditarMenuProps {
   menuOriginal: ArticuloMenu;
@@ -174,6 +177,44 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     setModalBusquedaSubcategoria(false)
   };
 
+  const [empresa] = useState<Empresa | null>(() => {
+    const empresaString = localStorage.getItem('empresa');
+
+    return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
+  });
+
+  const [idsSucursalesElegidas, setIdsSucursalesElegidas] = useState<Set<number>>(new Set<number>());
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+
+  useEffect(() => {
+    SucursalService.getSucursales()
+      .then(data => {
+        setSucursales(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleSucursalesElegidas = (sucursalId: number) => {
+    const updatedSelectedSucursales = new Set(idsSucursalesElegidas);
+    if (updatedSelectedSucursales.has(sucursalId)) {
+      updatedSelectedSucursales.delete(sucursalId);
+    } else {
+      updatedSelectedSucursales.add(sucursalId);
+    }
+    setIdsSucursalesElegidas(updatedSelectedSucursales);
+  };
+
+  const marcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set(sucursales.map(sucursal => sucursal.id)));
+  };
+
+  const desmarcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set());
+  };
+
+
   function editarMenu() {
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
@@ -264,6 +305,25 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     });
   }
 
+  const [precioSugerido, setPrecioSugerido] = useState<number>(0);
+
+  function calcularCostos() {
+    let precioRecomendado: number = 0;
+    if (ingredientes[0]?.ingrediente?.nombre?.length > 0 && precioSugerido === 0) {
+      ingredientes.forEach(ingredienteMenu => {
+        if (ingredienteMenu.medida?.nombre === ingredienteMenu.ingrediente?.stockIngrediente?.medida?.nombre) {
+          // Si coinciden las medidas, ej gramos y gramos entonces se calcula por igual
+          precioRecomendado += ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad;
+        } else if (ingredienteMenu?.medida?.nombre !== ingredienteMenu?.ingrediente?.stockIngrediente?.medida?.nombre && ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra) {
+          // Si no coinciden entonces hay que llevar la medida al mimso tipo ya que el precio se calcula por unidad de medida del stock
+          precioRecomendado += (ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad) / 1000;
+        }
+      });
+
+      setPrecioSugerido(precioRecomendado);
+    }
+  }
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextImage = () => {
@@ -275,138 +335,236 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
       prevIndex === 0 ? imagenesMuestra.length - 1 : prevIndex - 1
     );
   };
+  //SEPARAR EN PASOS
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <h4>Paso 1 - Datos</h4>
+            <div className="inputBox">
+              <hr />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del menu</span>
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
+              <span>Descripción del menu</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+              <span>Minutos de coccion</span>
+            </div>
+            <div className="input-filtrado">
+              <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+            </div>
+            <div className="input-filtrado">
+              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
+              {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <span>Precio</span>
+            </div>
+            <div className="inputBox">
+              <input type="number" required={true} value={comensales} onChange={(e) => { setComensales(parseInt(e.target.value)) }} />
+              <span>Comensales</span>
+              <hr />
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h4>Paso 2 - Agregar ingrediente al menú</h4>
+            <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
+              <AgregarIngrediente onCloseModal={handleModalClose} />
+            </ModalFlotante>
+            {ingredientesMuestra.map((ingredienteMenu, index) => (
+              <div key={index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={() => quitarCampoIngredienteMuestra(index)}>X</p>
+                <div className="inputBox">
+                  <input type="text" required={true} value={ingredienteMenu.ingrediente?.nombre} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+                  <span>Nombre del ingrediente</span>
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))} />
+                  <span>Cantidad necesaria</span>
+                </div>
+                <div className="input-filtrado">
+                  <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente.medida?.nombre ?? ingredienteMenu.medida?.nombre ?? ''} />
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteMostrableChange(index, medida); handleModalClose(); }} />}
+                </div>
+              </div>
+            ))}
+            {ingredientes.map((ingredienteMenu, index) => (
+              <div key={index}>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
+                <div>
+                  <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+                  <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
+                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
+                </div>
+                <div className="inputBox">
+                  <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
+                  <span>Cantidad necesaria</span>
+                </div>
+                <div className="input-filtrado">
+                  <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente?.medida?.nombre ?? ''} />
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.ingrediente?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
+                </div>
+              </div>
+            ))}
+            <button onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente</button>
+            <br />
+            <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
+            <hr />
+            <div className='btns-pasos'>
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h4>Paso 3</h4>
+            <div>
+              <div className="slider-container">
+                <button onClick={prevImage} className="slider-button prev">◀</button>
+                <div className='imagenes-wrapper'>
+                  {imagenesMuestra.map((imagen, index) => (
+                    <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
+
+                      <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
+                      <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+                      {imagen && (
+
+                        <img
+                          src={imagen.ruta}
+                          alt={`Imagen ${index}`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                  <button onClick={nextImage} className="slider-button next">▶</button>
+                </div>
+              </div>
+              <br />
+              {imagenes.map((imagen, index) => (
+                <div key={index} className='inputBox'>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                  <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
+                  <br />
+                  <div className="file-input-wrapper">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`}
+                      className="file-input"
+                      onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                    />
+                    <label htmlFor={`file-input-${index}`} className="file-input-label">
+                      {imagen.file ? (
+                        <p>Archivo seleccionado: {imagen.file.name}</p>
+                      ) : (
+                        <p>Seleccionar un archivo</p>
+                      )}
+                    </label>
+                  </div>
+                </div>
+              ))}
+              <br />
+              <button onClick={añadirCampoImagen}>Añadir imagen</button>
+              <br />
+              <div className="btns-pasos">
+                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+                <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              </div>
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <h4>Paso final</h4>
+            {precioSugerido !== undefined && precioSugerido > 0 && (
+              <>
+                <p>Costo por ingredientes: ${precioSugerido}</p>
+                <div className="inputBox">
+                  <input type="number" onChange={(e) => setPrecio((1 + parseInt(e.target.value) / 100) * precioSugerido)} />
+                  <span>% de ganancia buscado</span>
+                </div>
+              </>
+            )}
+            <div className="inputBox">
+              <input type="number" required={true} value={precioVenta | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <span>Precio final</span>
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
+              )}
+            </div>
+          </>
+        );
+      case 5:
+        return (
+          <>
+            <h4>Sucursales</h4>
+            {sucursales && sucursales.map((sucursal, index) => (
+              <div key={index}>
+                <>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => desmarcarSucursales()}>Desmarcar todas</p>
+                  <p className='cierre-ingrediente' onClick={() => marcarSucursales()}>Marcar todas</p>
+                  <h4 style={{ fontSize: '18px' }}>Sucursal: {sucursal.nombre}</h4>
+                  <input
+                    type="checkbox"
+                    value={sucursal.id}
+                    checked={idsSucursalesElegidas.has(sucursal.id) || false}
+                    onChange={() => handleSucursalesElegidas(sucursal.id)}
+                  />
+                  <label>{sucursal.nombre}</label>
+                </>
+              </div>
+            ))}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
+            </div>
+          </>
+        );
+    }
+  }
 
   return (
     <div className="modal-info">
+      <h2>&mdash; Agregar menú &mdash;</h2>
       <Toaster />
-      <h2>Editar menú</h2>
-      <div className="slider-container">
-        <button onClick={prevImage} className="slider-button prev">◀</button>
-        <div className='imagenes-wrapper'>
-          {imagenesMuestra.map((imagen, index) => (
-            <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
-
-              <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
-              <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
-              {imagen && (
-
-                <img
-                  src={imagen.ruta}
-                  alt={`Imagen ${index}`}
-                />
-              )}
-            </div>
-          ))}
-          <button onClick={nextImage} className="slider-button next">▶</button>
-        </div>
-      </div>
-      <br />
-      {imagenes.map((imagen, index) => (
-        <div key={index} className='inputBox'>
-          <hr />
-          <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
-          <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
-          <br />
-          <div className="file-input-wrapper">
-            <input
-              type="file"
-              accept="image/*"
-              id={`file-input-${index}`}
-              className="file-input"
-              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-            />
-            <label htmlFor={`file-input-${index}`} className="file-input-label">
-              {imagen.file ? (
-                <p>Archivo seleccionado: {imagen.file.name}</p>
-              ) : (
-                <p>Seleccionar un archivo</p>
-              )}
-            </label>
-          </div>
-        </div>
-      ))}
-      <br />
-      <button onClick={añadirCampoImagen}>Añadir imagen</button>
-      <div className="inputBox">
-        <hr />
-        <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-        <span>Nombre del menu</span>
-      </div>
-      <div className="inputBox">
-        <input type="text" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
-        <span>Descripción del menu</span>
-      </div>
-      <div className="inputBox">
-        <input type="number" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
-        <span>Minutos de coccion</span>
-      </div>
-      <div className="input-filtrado">
-        <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-        {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
-      </div>
-      <div className="input-filtrado">
-        <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
-        {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
-      </div>
-      <div className="inputBox">
-        <input type="number" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-        <span>Precio</span>
-      </div>
-      <div className="inputBox">
-        <input type="number" required={true} value={comensales} onChange={(e) => { setComensales(parseInt(e.target.value)) }} />
-        <span>Comensales</span>
-        <hr />
-      </div>
-      <div>
-        <h2>Ingredientes</h2>
-        <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
-          <AgregarIngrediente onCloseModal={handleModalClose} />
-        </ModalFlotante>
-        {ingredientesMuestra.map((ingredienteMenu, index) => (
-          <div key={index}>
-            <hr />
-            <p className='cierre-ingrediente' onClick={() => quitarCampoIngredienteMuestra(index)}>X</p>
-            <div className="inputBox">
-              <input type="text" required={true} value={ingredienteMenu.ingrediente?.nombre} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
-              <span>Nombre del ingrediente</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))} />
-              <span>Cantidad necesaria</span>
-            </div>
-            <div className="input-filtrado">
-              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente.medida?.nombre ?? ingredienteMenu.medida?.nombre ?? ''} />
-              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteMostrableChange(index, medida); handleModalClose(); }} />}
-            </div>
-          </div>
-        ))}
-        {ingredientes.map((ingredienteMenu, index) => (
-          <div key={index}>
-            <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
-            <div>
-              <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-              <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
-              {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
-              <span>Cantidad necesaria</span>
-            </div>
-            <div className="input-filtrado">
-              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente?.medida?.nombre ?? ''} />
-              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={ingredienteMenu.ingrediente?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngredienteChange(index, medida); handleModalClose(); }} />}
-            </div>
-          </div>
-        ))}
-      </div>
-      <button onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente</button>
-      <br />
-      <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
+      {renderStep()}
       <hr />
-      <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
     </div >
   )
 }
-
 
 export default EditarMenu

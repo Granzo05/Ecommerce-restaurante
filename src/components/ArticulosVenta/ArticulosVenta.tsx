@@ -135,16 +135,16 @@ const ArticuloVentas = () => {
         fetchArticuloVenta();
     };
 
-    const [paginaActual, setPaginaActual] = useState(0);
-    const [productosMostrables, setProductosMostrables] = useState<number>(10);
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [productosMostrables, setProductosMostrables] = useState(10);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
 
     // Obtener los elementos de la página actual
-    const productos = articulosVenta.slice(indexUltimoProducto, indexPrimerProducto);
- 
+    const productos = articulosVenta.slice(indexPrimerProducto, indexUltimoProducto);
+
     const paginasTotales = Math.ceil(articulosVenta.length / productosMostrables);
 
     // Cambiar de página

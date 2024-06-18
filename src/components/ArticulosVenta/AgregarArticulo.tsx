@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
@@ -13,6 +13,9 @@ import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
 import { StockArticuloVenta } from '../../types/Stock/StockArticuloVenta';
 import { StockArticuloVentaService } from '../../services/StockArticulosService';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
+import { SucursalService } from '../../services/SucursalService';
+import { Empresa } from '../../types/Restaurante/Empresa';
 
 interface AgregarArticuloVentaProps {
   onCloseModal: () => void;
@@ -57,6 +60,37 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
   const [nombre, setNombre] = useState('');
   const [medida, setMedida] = useState<Medida>(new Medida);
   const [cantidadMedida, setCantidadMedida] = useState(0);
+
+  const [idsSucursalesElegidas, setIdsSucursalesElegidas] = useState<Set<number>>(new Set<number>());
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+
+  useEffect(() => {
+    SucursalService.getSucursales()
+      .then(data => {
+        setSucursales(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleSucursalesElegidas = (sucursalId: number) => {
+    const updatedSelectedSucursales = new Set(idsSucursalesElegidas);
+    if (updatedSelectedSucursales.has(sucursalId)) {
+      updatedSelectedSucursales.delete(sucursalId);
+    } else {
+      updatedSelectedSucursales.add(sucursalId);
+    }
+    setIdsSucursalesElegidas(updatedSelectedSucursales);
+  };
+
+  const marcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set(sucursales.map(sucursal => sucursal.id)));
+  };
+
+  const desmarcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set());
+  };
 
   async function agregarArticulo() {
     if (imagenes.length === 0) {
@@ -117,6 +151,16 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
     articulo.borrado = 'NO';
     articulo.subcategoria = subcategoria;
 
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    articulo.sucursales = sucursalesElegidas;
+
     const stockArticuloVenta: StockArticuloVenta = new StockArticuloVenta();
 
     stockArticuloVenta.cantidadActual = cantidadActual;
@@ -145,6 +189,12 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
       },
     });
   }
+
+  const [empresa] = useState<Empresa | null>(() => {
+    const empresaString = localStorage.getItem('empresa');
+
+    return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
+  });
 
   // Modal flotante de ingrediente
   const [modalBusquedaCategoria, setModalBusquedaCategoria] = useState<boolean>(false);
@@ -210,7 +260,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
       case 2:
         return (
           <>
-            <h4>Paso final - Imagen</h4>
+            <h4>Imagenes</h4>
             <div >
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -242,10 +292,12 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
             <br />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={nextStep}>Agregar stock ⭢</button>
-              <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
-
-            </div>
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={() => setStep(4)}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-adelante' onClick={nextStep}>Agregar stock ⭢</button>
+              )}
+            </div >
           </>
         );
       case 3:
@@ -280,13 +332,42 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
             {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medidaStock?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedidaStock(medida); handleModalClose(); }} />}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
+              )}
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <h4>Sucursales</h4>
+            {sucursales && sucursales.map((sucursal, index) => (
+              <div key={index}>
+                <>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => desmarcarSucursales()}>Desmarcar todas</p>
+                  <p className='cierre-ingrediente' onClick={() => marcarSucursales()}>Marcar todas</p>
+                  <h4 style={{ fontSize: '18px' }}>Sucursal: {sucursal.nombre}</h4>
+                  <input
+                    type="checkbox"
+                    value={sucursal.id}
+                    checked={idsSucursalesElegidas.has(sucursal.id) || false}
+                    onChange={() => handleSucursalesElegidas(sucursal.id)}
+                  />
+                  <label>{sucursal.nombre}</label>
+                </>
+              </div>
+            ))}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
-
             </div>
           </>
         );
     }
-
   }
 
   return (
