@@ -1,7 +1,9 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
+import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Subcategoria;
+import main.entities.Restaurante.Sucursal;
 import main.repositories.SubcategoriaRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
@@ -42,7 +44,36 @@ public class SubcategoriaController {
         Optional<Subcategoria> subcategoriaDB = subcategoriaRepository.findByDenominacionAndIdSucursal(categoriaDetails.getNombre(), idSucursal);
 
         if (subcategoriaDB.isEmpty()) {
-            categoriaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+            if (!categoriaDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(categoriaDetails.getSucursales());
+                for (Sucursal sucursalVacia : sucursales) {
+                    Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
+
+                    for (Categoria categoria : sucursal.getCategorias()) {
+                        if (categoriaDetails.getCategoria().equals(categoria)) {
+                            categoria.getSubcategorias().add(categoriaDetails);
+                            categoriaDetails.getSucursales().add(sucursal);
+                        }
+                    }
+
+                    sucursalRepository.save(sucursal);
+                }
+            } else {
+                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                if (sucursalOpt.isPresent()) {
+                    Sucursal sucursal = sucursalOpt.get();
+
+                    for (Categoria categoria : sucursal.getCategorias()) {
+                        if (categoriaDetails.getCategoria().equals(categoria) && !sucursal.getPromociones().contains(categoriaDetails)) {
+                            categoria.getSubcategorias().add(categoriaDetails);
+                            categoriaDetails.getSucursales().add(sucursal);
+                        }
+                    }
+
+                } else {
+                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                }
+            }
 
             subcategoriaRepository.save(categoriaDetails);
 

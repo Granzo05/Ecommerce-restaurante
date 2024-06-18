@@ -25,6 +25,16 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
     medida.nombre = nombre;
     medida.borrado = 'NO';
 
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    medida.sucursales = sucursalesElegidas;
+
     toast.promise(MedidaService.createMedida(medida), {
       loading: 'Creando Medida...',
       success: (message) => {

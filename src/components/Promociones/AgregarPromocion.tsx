@@ -298,6 +298,16 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
     promocion.descuento = descuento;
 
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    promocion.sucursales = sucursalesElegidas;
+
     toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
       success: (message) => {

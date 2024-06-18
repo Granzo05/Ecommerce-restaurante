@@ -2,6 +2,7 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Medida;
+import main.entities.Restaurante.Sucursal;
 import main.repositories.MedidaRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,27 @@ public class MedidaController {
         Optional<Medida> medidaDB = medidaRepository.findByDenominacionAndIdSucursal(medidaDetails.getNombre(), idSucursal);
 
         if (medidaDB.isEmpty()) {
-            medidaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+            if (!medidaDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(medidaDetails.getSucursales());
+                for (Sucursal sucursalVacia : sucursales) {
+                    Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
+
+                    sucursal.getMedidas().add(medidaDetails);
+                    medidaDetails.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
+                }
+            } else {
+                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                if (sucursalOpt.isPresent()) {
+                    Sucursal sucursal = sucursalOpt.get();
+                    if (!sucursal.getMedidas().contains(medidaDetails)) {
+                        sucursal.getMedidas().add(medidaDetails);
+                        medidaDetails.getSucursales().add(sucursal);
+                    }
+                } else {
+                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                }
+            }
 
             medidaRepository.save(medidaDetails);
 

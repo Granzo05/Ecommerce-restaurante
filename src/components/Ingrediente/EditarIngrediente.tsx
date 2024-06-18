@@ -62,6 +62,17 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
     }
 
     ingrediente.nombre = nombre;
+
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    ingrediente.sucursales = sucursalesElegidas;
+
     toast.promise(IngredienteService.updateIngrediente(ingrediente), {
       loading: 'Editando Ingrediente...',
       success: (message) => {

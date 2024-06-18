@@ -151,10 +151,11 @@ public class ArticuloMenuController {
 
                 articuloMenu.setBorrado("NO");
 
-                // Si la sucursal coincide con los privilegios del admin o de la empresa que agregue todas las sucursales al menu
-                if (idSucursal == 0) {
-                    List<Sucursal> sucursales = sucursalRepository.findAll();
-                    for (Sucursal sucursal : sucursales) {
+                if (!articuloMenu.getSucursales().isEmpty()) {
+                    Set<Sucursal> sucursales = new HashSet<>(articuloMenu.getSucursales());
+                    for (Sucursal sucursalVacia : sucursales) {
+                        Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
+
                         sucursal.getArticulosMenu().add(articuloMenu);
                         articuloMenu.getSucursales().add(sucursal);
                         sucursalRepository.save(sucursal);

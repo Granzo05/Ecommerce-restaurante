@@ -52,7 +52,27 @@ public class PromocionController {
         Optional<Promocion> promocionDB = promocionRepository.findByNameAndIdSucursal(promocionDetails.getNombre(), idSucursal);
 
         if (promocionDB.isEmpty()) {
-            promocionDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+            if (!promocionDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(promocionDetails.getSucursales());
+                for (Sucursal sucursalVacia : sucursales) {
+                    Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
+
+                    sucursal.getPromociones().add(promocionDetails);
+                    promocionDetails.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
+                }
+            } else {
+                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                if (sucursalOpt.isPresent()) {
+                    Sucursal sucursal = sucursalOpt.get();
+                    if (!sucursal.getPromociones().contains(promocionDetails)) {
+                        sucursal.getPromociones().add(promocionDetails);
+                        promocionDetails.getSucursales().add(sucursal);
+                    }
+                } else {
+                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                }
+            }
 
             Set<DetallePromocion> detalles = new HashSet<>();
             for (DetallePromocion detallePromocion : promocionDetails.getDetallesPromocion()) {

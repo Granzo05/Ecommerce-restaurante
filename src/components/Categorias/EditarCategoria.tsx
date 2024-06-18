@@ -112,6 +112,17 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
     }
 
     categoria.nombre = nombre;
+
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    categoria.sucursales = sucursalesElegidas;
+
     toast.promise(CategoriaService.updateCategoria(categoria, imagenes, imagenesEliminadas), {
       loading: 'Editando Categoria...',
       success: (message) => {

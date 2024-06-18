@@ -97,11 +97,14 @@ public class ArticuloVentaController {
         Optional<ArticuloVenta> articuloDB = articuloVentaRepository.findByNameArticuloAndIdSucursal(articuloVenta.getNombre(), idSucursal);
 
         if (articuloDB.isEmpty()) {
-            if (idSucursal == 1) {
-                List<Sucursal> sucursales = sucursalRepository.findAll();
-                for (Sucursal sucursal : sucursales) {
+            if (!articuloVenta.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(articuloVenta.getSucursales());
+                for (Sucursal sucursalVacia : sucursales) {
+                    Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
+
                     sucursal.getArticulosVenta().add(articuloVenta);
                     articuloVenta.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);

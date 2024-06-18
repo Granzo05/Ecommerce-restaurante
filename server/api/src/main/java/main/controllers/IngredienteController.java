@@ -44,27 +44,22 @@ public class IngredienteController {
         Optional<Ingrediente> ingredienteDB = ingredienteRepository.findByNameAndIdSucursal(ingredienteDetails.getNombre(), idSucursal);
 
         if (ingredienteDB.isEmpty()) {
-            if (idSucursal == 1) {
-                List<Sucursal> sucursales = sucursalRepository.findAll();
-                for (Sucursal sucursal : sucursales) {
-                    Optional<Ingrediente> ingredienteSucursal = ingredienteRepository.findByNameAndIdSucursal(ingredienteDetails.getNombre(), sucursal.getId());
+            if (!ingredienteDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(ingredienteDetails.getSucursales());
+                for (Sucursal sucursalVacia : sucursales) {
+                    Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    if (ingredienteSucursal.isEmpty()) {
-                        sucursal.getIngredientes().add(ingredienteDetails);
-                        ingredienteDetails.getSucursales().add(sucursal);
-                    }
+                    sucursal.getIngredientes().add(ingredienteDetails);
+                    ingredienteDetails.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
                     if (!sucursal.getIngredientes().contains(ingredienteDetails)) {
-                        Optional<Ingrediente> ingredienteSucursal = ingredienteRepository.findByNameAndIdSucursal(ingredienteDetails.getNombre(), sucursal.getId());
-
-                        if (ingredienteSucursal.isEmpty()) {
-                            sucursal.getIngredientes().add(ingredienteDetails);
-                            ingredienteDetails.getSucursales().add(sucursal);
-                        }
+                        sucursal.getIngredientes().add(ingredienteDetails);
+                        ingredienteDetails.getSucursales().add(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);

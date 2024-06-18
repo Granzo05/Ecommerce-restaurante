@@ -1,3 +1,4 @@
+import { Sucursal } from "../Restaurante/Sucursal";
 import { DetallePromocion } from "./DetallePromocion";
 import { Imagenes } from "./Imagenes";
 
@@ -13,6 +14,7 @@ export class Promocion {
     borrado: string = '';
     cantidad: number = 0;
     descuento: number = 0;
+    sucursales: Sucursal[] = [];
 
     constructor() {
     }

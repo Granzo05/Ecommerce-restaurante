@@ -88,6 +88,16 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
 
     categoria.nombre = nombre;
     categoria.borrado = 'NO';
+    
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    categoria.sucursales = sucursalesElegidas;
 
     toast.promise(CategoriaService.createCategoria(categoria, imagenes), {
       loading: 'Creando Categoria...',

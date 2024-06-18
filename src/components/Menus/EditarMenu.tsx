@@ -291,6 +291,16 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
       });
     }
 
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    menuActualizado.sucursales = sucursalesElegidas;
+
     toast.promise(MenuService.updateMenu(menuActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando menu...',
       success: (message) => {

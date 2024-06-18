@@ -361,7 +361,15 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
 
     promocionUpdated.descripcion = descripcion;
 
-    console.log(promocionUpdated)
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    promocionUpdated.sucursales = sucursalesElegidas;
 
     toast.promise(PromocionService.updatePromocion(promocionUpdated, imagenes, imagenesEliminadas), {
       loading: 'Editando promoción...',

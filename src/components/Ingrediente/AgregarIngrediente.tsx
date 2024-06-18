@@ -114,6 +114,16 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
     ingrediente.nombre = nombre;
     ingrediente.borrado = 'NO';
 
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    ingrediente.sucursales = sucursalesElegidas;
+
     const stockIngredientes: StockIngredientes = new StockIngredientes();
 
     stockIngredientes.cantidadActual = cantidadActual;

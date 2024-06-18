@@ -139,6 +139,14 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       return;
     }
 
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
     const articuloActualizado: ArticuloVenta = {
       ...articuloOriginal,
       nombre,
@@ -148,6 +156,8 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       medida,
       subcategoria
     };
+
+    articuloActualizado.sucursales = sucursalesElegidas;
 
     articuloActualizado.borrado = 'NO';
 

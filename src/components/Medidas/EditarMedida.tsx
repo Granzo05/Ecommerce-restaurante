@@ -25,6 +25,17 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
     }
 
     medida.nombre = nombre;
+
+    let sucursalesElegidas: Sucursal[] = [];
+
+    idsSucursalesElegidas.forEach(idSucursal => {
+      let sucursal: Sucursal = new Sucursal();
+      sucursal.id = idSucursal;
+      sucursalesElegidas.push(sucursal);
+    });
+
+    medida.sucursales = sucursalesElegidas;
+
     toast.promise(MedidaService.updateMedida(medida), {
       loading: 'Editando Medida...',
       success: (message) => {

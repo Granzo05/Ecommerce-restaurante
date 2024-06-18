@@ -5,6 +5,7 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Subcategoria;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.Imagenes;
+import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,27 @@ public class CategoriaController {
         Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoriaDetails.getNombre(), idSucursal);
 
         if (categoriaDB.isEmpty()) {
-            categoriaDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+            if (!categoriaDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(categoriaDetails.getSucursales());
+                for (Sucursal sucursalVacia : sucursales) {
+                    Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
+
+                    sucursal.getCategorias().add(categoriaDetails);
+                    categoriaDetails.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
+                }
+            } else {
+                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                if (sucursalOpt.isPresent()) {
+                    Sucursal sucursal = sucursalOpt.get();
+                    if (!sucursal.getCategorias().contains(categoriaDetails)) {
+                        sucursal.getCategorias().add(categoriaDetails);
+                        categoriaDetails.getSucursales().add(sucursal);
+                    }
+                } else {
+                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                }
+            }
 
             categoriaRepository.save(categoriaDetails);
 
