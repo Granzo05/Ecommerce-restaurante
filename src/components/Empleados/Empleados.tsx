@@ -176,7 +176,7 @@ const Empleados = () => {
             </ModalCrud>
 
             <div className="filtros">
-                <div className="inputBox">
+                <div className="inputBox-filtrado">
                     <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
@@ -189,7 +189,7 @@ const Empleados = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox"
+                    <div className="inputBox-filtrado"
                         style={{ marginRight: '10px' }}>
                         <input
                             type="text"
@@ -198,7 +198,7 @@ const Empleados = () => {
                         />
                         <span>Filtrar por nombre</span>
                     </div>
-                    <div className="inputBox">
+                    <div className="inputBox-filtrado">
                         <input
                             type="number"
                             required

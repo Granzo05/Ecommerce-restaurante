@@ -154,6 +154,18 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
   }
 
 
+  const [mostrarInputs, setMostrarInputs] = useState(false);
+
+  const handleClose = () => {
+    setMostrarInputs(false);
+    setCantidadMinima(parseInt(''));
+    setCantidadMaxima(parseInt(''));
+    setCantidadActual(parseInt(''));
+    setCostoIngrediente(parseInt(''));
+    setMedida(new Medida());
+  };
+
+
   const [step, setStep] = useState(1);
 
   const nextStep = () => {
@@ -169,53 +181,55 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
       case 1:
         return (
           <>
-            <div >
-              <h2>&mdash; Cargar nuevo ingrediente &mdash;</h2>
-              <Toaster />
-              <div className="inputBox">
-                <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
-                <span>Nombre del ingrediente</span>
-              </div>
-              {!empresa && (
-                <>
-                  <label>
-                    <div className="inputBox">
-                      <input type="text" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
-                      <span>Cantidad mínima del ingrediente (opcional)</span>
-                    </div>
-                  </label>
-                  <label>
-                    <div className="inputBox">
-                      <input type="text" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
-                      <span>Cantidad máxima del ingrediente (opcional)</span>
-                    </div>
-
-                  </label>
-                  <label>
-                    <div className="inputBox">
-                      <input type="text" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
-                      <span>Cantidad actual del ingrediente (opcional)</span>
-                    </div>
-
-                  </label>
-                  <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida... (opcional)'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
-                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-
+            <Toaster />
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del ingrediente</span>
+            </div>
+            {!empresa && mostrarInputs && (
+              <>
+                  <h4 style={{fontSize: '20px', textTransform: 'lowercase'}}> <strong style={{fontWeight: '100', textTransform: 'capitalize'}}>Stock</strong>  {nombre}</h4>
+                  <p className='cierre-ingrediente' style={{marginRight: '35%'}} onClick={handleClose}>X</p>
+                <label>
                   <div className="inputBox">
-                    <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-                    <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
+                    <input type="text" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+                    <span>Cantidad mínima del ingrediente (opcional)</span>
                   </div>
+                </label>
+                <label>
+                  <div className="inputBox">
+                    <input type="text" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+                    <span>Cantidad máxima del ingrediente (opcional)</span>
+                  </div>
+
+                </label>
+                <label>
+                  <div className="inputBox">
+                    <input type="text" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+                    <span>Cantidad actual del ingrediente (opcional)</span>
+                  </div>
+
+                </label>
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida... (opcional)'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+
+                <div className="inputBox">
+                  <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+                  <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
+                </div>
+              </>
+            )}
+
+            <div className="btns-pasos">
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <>
+                  <button value="Agregar stock ahora (opcional)" id='agregarIngrediente' style={{ marginRight: '10px' }}
+                    onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock ahora (opcional)</button>
+                  <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar ingrediente</button>
                 </>
               )}
-
-              <div className="btns-pasos">
-                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-                {empresa && empresa?.id > 0 ? (
-                  <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
-                ) : (
-                  <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar</button>
-                )}
-              </div>
             </div>
           </>
         );

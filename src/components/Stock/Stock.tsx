@@ -80,7 +80,7 @@ const Stocks = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState<number>(10);
+    const [productosMostrables, setProductosMostrables] = useState<number>(11);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
@@ -91,7 +91,7 @@ const Stocks = () => {
 
     const stocksFiltrados = stocks.slice(indexPrimerProducto, indexUltimoProducto);
 
-    const paginasTotales = Math.ceil(stocks.length / productosMostrables);    
+    const paginasTotales = Math.ceil(stocks.length / productosMostrables);
 
     // Cambiar de página
     const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
@@ -172,14 +172,17 @@ const Stocks = () => {
         <div className="opciones-pantallas">
 
             <h1>- Stock -</h1>
+            <div className="references-venta">
+                <p><span className="cuadrado venta"></span>Artículos para venta</p>
+                <p><span className="cuadrado noventa"></span>Artículos para no venta</p>
+
+            </div>
             {createVisible && (
                 <div className="btns-stock">
                     <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
                     <button className="btn-agregar" onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
                 </div>)}
-
-            <p><span className="cuadrado venta"></span>Artículos para venta</p>
-            <p><span className="cuadrado noventa"></span>Artículos para no venta</p>
+            
 
             <hr />
 
@@ -203,9 +206,10 @@ const Stocks = () => {
                 {selectedStock && <EditarStock onCloseModal={handleModalClose} stockOriginal={selectedStock} tipo={tipo} nombre={nombre} />}
             </ModalFlotante>
 
-            {mostrarStocks && (
-                <div id="stocks">
-                    <select name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+            <div className="filtros">
+                <div className="inputBox-filtrado">
+                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                        <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
                         <option value={25}>25</option>
@@ -213,6 +217,38 @@ const Stocks = () => {
                         <option value={75}>75</option>
                         <option value={100}>100</option>
                     </select>
+                </div>
+
+                <div className="filtros-datos">
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                        <input
+                            type="text"
+                            required
+                        />
+                        <span>Filtrar por nombre</span>
+                    </div>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                        <input
+                            type="number"
+                            required
+                        />
+                        <span>Filtrar por costo</span>
+                    </div>
+                    <div className="inputBox-filtrado">
+                        <input
+                            type="text"
+                            required
+                        />
+                        <span>Filtrar por venta</span>
+                    </div>
+                    
+                </div>
+
+
+            </div>
+
+            {mostrarStocks && (
+                <div id="stocks">
                     <table>
                         <thead>
                             <tr>

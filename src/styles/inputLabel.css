@@ -96,6 +96,13 @@
     border-right: #2b86c4;
 }
 
+
+
+
+
+
+
+
 .inputBox input:user-invalid{
     color: red;
     border: 1px solid red;
@@ -104,6 +111,8 @@
 .inputBox input:user-invalid~span{
     color: red;
 }
+
+
 
 
 
@@ -129,6 +138,106 @@ select:focus {
     position: absolute;
     color: rgb(82, 82, 82);
 }
+
+.inputBox-filtrado:nth-child(2) input:valid~span,
+.inputBox-filtrado:nth-child(2) input:focus~span {
+    color: #1d2b3a;
+    border-radius: 2px;
+}
+
+
+.inputBox-filtrado input:valid,
+.inputBox-filtrado input:focus {
+    border: 1px solid #2b86c4;
+}
+
+select:focus {
+    border: 1px solid #2b86c4;
+}
+
+.inputBox-filtrado {
+    position: relative;
+}
+
+.inputBox-filtrado input[type='number'],
+.inputBox-filtrado input[type='password'],
+.inputBox-filtrado input[type='text'],
+.inputBox-filtrado input[type='email'],
+.inputBox-filtrado input[type='time'],
+.inputBox-filtrado input[type='date'],
+.inputBox-filtrado input[type='phone'] {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    border: 1px solid rgb(82, 82, 82);
+    background: #fff;
+    border-radius: 4px;
+    outline: none;
+    color: black;
+    margin-bottom: 10px;
+}
+
+.inputBox-filtrado input[type='file'] {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    background: none;
+    border-radius: 4px;
+    outline: none;
+    color: black;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    transition: background-color 0.3s, border-color 0.3s;
+    margin-top: -10px;
+}
+
+.inputBox-filtrado input[type='file']::-webkit-file-upload-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-right: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.inputBox-filtrado input[type='file']::-webkit-file-upload-button:hover {
+    background-color: #0056b3;
+}
+
+
+.inputBox-filtrado select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgb(82, 82, 82);
+    border-radius: 5px;
+    color: black;
+    margin-bottom: 10px;
+}
+
+.inputBox-filtrado span {
+    position: absolute;
+    left: 0;
+    padding: 8px;
+    pointer-events: none;
+    color: rgb(82, 82, 82);
+    transition: 0.5s;
+}
+
+.inputBox-filtrado input:valid~span,
+.inputBox-filtrado input:focus~span {
+    color: #1d2b3a;
+    transform: translateX(10px) translateY(-9px);
+    font-size: 0.85em;
+    padding: 0 10px;
+    background: #fff;
+    border-left: #2b86c4;
+    border-right: #2b86c4;
+}
+
+
 
 
 

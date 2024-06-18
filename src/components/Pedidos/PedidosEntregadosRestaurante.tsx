@@ -44,7 +44,7 @@ const PedidosEntregados = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(10);
+    const [productosMostrables, setProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
@@ -63,15 +63,41 @@ const PedidosEntregados = () => {
         <div className="opciones-pantallas">
             <h1>- Pedidos entregados -</h1>
             <hr />
+
+            <div className="filtros">
+                <div className="inputBox-filtrado">
+                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                        <option value={11} disabled >Selecciona una cantidad a mostrar</option>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={75}>75</option>
+                        <option value={100}>100</option>
+                    </select>
+                </div>
+
+                <div className="filtros-datos">
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                        <input
+                            type="text"
+                            required
+                        />
+                        <span>Filtrar por cliente</span>
+                    </div>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                        <input
+                            type="text"
+                            required
+                        />
+                        <span>Filtrar por tipo de envío</span>
+                    </div>
+                </div>
+
+
+            </div>
+
             <div id="pedidos">
-                <select name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={25}>25</option>
-                    <option value={50}>50</option>
-                    <option value={75}>75</option>
-                    <option value={100}>100</option>
-                </select>
                 <table>
                     <thead>
                         <tr>
