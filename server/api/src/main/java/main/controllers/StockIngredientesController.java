@@ -40,9 +40,11 @@ public class StockIngredientesController {
     }
 
     @CrossOrigin
-    @GetMapping("/stockIngredientes/{idSucursal}")
-    public Set<StockIngredientes> getStock(@PathVariable("idSucursal") long id) {
+    @GetMapping("/stockIngredientes/cargados/{idSucursal}")
+    public Set<StockIngredientes> getStockCargado(@PathVariable("idSucursal") long id) {
         List<StockIngredientes> stockIngredientes = stockIngredientesRepository.findAllByIdSucursal(id);
+
+        Set<StockIngredientes> stocksCargados = new HashSet<>();
 
         for (StockIngredientes stock : stockIngredientes) {
             // Busco el stock entrante más cercano en cuanto a fechaLlegada
@@ -52,9 +54,33 @@ public class StockIngredientesController {
             if (!stockEntrante.isEmpty()) {
                 stock.setFechaLlegadaProxima(stockEntrante.get().toList().get(0).getFechaLlegada());
             }
+
+            if (stock.getCantidadActual() > 0 && stock.getCantidadMinima() > 0 && stock.getCantidadMinima() > 0) stocksCargados.add(stock);
         }
 
-        return new HashSet<>(stockIngredientes);
+        return stocksCargados;
+    }
+
+    @CrossOrigin
+    @GetMapping("/stockIngredientes/vacios/{idSucursal}")
+    public Set<StockIngredientes> getStockVacio(@PathVariable("idSucursal") long id) {
+        List<StockIngredientes> stockIngredientes = stockIngredientesRepository.findAllByIdSucursal(id);
+
+        Set<StockIngredientes> stocksCargados = new HashSet<>();
+
+        for (StockIngredientes stock : stockIngredientes) {
+            // Busco el stock entrante más cercano en cuanto a fechaLlegada
+            PageRequest pageable = PageRequest.of(0, 1);
+            Page<StockEntrante> stockEntrante = stockEntranteRepository.findByIdIngredienteAndIdSucursal(stock.getIngrediente().getId(), id, pageable);
+
+            if (!stockEntrante.isEmpty()) {
+                stock.setFechaLlegadaProxima(stockEntrante.get().toList().get(0).getFechaLlegada());
+            }
+
+            if (stock.getCantidadActual() > 0 && stock.getCantidadMinima() > 0 && stock.getCantidadMinima() > 0) stocksCargados.add(stock);
+        }
+
+        return stocksCargados;
     }
 
 

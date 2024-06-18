@@ -3,10 +3,12 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Restaurante.Sucursal;
+import main.entities.Stock.StockIngredientes;
 import main.repositories.IngredienteRepository;
 import main.repositories.MedidaRepository;
 import main.repositories.StockIngredientesRepository;
 import main.repositories.SucursalRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,25 @@ public class IngredienteController {
     @GetMapping("/ingredientes/{idSucursal}")
     public Set<Ingrediente> getIngredientes(@PathVariable("idSucursal") Long idSucursal) {
         return new HashSet<>(ingredienteRepository.findAllByIdSucursal(idSucursal));
+    }
+
+    @CrossOrigin
+    @GetMapping("/ingredientes/vacios/{idSucursal}")
+    public Set<Ingrediente> getIngredientesVacios(@PathVariable("idSucursal") Long idSucursal) {
+        List<Ingrediente> ingredientes = ingredienteRepository.findAllByIdSucursal(idSucursal);
+
+        Set<Ingrediente> ingredientesSinStock = new HashSet<>();
+
+        for (Ingrediente ingrediente: ingredientes) {
+            Optional<StockIngredientes> stockDB = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
+
+            if(stockDB.isPresent()) {
+                StockIngredientes stock = stockDB.get();
+                if (stock.getCantidadActual() == 0 && stock.getCantidadMinima() == 0 && stock.getCantidadMinima() == 0) ingredientesSinStock.add(ingrediente);
+            }
+        }
+
+        return ingredientesSinStock;
     }
 
     @CrossOrigin

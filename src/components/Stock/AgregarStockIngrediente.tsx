@@ -8,6 +8,7 @@ import InputComponent from '../InputFiltroComponent';
 import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import ModalFlotanteRecomendacionesIngredientes from '../../hooks/ModalFlotanteFiltroIngredientes';
+import ModalFlotanteRecomendacionesIngredientesSinStock from '../../hooks/ModalFlotanteFiltroIngredientesSinStock';
 
 interface AgregarStockIngredienteProps {
   onCloseModal: () => void;
@@ -104,7 +105,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
-        {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={ingrediente?.nombre} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
+        {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientesSinStock datosOmitidos={ingrediente?.nombre} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
       </div>
 
       <label>
