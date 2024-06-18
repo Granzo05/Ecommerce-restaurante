@@ -78,13 +78,11 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
 
     if (medida) stock.medida = medida;
 
-    const ingrediente: Ingrediente = new Ingrediente();
     stock.borrado = 'NO';
 
-    ingrediente.nombre = nombreIngrediente;
     stock.ingrediente = ingrediente;
 
-    toast.promise(StockIngredientesService.createStock(stock), {
+    toast.promise(StockIngredientesService.updateStock(stock), {
       loading: 'Creando stock...',
       success: (message) => {
         setTimeout(() => {
@@ -105,7 +103,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
-        {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientesSinStock datosOmitidos={ingrediente?.nombre} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { setIngrediente(ingrediente); handleModalClose(); }} />}
+        {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientesSinStock datosOmitidos={ingrediente?.nombre} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { console.log(ingrediente); setIngrediente(ingrediente); handleModalClose(); }} />}
       </div>
 
       <label>
