@@ -79,19 +79,19 @@ const Stocks = () => {
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
 
-    const [paginaActual, setPaginaActual] = useState(0);
+    const [paginaActual, setPaginaActual] = useState(1);
     const [productosMostrables, setProductosMostrables] = useState<number>(10);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
 
     // Obtener los elementos de la página actual
     const stocks = [...stockArticulos, ...stockIngredientes];
 
-    const stocksFiltrados = stocks.slice(indexUltimoProducto, indexPrimerProducto);
+    const stocksFiltrados = stocks.slice(indexPrimerProducto, indexUltimoProducto);
 
-    const paginasTotales = Math.ceil(stocks.length / productosMostrables);
+    const paginasTotales = Math.ceil(stocks.length / productosMostrables);    
 
     // Cambiar de página
     const paginate = (paginaActual: number) => setPaginaActual(paginaActual);

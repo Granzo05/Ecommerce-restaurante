@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
@@ -12,6 +12,9 @@ import ModalFlotanteRecomendacionesCategoria from '../../hooks/ModalFlotanteFilt
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import ModalFlotanteRecomendacionesSubcategoria from '../../hooks/ModalFlotanteFiltroSubcategorias';
 import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
+import { SucursalService } from '../../services/SucursalService';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
+import { Empresa } from '../../types/Restaurante/Empresa';
 
 interface EditarArticuloVentaProps {
   articuloOriginal: ArticuloVenta;
@@ -73,6 +76,43 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     setModalBusquedaCategoria(false);
     setModalBusquedaMedida(false);
     setModalBusquedaMedida(false);
+  };
+
+  const [empresa] = useState<Empresa | null>(() => {
+    const empresaString = localStorage.getItem('empresa');
+
+    return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
+  });
+
+  const [idsSucursalesElegidas, setIdsSucursalesElegidas] = useState<Set<number>>(new Set<number>());
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+
+  useEffect(() => {
+    SucursalService.getSucursales()
+      .then(data => {
+        setSucursales(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleSucursalesElegidas = (sucursalId: number) => {
+    const updatedSelectedSucursales = new Set(idsSucursalesElegidas);
+    if (updatedSelectedSucursales.has(sucursalId)) {
+      updatedSelectedSucursales.delete(sucursalId);
+    } else {
+      updatedSelectedSucursales.add(sucursalId);
+    }
+    setIdsSucursalesElegidas(updatedSelectedSucursales);
+  };
+
+  const marcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set(sucursales.map(sucursal => sucursal.id)));
+  };
+
+  const desmarcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set());
   };
 
   function editarArticuloVenta() {
@@ -141,92 +181,156 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     );
   };
 
-  return (
-    <div className="modal-info">
-      <h2>Editar artículo</h2>
-      <Toaster />
-      <div className="slider-container">
-        <button onClick={prevImage} className="slider-button prev">◀</button>
-        <div className='imagenes-wrapper'>
-          {imagenesMuestra.map((imagen, index) => (
-            <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
-              <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
-              <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+  const [step, setStep] = useState(1);
 
-              {imagen && (
-                <img
+  const nextStep = () => {
+    setStep(step + 1);
+  };
 
-                  src={imagen.ruta}
-                  alt={`Imagen ${index}`}
-                />
-              )}
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <h4>Paso 1 - Datos</h4>
+            <div>
+              <div className="inputBox">
+                <hr />
+                <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+                <span>Nombre del articulo</span>
+              </div>
+
+              <div className="inputBox">
+                <input type="text" required={true} value={precioVenta | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+                <span>Precio del articulo</span>
+              </div>
+              <div className="inputBox">
+                <input type="text" required={true} value={cantidad | 0} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+                <span>Cantidad</span>
+              </div>
+              <div className="input-filtrado">
+                <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
+                {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+              </div>
+              <div className="input-filtrado">
+                <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedasubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
+                {modalBusquedasubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
+              </div>
+              <div className="input-filtrado">
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida?.nombre ?? ''} />
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+              </div>
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h4>Imagenes</h4>
+            <div className="slider-container">
+              <button onClick={prevImage} className="slider-button prev">◀</button>
+              <div className='imagenes-wrapper'>
+                {imagenesMuestra.map((imagen, index) => (
+                  <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
+                    <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
+                    <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+
+                    {imagen && (
+                      <img
+
+                        src={imagen.ruta}
+                        alt={`Imagen ${index}`}
+                      />
+                    )}
+                  </div>
+
+                ))}
+                <button onClick={nextImage} className="slider-button next">▶</button>
+              </div>
             </div>
 
-          ))}
-          <button onClick={nextImage} className="slider-button next">▶</button>
-        </div>
-
-      </div>
-
-      {imagenes.map((imagen, index) => (
-        <div key={index} className='inputBox'>
-          <hr />
-          <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
-          <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
-          <br />
-          <div className="file-input-wrapper">
-            <input
-              type="file"
-              accept="image/*"
-              id={`file-input-${index}`}
-              className="file-input"
-              onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-            />
-            <label htmlFor={`file-input-${index}`} className="file-input-label">
-              {imagen.file ? (
-                <p>Archivo seleccionado: {imagen.file.name}</p>
+            {imagenes.map((imagen, index) => (
+              <div key={index} className='inputBox'>
+                <hr />
+                <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
+                <br />
+                <div className="file-input-wrapper">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id={`file-input-${index}`}
+                    className="file-input"
+                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                  />
+                  <label htmlFor={`file-input-${index}`} className="file-input-label">
+                    {imagen.file ? (
+                      <p>Archivo seleccionado: {imagen.file.name}</p>
+                    ) : (
+                      <p>Seleccionar un archivo</p>
+                    )}
+                  </label>
+                </div>
+              </div>
+            ))}
+            <br />
+            <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <br />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              {empresa && empresa.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <p>Seleccionar un archivo</p>
+                <button className='btn-accion-adelante' onClick={editarArticuloVenta}>Editar articulo ⭢</button>
               )}
-            </label>
-          </div>
-        </div>
-      ))}
-      <br />
-      <button onClick={añadirCampoImagen}>Añadir imagen</button>
-      <div>
-        <div className="inputBox">
-          <hr />
-          <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-          <span>Nombre del articulo</span>
-        </div>
+            </div >
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h4>Sucursales</h4>
+            {sucursales && sucursales.map((sucursal, index) => (
+              <div key={index}>
+                <>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => desmarcarSucursales()}>Desmarcar todas</p>
+                  <p className='cierre-ingrediente' onClick={() => marcarSucursales()}>Marcar todas</p>
+                  <h4 style={{ fontSize: '18px' }}>Sucursal: {sucursal.nombre}</h4>
+                  <input
+                    type="checkbox"
+                    value={sucursal.id}
+                    checked={idsSucursalesElegidas.has(sucursal.id) || false}
+                    onChange={() => handleSucursalesElegidas(sucursal.id)}
+                  />
+                  <label>{sucursal.nombre}</label>
+                </>
+              </div>
+            ))}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={editarArticuloVenta}>Editar artículo ✓</button>
+            </div>
+          </>
+        );
+    }
+  }
 
-        <div className="inputBox">
-          <input type="text" required={true} value={precioVenta | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-          <span>Precio del articulo</span>
-        </div>
-        <div className="inputBox">
-          <input type="text" required={true} value={cantidad | 0} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
-          <span>Cantidad</span>
-        </div>
-        <div className="input-filtrado">
-          <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-          {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
-        </div>
-        <div className="input-filtrado">
-          <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedasubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
-          {modalBusquedasubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
-        </div>
-        <div className="input-filtrado">
-          <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida?.nombre ?? ''} />
-          {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-        </div>
-      </div>
-      <hr />
-      <button className='button-form' type='button' onClick={editarArticuloVenta}>Editar articulo</button>
 
+  return (
+    <div className="modal-info">
+      <h2>&mdash; Editar artículo para venta &mdash;</h2>
+      <Toaster />
+      {renderStep()}
     </div >
-  )
+  );
 }
 
 

@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Toaster, toast } from 'sonner'
 import { Categoria } from '../../types/Ingredientes/Categoria';
 import { CategoriaService } from '../../services/CategoriaService';
 import { Imagenes } from '../../types/Productos/Imagenes';
+import { SucursalService } from '../../services/SucursalService';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
+import { Empresa } from '../../types/Restaurante/Empresa';
 
 interface AgregarCategoriaProps {
   onCloseModal: () => void;
@@ -36,6 +39,43 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
     }
   };
 
+  const [empresa] = useState<Empresa | null>(() => {
+    const empresaString = localStorage.getItem('empresa');
+
+    return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
+  });
+
+  const [idsSucursalesElegidas, setIdsSucursalesElegidas] = useState<Set<number>>(new Set<number>());
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+
+  useEffect(() => {
+    SucursalService.getSucursales()
+      .then(data => {
+        setSucursales(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleSucursalesElegidas = (sucursalId: number) => {
+    const updatedSelectedSucursales = new Set(idsSucursalesElegidas);
+    if (updatedSelectedSucursales.has(sucursalId)) {
+      updatedSelectedSucursales.delete(sucursalId);
+    } else {
+      updatedSelectedSucursales.add(sucursalId);
+    }
+    setIdsSucursalesElegidas(updatedSelectedSucursales);
+  };
+
+  const marcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set(sucursales.map(sucursal => sucursal.id)));
+  };
+
+  const desmarcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set());
+  };
+
   const [nombre, setNombre] = useState('');
 
   async function agregarCategoria() {
@@ -63,45 +103,104 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
     });
   }
 
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <h2>&mdash; Cargar nueva categoria &mdash;</h2>
+            <Toaster />
+            <div >
+              {imagenes.map((imagen, index) => (
+                <div key={index} className='inputBox'>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                  <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
+                  <br />
+                  <div className="file-input-wrapper">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`}
+                      className="file-input"
+                      onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                    />
+                    <label htmlFor={`file-input-${index}`} className="file-input-label">
+                      {imagen.file ? (
+                        <p>Archivo seleccionado: {imagen.file.name}</p>
+                      ) : (
+                        <p>Seleccionar un archivo</p>
+                      )}
+                    </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <br />
+            <div className="inputBox">
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del categoria</span>
+            </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-completar' onClick={agregarCategoria}>Agregar categoría ✓</button>
+              )}
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h4>Sucursales</h4>
+            {sucursales && sucursales.map((sucursal, index) => (
+              <div key={index}>
+                <>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => desmarcarSucursales()}>Desmarcar todas</p>
+                  <p className='cierre-ingrediente' onClick={() => marcarSucursales()}>Marcar todas</p>
+                  <h4 style={{ fontSize: '18px' }}>Sucursal: {sucursal.nombre}</h4>
+                  <input
+                    type="checkbox"
+                    value={sucursal.id}
+                    checked={idsSucursalesElegidas.has(sucursal.id) || false}
+                    onChange={() => handleSucursalesElegidas(sucursal.id)}
+                  />
+                  <label>{sucursal.nombre}</label>
+                </>
+              </div>
+            ))}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-completar' onClick={agregarCategoria}>Agregar categoría ✓</button>
+            </div>
+          </>
+        );
+    }
+  }
+
   return (
     <div className="modal-info">
-      <h2>&mdash; Cargar nueva categoria &mdash;</h2>
+      <h2>&mdash; Agregar artículo para venta &mdash;</h2>
       <Toaster />
-      <div >
-        {imagenes.map((imagen, index) => (
-          <div key={index} className='inputBox'>
-            <hr />
-            <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
-            <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
-            <br />
-            <div className="file-input-wrapper">
-              <input
-                type="file"
-                accept="image/*"
-                id={`file-input-${index}`}
-                className="file-input"
-                onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
-              />
-              <label htmlFor={`file-input-${index}`} className="file-input-label">
-                {imagen.file ? (
-                  <p>Archivo seleccionado: {imagen.file.name}</p>
-                ) : (
-                  <p>Seleccionar un archivo</p>
-                )}
-              </label>
-            </div>
-          </div>
-        ))}
-      </div>
-      <button onClick={añadirCampoImagen}>Añadir imagen</button>
-      <br />
-      <div className="inputBox">
-        <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-        <span>Nombre del categoria</span>
-      </div>
-      <button value="Agregar categoria" id="agregarCategoria" onClick={agregarCategoria}>Cargar </button>
-    </div>
-  )
+      {renderStep()}
+
+    </div >
+  );
 }
+
 
 export default AgregarCategoria

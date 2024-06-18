@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Toaster, toast } from 'sonner'
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { IngredienteService } from '../../services/IngredienteService';
@@ -7,6 +7,9 @@ import InputComponent from '../InputFiltroComponent';
 import { StockIngredientes } from '../../types/Stock/StockIngredientes';
 import { Medida } from '../../types/Ingredientes/Medida';
 import { StockIngredientesService } from '../../services/StockIngredientesService';
+import { SucursalService } from '../../services/SucursalService';
+import { Sucursal } from '../../types/Restaurante/Sucursal';
+import { Empresa } from '../../types/Restaurante/Empresa';
 
 interface AgregarIngredienteProps {
   onCloseModal: () => void;
@@ -23,6 +26,43 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
 
   const handleModalClose = () => {
     setModalBusquedaMedida(false)
+  };
+
+  const [empresa] = useState<Empresa | null>(() => {
+    const empresaString = localStorage.getItem('empresa');
+
+    return empresaString ? (JSON.parse(empresaString) as Empresa) : null;
+  });
+
+  const [idsSucursalesElegidas, setIdsSucursalesElegidas] = useState<Set<number>>(new Set<number>());
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+
+  useEffect(() => {
+    SucursalService.getSucursales()
+      .then(data => {
+        setSucursales(data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleSucursalesElegidas = (sucursalId: number) => {
+    const updatedSelectedSucursales = new Set(idsSucursalesElegidas);
+    if (updatedSelectedSucursales.has(sucursalId)) {
+      updatedSelectedSucursales.delete(sucursalId);
+    } else {
+      updatedSelectedSucursales.add(sucursalId);
+    }
+    setIdsSucursalesElegidas(updatedSelectedSucursales);
+  };
+
+  const marcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set(sucursales.map(sucursal => sucursal.id)));
+  };
+
+  const desmarcarSucursales = () => {
+    setIdsSucursalesElegidas(new Set());
   };
 
   async function agregarIngrediente() {
@@ -103,44 +143,110 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
     });
   }
 
+
+  const [step, setStep] = useState(1);
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <div >
+              <h2>&mdash; Cargar nuevo ingrediente &mdash;</h2>
+              <Toaster />
+              <div className="inputBox">
+                <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+                <span>Nombre del ingrediente</span>
+              </div>
+              {!empresa && (
+                <>
+                  <label>
+                    <div className="inputBox">
+                      <input type="text" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+                      <span>Cantidad mínima del ingrediente (opcional)</span>
+                    </div>
+                  </label>
+                  <label>
+                    <div className="inputBox">
+                      <input type="text" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+                      <span>Cantidad máxima del ingrediente (opcional)</span>
+                    </div>
+
+                  </label>
+                  <label>
+                    <div className="inputBox">
+                      <input type="text" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+                      <span>Cantidad actual del ingrediente (opcional)</span>
+                    </div>
+
+                  </label>
+                  <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida... (opcional)'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+
+                  <div className="inputBox">
+                    <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+                    <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
+                  </div>
+                </>
+              )}
+
+              <div className="btns-pasos">
+                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+                {empresa && empresa?.id > 0 ? (
+                  <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+                ) : (
+                  <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar</button>
+                )}
+              </div>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h4>Sucursales</h4>
+            {sucursales && sucursales.map((sucursal, index) => (
+              <div key={index}>
+                <>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => desmarcarSucursales()}>Desmarcar todas</p>
+                  <p className='cierre-ingrediente' onClick={() => marcarSucursales()}>Marcar todas</p>
+                  <h4 style={{ fontSize: '18px' }}>Sucursal: {sucursal.nombre}</h4>
+                  <input
+                    type="checkbox"
+                    value={sucursal.id}
+                    checked={idsSucursalesElegidas.has(sucursal.id) || false}
+                    onChange={() => handleSucursalesElegidas(sucursal.id)}
+                  />
+                  <label>{sucursal.nombre}</label>
+                </>
+              </div>
+            ))}
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar</button>
+            </div>
+          </>
+        );
+    }
+  }
+
   return (
     <div className="modal-info">
-      <h2>&mdash; Cargar nuevo ingrediente &mdash;</h2>
+      <h2>&mdash; Agregar ingrediente &mdash;</h2>
       <Toaster />
-      <div className="inputBox">
-        <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
-        <span>Nombre del ingrediente</span>
-      </div>
-      <label>
-        <div className="inputBox">
-          <input type="text" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
-          <span>Cantidad mínima del ingrediente (opcional)</span>
-        </div>
-      </label>
-      <label>
-        <div className="inputBox">
-          <input type="text" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
-          <span>Cantidad máxima del ingrediente (opcional)</span>
-        </div>
+      {renderStep()}
 
-      </label>
-      <label>
-        <div className="inputBox">
-          <input type="text" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
-          <span>Cantidad actual del ingrediente (opcional)</span>
-        </div>
-
-      </label>
-      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida... (opcional)'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
-      {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-
-      <div className="inputBox">
-        <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-        <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
-      </div>
-      <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar</button>
-    </div>
-  )
+    </div >
+  );
 }
 
 export default AgregarIngrediente

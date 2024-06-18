@@ -71,7 +71,7 @@
 [x] Iniciar en admin-control si sos admin o iniciar en /opciones si sos sucursal al loguearte
 [x] Arreglar los permisos de pedidos a entrantes, en camino, etc y poder aceptar o rechazar dependiendo el empleado
 [x] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
-[] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
+[x] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
 [] Configurar rutas privadas
 [] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
@@ -82,7 +82,8 @@
 [] Hacer la recuperacion de contraseña
 [] Filtro de lugares al cargar la sucursal para las localidadesDelivery para buscar por nombre de la localidad
 [] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
-
+[] Costo recomendado de articulos por sucursal
+ 
 CERRAR MODALS AL CREAR COSAS[x]
 NO PODER CARGAR SUBCATEGORIAS POR EL BUG DE CATEGORIAS[x]
 CUANDO AÑADIS INGREDIENTES AL MENU, TE DEBERIA TRAER DIRECTAMENTE SU MEDIDA[x] 

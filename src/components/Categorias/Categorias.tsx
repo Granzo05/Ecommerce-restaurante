@@ -62,20 +62,20 @@ const Categorias = () => {
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
-    const [paginaActual, setPaginaActual] = useState(0);
-    const [productosMostrables, setProductosMostrables] = useState<number>(10);
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [productosMostrables, setProductosMostrables] = useState(10);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
 
     // Obtener los elementos de la página actual
-    const categoriasFIltradas = categorias.slice(indexUltimoProducto, indexPrimerProducto);
+    const categoriasFiltradas = categorias.slice(indexPrimerProducto, indexUltimoProducto);
 
     const paginasTotales = Math.ceil(categorias.length / productosMostrables);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
 
     async function checkPrivilegies() {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
@@ -177,7 +177,7 @@ const Categorias = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {categoriasFIltradas.map(categoria => (
+                            {categoriasFiltradas.map(categoria => (
                                 <tr key={categoria.id}>
                                     <td>{categoria.nombre.toString().replace(/_/g, ' ')}</td>
 
