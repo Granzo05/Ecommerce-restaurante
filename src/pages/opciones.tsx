@@ -167,7 +167,7 @@ const Opciones = () => {
             return <Empresas />;
         } else if (opcionSeleccionada === 18) {
             return <Reportes />;
-        } else if (opcionSeleccionada === 18) {
+        } else if (opcionSeleccionada === 19) {
             return <PedidosEnCamino />;
         }
     };
@@ -336,7 +336,7 @@ const Opciones = () => {
                                                 </p>
                                             )}
                                             {pedidosEnCaminoVisibleEmpleado && (
-                                                <p className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
+                                                <p className={opcionSeleccionada === 19 ? 'selected' : ''} onClick={() => handleOpcionClick(19)}>
                                                     Pedidos en camino
                                                 </p>
                                             )}

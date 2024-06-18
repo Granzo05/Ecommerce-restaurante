@@ -26,6 +26,14 @@
 }
 
 
+.filtros .inputBox input:user-invalid {
+    color: #1d2b3a !important;
+    border: 1px solid  #1d2b3a;
+}
+
+
+
+
 
 .inputBox input:user-invalid {
     color: red;
@@ -43,6 +51,7 @@
     font-size: 0.8rem;
     color: red;
 }
+
 
 .btn-accion-adelante {
     margin-right: 10px;
