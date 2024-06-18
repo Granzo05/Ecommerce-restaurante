@@ -3,3 +3,47 @@
     align-items: center;
     justify-content: center;
 }
+
+.filtros{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filtros .filtros-datos{
+    display: flex;
+    align-items: center;
+}
+
+
+.filtros #cantidad{
+    justify-content: start;
+}
+
+.inputBox {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.inputBox input:user-invalid {
+    color: red;
+    border: 1px solid red;
+}
+
+.error-message {
+    display: none;
+}
+
+.inputBox input:user-invalid~.error-message {
+    display: block;
+    position: absolute;
+    margin-top: 2.5rem;
+    font-size: 0.8rem;
+    color: red;
+}
+
+.btn-accion-adelante{
+    margin-right: 10px;
+}

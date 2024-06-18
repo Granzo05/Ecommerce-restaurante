@@ -26,9 +26,9 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
-  const [cuil, setCuit] = useState('');
+  const [cuil, setCuil] = useState('');
   const [contraseña, setContraseña] = useState('');
-  const [telefono, setTelefono] = useState(0);
+  const [telefono, setTelefono] = useState('');
   const [fechaNacimiento, setFechaNacimiento] = useState(new Date());
   const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
   const [indexDomicilio, setIndexDomicilio] = useState<number>(0);
@@ -167,25 +167,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   };
 
   async function agregarEmpleado() {
-    if (!nombre) {
-      toast.error("Por favor, es necesario el nombre");
-      return;
-    } else if (!email) {
-      toast.error("Por favor, es necesaria el email");
-      return;
-    } else if (!contraseña) {
-      toast.error("Por favor, es necesaria la contraseña");
-      return;
-    } else if (!telefono) {
-      toast.error("Por favor, es necesario el telefono");
-      return;
-    } else if (!cuil) {
-      toast.error("Por favor, es necesario el cuil");
-      return;
-    } else if (!fechaNacimiento) {
-      toast.error("Por favor, es necesaria la fecha de nacimiento");
-      return;
-    }
+
 
     for (let i = 0; i < domicilios.length; i++) {
       const calle = domicilios[i].calle;
@@ -214,7 +196,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     empleado.nombre = nombre;
     empleado.email = email;
     empleado.contraseña = contraseña;
-    empleado.telefono = telefono;
+    empleado.telefono = parseInt(telefono);
     empleado.cuil = cuil;
     empleado.fechaNacimiento = fechaNacimiento;
     empleado.empleadoPrivilegios = empleadoPrivilegios;
@@ -252,6 +234,78 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+
+    // Validación de fecha de nacimiento
+  const hoy = new Date();
+  const fechaMinima = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate()); // Fecha actual menos 18 años
+
+    if (!nombre || !nombre.match(/^[a-zA-Z\s]+$/)) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
+      toast.error("Por favor, es necesaria el email");
+      return;
+    } else if (!contraseña || contraseña.length < 8) {
+      toast.error("Por favor, es necesaria la contraseña");
+      return;
+    } else if (!telefono || telefono.length < 10) {
+      toast.error("Por favor, es necesario el telefono");
+      return;
+    } else if (!cuil || cuil.length !== 13) {
+      toast.error("Por favor, es necesario el cuil");
+      return;
+    } else if (!fechaNacimiento || fechaNacimiento > fechaMinima) {
+      toast.error("Por favor, es necesaria una fecha de nacimiento válida. (Empleado mayor a 18 años)");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+
+
+  //VALIDAR CUIL
+
+  const formatearCuil = (value: string) => {
+    // Eliminar todos los caracteres no numéricos
+    const soloNumeros = value.replace(/\D/g, "");
+
+    // Insertar los guiones en las posiciones correctas
+    let cuilFormateado = "";
+    if (soloNumeros.length > 2) {
+      cuilFormateado += soloNumeros.slice(0, 2) + "-";
+      if (soloNumeros.length > 10) {
+        cuilFormateado += soloNumeros.slice(2, 10) + "-";
+        cuilFormateado += soloNumeros.slice(10, 11);
+      } else {
+        cuilFormateado += soloNumeros.slice(2);
+      }
+    } else {
+      cuilFormateado = soloNumeros;
+    }
+
+    return cuilFormateado;
+  };
+
+
+  const handleCuilChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    const cuilFormateado = formatearCuil(value);
+    setCuil(cuilFormateado);
+  };
+
+  const handleTelefonoChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    // Permitir solo valores numéricos
+    if (/^\d*$/.test(value)) {
+      setTelefono(value);
+    }
+  };
+
+  
+
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -259,39 +313,45 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-Z\s]+" />
               <span>Nombre del empleado</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
+              <input type="email" pattern="[\w-.]+@([\w-]+\.)+[\w-]{2,}\.com" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
               <span>Email del empleado</span>
+              <div className="error-message">Formato incorrecto de e-mail.</div>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={cuil} onChange={(e) => { setCuit(e.target.value) }} />
-              <span>Cuil del empleado</span>
+              <input type="text" pattern=".{13}" required={true} value={cuil} onChange={handleCuilChange} maxLength={13} />
+              <span>CUIL del empleado</span>
+              <div className="error-message">El CUIL debe contener sus 11 dígitos.</div>
             </div>
             <div className="inputBox">
-              <input type="password" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
+              <input type="password" pattern=".{8,}" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
               <span>Contraseña del empleado</span>
+              <div className="error-message">La contraseña debe tener mínimo 8 dígitos.</div>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
+              <input type="text" pattern="\d{10}" required={true} value={telefono} onChange={handleTelefonoChange} />
               <span>Telefono del empleado</span>
+              <div className="error-message">El número de teléfono no es válido. Mínimo 10 dígitos</div>
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
-              <input type="date" value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+              <input type="date" required value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+              <div className="error-message">El empleado debe ser mayor a 18 años.</div>
               <hr />
             </div>
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
       case 2:
         return (
           <>
-            <h4>Paso final - Domicilio/os</h4>
+            <h4>Paso 2 - Domicilio/os</h4>
             {domicilios && domicilios.map((domicilio, index) => (
               <div key={index}>
                 <hr />
@@ -336,7 +396,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       case 3:
         return (
           <>
-            <h4>Privilegios comúnes</h4>
+            <h4>Paso 3 - Privilegios comúnes</h4>
             {privilegios && privilegios.map((privilegio, index) => (
               <div key={index}>
                 {privilegio.tarea !== 'Empleados' && privilegio.tarea !== 'Sucursales' && privilegio.tarea !== 'Estadísticas' && privilegio.tarea !== 'Empresas' && (
@@ -364,15 +424,16 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-            </div>
+            
+              <button className='btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
+           </div>
           </>
         );
       case 4:
         return (
           <>
-            <h4>Privilegios sensibles</h4>
+            <h4>Paso 4 - Privilegios sensibles</h4>
             <p>Recomendamos que estos privilegios estén deshabilitados ya que pueden dar acceso a datos sensibles</p>
             {privilegios && privilegios.map((privilegio, index) => (
               <div key={index}>

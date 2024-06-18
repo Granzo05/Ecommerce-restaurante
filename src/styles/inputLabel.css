@@ -86,6 +86,27 @@
     border-right: #2b86c4;
 }
 
+.inputBox input:user-invalid~span {
+    color: #1d2b3a;
+    transform: translateX(10px) translateY(-9px);
+    font-size: 0.85em;
+    padding: 0 10px;
+    background: #fff;
+    border-left: #2b86c4;
+    border-right: #2b86c4;
+}
+
+.inputBox input:user-invalid{
+    color: red;
+    border: 1px solid red;
+}
+
+.inputBox input:user-invalid~span{
+    color: red;
+}
+
+
+
 .inputBox:nth-child(2) input:valid~span,
 .inputBox:nth-child(2) input:focus~span {
     color: #1d2b3a;

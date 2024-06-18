@@ -21,6 +21,12 @@ const Empleados = () => {
     const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
     const [showActivarEmpleadoModal, setShowActivarEmpleadoModal] = useState(false);
 
+    const [nombreFiltro, setNombreFiltro] = useState("");
+    const [cuilFiltro, setCuilFiltro] = useState("");
+    const [fechaIngresoFiltro, setFechaIngresoFiltro] = useState("");
+
+
+
     useEffect(() => {
         fetchEmpleados();
     }, []);
@@ -57,7 +63,7 @@ const Empleados = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(0);
-    const [productosMostrables, setProductosMostrables] = useState<number>(10);
+    const [productosMostrables, setProductosMostrables] = useState<number>(11);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
@@ -154,14 +160,17 @@ const Empleados = () => {
             )}
 
 
+
+
             <hr />
             <ModalCrud isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
                 <AgregarEmpleado onCloseModal={handleModalClose} />
             </ModalCrud>
 
-            {mostrarEmpleados && (
-                <div id="empleados">
-                    <select name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+            <div className="filtros">
+                <div className="inputBox">
+                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                        <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
                         <option value={25}>25</option>
@@ -169,6 +178,36 @@ const Empleados = () => {
                         <option value={75}>75</option>
                         <option value={100}>100</option>
                     </select>
+                </div>
+                <div className="filtros-datos">
+                <div className="inputBox" 
+                        style={{marginRight: '10px'}}>
+                    <input
+                        type="text"
+                        required
+                        value={nombreFiltro}
+                        onChange={(e) => setNombreFiltro(e.target.value)}
+                    />
+                    <span>Filtrar por nombre</span>
+                </div>
+                <div className="inputBox">
+                    <input
+                        type="number"
+                        required
+                        value={cuilFiltro}
+                        onChange={(e) => setCuilFiltro(e.target.value)}
+                    />
+                    <span>Filtrar por CUIL</span>
+                </div>
+                </div>
+                
+
+            </div>
+
+            {mostrarEmpleados && (
+                <div id="empleados">
+
+
                     <table>
                         <thead>
                             <tr>
