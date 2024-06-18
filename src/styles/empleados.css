@@ -1,22 +1,22 @@
-.btns-empleados{
+.btns-empleados {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.filtros{
+.filtros {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.filtros .filtros-datos{
+.filtros .filtros-datos {
     display: flex;
     align-items: center;
 }
 
 
-.filtros #cantidad{
+.filtros #cantidad {
     justify-content: start;
 }
 
@@ -44,6 +44,87 @@
     color: red;
 }
 
-.btn-accion-adelante{
+.btn-accion-adelante {
     margin-right: 10px;
+}
+
+.paso-titulo {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.privilegios-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.privilegio {
+    flex: 1 1 calc(20% - 20px);
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.733);
+    background-color: #f9f9f9;
+}
+
+.privilegio-opcional {
+    flex: 1 1 calc(50% - 20px);
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.733);
+    background-color: #f9f9f9;
+}
+
+.privilegio-titulo {
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.permisos-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.permiso {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.permiso input[type="checkbox"] {
+    margin-right: 10px;
+  }
+
+.cierre-privilegios {
+    cursor: pointer;
+    color: #007bff;
+    margin: 5px 0;
+}
+
+.cierre-privilegios.desactivado {
+    color: grey;
+    cursor: not-allowed;
+  }
+  
+  .cierre-privilegios:hover:not(.desactivado) {
+    color: #0056b3;
+  }
+
+.marcajes{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: end;
+    margin: -14px -10px 0 0;
+}
+
+.marcajes .cierre-privilegios{
+    margin: 0;
 }

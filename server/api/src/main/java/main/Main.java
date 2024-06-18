@@ -661,7 +661,7 @@ public class Main {
                 empleadoPrivilegio.setPrivilegio(privilegios);
                 empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
 
-                empleado = empleadoRepository.save(empleado);
+                //empleado = empleadoRepository.save(empleado);
 
                 sucursal.getEmpleados().add(empleado);
 

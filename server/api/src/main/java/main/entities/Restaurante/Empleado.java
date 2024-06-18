@@ -50,7 +50,7 @@ public class Empleado {
     private Set<EmpleadoPrivilegio> empleadoPrivilegios = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "empleados_sucursales",
             joinColumns = @JoinColumn(name = "id_empleado"),
