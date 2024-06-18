@@ -117,26 +117,15 @@ public class StockIngredientesController {
     @CrossOrigin
     @PostMapping("sucursal/{idSucursal}/stockIngredientes/create")
     public ResponseEntity<String> crearStock(@RequestBody StockIngredientes stockDetail, @PathVariable("idSucursal") long id) {
-        Optional<Ingrediente> ingredienteDb = ingredienteRepository.findByNameAndIdSucursal(stockDetail.getIngrediente().getNombre(), id);
-
-        // Si el cliente no se ha creado en su sección lo creamos para evitar trabajar doble
-        if (ingredienteDb.isEmpty()) {
-            Ingrediente ingrediente = new Ingrediente();
-            ingrediente.setNombre(stockDetail.getIngrediente().getNombre());
-
-            ingredienteRepository.save(ingrediente);
-        }
-
-        Ingrediente ingrediente = ingredienteRepository.findByNameAndIdSucursal(stockDetail.getIngrediente().getNombre(), id).get();
-
         // Busco el ingrediente en la base de datos
-        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), id);
+        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(stockDetail.getIngrediente().getId(), id);
 
         // Si no hay stock creado entonces necesitamos recuperar el ingrediente creado
         if (stockIngrediente.isEmpty()) {
-            stockDetail.setIngrediente(ingrediente);
+            Ingrediente ingrediente = ingredienteRepository.findByNameAndIdSucursal(stockDetail.getIngrediente().getNombre(), id).get();
 
-            ingrediente.setStockIngrediente(stockDetail);
+            stockDetail.setIngrediente(ingrediente);
+            stockDetail.getIngrediente().setStockIngrediente(stockDetail);
 
             Sucursal sucursal = sucursalRepository.findById(id).get();
 
