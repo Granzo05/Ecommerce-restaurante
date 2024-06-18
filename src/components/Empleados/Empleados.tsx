@@ -30,6 +30,7 @@ const Empleados = () => {
     const fetchEmpleados = async () => {
         try {
             let data = await EmpleadoService.getEmpleados();
+            console.log(data)
             setEmpleados(data);
         } catch (error) {
             console.error('Error al obtener empleados:', error);
@@ -58,15 +59,23 @@ const Empleados = () => {
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
 
-    const [paginaActual, setPaginaActual] = useState(0);
+    const [paginaActual, setPaginaActual] = useState(1);
     const [productosMostrables, setProductosMostrables] = useState<number>(11);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto + productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
 
     // Obtener los elementos de la página actual
-    const [empleadosFiltrados, setEmpleadosFiltrados] = useState<Empleado[]>(empleados.slice(indexUltimoProducto, indexPrimerProducto));
+    const [empleadosFiltrados, setEmpleadosFiltrados] = useState<Empleado[]>([]);
+
+    useEffect(() => {
+        setEmpleadosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
+    }, [empleados]);
+
+    useEffect(() => {
+        setEmpleadosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
+    }, [productosMostrables]);
 
     const paginasTotales = Math.ceil(empleados.length / productosMostrables);
 
@@ -105,9 +114,9 @@ const Empleados = () => {
 
     function filtrarNombre(filtro: string) {
         if (filtro.length > 0) {
-            setEmpleadosFiltrados(empleadosFiltrados.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+            setEmpleadosFiltrados(empleados.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
         } else {
-            setEmpleadosFiltrados(empleados);
+            setEmpleadosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
         }
     }
 

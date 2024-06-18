@@ -34,7 +34,7 @@ public class Sucursal implements Serializable {
     private Long id;
 
     @JsonIgnoreProperties(value = {"cliente", "empleado", "sucursal"}, allowSetters = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sucursal", cascade = CascadeType.MERGE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sucursal", cascade = CascadeType.ALL)
     private Set<Domicilio> domicilios = new HashSet<>();
 
     @Column(name = "contraseña")
@@ -76,7 +76,7 @@ public class Sucursal implements Serializable {
     private Set<StockArticuloVenta> stocksArticulo = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Ingrediente> ingredientes = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
@@ -84,7 +84,7 @@ public class Sucursal implements Serializable {
     private Set<StockEntrante> stocksEntranteSucursal = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Promocion> promociones = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
@@ -92,11 +92,11 @@ public class Sucursal implements Serializable {
     private Set<LocalidadDelivery> localidadesDisponiblesDelivery = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "sucursales", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ArticuloMenu> articulosMenu = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "sucursales", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
@@ -104,11 +104,11 @@ public class Sucursal implements Serializable {
     private Set<Imagenes> imagenes = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Medida> medidas = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales", "subcategorias"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Categoria> categorias = new HashSet<>();
 
 }

@@ -68,6 +68,7 @@ public class PromocionController {
                     if (!sucursal.getPromociones().contains(promocionDetails)) {
                         sucursal.getPromociones().add(promocionDetails);
                         promocionDetails.getSucursales().add(sucursal);
+                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
