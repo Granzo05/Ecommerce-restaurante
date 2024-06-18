@@ -64,14 +64,30 @@ const Medidas = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(10);
+    const [productosMostrables, setProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * productosMostrables;
     const indexPrimerProducto = indexUltimoProducto - productosMostrables;
 
     // Obtener los elementos de la página actual
-    const medidasFiltradas = medidas.slice(indexPrimerProducto, indexUltimoProducto);
+    const [medidasFiltradas, setMedidasFiltradas] = useState<Medida[]>([]);
+
+    useEffect(() => {
+        setMedidasFiltradas(medidas.slice(indexPrimerProducto, indexUltimoProducto));
+    }, [medidas]);
+
+    useEffect(() => {
+        setMedidasFiltradas(medidas.slice(indexPrimerProducto, indexUltimoProducto));
+    }, [productosMostrables]);
+
+    function filtrarNombre(filtro: string) {
+        if (filtro.length > 0) {
+            setMedidasFiltradas(medidasFiltradas.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+        } else {
+            setMedidasFiltradas(medidas.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
 
     const paginasTotales = Math.ceil(medidas.length / productosMostrables);
 
@@ -161,14 +177,26 @@ const Medidas = () => {
             <hr />
             {mostrarMedidas && (
                 <div id="stocks">
-                    <select name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
-                        <option value={5}>5</option>
-                        <option value={10}>10</option>
-                        <option value={25}>25</option>
-                        <option value={50}>50</option>
-                        <option value={75}>75</option>
-                        <option value={100}>100</option>
-                    </select>
+                    <div className="inputBox">
+                        <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                            <option value={11} disabled >Selecciona una cantidad a mostrar</option>
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={25}>25</option>
+                            <option value={50}>50</option>
+                            <option value={75}>75</option>
+                            <option value={100}>100</option>
+                        </select>
+                    </div>
+                    <div className="inputBox"
+                        style={{ marginRight: '10px' }}>
+                        <input
+                            type="text"
+                            required
+                            onChange={(e) => filtrarNombre(e.target.value)}
+                        />
+                        <span>Filtrar por nombre</span>
+                    </div>
                     <table>
                         <thead>
                             <tr>

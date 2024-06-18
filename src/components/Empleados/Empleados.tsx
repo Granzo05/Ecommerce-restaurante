@@ -21,11 +21,7 @@ const Empleados = () => {
     const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
     const [showActivarEmpleadoModal, setShowActivarEmpleadoModal] = useState(false);
 
-    const [nombreFiltro, setNombreFiltro] = useState("");
-    const [cuilFiltro, setCuilFiltro] = useState("");
     const [fechaIngresoFiltro, setFechaIngresoFiltro] = useState("");
-
-
 
     useEffect(() => {
         fetchEmpleados();
@@ -70,7 +66,7 @@ const Empleados = () => {
     const indexPrimerProducto = indexUltimoProducto + productosMostrables;
 
     // Obtener los elementos de la página actual
-    const empleadosFiltrados = empleados.slice(indexUltimoProducto, indexPrimerProducto);
+    const [empleadosFiltrados, setEmpleadosFiltrados] = useState<Empleado[]>(empleados.slice(indexUltimoProducto, indexPrimerProducto));
 
     const paginasTotales = Math.ceil(empleados.length / productosMostrables);
 
@@ -104,6 +100,22 @@ const Empleados = () => {
             setActivateVisible(true);
             setDeleteVisible(true);
             setUpdateVisible(true);
+        }
+    }
+
+    function filtrarNombre(filtro: string) {
+        if (filtro.length > 0) {
+            setEmpleadosFiltrados(empleadosFiltrados.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+        } else {
+            setEmpleadosFiltrados(empleados);
+        }
+    }
+
+    function filtrarCuil(filtro: string) {
+        if (filtro.length > 0) {
+            setEmpleadosFiltrados(empleadosFiltrados.filter(recomendacion => recomendacion.cuil.toLowerCase().includes(filtro.toLowerCase())));
+        } else {
+            setEmpleadosFiltrados(empleados);
         }
     }
 
@@ -158,10 +170,6 @@ const Empleados = () => {
 
                 </div>
             )}
-
-
-
-
             <hr />
             <ModalCrud isOpen={showAgregarEmpleadoModal} onClose={handleModalClose}>
                 <AgregarEmpleado onCloseModal={handleModalClose} />
@@ -179,28 +187,27 @@ const Empleados = () => {
                         <option value={100}>100</option>
                     </select>
                 </div>
+
                 <div className="filtros-datos">
-                <div className="inputBox" 
-                        style={{marginRight: '10px'}}>
-                    <input
-                        type="text"
-                        required
-                        value={nombreFiltro}
-                        onChange={(e) => setNombreFiltro(e.target.value)}
-                    />
-                    <span>Filtrar por nombre</span>
+                    <div className="inputBox"
+                        style={{ marginRight: '10px' }}>
+                        <input
+                            type="text"
+                            required
+                            onChange={(e) => filtrarNombre(e.target.value)}
+                        />
+                        <span>Filtrar por nombre</span>
+                    </div>
+                    <div className="inputBox">
+                        <input
+                            type="number"
+                            required
+                            onChange={(e) => filtrarCuil(e.target.value)}
+                        />
+                        <span>Filtrar por CUIL</span>
+                    </div>
                 </div>
-                <div className="inputBox">
-                    <input
-                        type="number"
-                        required
-                        value={cuilFiltro}
-                        onChange={(e) => setCuilFiltro(e.target.value)}
-                    />
-                    <span>Filtrar por CUIL</span>
-                </div>
-                </div>
-                
+
 
             </div>
 

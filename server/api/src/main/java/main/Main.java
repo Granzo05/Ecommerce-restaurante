@@ -512,6 +512,7 @@ public class Main {
                 Empleado empleado = new Empleado();
                 empleado.setContraseña("123456789");
                 empleado.setEmail("pepe@gmail.com");
+                empleado.getSucursales().add(sucursal);
 
                 EmpleadoPrivilegio empleadoPrivilegio = new EmpleadoPrivilegio();
                 empleadoPrivilegio.setEmpleado(empleado);
