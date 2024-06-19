@@ -56,7 +56,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
 
   const [categoria, setCategoria] = useState<Categoria>(new Categoria());
   const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
-  const [precio, setPrecio] = useState(0);
+  const [precio, setPrecio] = useState(parseInt(''));
   const [nombre, setNombre] = useState('');
   const [medida, setMedida] = useState<Medida>(new Medida);
   const [cantidadMedida, setCantidadMedida] = useState(0);
@@ -218,6 +218,32 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+
+    
+    if (!nombre || !nombre.match(/^[a-zA-Z\s\-]+$/)) {
+      toast.error("Por favor, es necesario el nombre del articulo");
+      return;
+    } else if (!precio || precio == 0){
+      toast.error("Por favor, es necesario el precio de venta del articulo válido");
+      return;
+    } else if (!categoria) {
+      toast.error("Por favor, es necesario el tipo");
+      return;
+    } else if (!subcategoria) {
+      toast.error("Por favor, es necesaria la subcategoría");
+      return;
+    } else if (!medida) {
+      toast.error("Por favor, es necesaria la medida");
+      return;
+    } else if (!cantidadMedida || cantidadMedida == 0) {
+      toast.error("Por favor, es necesaria una cantidad de la medida del artículo válida");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -225,13 +251,14 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <hr />
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} pattern="[a-zA-Z\s\-]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del articulo</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={precio} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
-              <span>Precio ($)</span>
+              <input type="number" required={true} pattern="\d*" value={precio} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
+              <span>Precio de venta ($)</span>
+              <div className="error-message">El precio de venta solo debe contener números.</div>
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
@@ -249,11 +276,13 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
               {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={cantidadMedida} onChange={(e) => setCantidadMedida(parseFloat(e.target.value))} />
+              <input type="number" required={true} pattern="\d*" value={cantidadMedida} onChange={(e) => setCantidadMedida(parseFloat(e.target.value))} />
               <span>Cantidad de la medida</span>
+              <div className="error-message">El precio de venta solo debe contener números.</div>
+            
             </div>
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );

@@ -82,6 +82,7 @@
 [] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
 [] Costo recomendado de articulos por sucursal
 [] Configurar rutas privadas
+[] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
  
 CERRAR MODALS AL CREAR COSAS[x]
 NO PODER CARGAR SUBCATEGORIAS POR EL BUG DE CATEGORIAS[x]
