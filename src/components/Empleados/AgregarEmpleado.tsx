@@ -433,7 +433,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
               </div>
             ))}
             <button onClick={añadirCampoRol}>Añadir rol</button>
-
+            <br /><br />
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>

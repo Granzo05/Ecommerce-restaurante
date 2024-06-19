@@ -81,6 +81,26 @@ export const EmpleadoService = {
         }
     },
 
+    getCantidadCocineros: async (): Promise<number> => {
+        try {
+            const response = await fetch(URL_API + 'cocineros/' + sucursalId(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+            }
+
+            return response.json();
+            
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
 
     updateEmpleado: async (empleado: Empleado): Promise<string> => {
         try {

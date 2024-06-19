@@ -8,10 +8,12 @@ import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empleado } from '../../types/Restaurante/Empleado';
+import { EmpleadoService } from '../../services/EmpleadoService';
 
 
 const PedidosEntrantes = () => {
     const [pedidosEntrantes, setPedidos] = useState<Pedido[]>([]);
+    const [cantidadCocineros, setCantidadCocineros] = useState<number>(0);
 
     useEffect(() => {
         /*
@@ -20,7 +22,7 @@ const PedidosEntrantes = () => {
         }, 25000);
         */
         buscarPedidos();
-
+        buscarCantidadCocineros();
     }, []);
 
     const buscarPedidos = async () => {
@@ -32,6 +34,18 @@ const PedidosEntrantes = () => {
                 console.error('Error:', error);
             });
     }
+
+    const buscarCantidadCocineros = async () => {
+        EmpleadoService.getCantidadCocineros()
+            .then(data => {
+                console.log(data)
+                setCantidadCocineros(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
 
     async function handleAceptarPedido(pedido: Pedido) {
         const horaActual = new Date();

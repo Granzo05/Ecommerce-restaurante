@@ -126,6 +126,12 @@ public class EmpleadoController {
         return new HashSet<>(empleados);
     }
 
+    @CrossOrigin
+    @GetMapping("/cocineros/{idSucursal}")
+    public int getCantidadCocineros(@PathVariable("idSucursal") Long idSucursal) {
+        return empleadoRepository.findCantidadCocineros(idSucursal);
+    }
+
 
     @Transactional
     @CrossOrigin

@@ -18,6 +18,9 @@ import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 import { Privilegios } from '../../types/Restaurante/Privilegios';
 import { EmpleadoPrivilegio } from '../../types/Restaurante/EmpleadoPrivilegio';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
+import ModalFlotanteRecomendacionesRoles from '../../hooks/ModalFlotanteFiltroRoles';
+import { RolesEmpleado } from '../../types/Restaurante/RolesEmpleados';
+import { Roles } from '../../types/Restaurante/Roles';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -30,13 +33,19 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [cuil, setCuit] = useState(empleadoOriginal.cuil);
   const [contraseña, setContraseña] = useState('');
   const [telefono, setTelefono] = useState(empleadoOriginal.telefono);
-  const [fechaNacimiento, setFechaNacimiento] = useState<string>(empleadoOriginal.fechaNacimiento.toString());
+  const [fechaNacimiento, setFechaNacimiento] = useState<string>(empleadoOriginal.fechaNacimiento?.toString());
   const [sucursal, setSucursal] = useState(empleadoOriginal.sucursales[0]);
 
   const [indexDomicilio, setIndexDomicilio] = useState<number>(0);
   const [indexDomicilioModificable, setIndexDomicilioModificable] = useState<number>(0);
   const [domiciliosModificable, setDomiciliosModificable] = useState<Domicilio[]>(empleadoOriginal.domicilios);
   const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
+
+  const [indexRoles, setIndexRoles] = useState<number>(0);
+  const [indexRolesModificables, setIndexRolesModificables] = useState<number>(0);
+  const [rolesModificables, setRolesModificables] = useState<RolesEmpleado[]>(empleadoOriginal.rolesEmpleado);
+  const [roles, setRoles] = useState<RolesEmpleado[]>([]);
+  const [rolesElegidos, setRolesElegidos] = useState<string[]>([]);
 
   const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [tarea: string]: string[] }>({});
   const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
@@ -117,7 +126,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     }
   };
 
-
   const quitarCampoDomicilioModificable = (index: number) => {
     if (domiciliosModificable.length > 0) {
       const nuevosDomicilios = [...domiciliosModificable];
@@ -130,6 +138,58 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     } else {
       setDomiciliosModificable([]);
       setIndexDomicilioModificable(0);
+    }
+  };
+
+  const handleChangeRol = (index: number, rol: Roles) => {
+    const nuevosRoles = [...roles];
+    if (rol) {
+      nuevosRoles[index].rol = rol;
+      setRoles(nuevosRoles);
+
+      const nuevosNombresRoles = [...rolesElegidos];
+      nuevosNombresRoles[index] = rol.nombre;
+      setRolesElegidos(nuevosNombresRoles);
+    }
+  };
+
+  const añadirCampoRol = () => {
+    // SI no hay ingredientes que genere en valor 0 de index
+    if (roles.length === 0) {
+      setRoles([...roles, { id: 0, rol: new Roles(), empleado: new Empleado() }]);
+    } else {
+      setRoles([...roles, { id: 0, rol: new Roles(), empleado: new Empleado() }]);
+      setIndexRoles(prevIndex => prevIndex + 1);
+    }
+  };
+
+  const quitarCampoRol = (index: number) => {
+    if (roles.length > 0) {
+      const nuevosRoles = [...roles];
+      nuevosRoles.splice(index, 1);
+      setRoles(nuevosRoles);
+
+      if (indexRoles > 0) {
+        setIndexRoles(indexRoles - 1);
+      }
+    } else {
+      setRoles([]);
+      setIndexRoles(0);
+    }
+  };
+
+  const quitarCampoRolModificable = (index: number) => {
+    if (rolesModificables.length > 0) {
+      const nuevosRoles = [...rolesModificables];
+      nuevosRoles.splice(index, 1);
+      setRolesModificables(nuevosRoles);
+
+      if (indexRolesModificables > 0) {
+        setIndexRolesModificables(indexRolesModificables - 1);
+      }
+    } else {
+      setRolesModificables([]);
+      setIndexRolesModificables(0);
     }
   };
 
@@ -148,7 +208,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       .catch(err => {
         console.error(err);
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleModificarPrivilegios = (tarea: string, permiso: string) => {
@@ -188,12 +248,14 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
   const [modalBusquedaPais, setModalBusquedaPais] = useState<boolean>(false);
+  const [modalBusquedaRol, setModalBusquedaRol] = useState<boolean>(false);
 
   const handleModalClose = () => {
     setModalBusquedaProvincia(false)
     setModalBusquedaDepartamento(false)
     setModalBusquedaLocalidad(false)
     setModalBusquedaPais(false)
+    setModalBusquedaRol(false)
   };
 
   const formatDate = (date: Date) => {
@@ -222,6 +284,11 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     }
 
     if (domiciliosModificable.length === 0 && domicilios.length === 0) {
+      toast.info("Se debe agregar al menos un domicilio.");
+      return;
+    }
+
+    if (rolesModificables.length === 0 && roles.length === 0) {
       toast.info("Se debe agregar al menos un domicilio.");
       return;
     }
@@ -258,6 +325,16 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       }
     });
 
+    rolesModificables.forEach((rol) => {
+      const existe = roles.some((rolNuevo) =>
+        rol.rol === rolNuevo.rol
+      );
+
+      if (!existe) {
+        roles.push(rol);
+      }
+    });
+
     const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([tarea, permisos]) => {
       const privilegio = new Privilegios(0, tarea, []);
       return new EmpleadoPrivilegio(0, privilegio, permisos);
@@ -270,6 +347,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     if (sucursal) empleadoActualizado.sucursales.push(sucursal);
 
     empleadoActualizado.borrado = 'NO';
+
+    empleadoActualizado.rolesEmpleado = roles;
 
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
       loading: 'Actualizando empleado...',
@@ -337,6 +416,39 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       case 2:
         return (
           <>
+            <h4>Roles</h4>
+            {rolesModificables && rolesModificables.map((roles, index) => (
+              <div key={'domicilioMod' + index}>
+                <hr />
+                <p className='cierre-ingrediente' onClick={() => quitarCampoRolModificable(index)}>X</p>
+
+                <h2>Rol {index + 1}</h2>
+                <div className="inputBox">
+                  <input type="text" disabled={true} required={true} value={roles.rol.nombre} />
+                </div>
+              </div>
+            ))}
+            {roles && indexRoles > 0 && roles.map((rol, index) => (
+              <>
+                <div key={'domicilio' + index}>
+                  <p onClick={() => quitarCampoRol(index)}>X</p>
+                  <InputComponent disabled={false} placeHolder='Seleccionar rol...' onInputClick={() => setModalBusquedaRol(true)} selectedProduct={rol.rol.nombre ?? ''} />
+                  {modalBusquedaRol && <ModalFlotanteRecomendacionesRoles datosOmitidos={rolesElegidos} onCloseModal={handleModalClose} onSelectRol={(rol) => { handleChangeRol(index, rol); handleModalClose(); }} />}
+                </div >
+                <hr />
+              </>
+            ))}
+            <button onClick={añadirCampoRol}>Añadir rol</button>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
             <h4>Domicilio/os</h4>
             {domiciliosModificable && domiciliosModificable.map((domicilio, index) => (
               <div key={'domicilioMod' + index}>
@@ -400,7 +512,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             </div>
           </>
         );
-      case 3:
+      case 4:
         return (
           <>
             <h4>Privilegios comúnes</h4>
@@ -436,7 +548,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             </div>
           </>
         );
-      case 4:
+      case 5:
         return (
           <>
             <h4>Privilegios sensibles</h4>
