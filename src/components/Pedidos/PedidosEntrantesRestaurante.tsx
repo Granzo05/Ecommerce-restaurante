@@ -84,11 +84,19 @@ const PedidosEntrantes = () => {
 
     async function calcularTiempoPreparacion(pedido: Pedido) {
         let tiempoTotal = 0;
-
+        /*
+        ∑ Sumatoria del tiempo estimado de los artículos manufacturados solicitados por el cliente en el pedido actual
+        +
+        ∑ Sumatoria del tiempo estimado de los artículos manufacturados que se encuentran en la cocina / cantidad cocineros
+        +
+        10 Minutos de entrega por delivery (solo si corresponde).
+        */
         // Asignamos el tiempo del menú con la preparación más tardía
         pedido.detallesPedido.forEach(detalle => {
             if (detalle.articuloMenu && detalle.articuloMenu.tiempoCoccion > tiempoTotal) {
-                tiempoTotal = detalle.articuloMenu.tiempoCoccion;
+                tiempoTotal = detalle.articuloMenu.tiempoCoccion + detalle.articuloMenu.tiempoCoccion / cantidadCocineros;
+
+                if (pedido.tipoEnvio === 'DELIVERY') tiempoTotal += 10;
             }
         });
 
