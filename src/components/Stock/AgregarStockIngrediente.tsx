@@ -108,21 +108,27 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
 
       <label>
         <div className="inputBox">
-          <input type="text" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+          <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
           <span>Cantidad mínima del ingrediente</span>
+          <div className="error-message">La cantidad mínima solo debe contener números.</div>
+                  
         </div>
       </label>
       <label>
         <div className="inputBox">
-          <input type="text" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+          <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
           <span>Cantidad máxima del ingrediente</span>
+          <div className="error-message">La cantidad máxima solo debe contener números.</div>
+                  
         </div>
 
       </label>
       <label>
         <div className="inputBox">
-          <input type="text" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+          <input type="text" required pattern="\d*" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
           <span>Cantidad actual del ingrediente</span>
+          <div className="error-message">La cantidad actual solo debe contener números.</div>
+                  
         </div>
 
       </label>
@@ -130,8 +136,10 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
       {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
 
       <div className="inputBox">
-        <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+        <input type="text" required pattern="\d*" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
         <span>Costo del ingrediente por una unidad de medida ($)</span>
+        <div className="error-message">El costo por unidad solo debe contener números.</div>
+                 
       </div>
       <hr />
       <button onClick={crearStockIngrediente}>Agregar</button>

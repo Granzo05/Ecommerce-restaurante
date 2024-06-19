@@ -179,8 +179,8 @@ const Stocks = () => {
             </div>
             {createVisible && (
                 <div className="btns-stock">
-                    <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
-                    <button className="btn-agregar" onClick={() => handleAgregarArticulo()}> + Agregar articulo</button>
+                    <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}>+ Agregar stock ingrediente</button>
+                    <button className="btn-agregar" onClick={() => handleAgregarArticulo()}>+ Agregar stock articulo</button>
                 </div>)}
             
 
