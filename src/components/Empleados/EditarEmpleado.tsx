@@ -16,7 +16,7 @@ import { Provincia } from '../../types/Domicilio/Provincia';
 import { Pais } from '../../types/Domicilio/Pais';
 import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 import { Privilegios } from '../../types/Restaurante/Privilegios';
-import { EmpleadoPrivilegio } from '../../types/Restaurante/EmpleadoPrivilegio';
+import { EmpleadoPrivilegio } from '../../types/Restaurante/PrivilegiosEmpleado';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
 import ModalFlotanteRecomendacionesRoles from '../../hooks/ModalFlotanteFiltroRoles';
 import { RolesEmpleado } from '../../types/Restaurante/RolesEmpleados';
@@ -47,7 +47,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [roles, setRoles] = useState<RolesEmpleado[]>([]);
   const [rolesElegidos, setRolesElegidos] = useState<string[]>([]);
 
-  const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [tarea: string]: string[] }>({});
+  const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [nombre: string]: string[] }>({});
   const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
 
   const handleChangeCalle = (index: number, calle: string) => {
@@ -143,22 +143,20 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
 
   const handleChangeRol = (index: number, rol: Roles) => {
     const nuevosRoles = [...roles];
-    if (rol) {
-      nuevosRoles[index].rol = rol;
-      setRoles(nuevosRoles);
+    nuevosRoles[index].rol = rol;
+    setRoles(nuevosRoles);
 
-      const nuevosNombresRoles = [...rolesElegidos];
-      nuevosNombresRoles[index] = rol.nombre;
-      setRolesElegidos(nuevosNombresRoles);
-    }
+    const nuevosNombresRoles = [...rolesElegidos];
+    nuevosNombresRoles[index] = rol.nombre;
+    setRolesElegidos(nuevosNombresRoles);
   };
 
   const añadirCampoRol = () => {
     // SI no hay ingredientes que genere en valor 0 de index
     if (roles.length === 0) {
-      setRoles([...roles, { id: 0, rol: new Roles(), empleado: new Empleado() }]);
+      setRoles([...roles, { id: 0, rol: new Roles() }]);
     } else {
-      setRoles([...roles, { id: 0, rol: new Roles(), empleado: new Empleado() }]);
+      setRoles([...roles, { id: 0, rol: new Roles() }]);
       setIndexRoles(prevIndex => prevIndex + 1);
     }
   };
@@ -196,50 +194,42 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   useEffect(() => {
     PrivilegiosService.getPrivilegios()
       .then(data => {
-        const nuevoPrivilegiosElegidos = empleadoOriginal.empleadoPrivilegios.reduce((acc: { [tarea: string]: string[] }, empleadoPrivilegio) => {
-          acc[empleadoPrivilegio.privilegio.tarea] = empleadoPrivilegio.permisos;
-          return acc;
-        }, {});
-
-        setPrivilegiosElegidos(nuevoPrivilegiosElegidos);
-
         setPrivilegios(data);
       })
       .catch(err => {
         console.error(err);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleModificarPrivilegios = (tarea: string, permiso: string) => {
+  const handleModificarPrivilegios = (nombre: string, permiso: string) => {
     setPrivilegiosElegidos((prev) => {
-      const permisosActuales = prev[tarea] || [];
+      const permisosActuales = prev[nombre] || [];
       if (permisosActuales.includes(permiso)) {
         return {
           ...prev,
-          [tarea]: permisosActuales.filter(p => p !== permiso)
+          [nombre]: permisosActuales.filter(p => p !== permiso)
         };
       } else {
         return {
           ...prev,
-          [tarea]: [...permisosActuales, permiso]
+          [nombre]: [...permisosActuales, permiso]
         };
       }
     });
   };
 
-  const desmarcarTarea = (tarea: string) => {
+  const desmarcarTarea = (nombre: string) => {
     setPrivilegiosElegidos((prev) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [tarea]: _, ...rest } = prev; // Da error pero ta bien
+      const { [nombre]: _, ...rest } = prev; // Da error pero ta bien
       return rest;
     });
   };
 
-  const marcarTarea = (tarea: string, permisos: string[]) => {
+  const marcarTarea = (nombre: string, permisos: string[]) => {
     setPrivilegiosElegidos((prev) => ({
       ...prev,
-      [tarea]: permisos,
+      [nombre]: permisos,
     }));
   };
 
@@ -335,8 +325,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       }
     });
 
-    const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([tarea, permisos]) => {
-      const privilegio = new Privilegios(0, tarea, []);
+    const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([nombre, permisos]) => {
+      const privilegio = new Privilegios(0, nombre, 'NO');
       return new EmpleadoPrivilegio(0, privilegio, permisos);
     });
 
@@ -349,7 +339,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     empleadoActualizado.borrado = 'NO';
 
     empleadoActualizado.rolesEmpleado = roles;
-
+    /*
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
       loading: 'Actualizando empleado...',
       success: (message) => {
@@ -362,6 +352,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
         return message;
       },
     });
+    */
   }
 
   //SEPARAR EN PASOS
@@ -518,19 +509,19 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             <h4>Privilegios comúnes</h4>
             {privilegios && privilegios.map((privilegio, index) => (
               <div key={index}>
-                {privilegio.tarea !== 'Empleados' && privilegio.tarea !== 'Sucursales' && privilegio.tarea !== 'Estadísticas' && privilegio.tarea !== 'Empresas' && (
+                {privilegio.nombre !== 'Empleados' && privilegio.nombre !== 'Sucursales' && privilegio.nombre !== 'Estadísticas' && privilegio.nombre !== 'Empresas' && (
                   <>
                     <hr />
-                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.tarea)}>Desmarcar todo</p>
-                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.tarea, privilegio.permisos)}>Marcar todo</p>
-                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.tarea}</h4>
+                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.nombre)}>Desmarcar todo</p>
+                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.nombre, privilegio.permisos)}>Marcar todo</p>
+                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.nombre}</h4>
                     {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
                       <div key={permisoIndex}>
                         <input
                           type="checkbox"
                           value={permiso}
-                          checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
-                          onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                          checked={privilegiosElegidos[privilegio.nombre]?.includes(permiso) || false}
+                          onChange={() => handleModificarPrivilegios(privilegio.nombre, permiso)}
                         />
                         <label>{permiso}</label>
                       </div>
@@ -555,19 +546,19 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             <p>Recomendamos que estos privilegios estén deshabilitados ya que pueden dar acceso a datos sensibles</p>
             {privilegios && privilegios.map((privilegio, index) => (
               <div key={index}>
-                {(privilegio.tarea === 'Empleados' || privilegio.tarea === 'Sucursales' || privilegio.tarea === 'Estadísticas' || privilegio.tarea === 'Empresas') && (
+                {(privilegio.nombre === 'Empleados' || privilegio.nombre === 'Sucursales' || privilegio.nombre === 'Estadísticas' || privilegio.nombre === 'Empresas') && (
                   <>
                     <hr />
-                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.tarea)}>Desmarcar todo</p>
-                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.tarea, privilegio.permisos)}>Marcar todo</p>
-                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.tarea}</h4>
+                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.nombre)}>Desmarcar todo</p>
+                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.nombre, privilegio.permisos)}>Marcar todo</p>
+                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.nombre}</h4>
                     {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
                       <div key={permisoIndex}>
                         <input
                           type="checkbox"
                           value={permiso}
-                          checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
-                          onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                          checked={privilegiosElegidos[privilegio.nombre]?.includes(permiso) || false}
+                          onChange={() => handleModificarPrivilegios(privilegio.nombre, permiso)}
                         />
                         <label>{permiso}</label>
                       </div>

@@ -3,11 +3,9 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Restaurante.Empleado;
-import main.entities.Restaurante.EmpleadoPrivilegio;
-import main.entities.Restaurante.FechaContratacionEmpleado;
-import main.entities.Restaurante.Sucursal;
+import main.entities.Restaurante.*;
 import main.repositories.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,14 +60,16 @@ public class EmpleadoController {
     @Transactional
     @CrossOrigin
     @PostMapping("/empleado/create/{idSucursal}")
-    public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
-        Optional<Empleado> empleadoDB = empleadoRepository.findByCuilAndIdSucursal(Encrypt.encriptarString(empleadoDetails.getCuil()), idSucursal);
+    public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails, @PathVariable("idSucursal") Long idSucursal) {
+        try {
+            Optional<Empleado> empleadoDB = empleadoRepository.findByCuilAndIdSucursal(Encrypt.encriptarString(empleadoDetails.getCuil()), idSucursal);
 
-        if (empleadoDB.isEmpty()) {
+            if (empleadoDB.isPresent()) {
+                return ResponseEntity.badRequest().body("Ya existe un empleado con ese cuil");
+            }
+
             empleadoDetails.setNombre(Encrypt.encriptarString(empleadoDetails.getNombre()));
-
             empleadoDetails.setEmail(Encrypt.encriptarString(empleadoDetails.getEmail()));
-
             empleadoDetails.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
 
             for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
@@ -77,12 +77,27 @@ public class EmpleadoController {
                 domicilio.setEmpleado(empleadoDetails);
             }
 
-            for (EmpleadoPrivilegio privilegio : empleadoDetails.getEmpleadoPrivilegios()) {
+            for (PrivilegiosEmpleados privilegio : empleadoDetails.getEmpleadoPrivilegios()) {
                 privilegio.setEmpleado(empleadoDetails);
-                privilegio.setPrivilegio(privilegiosRepository.findByTareaAndIdSucursal(privilegio.getPrivilegio().getTarea(), idSucursal).get());
+                Optional<Privilegios> privilegioDB = privilegiosRepository.findByNombreAndIdSucursal(privilegio.getPrivilegio().getNombre(), idSucursal);
+                if (privilegioDB.isPresent()) {
+                    privilegio.setPrivilegio(privilegioDB.get());
+                } else {
+                    throw new Exception("Privilegio no encontrado");
+                }
             }
 
-            empleadoDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+            for (RolesEmpleados roles : empleadoDetails.getRolesEmpleado()) {
+                roles.setEmpleado(empleadoDetails);
+            }
+
+            Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+            if (sucursalOpt.isPresent()) {
+                empleadoDetails.getSucursales().add(sucursalOpt.get());
+            } else {
+                throw new Exception("Sucursal no encontrada");
+            }
+
             empleadoDetails.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
 
             FechaContratacionEmpleado fecha = new FechaContratacionEmpleado();
@@ -92,9 +107,9 @@ public class EmpleadoController {
 
             empleadoRepository.save(empleadoDetails);
 
-            return ResponseEntity.ok("Carga con exito");
-        } else {
-            return ResponseEntity.badRequest().body("Ya existe un empleado con ese cuil");
+            return ResponseEntity.ok("Carga con éxito");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el empleado: " + e.getMessage());
         }
     }
 

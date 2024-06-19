@@ -82,7 +82,7 @@ const PrivilegiosEmpleados = () => {
 
     function filtrarNombre(filtro: string) {
         if (filtro.length > 0) {
-            setPrivilegiosFiltradas(privilegiosFiltradas.filter(recomendacion => recomendacion.tarea.toLowerCase().includes(filtro.toLowerCase())));
+            setPrivilegiosFiltradas(privilegiosFiltradas.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
         } else {
             setPrivilegiosFiltradas(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
         }
@@ -96,18 +96,18 @@ const PrivilegiosEmpleados = () => {
     async function checkPrivilegies() {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
-                empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
-                        if (privilegio.permisos.includes('CREATE')) {
+                empleado?.empleadoPrivilegios?.forEach(empleadoPrivilegio => {
+                    if (empleadoPrivilegio.privilegio.nombre === 'Empleados' && empleadoPrivilegio.privilegio.permisos.includes('READ')) {
+                        if (empleadoPrivilegio.privilegio.permisos.includes('CREATE')) {
                             setCreateVisible(true);
                         }
-                        if (privilegio.permisos.includes('UPDATE')) {
+                        if (empleadoPrivilegio.privilegio.permisos.includes('UPDATE')) {
                             setUpdateVisible(true);
                         }
-                        if (privilegio.permisos.includes('DELETE')) {
+                        if (empleadoPrivilegio.privilegio.permisos.includes('DELETE')) {
                             setDeleteVisible(true);
                         }
-                        if (privilegio.permisos.includes('ACTIVATE')) {
+                        if (empleadoPrivilegio.privilegio.permisos.includes('ACTIVATE')) {
                             setActivateVisible(true);
                         }
                     }
@@ -206,13 +206,20 @@ const PrivilegiosEmpleados = () => {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
+                                <th>Permisos disponibles</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {privilegiosFiltradas.map(privilegio => (
                                 <tr key={privilegio.id}>
-                                    <td>{privilegio.tarea.toString().replace(/_/g, ' ')}</td>
+                                    <td>{privilegio.nombre.toString().replace(/_/g, ' ')}</td>
+
+                                    <td>
+                                        {privilegio.permisos.map(permiso => (
+                                            <td>{permiso}</td>
+                                        ))}
+                                    </td>
 
                                     {privilegio.borrado === 'NO' ? (
                                         <td>

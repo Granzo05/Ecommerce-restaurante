@@ -15,9 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.mail.MessagingException;
 import java.io.BufferedReader;
@@ -26,7 +23,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 
 @SpringBootApplication
@@ -518,179 +514,179 @@ public class Main {
                     empleado.setEmail(Encrypt.encriptarString("pepe@gmail.com"));
                     empleado.setNombre(Encrypt.encriptarString("Pepito"));
 
-                    EmpleadoPrivilegio empleadoPrivilegio = new EmpleadoPrivilegio();
+                    PrivilegiosEmpleados empleadoPrivilegio = new PrivilegiosEmpleados();
                     empleadoPrivilegio.setEmpleado(empleado);
 
-                    Privilegios privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Articulos de venta");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Articulos de venta");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Artículos menú");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Artículos menú");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Stock");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Stock");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Stock entrante");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Stock entrante");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Ingredientes");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Ingredientes");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Categorias");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Categorias");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Medidas");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Medidas");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Promociones");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Promociones");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Subcategorias");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Subcategorias");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Estadísticas");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Estadísticas");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Pedidos entrantes");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Pedidos entrantes");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Pedidos aceptados");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Pedidos aceptados");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Pedidos cocinados");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Pedidos cocinados");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Pedidos entregados");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Pedidos entregados");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Pedidos en camino");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Pedidos en camino");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Empleados");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Empleados");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Sucursales");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Sucursales");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Empresas");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Empresas");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
-                    privilegios = new Privilegios();
-                    privilegios.getSucursales().add(sucursal);
-                    privilegios.setTarea("Roles");
-                    privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+                    Privilegios = new Privilegios();
+                    Privilegios.getSucursales().add(sucursal);
+                    Privilegios.setNombre("Roles");
+                    Privilegios.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleadoPrivilegio.setPrivilegio(privilegios);
+                    empleadoPrivilegio.setPrivilegio(Privilegios);
                     empleado.getEmpleadoPrivilegios().add(empleadoPrivilegio);
-                    sucursal.getPrivilegios().add(privilegios);
+                    sucursal.getPrivilegios().add(Privilegios);
 
                     empleado.setCuil(Encrypt.encriptarString("20425148887"));
 

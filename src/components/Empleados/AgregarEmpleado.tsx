@@ -16,9 +16,10 @@ import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPai
 import { Pais } from '../../types/Domicilio/Pais';
 import { Privilegios } from '../../types/Restaurante/Privilegios';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
-import { EmpleadoPrivilegio } from '../../types/Restaurante/EmpleadoPrivilegio';
 import ModalFlotanteRecomendacionesRoles from '../../hooks/ModalFlotanteFiltroRoles';
 import { Roles } from '../../types/Restaurante/Roles';
+import { RolesEmpleado } from '../../types/Restaurante/RolesEmpleados';
+import { EmpleadoPrivilegio } from '../../types/Restaurante/PrivilegiosEmpleado';
 
 interface AgregarEmpleadoProps {
   onCloseModal: () => void;
@@ -43,7 +44,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   const [modalBusquedaRoles, setModalBusquedaRoles] = useState<boolean>(false);
   const [modalBusquedaPais, setModalBusquedaPais] = useState<boolean>(false);
 
-  const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [tarea: string]: string[] }>({});
+  const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [nombre: string]: string[] }>({});
   const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
   const [rolesElegidos, setRolesElegidos] = useState<string[]>([]);
 
@@ -75,35 +76,35 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     setRolesElegidos(nuevosNombresRoles);
   };
 
-  const handleModificarPrivilegios = (tarea: string, permiso: string) => {
+  const handleModificarPrivilegios = (nombre: string, permiso: string) => {
     setPrivilegiosElegidos((prev) => {
-      const permisosActuales = prev[tarea] || [];
+      const permisosActuales = prev[nombre] || [];
       if (permisosActuales.includes(permiso)) {
         return {
           ...prev,
-          [tarea]: permisosActuales.filter(p => p !== permiso)
+          [nombre]: permisosActuales.filter(p => p !== permiso)
         };
       } else {
         return {
           ...prev,
-          [tarea]: [...permisosActuales, permiso]
+          [nombre]: [...permisosActuales, permiso]
         };
       }
     });
   };
 
-  const desmarcarTarea = (tarea: string) => {
+  const desmarcarTarea = (nombre: string) => {
     setPrivilegiosElegidos((prev) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [tarea]: _, ...rest } = prev; // Da error pero ta bien
+      const { [nombre]: _, ...rest } = prev; // Da error pero ta bien
       return rest;
     });
   };
 
-  const marcarTarea = (tarea: string, permisos: string[]) => {
+  const marcarTarea = (nombre: string, permisos: string[]) => {
     setPrivilegiosElegidos((prev) => ({
       ...prev,
-      [tarea]: permisos,
+      [nombre]: permisos,
     }));
   };
 
@@ -184,11 +185,12 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   };
 
   const añadirCampoRol = () => {
+    // SI no hay ingredientes que genere en valor 0 de index
     if (roles.length === 0) {
       setRoles([...roles, { id: 0, nombre: '', borrado: 'NO', sucursales: [] }]);
     } else {
       setRoles([...roles, { id: 0, nombre: '', borrado: 'NO', sucursales: [] }]);
-      setIndexDomicilio(prevIndex => prevIndex + 1);
+      setIndexRoles(prevIndex => prevIndex + 1);
     }
   };
 
@@ -208,11 +210,6 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   };
 
   async function agregarEmpleado() {
-    const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([tarea, permisos]) => {
-      const privilegio = new Privilegios(0, tarea, []);
-      return new EmpleadoPrivilegio(0, privilegio, permisos);
-    });
-
     const empleado = new Empleado();
     empleado.nombre = nombre;
     empleado.email = email;
@@ -220,22 +217,27 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     empleado.telefono = parseInt(telefono);
     empleado.cuil = cuil;
     empleado.fechaNacimiento = fechaNacimiento;
+    empleado.domicilios = domicilios;
+    empleado.borrado = 'NO';
+
+    const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([nombre, permisos]) => {
+      const privilegio = new Privilegios(0, nombre, 'NO');
+      return new EmpleadoPrivilegio(0, privilegio, permisos);
+    });
     empleado.empleadoPrivilegios = empleadoPrivilegios;
 
-    const sucursalStr = localStorage.getItem('usuario');
-    const sucursal = sucursalStr ? JSON.parse(sucursalStr) : new Sucursal();
+    roles.forEach(rol => {
+      let rolEmpleado: RolesEmpleado = new RolesEmpleado();
 
-    empleado.sucursales.push(sucursal);
+      rolEmpleado.rol = rol;
+      empleado.rolesEmpleado.push(rolEmpleado)
+    });
 
-    empleado.domicilios = domicilios;
-
-    empleado.borrado = 'NO';
+    console.log(empleado)
     toast.promise(EmpleadoService.createEmpleado(empleado), {
       loading: 'Creando empleado...',
       success: (message: string) => {
-        setTimeout(() => {
-          onCloseModal();
-        }, 800);
+
         return message;
       },
       error: (message) => {
@@ -319,11 +321,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     if (domicilios) {
       nextStep();
     }
-
-
   }
-
-
 
   //VALIDAR CUIL
 
@@ -364,24 +362,24 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   };
 
   const estanTodosMarcados = (privilegiosElegidos: { [x: string]: string | any[] | string[]; }, privilegio: Privilegios) => {
-    return privilegio.permisos.every((permiso: any) => privilegiosElegidos[privilegio.tarea]?.includes(permiso));
+    return privilegio.permisos.every((permiso: any) => privilegiosElegidos[privilegio.nombre]?.includes(permiso));
   };
 
   const estanTodosDesmarcados = (privilegiosElegidos: { [x: string]: string | any[] | string[]; }, privilegio: Privilegios) => {
-    return privilegio.permisos.every((permiso: any) => !privilegiosElegidos[privilegio.tarea]?.includes(permiso));
+    return privilegio.permisos.every((permiso: any) => !privilegiosElegidos[privilegio.nombre]?.includes(permiso));
   };
 
   const filteredPrivilegios = privilegios?.filter(
     (privilegio) =>
-      privilegio.tarea !== 'Empleados' &&
-      privilegio.tarea !== 'Sucursales' &&
-      privilegio.tarea !== 'Estadísticas' &&
-      privilegio.tarea !== 'Empresas'
+      privilegio.nombre !== 'Empleados' &&
+      privilegio.nombre !== 'Sucursales' &&
+      privilegio.nombre !== 'Estadísticas' &&
+      privilegio.nombre !== 'Empresas'
   );
 
   const filteredPrivilegiosOpcionales = privilegios?.filter(
     (privilegio) =>
-      privilegio.tarea == 'Empleados' || privilegio.tarea == 'Sucursales' || privilegio.tarea == 'Estadísticas' || privilegio.tarea == 'Empresas'
+      privilegio.nombre == 'Empleados' || privilegio.nombre == 'Sucursales' || privilegio.nombre == 'Estadísticas' || privilegio.nombre == 'Empresas'
   );
 
 
@@ -494,31 +492,31 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <div className="privilegios-container">
               {filteredPrivilegios && filteredPrivilegios.map((privilegio, index) => (
                 <div key={index} className="privilegio">
-                  {privilegio.tarea !== 'Empleados' && privilegio.tarea !== 'Sucursales' && privilegio.tarea !== 'Estadísticas' && privilegio.tarea !== 'Empresas' && (
+                  {privilegio.nombre !== 'Empleados' && privilegio.nombre !== 'Sucursales' && privilegio.nombre !== 'Estadísticas' && privilegio.nombre !== 'Empresas' && (
                     <>
                       <div className="marcajes">
                         <p
                           className={`cierre-privilegios ${estanTodosDesmarcados(privilegiosElegidos, privilegio) ? 'desactivado' : ''}`}
-                          onClick={() => !estanTodosDesmarcados(privilegiosElegidos, privilegio) && desmarcarTarea(privilegio.tarea)}
+                          onClick={() => !estanTodosDesmarcados(privilegiosElegidos, privilegio) && desmarcarTarea(privilegio.nombre)}
                         >
                           Desmarcar todo
                         </p>
                         <p
                           className={`cierre-privilegios ${estanTodosMarcados(privilegiosElegidos, privilegio) ? 'desactivado' : ''}`}
-                          onClick={() => !estanTodosMarcados(privilegiosElegidos, privilegio) && marcarTarea(privilegio.tarea, privilegio.permisos)}
+                          onClick={() => !estanTodosMarcados(privilegiosElegidos, privilegio) && marcarTarea(privilegio.nombre, privilegio.permisos)}
                         >
                           Marcar todo
                         </p>
                       </div>
-                      <h4 className="privilegio-titulo">&mdash; {privilegio.tarea} &mdash;</h4>
+                      <h4 className="privilegio-titulo">&mdash; {privilegio.nombre} &mdash;</h4>
                       <div className="permisos-container">
                         {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
                           <div key={permisoIndex} className="permiso">
                             <input
                               type="checkbox"
                               value={permiso}
-                              checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
-                              onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                              checked={privilegiosElegidos[privilegio.nombre]?.includes(permiso) || false}
+                              onChange={() => handleModificarPrivilegios(privilegio.nombre, permiso)}
                             />
                             <label>{permiso}</label>
                           </div>
@@ -545,31 +543,31 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <div className="privilegios-container">
               {filteredPrivilegiosOpcionales && filteredPrivilegiosOpcionales.map((privilegio, index) => (
                 <div key={index} className='privilegio-opcional'>
-                  {(privilegio.tarea === 'Empleados' || privilegio.tarea === 'Sucursales' || privilegio.tarea === 'Estadísticas' || privilegio.tarea === 'Empresas') && (
+                  {(privilegio.nombre === 'Empleados' || privilegio.nombre === 'Sucursales' || privilegio.nombre === 'Estadísticas' || privilegio.nombre === 'Empresas') && (
                     <>
                       <div className="marcajes">
                         <p
                           className={`cierre-privilegios ${estanTodosDesmarcados(privilegiosElegidos, privilegio) ? 'desactivado' : ''}`}
-                          onClick={() => !estanTodosDesmarcados(privilegiosElegidos, privilegio) && desmarcarTarea(privilegio.tarea)}
+                          onClick={() => !estanTodosDesmarcados(privilegiosElegidos, privilegio) && desmarcarTarea(privilegio.nombre)}
                         >
                           Desmarcar todo
                         </p>
                         <p
                           className={`cierre-privilegios ${estanTodosMarcados(privilegiosElegidos, privilegio) ? 'desactivado' : ''}`}
-                          onClick={() => !estanTodosMarcados(privilegiosElegidos, privilegio) && marcarTarea(privilegio.tarea, privilegio.permisos)}
+                          onClick={() => !estanTodosMarcados(privilegiosElegidos, privilegio) && marcarTarea(privilegio.nombre, privilegio.permisos)}
                         >
                           Marcar todo
                         </p>
                       </div>
-                      <h4 className="privilegio-titulo" style={{ fontSize: '18px' }}>&mdash; {privilegio.tarea} &mdash;</h4>
+                      <h4 className="privilegio-titulo" style={{ fontSize: '18px' }}>&mdash; {privilegio.nombre} &mdash;</h4>
                       <div className="permisos-container">
                         {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
                           <div key={permisoIndex} className="permiso">
                             <input
                               type="checkbox"
                               value={permiso}
-                              checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
-                              onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                              checked={privilegiosElegidos[privilegio.nombre]?.includes(permiso) || false}
+                              onChange={() => handleModificarPrivilegios(privilegio.nombre, permiso)}
                             />
                             <label>{permiso}</label>
                           </div>

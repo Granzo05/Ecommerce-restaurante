@@ -51,7 +51,7 @@ public class Empleado {
 
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EmpleadoPrivilegio> empleadoPrivilegios = new HashSet<>();
+    private Set<PrivilegiosEmpleados> empleadoPrivilegios = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -13,20 +13,25 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "roles_empleados", schema = "buen_sabor")
-public class RolesEmpleados {
+@Table(name = "privilegios_empleados", schema = "buen_sabor")
+public class PrivilegiosEmpleados {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_rol")
-    private Roles rol;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_privilegio")
+    private Privilegios privilegio;
 
-    @JsonIgnoreProperties(value = {"rolesEmpleado"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"empleadoPrivilegios"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "permisos_empleados", joinColumns = @JoinColumn(name = "id_privilegio"))
+    @Column(name = "permiso")
+    private List<String> permisos = new ArrayList<>();
 
 }

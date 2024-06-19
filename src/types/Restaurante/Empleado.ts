@@ -1,5 +1,5 @@
 import { Domicilio } from "../Domicilio/Domicilio";
-import { EmpleadoPrivilegio } from "./EmpleadoPrivilegio";
+import { EmpleadoPrivilegio } from "./PrivilegiosEmpleado";
 import { FechaContratacionEmpleado } from "./FechaContratacionEmpleado";
 import { RolesEmpleado } from "./RolesEmpleados";
 import { Sucursal } from "./Sucursal";

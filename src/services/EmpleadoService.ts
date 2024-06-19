@@ -19,6 +19,7 @@ export const EmpleadoService = {
             return await response.text();
 
         } catch (error) {
+            console.log(error)
             return 'Error al intentar cargar el empleado';
         }
     },

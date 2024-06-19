@@ -1,12 +1,10 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Ingredientes.Subcategoria;
 import main.entities.Restaurante.Privilegios;
-import main.entities.Restaurante.Privilegios;
+import main.entities.Restaurante.PrivilegiosEmpleados;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.PrivilegiosRepository;
-import main.repositories.SubcategoriaRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,27 +34,27 @@ public class PrivilegiosController {
     @CrossOrigin
     @Transactional
     @PostMapping("/prvilegio/create/{idSucursal}")
-    public ResponseEntity<String> crearRol(@RequestBody Privilegios privilegiosDetails, @PathVariable("idSucursal") Long idSucursal) {
+    public ResponseEntity<String> crearRol(@RequestBody Privilegios sucursalesPrivilegiosDetails, @PathVariable("idSucursal") Long idSucursal) {
         // Busco el privilegio en la base de datos
-        Optional<Privilegios> privilegiosDB = privilegiosRepository.findByTareaAndIdSucursal(privilegiosDetails.getTarea(), idSucursal);
+        Optional<Privilegios> privilegiosDB = privilegiosRepository.findByNombreAndIdSucursal(sucursalesPrivilegiosDetails.getNombre(), idSucursal);
 
         if (privilegiosDB.isEmpty()) {
-            if (!privilegiosDetails.getSucursales().isEmpty()) {
-                Set<Sucursal> sucursales = new HashSet<>(privilegiosDetails.getSucursales());
+            if (!sucursalesPrivilegiosDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(sucursalesPrivilegiosDetails.getSucursales());
                 for (Sucursal sucursalVacia : sucursales) {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    sucursal.getPrivilegios().add(privilegiosDetails);
-                    privilegiosDetails.getSucursales().add(sucursal);
+                    sucursal.getPrivilegios().add(sucursalesPrivilegiosDetails);
+                    sucursalesPrivilegiosDetails.getSucursales().add(sucursal);
                     sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
-                    if (!sucursal.getMedidas().contains(privilegiosDetails)) {
-                        sucursal.getPrivilegios().add(privilegiosDetails);
-                        privilegiosDetails.getSucursales().add(sucursal);
+                    if (!sucursal.getMedidas().contains(sucursalesPrivilegiosDetails)) {
+                        sucursal.getPrivilegios().add(sucursalesPrivilegiosDetails);
+                        sucursalesPrivilegiosDetails.getSucursales().add(sucursal);
                         sucursalRepository.save(sucursal);
                     }
                 } else {
@@ -64,8 +62,8 @@ public class PrivilegiosController {
                 }
             }
 
-            privilegiosDetails.setBorrado("NO");
-            privilegiosRepository.save(privilegiosDetails);
+            sucursalesPrivilegiosDetails.setBorrado("NO");
+            privilegiosRepository.save(sucursalesPrivilegiosDetails);
 
             return new ResponseEntity<>("El privilegio ha sido añadido correctamente", HttpStatus.CREATED);
         }
@@ -82,13 +80,13 @@ public class PrivilegiosController {
         if (rolDB.isEmpty()) {
             return ResponseEntity.ofNullable("La privilegio no existe");
         } else {
-            Optional<Privilegios> privilegioEncontrado = privilegiosRepository.findByTareaAndIdSucursal(privilegio.getTarea(), idSucursal);
+            Optional<Privilegios> privilegioEncontrado = privilegiosRepository.findByNombreAndIdSucursal(privilegio.getNombre(), idSucursal);
 
             if (privilegioEncontrado.isPresent() && privilegioEncontrado.get().getId() != rolDB.get().getId()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una privilegio con ese nombre");
             }
 
-            rolDB.get().setTarea(privilegio.getTarea());
+            rolDB.get().setNombre(privilegio.getNombre());
             rolDB.get().setBorrado(privilegio.getBorrado());
             privilegiosRepository.save(rolDB.get());
             return ResponseEntity.ok("Medida actualizada correctamente");

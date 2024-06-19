@@ -2,14 +2,14 @@ import { Sucursal } from "./Sucursal";
 
 export class Privilegios {
     id: number = 0;
-    tarea: string = '';
+    nombre: string = '';
     borrado: string = '';
     permisos: string[] = [];
     sucursales: Sucursal[] = [];
 
-    constructor(id: number, tarea: string, permisos: string[]) {
+    constructor(id: number, nombre: string, borrado: string) {
         this.id = id;
-        this.tarea = tarea;
-        this.permisos = permisos;
+        this.nombre = nombre;
+        this.borrado = borrado;
     }
 }

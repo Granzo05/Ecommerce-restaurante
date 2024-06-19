@@ -20,7 +20,7 @@ public class RolesEmpleados {
     private Long id;
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_rol")
     private Roles rol;
 
