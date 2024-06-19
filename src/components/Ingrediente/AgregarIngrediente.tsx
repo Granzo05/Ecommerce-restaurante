@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Toaster, toast } from 'sonner'
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { IngredienteService } from '../../services/IngredienteService';
@@ -67,8 +67,8 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
 
   async function agregarIngrediente() {
 
-    if (!nombre) {
-      toast.info("Por favor, asigne el nombre");
+    if (!nombre || !nombre.match(/^[a-zA-Z\s]+$/)) {
+      toast.info("Por favor, asigne un nombre válido");
       return;
     } else if (cantidadMaxima < cantidadMinima) {
       toast.error("Por favor, la cantidad mínima no puede ser mayor a la máxima");
@@ -176,6 +176,9 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
     setStep(step - 1);
   };
 
+  
+
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -183,8 +186,9 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
           <>
             <Toaster />
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-Z\s]+" />
               <span>Nombre del ingrediente</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             {!empresa && mostrarInputs && (
               <>
@@ -192,21 +196,24 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                   <p className='cierre-ingrediente' style={{marginRight: '35%'}} onClick={handleClose}>X</p>
                 <label>
                   <div className="inputBox">
-                    <input type="text" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+                    <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
                     <span>Cantidad mínima del ingrediente (opcional)</span>
+                    <div className="error-message">La cantidad mínima solo debe contener números.</div>
                   </div>
                 </label>
                 <label>
                   <div className="inputBox">
-                    <input type="text" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+                    <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
                     <span>Cantidad máxima del ingrediente (opcional)</span>
+                    <div className="error-message">La cantidad máxima solo debe contener números.</div>
                   </div>
 
                 </label>
                 <label>
                   <div className="inputBox">
-                    <input type="text" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+                    <input type="text" required pattern="\d*" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
                     <span>Cantidad actual del ingrediente (opcional)</span>
+                    <div className="error-message">La cantidad actual solo debe contener números.</div>
                   </div>
 
                 </label>
@@ -214,8 +221,10 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                 {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
 
                 <div className="inputBox">
-                  <input type="text" required id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
+                  <input type="text" required pattern="\d*" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
                   <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
+                  <div className="error-message">El costo por unidad solo debe contener números.</div>
+                  
                 </div>
               </>
             )}
