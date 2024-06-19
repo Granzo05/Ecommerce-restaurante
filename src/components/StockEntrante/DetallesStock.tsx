@@ -15,21 +15,21 @@ export const DetallesStock: React.FC<Props> = ({ detallesOriginal }) => {
   }, [detallesOriginal]);
 
   return (
-    <div id="grid-container-modal">
+    <div className="modal-container">
       {detallesOriginal.length > 0 && detallesOriginal.map(detalle => (
-        <div key={detalle.id} className="grid-item-modal">
-          <h2>{detalle.articuloVenta?.nombre}</h2>
-          <h2>{detalle.ingrediente?.nombre}</h2>
-          <p>Cantidad: {detalle.cantidad} {detalle.medida?.nombre.toString().replace(/_/g, ' ')}</p>
-          <p>Costo por unidad: ${detalle.costoUnitario.toLocaleString('es-AR')}</p>
-          <p>Subtotal: ${(detalle.cantidad * detalle.costoUnitario).toLocaleString('es-AR')}</p>
+        <div key={detalle.id} className="detalle-item">
+          
+          <h2 className="detalle-title"><strong>Stock:</strong> {detalle.articuloVenta?.nombre || detalle.ingrediente?.nombre}</h2>
+          <p className="detalle-info"><strong>Cantidad:</strong> {detalle.cantidad} {detalle.medida?.nombre.toString().replace(/_/g, ' ')}</p>
+          <p className="detalle-info"><strong>Costo por unidad:</strong> ${detalle.costoUnitario.toLocaleString('es-AR')}</p>
+          <p className="detalle-info"><strong>Subtotal:</strong> ${(detalle.cantidad * detalle.costoUnitario).toLocaleString('es-AR')}</p>
+          <hr />
         </div>
       ))}
-
-      {/* Formatear el total */}
-      <h2>Total: ${total.toLocaleString('es-AR')}</h2>
+      <h2 className="total"><strong>Total: ${total.toLocaleString('es-AR')}</strong></h2>
     </div>
   );
 }
 
 export default DetallesStock;
+

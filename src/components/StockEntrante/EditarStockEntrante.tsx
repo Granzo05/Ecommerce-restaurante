@@ -19,8 +19,17 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }
   const [fecha, setFecha] = useState(stockEntrante.fechaLlegada ? new Date(stockEntrante.fechaLlegada) : new Date());
   
   function editarStock() {
+    const hoy = new Date();
+    const fechaIngresada = new Date(fecha);
+
     if (!fecha) {
-      toast.info("Por favor, coloque una fecha");
+      toast.error("Por favor, la fecha es necesaria");
+      return;
+    } else if (fechaIngresada <= hoy) {
+      toast.error("Por favor, la fecha es necesaria y debe ser posterior a la fecha actual");
+      return;
+    } else if (fecha < fechaIngresada){
+      toast.error("Por favor, la fecha es necesaria y debe ser posterior a la fecha actual");
       return;
     }
     stockEntrante.borrado = 'NO';
@@ -42,15 +51,17 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }
 
   return (
     <div className="modal-info">
+      <h2>&mdash; Editar stock entrante &mdash;</h2>
       <Toaster />
       <div className="inputBox">
+      <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
+              
         <input
           type="date"
           required={true}
           value={fecha.toISOString().substring(0, 10)}
           onChange={(e) => setFecha(new Date(e.target.value))}
         />        
-        <span>Fecha de entrada</span>
       </div>
       <button type="button" onClick={editarStock}>Editar stock entrante</button>
     </div>

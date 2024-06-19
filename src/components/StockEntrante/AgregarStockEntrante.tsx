@@ -43,7 +43,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
   };
 
   const handleCantidadIngrediente = (cantidad: number, index: number) => {
-    if (cantidad) {
+    if (cantidad !== null && cantidad !== undefined) {
       setDetallesIngredientesStock(prevState => {
         const newState = [...prevState];
         newState[index].cantidad = cantidad;
@@ -63,7 +63,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
   };
 
   const almacenarSubTotalIngrediente = (costo: number, index: number) => {
-    if (costo) {
+    if (costo !== null && costo !== undefined) {
       setDetallesIngredientesStock(prevState => {
         const newState = [...prevState];
         newState[index].costoUnitario = costo;
@@ -86,7 +86,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
   };
 
   const handleCantidadArticulo = (cantidad: number, index: number) => {
-    if (cantidad) {
+    if (cantidad !== null && cantidad !== undefined) {
       setDetallesArticuloStock(prevState => {
         const newState = [...prevState];
         newState[index].cantidad = cantidad;
@@ -106,7 +106,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
   };
 
   const almacenarSubTotalArticulo = (costo: number, index: number) => {
-    if (costo) {
+    if (costo !== null && costo !== undefined) {
       setDetallesArticuloStock(prevState => {
         const newState = [...prevState];
         newState[index].costoUnitario = costo;
@@ -117,14 +117,14 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
 
   const añadirCampoIngrediente = () => {
     setDetallesIngredientesStock(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+      const newState = [...prevState, { id: 0, cantidad: parseInt(''), costoUnitario: parseInt(''), subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
       return newState;
     });
   };
 
   const añadirCampoArticulo = () => {
     setDetallesArticuloStock(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+      const newState = [...prevState, { id: 0, cantidad: parseInt(''), costoUnitario: parseInt(''), subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
       return newState;
     });
   };
@@ -167,10 +167,11 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
       return;
     }
 
-    if ((!detallesIngredienteStock[0].ingrediente?.nombre.length && !detallesArticuloStock[0].articuloVenta?.nombre)) {
-      toast.error("Por favor, es necesario asignar un producto de venta o un ingrediente");
-      return;
-    }
+    if ((!detallesIngredienteStock.length || !detallesIngredienteStock[0].ingrediente?.nombre) && 
+      (!detallesArticuloStock.length || !detallesArticuloStock[0].articuloVenta?.nombre)) {
+    toast.error("Por favor, es necesario asignar un producto de venta o un ingrediente");
+    return;
+  }
 
     const stockEntrante: StockEntrante = new StockEntrante();
 
@@ -214,6 +215,78 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+
+    const hoy = new Date();
+    const fechaIngresada = new Date(fecha);
+
+    if (!fecha) {
+      toast.error("Por favor, la fecha es necesaria");
+      return;
+    } else if (fechaIngresada <= hoy) {
+      toast.error("Por favor, la fecha es necesaria y debe ser posterior a la fecha actual");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+  const validateAndNextStep2 = () => {
+
+    for (let i = 0; i < detallesIngredienteStock.length; i++) {
+      const ingrediente = detallesIngredienteStock[i].ingrediente;
+      const medida = detallesIngredienteStock[i].medida;
+      const cantidad = detallesIngredienteStock[i].cantidad;
+      const costoUnitario = detallesIngredienteStock[i].costoUnitario;
+
+      if (!ingrediente) {
+        toast.info(`Por favor, el ingrediente ${i + 1} debe contener un ingrediente`);
+        return;
+      } else if (!medida) {
+        toast.info(`Por favor, el ingrediente ${i + 1} debe contener una unidad de medida`);
+        return;
+      } else if (!cantidad || (cantidad == 0)) {
+        toast.info(`Por favor, el ingrediente ${i + 1} debe contener una cantidad válida`);
+        return;
+      } else if (!costoUnitario || (costoUnitario == 0)) {
+        toast.info(`Por favor, el ingrediente ${i + 1} debe contener un costo válido`);
+        return;
+      }
+    }
+
+    if (detallesIngredienteStock) {
+      nextStep();
+    }
+  }
+
+  const validateAndNextStep3 = () => {
+
+    for (let i = 0; i < detallesArticuloStock.length; i++) {
+      const articuloVenta = detallesArticuloStock[i].articuloVenta;
+      const medida = detallesArticuloStock[i].medida;
+      const cantidad = detallesArticuloStock[i].cantidad;
+      const costoUnitario = detallesArticuloStock[i].costoUnitario;
+
+      if (!articuloVenta) {
+        toast.info(`Por favor, el articulo ${i + 1} debe contener un articulo`);
+        return;
+      } else if (!medida) {
+        toast.info(`Por favor, el articulo ${i + 1} debe contener una unidad de medida`);
+        return;
+      } else if (!cantidad || (cantidad == 0)) {
+        toast.info(`Por favor, el articulo ${i + 1} debe contener una cantidad válida`);
+        return;
+      } else if (!costoUnitario || (costoUnitario == 0)) {
+        toast.info(`Por favor, el articulo ${i + 1} debe contener un costo válido`);
+        return;
+      }
+    }
+
+    if (detallesIngredienteStock) {
+      agregarStockEntrante();
+    }
+  }
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -225,7 +298,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
               <input type="date" required={true} value={formatearFechaYYYYMMDD(fecha)} onChange={(e) => { setFecha(new Date(e.target.value)) }} />
             </div>
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
@@ -248,12 +321,16 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
                 {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesIngredienteStock[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
 
                 <div className="inputBox">
-                  <input type="number" required={true} value={detallesIngredienteStock[index]?.cantidad} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
+                  <input type="number" required={true} pattern="^[1-9]\d*$" value={detallesIngredienteStock[index]?.cantidad} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
                   <span>Cantidad de unidades</span>
+                  <div className="error-message">La cantidad solo debe contener números.</div>
+              
                 </div>
                 <div className="inputBox">
-                  <input type="number" required={true} value={detallesIngredienteStock[index]?.costoUnitario} onChange={(e) => almacenarSubTotalIngrediente(parseFloat(e.target.value), index)} />
+                  <input type="number" required={true} pattern="^[1-9]\d*$"  value={detallesIngredienteStock[index]?.costoUnitario} onChange={(e) => almacenarSubTotalIngrediente(parseFloat(e.target.value), index)} />
                   <span>Costo unitario ($)</span>
+                  <div className="error-message">El costo por unidad solo debe contener números.</div>
+            
                 </div>
               </div>
             ))}
@@ -261,7 +338,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
             <br />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
 
             </div>
           </>
@@ -300,7 +377,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={agregarStockEntrante}>Agregar stock entrante ✓</button>
+              <button className='btn-accion-completar' onClick={validateAndNextStep3}>Agregar stock entrante ✓</button>
 
             </div>
           </>

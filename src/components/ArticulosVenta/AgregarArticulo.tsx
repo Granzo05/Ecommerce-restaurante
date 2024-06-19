@@ -24,10 +24,10 @@ interface AgregarArticuloVentaProps {
 const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModal }) => {
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
-  const [cantidadActual, setCantidadActual] = useState(0);
-  const [cantidadMinima, setCantidadMinima] = useState(0);
-  const [cantidadMaxima, setCantidadMaxima] = useState(0);
-  const [precioStock, setPrecioStock] = useState(0);
+  const [cantidadActual, setCantidadActual] = useState(parseInt(''));
+  const [cantidadMinima, setCantidadMinima] = useState(parseInt(''));
+  const [cantidadMaxima, setCantidadMaxima] = useState(parseInt(''));
+  const [precioStock, setPrecioStock] = useState(parseInt(''));
   const [medidaStock, setMedidaStock] = useState<Medida>(new Medida());
 
   const handleImagen = (index: number, file: File | null) => {
@@ -59,7 +59,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
   const [precio, setPrecio] = useState(parseInt(''));
   const [nombre, setNombre] = useState('');
   const [medida, setMedida] = useState<Medida>(new Medida);
-  const [cantidadMedida, setCantidadMedida] = useState(0);
+  const [cantidadMedida, setCantidadMedida] = useState(parseInt(''));
 
   const [idsSucursalesElegidas, setIdsSucursalesElegidas] = useState<Set<number>>(new Set<number>());
   const [sucursales, setSucursales] = useState<Sucursal[]>([]);
@@ -207,6 +207,17 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
     setModalBusquedaSubcategoria(false)
   };
 
+  const [mostrarInputs, setMostrarInputs] = useState(false);
+
+  const handleClose = () => {
+    setStep(step - 1);
+    setCantidadMinima(parseInt(''));
+    setCantidadMaxima(parseInt(''));
+    setCantidadActual(parseInt(''));
+    setPrecioStock(parseInt(''));
+    setMedida(new Medida());
+  };
+
   //SEPARAR EN PASOS
   const [step, setStep] = useState(1);
 
@@ -289,7 +300,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
       case 2:
         return (
           <>
-            <h4>Imagenes</h4>
+            <h4>Paso final - Imagenes</h4>
             <div >
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -324,7 +335,11 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={() => setStep(4)}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-adelante' onClick={nextStep}>Agregar stock ⭢</button>
+                <>
+                <button className='btn-accion-adelante' onClick={nextStep}>Agregar stock (opcional) ⭢</button>
+                <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
+                </>
+                
               )}
             </div >
           </>
@@ -332,35 +347,44 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
       case 3:
         return (
           <>
-            <h4>Paso opcional - Stock</h4>
+            <h4 style={{ textTransform: 'lowercase'}}> <strong style={{fontWeight: '100', textTransform: 'capitalize'}}>Paso opcional - Stock</strong>  {nombre}</h4>
             <label>
               <div className="inputBox">
-                <input type="number" required value={cantidadMinima} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+                <input type="number" pattern="\d*" required value={cantidadMinima} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
                 <span>Cantidad mínima del articulo (opcional)</span>
+                <div className="error-message">La cantidad mínima solo debe contener números.</div>
+                  
               </div>
             </label>
             <label>
               <div className="inputBox">
-                <input type="number" required value={cantidadMaxima} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+                <input type="number" pattern="\d*" required value={cantidadMaxima} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
                 <span>Cantidad máxima del articulo (opcional)</span>
+                <div className="error-message">La cantidad máxima solo debe contener números.</div>
+                  
               </div>
             </label>
             <label>
               <div className="inputBox">
-                <input type="number" required value={cantidadActual} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+                <input type="number" pattern="\d*" required value={cantidadActual} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
                 <span>Cantidad actual del articulo (opcional)</span>
-              </div>
-            </label>
-            <label>
-              <div className="inputBox">
-                <input type="number" required value={precioStock} onChange={(e) => { setPrecioStock(parseFloat(e.target.value)) }} />
-                <span>Costo por unidad ($) (opcional)</span>
+                <div className="error-message">La cantidad actual solo debe contener números.</div>
+                  
               </div>
             </label>
             <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medidaStock.nombre ?? ''} />
             {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medidaStock?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedidaStock(medida); handleModalClose(); }} />}
+            
+            <label>
+              <div className="inputBox">
+                <input type="number" pattern="\d*" required value={precioStock} onChange={(e) => { setPrecioStock(parseFloat(e.target.value)) }} />
+                <span>Costo por unidad ($) (opcional)</span>
+                <div className="error-message">El costo por unidad solo debe contener números.</div>
+                  
+              </div>
+            </label>
             <div className="btns-pasos">
-              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-atras' onClick={handleClose}>⭠ Atrás (no agregar stock)</button>
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (

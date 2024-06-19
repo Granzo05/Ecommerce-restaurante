@@ -1,10 +1,10 @@
 import React from 'react';
 import { StockEntranteService } from '../../services/StockEntranteService';
 import { toast, Toaster } from 'sonner';
-import { StockEntranteDTO } from '../../types/Stock/StockEntranteDTO';
+import { StockEntrante } from '../../types/Stock/StockEntrante';
 
 interface EliminarStockProps {
-  stockEntrante: StockEntranteDTO;
+  stockEntrante: StockEntrante;
   onCloseModal: () => void;
 
 }
@@ -32,8 +32,9 @@ const EliminarStockEntrante: React.FC<EliminarStockProps> = ({ stockEntrante, on
   return (
     <div className="modal-info">
       <Toaster />
-      <p>¿Seguro que quieres eliminar el stock?</p>
+      <h2>¿Seguro que quieres eliminar el stock?</h2>
       <button onClick={onConfirm}>Confirmar</button>
+      <br />
       <button onClick={onCancel}>Cancelar</button>
     </div>
   );

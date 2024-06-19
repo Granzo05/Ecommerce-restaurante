@@ -175,10 +175,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     categoria.subcategorias.push(subcategoria);
   };
 
-  const [tiempoCoccion, setTiempo] = useState(0);
+  const [tiempoCoccion, setTiempo] = useState(parseInt(''));
   const [categoria, setCategoria] = useState<Categoria>(new Categoria());
-  const [comensales, setComensales] = useState(0);
-  const [precio, setPrecio] = useState(0);
+  const [comensales, setComensales] = useState(parseInt(''));
+  const [precio, setPrecio] = useState(parseInt(''));
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
@@ -275,7 +275,6 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <hr />
               <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del menu</span>
             </div>
