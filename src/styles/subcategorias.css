@@ -1,0 +1,13 @@
+/* stock.css */
+
+.categoria-row:hover + .subcategoria-row,
+.subcategoria-row:hover {
+    
+    background-color: #cccccc;
+}
+
+/* Si necesitas aplicar un estilo diferente cuando la fila de la categoría esté en hover */
+.categoria-row:hover ~ .subcategoria-row {
+    
+    background-color: #cccccc;
+}

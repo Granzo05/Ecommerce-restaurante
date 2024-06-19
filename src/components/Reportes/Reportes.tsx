@@ -57,46 +57,50 @@ const Reportes: React.FC = () => {
 
   return (
     <>
-    <div className="opciones-pantallas">
-      <h1>- Reporte de ventas -</h1>
-      <div className="btns-stock">
-      <div className="filtros-container">
-        <div className="fechas">
-        <div style={{marginRight: '20px',}}>
-          <label style={{ display: 'flex',  fontWeight: 'bold', color: 'black' }}>Fecha inicio:</label>
-          <input type="date" value={fechaInicio} onChange={e => setFechaInicio(e.target.value)} />
-        </div>
-          
-          
-        <div>
-        <label style={{ display: 'flex', fontWeight: 'bold', color: 'black' }}>Fecha fin:</label>
-          <input type="date" value={fechaFin} onChange={e => setFechaFin(e.target.value)} />
-        </div>
-        </div>
+      <div className="opciones-pantallas">
+        <h1>- Reporte de ventas -</h1>
         
-        <button className='btn-agregar' onClick={handleFilter}>Filtrar</button>
+        <hr />
+        <div className="filtros">
+          <div className="filtros-container">
+            <div className="fechas">
+              <div style={{ marginRight: '10px', }}>
+                <label style={{ display: 'flex', fontWeight: 'bold', color: 'black' }}>Fecha inicio:</label>
+                <input type="date" value={fechaInicio} onChange={e => setFechaInicio(e.target.value)} />
+              </div>
+
+
+              <div>
+                <label style={{ display: 'flex', fontWeight: 'bold', color: 'black' }}>Fecha fin:</label>
+                <input type="date" value={fechaFin} onChange={e => setFechaFin(e.target.value)} />
+              </div>
+            </div>
+
+          </div>
+          
+          <button className='btn-agregar' style={{marginTop: '7.7px'}} onClick={handleFilter}>Filtrar</button>
+
+
+        </div>
+
+        <div className="estadisticas-container">
+          <p>Total Ventas: {totalIngresos}</p>
+          <p>Ventas con Promoción: {cantidadPromociones}</p>
+        </div>
+        <Chart
+          chartType="LineChart"
+          width="100%"
+          height="400px"
+          data={chartData}
+          options={{
+            title: 'Cantidad de Ventas por Fecha',
+            hAxis: { title: 'Fecha' },
+            vAxis: { title: 'Cantidad de Ventas' },
+          }}
+        />
       </div>
-      </div>
-      <hr />
-      
-      <div className="estadisticas-container">
-        <p>Total Ventas: {totalIngresos}</p>
-        <p>Ventas con Promoción: {cantidadPromociones}</p>
-      </div>
-      <Chart
-        chartType="LineChart"
-        width="100%"
-        height="400px"
-        data={chartData}
-        options={{
-          title: 'Cantidad de Ventas por Fecha',
-          hAxis: { title: 'Fecha' },
-          vAxis: { title: 'Cantidad de Ventas' },
-        }}
-      />
-    </div>
     </>
-    
+
   );
 };
 

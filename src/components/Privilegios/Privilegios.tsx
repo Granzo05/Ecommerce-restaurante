@@ -174,28 +174,34 @@ const PrivilegiosEmpleados = () => {
                     <button className="btn-agregar" onClick={() => handleAgregarPrivilegio()}> + Agregar privilegio</button>
                 </div>)}
             <hr />
-            {mostrarPrivilegios && (
-                <div id="stocks">
-                    <div className="inputBox">
-                        <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
-                            <option value={11} disabled >Selecciona una cantidad a mostrar</option>
-                            <option value={5}>5</option>
-                            <option value={10}>10</option>
-                            <option value={25}>25</option>
-                            <option value={50}>50</option>
-                            <option value={75}>75</option>
-                            <option value={100}>100</option>
-                        </select>
-                    </div>
-                    <div className="inputBox"
-                        style={{ marginRight: '10px' }}>
+
+            <div className="filtros">
+                <div className="inputBox-filtrado">
+                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                        <option value={11} disabled >Selecciona una cantidad a mostrar</option>
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={75}>75</option>
+                        <option value={100}>100</option>
+                    </select>
+                </div>
+
+                <div className="filtros-datos">
+                    <div className="inputBox-filtrado" >
                         <input
                             type="text"
                             required
-                            onChange={(e) => filtrarNombre(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
+                </div>
+
+
+            </div>
+            {mostrarPrivilegios && (
+                <div id="stocks">
                     <table>
                         <thead>
                             <tr>
