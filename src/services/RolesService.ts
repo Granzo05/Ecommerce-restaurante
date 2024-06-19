@@ -1,15 +1,15 @@
-import { Privilegios } from '../types/Restaurante/Privilegios';
+import { Roles } from '../types/Restaurante/Roles';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
-export const PrivilegiosService = {
-    createPrivilegio: async (privilegio: Privilegios): Promise<string> => {
+export const RolesService = {
+    createRol: async (rol: Roles): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `privilegio/create/${sucursalId()}`, {
+            const response = await fetch(URL_API + `roles/create/${sucursalId()}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(privilegio)
+                body: JSON.stringify(rol)
             })
             if (!response.ok) {
                 throw new Error(await response.text());
@@ -22,9 +22,9 @@ export const PrivilegiosService = {
         }
     },
 
-    getPrivilegios: async (): Promise<Privilegios[]> => {
+    getRoles: async (): Promise<Roles[]> => {
         try {
-            const response = await fetch(URL_API + 'privilegios/' + sucursalId(), {
+            const response = await fetch(URL_API + 'roles/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -41,14 +41,14 @@ export const PrivilegiosService = {
         }
     },
 
-    updatePrivilegios: async (privilegio: Privilegios): Promise<string> => {
+    updateRol: async (rol: Roles): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'privilegio/update/' + sucursalId(), {
+            const response = await fetch(URL_API + 'rol/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(privilegio)
+                body: JSON.stringify(rol)
             })
             if (!response.ok) {
                 throw new Error(await response.text());

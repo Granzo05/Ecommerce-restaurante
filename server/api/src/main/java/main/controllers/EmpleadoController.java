@@ -79,7 +79,7 @@ public class EmpleadoController {
 
             for (EmpleadoPrivilegio privilegio : empleadoDetails.getEmpleadoPrivilegios()) {
                 privilegio.setEmpleado(empleadoDetails);
-                privilegio.setPrivilegio(privilegiosRepository.findByTarea(privilegio.getPrivilegio().getTarea()).get());
+                privilegio.setPrivilegio(privilegiosRepository.findByTareaAndIdSucursal(privilegio.getPrivilegio().getTarea(), idSucursal).get());
             }
 
             empleadoDetails.getSucursales().add(sucursalRepository.findById(idSucursal).get());

@@ -72,17 +72,16 @@
 [x] Arreglar los permisos de pedidos a entrantes, en camino, etc y poder aceptar o rechazar dependiendo el empleado
 [x] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [x] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
-[] Configurar rutas privadas
-[] Agregar addEventListener del enter para activar los botones de los modales ok y desactivar que al tabular pase de un input al otro porque sino se rompe el inputComponent
+[] Ajustar el horario estimado
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Agregar imagenes al empleado
 [] Formatear y mejorar la legibilidad del codigo
 [] Si llegamos mostrar recetas de los menus
-[] Ajustar el horario estimado
 [] Hacer la recuperacion de contraseña
 [] Filtro de lugares al cargar la sucursal para las localidadesDelivery para buscar por nombre de la localidad
 [] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
 [] Costo recomendado de articulos por sucursal
+[] Configurar rutas privadas
  
 CERRAR MODALS AL CREAR COSAS[x]
 NO PODER CARGAR SUBCATEGORIAS POR EL BUG DE CATEGORIAS[x]
@@ -102,7 +101,7 @@ NO ANDA EDITAR EMPRESA[]
 EL HOME SE ROMPE Y NO TRAE A VECES LAS PROMOCIONES Y LAS CATEGORIAS[]
 SucursalCards: FALTA VALIDACIONES Y RUTAPRIVADA. ERROR AL SELECCIONAR SUCURSAL.[]
 Footer: BUG, MUESTRA SUCURSAL VACIA.[]
-pago: NO TE DEBE DEJAR ENTRAR SI NO ESTAS LOGUEADO. ARREGLAR MODAL DE SALIDA.[]
+pago: NO TE DEBE DEJAR ENTRAR SI NO ESTAS LOGUEADO. ARREGLAR MODAL DE SALIDA.[] RUTAS PRIVADA EVITA ESTO :D
 loginCliente: FALTA HACER VALIDAR LA RECUPERACION DE LA CONTRASEÑA. FALTA VALIDAR INGRESO CON GMAIL. FALTAN VALIDACIONES A LOS INPUTS.[]
 loginNegocio: FALTA VALIDAR EN EL RECUPERO DE CONTRA, QUE EL CORREO SEA CORRECTO Y ESTE DENTRO DE LA BASE DE DATOS.[]
 opcionesCliente: FALTA MOSTRAR DOMICILIOS DEL USUARIO Y VALIDAR CAMBIOS DE LA CUENTA EN LA BASE DE DATOS.[]

@@ -1,6 +1,7 @@
 package main.repositories;
 
 import main.entities.Ingredientes.Medida;
+import main.entities.Restaurante.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,13 +12,13 @@ import java.util.Optional;
 
 
 @Repository
-public interface MedidaRepository extends JpaRepository<Medida, Long> {
-    @Query("SELECT m FROM Medida m JOIN m.sucursales s WHERE s.id = :id AND m.nombre = :nombre")
-    Optional<Medida> findByDenominacionAndIdSucursal(@Param("nombre") String nombre, @Param("id") Long id);
+public interface RolesRepository extends JpaRepository<Roles, Long> {
+    @Query("SELECT r FROM Roles r JOIN r.sucursales s WHERE s.id = :id AND r.nombre = :nombre")
+    Optional<Roles> findByDenominacionAndIdSucursal(@Param("nombre") String nombre, @Param("id") Long id);
 
-    @Query("SELECT m FROM Medida m JOIN m.sucursales s WHERE s.id = :idSucursal AND m.id = :idMedida")
-    Optional<Medida> findByIdMedidaAndIdSucursal(@Param("idMedida") Long idMedida, @Param("idSucursal") Long idSucursal);
+    @Query("SELECT r FROM Roles r JOIN r.sucursales s WHERE s.id = :idSucursal AND r.id = :idRol")
+    Optional<Roles> findByIdRolAndIdSucursal(@Param("idRol") Long idRol, @Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT m FROM Medida m JOIN m.sucursales s WHERE s.id = :id")
-    List<Medida> findAllByIdSucursal(@Param("id") Long id);
+    @Query("SELECT r FROM Roles r JOIN r.sucursales s WHERE s.id = :id")
+    List<Roles> findAllByIdSucursal(@Param("id") Long id);
 }

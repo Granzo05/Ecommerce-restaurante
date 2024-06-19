@@ -2,8 +2,10 @@ package main.controllers;
 
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Medida;
+import main.entities.Restaurante.Roles;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.MedidaRepository;
+import main.repositories.RolesRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,46 +16,46 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-public class MedidaController {
-    private final MedidaRepository medidaRepository;
+public class RolesController {
+    private final RolesRepository rolesRepository;
     private final SucursalRepository sucursalRepository;
 
-    public MedidaController(MedidaRepository medidaRepository, SucursalRepository sucursalRepository) {
-        this.medidaRepository = medidaRepository;
+    public RolesController(RolesRepository rolesRepository, SucursalRepository sucursalRepository) {
+        this.rolesRepository = rolesRepository;
         this.sucursalRepository = sucursalRepository;
     }
 
 
     @CrossOrigin
-    @GetMapping("/medidas/{idSucursal}")
-    public Set<Medida> getMedidas(@PathVariable("idSucursal") Long idSucursal) {
-        return new HashSet<>(medidaRepository.findAllByIdSucursal(idSucursal));
+    @GetMapping("/roles/{idSucursal}")
+    public Set<Roles> getRoles(@PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(rolesRepository.findAllByIdSucursal(idSucursal));
     }
 
     @CrossOrigin
     @Transactional
-    @PostMapping("/medida/create/{idSucursal}")
-    public ResponseEntity<String> crearMedida(@RequestBody Medida medidaDetails, @PathVariable("idSucursal") Long idSucursal) {
-        // Busco el medida en la base de datos
-        Optional<Medida> medidaDB = medidaRepository.findByDenominacionAndIdSucursal(medidaDetails.getNombre(), idSucursal);
+    @PostMapping("/roles/create/{idSucursal}")
+    public ResponseEntity<String> crearRol(@RequestBody Roles rolDetails, @PathVariable("idSucursal") Long idSucursal) {
+        // Busco el rol en la base de datos
+        Optional<Roles> rolesDB = rolesRepository.findByDenominacionAndIdSucursal(rolDetails.getNombre(), idSucursal);
 
-        if (medidaDB.isEmpty()) {
-            if (!medidaDetails.getSucursales().isEmpty()) {
-                Set<Sucursal> sucursales = new HashSet<>(medidaDetails.getSucursales());
+        if (rolesDB.isEmpty()) {
+            if (!rolDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(rolDetails.getSucursales());
                 for (Sucursal sucursalVacia : sucursales) {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    sucursal.getMedidas().add(medidaDetails);
-                    medidaDetails.getSucursales().add(sucursal);
+                    sucursal.getRoles().add(rolDetails);
+                    rolDetails.getSucursales().add(sucursal);
                     sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
-                    if (!sucursal.getMedidas().contains(medidaDetails)) {
-                        sucursal.getMedidas().add(medidaDetails);
-                        medidaDetails.getSucursales().add(sucursal);
+                    if (!sucursal.getMedidas().contains(rolDetails)) {
+                        sucursal.getRoles().add(rolDetails);
+                        rolDetails.getSucursales().add(sucursal);
                         sucursalRepository.save(sucursal);
                     }
                 } else {
@@ -61,32 +63,33 @@ public class MedidaController {
                 }
             }
 
-            medidaRepository.save(medidaDetails);
+            rolDetails.setBorrado("NO");
+            rolesRepository.save(rolDetails);
 
-            return new ResponseEntity<>("El medida ha sido añadido correctamente", HttpStatus.CREATED);
+            return new ResponseEntity<>("El rol ha sido añadido correctamente", HttpStatus.CREATED);
         }
 
-        return ResponseEntity.badRequest().body("Hay una medida existente con ese nombre");
+        return ResponseEntity.badRequest().body("Hay una rol existente con ese nombre");
     }
 
     @CrossOrigin
     @Transactional
-    @PutMapping("/medida/update/{idSucursal}")
-    public ResponseEntity<String> actualizarMedida(@RequestBody Medida medida, @PathVariable("idSucursal") Long idSucursal) {
-        Optional<Medida> medidaDB = medidaRepository.findByIdMedidaAndIdSucursal(medida.getId(), idSucursal);
+    @PutMapping("/rol/update/{idSucursal}")
+    public ResponseEntity<String> actualizarRol(@RequestBody Roles rol, @PathVariable("idSucursal") Long idSucursal) {
+        Optional<Roles> rolDB = rolesRepository.findByIdRolAndIdSucursal(rol.getId(), idSucursal);
 
-        if (medidaDB.isEmpty()) {
-            return ResponseEntity.ofNullable("La medida no existe");
+        if (rolDB.isEmpty()) {
+            return ResponseEntity.ofNullable("La rol no existe");
         } else {
-            Optional<Medida> medidaEncontrada = medidaRepository.findByDenominacionAndIdSucursal(medida.getNombre(), idSucursal);
+            Optional<Roles> rolEncontrado = rolesRepository.findByDenominacionAndIdSucursal(rol.getNombre(), idSucursal);
 
-            if (medidaEncontrada.isPresent() && medidaEncontrada.get().getId() != medidaDB.get().getId()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una medida con ese nombre");
+            if (rolEncontrado.isPresent() && rolEncontrado.get().getId() != rolDB.get().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Existe una rol con ese nombre");
             }
 
-            medidaDB.get().setNombre(medida.getNombre());
-            medidaDB.get().setBorrado(medida.getBorrado());
-            medidaRepository.save(medidaDB.get());
+            rolDB.get().setNombre(rol.getNombre());
+            rolDB.get().setBorrado(rol.getBorrado());
+            rolesRepository.save(rolDB.get());
             return ResponseEntity.ok("Medida actualizada correctamente");
         }
     }

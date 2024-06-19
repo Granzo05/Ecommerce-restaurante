@@ -1,11 +1,10 @@
 package main.entities.Restaurante;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -14,21 +13,20 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "roles", schema = "buen_sabor")
-public class Roles {
+@Table(name = "roles_empleados", schema = "buen_sabor")
+public class RolesEmpleados {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "nombre")
-    private String nombre;
+    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_rol")
+    private Roles rol;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "empleados_sucursales",
-            joinColumns = @JoinColumn(name = "id_empleado"),
-            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
-    )
-    private Set<Sucursal> sucursales = new HashSet<>();
+    @JsonIgnoreProperties(value = {"rolesEmpleado"}, allowSetters = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_empleado")
+    private Empleado empleado;
 
 }

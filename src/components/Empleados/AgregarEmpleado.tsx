@@ -17,6 +17,8 @@ import { Pais } from '../../types/Domicilio/Pais';
 import { Privilegios } from '../../types/Restaurante/Privilegios';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
 import { EmpleadoPrivilegio } from '../../types/Restaurante/EmpleadoPrivilegio';
+import ModalFlotanteRecomendacionesRoles from '../../hooks/ModalFlotanteFiltroRoles';
+import { Roles } from '../../types/Restaurante/Roles';
 
 interface AgregarEmpleadoProps {
   onCloseModal: () => void;
@@ -32,20 +34,25 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   const [fechaNacimiento, setFechaNacimiento] = useState(new Date());
   const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
   const [indexDomicilio, setIndexDomicilio] = useState<number>(0);
+  const [indexRoles, setIndexRoles] = useState<number>(0);
+  const [roles, setRoles] = useState<Roles[]>([]);
 
   const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
   const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
+  const [modalBusquedaRoles, setModalBusquedaRoles] = useState<boolean>(false);
   const [modalBusquedaPais, setModalBusquedaPais] = useState<boolean>(false);
 
   const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [tarea: string]: string[] }>({});
   const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+  const [rolesElegidos, setRolesElegidos] = useState<string[]>([]);
 
   const handleModalClose = () => {
     setModalBusquedaProvincia(false)
     setModalBusquedaDepartamento(false)
     setModalBusquedaLocalidad(false)
     setModalBusquedaPais(false)
+    setModalBusquedaRoles(false)
   };
 
   useEffect(() => {
@@ -57,6 +64,16 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
         console.error(err);
       });
   }, []);
+
+  const handleChangeRol = (index: number, rol: Roles) => {
+    const nuevosRoles = [...roles];
+    nuevosRoles[index] = rol;
+    setRoles(nuevosRoles);
+
+    const nuevosNombresRoles = [...rolesElegidos];
+    nuevosNombresRoles[index] = rol.nombre;
+    setRolesElegidos(nuevosNombresRoles);
+  };
 
   const handleModificarPrivilegios = (tarea: string, permiso: string) => {
     setPrivilegiosElegidos((prev) => {
@@ -166,11 +183,31 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     }
   };
 
+  const añadirCampoRol = () => {
+    if (roles.length === 0) {
+      setRoles([...roles, { id: 0, nombre: '', borrado: 'NO', sucursales: [] }]);
+    } else {
+      setRoles([...roles, { id: 0, nombre: '', borrado: 'NO', sucursales: [] }]);
+      setIndexDomicilio(prevIndex => prevIndex + 1);
+    }
+  };
+
+  const quitarCampoRol = (index: number) => {
+    if (roles.length > 0) {
+      const nuevosRoles = [...roles];
+      nuevosRoles.splice(index, 1);
+      setRoles(nuevosRoles);
+
+      if (indexRoles > 0) {
+        setIndexRoles(indexRoles - 1);
+      }
+    } else {
+      setRoles([]);
+      setIndexRoles(0);
+    }
+  };
+
   async function agregarEmpleado() {
-
-
-
-
     const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([tarea, permisos]) => {
       const privilegio = new Privilegios(0, tarea, []);
       return new EmpleadoPrivilegio(0, privilegio, permisos);
@@ -241,6 +278,9 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       return;
     } else if (!fechaNacimiento || fechaNacimiento > fechaMinima) {
       toast.error("Por favor, es necesaria una fecha de nacimiento válida. (Empleado mayor a 18 años)");
+      return;
+    } else if (!roles && rolesElegidos[0].length === 0) {
+      toast.error("Por favor, es necesario el rol del empleado");
       return;
     } else {
       nextStep();
@@ -382,6 +422,18 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
               <div className="error-message">El empleado debe ser mayor a 18 años.</div>
               <hr />
             </div>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Rol del empleado:</label>
+
+            {roles && roles.map((roles, index) => (
+              <div key={index}>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoRol(index)}>X</p>
+                <h4 style={{ fontSize: '18px' }}>Rol {index + 1}</h4>
+                <InputComponent disabled={false} placeHolder='Seleccionar rol...' onInputClick={() => setModalBusquedaRoles(true)} selectedProduct={roles.nombre ?? ''} />
+                {modalBusquedaRoles && <ModalFlotanteRecomendacionesRoles datosOmitidos={rolesElegidos} onCloseModal={handleModalClose} onSelectRol={(rol) => { handleChangeRol(index, rol); handleModalClose(); }} />}
+              </div>
+            ))}
+            <button onClick={añadirCampoRol}>Añadir rol</button>
+
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
@@ -511,20 +563,20 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
                       </div>
                       <h4 className="privilegio-titulo" style={{ fontSize: '18px' }}>&mdash; {privilegio.tarea} &mdash;</h4>
                       <div className="permisos-container">
-                      {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
-                        <div key={permisoIndex} className="permiso">
-                          <input
-                            type="checkbox"
-                            value={permiso}
-                            checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
-                            onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
-                          />
-                          <label>{permiso}</label>
-                        </div>
-                      ))}
+                        {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
+                          <div key={permisoIndex} className="permiso">
+                            <input
+                              type="checkbox"
+                              value={permiso}
+                              checked={privilegiosElegidos[privilegio.tarea]?.includes(permiso) || false}
+                              onChange={() => handleModificarPrivilegios(privilegio.tarea, permiso)}
+                            />
+                            <label>{permiso}</label>
+                          </div>
+                        ))}
                       </div>
-                      
-                      
+
+
                     </>
                   )}
                 </div>

@@ -12,6 +12,9 @@ import { DESACTIVAR_PRIVILEGIOS, getBaseUrl, limpiarCredenciales } from '../util
 import { Empresa } from '../types/Restaurante/Empresa';
 import ModalFlotante from '../components/ModalFlotante';
 import PedidosEnCamino from '../components/Pedidos/PedidosEnCamino';
+import { Roles } from '../types/Restaurante/Roles';
+import RolesEmpleado from '../components/Roles/Roles';
+import PrivilegiosEmpleados from '../components/Privilegios/Privilegios';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -169,6 +172,10 @@ const Opciones = () => {
             return <Reportes />;
         } else if (opcionSeleccionada === 19) {
             return <PedidosEnCamino />;
+        } else if (opcionSeleccionada === 20) {
+            return <RolesEmpleado />;
+        }else if (opcionSeleccionada === 21) {
+            return <PrivilegiosEmpleados />;
         }
     };
 
@@ -190,6 +197,8 @@ const Opciones = () => {
     const [pedidosCocinadosVisibleEmpleado, setPedidosCocinadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [pedidosEntregadosVisibleEmpleado, setPedidosEntregadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [pedidosEnCaminoVisibleEmpleado, setPedidosEnCaminoVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [rolesVisibleEmpleado, setRolesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [privilegiosVisibleEmpleado, setPrivilegiosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
 
     useEffect(() => {
         checkPrivilegies();
@@ -236,6 +245,10 @@ const Opciones = () => {
                         setSucursalesVisibleEmpleado(true);
                     } else if (privilegio.privilegio.tarea === 'Empresas' && privilegio.permisos.includes('READ')) {
                         setEmpresasVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Roles' && privilegio.permisos.includes('READ')) {
+                        setRolesVisibleEmpleado(true);
+                    } else if (privilegio.privilegio.tarea === 'Privilegios' && privilegio.permisos.includes('READ')) {
+                        setPrivilegiosVisibleEmpleado(true);
                     }
                 });
             } catch (error) {
@@ -260,6 +273,8 @@ const Opciones = () => {
             setPedidosCocinadosVisibleEmpleado(true);
             setPedidosEntregadosVisibleEmpleado(true);
             setPedidosEnCaminoVisibleEmpleado(true);
+            setRolesVisibleEmpleado(true);
+            setPrivilegiosVisibleEmpleado(true);
         }
     }
 
@@ -281,7 +296,7 @@ const Opciones = () => {
                     <div className="modal-info">
                         <>
                             <h2>¿Qué desea hacer?</h2>
-                            <button onClick={() => {limpiarCredenciales; window.location.href = getBaseUrl() }}>Cerrar sesión</button>
+                            <button onClick={() => { limpiarCredenciales; window.location.href = getBaseUrl() }}>Cerrar sesión</button>
                             <br />
                             <button onClick={() => { localStorage.removeItem('sucursal'); window.location.href = getBaseUrl() + '/empresa' }}>Volver a cuenta de empresa</button>
                         </>
@@ -377,6 +392,11 @@ const Opciones = () => {
                                     </h4>
                                 )}
 
+                                {rolesVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 20 ? 'selected' : ''} onClick={() => handleOpcionClick(20)}>
+                                        Roles
+                                    </h4>
+                                )}
 
                                 {empleadosVisibleEmpleado && (
                                     <h4 className={opcionSeleccionada === 8 ? 'selected' : ''} onClick={() => handleOpcionClick(8)}>
@@ -394,6 +414,12 @@ const Opciones = () => {
                                 {ingredientesVisibleEmpleado && (
                                     <h4 className={opcionSeleccionada === 10 ? 'selected' : ''} onClick={() => handleOpcionClick(10)}>
                                         Ingredientes
+                                    </h4>
+                                )}
+
+                                {privilegiosVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 21 ? 'selected' : ''} onClick={() => handleOpcionClick(21)}>
+                                        Privilegios
                                     </h4>
                                 )}
 

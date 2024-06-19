@@ -1,0 +1,267 @@
+import { useEffect, useState } from "react";
+import ModalCrud from "../ModalCrud";
+import '../../styles/stock.css';
+import { PrivilegiosService } from "../../services/PrivilegiosService";
+import { Privilegios } from "../../types/Restaurante/Privilegios";
+import { Empleado } from "../../types/Restaurante/Empleado";
+import { Sucursal } from "../../types/Restaurante/Sucursal";
+import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
+import AgregarPrivilegio from "./AgregarPrivilegio";
+import ActivarPrivilegio from "./ActivarPrivilegio";
+import EditarPrivilegio from "./EditarPrivilegio";
+import EliminarPrivilegio from "./EliminarPrivilegio";
+
+const PrivilegiosEmpleados = () => {
+    const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+    const [mostrarPrivilegios, setMostrarPrivilegios] = useState(true);
+
+    const [showAgregarModalPrivilegio, setShowAgregarModalPrivilegio] = useState(false);
+    const [showEditarPrivilegioModal, setShowEditarPrivilegioModal] = useState(false);
+    const [showEliminarPrivilegioModal, setShowEliminarPrivilegioModal] = useState(false);
+    const [showActivarPrivilegioModal, setShowActivarPrivilegioModal] = useState(false);
+
+    const [selectedPrivilegio, setSelectedPrivilegio] = useState<Privilegios>();
+
+    useEffect(() => {
+        fetchPrivilegios();
+    }, []);
+
+    const fetchPrivilegios = async () => {
+        try {
+            PrivilegiosService.getPrivilegios()
+                .then(data => {
+                    setPrivilegios(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
+    const [empleado] = useState<Empleado | null>(() => {
+        const empleadoString = localStorage.getItem('empleado');
+
+        return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
+    });
+
+    const [sucursal] = useState<Sucursal | null>(() => {
+        const sucursalString = localStorage.getItem('sucursal');
+
+        return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
+    });
+
+    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+
+
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [productosMostrables, setProductosMostrables] = useState(11);
+
+    // Calcular el índice del primer y último elemento de la página actual
+    const indexUltimoProducto = paginaActual * productosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+
+    // Obtener los elementos de la página actual
+    const [privilegiosFiltradas, setPrivilegiosFiltradas] = useState<Privilegios[]>([]);
+
+    useEffect(() => {
+        setPrivilegiosFiltradas(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
+    }, [privilegios]);
+
+    useEffect(() => {
+        setPrivilegiosFiltradas(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
+    }, [productosMostrables]);
+
+    function filtrarNombre(filtro: string) {
+        if (filtro.length > 0) {
+            setPrivilegiosFiltradas(privilegiosFiltradas.filter(recomendacion => recomendacion.tarea.toLowerCase().includes(filtro.toLowerCase())));
+        } else {
+            setPrivilegiosFiltradas(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    const paginasTotales = Math.ceil(privilegios.length / productosMostrables);
+
+    // Cambiar de página
+    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+
+    async function checkPrivilegies() {
+        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+            try {
+                empleado?.empleadoPrivilegios?.forEach(privilegio => {
+                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
+                            setCreateVisible(true);
+                        }
+                        if (privilegio.permisos.includes('UPDATE')) {
+                            setUpdateVisible(true);
+                        }
+                        if (privilegio.permisos.includes('DELETE')) {
+                            setDeleteVisible(true);
+                        }
+                        if (privilegio.permisos.includes('ACTIVATE')) {
+                            setActivateVisible(true);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } else if (sucursal && sucursal.id > 0) {
+            setCreateVisible(true);
+            setActivateVisible(true);
+            setDeleteVisible(true);
+            setUpdateVisible(true);
+        }
+    }
+
+    const handleAgregarPrivilegio = () => {
+        setShowEditarPrivilegioModal(false);
+        setShowEliminarPrivilegioModal(false);
+        setMostrarPrivilegios(false);
+        setShowAgregarModalPrivilegio(true);
+    };
+
+    const handleEditarPrivilegio = (privilegio: Privilegios) => {
+        setSelectedPrivilegio(privilegio);
+        setShowAgregarModalPrivilegio(false);
+        setShowEliminarPrivilegioModal(false);
+        setMostrarPrivilegios(false);
+        setShowEditarPrivilegioModal(true);
+    };
+
+    const handleEliminarPrivilegio = (privilegio: Privilegios) => {
+        setSelectedPrivilegio(privilegio);
+        setShowAgregarModalPrivilegio(false);
+        setShowEditarPrivilegioModal(false);
+        setMostrarPrivilegios(false);
+        setShowActivarPrivilegioModal(false);
+        setShowEliminarPrivilegioModal(true);
+    };
+
+    const handleActivarPrivilegio = (privilegio: Privilegios) => {
+        setSelectedPrivilegio(privilegio);
+        setShowAgregarModalPrivilegio(false);
+        setShowEditarPrivilegioModal(false);
+        setMostrarPrivilegios(false);
+        setShowActivarPrivilegioModal(true);
+        setShowEliminarPrivilegioModal(false);
+    };
+
+    const handleModalClose = () => {
+        setShowAgregarModalPrivilegio(false);
+        setShowEditarPrivilegioModal(false);
+        setShowEliminarPrivilegioModal(false);
+        setShowActivarPrivilegioModal(false);
+        fetchPrivilegios();
+        setMostrarPrivilegios(true);
+    };
+
+    return (
+        <div className="opciones-pantallas">
+            <h1>- Privilegios -</h1>
+
+            {createVisible && (
+                <div className="btns-categorias">
+                    <button className="btn-agregar" onClick={() => handleAgregarPrivilegio()}> + Agregar privilegio</button>
+                </div>)}
+            <hr />
+            {mostrarPrivilegios && (
+                <div id="stocks">
+                    <div className="inputBox">
+                        <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                            <option value={11} disabled >Selecciona una cantidad a mostrar</option>
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={25}>25</option>
+                            <option value={50}>50</option>
+                            <option value={75}>75</option>
+                            <option value={100}>100</option>
+                        </select>
+                    </div>
+                    <div className="inputBox"
+                        style={{ marginRight: '10px' }}>
+                        <input
+                            type="text"
+                            required
+                            onChange={(e) => filtrarNombre(e.target.value)}
+                        />
+                        <span>Filtrar por nombre</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {privilegiosFiltradas.map(privilegio => (
+                                <tr key={privilegio.id}>
+                                    <td>{privilegio.tarea.toString().replace(/_/g, ' ')}</td>
+
+                                    {privilegio.borrado === 'NO' ? (
+                                        <td>
+                                            <div className="btns-acciones">
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarPrivilegio(privilegio)}>EDITAR</button>
+                                                )}
+                                                {deleteVisible && (
+                                                    <button className="btn-accion-eliminar" onClick={() => handleEliminarPrivilegio(privilegio)}>ELIMINAR</button>
+                                                )}
+                                            </div>
+
+                                        </td>
+                                    ) : (
+                                        <td>
+                                            <div className="btns-acciones">
+                                                {updateVisible && (
+                                                    <button className="btn-accion-editar" onClick={() => handleEditarPrivilegio(privilegio)}>EDITAR</button>
+                                                )}
+                                                {activateVisible && (
+                                                    <button className="btn-accion-activar" onClick={() => handleActivarPrivilegio(privilegio)}>ACTIVAR</button>
+                                                )}
+                                            </div>
+                                        </td>
+                                    )}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className="pagination">
+                        {Array.from({ length: paginasTotales }, (_, index) => (
+                            <button key={index + 1} onClick={() => paginate(index + 1)} disabled={paginaActual === index + 1}>
+                                {index + 1}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+            <ModalCrud isOpen={showAgregarModalPrivilegio} onClose={handleModalClose}>
+                <AgregarPrivilegio onCloseModal={handleModalClose} />
+            </ModalCrud>
+
+            <ModalCrud isOpen={showEliminarPrivilegioModal} onClose={handleModalClose}>
+                {selectedPrivilegio && <EliminarPrivilegio privilegioOriginal={selectedPrivilegio} onCloseModal={handleModalClose} />}
+            </ModalCrud>
+
+            <ModalCrud isOpen={showActivarPrivilegioModal} onClose={handleModalClose}>
+                {selectedPrivilegio && <ActivarPrivilegio privilegioOriginal={selectedPrivilegio} onCloseModal={handleModalClose} />}
+            </ModalCrud>
+
+            <ModalCrud isOpen={showEditarPrivilegioModal} onClose={handleModalClose}>
+                {selectedPrivilegio && <EditarPrivilegio privilegioOriginal={selectedPrivilegio} onCloseModal={handleModalClose} />}
+            </ModalCrud>
+        </div>
+    )
+}
+
+export default PrivilegiosEmpleados

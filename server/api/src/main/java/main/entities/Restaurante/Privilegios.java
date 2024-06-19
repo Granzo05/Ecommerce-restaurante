@@ -24,9 +24,21 @@ public class Privilegios {
     @Column(name = "tarea")
     private String tarea;
 
+    @Column(name = "borrado")
+    private String borrado = "NO";
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "permisos", joinColumns = @JoinColumn(name = "privilegio_id"))
     @Column(name = "permiso")
     private List<String> permisos = new ArrayList<>();
+
+    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "privilegios_sucursales",
+            joinColumns = @JoinColumn(name = "id_privilegio"),
+            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
+    )
+    private Set<Sucursal> sucursales = new HashSet<>();
 
 }

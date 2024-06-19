@@ -22,12 +22,16 @@ public class Empleado {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "contraseña")
     private String contraseña;
+
     @Column(name = "cuil")
     private String cuil;
+
     @Column(name = "telefono")
     private Long telefono;
 
@@ -48,6 +52,10 @@ public class Empleado {
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EmpleadoPrivilegio> empleadoPrivilegios = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RolesEmpleados> rolesEmpleado = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

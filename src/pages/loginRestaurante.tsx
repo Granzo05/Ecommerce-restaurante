@@ -10,13 +10,17 @@ import HeaderLogin from '../components/headerLogin';
 import { EmpresaService } from '../services/EmpresaService';
 
 const LoginNegocio = () => {
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    console.log(event.key)
+    if (event.key === 'Enter') {
+      handleIniciarSesionNegocio();
+    }
+  };
 
   const [showResetContraModal, SetShowResetContraModal] = useState(false);
 
   const handleModalClose = () => {
     SetShowResetContraModal(false);
-
-
   };
 
   const handleAgregarArticulo = () => {
@@ -160,7 +164,7 @@ const LoginNegocio = () => {
             </div>
             <button type='button' className="my-form__button" onClick={handleIniciarSesionNegocio}>
               Ingresar
-            </button>
+            </button>            
           </div>
         </main>
       </div>

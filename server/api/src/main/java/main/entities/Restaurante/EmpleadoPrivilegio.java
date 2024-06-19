@@ -19,7 +19,7 @@ public class EmpleadoPrivilegio {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "empleado_id")
+    @JoinColumn
     private Empleado empleado;
 
     @ManyToOne

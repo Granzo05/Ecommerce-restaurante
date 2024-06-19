@@ -6,6 +6,7 @@ import { Imagenes } from "../Productos/Imagenes";
 import { Promocion } from "../Productos/Promocion";
 import { Empresa } from "./Empresa";
 import { LocalidadDelivery } from "./LocalidadDelivery";
+import { Roles } from "./Roles";
 
 export class Sucursal {
     id: number = 0;
@@ -25,6 +26,7 @@ export class Sucursal {
     categorias: Categoria[] = [];
     imagenes: Imagenes[] = [];
     borrado: string = '';
+    roles: Roles[] = [];
 
     constructor() {
 
