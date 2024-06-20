@@ -404,10 +404,11 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             <button onClick={añadirCampoIngrediente}>Añadir ingrediente al menú</button>
 
             <br />
-            <button onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente en el inventario (opcional)</button>
             <br />
             <div className='btns-pasos'>
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button style={{marginRight: '10px'}} onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente en el inventario (opcional)</button>
+            
               <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
             </div>
           </>

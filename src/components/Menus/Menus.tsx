@@ -69,7 +69,7 @@ const Menus = () => {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
                 empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                    if (privilegio.privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('CREATE')) {
                             setCreateVisible(true);
                         }
@@ -187,7 +187,7 @@ const Menus = () => {
                             type="number"
                             required
                         />
-                        <span>Filtrar por t. de cocción</span>
+                        <span>Filtrar por tiempo</span>
                     </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input

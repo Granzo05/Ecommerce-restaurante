@@ -84,6 +84,7 @@
 [] Configurar rutas privadas
 [] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
 [] Cascade en articuloVenta.
+[] El editar menú no borra los ingredientes.
  
 CERRAR MODALS AL CREAR COSAS[x]
 NO PODER CARGAR SUBCATEGORIAS POR EL BUG DE CATEGORIAS[x]
