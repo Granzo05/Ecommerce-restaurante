@@ -15,7 +15,9 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Builder
-@Table(name = "privilegios", schema = "buen_sabor")
+@Table(name = "privilegios")
+@Inheritance(strategy = InheritanceType.JOINED)
+@JsonIgnoreProperties(value = {"empleados", "sucursales"}, allowSetters = true)
 public class Privilegios {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,18 +28,4 @@ public class Privilegios {
 
     @Column(name = "borrado")
     private String borrado = "NO";
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "permisos_sucursales", joinColumns = @JoinColumn(name = "id_privilegio"))
-    @Column(name = "permiso")
-    private List<String> permisos = new ArrayList<>();
-
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "privilegios_sucursales",
-            joinColumns = @JoinColumn(name = "id_privilegio"),
-            inverseJoinColumns = @JoinColumn(name = "id_sucursal")
-    )
-    private Set<Sucursal> sucursales = new HashSet<>();
 }

@@ -18,14 +18,23 @@ public class EmpleadoController {
     private final EmpleadoRepository empleadoRepository;
     private final FechaContratacionRepository fechaContratacionRepository;
     private final DomicilioRepository domicilioRepository;
-    private final PrivilegiosRepository privilegiosRepository;
+    private final PrivilegiosSucursalesRepository privilegiosSucursalesRepository;
+    private final RolesRepository rolesRepository;
 
-    public EmpleadoController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, PrivilegiosRepository privilegiosRepository) {
+    private final PrivilegiosEmpleadoRepository privilegiosEmpleadoRepository;
+
+    private final RolesEmpleadoRepository rolesEmpleadoRepository;
+
+
+    public EmpleadoController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, PrivilegiosSucursalesRepository privilegiosSucursalesRepository, RolesRepository rolesRepository, PrivilegiosEmpleadoRepository privilegiosEmpleadoRepository, RolesEmpleadoRepository rolesEmpleadoRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.fechaContratacionRepository = fechaContratacionRepository;
         this.domicilioRepository = domicilioRepository;
-        this.privilegiosRepository = privilegiosRepository;
+        this.privilegiosSucursalesRepository = privilegiosSucursalesRepository;
+        this.rolesRepository = rolesRepository;
+        this.privilegiosEmpleadoRepository = privilegiosEmpleadoRepository;
+        this.rolesEmpleadoRepository = rolesEmpleadoRepository;
     }
 
 
@@ -77,14 +86,8 @@ public class EmpleadoController {
                 domicilio.setEmpleado(empleadoDetails);
             }
 
-            for (PrivilegiosEmpleados privilegio : empleadoDetails.getEmpleadoPrivilegios()) {
+            for (PrivilegiosEmpleados privilegio : empleadoDetails.getPrivilegios()) {
                 privilegio.setEmpleado(empleadoDetails);
-                Optional<Privilegios> privilegioDB = privilegiosRepository.findByNombreAndIdSucursal(privilegio.getPrivilegio().getNombre(), idSucursal);
-                if (privilegioDB.isPresent()) {
-                    privilegio.setPrivilegio(privilegioDB.get());
-                } else {
-                    throw new Exception("Privilegio no encontrado");
-                }
             }
 
             for (RolesEmpleados roles : empleadoDetails.getRolesEmpleado()) {
@@ -124,14 +127,24 @@ public class EmpleadoController {
                 empleado.setNombre(Encrypt.desencriptarString(empleado.getNombre()));
                 empleado.setEmail(Encrypt.desencriptarString(empleado.getEmail()));
                 empleado.setCuil(Encrypt.desencriptarString(empleado.getCuil()));
-            } catch (NullPointerException ignored) {}
-
-
-            List<Domicilio> domicilios = domicilioRepository.findByIdEmpleado(empleado.getId());
-
-            for (Domicilio domicilio : domicilios) {
-                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+            } catch (NullPointerException ignored) {
             }
+
+            Set<RolesEmpleados> nuevosRoles = new HashSet<>();
+
+            for (RolesEmpleados rol : empleado.getRolesEmpleado()) {
+                if (rol.getBorrado().equals("NO")) nuevosRoles.add(rol);
+            }
+            empleado.setRolesEmpleado(nuevosRoles);
+
+            List<Domicilio> domicilios = domicilioRepository.findByIdEmpleadoNotBorrado(empleado.getId());
+
+            try {
+                for (Domicilio domicilio : domicilios) {
+                    domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+                }
+            } catch (Exception ignored){}
+
 
             empleado.setDomicilios(new HashSet<>(domicilios));
 
@@ -148,8 +161,8 @@ public class EmpleadoController {
     }
 
 
-    @Transactional
     @CrossOrigin
+    @Transactional
     @PutMapping("/empleado/update/{idSucursal}")
     public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
         Optional<Empleado> empleadoOptional = empleadoRepository.findByCuilAndIdSucursal(Encrypt.encriptarString(empleadoDetails.getCuil()), idSucursal);
@@ -191,51 +204,66 @@ public class EmpleadoController {
 
             empleadoDb.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
 
-            Set<Domicilio> domiciliosDetailsSet = new HashSet<>(empleadoDetails.getDomicilios());
 
-            // Crear una lista de domicilios para actualizar la sucursal después de la iteración
-            List<Domicilio> domiciliosActualizados = new ArrayList<>();
-
-            // Recorrer cada domicilio en la sucursal almacenada previamente
-            for (Domicilio domicilio : empleadoDb.getDomicilios()) {
-                // Comparamos los domicilios guardados antes, si está entonces no pasa nada, si no está entonces se marca como borrado
-                if (!domiciliosDetailsSet.contains(domicilio)) {
-                    domicilio.setBorrado("SI");
-                } else {
-                    // Si está presente, agregarlo a la lista actualizada
-                    domiciliosActualizados.add(domicilio);
-                }
-            }
-
-            // Actualizar domicilios en sucursalDetails
+            // Iterar sobre los domicilios guardados en empleadoDb
             for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
                 domicilio.setEmpleado(empleadoDb);
-                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
+            }
 
-                // Añadir a la lista actualizada si no está presente
-                if (!domiciliosActualizados.contains(domicilio)) {
-                    domiciliosActualizados.add(domicilio);
+            empleadoDb.setDomicilios(new HashSet<>(empleadoDetails.getDomicilios()));
+
+            Set<RolesEmpleados> rolesActualizados = new HashSet<>();
+
+            for (RolesEmpleados rolDB : empleadoDb.getRolesEmpleado()) {
+                boolean rolEncontrado = false;
+
+                for (RolesEmpleados rolNuevo : empleadoDetails.getRolesEmpleado()) {
+                    if (rolDB.getRol().getNombre().equals(rolNuevo.getRol().getNombre())) {
+                        // Actualizar atributos del rol existente
+                        rolDB.setEmpleado(empleadoDb);
+                        rolesActualizados.add(rolDB);
+                        rolEncontrado = true;
+                        break;
+                    }
+                }
+
+                if (!rolEncontrado) {
+                    // Si el rolDB no se encontró en empleadoDetails, marcar como borrado
+                    rolDB.setBorrado("SI");
+                    rolesActualizados.add(rolDB);
                 }
             }
 
-            // Reemplazar la lista de domicilios en la sucursal con la lista actualizada
-            empleadoDb.setDomicilios(new HashSet<>(domiciliosActualizados));
-
-            for (PrivilegiosEmpleados privilegio : empleadoDetails.getEmpleadoPrivilegios()) {
-                privilegio.setEmpleado(empleadoDb);
+            // Agregar roles nuevos que no estaban en empleadoDb
+            for (RolesEmpleados rolNuevo : empleadoDetails.getRolesEmpleado()) {
+                boolean esNuevo = true;
+                for (RolesEmpleados rolDB : empleadoDb.getRolesEmpleado()) {
+                    if (rolDB.getRol().getNombre().equals(rolNuevo.getRol().getNombre())) {
+                        esNuevo = false;
+                        break;
+                    }
+                }
+                if (esNuevo) {
+                    rolNuevo.setEmpleado(empleadoDb);
+                    rolesActualizados.add(rolNuevo);
+                }
             }
 
-            empleadoDb.setEmpleadoPrivilegios(empleadoDetails.getEmpleadoPrivilegios());
+            // Actualizar la colección de roles en empleadoDb
+            empleadoDb.setRolesEmpleado(rolesActualizados);
 
-            for (RolesEmpleados roles : empleadoDetails.getRolesEmpleado()) {
-                roles.setEmpleado(empleadoDb);
+            empleadoDb.getPrivilegios().clear();
+
+            // Actualizar los privilegios con los de empleadoDetails
+            for (PrivilegiosEmpleados privilegiosEmpleados : empleadoDetails.getPrivilegios()) {
+                privilegiosEmpleados.setEmpleado(empleadoDb);
+                empleadoDb.getPrivilegios().add(privilegiosEmpleados);
             }
-
-            empleadoDb.setRolesEmpleado(empleadoDetails.getRolesEmpleado());
 
             empleadoRepository.save(empleadoDb);
 
             return ResponseEntity.ok("El empleado se modificó correctamente");
+
         } else if (empleadoOptional.isPresent() && !empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
             empleadoOptional.get().setBorrado(empleadoDetails.getBorrado());
 
@@ -247,4 +275,5 @@ public class EmpleadoController {
         return ResponseEntity.ok("El empleado no se encontró");
 
     }
+
 }

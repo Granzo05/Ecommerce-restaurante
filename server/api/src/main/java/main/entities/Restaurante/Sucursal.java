@@ -116,7 +116,7 @@ public class Sucursal implements Serializable {
     private Set<Roles> roles = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL )
-    private Set<Privilegios> privilegios = new HashSet<>();
+    @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<PrivilegiosSucursales> privilegios = new HashSet<>();
 
 }

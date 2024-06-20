@@ -1,7 +1,7 @@
 package main.repositories;
 
-import main.entities.Ingredientes.Medida;
 import main.entities.Restaurante.Roles;
+import main.entities.Restaurante.RolesEmpleados;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,18 +14,8 @@ import java.util.Optional;
 
 
 @Repository
-public interface RolesRepository extends JpaRepository<Roles, Long> {
-    @Query("SELECT r FROM Roles r JOIN r.sucursales s WHERE s.id = :id AND r.nombre = :nombre")
-    Optional<Roles> findByDenominacionAndIdSucursal(@Param("nombre") String nombre, @Param("id") Long id);
+public interface RolesEmpleadoRepository extends JpaRepository<RolesEmpleados, Long> {
+    @Query("SELECT r FROM RolesEmpleados r WHERE r.rol.nombre = :nombre")
+    Optional<RolesEmpleados> findByDenominacion(@Param("nombre") String nombre);
 
-    @Query("SELECT r FROM Roles r JOIN r.sucursales s WHERE s.id = :idSucursal AND r.id = :idRol")
-    Optional<Roles> findByIdRolAndIdSucursal(@Param("idRol") Long idRol, @Param("idSucursal") Long idSucursal);
-
-    @Query("SELECT r FROM Roles r JOIN r.sucursales s WHERE s.id = :id")
-    List<Roles> findAllByIdSucursal(@Param("id") Long id);
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM RolesEmpleados d WHERE d.empleado.id = :id")
-    void deleteAllByEmpleadoId(@Param("id") Long id);
 }

@@ -72,20 +72,7 @@
 [x] Arreglar los permisos de pedidos a entrantes, en camino, etc y poder aceptar o rechazar dependiendo el empleado
 [x] Pantalla que el día de llegada de stock muestre todos los ingredientes a recibir, con un boton que marque como recibido o no recibido para sumar al stock actual
 [x] Si soy admin poder elegir dentro de una empresa en que sucursales quiero cargarlo
-[] Ajustar el horario estimado
-[] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
-[] Agregar imagenes al empleado
-[] Formatear y mejorar la legibilidad del codigo
 [] Si llegamos mostrar recetas de los menus
-[] Hacer la recuperacion de contraseña
-[] Filtro de lugares al cargar la sucursal para las localidadesDelivery para buscar por nombre de la localidad
-[] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
-[] Costo recomendado de articulos por sucursal
-[] Configurar rutas privadas
-[] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
-[] Cascade en articuloVenta.
-[] El editar menú no borra los ingredientes.
- 
 CERRAR MODALS AL CREAR COSAS[x]
 NO PODER CARGAR SUBCATEGORIAS POR EL BUG DE CATEGORIAS[x]
 CUANDO AÑADIS INGREDIENTES AL MENU, TE DEBERIA TRAER DIRECTAMENTE SU MEDIDA[x] 
@@ -95,6 +82,19 @@ ERROR AL CREAR Y MOSTRAR SUCURSALES[x]
 ESTA BUG LO DE LA FECHA DE LAS PROMOCIONES[x]
 ERROR AL MOSTRAR EMPLEADOS EN OPCIONES EMPLEADOS[x]
 EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
+
+[] Ajustar el horario estimado
+[] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
+[] Agregar imagenes al empleado
+[] Formatear y mejorar la legibilidad del codigo
+[] Hacer la recuperacion de contraseña
+[] Filtro de lugares al cargar la sucursal para las localidadesDelivery para buscar por nombre de la localidad
+[] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
+[] Costo recomendado de articulos por sucursal
+[] Configurar rutas privadas
+[] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
+[] Cascade en articuloVenta.
+[] El editar menú no borra los ingredientes.
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
 ERROR AL CARGAR EMPRESA[]

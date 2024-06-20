@@ -5,27 +5,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
-@Table(name = "privilegios_empleados", schema = "buen_sabor")
-public class PrivilegiosEmpleados {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+@Table(name = "privilegios_empleados")
+public class PrivilegiosEmpleados extends Privilegios {
 
-    @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_privilegio")
-    private Privilegios privilegio;
-
-    @JsonIgnoreProperties(value = {"empleadoPrivilegios"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = {"privilegiosEmpleados"}, allowSetters = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;
 
@@ -33,5 +26,4 @@ public class PrivilegiosEmpleados {
     @CollectionTable(name = "permisos_empleados", joinColumns = @JoinColumn(name = "id_privilegio"))
     @Column(name = "permiso")
     private List<String> permisos = new ArrayList<>();
-
 }

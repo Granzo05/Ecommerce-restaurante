@@ -14,13 +14,14 @@ import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPai
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { Pais } from '../../types/Domicilio/Pais';
-import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
+import { formatearFechaDDMMYYYY, formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 import { Privilegios } from '../../types/Restaurante/Privilegios';
-import { EmpleadoPrivilegio } from '../../types/Restaurante/PrivilegiosEmpleado';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
 import ModalFlotanteRecomendacionesRoles from '../../hooks/ModalFlotanteFiltroRoles';
 import { RolesEmpleado } from '../../types/Restaurante/RolesEmpleados';
 import { Roles } from '../../types/Restaurante/Roles';
+import { PrivilegiosEmpleados } from '../../types/Restaurante/PrivilegiosEmpleado';
+import { PrivilegiosSucursales } from '../../types/Restaurante/PrivilegiosSucursales';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -33,7 +34,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [cuil, setCuit] = useState(empleadoOriginal.cuil);
   const [contraseña, setContraseña] = useState('');
   const [telefono, setTelefono] = useState(empleadoOriginal.telefono);
-  const [fechaNacimiento, setFechaNacimiento] = useState<string>(empleadoOriginal.fechaNacimiento?.toString());
+  const [fechaNacimiento, setFechaNacimiento] = useState<Date>(new Date(empleadoOriginal.fechaNacimiento));
   const [sucursal, setSucursal] = useState(empleadoOriginal.sucursales[0]);
 
   const [indexDomicilio, setIndexDomicilio] = useState<number>(0);
@@ -48,7 +49,9 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [rolesElegidos, setRolesElegidos] = useState<string[]>([]);
 
   const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [nombre: string]: string[] }>({});
-  const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+  const [privilegios, setPrivilegios] = useState<PrivilegiosSucursales[]>([]);
+
+
 
   const handleChangeCalle = (index: number, calle: string) => {
     const nuevosDomicilios = [...domicilios];
@@ -123,7 +126,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   };
 
   const quitarCampoDomicilioModificable = (index: number) => {
-    if (indexDomicilioModificable > 0) {
+    if (domiciliosModificable.length > 0) {
       const nuevosDomicilios = [...domiciliosModificable];
       nuevosDomicilios.splice(index, 1);
       setDomiciliosModificable(nuevosDomicilios);
@@ -149,12 +152,11 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
 
   const añadirCampoRol = () => {
     // SI no hay ingredientes que genere en valor 0 de index
-    setRoles([...roles, { id: 0, rol: new Roles() }]);
+    setRoles([...roles, { id: 0, rol: new Roles(), borrado: 'no' }]);
     setIndexRoles(prevIndex => prevIndex + 1);
   };
 
   const quitarCampoRol = (index: number) => {
-    console.log(indexRoles)
     if (indexRoles > 0) {
       const nuevosRoles = [...roles];
       nuevosRoles.splice(index, 1);
@@ -188,11 +190,22 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     PrivilegiosService.getPrivilegios()
       .then(data => {
         setPrivilegios(data);
+        cargarPrivilegios();
       })
       .catch(err => {
         console.error(err);
       });
   }, []);
+
+  const cargarPrivilegios = () => {
+    empleadoOriginal.privilegios?.forEach(privilegios => {
+      setPrivilegiosElegidos(prevState => {
+        const { nombre } = privilegios;
+        const nuevosPrivilegios = [...(prevState[nombre] || []), ...privilegios.permisos];
+        return { ...prevState, [nombre]: nuevosPrivilegios };
+      });
+    });
+  };
 
   const handleModificarPrivilegios = (nombre: string, permiso: string) => {
     setPrivilegiosElegidos((prev) => {
@@ -304,7 +317,10 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       );
 
       if (!existe) {
-        domicilios.push(nuevoDomicilio);
+        empleadoActualizado.domicilios.push(nuevoDomicilio);
+      } else {
+        empleadoActualizado.domicilios = empleadoActualizado.domicilios.filter(s => s.id !== nuevoDomicilio.id);
+        empleadoActualizado.domicilios.push(nuevoDomicilio);
       }
     });
 
@@ -318,23 +334,39 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       }
     });
 
-    const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([nombre, permisos]) => {
-      const privilegio = new Privilegios(0, nombre, 'NO');
-      return new EmpleadoPrivilegio(0, privilegio, permisos);
+    const empleadoPrivilegios: PrivilegiosEmpleados[] = Object.entries(privilegiosElegidos).map(([nombre, permisos]) => {
+      return new PrivilegiosEmpleados(0, permisos, 0, nombre, 'NO');
     });
 
     empleadoActualizado.domicilios = domicilios;
 
-    empleadoActualizado.empleadoPrivilegios = empleadoPrivilegios
+    empleadoActualizado.privilegios = empleadoPrivilegios
 
     // Por las dudas, se busca si la sucursal existe, en ese caso se borra para evitar duplicaciones
     if (sucursal && !empleadoActualizado.sucursales.some(s => s.nombre === sucursal.nombre)) {
       empleadoActualizado.sucursales.push(sucursal);
     } else {
       empleadoActualizado.sucursales = empleadoActualizado.sucursales.filter(s => s.id !== sucursal.id);
-
       empleadoActualizado.sucursales.push(sucursal);
     }
+
+    domicilios.forEach(domicilio => {
+      if (domicilio && !empleadoActualizado.domicilios.some(s => s.calle === domicilio.calle && s.localidad === domicilio.localidad && s.codigoPostal === domicilio.codigoPostal)) {
+        empleadoActualizado.domicilios.push(domicilio);
+      } else {
+        empleadoActualizado.domicilios = empleadoActualizado.domicilios.filter(s => s.id !== domicilio.id);
+        empleadoActualizado.domicilios.push(domicilio);
+      }
+    });
+
+    roles.forEach(rol => {
+      if (rol && !empleadoActualizado.rolesEmpleado.some(s => s.rol === rol.rol)) {
+        empleadoActualizado.rolesEmpleado.push(rol);
+      } else {
+        empleadoActualizado.rolesEmpleado = empleadoActualizado.rolesEmpleado.filter(s => s.id !== rol.id);
+        empleadoActualizado.rolesEmpleado.push(rol);
+      }
+    });
 
     empleadoActualizado.borrado = 'NO';
 
@@ -352,7 +384,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
         return message;
       },
     });
-  
+
   }
 
   //SEPARAR EN PASOS
@@ -394,7 +426,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
               <span>Telefono del empleado</span>
             </div>
             <div className="inputBox">
-              <input type="date" required={true} value={formatearFechaYYYYMMDD(new Date(fechaNacimiento))} onChange={(e) => setFechaNacimiento(e.target.value)} />
+              <input type="date" required={true} value={formatearFechaYYYYMMDD(new Date(fechaNacimiento))} onChange={(e) => setFechaNacimiento(new Date(e.target.value))} />
               <span>Fecha de nacimiento</span>
             </div>
             <InputComponent disabled={false} placeHolder='Seleccionar sucursal...' onInputClick={() => setModalBusquedaSucursal(true)} selectedProduct={sucursal?.nombre ?? ''} />

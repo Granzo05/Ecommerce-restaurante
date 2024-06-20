@@ -1,4 +1,5 @@
 import { Privilegios } from '../types/Restaurante/Privilegios';
+import { PrivilegiosSucursales } from '../types/Restaurante/PrivilegiosSucursales';
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const PrivilegiosService = {
@@ -22,7 +23,7 @@ export const PrivilegiosService = {
         }
     },
 
-    getPrivilegios: async (): Promise<Privilegios[]> => {
+    getPrivilegios: async (): Promise<PrivilegiosSucursales[]> => {
         try {
             const response = await fetch(URL_API + 'privilegios/' + sucursalId(), {
                 method: 'GET',

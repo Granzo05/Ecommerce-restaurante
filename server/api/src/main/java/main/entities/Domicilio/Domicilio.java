@@ -9,6 +9,7 @@ import main.entities.Restaurante.Sucursal;
 import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -66,5 +67,4 @@ public class Domicilio implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_empleado")
     )
     private Empleado empleado;
-
-}
+    }

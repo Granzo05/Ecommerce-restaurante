@@ -1,6 +1,6 @@
 import { Privilegios } from "./Privilegios";
 
-export class PrivilegiosEmpleados extends Privilegios {
+export class PrivilegiosSucursales extends Privilegios {
     id: number = 0;
     permisos: string[] = [];
 

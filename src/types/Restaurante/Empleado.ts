@@ -1,5 +1,5 @@
 import { Domicilio } from "../Domicilio/Domicilio";
-import { EmpleadoPrivilegio } from "./PrivilegiosEmpleado";
+import { PrivilegiosEmpleados } from "./PrivilegiosEmpleado";
 import { FechaContratacionEmpleado } from "./FechaContratacionEmpleado";
 import { RolesEmpleado } from "./RolesEmpleados";
 import { Sucursal } from "./Sucursal";
@@ -14,7 +14,7 @@ export class Empleado {
     domicilios: Domicilio[] = [];
     fechaContratacion: FechaContratacionEmpleado[] = [];
     fechaNacimiento: Date = new Date();
-    empleadoPrivilegios: EmpleadoPrivilegio[] = [];
+    privilegios: PrivilegiosEmpleados[] = [];
     sucursales: Sucursal[] = [];
     rolesEmpleado: RolesEmpleado[] = [];
     borrado: string = '';
