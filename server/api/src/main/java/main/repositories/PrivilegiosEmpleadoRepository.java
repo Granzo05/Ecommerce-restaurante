@@ -2,9 +2,11 @@ package main.repositories;
 
 import main.entities.Restaurante.Privilegios;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +22,9 @@ public interface PrivilegiosRepository extends JpaRepository<Privilegios, Long> 
 
     @Query("SELECT p FROM Privilegios p JOIN p.sucursales s WHERE s.id = :id")
     List<Privilegios> findAllByIdSucursal(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM PrivilegiosEmpleados d WHERE d.empleado.id = :id")
+    void deleteAllByEmpleadoId(@Param("id") Long id);
 }
