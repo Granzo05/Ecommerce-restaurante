@@ -420,6 +420,15 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
               <div className="error-message">El empleado debe ser mayor a 18 años.</div>
               <hr />
             </div>
+            <div className="btns-pasos">
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h4>Paso 2 - Roles</h4>
             <label style={{ display: 'flex', fontWeight: 'bold' }}>Rol del empleado:</label>
 
             {roles && roles.map((roles, index) => (
@@ -432,15 +441,17 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             ))}
             <button onClick={añadirCampoRol}>Añadir rol</button>
             <br /><br />
+            <hr />
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
             </div>
           </>
         );
-      case 2:
+      case 3:
         return (
           <>
-            <h4>Paso 2 - Domicilio/os</h4>
+            <h4>Paso 3 - Domicilio/os</h4>
             {domicilios && domicilios.map((domicilio, index) => (
               <div key={index}>
                 <hr />
@@ -485,10 +496,10 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             </div>
           </>
         );
-      case 3:
+      case 4:
         return (
           <>
-            <h4 className="paso-titulo">Paso 3 - Privilegios comunes</h4>
+            <h4 className="paso-titulo">Paso 4 - Privilegios comunes</h4>
             <div className="privilegios-container">
               {filteredPrivilegios && filteredPrivilegios.map((privilegio, index) => (
                 <div key={index} className="privilegio">
@@ -535,7 +546,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             </div>
           </>
         );
-      case 4:
+      case 5:
         return (
           <>
             <h4 className="paso-titulo">Paso opcional - Privilegios sensibles</h4>

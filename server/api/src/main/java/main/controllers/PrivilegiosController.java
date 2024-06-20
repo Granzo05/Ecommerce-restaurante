@@ -34,27 +34,27 @@ public class PrivilegiosController {
     @CrossOrigin
     @Transactional
     @PostMapping("/prvilegio/create/{idSucursal}")
-    public ResponseEntity<String> crearRol(@RequestBody Privilegios sucursalesPrivilegiosDetails, @PathVariable("idSucursal") Long idSucursal) {
+    public ResponseEntity<String> crearPrivilegio(@RequestBody Privilegios privilegiosDetails, @PathVariable("idSucursal") Long idSucursal) {
         // Busco el privilegio en la base de datos
-        Optional<Privilegios> privilegiosDB = privilegiosRepository.findByNombreAndIdSucursal(sucursalesPrivilegiosDetails.getNombre(), idSucursal);
+        Optional<Privilegios> privilegiosDB = privilegiosRepository.findByNombreAndIdSucursal(privilegiosDetails.getNombre(), idSucursal);
 
         if (privilegiosDB.isEmpty()) {
-            if (!sucursalesPrivilegiosDetails.getSucursales().isEmpty()) {
-                Set<Sucursal> sucursales = new HashSet<>(sucursalesPrivilegiosDetails.getSucursales());
+            if (!privilegiosDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(privilegiosDetails.getSucursales());
                 for (Sucursal sucursalVacia : sucursales) {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    sucursal.getPrivilegios().add(sucursalesPrivilegiosDetails);
-                    sucursalesPrivilegiosDetails.getSucursales().add(sucursal);
+                    sucursal.getPrivilegios().add(privilegiosDetails);
+                    privilegiosDetails.getSucursales().add(sucursal);
                     sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
-                    if (!sucursal.getMedidas().contains(sucursalesPrivilegiosDetails)) {
-                        sucursal.getPrivilegios().add(sucursalesPrivilegiosDetails);
-                        sucursalesPrivilegiosDetails.getSucursales().add(sucursal);
+                    if (!sucursal.getMedidas().contains(privilegiosDetails)) {
+                        sucursal.getPrivilegios().add(privilegiosDetails);
+                        privilegiosDetails.getSucursales().add(sucursal);
                         sucursalRepository.save(sucursal);
                     }
                 } else {
@@ -62,8 +62,8 @@ public class PrivilegiosController {
                 }
             }
 
-            sucursalesPrivilegiosDetails.setBorrado("NO");
-            privilegiosRepository.save(sucursalesPrivilegiosDetails);
+            privilegiosDetails.setBorrado("NO");
+            privilegiosRepository.save(privilegiosDetails);
 
             return new ResponseEntity<>("El privilegio ha sido añadido correctamente", HttpStatus.CREATED);
         }
@@ -74,7 +74,7 @@ public class PrivilegiosController {
     @CrossOrigin
     @Transactional
     @PutMapping("/privilegio/update/{idSucursal}")
-    public ResponseEntity<String> actualizarRol(@RequestBody Privilegios privilegio, @PathVariable("idSucursal") Long idSucursal) {
+    public ResponseEntity<String> actualizarPrivilegio(@RequestBody Privilegios privilegio, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Privilegios> rolDB = privilegiosRepository.findByIdPrivilegioAndIdSucursal(privilegio.getId(), idSucursal);
 
         if (rolDB.isEmpty()) {

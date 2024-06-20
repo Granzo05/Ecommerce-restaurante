@@ -103,16 +103,12 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
 
   const añadirCampoDomicilio = () => {
     // SI no hay ingredientes que genere en valor 0 de index
-    if (domicilios.length === 0) {
-      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
-    } else {
-      setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
-      setIndexDomicilio(prevIndex => prevIndex + 1);
-    }
+    setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
+    setIndexDomicilio(prevIndex => prevIndex + 1);
   };
 
   const quitarCampoDomicilio = (index: number) => {
-    if (domicilios.length > 0) {
+    if (indexDomicilio > 0) {
       const nuevosDomicilios = [...domicilios];
       nuevosDomicilios.splice(index, 1);
       setDomicilios(nuevosDomicilios);
@@ -127,7 +123,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   };
 
   const quitarCampoDomicilioModificable = (index: number) => {
-    if (domiciliosModificable.length > 0) {
+    if (indexDomicilioModificable > 0) {
       const nuevosDomicilios = [...domiciliosModificable];
       nuevosDomicilios.splice(index, 1);
       setDomiciliosModificable(nuevosDomicilios);
@@ -153,16 +149,13 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
 
   const añadirCampoRol = () => {
     // SI no hay ingredientes que genere en valor 0 de index
-    if (roles.length === 0) {
-      setRoles([...roles, { id: 0, rol: new Roles() }]);
-    } else {
-      setRoles([...roles, { id: 0, rol: new Roles() }]);
-      setIndexRoles(prevIndex => prevIndex + 1);
-    }
+    setRoles([...roles, { id: 0, rol: new Roles() }]);
+    setIndexRoles(prevIndex => prevIndex + 1);
   };
 
   const quitarCampoRol = (index: number) => {
-    if (roles.length > 0) {
+    console.log(indexRoles)
+    if (indexRoles > 0) {
       const nuevosRoles = [...roles];
       nuevosRoles.splice(index, 1);
       setRoles(nuevosRoles);
@@ -334,12 +327,19 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
 
     empleadoActualizado.empleadoPrivilegios = empleadoPrivilegios
 
-    if (sucursal) empleadoActualizado.sucursales.push(sucursal);
+    // Por las dudas, se busca si la sucursal existe, en ese caso se borra para evitar duplicaciones
+    if (sucursal && !empleadoActualizado.sucursales.some(s => s.nombre === sucursal.nombre)) {
+      empleadoActualizado.sucursales.push(sucursal);
+    } else {
+      empleadoActualizado.sucursales = empleadoActualizado.sucursales.filter(s => s.id !== sucursal.id);
+
+      empleadoActualizado.sucursales.push(sucursal);
+    }
 
     empleadoActualizado.borrado = 'NO';
 
     empleadoActualizado.rolesEmpleado = roles;
-    /*
+
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
       loading: 'Actualizando empleado...',
       success: (message) => {
@@ -352,7 +352,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
         return message;
       },
     });
-    */
+  
   }
 
   //SEPARAR EN PASOS
@@ -382,7 +382,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
               <span>Email del empleado</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={cuil} onChange={(e) => { setCuit(e.target.value) }} />
+              <input type="number" required={true} value={cuil.replace(/-/g, '')} onChange={(e) => { setCuit(e.target.value) }} />
               <span>Cuil del empleado</span>
             </div>
             <div className="inputBox">
@@ -413,15 +413,16 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
                 <hr />
                 <p className='cierre-ingrediente' onClick={() => quitarCampoRolModificable(index)}>X</p>
 
-                <h2>Rol {index + 1}</h2>
+                <h2>Rol actual {index + 1}</h2>
                 <div className="inputBox">
                   <input type="text" disabled={true} required={true} value={roles.rol.nombre} />
                 </div>
               </div>
             ))}
-            {roles && indexRoles > 0 && roles.map((rol, index) => (
+            {roles && roles.map((rol, index) => (
               <>
                 <div key={'domicilio' + index}>
+                  <h2>Rol nuevo {index + 1}</h2>
                   <p onClick={() => quitarCampoRol(index)}>X</p>
                   <InputComponent disabled={false} placeHolder='Seleccionar rol...' onInputClick={() => setModalBusquedaRol(true)} selectedProduct={rol.rol.nombre ?? ''} />
                   {modalBusquedaRol && <ModalFlotanteRecomendacionesRoles datosOmitidos={rolesElegidos} onCloseModal={handleModalClose} onSelectRol={(rol) => { handleChangeRol(index, rol); handleModalClose(); }} />}
@@ -445,9 +446,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
               <div key={'domicilioMod' + index}>
                 <hr />
                 <p className='cierre-ingrediente' onClick={() => quitarCampoDomicilioModificable(index)}>X</p>
-
-                <h2>Domicilio {index + 1}</h2>
-
+                <h2>Domicilio actual {index + 1}</h2>
                 <div className="inputBox">
                   <input type="text" required={true} value={domicilio.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
                   <span>Nombre de calle</span>
@@ -465,8 +464,10 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
                 </div>
               </div>
             ))}
-            {domicilios && indexDomicilio > 0 && domicilios.map((domicilio, index) => (
+            {domicilios && domicilios.map((domicilio, index) => (
               <div key={'domicilio' + index}>
+                <h2>Domicilio nuevo {index + 1}</h2>
+                <hr /><p onClick={() => quitarCampoDomicilio(index)}>X</p>
                 <div className="inputBox">
                   <input type="text" required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
                   <span>Nombre de calle</span>
@@ -492,7 +493,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
                 <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
                 {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
                 <hr />
-                <hr /><p onClick={() => quitarCampoDomicilio(index)}>X</p>
               </div>
             ))}
             <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>

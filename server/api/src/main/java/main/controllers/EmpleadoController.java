@@ -152,7 +152,7 @@ public class EmpleadoController {
     @CrossOrigin
     @PutMapping("/empleado/update/{idSucursal}")
     public ResponseEntity<String> updateEmpleado(@RequestBody Empleado empleadoDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
-        Optional<Empleado> empleadoOptional = empleadoRepository.findByCuilAndIdSucursal(empleadoDetails.getCuil(), idSucursal);
+        Optional<Empleado> empleadoOptional = empleadoRepository.findByCuilAndIdSucursal(Encrypt.encriptarString(empleadoDetails.getCuil()), idSucursal);
 
         if (empleadoOptional.isPresent() && empleadoOptional.get().getBorrado().equals(empleadoDetails.getBorrado())) {
             // Comparo cada uno de los datos a ver si ha cambiado, ya que clienteDetails viene de un DTO y no contiene los mismos datos del empleadoDB entonces hay valores nulos
@@ -220,6 +220,18 @@ public class EmpleadoController {
 
             // Reemplazar la lista de domicilios en la sucursal con la lista actualizada
             empleadoDb.setDomicilios(new HashSet<>(domiciliosActualizados));
+
+            for (PrivilegiosEmpleados privilegio : empleadoDetails.getEmpleadoPrivilegios()) {
+                privilegio.setEmpleado(empleadoDb);
+            }
+
+            empleadoDb.setEmpleadoPrivilegios(empleadoDetails.getEmpleadoPrivilegios());
+
+            for (RolesEmpleados roles : empleadoDetails.getRolesEmpleado()) {
+                roles.setEmpleado(empleadoDb);
+            }
+
+            empleadoDb.setRolesEmpleado(empleadoDetails.getRolesEmpleado());
 
             empleadoRepository.save(empleadoDb);
 

@@ -40,7 +40,7 @@ public class Empleado {
     private Set<Domicilio> domicilios = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<FechaContratacionEmpleado> fechaContratacion = new HashSet<>();
 
     @Column(name = "fecha_nacimiento")
@@ -48,15 +48,12 @@ public class Empleado {
 
     @Column(name = "borrado")
     private String borrado = "NO";
-
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
     private Set<PrivilegiosEmpleados> empleadoPrivilegios = new HashSet<>();
-
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
     private Set<RolesEmpleados> rolesEmpleado = new HashSet<>();
-
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
