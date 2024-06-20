@@ -42,7 +42,7 @@ public class ArticuloVenta implements Serializable {
     private double precioVenta;
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_medida")
     private Medida medida;
 

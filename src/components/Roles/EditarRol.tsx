@@ -19,8 +19,8 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
     const rol: Roles = rolOriginal;
     rol.borrado = 'NO';
 
-    if (!nombre) {
-      toast.info("Por favor, asigne el nombre");
+    if (!nombre || !nombre.match(/^[a-zA-Z\s]+$/)) {
+      toast.info("Por favor, asigne un nombre válido");
       return;
     }
 
@@ -42,7 +42,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return message;
+        return "Rol actualizado correctamente!";
       },
       error: (message) => {
         return message;
@@ -105,19 +105,19 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
             <div >
               <Toaster />
               <div className="modal-info">
-                <h2>Editar medida</h2>
+                
                 <Toaster />
                 <div className="inputBox">
-                  <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-                  <span>Nombre del medida</span>
+                  <input type="text" required={true} pattern="[a-zA-Z\s]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+                  <span>Nombre del rol</span>
+                  <div className="error-message">El nombre debe contener letras y espacios.</div>
                 </div>
               </div>
               <div className="btns-pasos">
-                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
                 {empresa && empresa?.id > 0 ? (
                   <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
                 ) : (
-                  <button onClick={editarMedida}>Editar medida</button>
+                  <button onClick={editarMedida}>Editar rol</button>
                 )}
               </div>
             </div>
@@ -155,7 +155,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
 
   return (
     <div className="modal-info">
-      <h2>&mdash; Editar medida &mdash;</h2>
+      <h2>&mdash; Editar rol &mdash;</h2>
       <Toaster />
       {renderStep()}
     </div >

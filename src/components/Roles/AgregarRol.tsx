@@ -17,8 +17,8 @@ const AgregarRoles: React.FC<AgregarRolesProps> = ({ onCloseModal }) => {
   async function agregarRoles() {
     const rol: Roles = new Roles();
 
-    if (!nombre) {
-      toast.info("Por favor, asigne el nombre");
+    if (!nombre || !nombre.match(/^[a-zA-Z\s]+$/)) {
+      toast.info("Por favor, asigne un rol válido");
       return;
     }
 
@@ -104,11 +104,11 @@ const AgregarRoles: React.FC<AgregarRolesProps> = ({ onCloseModal }) => {
             <div >
               <Toaster />
               <div className="inputBox">
-                <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+                <input type="text" pattern="[a-zA-Z\s]+" required={true} onChange={(e) => { setNombre(e.target.value) }} />
                 <span>Nombre del rol</span>
+                <div className="error-message">El nombre debe contener letras y espacios.</div>
               </div>
               <div className="btns-pasos">
-                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
                 {empresa && empresa?.id > 0 ? (
                   <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
                 ) : (
