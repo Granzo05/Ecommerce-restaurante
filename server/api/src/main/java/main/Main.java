@@ -672,12 +672,6 @@ public class Main {
 
                     empleado.getSucursales().add(sucursal);
 
-                    Roles rolCocinero = new Roles();
-                    rolCocinero.setNombre("COCINERO");
-                    rolCocinero.setBorrado("NO");
-                    rolCocinero.getSucursales().add(sucursal);
-                    sucursal.getRoles().add(rolCocinero);
-
                     Roles rolCajero = new Roles();
                     rolCajero.setBorrado("NO");
                     rolCajero.setNombre("CAJERO");
@@ -769,7 +763,6 @@ public class Main {
 
                     rolesEmpleados = new RolesEmpleados();
                     rolesEmpleados.setEmpleado(empleado);
-                    rolesEmpleados.setRol(rolCocinero);
 
                     empleado.getRolesEmpleado().add(rolesEmpleados);
 

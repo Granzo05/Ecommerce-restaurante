@@ -76,6 +76,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
       stock.cantidadMaxima = cantidadMaxima;
       stock.borrado = 'NO';
       stock.precioCompra = costo;
+      stock.id = stockOriginal.id;
 
       toast.promise(StockIngredientesService.updateStock(stock), {
         loading: 'Creando stock del ingrediente...',
@@ -101,7 +102,6 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
       stock.id = stockOriginal.id;
       stock.borrado = 'NO';
 
-      console.log(stock);
       toast.promise(StockArticuloVentaService.updateStock(stock), {
         loading: 'Editando stock del artículo...',
         success: (message) => {

@@ -167,7 +167,7 @@ public class StockIngredientesController {
     @PutMapping("sucursal/{idSucursal}/stockIngrediente/update")
     public ResponseEntity<String> actualizarStock(@RequestBody StockIngredientes stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
-        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(stockIngredientes.getIngrediente().getId(), id);
+        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
         if (stockEncontrado.isPresent()) {
             StockIngredientes stock = stockEncontrado.get();
 
@@ -181,7 +181,7 @@ public class StockIngredientesController {
             stockIngredientesRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");
         } else {
-            return ResponseEntity.ofNullable("El stock no existe o está desactivado");
+            return ResponseEntity.badRequest().body("El stock no existe o está desactivado");
         }
     }
 

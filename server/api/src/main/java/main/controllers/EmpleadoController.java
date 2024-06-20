@@ -220,9 +220,15 @@ public class EmpleadoController {
                 for (RolesEmpleados rolNuevo : empleadoDetails.getRolesEmpleado()) {
                     if (rolDB.getRol().getNombre().equals(rolNuevo.getRol().getNombre())) {
                         // Actualizar atributos del rol existente
-                        rolDB.setEmpleado(empleadoDb);
-                        rolesActualizados.add(rolDB);
-                        rolEncontrado = true;
+                        if(rolDB.getBorrado().equals("SI")) {
+                            rolDB.setBorrado("NO");
+                            rolesActualizados.add(rolDB);
+                        } else {
+                            rolDB.setEmpleado(empleadoDb);
+                            rolesActualizados.add(rolDB);
+                            rolEncontrado = true;
+                        }
+
                         break;
                     }
                 }
@@ -245,6 +251,7 @@ public class EmpleadoController {
                 }
                 if (esNuevo) {
                     rolNuevo.setEmpleado(empleadoDb);
+                    rolNuevo.setBorrado("NO");
                     rolesActualizados.add(rolNuevo);
                 }
             }

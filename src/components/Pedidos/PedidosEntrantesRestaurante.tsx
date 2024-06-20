@@ -51,7 +51,7 @@ const PedidosEntrantes = () => {
 
         // Calcular el tiempo de preparación en minutos
         const tiempoMayor: number = await calcularTiempoPreparacion(pedido);
-
+        console.log(await tiempoMayor)
         // Sumar los minutos del tiempo mayor al objeto Date
         horaActual.setMinutes(horaActual.getMinutes() + tiempoMayor);
 
@@ -66,9 +66,8 @@ const PedidosEntrantes = () => {
         localStorage.setItem('horaFinalizacionPedido', horaFinalizacionFormateada);
 
         // Asignar la hora de finalización al pedido
-        pedido.horaFinalizacion = horaFinalizacionFormateada;
-
-        // Usar toast para notificar al usuario sobre el estado de la actualización
+        pedido.horaFinalizacion = horaFinalizacionFormateada;  
+ 
         toast.promise(
             PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ACEPTADOS),
             {
@@ -82,19 +81,29 @@ const PedidosEntrantes = () => {
                 },
             }
         );
+      
     }
 
     async function calcularTiempoPreparacion(pedido: Pedido) {
         let tiempoTotal = 0;
 
-        // Sumatoria del tiempo estimado de los artículos manufacturados solicitados en el pedido actual
+        /*
+        ∑ Sumatoria del tiempo estimado de los artículos manufacturados solicitados por el cliente en el pedido actual
+        +
+        ∑ Sumatoria del tiempo estimado de los artículos manufacturados que se encuentran en la cocina / cantidad cocineros
+        +
+        10 Minutos de entrega por delivery (solo si corresponde).
+        */
         pedido.detallesPedido.forEach(detalle => {
             if (detalle.articuloMenu) {
                 tiempoTotal += detalle.articuloMenu.tiempoCoccion;
             }
         });
-
-        tiempoTotal = tiempoTotal / cantidadCocineros;
+        console.log(cantidadCocineros)
+        // Verificar que cantidadCocineros no sea 0 para evitar división por 0
+        if (cantidadCocineros > 0) {
+            tiempoTotal += tiempoTotal / cantidadCocineros;
+        }
 
         // 10 Minutos de entrega por delivery (solo si corresponde)
         if (pedido.tipoEnvio === 'DELIVERY') {
@@ -103,6 +112,7 @@ const PedidosEntrantes = () => {
 
         return tiempoTotal;
     }
+
 
 
     async function handleRechazarPedido(pedido: Pedido) {

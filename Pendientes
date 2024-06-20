@@ -83,7 +83,7 @@ ESTA BUG LO DE LA FECHA DE LAS PROMOCIONES[x]
 ERROR AL MOSTRAR EMPLEADOS EN OPCIONES EMPLEADOS[x]
 EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
 
-[] Ajustar el horario estimado
+[x] Ajustar el horario estimado
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Agregar imagenes al empleado
 [] Formatear y mejorar la legibilidad del codigo

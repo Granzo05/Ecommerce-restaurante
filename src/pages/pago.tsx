@@ -23,6 +23,7 @@ import { CarritoService } from "../services/CarritoService";
 import { SucursalService } from "../services/SucursalService";
 import { SucursalDTO } from "../types/Restaurante/SucursalDTO";
 import ModalCrud from "../components/ModalCrud";
+import { getBaseUrl } from "../utils/global_variables/const";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -207,6 +208,7 @@ const Pago = () => {
                         loading: 'Creando pedido...',
                         success: (message) => {
                             CarritoService.limpiarCarrito();
+                            window.location.href = getBaseUrl() + '/cliente'
                             return message;
                         },
                         error: (message) => {

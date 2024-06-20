@@ -14,7 +14,6 @@ import { Provincia } from '../../types/Domicilio/Provincia';
 import { Departamento } from '../../types/Domicilio/Departamento';
 import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
 import { Pais } from '../../types/Domicilio/Pais';
-import { Privilegios } from '../../types/Restaurante/Privilegios';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
 import ModalFlotanteRecomendacionesRoles from '../../hooks/ModalFlotanteFiltroRoles';
 import { Roles } from '../../types/Restaurante/Roles';

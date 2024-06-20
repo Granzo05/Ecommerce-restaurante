@@ -41,6 +41,8 @@ public class StockArticulosController {
     public Set<StockArticuloVenta> getStock(@PathVariable("idSucursal") Long id) {
         List<StockArticuloVenta> stocks = stockArticuloRepository.findAllByIdSucursal(id);
 
+        Set<StockArticuloVenta> stocksCargados = new HashSet<>();
+
         for (StockArticuloVenta stock : stocks) {
             // Busco el stock entrante más cercano en cuanto a fechaLlegada
             PageRequest pageable = PageRequest.of(0, 1);
@@ -49,9 +51,11 @@ public class StockArticulosController {
             if (!stockEntrante.isEmpty()) {
                 stock.setFechaLlegadaProxima(stockEntrante.get().toList().get(0).getFechaLlegada());
             }
+
+            if (stock.getCantidadActual() > 0 && stock.getCantidadMinima() > 0 && stock.getCantidadMinima() > 0) stocksCargados.add(stock);
         }
 
-        return new HashSet<>(stocks);
+        return stocksCargados;
     }
 
     @CrossOrigin
