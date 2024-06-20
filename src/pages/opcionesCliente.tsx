@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import PedidosEntrantes from '../components/Pedidos/PedidosEntrantesRestaurante';
-import PedidosEntregados from '../components/Pedidos/PedidosEntregadosRestaurante';
-import Preferencias from '../components/Preferencias';
+import { useEffect, useState } from 'react';
 import '../styles/opcionesCliente.css';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -15,9 +12,9 @@ import PedidosPendientes from '../components/Cliente/PedidosPendientes';
 import PedidosRealizados from '../components/Cliente/PedidosRealizados';
 import Cuenta from '../components/Cliente/Cuenta';
 import Perfil from '../components/Cliente/Perfil';
-import Header from '../components/Header';
 import { Cliente } from '../types/Cliente/Cliente';
 import { useLocation } from 'react-router-dom';
+import { getBaseUrl } from '../utils/global_variables/const';
 
 const OpcionesCliente = () => {
     const location = useLocation();
@@ -25,14 +22,9 @@ const OpcionesCliente = () => {
     const [opcionSeleccionada, setOpcionSeleccionada] = useState<number>(state?.opcionSeleccionada || 0);
     const [isVisible, setVisible] = useState<boolean>(true);
     const [pedidosVisible, setPedidosVisible] = useState(false);
-    const [settingsVisible, setSettingsVisible] = useState(false);
     const [pedidosIcon, setPedidosIcon] = useState(<KeyboardArrowRightIcon />);
-    const [settingsIcon, setSettingsIcon] = useState(<KeyboardArrowRightIcon />);
-    const [sidebarIcon, setSidebarIcon] = useState(<ArrowForwardIosIcon />);
-    const [topIcon, setTopIcon] = useState(<KeyboardArrowDownIcon />);
     const [menuVisible, setMenuVisible] = useState(true);
-    const [opcionesBg, setOpcionesBg] = useState('');
-    const [settingsBg, setSettingsBg] = useState('');
+    const [opcionesBg] = useState('');
     const [sidebarBg, setSidebarBg] = useState('');
 
     const [cliente, setCliente] = useState<Cliente | null>(null);
@@ -58,12 +50,6 @@ const OpcionesCliente = () => {
 
     };
 
-    const toggleMenuVisibility = () => {
-        setMenuVisible(!menuVisible);
-        setSidebarIcon(menuVisible ? <ArrowBackIosNewIcon /> : <ArrowForwardIosIcon />);
-        setTopIcon(menuVisible ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />);
-    };
-
     const handleOpcionClick = (opcion: number) => {
         setOpcionSeleccionada(opcion);
         setSidebarBg('white');
@@ -83,31 +69,16 @@ const OpcionesCliente = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setVisible(await EmpleadoService.checkUser());
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    useEffect(() => {
         document.title = 'Administración y opciones';
-    }, []);
-
-    
+    }, []);    
 
     return (
         <>
         <div className={`sidebar ${sidebarBg}`}>
             <div className={`opciones-menu`}>
                 <div className="title-header">
-                <a href="/" className='volver-menu'>⭠ Volver</a>
-                    <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" title='VOLVER AL MENU PRINCIPAL' className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/'}/>
-                    
+                <p onClick={() => window.location.href = getBaseUrl()} className='volver-menu'>⭠ Volver</p>
+                    <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" title='VOLVER AL MENU PRINCIPAL' className="logo-opciones" onClick={() => window.location.href = getBaseUrl()}/>
                 </div>
                 <hr />
                 <label id="label" className={`opciones-link ${opcionesBg}`} onClick={() => setOpcionSeleccionada(0)}>

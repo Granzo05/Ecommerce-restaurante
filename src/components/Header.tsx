@@ -82,6 +82,18 @@ const Header = () => {
         }
     }
 
+    const handleEditarPerfilClick = () => {
+        navigate('/cliente', { state: { opcionSeleccionada: 4 } });
+    };
+
+    const handleEditarDomiciliosClick = () => {
+        navigate('/cliente', { state: { opcionSeleccionada: 3 } });
+    };
+
+    const handlePedidosClick = () => {
+        navigate('/cliente', { state: { opcionSeleccionada: 2 } });
+    };
+
     return (
         <header id="inicio" className="header-all">
             <Toaster />
@@ -221,9 +233,9 @@ const Header = () => {
                                         <button className="close-cart" onClick={handleCloseCart}>X<strong>(cerrar)</strong></button>
                                         <p className='nombre-email-usuario'>- {cliente.nombre ? cliente.nombre : cliente.email} -</p>
                                         <ul className="preferences-list">
-                                            <li><button>Editar perfil</button></li>
-                                            <li><button>Editar domicilios</button></li>
-                                            <li><button>Pedidos</button></li>
+                                            <li><button onClick={handleEditarPerfilClick}>Editar perfil</button></li>
+                                            <li><button onClick={handleEditarDomiciliosClick}>Editar domicilios</button></li>
+                                            <li><button onClick={handlePedidosClick}>Pedidos</button></li>
                                         </ul>
                                         <div className="button-logout-div">
                                             <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>

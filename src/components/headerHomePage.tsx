@@ -35,18 +35,14 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
 
         if (clienteString !== null) {
             let clienteMem: Cliente = clienteString ? JSON.parse(clienteString) : new Cliente();
-            console.log(clienteMem)
             setCliente(clienteMem);
         } else if (empleadoString !== null) {
             let clienteMem: Empleado = empleadoString ? JSON.parse(empleadoString) : new Empleado();
-            console.log(clienteMem)
             setCliente(clienteMem);
         } else if (sucursalString !== null) {
             let clienteMem: Sucursal = sucursalString ? JSON.parse(sucursalString) : new Sucursal();
-            console.log(clienteMem)
             setCliente(clienteMem);
         }
-
     }
 
     const handleLoginClick = () => {

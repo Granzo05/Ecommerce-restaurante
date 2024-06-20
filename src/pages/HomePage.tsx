@@ -10,6 +10,7 @@ import Footer from '../components/Footer';
 import ModalCrud from '../components/ModalCrud';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { formatearFechaDDMMYYYY } from '../utils/global_variables/functions';
+import { getBaseUrl } from '../utils/global_variables/const';
 
 export default function MainMenu() {
     const [scrolled, setScrolled] = useState(false);
@@ -48,7 +49,7 @@ export default function MainMenu() {
 
     function handleMenu(tipoComida: string) {
         // Que asigne el id de la sucursal por si necesitamos traer otros datos
-        window.history.pushState({ path: `/${id}/menu/${tipoComida}` }, '', `/${id}/menu/${tipoComida}`);
+        window.location.href = getBaseUrl() + `/${tipoComida}`;
     }
 
     const handleModalClose = () => {

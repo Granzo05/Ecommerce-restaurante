@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react"
 import { Route, Routes } from "react-router-dom"
 import MainMenu from "../pages/HomePage";
-import NotFound from "../pages/notFound";
 import SpinnerSuspense from "../hooks/SpinnerSuspense";
 const Opciones = lazy(() => import('../pages/opciones'));
+const NotFound = lazy(() => import('../pages/notFound'));
 const OpcionesCliente = lazy(() => import('../pages/opcionesCliente'));
 const LoginNegocio = lazy(() => import('../pages/loginRestaurante'));
 const LoginCliente = lazy(() => import('../pages/loginCliente'));
@@ -35,7 +35,7 @@ const AppRoutes: React.FC = () => {
 
         <Route path="/login-negocio" element={<LoginNegocio />} />
 
-        <Route path="/:id/producto/:categoria" element={<Menu />} />
+        <Route path="/:id/:categoria" element={<Menu />} />
 
         <Route path="/:id/busqueda/:nombre" element={<ProductosBuscados />} />
 

@@ -60,10 +60,10 @@ const PedidosEnCamino = () => {
     }, []);
 
     async function checkPrivilegies() {
-        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+        if (empleado && empleado.privilegios?.length > 0) {
             try {
-                empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                empleado?.privilegios?.forEach(privilegio => {
+                    if (privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('UPDATE')) {
                             setUpdateVisible(true);
                         }

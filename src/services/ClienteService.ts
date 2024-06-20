@@ -4,7 +4,7 @@ import { limpiarCredenciales, URL_API } from '../utils/global_variables/const';
 
 export const ClienteService = {
     createUser: async (cliente: Cliente) => {
-
+        limpiarCredenciales();
         fetch(URL_API + 'cliente/create', {
             method: 'POST',
             headers: {
@@ -19,7 +19,6 @@ export const ClienteService = {
                 return await response.json()
             })
             .then(data => {
-                console.log(data)
                 let cliente = {
                     id: data.id,
                     nombre: data.nombre,
@@ -27,8 +26,6 @@ export const ClienteService = {
                     telefono: data.telefono,
                     idSucursalRecomendada: data.idSucursalRecomendada
                 }
-
-                limpiarCredenciales();
 
                 localStorage.setItem('usuario', JSON.stringify(cliente));
 
@@ -62,20 +59,23 @@ export const ClienteService = {
 
     //CONTRASEÑA OLVIDADA--------------------------------------------------//
 
-    getUser: async (email: string, contraseña: string) => {
-        fetch(URL_API + 'cliente/login/' + email + '/' + contraseña, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+    getUser: async (email: string, contraseña: string): Promise<string> => {
+        limpiarCredenciales();
+        try {
+            const response = await fetch(URL_API + 'cliente/login/' + email + '/' + contraseña, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-                return await response.json()
             })
-            .then(data => {
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+            }
+
+            const data = await response.json();
+
+            if (data.id > 0) {
                 let cliente = {
                     id: data.id,
                     nombre: data.nombre,
@@ -83,8 +83,6 @@ export const ClienteService = {
                     telefono: data.telefono,
                     idSucursalRecomendada: data.idSucursalRecomendada
                 }
-
-                limpiarCredenciales();
 
                 localStorage.setItem('usuario', JSON.stringify(cliente));
 
@@ -94,10 +92,14 @@ export const ClienteService = {
                 } else {
                     window.location.href = `/sucursales`
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-            })
+            }
+
+            return 'Los datos ingresados no corresponden a una cuenta activa';
+
+
+        } catch (error) {
+            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+        }
     },
 
     getDomicilios: async (id: number): Promise<Domicilio[]> => {

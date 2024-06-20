@@ -1,6 +1,7 @@
 import '../styles/notFound.css'
 import '../styles/header.css';
 import Header from '../components/Header'
+import { getBaseUrl } from '../utils/global_variables/const';
 
 
 function NotFound() {
@@ -17,7 +18,7 @@ function NotFound() {
           <div>
             <p className="display-4">Creo que te has perdido</p>
             <p>No se ha encontrado la página buscada</p>
-            <a href="/"
+            <a onClick={() => window.location.href = getBaseUrl()}
               className="text-white text-decoration-none px-4 py-3 
                           bg-success d-inline-block mt-2 rounded">
               Volver a la página principal

@@ -10,9 +10,10 @@ import AgregarPrivilegio from "./AgregarPrivilegio";
 import ActivarPrivilegio from "./ActivarPrivilegio";
 import EditarPrivilegio from "./EditarPrivilegio";
 import EliminarPrivilegio from "./EliminarPrivilegio";
+import { PrivilegiosSucursales } from "../../types/Restaurante/PrivilegiosSucursales";
 
 const PrivilegiosEmpleados = () => {
-    const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+    const [privilegios, setPrivilegios] = useState<PrivilegiosSucursales[]>([]);
     const [mostrarPrivilegios, setMostrarPrivilegios] = useState(true);
 
     const [showAgregarModalPrivilegio, setShowAgregarModalPrivilegio] = useState(false);
@@ -20,7 +21,7 @@ const PrivilegiosEmpleados = () => {
     const [showEliminarPrivilegioModal, setShowEliminarPrivilegioModal] = useState(false);
     const [showActivarPrivilegioModal, setShowActivarPrivilegioModal] = useState(false);
 
-    const [selectedPrivilegio, setSelectedPrivilegio] = useState<Privilegios>();
+    const [selectedPrivilegio, setSelectedPrivilegio] = useState<PrivilegiosSucursales>();
 
     useEffect(() => {
         fetchPrivilegios();
@@ -70,7 +71,7 @@ const PrivilegiosEmpleados = () => {
     const indexPrimerProducto = indexUltimoProducto - productosMostrables;
 
     // Obtener los elementos de la página actual
-    const [privilegiosFiltradas, setPrivilegiosFiltradas] = useState<Privilegios[]>([]);
+    const [privilegiosFiltradas, setPrivilegiosFiltradas] = useState<PrivilegiosSucursales[]>([]);
 
     useEffect(() => {
         setPrivilegiosFiltradas(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
@@ -94,20 +95,20 @@ const PrivilegiosEmpleados = () => {
     const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
 
     async function checkPrivilegies() {
-        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+        if (empleado && empleado.privilegios?.length > 0) {
             try {
-                empleado?.empleadoPrivilegios?.forEach(empleadoPrivilegio => {
-                    if (empleadoPrivilegio.privilegio.nombre === 'Empleados' && empleadoPrivilegio.privilegio.permisos.includes('READ')) {
-                        if (empleadoPrivilegio.privilegio.permisos.includes('CREATE')) {
+                empleado?.privilegios?.forEach(privilegio => {
+                    if (privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
+                        if (privilegio.permisos.includes('CREATE')) {
                             setCreateVisible(true);
                         }
-                        if (empleadoPrivilegio.privilegio.permisos.includes('UPDATE')) {
+                        if (privilegio.permisos.includes('UPDATE')) {
                             setUpdateVisible(true);
                         }
-                        if (empleadoPrivilegio.privilegio.permisos.includes('DELETE')) {
+                        if (privilegio.permisos.includes('DELETE')) {
                             setDeleteVisible(true);
                         }
-                        if (empleadoPrivilegio.privilegio.permisos.includes('ACTIVATE')) {
+                        if (privilegio.permisos.includes('ACTIVATE')) {
                             setActivateVisible(true);
                         }
                     }
@@ -130,7 +131,7 @@ const PrivilegiosEmpleados = () => {
         setShowAgregarModalPrivilegio(true);
     };
 
-    const handleEditarPrivilegio = (privilegio: Privilegios) => {
+    const handleEditarPrivilegio = (privilegio: PrivilegiosSucursales) => {
         setSelectedPrivilegio(privilegio);
         setShowAgregarModalPrivilegio(false);
         setShowEliminarPrivilegioModal(false);
@@ -138,7 +139,7 @@ const PrivilegiosEmpleados = () => {
         setShowEditarPrivilegioModal(true);
     };
 
-    const handleEliminarPrivilegio = (privilegio: Privilegios) => {
+    const handleEliminarPrivilegio = (privilegio: PrivilegiosSucursales) => {
         setSelectedPrivilegio(privilegio);
         setShowAgregarModalPrivilegio(false);
         setShowEditarPrivilegioModal(false);
@@ -147,7 +148,7 @@ const PrivilegiosEmpleados = () => {
         setShowEliminarPrivilegioModal(true);
     };
 
-    const handleActivarPrivilegio = (privilegio: Privilegios) => {
+    const handleActivarPrivilegio = (privilegio: PrivilegiosSucursales) => {
         setSelectedPrivilegio(privilegio);
         setShowAgregarModalPrivilegio(false);
         setShowEditarPrivilegioModal(false);

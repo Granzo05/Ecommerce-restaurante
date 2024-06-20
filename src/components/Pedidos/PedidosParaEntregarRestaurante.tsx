@@ -15,18 +15,7 @@ const PedidosParaEntregar = () => {
     const [pedidosEntregables, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await EmpleadoService.checkUser();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
-
         buscarPedidos();
-
     }, []);
 
     useEffect(() => {
@@ -34,10 +23,10 @@ const PedidosParaEntregar = () => {
     }, []);
 
     async function checkPrivilegies() {
-        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+        if (empleado && empleado.privilegios?.length > 0) {
             try {
-                empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                empleado?.privilegios?.forEach(privilegio => {
+                    if (privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('UPDATE')) {
                             setUpdateVisible(true);
                         }
@@ -69,7 +58,8 @@ const PedidosParaEntregar = () => {
         PedidoService.getPedidos(EnumEstadoPedido.COCINADOS)
             .then(data => {
                 setPedidos(data);
-            })
+                calcularTotal();
+            })        
             .catch(error => {
                 console.error('Error:', error);
             });
@@ -125,6 +115,24 @@ const PedidosParaEntregar = () => {
 
     // Cambiar de página
     const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+
+    const [total, setTotal] = useState<number>(0);
+
+    function calcularTotal() {
+        let nuevoTotal = 0;
+
+        pedidosFiltrados.forEach(pedido => {
+            pedido.detallesPedido.forEach(detalle => {
+                if (detalle.articuloVenta && detalle.articuloVenta.precioVenta > 0) {
+                    nuevoTotal += detalle.cantidad * detalle.articuloVenta.precioVenta;
+                } else if (detalle.articuloMenu && detalle.articuloMenu.precioVenta > 0) {
+                    nuevoTotal += detalle.cantidad * detalle.articuloMenu.precioVenta;
+                }
+            });
+        });
+
+        setTotal(nuevoTotal);
+    }
 
     return (
 
@@ -207,6 +215,9 @@ const PedidosParaEntregar = () => {
                                             <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} </p>
                                         </div>
                                     ))}
+                                </td>
+                                <td>
+                                    ${total.toLocaleString('es-AR')}
                                 </td>
                                 {updateVisible && (
                                     <td><button onClick={() => handleEntregarPedido(pedido)}>Entregar</button></td>

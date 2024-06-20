@@ -94,10 +94,10 @@ const RolesEmpleado = () => {
     const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
 
     async function checkPrivilegies() {
-        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+        if (empleado && empleado.privilegios?.length > 0) {
             try {
-                empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
+                empleado?.privilegios?.forEach(privilegio => {
+                    if (privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('CREATE')) {
                             setCreateVisible(true);
                         }

@@ -46,7 +46,6 @@ const PedidosEntrantes = () => {
             });
     }
 
-
     async function handleAceptarPedido(pedido: Pedido) {
         const horaActual = new Date();
 
@@ -66,42 +65,45 @@ const PedidosEntrantes = () => {
         // Almacenar la hora de finalización estimada en localStorage
         localStorage.setItem('horaFinalizacionPedido', horaFinalizacionFormateada);
 
+        // Asignar la hora de finalización al pedido
         pedido.horaFinalizacion = horaFinalizacionFormateada;
 
-        toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ACEPTADOS), {
-            loading: 'Enviando pedido a cocina...',
-            success: (message) => {
-                buscarPedidos();
-                return message;
-            },
-            error: (message) => {
-                return message;
-            },
-        });
-
+        // Usar toast para notificar al usuario sobre el estado de la actualización
+        toast.promise(
+            PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ACEPTADOS),
+            {
+                loading: 'Enviando pedido a cocina...',
+                success: (message) => {
+                    buscarPedidos();
+                    return message;
+                },
+                error: (message) => {
+                    return message;
+                },
+            }
+        );
     }
-
 
     async function calcularTiempoPreparacion(pedido: Pedido) {
         let tiempoTotal = 0;
-        /*
-        ∑ Sumatoria del tiempo estimado de los artículos manufacturados solicitados por el cliente en el pedido actual
-        +
-        ∑ Sumatoria del tiempo estimado de los artículos manufacturados que se encuentran en la cocina / cantidad cocineros
-        +
-        10 Minutos de entrega por delivery (solo si corresponde).
-        */
-        // Asignamos el tiempo del menú con la preparación más tardía
-        pedido.detallesPedido.forEach(detalle => {
-            if (detalle.articuloMenu && detalle.articuloMenu.tiempoCoccion > tiempoTotal) {
-                tiempoTotal = detalle.articuloMenu.tiempoCoccion + detalle.articuloMenu.tiempoCoccion / cantidadCocineros;
 
-                if (pedido.tipoEnvio === 'DELIVERY') tiempoTotal += 10;
+        // Sumatoria del tiempo estimado de los artículos manufacturados solicitados en el pedido actual
+        pedido.detallesPedido.forEach(detalle => {
+            if (detalle.articuloMenu) {
+                tiempoTotal += detalle.articuloMenu.tiempoCoccion;
             }
         });
 
+        tiempoTotal = tiempoTotal / cantidadCocineros;
+
+        // 10 Minutos de entrega por delivery (solo si corresponde)
+        if (pedido.tipoEnvio === 'DELIVERY') {
+            tiempoTotal += 10;
+        }
+
         return tiempoTotal;
     }
+
 
     async function handleRechazarPedido(pedido: Pedido) {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
@@ -122,10 +124,10 @@ const PedidosEntrantes = () => {
     }, []);
 
     async function checkPrivilegies() {
-        if (empleado && empleado.empleadoPrivilegios?.length > 0) {
+        if (empleado && empleado.privilegios?.length > 0) {
             try {
-                empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
+                empleado?.privilegios?.forEach(privilegio => {
+                    if (privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('UPDATE')) {
                             setUpdateVisible(true);
                         }

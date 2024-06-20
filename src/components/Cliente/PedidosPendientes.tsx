@@ -97,7 +97,6 @@ const PedidosPendientes = () => {
             <div id="pedidos">
                 {pedidosPendientes.length > 0 && (
                     <div id="pedidos-pendientes">
-                        <h1>Pedidos pendientes</h1>
                         <table>
                             <thead>
                                 <tr>

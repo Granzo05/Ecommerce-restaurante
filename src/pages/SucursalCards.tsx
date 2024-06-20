@@ -3,13 +3,11 @@ import '../styles/sucursalCards.css';
 import HeaderLogin from '../components/headerLogin';
 import { SucursalService } from '../services/SucursalService';
 import { Sucursal } from '../types/Restaurante/Sucursal';
-import { useNavigate } from 'react-router-dom';
-import { Empresa } from '../types/Restaurante/Empresa';
 import { getBaseUrl } from '../utils/global_variables/const';
+import { Cliente } from '../types/Cliente/Cliente';
 
 const SucursalCards: React.FC = () => {
   const [sucursales, setSucursales] = useState<Sucursal[]>([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (sucursales.length === 0) fetchSucursales();
@@ -29,25 +27,21 @@ const SucursalCards: React.FC = () => {
   }, []);
 
   async function handleSucursalClick(sucursal: Sucursal) {
-    localStorage.setItem('selectedBranchId', sucursal.id.toString());
-    localStorage.setItem('selectedBranchName', sucursal.nombre);
-    localStorage.setItem('selectedBranchAddress', sucursal.domicilios[0]?.calle + ', ' + sucursal.domicilios[0]?.numero);
-    localStorage.setItem('selectedBranchCity', sucursal.domicilios[0]?.localidad.nombre);
-
-    // Seteamos el nuevo cambio de sucursal
     const usuarioString = localStorage.getItem('usuario');
-
     if (usuarioString) {
-      const usuario = JSON.parse(usuarioString);
+      const usuario: Cliente = JSON.parse(usuarioString);
       usuario.idSucursal = sucursal.id;
 
-      localStorage.setItem('usuario', usuario);
-    }
+      localStorage.setItem('usuario', JSON.stringify(usuario));
 
-    if (window.location.href.includes('/sucursales#login')) {
-      navigate('/login-cliente');
-    } else if (sucursal.id === 0) {
-      window.location.href = await getBaseUrl();
+      window.location.href = getBaseUrl();
+    } else {
+      const usuario: Cliente = new Cliente();
+      usuario.idSucursal = sucursal.id;
+
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+
+      window.location.href = getBaseUrl();
     }
   }
 
@@ -74,23 +68,7 @@ const SucursalCards: React.FC = () => {
                 ))}
               </div>
             ))}
-            <div className="sucursal-card" onClick={() => handleSucursalClick({
-              id: 0, nombre: 'Sin sucursal', domicilios: [],
-              contraseña: '',
-              telefono: 0,
-              email: '',
-              privilegios: '',
-              horarioApertura: '',
-              horarioCierre: '',
-              localidadesDisponiblesDelivery: [],
-              promociones: [],
-              articulosMenu: [],
-              articulosVenta: [],
-              empresa: new Empresa,
-              categorias: [],
-              imagenes: [],
-              borrado: ''
-            })}>
+            <div className="sucursal-card" onClick={() => handleSucursalClick(new Sucursal())}>
               <h2>Ingresar sin sucursal</h2>
             </div>
           </div>

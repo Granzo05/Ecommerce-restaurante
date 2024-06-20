@@ -45,6 +45,7 @@ export const EmpresaService = {
     },
 
     getEmpresa: async (email: string, contraseña: string) => {
+        limpiarCredenciales();
         try {
             const response = await fetch(URL_API + 'empresa/login/' + email + '/' + contraseña, {
                 method: 'GET',
@@ -65,8 +66,6 @@ export const EmpresaService = {
                     razonSocial: data.razonSocial
                 }
 
-                limpiarCredenciales();
-
                 localStorage.setItem('empresa', JSON.stringify(restaurante));
 
                 window.location.href = getBaseUrl() + '/empresa'
@@ -79,8 +78,7 @@ export const EmpresaService = {
             return 'Los datos ingresados no corresponden a una cuenta activa';
 
         } catch (error) {
-            console.error('Error:', error);
-            throw new Error('Credenciales inválidas');
+            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
         }
     },
 
