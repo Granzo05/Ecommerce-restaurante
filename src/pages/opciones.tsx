@@ -206,48 +206,48 @@ const Opciones = () => {
     }, []);
 
     async function checkPrivilegies() {
-        if (!DESACTIVAR_PRIVILEGIOS && (empleado !== null && empleado.empleadoPrivilegios?.length > 0)) {
+        if (!DESACTIVAR_PRIVILEGIOS && (empleado !== null && empleado.privilegios?.length > 0)) {
             try {
-                empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
+                empleado?.privilegios?.forEach(privilegio => {
+                    if (privilegio.nombre === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
                         setArticuloVentaVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Artículos menú' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Artículos menú' && privilegio.permisos.includes('READ')) {
                         setArticuloMenuVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Stock' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Stock' && privilegio.permisos.includes('READ')) {
                         setStockVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Stock entrante' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Stock entrante' && privilegio.permisos.includes('READ')) {
                         setStockEntranteVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Ingredientes' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Ingredientes' && privilegio.permisos.includes('READ')) {
                         setIngredientesVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Categorias' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Categorias' && privilegio.permisos.includes('READ')) {
                         setCategoriasVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Medidas' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Medidas' && privilegio.permisos.includes('READ')) {
                         setMedidasVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Promociones' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Promociones' && privilegio.permisos.includes('READ')) {
                         setPromocionesVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Subcategorias' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Subcategorias' && privilegio.permisos.includes('READ')) {
                         setSubcategoriasVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Estadísticas' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Estadísticas' && privilegio.permisos.includes('READ')) {
                         setEstadisticasVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Pedidos entrantes' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Pedidos entrantes' && privilegio.permisos.includes('READ')) {
                         setPedidosEntrantesVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Pedidos aceptados' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Pedidos aceptados' && privilegio.permisos.includes('READ')) {
                         setPedidosAceptadosVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Pedidos cocinados' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Pedidos cocinados' && privilegio.permisos.includes('READ')) {
                         setPedidosCocinadosVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Pedidos entregados' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Pedidos entregados' && privilegio.permisos.includes('READ')) {
                         setPedidosEntregadosVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Pedidos en camino' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Pedidos en camino' && privilegio.permisos.includes('READ')) {
                         setPedidosEnCaminoVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
                         setEmpleadosVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Sucursales' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Sucursales' && privilegio.permisos.includes('READ')) {
                         setSucursalesVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Empresas' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Empresas' && privilegio.permisos.includes('READ')) {
                         setEmpresasVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Roles' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Roles' && privilegio.permisos.includes('READ')) {
                         setRolesVisibleEmpleado(true);
-                    } else if (privilegio.privilegio.tarea === 'Privilegios' && privilegio.permisos.includes('READ')) {
+                    } else if (privilegio.nombre === 'Privilegios' && privilegio.permisos.includes('READ')) {
                         setPrivilegiosVisibleEmpleado(true);
                     }
                 });

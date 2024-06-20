@@ -18,7 +18,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@ToString
 @Table(name = "articulos_venta", schema = "buen_sabor")
 public class ArticuloVenta implements Serializable {
     @Id
@@ -42,7 +41,7 @@ public class ArticuloVenta implements Serializable {
     private double precioVenta;
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_medida")
     private Medida medida;
 
@@ -57,7 +56,7 @@ public class ArticuloVenta implements Serializable {
     private String borrado = "NO";
 
     @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "articulos_venta_sucursales",
             joinColumns = @JoinColumn(name = "id_articulo"),
@@ -66,6 +65,6 @@ public class ArticuloVenta implements Serializable {
     private Set<Sucursal> sucursales = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"articuloVenta", "sucursales"}, allowSetters = true)
-    @ManyToOne
+    @OneToOne(mappedBy = "articuloVenta")
     private StockArticuloVenta stockArticuloVenta;
 }

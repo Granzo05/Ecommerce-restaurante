@@ -19,7 +19,8 @@ import { PrivilegiosService } from '../../services/PrivilegiosService';
 import ModalFlotanteRecomendacionesRoles from '../../hooks/ModalFlotanteFiltroRoles';
 import { Roles } from '../../types/Restaurante/Roles';
 import { RolesEmpleado } from '../../types/Restaurante/RolesEmpleados';
-import { EmpleadoPrivilegio } from '../../types/Restaurante/PrivilegiosEmpleado';
+import { PrivilegiosEmpleados } from '../../types/Restaurante/PrivilegiosEmpleado';
+import { PrivilegiosSucursales } from '../../types/Restaurante/PrivilegiosSucursales';
 
 interface AgregarEmpleadoProps {
   onCloseModal: () => void;
@@ -45,7 +46,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   const [modalBusquedaPais, setModalBusquedaPais] = useState<boolean>(false);
 
   const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [nombre: string]: string[] }>({});
-  const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
+  const [privilegios, setPrivilegios] = useState<PrivilegiosSucursales[]>([]);
   const [rolesElegidos, setRolesElegidos] = useState<string[]>([]);
 
   const handleModalClose = () => {
@@ -220,11 +221,11 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     empleado.domicilios = domicilios;
     empleado.borrado = 'NO';
 
-    const empleadoPrivilegios: EmpleadoPrivilegio[] = Object.entries(privilegiosElegidos).map(([nombre, permisos]) => {
-      const privilegio = new Privilegios(0, nombre, 'NO');
-      return new EmpleadoPrivilegio(0, privilegio, permisos);
+    const empleadoPrivilegios: PrivilegiosEmpleados[] = Object.entries(privilegiosElegidos).map(([nombre, permisos]) => {
+      return new PrivilegiosEmpleados(0, permisos, 0, nombre, 'NO');
     });
-    empleado.empleadoPrivilegios = empleadoPrivilegios;
+    
+    empleado.privilegios = empleadoPrivilegios;
 
     roles.forEach(rol => {
       let rolEmpleado: RolesEmpleado = new RolesEmpleado();
@@ -237,7 +238,9 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     toast.promise(EmpleadoService.createEmpleado(empleado), {
       loading: 'Creando empleado...',
       success: (message: string) => {
-
+        setTimeout(() => {
+          onCloseModal();
+        }, 800);
         return message;
       },
       error: (message) => {
@@ -361,11 +364,11 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     }
   };
 
-  const estanTodosMarcados = (privilegiosElegidos: { [x: string]: string | any[] | string[]; }, privilegio: Privilegios) => {
+  const estanTodosMarcados = (privilegiosElegidos: { [x: string]: string | any[] | string[]; }, privilegio: PrivilegiosSucursales) => {
     return privilegio.permisos.every((permiso: any) => privilegiosElegidos[privilegio.nombre]?.includes(permiso));
   };
 
-  const estanTodosDesmarcados = (privilegiosElegidos: { [x: string]: string | any[] | string[]; }, privilegio: Privilegios) => {
+  const estanTodosDesmarcados = (privilegiosElegidos: { [x: string]: string | any[] | string[]; }, privilegio: PrivilegiosSucursales) => {
     return privilegio.permisos.every((permiso: any) => !privilegiosElegidos[privilegio.nombre]?.includes(permiso));
   };
 

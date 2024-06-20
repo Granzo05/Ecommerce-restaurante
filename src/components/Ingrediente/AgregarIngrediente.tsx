@@ -176,7 +176,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
     setStep(step - 1);
   };
 
-  
+
 
 
   const renderStep = () => {
@@ -192,8 +192,8 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
             </div>
             {!empresa && mostrarInputs && (
               <>
-                  <h4 style={{fontSize: '20px', textTransform: 'lowercase'}}> <strong style={{fontWeight: '100', textTransform: 'capitalize'}}>Stock</strong>  {nombre}</h4>
-                  <p className='cierre-ingrediente' style={{marginRight: '35%'}} onClick={handleClose}>X</p>
+                <h4 style={{ fontSize: '20px', textTransform: 'lowercase' }}> <strong style={{ fontWeight: '100', textTransform: 'capitalize' }}>Stock</strong>  {nombre}</h4>
+                <p className='cierre-ingrediente' style={{ marginRight: '35%' }} onClick={handleClose}>X</p>
                 <label>
                   <div className="inputBox">
                     <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
@@ -224,7 +224,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                   <input type="text" required pattern="\d*" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
                   <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
                   <div className="error-message">El costo por unidad solo debe contener números.</div>
-                  
+
                 </div>
               </>
             )}
@@ -234,8 +234,10 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
                 <>
-                  <button value="Agregar stock ahora (opcional)" id='agregarIngrediente' style={{ marginRight: '10px' }}
-                    onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock ahora (opcional)</button>
+                  {!mostrarInputs && (
+                    <button value="Agregar stock ahora (opcional)" id='agregarIngrediente' style={{ marginRight: '10px' }}
+                      onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock ahora (opcional)</button>
+                  )}
                   <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar ingrediente</button>
                 </>
               )}

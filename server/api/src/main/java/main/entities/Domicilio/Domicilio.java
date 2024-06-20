@@ -17,7 +17,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 @Entity
-@ToString
 @Table(name = "domicilios", schema = "buen_sabor")
 public class Domicilio implements Serializable {
     @Id
@@ -50,7 +49,7 @@ public class Domicilio implements Serializable {
     )
     private Cliente cliente;
 
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToOne
     @JoinTable(
             name = "domicilios_sucursales",
