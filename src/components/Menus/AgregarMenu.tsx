@@ -175,10 +175,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     categoria.subcategorias.push(subcategoria);
   };
 
-  const [tiempoCoccion, setTiempo] = useState(0);
+  const [tiempoCoccion, setTiempo] = useState(parseInt(''));
   const [categoria, setCategoria] = useState<Categoria>(new Categoria());
-  const [comensales, setComensales] = useState(0);
-  const [precio, setPrecio] = useState(0);
+  const [comensales, setComensales] = useState(parseInt(''));
+  const [precio, setPrecio] = useState(parseInt(''));
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
@@ -192,7 +192,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     } else if (!comensales) {
       toast.error("Por favor, es necesaria la cantidad de comensales comensales");
       return;
-    } else if (!precio) {
+    } else if (!precio || precio == 0) {
       toast.error("Por favor, es necesario el precio");
       return;
     } else if (!categoria) {
@@ -268,6 +268,62 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+
+
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!tiempoCoccion || tiempoCoccion == 0) {
+      toast.error("Por favor, es necesaria el tiempo de cocción y que no sea 0");
+      return;
+    } else if (!comensales || comensales == 0) {
+      toast.error("Por favor, es necesaria la cantidad de comensales y que no sea 0");
+      return;
+    } else if (!categoria) {
+      toast.error("Por favor, es necesaria la categoria");
+      return;
+    } else if (!subcategoria) {
+      toast.error("Por favor, es necesaria la subcategoria");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+  const validateAndNextStep2 = () => {
+
+    for (let i = 0; i < ingredientesMenu.length; i++) {
+      const ingrediente = ingredientesMenu[i].ingrediente;
+      const medida = ingredientesMenu[i].medida;
+      const cantidad = ingredientesMenu[i].cantidad;
+
+      if (!ingrediente) {
+        toast.info(`Por favor, el ingrediente ${i + 1} debe contener un ingrediente`);
+        return;
+      } else if (!medida) {
+        toast.info(`Por favor, el ingrediente ${i + 1} debe contener una unidad de medida`);
+        return;
+      } else if (!cantidad || (cantidad == 0)) {
+        toast.info(`Por favor, el ingrediente ${i + 1} debe contener una cantidad válida y no debe ser 0`);
+        return;
+      }
+    }
+
+    if (ingredientesMenu) {
+      nextStep();
+    }
+  }
+
+  const validateAndNextStep3 = () => {
+    if (imagenes.length === 0) {
+      toast.info("No se asignó ninguna imagen");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -275,18 +331,21 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <hr />
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-              <span>Nombre del menu</span>
+              <input type="text" pattern="[a-zA-Z\s\-]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del menú</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
+              <input type="text" required={true} pattern="[a-zA-Z\s\-]+" value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
               <span>Descripción del menu</span>
+              <div className="error-message">La descripción debe contener letras y espacios.</div>
             </div>
 
             <div className="inputBox">
-              <input type="number" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+              <input type="number" pattern="^[1-9]\d*$" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
               <span>Minutos de coccion</span>
+              <div className="error-message">Los minutos de cocción solo deben contener números.</div>
+
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
@@ -299,12 +358,14 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { handleSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={comensales} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
+              <input type="number" required={true} pattern="^[1-9]\d*$" value={comensales} onChange={(e) => { setComensales(parseFloat(e.target.value)) }} />
               <span>Comensales</span>
+              <div className="error-message">La cantidad de comensales solo debe contener números.</div>
+
               <hr />
             </div>
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
@@ -327,8 +388,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
                     {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente); handleModalClose() }} />}
                   </div>
                   <div className="inputBox">
-                    <input type="number" required={true} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
+                    <input type="number" required={true} pattern="^[1-9]\d*$" onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
                     <span>Cantidad necesaria</span>
+                    <div className="error-message">La cantidad solo debe contener números.</div>
+
                   </div>
                   <div className="input-filtrado">
                     <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredientesMenu[index].ingrediente?.medida?.nombre ?? ingredientesMenu[index].medida?.nombre ?? ''} />
@@ -341,18 +404,19 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             <button onClick={añadirCampoIngrediente}>Añadir ingrediente al menú</button>
 
             <br />
-            <button onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente en el inventario</button>
             <br />
             <div className='btns-pasos'>
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button style={{marginRight: '10px'}} onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente en el inventario (opcional)</button>
+            
+              <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
             </div>
           </>
         );
       case 3:
         return (
           <>
-            <h4>Paso 3</h4>
+            <h4>Paso 3 - Imagenes</h4>
             <div>
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -383,7 +447,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             <br />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep3}>Siguiente ⭢</button>
             </div>
           </>
         );
@@ -395,14 +459,18 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
               <>
                 <p>Costo por ingredientes: ${precioSugerido}</p>
                 <div className="inputBox">
-                  <input type="number" onChange={(e) => setPrecio((1 + parseInt(e.target.value) / 100) * precioSugerido)} />
+                  <input type="number" pattern="^[1-9]\d*$" min={-100} onChange={(e) => setPrecio((1 + parseInt(e.target.value) / 100) * precioSugerido)} />
                   <span>% de ganancia buscado</span>
+                  <div className="error-message">Asigne un porcentaje válido que solo debe contener números.</div>
+
                 </div>
               </>
             )}
             <div className="inputBox">
-              <input type="number" required={true} value={precio | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <input type="number" pattern="^[1-9]\d*$" min={0} required={true} value={precio | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
               <span>Precio final</span>
+              <div className="error-message">Asigne un precio final que solo debe contener números.</div>
+
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>

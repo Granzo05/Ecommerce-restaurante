@@ -92,15 +92,25 @@ table tr:hover {
     align-items: center;
 }
 
-.btn-accion-editar, .btn-accion-eliminar{
+.btn-accion-editar, .btn-accion-eliminar, .btn-accion-entregado, .btn-accion-detalle{
     width: 150px;
     color: black;
     margin: 5px;
     border: 1px solid black;
 }
 
+
 .btn-accion-editar{
     background-color: #e4e000;
+}
+
+.btn-accion-entregado{
+    background-color: #19cc37;
+    width: 272px;
+}
+
+.btn-accion-entregado:hover{
+    background-color: #088a1e;
 }
 
 .btn-accion-eliminar{
@@ -142,4 +152,69 @@ table tr:hover {
 .btn-agregar:focus {
     outline: none;
 }
+
+.modal-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgb(0, 0, 0);
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .detalle-item {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .detalle-title {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .detalle-info {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .total {
+    font-size: 1.5em;
+    color: #111;
+    text-align: center;
+  }
+  
+  @media (min-width: 768px) {
+    .modal-container {
+      padding: 30px;
+    }
+  
+    .detalle-item {
+      padding: 20px;
+    }
+  
+    .detalle-title {
+      font-size: 1.5em;
+    }
+  
+    .detalle-info {
+      font-size: 1.1em;
+    }
+  
+    .total {
+      font-size: 1.8em;
+    }
+  }
+  
+
 

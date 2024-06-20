@@ -105,7 +105,7 @@ const StocksEntrantes = () => {
         if (empleado && empleado.empleadoPrivilegios?.length > 0) {
             try {
                 empleado?.empleadoPrivilegios?.forEach(privilegio => {
-                    if (privilegio.privilegio.tarea === 'Empleados' && privilegio.permisos.includes('READ')) {
+                    if (privilegio.privilegio.nombre === 'Empleados' && privilegio.permisos.includes('READ')) {
                         if (privilegio.permisos.includes('CREATE')) {
                             setCreateVisible(true);
                         }
@@ -225,9 +225,9 @@ const StocksEntrantes = () => {
                 <AgregarStockEntrante onCloseModal={handleModalClose} />
             </ModalCrud>
 
-            <ModalFlotante isOpen={showDetallesStock} onClose={handleModalClose}>
+            <ModalCrud isOpen={showDetallesStock} onClose={handleModalClose}>
                 <DetallesStock detallesOriginal={selectedDetalles} />
-            </ModalFlotante>
+            </ModalCrud>
 
             <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
                 {selectedStock && <EliminarStockEntrante stockEntrante={selectedStock} onCloseModal={handleModalClose} />}
@@ -281,7 +281,7 @@ const StocksEntrantes = () => {
                         <thead>
                             <tr>
                                 <th>Fecha</th>
-                                <th>Costo</th>
+                                <th>Costo total</th>
                                 <th>Detalles</th>
                                 <th>Acciones</th>
                             </tr>
@@ -290,8 +290,8 @@ const StocksEntrantes = () => {
                             {stockFiltrado.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{formatDate(new Date(stock.fechaLlegada.toString()))}</td>
-                                    <td>{stock.costo}</td>
-                                    <td onClick={() => handleMostrarDetalles(stock.detallesStock)}>Detalle stock</td>
+                                    <td>${stock.costo}</td>
+                                    <td className="detalle-stock-entrante" onClick={() => handleMostrarDetalles(stock.detallesStock)}><button className="btn-accion-detalle">VER DETALLE</button></td>
 
                                     {stock.borrado === 'NO' ? (
                                         <td>
@@ -302,7 +302,7 @@ const StocksEntrantes = () => {
                                                 <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
                                             )}
                                             {updateVisible && (
-                                                <button className="btn-accion-editar" onClick={() => handleCargarStock(stock)}>MARCAR COMO ENTREGADO</button>
+                                                <button className="btn-accion-entregado" onClick={() => handleCargarStock(stock)}>MARCAR COMO ENTREGADO</button>
                                             )}
                                         </td>
                                     ) : (

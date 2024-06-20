@@ -19,6 +19,7 @@ import { Subcategoria } from '../../types/Ingredientes/Subcategoria';
 import { SucursalService } from '../../services/SucursalService';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empresa } from '../../types/Restaurante/Empresa';
+import ModalCrud from '../ModalCrud';
 
 interface EditarMenuProps {
   menuOriginal: ArticuloMenu;
@@ -125,9 +126,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
   const añadirCampoIngrediente = () => {
     // SI no hay ingredientes que genere en valor 0 de index
     if (ingredientes.length === 0) {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: parseInt(''), medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
     } else {
-      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
+      setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: parseInt(''), medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
       setSelectIndexIngredientes(prevIndex => prevIndex + 1);
     }
   };
@@ -236,11 +237,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
       return;
     } else if (!descripcion) {
       toast.error("Por favor, es necesaria la descripción");
-      return;
-    }
-
-    if (!categoria.subcategorias.find(sub => sub.nombre === subcategoria.nombre)) {
-      toast.error("Por favor, la subcategoría no corresponde a esa categoría");
       return;
     }
 
@@ -356,6 +352,83 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+
+
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!tiempoCoccion || tiempoCoccion == 0) {
+      toast.error("Por favor, es necesaria el tiempo de cocción y que no sea 0");
+      return;
+    } else if (!comensales || comensales == 0) {
+      toast.error("Por favor, es necesaria la cantidad de comensales y que no sea 0");
+      return;
+    } else if (!precioVenta || precioVenta == 0) {
+      toast.error("Por favor, es necesario el precio de venta y que no sea 0");
+      return;
+    } else if (!categoria) {
+      toast.error("Por favor, es necesaria la categoria");
+      return;
+    } else if (!subcategoria) {
+      toast.error("Por favor, es necesaria la subcategoria");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+  const validateAndNextStep2 = () => {
+
+    for (let i = 0; i < ingredientesMuestra.length; i++) {
+      const ingrediente = ingredientesMuestra[i].ingrediente;
+      const medida = ingredientesMuestra[i].medida;
+      const cantidad = ingredientesMuestra[i].cantidad;
+
+      if (!ingrediente) {
+        toast.info(`Por favor, el ingrediente actual ${i + 1} debe contener un ingrediente`);
+        return;
+      } else if (!medida) {
+        toast.info(`Por favor, el ingrediente actual ${i + 1} debe contener una unidad de medida`);
+        return;
+      } else if (!cantidad || (cantidad == 0)) {
+        toast.info(`Por favor, el ingrediente actual ${i + 1} debe contener una cantidad válida y no debe ser 0`);
+        return;
+      }
+    }
+
+    for (let i = 0; i < ingredientes.length; i++) {
+      const ingrediente = ingredientes[i].ingrediente;
+      const medida = ingredientes[i].medida;
+      const cantidad = ingredientes[i].cantidad;
+
+      if (!ingrediente) {
+        toast.info(`Por favor, el ingrediente nuevo ${i + 1} debe contener un ingrediente`);
+        return;
+      } else if (!medida) {
+        toast.info(`Por favor, el ingrediente nuevo ${i + 1} debe contener una unidad de medida`);
+        return;
+      } else if (!cantidad || (cantidad == 0)) {
+        toast.info(`Por favor, el ingrediente nuevo ${i + 1} debe contener una cantidad válida y no debe ser 0`);
+        return;
+      }
+    }
+
+    if (ingredientesMuestra && ingredientes) {
+      nextStep();
+    }
+  }
+
+  const validateAndNextStep3 = () => {
+    if (imagenes.length > 0) {
+      toast.info("No se asignó ninguna imagen");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -363,37 +436,48 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <hr />
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" pattern="[a-zA-Z\s\-]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del menu</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            
             </div>
             <div className="inputBox">
-              <input type="text" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
+              <input type="text" pattern="[a-zA-Z\s\-]+" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
               <span>Descripción del menu</span>
+              <div className="error-message">La descripción debe contener letras y espacios.</div>
+            
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
+              <input type="number" pattern="^[1-9]\d*$" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
               <span>Minutos de coccion</span>
+              <div className="error-message">Los minutos de cocción solo deben contener números.</div>
+
             </div>
-            <div className="input-filtrado">
+            <div>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
               {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
             </div>
-            <div className="input-filtrado">
+            <div>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-              <span>Precio</span>
+              <input type="number" pattern="^[1-9]\d*$"  required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <span>Precio actual ($)</span>
+              <div className="error-message">El precio actual solo debe contener números.</div>
+
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={comensales} onChange={(e) => { setComensales(parseInt(e.target.value)) }} />
+              <input type="number" pattern="^[1-9]\d*$" required={true} value={comensales} onChange={(e) => { setComensales(parseInt(e.target.value)) }} />
               <span>Comensales</span>
+              <div className="error-message">La cantidad de comensales solo debe contener números.</div>
+
               <hr />
             </div>
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
@@ -401,20 +485,24 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
         return (
           <>
             <h4>Paso 2 - Agregar ingrediente al menú</h4>
-            <ModalFlotante isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showAgregarIngredienteModal} onClose={handleModalClose}>
               <AgregarIngrediente onCloseModal={handleModalClose} />
-            </ModalFlotante>
+            </ModalCrud>
             {ingredientesMuestra.map((ingredienteMenu, index) => (
               <div key={index}>
                 <hr />
                 <p className='cierre-ingrediente' onClick={() => quitarCampoIngredienteMuestra(index)}>X</p>
-                <div className="inputBox">
-                  <input type="text" required={true} value={ingredienteMenu.ingrediente?.nombre} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
-                  <span>Nombre del ingrediente</span>
+                <h4 style={{ fontSize: '18px' }}>Ingrediente actual {index + 1}</h4>
+                <div>
+                  <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
+                  <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
+                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
                 </div>
                 <div className="inputBox">
-                  <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))} />
+                  <input type="number" required={true} pattern="^[1-9]\d*$" min={0} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))} />
                   <span>Cantidad necesaria</span>
+                  <div className="error-message">La cantidad solo debe contener números.</div>
+
                 </div>
                 <div className="input-filtrado">
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente.medida?.nombre ?? ingredienteMenu.medida?.nombre ?? ''} />
@@ -424,15 +512,18 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
             ))}
             {ingredientes.map((ingredienteMenu, index) => (
               <div key={index}>
+                <hr />
                 <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
+                <h4 style={{ fontSize: '18px' }}>Ingrediente nuevo {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
                   {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
                 </div>
                 <div className="inputBox">
-                  <input type="number" required={true} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
+                  <input type="number" required={true} pattern="^[1-9]\d*$" min={0} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />
                   <span>Cantidad necesaria</span>
+                  <div className="error-message">La cantidad solo debe contener números.</div>
                 </div>
                 <div className="input-filtrado">
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente?.medida?.nombre ?? ''} />
@@ -440,20 +531,24 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
                 </div>
               </div>
             ))}
-            <button onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente</button>
+            
+            <button onClick={añadirCampoIngrediente}>Añadir ingrediente al menú</button>
             <br />
-            <button onClick={añadirCampoIngrediente}>Añadir ingrediente</button>
+            
             <hr />
             <div className='btns-pasos'>
+              
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button style={{marginRight: '10px'}} onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente en el inventario (opcional)</button>
+            
+              <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
             </div>
           </>
         );
       case 3:
         return (
           <>
-            <h4>Paso 3</h4>
+            <h4>Paso 3 - Imagenes</h4>
             <div>
               <div className="slider-container">
                 <button onClick={prevImage} className="slider-button prev">◀</button>
@@ -500,14 +595,16 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
                   </div>
                 </div>
               ))}
-              <br />
-              <button onClick={añadirCampoImagen}>Añadir imagen</button>
-              <br />
-              <div className="btns-pasos">
-                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-                <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-              </div>
+              
+              
             </div>
+            
+            <button onClick={añadirCampoImagen}>Añadir imagen al menú</button>
+            <br />
+            <div className="btns-pasos">
+                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+                <button className='btn-accion-adelante' onClick={validateAndNextStep3}>Siguiente ⭢</button>
+              </div>
           </>
         );
       case 4:
@@ -532,7 +629,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
+                <button className='btn-accion-completar' type='button' onClick={editarMenu}>Editar menú ✓</button>
               )}
             </div>
           </>
