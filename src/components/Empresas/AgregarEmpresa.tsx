@@ -47,6 +47,27 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
     }
   };
 
+  const formatearCuil = (value: string) => {
+    // Eliminar todos los caracteres no numéricos
+    const soloNumeros = value.replace(/\D/g, "");
+
+    // Insertar los guiones en las posiciones correctas
+    let cuilFormateado = "";
+    if (soloNumeros.length > 2) {
+      cuilFormateado += soloNumeros.slice(0, 2) + "-";
+      if (soloNumeros.length > 10) {
+        cuilFormateado += soloNumeros.slice(2, 10) + "-";
+        cuilFormateado += soloNumeros.slice(10, 11);
+      } else {
+        cuilFormateado += soloNumeros.slice(2);
+      }
+    } else {
+      cuilFormateado = soloNumeros;
+    }
+
+    return cuilFormateado;
+  };
+
   const handleCargarNegocio = async () => {
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
@@ -117,7 +138,7 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
               <span>Razón social</span>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} value={cuit} onChange={(e) => { setCuit(e.target.value) }} />
+              <input type="text" required={true} value={cuit} onChange={(e) => { setCuit(formatearCuil(e.target.value)) }} />
               <span>Cuit</span>
             </div>
             <div className="inputBox">
