@@ -22,21 +22,17 @@ export const EmpresaService = {
 
         // Cargar imágenes solo si se debe hacer
         if (cargarImagenes) {
-            await Promise.all(imagenes.map(async (imagen: Imagenes) => {
+            await Promise.all(imagenes.map(async (imagen) => {
                 if (imagen.file) {
                     // Crear objeto FormData para las imágenes
                     const formData = new FormData();
                     formData.append('file', imagen.file);
-                    formData.append('razonSocialEmpresa', empresa.razonSocial);
+                    formData.append('cuit', empresa.cuit);
 
-                    const responseImagenes = await fetch(URL_API + 'empresa/imagenes/', {
+                    await fetch(URL_API + 'empresa/imagenes', {
                         method: 'POST',
                         body: formData
                     });
-
-                    if (!responseImagenes.ok) {
-                        throw new Error(await response.text());
-                    }
                 }
             }));
         }
@@ -154,7 +150,7 @@ export const EmpresaService = {
                         // Crear objeto FormData para las imágenes
                         const formData = new FormData();
                         formData.append('file', imagen.file);
-                        formData.append('razonSocialEmpresa', empresa.razonSocial);
+                        formData.append('cuit', empresa.cuit);
 
                         await fetch(URL_API + 'empresa/imagenes', {
                             method: 'POST',

@@ -86,6 +86,7 @@ EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
 [x] Ajustar el horario estimado
 [x] Cascade en articuloVenta.
 [x] Agregar imagenes al empleado
+ERROR AL CARGAR EMPRESA[x]
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Formatear y mejorar la legibilidad del codigo
@@ -97,7 +98,6 @@ EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
 [] El editar menú no borra los ingredientes.
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
-ERROR AL CARGAR EMPRESA[]
 TERMINAR REPORTES[]
 ARREGLAR PREFERENCIAS DE EMPLEADO[]
 NO ANDA EDITAR EMPRESA[]

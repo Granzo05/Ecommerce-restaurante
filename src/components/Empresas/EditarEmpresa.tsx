@@ -12,7 +12,7 @@ interface EditarMenuProps {
 const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }) => {
   const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(empresaOriginal.imagenes);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
-  const [imagenes, setImagenes] = useState<Imagenes[]>(empresaOriginal.imagenes);
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const [nombre, setNombre] = useState(empresaOriginal.nombre);
@@ -63,7 +63,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
     } else if (!razonSocial) {
       toast.error("Por favor, es necesaria la razón social");
       return;
-    } else if (imagenes.length === 0 || imagenesMuestra.length === 0) {
+    } else if (imagenes.length === 0 && imagenesMuestra.length === 0) {
       toast.error("Por favor, es necesaria una imagen");
       return;
     }

@@ -138,7 +138,7 @@ public class EmpresaController {
     }
 
     @CrossOrigin
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     @PostMapping("/empresa/imagenes")
     public ResponseEntity<String> crearImagen(@RequestParam("file") MultipartFile file, @RequestParam("cuit") String cuit) {
         HashSet<Imagenes> listaImagenes = new HashSet<>();
@@ -146,7 +146,8 @@ public class EmpresaController {
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
             String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesEmpresa" + File.separator + cuit.toString().replaceAll(" ", "") + File.separator;
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesEmpresas" + File.separator + cuit.replaceAll(" ", "").replaceAll("-", "") + File.separator;
+
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);
             if (!carpeta.exists()) {
@@ -157,8 +158,8 @@ public class EmpresaController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("imagesEmpresa/")
-                    .path(cuit.toString().replaceAll(" ", ""))
+                    .path("imagesEmpresas/")
+                    .path(cuit.replaceAll(" ", "").replaceAll("-", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();
 
@@ -177,7 +178,6 @@ public class EmpresaController {
                         return new ResponseEntity<>("Empresa no encontrada", HttpStatus.NOT_FOUND);
                     }
                     imagenProducto.getEmpresas().add(empresa.get());
-
                     imagenesRepository.save(imagen);
                 }
 
