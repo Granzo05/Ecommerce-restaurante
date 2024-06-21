@@ -266,7 +266,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
               {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
             </div>
             <div className="inputBox">
-              <input type="text" required={true} value={cantidad | 0} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+              <input type="text" required={true} pattern="\d*" value={cantidad || ''} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
               <span>Cantidad de la medida de venta</span>
               <div className="error-message">El precio de venta solo debe contener números.</div>
 
@@ -280,14 +280,14 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       case 2:
         return (
           <>
-            <h4>Imagenes</h4>
+            <h4>Paso final - Imagenes</h4>
             <div className="slider-container">
               <button onClick={prevImage} className="slider-button prev">◀</button>
               <div className='imagenes-wrapper'>
                 {imagenesMuestra.map((imagen, index) => (
                   <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
                     <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
-                    <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+                    <label style={{ fontSize: '20px' }}>_imagenes asociadas</label>
 
                     {imagen && (
                       <img
@@ -335,7 +335,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
               {empresa && empresa.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-adelante' onClick={editarArticuloVenta}>Editar articulo ⭢</button>
+                <button className='btn-accion-completar' onClick={editarArticuloVenta}>Editar articulo ✓</button>
               )}
             </div >
           </>

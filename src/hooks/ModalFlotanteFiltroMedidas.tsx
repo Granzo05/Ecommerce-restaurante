@@ -70,15 +70,14 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar unidades de medidas &mdash;</h2>
-          <div className="btns-stock">
+          <div className="btns-filtrado">
 
-            <button onClick={() => setShowAgregarMedidaModal(true)}>Añadir unidad de medida</button>
+            <button className="btn-agregar" onClick={() => setShowAgregarMedidaModal(true)}>Añadir unidad de medida</button>
           </div>
-          <hr />
           <ModalCrud isOpen={showAgregarMedidaModal} onClose={handleModalCargarMedidaClose}>
             <AgregarMedida onCloseModal={handleModalClose}/>
           </ModalCrud>
-          <div className="inputBox">
+          <div style={{marginBottom: '0px'}} className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>

@@ -101,21 +101,18 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
       case 1:
         return (
           <>
-            <div >
               <Toaster />
               <div className="inputBox">
                 <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
                 <span>Nombre de la unidad de medida</span>
               </div>
               <div className="btns-pasos">
-                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
                 {empresa && empresa?.id > 0 ? (
                   <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
                 ) : (
-                  <button value="Agregar medida" id="agregarMedida" onClick={agregarMedida}>Cargar </button>
+                  <button className='btn-accion-completar' value="Agregar medida" id="agregarMedida" onClick={agregarMedida}>Agregar medida ✓</button>
                 )}
               </div>
-            </div>
           </>
         );
       case 2:
