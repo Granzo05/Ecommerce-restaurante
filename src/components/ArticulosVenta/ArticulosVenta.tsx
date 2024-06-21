@@ -175,6 +175,19 @@ const ArticuloVentas = () => {
         }
     }
 
+    function filtrarPorPrecio(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = articulosVenta.filter(recomendacion =>
+                recomendacion.precioVenta.toString().startsWith(filtro)
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(articulosVenta.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(articulosVenta.length / cantidadProductosMostrables));
+        }
+    }
+
     useEffect(() => {
         if (articulosVenta.length > 0) {
             setDatosFiltrados(articulosVenta.slice(indexPrimerProducto, indexUltimoProducto));
@@ -216,8 +229,9 @@ const ArticuloVentas = () => {
                     </div>
                     <div className="inputBox-filtrado" >
                         <input
-                            type="number"
+                            type="text"
                             required
+                            onChange={(e) => filtrarPorPrecio((e.target.value))}
                         />
                         <span>Filtrar por precio</span>
                     </div>
