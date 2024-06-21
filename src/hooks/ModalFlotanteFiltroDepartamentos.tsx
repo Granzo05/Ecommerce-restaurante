@@ -18,6 +18,7 @@ const ModalFlotanteRecomendacionesDepartamentos: React.FC<{ onCloseModal: () => 
   useEffect(() => {
     DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
       .then(async departamentos => {
+        departamentos.sort((a, b) => a.nombre.localeCompare(b.nombre));
         setRecomendaciones(departamentos);
         setRecomendacionesFiltradas(departamentos);
       })
@@ -27,9 +28,18 @@ const ModalFlotanteRecomendacionesDepartamentos: React.FC<{ onCloseModal: () => 
   }, [inputProvincia]);
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }

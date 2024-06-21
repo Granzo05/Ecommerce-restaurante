@@ -18,8 +18,10 @@ const ModalFlotanteRecomendacionesProvincias: React.FC<{ onCloseModal: () => voi
   useEffect(() => {
     ProvinciaService.getProvincias()
       .then(provincias => {
+        provincias.sort((a, b) => a.nombre.localeCompare(b.nombre));
         setRecomendaciones(provincias);
         setRecomendacionesFiltradas(provincias);
+
       })
       .catch(error => {
         console.error('Error:', error);
@@ -27,13 +29,21 @@ const ModalFlotanteRecomendacionesProvincias: React.FC<{ onCloseModal: () => voi
   }, []);
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }
-
   return (
     <div>
       <div className="modal-overlay">

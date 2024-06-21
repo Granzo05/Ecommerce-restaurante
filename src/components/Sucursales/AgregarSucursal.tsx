@@ -39,7 +39,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
   const [departamentosMostrablesCheckBox, setDepartamentosMostrablesCheckbox] = useState<Departamento[]>([]);
 
   const [idDepartamentosElegidos, setIdDepartamentosElegidos] = useState<Set<number>>(new Set<number>());
-  
+
   const [idLocalidadesElegidas, setIdLocalidadesElegidas] = useState<Set<number>>(new Set<number>());
 
   const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
@@ -62,13 +62,15 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
   }
 
   useEffect(() => {
-    DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
-      .then(async departamentos => {
-        setDepartamentosMostrablesCheckbox(departamentos);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
+    if (inputProvincia.length > 0) {
+      DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
+        .then(async departamentos => {
+          setDepartamentosMostrablesCheckbox(departamentos);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        })
+    }
   }, [inputProvincia]);
 
   const handleModalClose = () => {
@@ -105,6 +107,97 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     }
   };
 
+
+  // Paginacion de localidades
+
+  const [paginaActualLocalidades, setPaginaActualLocalidades] = useState(1);
+  const [cantidadLocalidadesMostrablesFiltradas, setCantidadLocalidadesMostrablesFiltrada] = useState(11);
+
+  // Calcular el índice del primer y último elemento de la página actual
+  const indexUltimaLocalidad = paginaActualLocalidades * cantidadLocalidadesMostrablesFiltradas;
+  const indexPrimerLocalidad = indexUltimaLocalidad - cantidadLocalidadesMostrablesFiltradas;
+
+  // Obtener los elementos de la página actual
+  const [localidadesMostrablesCheckboxFiltradas, setLocalidadesMostrablesCheckboxFiltradas] = useState<Localidad[]>([]);
+
+  const [paginasTotalesLocalidades, setPaginasTotalesLocalidades] = useState(1);
+
+  // Cambiar de página
+  const paginateLocalidades = (pagina: number) => setPaginaActualLocalidades(pagina);
+
+  function cantidadMostradaLocalidades(cantidad: number) {
+    setCantidadLocalidadesMostrablesFiltrada(cantidad);
+
+    if (cantidad > localidadesMostrablesCheckbox.length) {
+      setPaginasTotalesLocalidades(1);
+      setLocalidadesMostrablesCheckboxFiltradas(localidadesMostrablesCheckbox);
+    } else {
+      setPaginasTotalesLocalidades(Math.ceil(localidadesMostrablesCheckbox.length / cantidad));
+      setLocalidadesMostrablesCheckboxFiltradas(localidadesMostrablesCheckbox.slice(indexPrimerLocalidad, indexUltimaLocalidad));
+    }
+  }
+
+  function filtrarLocalidades(filtro: string) {
+    if (filtro.length > 0) {
+      const filtradas = localidadesMostrablesCheckbox.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      setLocalidadesMostrablesCheckboxFiltradas(filtradas.length > 0 ? filtradas : []);
+    } else {
+      setLocalidadesMostrablesCheckboxFiltradas(localidadesMostrablesCheckbox.slice(indexPrimerLocalidad, indexUltimaLocalidad));
+    }
+  }
+
+  useEffect(() => {
+    if (localidadesMostrablesCheckbox.length > 0) {
+      setLocalidadesMostrablesCheckboxFiltradas(localidadesMostrablesCheckbox.slice(indexPrimerLocalidad, indexUltimaLocalidad));
+    }
+  }, [localidadesMostrablesCheckbox, paginaActualLocalidades, cantidadLocalidadesMostrablesFiltradas]);
+
+
+
+
+  // Paginación de departamentos
+  const [paginaActualDepartamentos, setPaginaActualDepartamentos] = useState(1);
+  const [cantidadDepartamentosMostrablesFiltrada, setCantidadDepartamentosMostrablesFiltrada] = useState(11);
+
+  const indexUltimaDepartamento = paginaActualDepartamentos * cantidadDepartamentosMostrablesFiltrada;
+  const indexPrimerDepartamento = indexUltimaDepartamento - cantidadDepartamentosMostrablesFiltrada;
+
+  const [paginasTotalesDepartamentos, setPaginasTotalesDepartamentos] = useState(1);
+
+  const paginateDepartamentos = (pagina: number) => setPaginaActualDepartamentos(pagina);
+
+  const [departamentosMostrablesCheckboxFiltradas, setDepartamentosMostrablesCheckboxFiltradas] = useState<Departamento[]>([]);
+
+  function cantidadMostradaDepartamentos(cantidad: number) {
+    setCantidadDepartamentosMostrablesFiltrada(cantidad);
+
+    if (cantidad > departamentosMostrablesCheckBox.length) {
+      setPaginasTotalesDepartamentos(1);
+      setDepartamentosMostrablesCheckboxFiltradas(departamentosMostrablesCheckBox);
+    } else {
+      setPaginasTotalesDepartamentos(Math.ceil(departamentosMostrablesCheckBox.length / cantidad));
+      setDepartamentosMostrablesCheckboxFiltradas(departamentosMostrablesCheckBox.slice(indexPrimerDepartamento, indexUltimaDepartamento));
+    }
+  }
+
+  function filtrarDepartamentos(filtro: string) {
+    if (filtro.length > 0) {
+      const filtradas = departamentosMostrablesCheckBox.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      setDepartamentosMostrablesCheckboxFiltradas(filtradas.length > 0 ? filtradas : []);
+    } else {
+      setDepartamentosMostrablesCheckboxFiltradas(departamentosMostrablesCheckBox.slice(indexPrimerDepartamento, indexUltimaDepartamento));
+    }
+  }
+
+  useEffect(() => {
+    setDepartamentosMostrablesCheckboxFiltradas(departamentosMostrablesCheckBox.slice(indexPrimerDepartamento, indexUltimaDepartamento));
+  }, [departamentosMostrablesCheckBox, paginaActualDepartamentos, cantidadDepartamentosMostrablesFiltrada]);
+
+
   const handleDepartamentosCheckboxChange = async (departamentoId: number) => {
     if (localidadesProvincia.length === 0) {
       buscarLocalidadesProvincia();
@@ -132,7 +225,6 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
         nuevasLocalidades.push(localidad);
       }
     }
-
     // Actualiza el estado con las nuevas localidades
     setLocalidadesMostrables(nuevasLocalidades);
   };
@@ -330,30 +422,57 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
           <>
             <h4>Paso 3 - Departamentos para delivery</h4>
             <div className="inputBox">
-              <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery:</label>
-
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery dentro de la provincia de {inputProvincia}:</label>
             </div>
-            {departamentosMostrablesCheckBox && (
-              <table>
-                <tbody>
-                  {departamentosMostrablesCheckBox.map((departamento, index) => (
-                    <tr key={index}>
-                      <td>{departamento.nombre}</td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          id={`localidad-${index}`}
-                          value={departamento.id}
-                          checked={idDepartamentosElegidos.has(departamento.id)}
-                          onChange={() => handleDepartamentosCheckboxChange(departamento.id)}
-                        />
-                      </td>
-                    </tr>
+            <div className="filtros">
+              <div className="inputBox-filtrado">
+                <select id="cantidad" name="cantidadProductos" value={cantidadDepartamentosMostrablesFiltrada} onChange={(e) => cantidadMostradaDepartamentos(parseInt(e.target.value))}>
+                  <option value={11} disabled >Selecciona una cantidad a mostrar</option>
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={75}>75</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
 
-                  ))}
-                </tbody>
-              </table>
-            )}
+              <div className="filtros-datos">
+                <div className="inputBox-filtrado" >
+                  <input
+                    type="text"
+                    required
+                    onChange={(e) => filtrarDepartamentos(e.target.value)}
+                  />
+                  <span>Filtrar por nombre</span>
+                </div>
+              </div>
+            </div>
+            <table>
+              <tbody>
+                {departamentosMostrablesCheckboxFiltradas.map((departamento, index) => (
+                  <tr key={index}>
+                    <td>{departamento.nombre}</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        id={`localidad-${index}`}
+                        value={departamento.id}
+                        checked={idDepartamentosElegidos.has(departamento.id)}
+                        onChange={() => handleDepartamentosCheckboxChange(departamento.id)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="pagination">
+              {Array.from({ length: paginasTotalesDepartamentos }, (_, index) => (
+                <button key={index + 1} onClick={() => paginateDepartamentos(index + 1)} disabled={paginaActualDepartamentos === index + 1}>
+                  {index + 1}
+                </button>
+              ))}
+            </div>
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
@@ -366,14 +485,36 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
           <>
             <h4>Paso 4 - Localidades para delivery</h4>
             <div className="inputBox">
-
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
             </div>
+            <div className="filtros">
+              <div className="inputBox-filtrado">
+                <select id="cantidad" name="cantidadProductos" value={cantidadLocalidadesMostrablesFiltradas} onChange={(e) => cantidadMostradaLocalidades(parseInt(e.target.value))}>
+                  <option value={11} disabled >Selecciona una cantidad a mostrar</option>
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={75}>75</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
 
-            {localidadesMostrablesCheckbox && (
+              <div className="filtros-datos">
+                <div className="inputBox-filtrado" >
+                  <input
+                    type="text"
+                    required
+                    onChange={(e) => filtrarLocalidades(e.target.value)}
+                  />
+                  <span>Filtrar por nombre</span>
+                </div>
+              </div>
+            </div>
+            {localidadesMostrablesCheckboxFiltradas && (
               <table>
                 <tbody>
-                  {localidadesMostrablesCheckbox.map((localidad, index) => (
+                  {localidadesMostrablesCheckboxFiltradas.map((localidad, index) => (
                     <tr key={index}>
                       <td>{localidad.nombre}</td>
                       <td>
@@ -390,6 +531,13 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
                 </tbody>
               </table>
             )}
+            <div className="pagination">
+              {Array.from({ length: paginasTotalesLocalidades }, (_, index) => (
+                <button key={index + 1} onClick={() => paginateLocalidades(index + 1)} disabled={paginaActualLocalidades === index + 1}>
+                  {index + 1}
+                </button>
+              ))}
+            </div>
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>

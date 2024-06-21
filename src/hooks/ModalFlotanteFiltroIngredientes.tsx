@@ -30,9 +30,11 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
             !datosOmitidos.includes(articulo.nombre)
           );
 
+          ingredientesFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(ingredientesFiltrados);
           setRecomendacionesFiltradas(ingredientesFiltrados);
         } else {
+          ingredientes.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(ingredientes);
           setRecomendacionesFiltradas(ingredientes);
         }
@@ -43,9 +45,18 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
   }
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }

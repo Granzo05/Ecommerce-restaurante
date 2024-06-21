@@ -194,12 +194,11 @@ const PrivilegiosEmpleados = () => {
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarNombre(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
                 </div>
-
-
             </div>
             {mostrarPrivilegios && (
                 <div id="stocks">

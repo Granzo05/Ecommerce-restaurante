@@ -30,9 +30,11 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
           const rolesFiltrados = roles.filter(rol =>
             !datosOmitidos.includes(rol.nombre)
           );
+          rolesFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(rolesFiltrados);
           setRecomendacionesFiltradas(rolesFiltrados);
         } else {
+          roles.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(roles);
           setRecomendacionesFiltradas(roles);
         }
@@ -43,9 +45,18 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
   }, []);
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }

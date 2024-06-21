@@ -28,9 +28,11 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
           const medidasFiltradas = medidas.filter(articulo =>
             !datosOmitidos.includes(articulo.nombre)
           );
+          medidasFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(medidasFiltradas);
           setRecomendacionesFiltradas(medidasFiltradas);
         } else {
+          medidas.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(medidas);
           setRecomendacionesFiltradas(medidas);
         }
@@ -41,13 +43,21 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
   }, []);
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }
-
   const [showAgregarMedidaModal, setShowAgregarMedidaModal] = useState<boolean>(false);
 
 

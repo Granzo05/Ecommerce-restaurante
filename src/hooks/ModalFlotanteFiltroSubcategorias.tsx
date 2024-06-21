@@ -31,9 +31,11 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
           const subcategoriasFiltrados = subcategorias.filter(articulo =>
             !datosOmitidos.includes(articulo.nombre)
           );
+          subcategoriasFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(subcategoriasFiltrados);
           setRecomendacionesFiltradas(subcategoriasFiltrados);
         } else {
+          subcategorias.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(subcategorias);
           setRecomendacionesFiltradas(subcategorias);
         }
@@ -44,9 +46,18 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
   }, []);
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }
@@ -64,7 +75,7 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
 
           </div>
           <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={handleModalAddSubClose}>
-            <AgregarSubcategoria onCloseModal={handleModalClose}/>
+            <AgregarSubcategoria onCloseModal={handleModalClose} />
           </ModalCrud>
           <hr />
           <div className="inputBox">

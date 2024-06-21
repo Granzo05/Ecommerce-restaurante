@@ -25,9 +25,11 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
               !datosOmitidos.includes(articulo.calle)
             );
 
+            domiciliosFiltrados.sort((a, b) => a.calle.localeCompare(b.calle));
             setRecomendaciones(domiciliosFiltrados);
             setRecomendacionesFiltradas(domiciliosFiltrados);
           } else {
+            domicilios.sort((a, b) => a.calle.localeCompare(b.calle));
             setRecomendaciones(domicilios);
             setRecomendacionesFiltradas(domicilios);
           }
@@ -40,9 +42,18 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
   }, [cliente]);
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.calle.toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.calle.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.calle.localeCompare(b.calle));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.calle.localeCompare(b.calle));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }

@@ -5,7 +5,7 @@ import '../styles/modalCrud.css'
 import { PaisService } from "../services/PaisService";
 import { Pais } from "../types/Domicilio/Pais";
 
-const ModalFlotanteRecomendacionesPais: React.FC<{ onCloseModal: () => void, onSelectPais: (paises: Pais) => void}> = ({ onCloseModal, onSelectPais }) => {
+const ModalFlotanteRecomendacionesPais: React.FC<{ onCloseModal: () => void, onSelectPais: (paises: Pais) => void }> = ({ onCloseModal, onSelectPais }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -18,8 +18,10 @@ const ModalFlotanteRecomendacionesPais: React.FC<{ onCloseModal: () => void, onS
   useEffect(() => {
     PaisService.getPaises()
       .then(paises => {
+        paises.sort((a, b) => a.nombre.localeCompare(b.nombre));
         setRecomendaciones(paises);
         setRecomendacionesFiltradas(paises);
+
       })
       .catch(error => {
         console.error('Error:', error);
@@ -27,9 +29,18 @@ const ModalFlotanteRecomendacionesPais: React.FC<{ onCloseModal: () => void, onS
   }, []);
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }

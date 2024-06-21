@@ -22,9 +22,11 @@ const ModalFlotanteRecomendacionesSucursales: React.FC<{ onCloseModal: () => voi
           const sucursalesFiltrados = sucursales.filter(articulo =>
             !datosOmitidos.includes(articulo.nombre)
           );
+          sucursalesFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(sucursalesFiltrados);
           setRecomendacionesFiltradas(sucursalesFiltrados);
         } else {
+          sucursales.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(sucursales);
           setRecomendacionesFiltradas(sucursales);
         }
@@ -35,9 +37,18 @@ const ModalFlotanteRecomendacionesSucursales: React.FC<{ onCloseModal: () => voi
   }, []);
 
   function filtrarRecomendaciones(filtro: string) {
+    let recomendacionesFiltradas = recomendaciones;
+
     if (filtro.length > 0) {
-      setRecomendacionesFiltradas(recomendaciones.filter(recomendacion => recomendacion.id.toString().toLowerCase().includes(filtro.toLowerCase())));
+      recomendacionesFiltradas = recomendaciones.filter(recomendacion =>
+        recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      recomendacionesFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+      setRecomendacionesFiltradas(recomendacionesFiltradas);
     } else {
+      recomendaciones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
       setRecomendacionesFiltradas(recomendaciones);
     }
   }
@@ -62,9 +73,9 @@ const ModalFlotanteRecomendacionesSucursales: React.FC<{ onCloseModal: () => voi
             </thead>
             <tbody>
               {recomendacionesFiltradas && recomendacionesFiltradas.length > 0 ? (
-                recomendacionesFiltradas.map(recomendacion => (
+                recomendacionesFiltradas.map((recomendacion, index) => (
                   <tr key={recomendacion.id} style={{ cursor: 'pointer' }} onClick={() => onSelectSucursal(recomendacion)}>
-                    <td>{recomendacion.id} - {recomendacion.domicilio.localidad.departamento.nombre}, {recomendacion.domicilio.localidad.departamento.provincia.nombre}</td>
+                    <td>{recomendacion.id} - {recomendacion.domicilios[index].localidad.departamento.nombre}, {recomendacion.domicilios[index].localidad.departamento.provincia.nombre}</td>
                   </tr>
                 ))
               ) : (
