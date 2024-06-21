@@ -3,6 +3,7 @@ import { PrivilegiosEmpleados } from "./PrivilegiosEmpleado";
 import { FechaContratacionEmpleado } from "./FechaContratacionEmpleado";
 import { RolesEmpleado } from "./RolesEmpleados";
 import { Sucursal } from "./Sucursal";
+import { Imagenes } from "../Productos/Imagenes";
 
 export class Empleado {
     id: number = 0;
@@ -18,7 +19,8 @@ export class Empleado {
     sucursales: Sucursal[] = [];
     rolesEmpleado: RolesEmpleado[] = [];
     borrado: string = '';
-
+    imagenes: Imagenes[] = [];
+    
     constructor() {
 
     }

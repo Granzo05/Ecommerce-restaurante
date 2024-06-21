@@ -55,7 +55,7 @@ public class Sucursal implements Serializable {
     @Column(name = "horario_cierre")
     private LocalTime horarioCierre;
 
-    @JsonIgnoreProperties(value = {"domicilios", "sucursales"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "imagenes", "privilegios", "rolesEmpleado", "sucursales", "fechaContratacion"}, allowSetters = true)
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Empleado> empleados = new HashSet<>();
 
@@ -99,7 +99,7 @@ public class Sucursal implements Serializable {
     @ManyToMany(mappedBy = "sucursales", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ArticuloVenta> articulosVenta = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria", "empleados"}, allowSetters = true)
     @ManyToMany(mappedBy = "sucursales", fetch = FetchType.EAGER)
     private Set<Imagenes> imagenes = new HashSet<>();
 

@@ -213,7 +213,7 @@ const PrivilegiosEmpleados = () => {
                         </thead>
                         <tbody>
                             {privilegiosFiltradas.map(privilegio => (
-                                <tr key={privilegio.id}>
+                                <tr key={privilegio.nombre}>
                                     <td>{privilegio.nombre.toString().replace(/_/g, ' ')}</td>
 
                                     <td>

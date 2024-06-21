@@ -27,7 +27,7 @@ public class RolesEmpleados {
     @JoinColumn(name = "id_rol")
     private Roles rol;
 
-    @JsonIgnoreProperties(value = {"rolesEmpleado", "domicilios", "sucursales"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "imagenes", "privilegios", "rolesEmpleado", "sucursales", "fechaContratacion"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;

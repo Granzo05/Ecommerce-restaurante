@@ -3,12 +3,17 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
+import main.entities.Productos.ArticuloVenta;
+import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.*;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -18,25 +23,15 @@ public class EmpleadoController {
     private final EmpleadoRepository empleadoRepository;
     private final FechaContratacionRepository fechaContratacionRepository;
     private final DomicilioRepository domicilioRepository;
-    private final PrivilegiosSucursalesRepository privilegiosSucursalesRepository;
-    private final RolesRepository rolesRepository;
+    private final ImagenesRepository imagenesRepository;
 
-    private final PrivilegiosEmpleadoRepository privilegiosEmpleadoRepository;
-
-    private final RolesEmpleadoRepository rolesEmpleadoRepository;
-
-
-    public EmpleadoController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, PrivilegiosSucursalesRepository privilegiosSucursalesRepository, RolesRepository rolesRepository, PrivilegiosEmpleadoRepository privilegiosEmpleadoRepository, RolesEmpleadoRepository rolesEmpleadoRepository) {
+    public EmpleadoController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, ImagenesRepository imagenesRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.fechaContratacionRepository = fechaContratacionRepository;
         this.domicilioRepository = domicilioRepository;
-        this.privilegiosSucursalesRepository = privilegiosSucursalesRepository;
-        this.rolesRepository = rolesRepository;
-        this.privilegiosEmpleadoRepository = privilegiosEmpleadoRepository;
-        this.rolesEmpleadoRepository = rolesEmpleadoRepository;
+        this.imagenesRepository = imagenesRepository;
     }
-
 
     @CrossOrigin
     @GetMapping("/empleado/login/{email}/{password}")
@@ -88,10 +83,12 @@ public class EmpleadoController {
 
             for (PrivilegiosEmpleados privilegio : empleadoDetails.getPrivilegios()) {
                 privilegio.setEmpleado(empleadoDetails);
+                privilegio.setBorrado("NO");
             }
 
             for (RolesEmpleados roles : empleadoDetails.getRolesEmpleado()) {
                 roles.setEmpleado(empleadoDetails);
+                roles.setBorrado("NO");
             }
 
             Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -145,7 +142,6 @@ public class EmpleadoController {
                 }
             } catch (Exception ignored){}
 
-
             empleado.setDomicilios(new HashSet<>(domicilios));
 
             empleado.setFechaContratacion(new HashSet<>(fechaContratacionRepository.findByIdEmpleado(empleado.getId())));
@@ -158,6 +154,85 @@ public class EmpleadoController {
     @GetMapping("/cocineros/{idSucursal}")
     public int getCantidadCocineros(@PathVariable("idSucursal") Long idSucursal) {
         return empleadoRepository.findCantidadCocineros(idSucursal);
+    }
+
+    @CrossOrigin
+    @org.springframework.transaction.annotation.Transactional
+    @PostMapping("/empleado/imagenes/{idSucursal}")
+    public ResponseEntity<String> crearImagenEmpleado(@RequestParam("file") MultipartFile file, @RequestParam("cuilEmpleado") String cuilEmpleado, @PathVariable("idSucursal") Long idSucursal) {
+        HashSet<Imagenes> listaImagenes = new HashSet<>();
+        // Buscamos el nombre de la foto
+        String fileName = file.getOriginalFilename().replaceAll(" ", "");
+        try {
+            String basePath = new File("").getAbsolutePath();
+            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesEmpleados" + File.separator + cuilEmpleado.replaceAll(" ", "").replaceAll("-", "") + File.separator;
+
+            // Verificar si la carpeta existe, caso contrario, crearla
+            File carpeta = new File(rutaCarpeta);
+            if (!carpeta.exists()) {
+                carpeta.mkdirs();
+            }
+
+            String rutaArchivo = rutaCarpeta + fileName;
+            file.transferTo(new File(rutaArchivo));
+
+            String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("imagesEmpleados/")
+                    .path(cuilEmpleado.replaceAll(" ", "").replaceAll("-", "") + "/")
+                    .path(fileName.replaceAll(" ", ""))
+                    .toUriString();
+
+            Imagenes imagen = new Imagenes();
+            imagen.setNombre(fileName.replaceAll(" ", ""));
+            imagen.setRuta(downloadUrl);
+            imagen.setFormato(file.getContentType());
+
+            listaImagenes.add(imagen);
+
+            try {
+                for (Imagenes imagenProducto : listaImagenes) {
+                    // Asignamos el empleado a la imagen
+                    Optional<Empleado> empleado = empleadoRepository.findByCuilAndIdSucursal(Encrypt.encriptarString(cuilEmpleado), idSucursal);
+                    if (empleado.isEmpty()) {
+                        return ResponseEntity.badRequest().body("empleado no encontrado");
+                    }
+                    imagenProducto.getEmpleados().add(empleado.get());
+                    imagenProducto.getSucursales().add(sucursalRepository.findById(idSucursal).get());
+
+                    imagenesRepository.save(imagenProducto);
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error al insertar la ruta en el menu: " + e);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>("Imagen creada correctamente", HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.out.println("Error al crear la imagen: " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @jakarta.transaction.Transactional
+    @CrossOrigin
+    @PutMapping("/empleado/imagen/{id}/delete")
+    public ResponseEntity<String> eliminarImagenArticulo(@PathVariable("id") Long id) {
+        Optional<Imagenes> imagen = imagenesRepository.findById(id);
+
+        if (imagen.isPresent()) {
+            try {
+                imagen.get().setBorrado("SI");
+                imagenesRepository.save(imagen.get());
+                return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
+            } catch (Exception e) {
+                System.out.println("Error al crear la imagen: " + e);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 

@@ -17,7 +17,7 @@ import java.util.Set;
 @Table(name = "privilegios_empleados")
 public class PrivilegiosEmpleados extends Privilegios {
 
-    @JsonIgnoreProperties(value = {"privilegiosEmpleados"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "imagenes", "privilegios", "rolesEmpleado", "sucursales", "fechaContratacion"}, allowSetters = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;

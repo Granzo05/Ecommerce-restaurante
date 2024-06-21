@@ -58,7 +58,7 @@ public class Domicilio implements Serializable {
     )
     private Sucursal sucursal;
 
-    @JsonIgnoreProperties(value = {"domicilios"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "imagenes", "privilegios", "rolesEmpleado", "sucursales", "fechaContratacion"}, allowSetters = true)
     @ManyToOne
     @JoinTable(
             name = "domicilios_empleados",

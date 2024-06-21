@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Ingredientes.Categoria;
+import main.entities.Restaurante.Empleado;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.Sucursal;
 
@@ -68,7 +69,7 @@ public class Imagenes implements Serializable {
     )
     private Set<Empresa> empresas = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "imagenes_sucursal",
@@ -77,7 +78,7 @@ public class Imagenes implements Serializable {
     )
     private Set<Sucursal> sucursales = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"subcategorias", "sucursales"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"subcategorias", "sucursales", "imagenes"}, allowSetters = true)
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "imagenes_categoria",
@@ -85,4 +86,13 @@ public class Imagenes implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_categoria")
     )
     private Set<Categoria> categorias = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"domicilios", "fechaContratacion", "privilegios", "rolesEmpleado", "imagenes", "sucursales"}, allowSetters = true)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "imagenes_empleado",
+            joinColumns = @JoinColumn(name = "id_imagen"),
+            inverseJoinColumns = @JoinColumn(name = "id_empleado")
+    )
+    private Set<Empleado> empleados = new HashSet<>();
 }

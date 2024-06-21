@@ -40,7 +40,7 @@ public class Promocion implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "promocion", cascade = CascadeType.ALL)
     private Set<DetallePromocion> detallesPromocion = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria", "empleados"}, allowSetters = true)
     @ManyToMany(mappedBy = "promociones", fetch = FetchType.EAGER)
     private Set<Imagenes> imagenes = new HashSet<>();
 
@@ -53,7 +53,7 @@ public class Promocion implements Serializable {
     @Column(name = "borrado")
     private String borrado = "NO";
 
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "promocion_sucursal",

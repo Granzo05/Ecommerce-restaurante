@@ -14,14 +14,14 @@ import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPai
 import { Departamento } from '../../types/Domicilio/Departamento';
 import { Provincia } from '../../types/Domicilio/Provincia';
 import { Pais } from '../../types/Domicilio/Pais';
-import { formatearFechaDDMMYYYY, formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
-import { Privilegios } from '../../types/Restaurante/Privilegios';
+import { formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
 import ModalFlotanteRecomendacionesRoles from '../../hooks/ModalFlotanteFiltroRoles';
 import { RolesEmpleado } from '../../types/Restaurante/RolesEmpleados';
 import { Roles } from '../../types/Restaurante/Roles';
 import { PrivilegiosEmpleados } from '../../types/Restaurante/PrivilegiosEmpleado';
 import { PrivilegiosSucursales } from '../../types/Restaurante/PrivilegiosSucursales';
+import { Imagenes } from '../../types/Productos/Imagenes';
 
 interface EditarEmpleadoProps {
   empleadoOriginal: Empleado;
@@ -51,7 +51,43 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [privilegiosElegidos, setPrivilegiosElegidos] = useState<{ [nombre: string]: string[] }>({});
   const [privilegios, setPrivilegios] = useState<PrivilegiosSucursales[]>([]);
 
+  const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(empleadoOriginal.imagenes);
+  const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
+  const [selectIndex, setSelectIndex] = useState<number>(0);
 
+  const handleImagen = (index: number, file: File | null) => {
+    if (file) {
+      const newImagenes = [...imagenes];
+      newImagenes[index] = { ...newImagenes[index], file };
+      setImagenes(newImagenes);
+    }
+  };
+
+  const añadirCampoImagen = () => {
+    let imagenNueva = new Imagenes();
+    imagenNueva.index = imagenes.length;
+    setImagenes([...imagenes, imagenNueva]);
+  };
+
+  const quitarCampoImagen = () => {
+    if (imagenes.length > 0) {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+
+      if (selectIndex > 0) {
+        setSelectIndex(prevIndex => prevIndex - 1);
+      }
+    }
+  };
+
+  const handleEliminarImagen = (index: number) => {
+    const nuevasImagenes = [...imagenesMuestra];
+    const imagenEliminada = nuevasImagenes.splice(index, 1)[0];
+    setImagenesMuestra(nuevasImagenes);
+    setImagenesEliminadas([...imagenesEliminadas, imagenEliminada]);
+  };
 
   const handleChangeCalle = (index: number, calle: string) => {
     const nuevosDomicilios = [...domicilios];
@@ -372,7 +408,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
 
     empleadoActualizado.rolesEmpleado = roles;
 
-    toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado), {
+    toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado, imagenes, imagenesEliminadas), {
       loading: 'Actualizando empleado...',
       success: (message) => {
         setTimeout(() => {
@@ -384,8 +420,19 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
         return message;
       },
     });
-
   }
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextImage = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % imagenesMuestra.length);
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? imagenesMuestra.length - 1 : prevIndex - 1
+    );
+  };
 
   //SEPARAR EN PASOS
   const [step, setStep] = useState(1);
@@ -439,6 +486,65 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       case 2:
         return (
           <>
+            <h4>Imagenes</h4>
+            <div className="slider-container">
+              <button onClick={prevImage} className="slider-button prev">◀</button>
+              <div className='imagenes-wrapper'>
+                {imagenesMuestra.map((imagen, index) => (
+                  <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
+                    <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
+                    <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+
+                    {imagen && (
+                      <img
+
+                        src={imagen.ruta}
+                        alt={`Imagen ${index}`}
+                      />
+                    )}
+                  </div>
+
+                ))}
+                <button onClick={nextImage} className="slider-button next">▶</button>
+              </div>
+            </div>
+
+            {imagenes.map((imagen, index) => (
+              <div key={index} className='inputBox'>
+                <hr />
+                <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
+                <br />
+                <div className="file-input-wrapper">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id={`file-input-${index}`}
+                    className="file-input"
+                    onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                  />
+                  <label htmlFor={`file-input-${index}`} className="file-input-label">
+                    {imagen.file ? (
+                      <p>Archivo seleccionado: {imagen.file.name}</p>
+                    ) : (
+                      <p>Seleccionar un archivo</p>
+                    )}
+                  </label>
+                </div>
+              </div>
+            ))}
+            <br />
+            <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <br />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
             <h4>Roles</h4>
             {rolesModificables && rolesModificables.map((roles, index) => (
               <div key={'domicilioMod' + index}>
@@ -470,7 +576,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             </div>
           </>
         );
-      case 3:
+      case 4:
         return (
           <>
             <h4>Domicilio/os</h4>
@@ -535,7 +641,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             </div>
           </>
         );
-      case 4:
+      case 5:
         return (
           <>
             <h4>Privilegios comúnes</h4>
@@ -571,7 +677,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             </div>
           </>
         );
-      case 5:
+      case 6:
         return (
           <>
             <h4>Privilegios sensibles</h4>

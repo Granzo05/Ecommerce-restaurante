@@ -1,8 +1,9 @@
+import { Imagenes } from '../types/Productos/Imagenes';
 import { Empleado } from '../types/Restaurante/Empleado'
 import { getBaseUrl, limpiarCredenciales, sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
-    createEmpleado: async (empleado: Empleado): Promise<string> => {
+    createEmpleado: async (empleado: Empleado, imagenes: Imagenes[]): Promise<string> => {
         try {
             let response = await fetch(URL_API + 'empleado/create/' + sucursalId(), {
                 method: 'POST',
@@ -12,8 +13,28 @@ export const EmpleadoService = {
                 body: JSON.stringify(empleado)
             })
 
+            let cargarImagenes = true;
+
             if (!response.ok) {
-                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+                cargarImagenes = false;
+                throw new Error(await response.text());
+            }
+
+            // Cargar imágenes solo si se debe hacer
+            if (cargarImagenes) {
+                await Promise.all(imagenes.map(async (imagen) => {
+                    if (imagen.file) {
+                        // Crear objeto FormData para las imágenes
+                        const formData = new FormData();
+                        formData.append('file', imagen.file);
+                        formData.append('cuilEmpleado', empleado.cuil);
+
+                        await fetch(URL_API + 'empleado/imagenes/' + sucursalId(), {
+                            method: 'POST',
+                            body: formData
+                        });
+                    }
+                }));
             }
 
             return await response.text();
@@ -53,7 +74,7 @@ export const EmpleadoService = {
 
                     // Redirige al usuario al menú principal
                     window.location.href = getBaseUrl() + '/opciones';
-                    
+
                     return;
                 }
             })
@@ -96,14 +117,14 @@ export const EmpleadoService = {
             }
 
             return response.json();
-            
+
         } catch (error) {
             console.error('Error:', error);
             throw error;
         }
     },
 
-    updateEmpleado: async (empleado: Empleado): Promise<string> => {
+    updateEmpleado: async (empleado: Empleado, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'empleado/update/' + sucursalId(), {
                 method: 'PUT',
@@ -113,9 +134,39 @@ export const EmpleadoService = {
                 body: JSON.stringify(empleado)
             })
 
+            let cargarImagenes = true;
+
             if (!response.ok) {
+                cargarImagenes = false;
                 throw new Error(await response.text());
             }
+
+            // Cargar imágenes solo si se debe hacer
+            if (cargarImagenes && (imagenes || imagenesEliminadas)) {
+                await Promise.all(imagenes.map(async (imagen) => {
+                    if (imagen.file) {
+                        // Crear objeto FormData para las imágenes
+                        const formData = new FormData();
+                        formData.append('file', imagen.file);
+                        formData.append('cuilEmpleado', empleado.cuil);
+
+                        await fetch(URL_API + 'empleado/imagenes/' + sucursalId(), {
+                            method: 'POST',
+                            body: formData
+                        });
+                    }
+                }));
+
+                if (imagenesEliminadas) {
+                    await Promise.all(imagenesEliminadas.map(async (imagen) => {
+                        await fetch(URL_API + 'empleado/imagen/' + imagen.id + '/delete', {
+                            method: 'PUT',
+                        });
+                    }));
+                }
+            }
+
+            return response.text();
 
             return await response.text();
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
+import main.entities.Productos.Imagenes;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -57,7 +58,11 @@ public class Empleado {
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
     private Set<RolesEmpleados> rolesEmpleado = new HashSet<>();
 
-    @JsonIgnoreProperties(value = {"empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria", "empleados"}, allowSetters = true)
+    @ManyToMany(mappedBy = "empleados", fetch = FetchType.EAGER)
+    private Set<Imagenes> imagenes = new HashSet<>();
+
+    @JsonIgnoreProperties(value = {"domicilios", "empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "empleados_sucursales",

@@ -20,12 +20,15 @@ import { Roles } from '../../types/Restaurante/Roles';
 import { RolesEmpleado } from '../../types/Restaurante/RolesEmpleados';
 import { PrivilegiosEmpleados } from '../../types/Restaurante/PrivilegiosEmpleado';
 import { PrivilegiosSucursales } from '../../types/Restaurante/PrivilegiosSucursales';
+import { Imagenes } from '../../types/Productos/Imagenes';
 
 interface AgregarEmpleadoProps {
   onCloseModal: () => void;
 }
 
 const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
+  const [imagenes, setImagenes] = useState<Imagenes[]>([]);
+  const [selectIndex, setSelectIndex] = useState<number>(0);
 
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
@@ -54,6 +57,30 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     setModalBusquedaLocalidad(false)
     setModalBusquedaPais(false)
     setModalBusquedaRoles(false)
+  };
+
+  const handleImagen = (index: number, file: File | null) => {
+    if (file) {
+      const newImagenes = [...imagenes];
+      newImagenes[index] = { ...newImagenes[index], file };
+      setImagenes(newImagenes);
+    }
+  };
+
+  const añadirCampoImagen = () => {
+    setImagenes([...imagenes, { index: imagenes.length, file: null } as Imagenes]);
+  };
+
+  const quitarCampoImagen = () => {
+    if (imagenes.length > 0) {
+      const nuevasImagenes = [...imagenes];
+      nuevasImagenes.pop();
+      setImagenes(nuevasImagenes);
+
+      if (selectIndex > 0) {
+        setSelectIndex(prevIndex => prevIndex - 1);
+      }
+    }
   };
 
   useEffect(() => {
@@ -223,7 +250,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     const empleadoPrivilegios: PrivilegiosEmpleados[] = Object.entries(privilegiosElegidos).map(([nombre, permisos]) => {
       return new PrivilegiosEmpleados(0, permisos, 0, nombre, 'NO');
     });
-    
+
     empleado.privilegios = empleadoPrivilegios;
 
     roles.forEach(rol => {
@@ -233,8 +260,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       empleado.rolesEmpleado.push(rolEmpleado)
     });
 
-    console.log(empleado)
-    toast.promise(EmpleadoService.createEmpleado(empleado), {
+    toast.promise(EmpleadoService.createEmpleado(empleado, imagenes), {
       loading: 'Creando empleado...',
       success: (message: string) => {
         setTimeout(() => {
@@ -289,6 +315,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     } else {
       nextStep();
     }
+
   }
 
   const validateAndNextStep2 = () => {
@@ -301,6 +328,8 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       const provincia = domicilios[i].localidad.departamento.provincia;
       const departamento = domicilios[i].localidad.departamento;
       const localidad = domicilios[i].localidad;
+
+      console.log(calle)
 
       if (!calle || !calle.match(/^[a-zA-Z\s]+$/)) {
         toast.info(`Por favor, el domicilio ${i + 1} debe contener una calle`);
@@ -419,7 +448,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
               <input type="date" required value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
-              <div className="error-message">El empleado debe ser mayor a 18 años.</div>
+              <div className="error-message" style={{ marginTop: '-15px' }}>El empleado debe ser mayor a 18 años.</div>
               <hr />
             </div>
             <div className="btns-pasos">
@@ -430,7 +459,46 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       case 2:
         return (
           <>
-            <h4>Paso 2 - Roles</h4>
+            <h4>Paso 2 - Imagenes</h4>
+            <div >
+              {imagenes.map((imagen, index) => (
+                <div key={index} className='inputBox'>
+                  <hr />
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoImagen()}>X</p>
+                  <h4 style={{ fontSize: '18px' }}>Imagen {index + 1}</h4>
+                  <br />
+                  <div className="file-input-wrapper">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id={`file-input-${index}`}
+                      className="file-input"
+                      onChange={(e) => handleImagen(index, e.target.files?.[0] ?? null)}
+                    />
+                    <label htmlFor={`file-input-${index}`} className="file-input-label">
+                      {imagen.file ? (
+                        <p>Archivo seleccionado: {imagen.file.name}</p>
+                      ) : (
+                        <p>Seleccionar un archivo</p>
+                      )}
+                    </label>
+                  </div>
+                </div>
+              ))}
+
+            </div>
+            <button onClick={añadirCampoImagen}>Añadir imagen</button>
+            <br />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h4>Paso 3 - Roles</h4>
             <label style={{ display: 'flex', fontWeight: 'bold' }}>Rol del empleado:</label>
 
             {roles && roles.map((roles, index) => (
@@ -450,10 +518,10 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             </div>
           </>
         );
-      case 3:
+      case 4:
         return (
           <>
-            <h4>Paso 3 - Domicilio/os</h4>
+            <h4>Paso 4 - Domicilio/os</h4>
             {domicilios && domicilios.map((domicilio, index) => (
               <div key={index}>
                 <hr />
@@ -498,10 +566,10 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             </div>
           </>
         );
-      case 4:
+      case 5:
         return (
           <>
-            <h4 className="paso-titulo">Paso 4 - Privilegios comunes</h4>
+            <h4 className="paso-titulo">Paso 5 - Privilegios comunes</h4>
             <div className="privilegios-container">
               {filteredPrivilegios && filteredPrivilegios.map((privilegio, index) => (
                 <div key={index} className="privilegio">
@@ -548,7 +616,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             </div>
           </>
         );
-      case 5:
+      case 6:
         return (
           <>
             <h4 className="paso-titulo">Paso opcional - Privilegios sensibles</h4>

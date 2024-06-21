@@ -17,7 +17,7 @@ import java.util.Set;
 @Table(name = "privilegios_sucursales")
 public class PrivilegiosSucursales extends Privilegios {
 
-    @JsonIgnoreProperties(value = {"privilegiosSucursales"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "privilegios_sucursales_rel",

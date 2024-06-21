@@ -82,10 +82,11 @@ ERROR AL CREAR Y MOSTRAR SUCURSALES[x]
 ESTA BUG LO DE LA FECHA DE LAS PROMOCIONES[x]
 ERROR AL MOSTRAR EMPLEADOS EN OPCIONES EMPLEADOS[x]
 EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
-
 [x] Ajustar el horario estimado
+[x] Cascade en articuloVenta.
+[x] Agregar imagenes al empleado
+
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
-[] Agregar imagenes al empleado
 [] Formatear y mejorar la legibilidad del codigo
 [] Hacer la recuperacion de contraseña
 [] Filtro de lugares al cargar la sucursal para las localidadesDelivery para buscar por nombre de la localidad
@@ -93,7 +94,6 @@ EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
 [] Costo recomendado de articulos por sucursal
 [] Configurar rutas privadas
 [] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
-[] Cascade en articuloVenta.
 [] El editar menú no borra los ingredientes.
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
