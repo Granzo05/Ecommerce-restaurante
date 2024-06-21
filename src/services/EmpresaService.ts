@@ -1,6 +1,7 @@
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Empresa } from '../types/Restaurante/Empresa';
 import { getBaseUrl, limpiarCredenciales, URL_API } from '../utils/global_variables/const';
+import { EmpleadoService } from './EmpleadoService';
 import { SucursalService } from './SucursalService';
 
 export const EmpresaService = {
@@ -40,7 +41,7 @@ export const EmpresaService = {
         return await response.text();
     },
 
-    getEmpresa: async (email: string, contraseña: string) => {
+    getEmpresa: async (email: string, contraseña: string): Promise<string> => {
         limpiarCredenciales();
         try {
             const response = await fetch(URL_API + 'empresa/login/' + email + '/' + contraseña, {
@@ -64,15 +65,25 @@ export const EmpresaService = {
 
                 localStorage.setItem('empresa', JSON.stringify(restaurante));
 
-                window.location.href = getBaseUrl() + '/empresa'
+                window.location.href = getBaseUrl() + '/empresa';
 
-                return;
+                return 'Sesión iniciada correctamente';
             } else {
-                SucursalService.getSucursal(email, contraseña)
+                // Intenta iniciar sesión en la sucursal
+                const mensajeSucursal = await SucursalService.getSucursal(email, contraseña);
+                if (mensajeSucursal) {
+                    return mensajeSucursal;
+                } else {
+                    // Si no se pudo iniciar sesión en la sucursal, intenta como empleado
+                    const mensajeEmpleado = await EmpleadoService.getEmpleado(email, contraseña);
+                    if (mensajeEmpleado) {
+                        return mensajeEmpleado;
+                    } else {
+                        // Si ninguno inició sesión, lanza el error correspondiente
+                        throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+                    }
+                }
             }
-
-            return 'Los datos ingresados no corresponden a una cuenta activa';
-
         } catch (error) {
             throw new Error('Los datos ingresados no corresponden a una cuenta activa');
         }

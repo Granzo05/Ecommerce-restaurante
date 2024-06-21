@@ -71,13 +71,13 @@ export const SucursalService = {
                 localStorage.setItem('sucursal', JSON.stringify(sucursal));
 
                 window.location.href = getBaseUrl() + '/opciones';
-                return;
-            } else {
-                EmpleadoService.getEmpleado(email, contraseña);
-            }
 
+                return 'Sesión iniciada correctamente';
+            } else {
+                throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+            }
         } catch (error) {
-            console.error('Error:', error);
+            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
         }
     },
 

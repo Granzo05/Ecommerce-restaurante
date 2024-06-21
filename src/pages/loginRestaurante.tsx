@@ -41,9 +41,9 @@ const LoginNegocio = () => {
 
     toast.promise(EmpresaService.getEmpresa(email, contraseña), {
       loading: 'Iniciando sesión...',
-      success: (message) => {
-        return message;
-      },
+      success: 'Abriendo sesión',
+      error: 'Credenciales inválidas',
+      duration: 3000,
     });
   };
 
@@ -164,7 +164,7 @@ const LoginNegocio = () => {
             </div>
             <button type='button' className="my-form__button" onClick={handleIniciarSesionNegocio}>
               Ingresar
-            </button>            
+            </button>
           </div>
         </main>
       </div>

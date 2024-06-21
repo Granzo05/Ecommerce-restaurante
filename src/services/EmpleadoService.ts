@@ -46,41 +46,45 @@ export const EmpleadoService = {
     },
 
     getEmpleado: async (email: string, contraseña: string) => {
-        fetch(URL_API + 'empleado/login/' + email + '/' + contraseña, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
+        limpiarCredenciales();
+        try {
+            const response = await fetch(URL_API + 'empleado/login/' + email + '/' + contraseña, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error('Usuario no encontrado');
             }
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+
+            const data = await response.json();
+
+            if (data.id > 0) {
+                let empleado = {
+                    id: data.id,
+                    nombre: data.nombre,
+                    email: data.email,
+                    empleadoPrivilegios: data.empleadoPrivilegios,
+                    sucursales: data.sucursales
                 }
-                return await response.json()
-            })
-            .then(data => {
-                if (data.id > 0) {
-                    let empleado = {
-                        id: data.id,
-                        nombre: data.nombre,
-                        email: data.email,
-                        empleadoPrivilegios: data.empleadoPrivilegios,
-                        sucursales: data.sucursales
-                    }
 
-                    limpiarCredenciales();
+                limpiarCredenciales();
 
-                    localStorage.setItem('empleado', JSON.stringify(empleado));
+                localStorage.setItem('empleado', JSON.stringify(empleado));
 
-                    // Redirige al usuario al menú principal
-                    window.location.href = getBaseUrl() + '/opciones';
+                // Redirige al usuario al menú principal
+                window.location.href = getBaseUrl() + '/opciones';
 
-                    return;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-            })
+                return 'Sesión iniciada correctamente';
+            } else {
+                throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+            }
+        }
+        catch (error) {
+            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+        }
     },
 
     getEmpleados: async (): Promise<Empleado[]> => {
@@ -201,12 +205,12 @@ export const EmpleadoService = {
         /*
         const empleadoStr: string | null = localStorage.getItem('usuario');
         const empleado: Empleado = empleadoStr ? JSON.parse(empleadoStr) : new Empleado();
-
+ 
         // Si no hay un usuario, o el usuario no cumple con los requisitos entonces se le niega la entrada
         if (!empleado || empleado.privilegios === null) {
             window.location.href = '/acceso-denegado';
         }
-
+ 
         // Si los privilegios son solo para el negocio entonces en caso de ser empleado se devuelve un false para no mostrarle las opciones donde no deberia poder acceder
         if (empleado && empleado.privilegios.match('empleado')) {
             return false;
