@@ -183,10 +183,10 @@ const ArticuloVentas = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>- Articulos -</h1>
+            <h1>- Artículos -</h1>
             {createVisible && (
                 <div className="btns-arts">
-                    <button className='btn-agregar' onClick={() => handleAgregarArticuloVenta()}> + Agregar articulo</button>
+                    <button className='btn-agregar' onClick={() => handleAgregarArticuloVenta()}> + Agregar artículo</button>
                 </div>
             )}
             <hr />
@@ -232,7 +232,7 @@ const ArticuloVentas = () => {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Descripcion</th>
+                                <th>Descripción</th>
                                 <th>Precio</th>
                                 <th>Acciones</th>
                             </tr>
