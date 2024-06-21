@@ -201,40 +201,77 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+
+
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+      toast.error("Por favor, es necesario el nombre del articulo");
+      return;
+    } else if (!precio || precio == 0) {
+      toast.error("Por favor, es necesario el precio de venta del articulo válido");
+      return;
+    } else if (!categoria) {
+      toast.error("Por favor, es necesario el tipo");
+      return;
+    } else if (!subcategoria) {
+      toast.error("Por favor, es necesaria la subcategoría");
+      return;
+    } else if (!medida) {
+      toast.error("Por favor, es necesaria la medida");
+      return;
+    } else if (!cantidadMedida || cantidadMedida == 0) {
+      toast.error("Por favor, es necesaria una cantidad de la medida del artículo válida");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
           <>
             <h4>Paso 1 - Datos</h4>
-            <div>
-              <div className="inputBox">
-                <hr />
-                <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-                <span>Nombre del articulo</span>
-              </div>
 
-              <div className="inputBox">
-                <input type="text" required={true} value={precioVenta | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-                <span>Precio del articulo</span>
-              </div>
-              <div className="inputBox">
-                <input type="text" required={true} value={cantidad | 0} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
-                <span>Cantidad</span>
-              </div>
-              <div className="input-filtrado">
-                <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-                {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
-              </div>
-              <div className="input-filtrado">
-                <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedasubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
-                {modalBusquedasubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
-              </div>
-              <div className="input-filtrado">
-                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida?.nombre ?? ''} />
-                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-              </div>
+            <div className="inputBox">
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del articulo</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+
             </div>
+
+            <div className="inputBox">
+              <input type="text" required={true} pattern="\d*" value={precioVenta || ''} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <span>Precio de venta ($)</span>
+              <div className="error-message">El precio de venta solo debe contener números.</div>
+
+            </div>
+
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
+              <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+            </div>
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
+
+              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedasubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
+              {modalBusquedasubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
+            </div>
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida de venta:</label>
+
+              <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida?.nombre ?? ''} />
+              {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
+            </div>
+            <div className="inputBox">
+              <input type="text" required={true} value={cantidad | 0} onChange={(e) => { setCantidad(parseFloat(e.target.value)) }} />
+              <span>Cantidad de la medida de venta</span>
+              <div className="error-message">El precio de venta solo debe contener números.</div>
+
+            </div>
+
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
@@ -336,7 +373,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
 
   return (
     <div className="modal-info">
-      <h2>&mdash; Editar artículo para venta &mdash;</h2>
+      <h2>&mdash; Editar artículo &mdash;</h2>
       <Toaster />
       {renderStep()}
     </div >

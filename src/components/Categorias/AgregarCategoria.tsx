@@ -81,7 +81,7 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
   async function agregarCategoria() {
     const categoria: Categoria = new Categoria();
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
       toast.info("Por favor, asigne un nombre válido");
       return;
     } else if (imagenes.length === 0) {
@@ -133,7 +133,7 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
           <>
             <Toaster />
             <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" />
               <span>Nombre del categoria</span>
               
               <div className="error-message">El nombre debe contener letras y espacios.</div>
@@ -208,6 +208,7 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
 
   return (
     <div className="modal-info">
+      <h2>&mdash; Agregar categoría &mdash;</h2>
       <Toaster />
       {renderStep()}
     </div >

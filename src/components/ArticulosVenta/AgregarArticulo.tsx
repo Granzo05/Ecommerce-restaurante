@@ -232,7 +232,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
   const validateAndNextStep = () => {
 
     
-    if (!nombre || !nombre.match(/^[a-zA-Z\s\-]+$/)) {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
       toast.error("Por favor, es necesario el nombre del articulo");
       return;
     } else if (!precio || precio == 0){
@@ -262,7 +262,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" required={true} pattern="[a-zA-Z\s\-]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del articulo</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
@@ -282,13 +282,13 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div>
-              <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida de venta:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida?.nombre ?? ''} />
               {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
             </div>
             <div className="inputBox">
               <input type="number" required={true} pattern="\d*" value={cantidadMedida} onChange={(e) => setCantidadMedida(parseFloat(e.target.value))} />
-              <span>Cantidad de la medida</span>
+              <span>Cantidad de la medida de venta</span>
               <div className="error-message">El precio de venta solo debe contener números.</div>
             
             </div>
