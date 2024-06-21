@@ -158,7 +158,6 @@ public class ArticuloMenuController {
 
                         sucursal.getArticulosMenu().add(articuloMenu);
                         articuloMenu.getSucursales().add(sucursal);
-                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -166,7 +165,6 @@ public class ArticuloMenuController {
                         Sucursal sucursal = sucursalOpt.get();
                         sucursal.getArticulosMenu().add(articuloMenu);
                         articuloMenu.getSucursales().add(sucursal);
-                        sucursalRepository.save(sucursal);
                     } else {
                         return ResponseEntity.badRequest().body("Sucursal no encontrada");
                     }

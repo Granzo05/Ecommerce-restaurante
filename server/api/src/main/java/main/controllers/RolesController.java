@@ -47,7 +47,6 @@ public class RolesController {
 
                     sucursal.getRoles().add(rolDetails);
                     rolDetails.getSucursales().add(sucursal);
-                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -56,7 +55,6 @@ public class RolesController {
                     if (!sucursal.getMedidas().contains(rolDetails)) {
                         sucursal.getRoles().add(rolDetails);
                         rolDetails.getSucursales().add(sucursal);
-                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
@@ -64,6 +62,7 @@ public class RolesController {
             }
 
             rolDetails.setBorrado("NO");
+
             rolesRepository.save(rolDetails);
 
             return new ResponseEntity<>("El rol ha sido añadido correctamente", HttpStatus.CREATED);

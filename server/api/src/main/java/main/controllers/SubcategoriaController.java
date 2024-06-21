@@ -55,8 +55,6 @@ public class SubcategoriaController {
                             categoriaDetails.getSucursales().add(sucursal);
                         }
                     }
-
-                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -67,7 +65,6 @@ public class SubcategoriaController {
                         if (categoriaDetails.getCategoria().equals(categoria) && !sucursal.getPromociones().contains(categoriaDetails)) {
                             categoria.getSubcategorias().add(categoriaDetails);
                             categoriaDetails.getSucursales().add(sucursal);
-                            sucursalRepository.save(sucursal);
                         }
                     }
 

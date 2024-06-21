@@ -197,14 +197,14 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                 <label>
                   <div className="inputBox">
                     <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
-                    <span>Cantidad mínima del ingrediente (opcional)</span>
+                    <span>Cantidad mínima del ingrediente</span>
                     <div className="error-message">La cantidad mínima solo debe contener números.</div>
                   </div>
                 </label>
                 <label>
                   <div className="inputBox">
                     <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
-                    <span>Cantidad máxima del ingrediente (opcional)</span>
+                    <span>Cantidad máxima del ingrediente</span>
                     <div className="error-message">La cantidad máxima solo debe contener números.</div>
                   </div>
 
@@ -212,17 +212,17 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                 <label>
                   <div className="inputBox">
                     <input type="text" required pattern="\d*" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
-                    <span>Cantidad actual del ingrediente (opcional)</span>
+                    <span>Cantidad actual del ingrediente</span>
                     <div className="error-message">La cantidad actual solo debe contener números.</div>
                   </div>
 
                 </label>
-                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida... (opcional)'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
                 {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
 
                 <div className="inputBox">
                   <input type="text" required pattern="\d*" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
-                  <span>Costo del ingrediente por una unidad de medida ($) (opcional)</span>
+                  <span>Costo del ingrediente por una unidad de medida ($)</span>
                   <div className="error-message">El costo por unidad solo debe contener números.</div>
 
                 </div>
@@ -236,7 +236,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                 <>
                   {!mostrarInputs && (
                     <button value="Agregar stock ahora (opcional)" id='agregarIngrediente' style={{ marginRight: '10px' }}
-                      onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock ahora (opcional)</button>
+                      onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock ahora</button>
                   )}
                   <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar ingrediente</button>
                 </>

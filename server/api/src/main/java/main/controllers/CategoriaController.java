@@ -62,7 +62,6 @@ public class CategoriaController {
 
                     sucursal.getCategorias().add(categoriaDetails);
                     categoriaDetails.getSucursales().add(sucursal);
-                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);

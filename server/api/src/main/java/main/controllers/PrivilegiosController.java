@@ -46,7 +46,6 @@ public class PrivilegiosController {
 
                     sucursal.getPrivilegios().add(privilegiosDetails);
                     privilegiosDetails.getSucursales().add(sucursal);
-                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -55,7 +54,6 @@ public class PrivilegiosController {
                     if (!sucursal.getMedidas().contains(privilegiosDetails)) {
                         sucursal.getPrivilegios().add(privilegiosDetails);
                         privilegiosDetails.getSucursales().add(sucursal);
-                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
@@ -63,6 +61,7 @@ public class PrivilegiosController {
             }
 
             privilegiosDetails.setBorrado("NO");
+
             privilegiosSucursalesRepository.save(privilegiosDetails);
 
             return new ResponseEntity<>("El privilegio ha sido añadido correctamente", HttpStatus.CREATED);

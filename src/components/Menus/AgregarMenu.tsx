@@ -111,7 +111,6 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
           precioRecomendado += (ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad) / 1000;
         }
       });
-
       setPrecioSugerido(precioRecomendado);
     }
   }
@@ -259,9 +258,12 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
   //SEPARAR EN PASOS
   const [step, setStep] = useState(1);
 
+  useEffect(() => {
+    calcularCostos();
+  }, [step]);
+
   const nextStep = () => {
     setStep(step + 1);
-    calcularCostos();
   };
 
   const prevStep = () => {
@@ -410,8 +412,8 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             <br />
             <div className='btns-pasos'>
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button style={{marginRight: '10px'}} onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente en el inventario (opcional)</button>
-            
+              <button style={{ marginRight: '10px' }} onClick={() => setShowAgregarIngredienteModal(true)}>Cargar nuevo ingrediente en el inventario (opcional)</button>
+
               <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
             </div>
           </>
@@ -470,11 +472,18 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
               </>
             )}
             <div className="inputBox">
-              <input type="number" pattern="^[1-9]\d*$" min={0} required={true} value={precio | 0} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <input
+                type="number"
+                step="0.01"
+                min={0}
+                required={true}
+                value={precio}
+                onChange={(e) => { setPrecio(parseFloat(e.target.value)) }}
+              />
               <span>Precio final</span>
               <div className="error-message">Asigne un precio final que solo debe contener números.</div>
-
             </div>
+
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               {empresa && empresa?.id > 0 ? (
