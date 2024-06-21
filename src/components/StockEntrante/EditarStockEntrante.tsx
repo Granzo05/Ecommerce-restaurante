@@ -22,13 +22,18 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }
     const hoy = new Date();
     const fechaIngresada = new Date(fecha);
 
+    const fechaObj = new Date(fecha);
+  
+  // Verificar que la fecha sea válida
+  if (isNaN(fechaObj.getTime())) {
+    toast.error("La fecha no es válida");
+    return;
+  }
+
     if (!fecha) {
       toast.error("Por favor, la fecha es necesaria");
       return;
     } else if (fechaIngresada <= hoy) {
-      toast.error("Por favor, la fecha es necesaria y debe ser posterior a la fecha actual");
-      return;
-    } else if (fecha < fechaIngresada){
       toast.error("Por favor, la fecha es necesaria y debe ser posterior a la fecha actual");
       return;
     }

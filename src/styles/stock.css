@@ -216,5 +216,14 @@ table tr:hover {
     }
   }
   
+.btns-filtrado{
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
 
+.btns-filtrado button{
+    margin: 0;
+    margin-bottom: 10px;
+}
 

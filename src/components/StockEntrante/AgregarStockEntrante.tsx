@@ -220,6 +220,14 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
     const hoy = new Date();
     const fechaIngresada = new Date(fecha);
 
+    const fechaObj = new Date(fecha);
+  
+  // Verificar que la fecha sea válida
+  if (isNaN(fechaObj.getTime())) {
+    toast.error("La fecha no es válida");
+    return;
+  }
+
     if (!fecha) {
       toast.error("Por favor, la fecha es necesaria");
       return;

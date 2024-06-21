@@ -81,8 +81,11 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
   async function agregarCategoria() {
     const categoria: Categoria = new Categoria();
 
-    if (!nombre) {
-      toast.info("Por favor, asigne el nombre");
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+      toast.info("Por favor, asigne un nombre válido");
+      return;
+    } else if (imagenes.length === 0) {
+      toast.info("No se asignó ninguna imagen");
       return;
     }
 
@@ -128,8 +131,13 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
       case 1:
         return (
           <>
-            <h2>&mdash; Cargar nueva categoria &mdash;</h2>
             <Toaster />
+            <div className="inputBox">
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <span>Nombre del categoria</span>
+              
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            </div>
             <div >
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -157,13 +165,9 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
               ))}
             </div>
             <button onClick={añadirCampoImagen}>Añadir imagen</button>
-            <br />
-            <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-              <span>Nombre del categoria</span>
-            </div>
+            <hr />
+            
             <div className="btns-pasos">
-              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (

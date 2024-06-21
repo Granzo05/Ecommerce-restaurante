@@ -67,7 +67,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
 
   async function agregarIngrediente() {
 
-    if (!nombre || !nombre.match(/^[a-zA-Z\s]+$/)) {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
       toast.info("Por favor, asigne un nombre válido");
       return;
     } else if (cantidadMaxima < cantidadMinima) {
@@ -186,7 +186,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
           <>
             <Toaster />
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-Z\s]+" />
+              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
               <span>Nombre del ingrediente</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>

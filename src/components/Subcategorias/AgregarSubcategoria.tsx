@@ -69,8 +69,8 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
     if (!categoria) {
       toast.info("Por favor, es necesaria la categoria");
       return;
-    } else if (!nombreSubcategoria) {
-      toast.info("Por favor, asigne el nombre");
+    } else if (!nombreSubcategoria || !nombreSubcategoria.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+      toast.info("Por favor, asigne un nombre válido");
       return;
     }
 
@@ -92,10 +92,10 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return message;
+        return "Subcategoría creada correctamente";
       },
       error: (message) => {
-        return message;
+        return "Error al crear la subcategoría";
       },
     });
   }
@@ -116,7 +116,6 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
         return (
           <>
             <div className="modal-info">
-              <h2>&mdash; Cargar nueva subcategoria &mdash;</h2>
               <Toaster />
               <div>
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
@@ -124,8 +123,10 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
                 {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre ?? ''} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
               </div>
               <div className="inputBox">
-                <input type="text" required={true} value={nombreSubcategoria} onChange={(e) => { setNombreSubcategoria(e.target.value) }} />
+                <input type="text" required={true} value={nombreSubcategoria} onChange={(e) => { setNombreSubcategoria(e.target.value) }}  pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"/>
                 <span>Nombre de la subcategoria</span>
+                
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
               </div>
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
@@ -167,7 +168,7 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
 
   return (
     <div className="modal-info">
-      <h2>&mdash; Agregar ingrediente &mdash;</h2>
+      <h2>&mdash; Agregar subcategoría &mdash;</h2>
       <Toaster />
       {renderStep()}
 

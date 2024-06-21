@@ -472,6 +472,32 @@ const Opciones = () => {
                                     </div>
                                 )}
 
+
+                                {articuloMenuVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 7 ? 'selected' : ''} onClick={() => handleOpcionClick(7)}>
+                                        Menú
+                                    </h4>
+                                )}
+
+
+                                {articuloVentaVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 11 ? 'selected' : ''} onClick={() => handleOpcionClick(11)}>
+                                        Articulos
+                                    </h4>
+                                )}
+
+                                {rolesVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 20 ? 'selected' : ''} onClick={() => handleOpcionClick(20)}>
+                                        Roles
+                                    </h4>
+                                )}
+
+                                {empleadosVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 8 ? 'selected' : ''} onClick={() => handleOpcionClick(8)}>
+                                        Empleados
+                                    </h4>
+                                )}
+
                                 {sucursalesVisibleEmpleado && (
                                     <h4 className={opcionSeleccionada === 9 ? 'selected' : ''} onClick={() => handleOpcionClick(9)}>
                                         Sucursales

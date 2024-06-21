@@ -90,7 +90,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
     <div className="modal-info">
 
       <Toaster />
-      <h2>&mdash; Agregar artículo &mdash;</h2>
+      <h2>&mdash; Agregar stock artículo &mdash;</h2>
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={articulo?.nombre ?? ''} />
@@ -98,33 +98,41 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
       </div>
       <label>
         <div className="inputBox">
-          <input type="number" required onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
+          <input type="number" required pattern="\d*" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
           <span>Cantidad mínima del articulo</span>
+          <div className="error-message">La cantidad mínima solo debe contener números.</div>
+                
         </div>
       </label>
       <label>
         <div className="inputBox">
-          <input type="number" required onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
+          <input type="number" required pattern="\d*" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
           <span>Cantidad máxima del articulo</span>
+          <div className="error-message">La cantidad máxima solo debe contener números.</div>
+            
         </div>
       </label>
       <label>
         <div className="inputBox">
-          <input type="number" required onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
+          <input type="number" required pattern="\d*" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
           <span>Cantidad actual del articulo</span>
+          <div className="error-message">La cantidad actual solo debe contener números.</div>
+              
         </div>
       </label>
-      <label>
-        <div className="inputBox">
-          <input type="number" required onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-          <span>Costo ($)</span>
-        </div>
-      </label>
+      
       <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={articulo.medida?.nombre ?? medida.nombre ?? ''} />
       {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
-
+      <label>
+        <div className="inputBox">
+          <input type="number" required pattern="\d*" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+          <span>Costo del ingrediente por una unidad de medida ($)</span>
+          <div className="error-message">El costo por unidad solo debe contener números.</div>
+         
+        </div>
+      </label>
       <br />
-      <button type="button" onClick={agregarStock}>Agregar</button>
+      <button type="button" onClick={agregarStock}>Agregar stock</button>
     </div>
   )
 }
