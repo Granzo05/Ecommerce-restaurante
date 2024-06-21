@@ -129,10 +129,9 @@ export default function MainMenu() {
                             )}
                         </div>
                     </section>
+                    <section className='bg'></section>
                 </>
             )}
-
-            <section className='bg'></section>
             <section id='menus' className='food container'>
                 <ModalCrud isOpen={showDetallePromocionModal} onClose={handleModalClose}>
                     <DetallesPromocion selectedPromocion={selectedPromocion} onCloseModal={handleModalClose} />
