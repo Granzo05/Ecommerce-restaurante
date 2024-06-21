@@ -87,6 +87,7 @@ EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
 [x] Cascade en articuloVenta.
 [x] Agregar imagenes al empleado
 ERROR AL CARGAR EMPRESA[x]
+NO ANDA EDITAR EMPRESA[x]
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Formatear y mejorar la legibilidad del codigo
@@ -126,9 +127,8 @@ MENÚ:
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
 TERMINAR REPORTES[]
 ARREGLAR PREFERENCIAS DE EMPLEADO[]
-NO ANDA EDITAR EMPRESA[]
 EL HOME SE ROMPE Y NO TRAE A VECES LAS PROMOCIONES Y LAS CATEGORIAS[]
-SucursalCards: FALTA VALIDACIONES Y RUTAPRIVADA. ERROR AL SELECCIONAR SUCURSAL.[]
+SucursalCards: FALTA VALIDACIONES Y RUTAPRIVADA. ERROR AL SELECCIONAR SUCURSAL[x]  []
 Footer: BUG, MUESTRA SUCURSAL VACIA.[]
 pago: NO TE DEBE DEJAR ENTRAR SI NO ESTAS LOGUEADO. ARREGLAR MODAL DE SALIDA.[] RUTAS PRIVADA EVITA ESTO :D
 loginCliente: FALTA HACER VALIDAR LA RECUPERACION DE LA CONTRASEÑA. FALTA VALIDAR INGRESO CON GMAIL. FALTAN VALIDACIONES A LOS INPUTS.[]
@@ -238,7 +238,7 @@ Pruebas
 [] Activacion pedido
 [] Validaciones completas (emails sean mails, numeros sean numeros, largo sea largo)
 
-[] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle), telefono)
+[x] Encriptacion y desencriptacion de datos sensibles (contraseñas, nombres, domicilios(calle), telefono)
 
 
 CONTRASEÑA

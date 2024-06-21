@@ -21,8 +21,6 @@ const Empleados = () => {
     const [showEliminarEmpleadoModal, setShowEliminarEmpleadoModal] = useState(false);
     const [showActivarEmpleadoModal, setShowActivarEmpleadoModal] = useState(false);
 
-    const [fechaIngresoFiltro, setFechaIngresoFiltro] = useState("");
-
     useEffect(() => {
         fetchEmpleados();
     }, []);
