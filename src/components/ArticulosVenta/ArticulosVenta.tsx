@@ -136,19 +136,50 @@ const ArticuloVentas = () => {
     };
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const productos = articulosVenta.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<ArticuloVenta[]>([]);
 
-    const paginasTotales = Math.ceil(articulosVenta.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > articulosVenta.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(articulosVenta);
+        } else {
+            setPaginasTotales(Math.ceil(articulosVenta.length / cantidad));
+            setDatosFiltrados(articulosVenta.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarDatos(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = articulosVenta.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(articulosVenta.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(articulosVenta.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (articulosVenta.length > 0) {
+            setDatosFiltrados(articulosVenta.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [articulosVenta, paginaActual, cantidadProductosMostrables]);
 
     return (
         <div className="opciones-pantallas">
@@ -163,7 +194,7 @@ const ArticuloVentas = () => {
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -179,6 +210,7 @@ const ArticuloVentas = () => {
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarDatos(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
@@ -189,7 +221,7 @@ const ArticuloVentas = () => {
                         />
                         <span>Filtrar por precio</span>
                     </div>
-                    
+
                 </div>
 
 
@@ -206,7 +238,7 @@ const ArticuloVentas = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {productos.length > 0 && productos.map(articulo => (
+                            {datosFiltrados.length > 0 && datosFiltrados.map(articulo => (
                                 <tr key={articulo.id}>
                                     <td>{articulo.nombre}</td>
                                     <td>{articulo.cantidadMedida} {articulo.medida.nombre?.toString().replace(/_/g, ' ')}</td>

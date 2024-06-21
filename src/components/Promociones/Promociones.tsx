@@ -39,7 +39,7 @@ const Promociones = () => {
     useEffect(() => {
         checkPrivilegies();
     }, []);
-    
+
 
     const [empleado] = useState<Empleado | null>(() => {
         const empleadoString = localStorage.getItem('empleado');
@@ -59,19 +59,96 @@ const Promociones = () => {
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const promocionesFiltradas = promociones.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<Promocion[]>([]);
 
-    const paginasTotales = Math.ceil(promociones.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > promociones.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(promociones);
+        } else {
+            setPaginasTotales(Math.ceil(promociones.length / cantidad));
+            setDatosFiltrados(promociones.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    const [signoPrecio, setSignoPrecio] = useState('>');
+
+    function filtrarPrecio(filtro: number) {
+        const comparadores: { [key: string]: (a: number, b: number) => boolean } = {
+            '>': (a, b) => a > b,
+            '<': (a, b) => a < b,
+            '>=': (a, b) => a >= b,
+            '<=': (a, b) => a <= b,
+            '=': (a, b) => a === b
+        };
+
+        if (filtro > 0 && comparadores[signoPrecio]) {
+            const filtradas = promociones.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precio, filtro)
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(promociones.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(promociones.length / cantidadProductosMostrables));
+        }
+    }
+
+    function filtrarFechas(fechaInicio: string, fechaFin: string) {
+        if (fechaInicio.length > 0 && fechaFin.length > 0) {
+            const fechaFiltroInicio = new Date(fechaInicio);
+            const fechaFiltroFin = new Date(fechaFin);
+
+            const filtradas = promociones.filter(promocion => {
+                const fechaPromocion = new Date(promocion.fechaDesde);
+                return fechaPromocion >= fechaFiltroInicio && fechaPromocion <= fechaFiltroFin;
+            });
+
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else if (fechaInicio.length > 0) {
+            const fechaFiltro = new Date(fechaInicio);
+
+            const filtradas = promociones.filter(promocion => {
+                const fechaPromocion = new Date(promocion.fechaDesde);
+                return fechaPromocion.toDateString() === fechaFiltro.toDateString();
+            });
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else if (fechaFin.length > 0) {
+            const fechaFiltro = new Date(fechaFin);
+
+            const filtradas = promociones.filter(promocion => {
+                const fechaPromocion = new Date(promocion.fechaHasta);
+                return fechaPromocion.toDateString() === fechaFiltro.toDateString();
+            });
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(promociones.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(promociones.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (promociones.length > 0) {
+            setDatosFiltrados(promociones.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [promociones, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -188,7 +265,7 @@ const Promociones = () => {
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -200,19 +277,36 @@ const Promociones = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado"  style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
-                            type="text"
+                            type="date"
                             required
+                            onChange={(e) => filtrarFechas(e.target.value, '')}
                         />
-                        <span>Filtrar por duración</span>
+                        <span>Filtrar por fecha inicial</span>
+                    </div>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                        <input
+                            type="date"
+                            required
+                            onChange={(e) => filtrarFechas('', e.target.value)}
+                        />
+                        <span>Filtrar por fecha final</span>
                     </div>
                     <div className="inputBox-filtrado">
                         <input
                             type="number"
                             required
+                            onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
                         />
-                        <span>Filtrar por costo</span>
+                        <span>Filtrar por precio</span>
+                        <select name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
+                            <option value=">">&gt;</option>
+                            <option value="<">&lt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="=">=</option>
+                        </select>
                     </div>
                 </div>
 
@@ -230,7 +324,7 @@ const Promociones = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {promocionesFiltradas.map(promocion => (
+                            {datosFiltrados.map(promocion => (
                                 <tr key={promocion.id}>
                                     <td>
                                         {formatearFechaDDMMYYYY(new Date(promocion.fechaDesde.toString()))} -

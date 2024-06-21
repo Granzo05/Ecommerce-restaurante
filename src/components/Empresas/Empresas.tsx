@@ -53,19 +53,77 @@ const Empresas = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const empresasFiltradas = empresas.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<Empresa[]>([]);
 
-    const paginasTotales = Math.ceil(empresas.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > empresas.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(empresas);
+        } else {
+            setPaginasTotales(Math.ceil(empresas.length / cantidad));
+            setDatosFiltrados(empresas.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarNombre(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = empresas.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(empresas.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(empresas.length / cantidadProductosMostrables));
+        }
+    }
+
+    function filtrarRazonSocial(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = empresas.filter(recomendacion =>
+                recomendacion.razonSocial.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(empresas.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(empresas.length / cantidadProductosMostrables));
+        }
+    }
+
+    function filtrarCuit(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = empresas.filter(recomendacion =>
+                recomendacion.cuit.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(empresas.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(empresas.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (empresas.length > 0) {
+            setDatosFiltrados(empresas.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [empresas, paginaActual, cantidadProductosMostrables]);
+
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -167,7 +225,7 @@ const Empresas = () => {
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -179,17 +237,19 @@ const Empresas = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado"  style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarNombre(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
-                    <div className="inputBox-filtrado"  style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarRazonSocial(e.target.value)}
                         />
                         <span>Filtrar por razón social</span>
                     </div>
@@ -197,6 +257,7 @@ const Empresas = () => {
                         <input
                             type="number"
                             required
+                            onChange={(e) => filtrarCuit(e.target.value)}
                         />
                         <span>Filtrar por CUIT</span>
                     </div>
@@ -216,7 +277,7 @@ const Empresas = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {empresasFiltradas.map(empresa => (
+                            {datosFiltrados.map(empresa => (
                                 <tr key={empresa.id}>
                                     <td>{empresa.nombre}</td>
                                     <td>{empresa.razonSocial}</td>

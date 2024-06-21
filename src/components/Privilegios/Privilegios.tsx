@@ -64,35 +64,50 @@ const PrivilegiosEmpleados = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const [privilegiosFiltradas, setPrivilegiosFiltradas] = useState<PrivilegiosSucursales[]>([]);
+    const [datosFiltrados, setDatosFiltrados] = useState<PrivilegiosSucursales[]>([]);
 
-    useEffect(() => {
-        setPrivilegiosFiltradas(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [privilegios]);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
-    useEffect(() => {
-        setPrivilegiosFiltradas(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [productosMostrables]);
+    // Cambiar de página
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
 
-    function filtrarNombre(filtro: string) {
-        if (filtro.length > 0) {
-            setPrivilegiosFiltradas(privilegiosFiltradas.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > privilegios.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(privilegios);
         } else {
-            setPrivilegiosFiltradas(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(privilegios.length / cantidad));
+            setDatosFiltrados(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
         }
     }
 
-    const paginasTotales = Math.ceil(privilegios.length / productosMostrables);
+    function filtrarDatos(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = privilegios.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(privilegios.length / cantidadProductosMostrables));
+        }
+    }
 
-    // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    useEffect(() => {
+        if (privilegios.length > 0) {
+            setDatosFiltrados(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [privilegios, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -171,14 +186,14 @@ const PrivilegiosEmpleados = () => {
             <h1>- Privilegios -</h1>
 
             {createVisible && (
-                <div className="btns-categorias">
+                <div className="btns-privilegios">
                     <button className="btn-agregar" onClick={() => handleAgregarPrivilegio()}> + Agregar privilegio</button>
                 </div>)}
             <hr />
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -194,7 +209,7 @@ const PrivilegiosEmpleados = () => {
                         <input
                             type="text"
                             required
-                            onChange={(e) => filtrarNombre(e.target.value)}
+                            onChange={(e) => filtrarDatos(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
@@ -211,7 +226,7 @@ const PrivilegiosEmpleados = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {privilegiosFiltradas.map(privilegio => (
+                            {datosFiltrados.map(privilegio => (
                                 <tr key={privilegio.nombre}>
                                     <td>{privilegio.nombre.toString().replace(/_/g, ' ')}</td>
 

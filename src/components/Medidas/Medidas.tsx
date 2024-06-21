@@ -64,35 +64,50 @@ const Medidas = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const [medidasFiltradas, setMedidasFiltradas] = useState<Medida[]>([]);
+    const [datosFiltrados, setDatosFiltrados] = useState<Medida[]>([]);
 
-    useEffect(() => {
-        setMedidasFiltradas(medidas.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [medidas]);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
-    useEffect(() => {
-        setMedidasFiltradas(medidas.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [productosMostrables]);
+    // Cambiar de página
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
 
-    function filtrarNombre(filtro: string) {
-        if (filtro.length > 0) {
-            setMedidasFiltradas(medidasFiltradas.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > medidas.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(medidas);
         } else {
-            setMedidasFiltradas(medidas.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(medidas.length / cantidad));
+            setDatosFiltrados(medidas.slice(indexPrimerProducto, indexUltimoProducto));
         }
     }
 
-    const paginasTotales = Math.ceil(medidas.length / productosMostrables);
+    function filtrarDatos(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = medidas.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(medidas.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(medidas.length / cantidadProductosMostrables));
+        }
+    }
 
-    // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    useEffect(() => {
+        if (medidas.length > 0) {
+            setDatosFiltrados(medidas.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [medidas, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -171,13 +186,13 @@ const Medidas = () => {
             <h1>- Medidas -</h1>
 
             {createVisible && (
-                <div className="btns-categorias">
+                <div className="btns-medidas">
                     <button className="btn-agregar" onClick={() => handleAgregarMedida()}> + Agregar medida</button>
                 </div>)}
             <hr />
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -193,6 +208,7 @@ const Medidas = () => {
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarDatos(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
@@ -210,7 +226,7 @@ const Medidas = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {medidasFiltradas.map(medida => (
+                            {datosFiltrados.map(medida => (
                                 <tr key={medida.id}>
                                     <td>{medida.nombre.toString().replace(/_/g, ' ')}</td>
 

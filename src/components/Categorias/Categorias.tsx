@@ -63,19 +63,50 @@ const Categorias = () => {
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const categoriasFiltradas = categorias.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<Categoria[]>([]);
 
-    const paginasTotales = Math.ceil(categorias.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
     const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > categorias.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(categorias);
+        } else {
+            setPaginasTotales(Math.ceil(categorias.length / cantidad));
+            setDatosFiltrados(categorias.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarDatos(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = categorias.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(categorias.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(categorias.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (categorias.length > 0) {
+            setDatosFiltrados(categorias.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [categorias, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -161,7 +192,7 @@ const Categorias = () => {
             <hr />
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -177,6 +208,7 @@ const Categorias = () => {
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarDatos(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
@@ -194,7 +226,7 @@ const Categorias = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {categoriasFiltradas.map(categoria => (
+                            {datosFiltrados.map(categoria => (
                                 <tr key={categoria.id}>
                                     <td>{categoria.nombre.toString().replace(/_/g, ' ')}</td>
 

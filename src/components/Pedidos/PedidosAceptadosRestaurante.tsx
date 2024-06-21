@@ -8,6 +8,7 @@ import DetallesPedido from './DetallesPedido';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
+import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 
 const PedidosAceptados = () => {
     const [pedidosAceptados, setPedidos] = useState<Pedido[]>([]);
@@ -84,19 +85,75 @@ const PedidosAceptados = () => {
     };
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const pedidosFiltrados = pedidosAceptados.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<Pedido[]>([]);
 
-    const paginasTotales = Math.ceil(pedidosAceptados.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > pedidosAceptados.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(pedidosAceptados);
+        } else {
+            setPaginasTotales(Math.ceil(pedidosAceptados.length / cantidad));
+            setDatosFiltrados(pedidosAceptados.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarMenus(filtro: string) {
+        if (filtro.length > 0) {
+            let filtradas = pedidosAceptados.filter(recomendacion =>
+                recomendacion.detallesPedido.some(detalle =>
+                    detalle.articuloMenu?.nombre.toLowerCase().includes(filtro.toLowerCase())
+                )
+            );
+
+            if (filtradas.length === 0) {
+                filtradas = pedidosAceptados.filter(recomendacion =>
+                    recomendacion.detallesPedido.some(detalle =>
+                        detalle.articuloVenta?.nombre.toLowerCase().includes(filtro.toLowerCase())
+                    )
+                );
+            }
+
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(pedidosAceptados.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(pedidosAceptados.length / cantidadProductosMostrables));
+        }
+    }
+
+
+    function filtrarEnvio(filtro: number) {
+        if (filtro > 0) {
+            const filtradas = pedidosAceptados.filter(recomendacion =>
+                recomendacion.tipoEnvio === filtro
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(pedidosAceptados.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(pedidosAceptados.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (pedidosAceptados.length > 0) {
+            setDatosFiltrados(pedidosAceptados.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [pedidosAceptados, paginaActual, cantidadProductosMostrables]);
 
     return (
 
@@ -110,7 +167,7 @@ const PedidosAceptados = () => {
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -123,16 +180,18 @@ const PedidosAceptados = () => {
 
                 <div className="filtros-datos">
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
-                        <input
-                            type="text"
-                            required
-                        />
+                        <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
+                            <option value={0}>Seleccionar tipo de envío</option>
+                            <option value={EnumTipoEnvio.DELIVERY}>DELIVERY</option>
+                            <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Retiro en tienda</option>
+                        </select>
                         <span>Filtrar por tipo de envío</span>
                     </div>
                     <div className="inputBox-filtrado">
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarMenus(e.target.value)}
                         />
                         <span>Filtrar por menú</span>
                     </div>
@@ -151,7 +210,7 @@ const PedidosAceptados = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {pedidosFiltrados.map(pedido => (
+                        {datosFiltrados.map(pedido => (
                             <tr key={pedido.id}>
                                 <td>{pedido.tipoEnvio.toString().replace(/_/g, ' ')}</td>
                                 <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>

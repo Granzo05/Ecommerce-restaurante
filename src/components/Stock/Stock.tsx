@@ -15,6 +15,7 @@ import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
+import { Ingrediente } from "../../types/Ingredientes/Ingrediente";
 
 
 const Stocks = () => {
@@ -79,22 +80,83 @@ const Stocks = () => {
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
 
-    const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState<number>(11);
-
-    // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
-
-    // Obtener los elementos de la página actual
     const stocks = [...stockArticulos, ...stockIngredientes];
 
-    const stocksFiltrados = stocks.slice(indexPrimerProducto, indexUltimoProducto);
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
-    const paginasTotales = Math.ceil(stocks.length / productosMostrables);
+    // Calcular el índice del primer y último elemento de la página actual
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
+
+    // Obtener los elementos de la página actual
+    const [datosFiltrados, setDatosFiltrados] = useState<StockIngredientes[]>([]);
+
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > stocks.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(stocks);
+        } else {
+            setPaginasTotales(Math.ceil(stocks.length / cantidad));
+            setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    const [signoPrecio, setSignoPrecio] = useState('>');
+
+    function filtrarPrecio(filtro: number) {
+        const comparadores: { [key: string]: (a: number, b: number) => boolean } = {
+            '>': (a, b) => a > b,
+            '<': (a, b) => a < b,
+            '>=': (a, b) => a >= b,
+            '<=': (a, b) => a <= b,
+            '=': (a, b) => a === b
+        };
+
+        if (filtro > 0 && comparadores[signoPrecio]) {
+            const filtradas = stocks.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precioCompra, filtro)
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(stocks.length / cantidadProductosMostrables));
+        }
+    }
+
+    function filtrarStocks(filtro: string) {
+        if (filtro.length > 0) {
+            let filtradas = stocks.filter(recomendacion =>
+                recomendacion.articuloVenta?.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+
+            if (filtradas.length === 0) {
+                filtradas = stocks.filter(recomendacion =>
+                    recomendacion.ingrediente?.nombre.toLowerCase().includes(filtro.toLowerCase())
+                );
+            }
+
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(stocks.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (stocks.length > 0) {
+            setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [stocks, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -182,7 +244,7 @@ const Stocks = () => {
                     <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}>+ Agregar stock ingrediente</button>
                     <button className="btn-agregar" onClick={() => handleAgregarArticulo()}>+ Agregar stock articulo</button>
                 </div>)}
-            
+
 
             <hr />
 
@@ -208,7 +270,7 @@ const Stocks = () => {
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -224,24 +286,25 @@ const Stocks = () => {
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarStocks(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
-                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado">
                         <input
                             type="number"
                             required
+                            onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
                         />
-                        <span>Filtrar por costo</span>
+                        <span>Filtrar por precio</span>
+                        <select name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
+                            <option value=">">&gt;</option>
+                            <option value="<">&lt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="=">=</option>
+                        </select>
                     </div>
-                    <div className="inputBox-filtrado">
-                        <input
-                            type="text"
-                            required
-                        />
-                        <span>Filtrar por venta</span>
-                    </div>
-                    
                 </div>
 
 
@@ -264,7 +327,7 @@ const Stocks = () => {
                         </thead>
 
                         <tbody>
-                            {stocksFiltrados.map(stock => (
+                            {datosFiltrados.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{stock.ingrediente?.nombre}{stock.articuloVenta?.nombre}</td>
                                     <td style={{ textTransform: 'lowercase' }}>{stock.cantidadActual} {stock.medida?.nombre}</td>

@@ -174,25 +174,55 @@ const Sucursales = () => {
         fetchSucursales();
     };
 
-
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const sucursalesFiltradas = sucursales.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<Sucursal[]>([]);
 
-    const paginasTotales = Math.ceil(sucursales.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > sucursales.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(sucursales);
+        } else {
+            setPaginasTotales(Math.ceil(sucursales.length / cantidad));
+            setDatosFiltrados(sucursales.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarDatos(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = sucursales.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(sucursales.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(sucursales.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (sucursales.length > 0) {
+            setDatosFiltrados(sucursales.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [sucursales, paginaActual, cantidadProductosMostrables]);
 
     return (
         <div className="opciones-pantallas">
-            <Toaster/>
+            <Toaster />
             {showSolicitarCredenciales && (
                 <ModalFlotante isOpen={showSolicitarCredenciales} onClose={handleModalClose}>
                     <div className='modal-info'>
@@ -225,7 +255,7 @@ const Sucursales = () => {
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -237,19 +267,13 @@ const Sucursales = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado"  style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarDatos(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
-                    </div>
-                    <div className="inputBox-filtrado">
-                        <input
-                            type="number"
-                            required
-                        />
-                        <span>Filtrar por teléfono</span>
                     </div>
                 </div>
 
@@ -268,7 +292,7 @@ const Sucursales = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sucursalesFiltradas.map(sucursal => (
+                            {datosFiltrados.map(sucursal => (
                                 <tr key={sucursal.id}>
                                     <td>{sucursal.nombre}</td>
                                     <td>{sucursal.telefono}</td>

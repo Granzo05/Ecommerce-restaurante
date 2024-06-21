@@ -12,7 +12,7 @@ import EditarRol from "./EditarRol";
 import EliminarRol from "./EliminarRol";
 
 const RolesEmpleado = () => {
-    const [rols, setRoles] = useState<Roles[]>([]);
+    const [roles, setRoles] = useState<Roles[]>([]);
     const [mostrarRoles, setMostrarRoles] = useState(true);
 
     const [showAgregarModalRol, setShowAgregarModalRol] = useState(false);
@@ -63,35 +63,50 @@ const RolesEmpleado = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const [rolsFiltradas, setRolesFiltradas] = useState<Roles[]>([]);
+    const [datosFiltrados, setDatosFiltrados] = useState<Roles[]>([]);
 
-    useEffect(() => {
-        setRolesFiltradas(rols.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [rols]);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
-    useEffect(() => {
-        setRolesFiltradas(rols.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [productosMostrables]);
+    // Cambiar de página
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
 
-    function filtrarNombre(filtro: string) {
-        if (filtro.length > 0) {
-            setRolesFiltradas(rolsFiltradas.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > roles.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(roles);
         } else {
-            setRolesFiltradas(rols.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(roles.length / cantidad));
+            setDatosFiltrados(roles.slice(indexPrimerProducto, indexUltimoProducto));
         }
     }
 
-    const paginasTotales = Math.ceil(rols.length / productosMostrables);
+    function filtrarDatos(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = roles.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(roles.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(roles.length / cantidadProductosMostrables));
+        }
+    }
 
-    // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    useEffect(() => {
+        if (roles.length > 0) {
+            setDatosFiltrados(roles.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [roles, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -170,13 +185,13 @@ const RolesEmpleado = () => {
             <h1>- Roles -</h1>
 
             {createVisible && (
-                <div className="btns-categorias">
+                <div className="btns-roles">
                     <button className="btn-agregar" onClick={() => handleAgregarRol()}> + Agregar rol</button>
                 </div>)}
             <hr />
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -192,6 +207,7 @@ const RolesEmpleado = () => {
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarDatos(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
@@ -209,7 +225,7 @@ const RolesEmpleado = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {rolsFiltradas.map(rol => (
+                            {datosFiltrados.map(rol => (
                                 <tr key={rol.id}>
                                     <td>{rol.nombre.toString().replace(/_/g, ' ')}</td>
 

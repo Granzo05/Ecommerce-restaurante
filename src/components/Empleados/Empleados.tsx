@@ -59,27 +59,64 @@ const Empleados = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState<number>(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const [empleadosFiltrados, setEmpleadosFiltrados] = useState<Empleado[]>([]);
+    const [datosFiltrados, setDatosFiltrados] = useState<Empleado[]>([]);
 
-    useEffect(() => {
-        setEmpleadosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [empleados]);
-
-    useEffect(() => {
-        setEmpleadosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [productosMostrables]);
-
-    const paginasTotales = Math.ceil(empleados.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > empleados.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(empleados);
+        } else {
+            setPaginasTotales(Math.ceil(empleados.length / cantidad));
+            setDatosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarNombre(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = empleados.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(empleados.length / cantidadProductosMostrables));
+        }
+    }
+
+    function filtrarCuil(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = empleados.filter(recomendacion =>
+                recomendacion.cuil.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(empleados.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (empleados.length > 0) {
+            setDatosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [empleados, paginaActual, cantidadProductosMostrables]);
+
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -108,22 +145,6 @@ const Empleados = () => {
             setActivateVisible(true);
             setDeleteVisible(true);
             setUpdateVisible(true);
-        }
-    }
-
-    function filtrarNombre(filtro: string) {
-        if (filtro.length > 0) {
-            setEmpleadosFiltrados(empleados.filter(recomendacion => recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())));
-        } else {
-            setEmpleadosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
-        }
-    }
-
-    function filtrarCuil(filtro: string) {
-        if (filtro.length > 0) {
-            setEmpleadosFiltrados(empleadosFiltrados.filter(recomendacion => recomendacion.cuil.toLowerCase().includes(filtro.toLowerCase())));
-        } else {
-            setEmpleadosFiltrados(empleados);
         }
     }
 
@@ -185,7 +206,7 @@ const Empleados = () => {
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -236,7 +257,7 @@ const Empleados = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {empleadosFiltrados.map(empleado => (
+                            {datosFiltrados.map(empleado => (
                                 <tr key={empleado.id}>
                                     <td>{empleado.nombre}</td>
                                     <td>{empleado.cuil}</td>

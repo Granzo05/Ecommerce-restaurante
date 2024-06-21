@@ -6,16 +6,16 @@ import EliminarSubcategoria from "./EliminarSubcategoria";
 import ActivarSubcategoria from "./ActivarSubcategoria";
 import EditarSubcategoria from "./EditarSubcategoria";
 import AgregarSubcategoria from "./AgregarSubcategoria";
-import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from "../../types/Ingredientes/Categoria";
 import React from "react";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
+import { CategoriaService } from "../../services/CategoriaService";
 
-const Subcategorias = () => {
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [mostrarCategorias, setMostrarCategorias] = useState(true);
+const Subsubcategorias = () => {
+    const [subcategorias, setsubcategorias] = useState<Categoria[]>([]);
+    const [mostrarsubcategorias, setMostrarsubcategorias] = useState(true);
 
     const [showAgregarModalCategoria, setShowAgregarModalCategoria] = useState(false);
     const [showEditarCategoriaModal, setShowEditarCategoriaModal] = useState(false);
@@ -25,13 +25,13 @@ const Subcategorias = () => {
     const [selectedCategoria, setSelectedCategoria] = useState<Subcategoria | null>(null);
 
     useEffect(() => {
-        fetchCategorias();
+        fetchsubcategorias();
     }, []);
 
-    const fetchCategorias = async () => {
+    const fetchsubcategorias = async () => {
         try {
             const data = await CategoriaService.getCategorias();
-            setCategorias(data);
+            setsubcategorias(data);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -60,19 +60,65 @@ const Subcategorias = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const categoriasFiltradas = categorias.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<Categoria[]>([]);
 
-    const paginasTotales = Math.ceil(categorias.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > subcategorias.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(subcategorias);
+        } else {
+            setPaginasTotales(Math.ceil(subcategorias.length / cantidad));
+            setDatosFiltrados(subcategorias.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarCategoria(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = subcategorias.filter(categoria =>
+                categoria.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(subcategorias.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(subcategorias.length / cantidadProductosMostrables));
+        }
+    }
+
+    function filtrarSubcategoria(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = subcategorias.filter(recomendacion =>
+                recomendacion.subcategorias.some(sub =>
+                    sub.nombre.toLowerCase().includes(filtro.toLowerCase())
+                )
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(subcategorias.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(subcategorias.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (subcategorias.length > 0) {
+            setDatosFiltrados(subcategorias.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [subcategorias, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -107,7 +153,7 @@ const Subcategorias = () => {
     const handleAgregarCategoria = () => {
         setShowEditarCategoriaModal(false);
         setShowEliminarCategoriaModal(false);
-        setMostrarCategorias(false);
+        setMostrarsubcategorias(false);
         setShowAgregarModalCategoria(true);
     };
 
@@ -115,7 +161,7 @@ const Subcategorias = () => {
         setSelectedCategoria(subcategoria);
         setShowAgregarModalCategoria(false);
         setShowEliminarCategoriaModal(false);
-        setMostrarCategorias(false);
+        setMostrarsubcategorias(false);
         setShowEditarCategoriaModal(true);
     };
 
@@ -123,7 +169,7 @@ const Subcategorias = () => {
         setSelectedCategoria(subcategoria);
         setShowAgregarModalCategoria(false);
         setShowEditarCategoriaModal(false);
-        setMostrarCategorias(false);
+        setMostrarsubcategorias(false);
         setShowActivarCategoriaModal(false);
         setShowEliminarCategoriaModal(true);
     };
@@ -132,7 +178,7 @@ const Subcategorias = () => {
         setSelectedCategoria(subcategoria);
         setShowAgregarModalCategoria(false);
         setShowEditarCategoriaModal(false);
-        setMostrarCategorias(false);
+        setMostrarsubcategorias(false);
         setShowActivarCategoriaModal(true);
         setShowEliminarCategoriaModal(false);
     };
@@ -142,22 +188,22 @@ const Subcategorias = () => {
         setShowEditarCategoriaModal(false);
         setShowActivarCategoriaModal(false);
         setShowEliminarCategoriaModal(false);
-        fetchCategorias();
-        setMostrarCategorias(true);
+        fetchsubcategorias();
+        setMostrarsubcategorias(true);
     };
 
     return (
         <div className="opciones-pantallas">
             <h1>- Subcategorías -</h1>
             {createVisible && (
-                <div className="btns-categorias">
+                <div className="btns-subcategorias">
                     <button className="btn-agregar" onClick={handleAgregarCategoria}> + Agregar subcategoría</button>
                 </div>)}
 
             <hr />
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -169,10 +215,11 @@ const Subcategorias = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado"  style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarCategoria(e.target.value)}
                         />
                         <span>Filtrar por categoría</span>
                     </div>
@@ -180,6 +227,7 @@ const Subcategorias = () => {
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarSubcategoria(e.target.value)}
                         />
                         <span>Filtrar por subcategoría</span>
                     </div>
@@ -187,7 +235,7 @@ const Subcategorias = () => {
 
 
             </div>
-            {mostrarCategorias && (
+            {mostrarsubcategorias && (
                 <div id="stocks">
                     <table>
                         <thead>
@@ -198,7 +246,7 @@ const Subcategorias = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {categoriasFiltradas.map(categoria => (
+                            {datosFiltrados.map(categoria => (
                                 <React.Fragment key={categoria.id}>
                                     {categoria.subcategorias.map((subcategoria, index) => (
                                         <tr key={subcategoria.id} className="subcategoria-row">
@@ -254,4 +302,4 @@ const Subcategorias = () => {
     );
 };
 
-export default Subcategorias;
+export default Subsubcategorias;

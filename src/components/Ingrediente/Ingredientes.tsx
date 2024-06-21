@@ -62,21 +62,51 @@ const Ingredientes = () => {
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
-
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const ingredientesFiltrados = ingredientes.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<Ingrediente[]>([]);
 
-    const paginasTotales = Math.ceil(ingredientes.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > ingredientes.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(ingredientes);
+        } else {
+            setPaginasTotales(Math.ceil(ingredientes.length / cantidad));
+            setDatosFiltrados(ingredientes.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarDatos(filtro: string) {
+        if (filtro.length > 0) {
+            const filtradas = ingredientes.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(ingredientes.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(ingredientes.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (ingredientes.length > 0) {
+            setDatosFiltrados(ingredientes.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [ingredientes, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -161,7 +191,7 @@ const Ingredientes = () => {
             <hr />
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -177,10 +207,11 @@ const Ingredientes = () => {
                         <input
                             type="text"
                             required
+                            onChange={(e) => filtrarDatos(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
-                    
+
                 </div>
 
 
@@ -195,7 +226,7 @@ const Ingredientes = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {ingredientesFiltrados.map(ingrediente => (
+                            {datosFiltrados.map(ingrediente => (
                                 <tr key={ingrediente.id}>
                                     <td>{ingrediente.nombre}</td>
 

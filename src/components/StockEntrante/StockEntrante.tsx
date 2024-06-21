@@ -6,7 +6,6 @@ import { StockEntranteService } from "../../services/StockEntranteService";
 import AgregarStockEntrante from "./AgregarStockEntrante";
 import ActivarStockEntrante from "./ActivarStockEntrante";
 import EliminarStockEntrante from "./EliminarStockEntrante";
-import ModalFlotante from "../ModalFlotante";
 import DetallesStock from "./DetallesStock";
 import { DetalleStock } from "../../types/Stock/DetalleStock";
 import { StockEntrante } from "../../types/Stock/StockEntrante";
@@ -87,19 +86,96 @@ const StocksEntrantes = () => {
 
 
     const [paginaActual, setPaginaActual] = useState(1);
-    const [productosMostrables, setProductosMostrables] = useState(11);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
     // Calcular el índice del primer y último elemento de la página actual
-    const indexUltimoProducto = paginaActual * productosMostrables;
-    const indexPrimerProducto = indexUltimoProducto - productosMostrables;
+    const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
+    const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const stockFiltrado = stockEntrante.slice(indexPrimerProducto, indexUltimoProducto);
+    const [datosFiltrados, setDatosFiltrados] = useState<StockEntrante[]>([]);
 
-    const paginasTotales = Math.ceil(stockEntrante.length / productosMostrables);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     // Cambiar de página
-    const paginate = (paginaActual: number) => setPaginaActual(paginaActual);
+    const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
+
+    function cantidadDatosMostrables(cantidad: number) {
+        setCantidadProductosMostrables(cantidad);
+
+        if (cantidad > stockEntrante.length) {
+            setPaginasTotales(1);
+            setDatosFiltrados(stockEntrante);
+        } else {
+            setPaginasTotales(Math.ceil(stockEntrante.length / cantidad));
+            setDatosFiltrados(stockEntrante.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }
+
+    function filtrarFechas(fechaInicio: string, fechaFin: string) {
+        if (fechaInicio.length > 0 && fechaFin.length > 0) {
+            const fechaFiltroInicio = new Date(fechaInicio);
+            const fechaFiltroFin = new Date(fechaFin);
+
+            const filtradas = stockEntrante.filter(promocion => {
+                const fechaPromocion = new Date(promocion.fechaLlegada);
+                return fechaPromocion >= fechaFiltroInicio && fechaPromocion <= fechaFiltroFin;
+            });
+
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else if (fechaInicio.length > 0) {
+            const fechaFiltro = new Date(fechaInicio);
+
+            const filtradas = stockEntrante.filter(promocion => {
+                const fechaPromocion = new Date(promocion.fechaLlegada);
+                return fechaPromocion.toDateString() === fechaFiltro.toDateString();
+            });
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else if (fechaFin.length > 0) {
+            const fechaFiltro = new Date(fechaFin);
+
+            const filtradas = stockEntrante.filter(promocion => {
+                const fechaPromocion = new Date(promocion.fechaLlegada);
+                return fechaPromocion.toDateString() === fechaFiltro.toDateString();
+            });
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(stockEntrante.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(stockEntrante.length / cantidadProductosMostrables));
+        }
+    }
+
+    const [signoPrecio, setSignoPrecio] = useState('>');
+
+    function filtrarPrecio(filtro: number) {
+        const comparadores: { [key: string]: (a: number, b: number) => boolean } = {
+            '>': (a, b) => a > b,
+            '<': (a, b) => a < b,
+            '>=': (a, b) => a >= b,
+            '<=': (a, b) => a <= b,
+            '=': (a, b) => a === b
+        };
+
+        if (filtro > 0 && comparadores[signoPrecio]) {
+            const filtradas = stockEntrante.filter(recomendacion =>
+                comparadores[signoPrecio](parseFloat(recomendacion.costo), filtro)
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(stockEntrante.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(stockEntrante.length / cantidadProductosMostrables));
+        }
+    }
+
+    useEffect(() => {
+        if (stockEntrante.length > 0) {
+            setDatosFiltrados(stockEntrante.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [stockEntrante, paginaActual, cantidadProductosMostrables]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -243,7 +319,7 @@ const StocksEntrantes = () => {
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
-                    <select id="cantidad" name="cantidadProductos" value={productosMostrables} onChange={(e) => setProductosMostrables(parseInt(e.target.value))}>
+                    <select id="cantidad" name="cantidadProductos" value={cantidadProductosMostrables} onChange={(e) => cantidadDatosMostrables(parseInt(e.target.value))}>
                         <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -257,19 +333,35 @@ const StocksEntrantes = () => {
                 <div className="filtros-datos">
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
-                            type="text"
+                            type="date"
                             required
+                            onChange={(e) => filtrarFechas(e.target.value, '')}
                         />
-                        <span>Filtrar por fecha</span>
+                        <span>Filtrar por fecha inicial</span>
                     </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
+                            type="date"
+                            required
+                            onChange={(e) => filtrarFechas('', e.target.value)}
+                        />
+                        <span>Filtrar por fecha final</span>
+                    </div>
+                    <div className="inputBox-filtrado">
+                        <input
                             type="number"
                             required
+                            onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
                         />
-                        <span>Filtrar por costo</span>
+                        <span>Filtrar por precio</span>
+                        <select name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
+                            <option value=">">&gt;</option>
+                            <option value="<">&lt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="=">=</option>
+                        </select>
                     </div>
-                    
                 </div>
 
 
@@ -287,7 +379,7 @@ const StocksEntrantes = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {stockFiltrado.map(stock => (
+                            {datosFiltrados.map(stock => (
                                 <tr key={stock.id}>
                                     <td>{formatDate(new Date(stock.fechaLlegada.toString()))}</td>
                                     <td>${stock.costo}</td>

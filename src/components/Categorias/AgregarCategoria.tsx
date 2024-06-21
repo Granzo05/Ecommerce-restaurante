@@ -204,10 +204,8 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
 
   return (
     <div className="modal-info">
-      <h2>&mdash; Agregar artículo para venta &mdash;</h2>
       <Toaster />
       {renderStep()}
-
     </div >
   );
 }
