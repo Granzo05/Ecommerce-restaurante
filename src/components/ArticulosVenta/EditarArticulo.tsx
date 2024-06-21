@@ -207,7 +207,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
       toast.error("Por favor, es necesario el nombre del articulo");
       return;
-    } else if (!precio || precio == 0) {
+    } else if (!precioVenta || precioVenta == 0) {
       toast.error("Por favor, es necesario el precio de venta del articulo válido");
       return;
     } else if (!categoria) {
@@ -219,7 +219,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     } else if (!medida) {
       toast.error("Por favor, es necesaria la medida");
       return;
-    } else if (!cantidadMedida || cantidadMedida == 0) {
+    } else if (!cantidad || cantidad == 0) {
       toast.error("Por favor, es necesaria una cantidad de la medida del artículo válida");
       return;
     } else {
@@ -273,7 +273,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
             </div>
 
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
