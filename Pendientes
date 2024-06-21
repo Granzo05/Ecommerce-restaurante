@@ -98,6 +98,32 @@ NO ANDA EDITAR EMPRESA[x]
 [] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
 [] El editar menú no borra los ingredientes.
 
+/*OPCIONES:
+[] Hacer andar filtros de Opciones.
+
+STOCK:
+[] No me deja agregar stock de ingredientes desde Stock. Stock inexistente.
+[] Cuando quiero agregar stock de articulo desde Articulo, me trae la unidad de medida de venta y no me deja cambiarla.
+[] No me deja agregar stock de artículos desde Stock. Stock ya existe.
+[] Eliminas un stock y se elimina cualquiera, no el que seleccionaste.
+[] Si editas, pero no tocas la unidad de medida, te pone cualquiera por defecto.
+
+STOCK ENTRANTE:
+[] La fecha te muestra el día siguiente al actual pero sigue tomando la fecha actual, por ende no te deja avanzar porque la fecha debe ser posterior.
+[] Cuando quiero agregar un articulo, siempre me trae la unidad de medida de venta, por ejemplo LITROS de Coca.. y el stock se mide en unidades.
+[] Validar que el botón de agregar te tome un solo click, porque me añadió dos veces al hacer click dos veces sin querer.
+[] Si seleccionas un ingrediente, pero borras ese stock entrante y queres añadir otro, ese ingrediente que elegiste ya no aparece en el filtrado.
+[] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
+[] Al seleccionar un producto para añadir, debería traer su unidad de medida del stock, porque una equivocación de unidad de medida, rompería el sistema.
+[] Ordenar la tabla por fecha ascendente.
+[] Se rompe la fecha con el ToISO en Editar, pero de andar, anda.
+[] Faltaría agregar la función de Marcar como entregado.
+
+MENÚ:
+[] Al agregar menú, te pone cualquier categoría y subcategoria si no le añadis ninguna.
+[] No me deja añadir categoría. Error.
+ */
+
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
 TERMINAR REPORTES[]
 ARREGLAR PREFERENCIAS DE EMPLEADO[]
