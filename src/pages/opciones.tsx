@@ -174,7 +174,7 @@ const Opciones = () => {
             return <PedidosEnCamino />;
         } else if (opcionSeleccionada === 20) {
             return <RolesEmpleado />;
-        }else if (opcionSeleccionada === 21) {
+        } else if (opcionSeleccionada === 21) {
             return <PrivilegiosEmpleados />;
         }
     };
@@ -321,6 +321,64 @@ const Opciones = () => {
                         {isVisible ? (
                             <div className="main-options">
                                 <div className="pedidos">
+                                    {articuloVentaVisibleEmpleado && (
+                                        <h4 className={opcionSeleccionada === 11 ? 'selected' : ''} onClick={() => handleOpcionClick(11)}>
+                                            Articulos
+                                        </h4>
+                                    )}
+
+                                    {categoriasVisibleEmpleado && (
+                                        <div className="categorias">
+                                            <h4 onClick={toggleCategoriaVisibility} className={opcionSeleccionada >= 12 && opcionSeleccionada <= 13 ? 'h4-selected' : ''}>
+                                                Categoria
+                                                {categoriaIcon}
+                                            </h4>
+                                            {categoriaVisible && (
+                                                <>
+                                                    <p className={opcionSeleccionada === 12 ? 'selected' : ''} onClick={() => handleOpcionClick(12)}>
+                                                        Categoria
+                                                    </p>
+                                                    {subcategoriasVisibleEmpleado && (
+                                                        <p className={opcionSeleccionada === 13 ? 'selected' : ''} onClick={() => handleOpcionClick(13)}>
+                                                            Subcategoria
+                                                        </p>
+                                                    )}
+
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {empleadosVisibleEmpleado && (
+                                        <h4 className={opcionSeleccionada === 8 ? 'selected' : ''} onClick={() => handleOpcionClick(8)}>
+                                            Empleados
+                                        </h4>
+                                    )}
+
+                                    {empresasVisibleEmpleado && (
+                                        <h4 className={opcionSeleccionada === 17 ? 'selected' : ''} onClick={() => handleOpcionClick(17)}>
+                                            Empresas
+                                        </h4>
+                                    )}
+
+                                    {ingredientesVisibleEmpleado && (
+                                        <h4 className={opcionSeleccionada === 10 ? 'selected' : ''} onClick={() => handleOpcionClick(10)}>
+                                            Ingredientes
+                                        </h4>
+                                    )}
+
+                                    {medidasVisibleEmpleado && (
+                                        <h4 className={opcionSeleccionada === 14 ? 'selected' : ''} onClick={() => handleOpcionClick(14)}>
+                                            Medidas
+                                        </h4>
+                                    )}
+
+                                    {articuloMenuVisibleEmpleado && (
+                                        <h4 className={opcionSeleccionada === 7 ? 'selected' : ''} onClick={() => handleOpcionClick(7)}>
+                                            Menus
+                                        </h4>
+                                    )}
+
                                     <h4 onClick={togglePedidosVisibility} className={opcionSeleccionada >= 1 && opcionSeleccionada <= 4 ? 'h4-selected' : ''}>
                                         Pedidos
                                         {pedidosIcon}
@@ -358,6 +416,41 @@ const Opciones = () => {
                                         </>
                                     )}
                                 </div>
+
+                                {privilegiosVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 21 ? 'selected' : ''} onClick={() => handleOpcionClick(21)}>
+                                        Privilegios
+                                    </h4>
+                                )}
+
+                                {promocionesVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 16 ? 'selected' : ''} onClick={() => handleOpcionClick(16)}>
+                                        Promociones
+                                    </h4>
+                                )}
+
+                                {estadisticasVisibleEmpleado && (
+                                    <div className="reportes">
+                                        <h4 onClick={toggleReportesVisibility} className={opcionSeleccionada >= 18 && opcionSeleccionada <= 18 ? 'h4-selected' : ''}>
+                                            Reportes
+                                            {stockIcon}
+                                        </h4>
+                                        {reportesVisible && (
+                                            <>
+                                                <p className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
+                                                    Reportes de ventas
+                                                </p>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+
+                                {rolesVisibleEmpleado && (
+                                    <h4 className={opcionSeleccionada === 20 ? 'selected' : ''} onClick={() => handleOpcionClick(20)}>
+                                        Roles
+                                    </h4>
+                                )}
+
                                 {stockVisibleEmpleado && (
                                     <div className="stock">
                                         <h4 onClick={toggleStockVisibility} className={opcionSeleccionada >= 5 && opcionSeleccionada <= 6 ? 'h4-selected' : ''}>
@@ -379,106 +472,11 @@ const Opciones = () => {
                                     </div>
                                 )}
 
-                                {articuloMenuVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 7 ? 'selected' : ''} onClick={() => handleOpcionClick(7)}>
-                                        Menus
-                                    </h4>
-                                )}
-
-
-                                {articuloVentaVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 11 ? 'selected' : ''} onClick={() => handleOpcionClick(11)}>
-                                        Articulos
-                                    </h4>
-                                )}
-
-                                {rolesVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 20 ? 'selected' : ''} onClick={() => handleOpcionClick(20)}>
-                                        Roles
-                                    </h4>
-                                )}
-
-                                {empleadosVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 8 ? 'selected' : ''} onClick={() => handleOpcionClick(8)}>
-                                        Empleados
-                                    </h4>
-                                )}
-
                                 {sucursalesVisibleEmpleado && (
                                     <h4 className={opcionSeleccionada === 9 ? 'selected' : ''} onClick={() => handleOpcionClick(9)}>
                                         Sucursales
                                     </h4>
                                 )}
-
-
-                                {ingredientesVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 10 ? 'selected' : ''} onClick={() => handleOpcionClick(10)}>
-                                        Ingredientes
-                                    </h4>
-                                )}
-
-                                {privilegiosVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 21 ? 'selected' : ''} onClick={() => handleOpcionClick(21)}>
-                                        Privilegios
-                                    </h4>
-                                )}
-
-                                {categoriasVisibleEmpleado && (
-                                    <div className="categorias">
-                                        <h4 onClick={toggleCategoriaVisibility} className={opcionSeleccionada >= 12 && opcionSeleccionada <= 13 ? 'h4-selected' : ''}>
-                                            Categoria
-                                            {categoriaIcon}
-                                        </h4>
-                                        {categoriaVisible && (
-                                            <>
-                                                <p className={opcionSeleccionada === 12 ? 'selected' : ''} onClick={() => handleOpcionClick(12)}>
-                                                    Categoria
-                                                </p>
-                                                {subcategoriasVisibleEmpleado && (
-                                                    <p className={opcionSeleccionada === 13 ? 'selected' : ''} onClick={() => handleOpcionClick(13)}>
-                                                        Subcategoria
-                                                    </p>
-                                                )}
-
-                                            </>
-                                        )}
-                                    </div>
-                                )}
-
-                                {medidasVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 14 ? 'selected' : ''} onClick={() => handleOpcionClick(14)}>
-                                        Medidas
-                                    </h4>
-                                )}
-
-                                {promocionesVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 16 ? 'selected' : ''} onClick={() => handleOpcionClick(16)}>
-                                        Promociones
-                                    </h4>
-                                )}
-
-                                {empresasVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 17 ? 'selected' : ''} onClick={() => handleOpcionClick(17)}>
-                                        Empresas
-                                    </h4>
-                                )}
-
-                                {estadisticasVisibleEmpleado && (
-                                    <div className="reportes">
-                                        <h4 onClick={toggleReportesVisibility} className={opcionSeleccionada >= 18 && opcionSeleccionada <= 18 ? 'h4-selected' : ''}>
-                                            Reportes
-                                            {stockIcon}
-                                        </h4>
-                                        {reportesVisible && (
-                                            <>
-                                                <p className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
-                                                    Reportes de ventas
-                                                </p>
-                                            </>
-                                        )}
-                                    </div>
-                                )}
-
                             </div>
                         ) : (
                             <div className="main-options">
