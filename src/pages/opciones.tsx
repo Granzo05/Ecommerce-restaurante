@@ -330,17 +330,17 @@ const Opciones = () => {
                                     {categoriasVisibleEmpleado && (
                                         <div className="categorias">
                                             <h4 onClick={toggleCategoriaVisibility} className={opcionSeleccionada >= 12 && opcionSeleccionada <= 13 ? 'h4-selected' : ''}>
-                                                Categoria
+                                                Categorías
                                                 {categoriaIcon}
                                             </h4>
                                             {categoriaVisible && (
                                                 <>
                                                     <p className={opcionSeleccionada === 12 ? 'selected' : ''} onClick={() => handleOpcionClick(12)}>
-                                                        Categoria
+                                                        Categorías
                                                     </p>
                                                     {subcategoriasVisibleEmpleado && (
                                                         <p className={opcionSeleccionada === 13 ? 'selected' : ''} onClick={() => handleOpcionClick(13)}>
-                                                            Subcategoria
+                                                            Subcategorías
                                                         </p>
                                                     )}
 
@@ -375,7 +375,7 @@ const Opciones = () => {
 
                                     {articuloMenuVisibleEmpleado && (
                                         <h4 className={opcionSeleccionada === 7 ? 'selected' : ''} onClick={() => handleOpcionClick(7)}>
-                                            Menus
+                                            Menús
                                         </h4>
                                     )}
 
@@ -473,30 +473,10 @@ const Opciones = () => {
                                 )}
 
 
-                                {articuloMenuVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 7 ? 'selected' : ''} onClick={() => handleOpcionClick(7)}>
-                                        Menú
-                                    </h4>
-                                )}
 
 
-                                {articuloVentaVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 11 ? 'selected' : ''} onClick={() => handleOpcionClick(11)}>
-                                        Articulos
-                                    </h4>
-                                )}
 
-                                {rolesVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 20 ? 'selected' : ''} onClick={() => handleOpcionClick(20)}>
-                                        Roles
-                                    </h4>
-                                )}
-
-                                {empleadosVisibleEmpleado && (
-                                    <h4 className={opcionSeleccionada === 8 ? 'selected' : ''} onClick={() => handleOpcionClick(8)}>
-                                        Empleados
-                                    </h4>
-                                )}
+                                
 
                                 {sucursalesVisibleEmpleado && (
                                     <h4 className={opcionSeleccionada === 9 ? 'selected' : ''} onClick={() => handleOpcionClick(9)}>
