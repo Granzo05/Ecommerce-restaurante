@@ -52,11 +52,10 @@ const ActivarStock: React.FC<ActivarStockProps> = ({ stockOriginal, onCloseModal
   return (
     <div className="modal-info">
       <Toaster />
-      <h3>¿Seguro que quieres activar el stock?</h3>
-      <div className="btns-eliminar-stock">
+      <h2>¿Seguro que quieres activar el stock?</h2>
         <button onClick={onConfirm}>Confirmar</button>
+        <br />
         <button onClick={onCancel}>Cancelar</button>
-      </div>
 
     </div>
   );

@@ -55,10 +55,9 @@ const EliminarStock: React.FC<EliminarStockProps> = ({ stockOriginal, onCloseMod
     <div className="modal-info">
       <Toaster />
       <h2>¿Seguro que quieres eliminar el stock?</h2>
-      <div className="btns-eliminar-stock">
         <button onClick={onConfirm}>Confirmar</button>
+        <br />
         <button onClick={onCancel}>Cancelar</button>
-      </div>
 
     </div>
   );

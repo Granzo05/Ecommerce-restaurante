@@ -194,17 +194,17 @@ const Stocks = () => {
                 <AgregarStockIngrediente onCloseModal={handleModalClose} />
             </ModalCrud>
 
-            <ModalFlotante isOpen={showEliminarStockModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showEliminarStockModal} onClose={handleModalClose}>
                 {selectedStock && <EliminarStock stockOriginal={selectedStock} onCloseModal={handleModalClose} tipo={tipo} />}
-            </ModalFlotante>
+            </ModalCrud>
 
-            <ModalFlotante isOpen={showActivarStockModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showActivarStockModal} onClose={handleModalClose}>
                 {selectedStock && <ActivarStock stockOriginal={selectedStock} onCloseModal={handleModalClose} tipo={tipo} />}
-            </ModalFlotante>
+            </ModalCrud>
 
-            <ModalFlotante isOpen={showEditarStockModal} onClose={handleModalClose}>
+            <ModalCrud isOpen={showEditarStockModal} onClose={handleModalClose}>
                 {selectedStock && <EditarStock onCloseModal={handleModalClose} stockOriginal={selectedStock} tipo={tipo} nombre={nombre} />}
-            </ModalFlotante>
+            </ModalCrud>
 
             <div className="filtros">
                 <div className="inputBox-filtrado">

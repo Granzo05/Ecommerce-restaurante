@@ -381,7 +381,7 @@ const Opciones = () => {
 
                                 {articuloMenuVisibleEmpleado && (
                                     <h4 className={opcionSeleccionada === 7 ? 'selected' : ''} onClick={() => handleOpcionClick(7)}>
-                                        Menus
+                                        Menú
                                     </h4>
                                 )}
 

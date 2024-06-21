@@ -153,7 +153,7 @@ const Menus = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>- Menus -</h1>
+            <h1>- Menú -</h1>
 
             {createVisible && (
                 <div className="btns-menu">

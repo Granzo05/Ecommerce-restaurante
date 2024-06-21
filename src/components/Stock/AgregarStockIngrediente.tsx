@@ -99,7 +99,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
   return (
     <div className="modal-info">
       <Toaster />
-      <h2>&mdash; Agregar ingrediente &mdash;</h2>
+      <h2>&mdash; Agregar stock ingrediente &mdash;</h2>
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingrediente.nombre ?? ''} />
@@ -142,7 +142,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
                  
       </div>
       <hr />
-      <button onClick={crearStockIngrediente}>Agregar</button>
+      <button onClick={crearStockIngrediente}>Agregar stock</button>
     </div>
   )
 }
