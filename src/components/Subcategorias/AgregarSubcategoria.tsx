@@ -95,7 +95,7 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
         return "Subcategoría creada correctamente";
       },
       error: (message) => {
-        return "Error al crear la subcategoría";
+        return "No se pudo crear la subcategoría";
       },
     });
   }
@@ -115,25 +115,24 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
       case 1:
         return (
           <>
-            <div className="modal-info">
-              <Toaster />
-              <div>
-                <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
-                <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-                {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre ?? ''} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
-              </div>
-              <div className="inputBox">
-                <input type="text" required={true} value={nombreSubcategoria} onChange={(e) => { setNombreSubcategoria(e.target.value) }}  pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"/>
-                <span>Nombre de la subcategoria</span>
-                
-              <div className="error-message">El nombre debe contener letras y espacios.</div>
-              </div>
-              {empresa && empresa?.id > 0 ? (
-                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
-              ) : (
-                <button value="Agregar categoria" id="agregarCategoria" onClick={agregarCategoria}>Cargar</button>
-              )}
+            <Toaster />
+            <div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
+              <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre ?? ''} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
             </div>
+            <div className="inputBox">
+              <input type="text" required={true} value={nombreSubcategoria} onChange={(e) => { setNombreSubcategoria(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <span>Nombre de la subcategoria</span>
+
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            </div>
+            <div className="btns-pasos">{empresa && empresa?.id > 0 ? (
+              <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+            ) : (
+              <button className='btn-accion-completar' value="Agregar categoria" id="agregarCategoria" onClick={agregarCategoria}>Agregar subcategoría ✓</button>
+            )}</div>
+
           </>
         );
       case 2:

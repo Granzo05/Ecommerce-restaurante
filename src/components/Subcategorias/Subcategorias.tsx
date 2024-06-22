@@ -196,7 +196,7 @@ const Subsubcategorias = () => {
         <div className="opciones-pantallas">
             <h1>- Subcategorías -</h1>
             {createVisible && (
-                <div className="btns-subcategorias">
+                <div className="btns-categorias">
                     <button className="btn-agregar" onClick={handleAgregarCategoria}> + Agregar subcategoría</button>
                 </div>)}
 
