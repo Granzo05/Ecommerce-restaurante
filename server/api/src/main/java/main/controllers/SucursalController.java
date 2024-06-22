@@ -127,9 +127,10 @@ public class SucursalController {
             sucursal.setCategorias(categorias);
 
             sucursal.setImagenes(new HashSet<>(imagenesRepository.findByIdSucursal(idSucursal)));
+
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(idSucursal)));
 
-            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now().plusDays(1))));
+            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now().plusDays(5))));
 
             return sucursal;
         }

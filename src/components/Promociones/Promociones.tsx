@@ -6,7 +6,7 @@ import EliminarPromocionEntrante from "./EliminarPromocion";
 import { PromocionService } from "../../services/PromocionService";
 import { Promocion } from "../../types/Productos/Promocion";
 import AgregarPromocion from "./AgregarPromocion";
-import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
+import { formatearFechaDDMMYYYY, formatearFechaYYYYMMDDHHMM } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
@@ -327,8 +327,7 @@ const Promociones = () => {
                             {datosFiltrados.map(promocion => (
                                 <tr key={promocion.id}>
                                     <td>
-                                        {formatearFechaDDMMYYYY(new Date(promocion.fechaDesde.toString()))} -
-                                        {formatearFechaDDMMYYYY(new Date(promocion.fechaHasta.toString()))}
+                                        {formatearFechaYYYYMMDDHHMM(new Date(promocion.fechaDesde))} - {formatearFechaYYYYMMDDHHMM(new Date(promocion.fechaHasta))}
                                         (Quedan {diasRestantes(promocion.fechaHasta.toString())} días)
                                     </td>
                                     <td>

@@ -190,11 +190,16 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
   function calcularCostos() {
     let precioRecomendado: number = 0;
-
+    console.log(detallesArticuloMenu)
     detallesArticuloMenu.forEach(detalle => {
       if (detalle?.articuloMenu.nombre.length > 0) {
         precioRecomendado += detalle?.articuloMenu?.precioVenta * detalle?.cantidad;
-      } else if (detalle?.articuloVenta.nombre.length > 0) {
+      }
+    });
+    console.log(detallesArticuloVenta)
+
+    detallesArticuloVenta.forEach(detalle => {
+      if (detalle?.articuloVenta.nombre.length > 0) {
         precioRecomendado += detalle?.articuloVenta?.precioVenta * detalle?.cantidad;
       }
     });
@@ -307,7 +312,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     });
 
     promocion.sucursales = sucursalesElegidas;
-
+  
     toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
       success: (message) => {
@@ -320,10 +325,15 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
         return message;
       },
     });
+   
   }
 
   //SEPARAR EN PASOS
   const [step, setStep] = useState(1);
+
+  useEffect(() => {
+    calcularCostos();
+  }, [step]);
 
   const nextStep = () => {
     if (step === 3) {
@@ -352,12 +362,21 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
-              <input type="datetime-local" required={true} value={formatearFechaYYYYMMDDHHMM(fechaDesde)} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
+              <input
+                type="datetime-local"
+                required={true}
+                value={formatearFechaYYYYMMDDHHMM(fechaDesde)}
+                onChange={(e) => { setFechaDesde(new Date(e.target.value)) }}
+              />
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
-              <input type="datetime-local" required={true} value={formatearFechaYYYYMMDDHHMM(fechaHasta)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
-            </div>
+              <input
+                type="datetime-local"
+                required={true}
+                value={formatearFechaYYYYMMDDHHMM(fechaHasta)}
+                onChange={(e) => { setFechaHasta(new Date(e.target.value)) }}
+              />            </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
@@ -383,7 +402,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
                   {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloMenu[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
                 </div>
                 <div className="inputBox">
-                  <input type="number" required={true} onChange={(e) => handleCantidadArticuloMenu(parseFloat(e.target.value), index)} />
+                  <input type="number" required={true} value={articuloMenu.cantidad} onChange={(e) => handleCantidadArticuloMenu(parseFloat(e.target.value), index)} />
                   <span>Cantidad de unidades</span>
                 </div>
               </div>
@@ -487,7 +506,14 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
                   </>
 
                   <div className="inputBox">
-                    <input type="number" required={true} value={total | 0} onChange={(e) => { handleTotalChange(parseFloat(e.target.value)) }} />
+                    <input
+                      type="number"
+                      step="0.01"
+                      min={0}
+                      required={true}
+                      value={total.toFixed(2)}
+                      onChange={(e) => handleTotalChange(parseFloat(e.target.value))}
+                    />
                     <span>Precio</span>
                   </div>
                 </>

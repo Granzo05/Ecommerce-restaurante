@@ -9,7 +9,7 @@ import HeaderHomePage from '../components/headerHomePage';
 import Footer from '../components/Footer';
 import ModalCrud from '../components/ModalCrud';
 import { Sucursal } from '../types/Restaurante/Sucursal';
-import { formatearFechaDDMMYYYY } from '../utils/global_variables/functions';
+import { formatearFechaDDMMYYYYHHMMPromociones } from '../utils/global_variables/functions';
 import { getBaseUrl } from '../utils/global_variables/const';
 
 export default function MainMenu() {
@@ -112,14 +112,14 @@ export default function MainMenu() {
                             <h2 className='nuestras-promociones'>&mdash; Nuestras promociones &mdash;</h2>
                         </div>
                     </section>
-                    <section className="oferts">
+                    <section className="bg">
                         <div className="ofert-content container">
                             {sucursal && sucursal.promociones.map(promocion =>
                                 <div key={promocion.id} className="ofert-1">
                                     <div className="ofert-txt">
                                         <h3>{promocion.nombre}</h3>
-                                        <p>Desde: {formatearFechaDDMMYYYY(new Date(promocion.fechaDesde.toString()))}</p>
-                                        <p>Hasta: {formatearFechaDDMMYYYY(new Date(promocion.fechaHasta.toString()))}</p>
+                                        <p>Desde {formatearFechaDDMMYYYYHHMMPromociones(new Date(promocion.fechaDesde.toString()))}</p>
+                                        <p>Hasta {formatearFechaDDMMYYYYHHMMPromociones(new Date(promocion.fechaHasta.toString()))}</p>
                                         <a className='btn-2' onClick={() => { setShowDetallePromocionModal(true); setSelectedPromocion(promocion) }}>Más Información</a>
                                     </div>
                                     <div className="ofert-img">
@@ -129,7 +129,6 @@ export default function MainMenu() {
                             )}
                         </div>
                     </section>
-                    <section className='bg'></section>
                 </>
             )}
             <section id='menus' className='food container'>
