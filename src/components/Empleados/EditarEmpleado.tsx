@@ -445,55 +445,198 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+
+    // Validación de fecha de nacimiento
+    const hoy = new Date();
+    const fechaMinima = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate()); // Fecha actual menos 18 años
+
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+      toast.error("Por favor, es necesario un nombre válido");
+      return;
+    } else if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
+      toast.error("Por favor, es necesario un e-mail válido");
+      return;
+    } else if (!contraseña || contraseña.length < 8) {
+      toast.error("Por favor, es necesario una contraseña válida");
+      return;
+    } else if (!telefono || telefono < 10) {
+      toast.error("Por favor, es necesario un número de teléfono válido");
+      return;
+    } else if (!cuil || cuil.length !== 13) {
+      toast.error("Por favor, es necesario un CUIL válido");
+      return;
+    } else if (!fechaNacimiento || fechaNacimiento > fechaMinima) {
+      toast.error("Por favor, es necesaria una fecha de nacimiento válida. (Empleado mayor a 18 años)");
+      return;
+    } else {
+      nextStep();
+    }
+
+  }
+
+  const validateAndNextStep2 = () => {
+
+    if (!domicilios || domicilios.length === 0) {
+      toast.info("Por favor, es necesario asignarle mínimo un domicilio al empleado");
+      return;
+    }
+
+    for (let i = 0; i < domicilios.length; i++) {
+      const calle = domicilios[i].calle;
+      const numero = domicilios[i].numero;
+      const codigoPostal = domicilios[i].codigoPostal;
+      const pais = domicilios[i].localidad.departamento.provincia.pais;
+      const provincia = domicilios[i].localidad.departamento.provincia;
+      const departamento = domicilios[i].localidad.departamento;
+      const localidad = domicilios[i].localidad;
+
+      console.log(calle)
+
+      if (!calle || !calle.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+        toast.info(`Por favor, el domicilio ${i + 1} debe contener una calle`);
+        return;
+      } else if (!numero || (numero > 9999 || numero < 1)) {
+        toast.info(`Por favor, el domicilio ${i + 1} debe contener un numero de casa`);
+      } else if (!codigoPostal || (codigoPostal > 9431 || codigoPostal < 1001)) {
+        toast.info(`Por favor, el domicilio ${i + 1} debe contener un código postal`);
+      } else if (pais.nombre == '') {
+        toast.info(`Por favor, el domicilio ${i + 1} debe contener un país`);
+      } else if (provincia.nombre == '') {
+        toast.info(`Por favor, el domicilio ${i + 1} debe contener una provincia`);
+      } else if (departamento.nombre == '') {
+        toast.info(`Por favor, el domicilio ${i + 1} debe contener un departamento`);
+      } else if (localidad.nombre == '') {
+        toast.info(`Por favor, el domicilio ${i + 1} debe contener una localidad`);
+      }
+    }
+
+    if (domicilios) {
+      nextStep();
+    }
+  }
+
+  const validateAndNextStep3 = () => {
+
+    if (!roles || rolesElegidos.length === 0) {
+      toast.info("Por favor, es necesario asignarle mínimo un rol al empleado");
+      return;
+    }
+    
+    for (let i = 0; i < roles.length; i++) {
+      const rol = roles[i].rol
+
+      
+      if (!rol){
+        toast.info(`Complete el rol ${i + 1} que desea asignar`);
+        return;
+      }
+
+    }
+
+    if (roles) {
+      nextStep();
+    }
+  }
+
+  //VALIDAR CUIL
+
+  const formatearCuil = (value: string) => {
+    // Eliminar todos los caracteres no numéricos
+    const soloNumeros = value.replace(/\D/g, "");
+
+    // Insertar los guiones en las posiciones correctas
+    let cuilFormateado = "";
+    if (soloNumeros.length > 2) {
+      cuilFormateado += soloNumeros.slice(0, 2) + "-";
+      if (soloNumeros.length > 10) {
+        cuilFormateado += soloNumeros.slice(2, 10) + "-";
+        cuilFormateado += soloNumeros.slice(10, 11);
+      } else {
+        cuilFormateado += soloNumeros.slice(2);
+      }
+    } else {
+      cuilFormateado = soloNumeros;
+    }
+
+    return cuilFormateado;
+  };
+
+
+  const handleCuilChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    const cuilFormateado = formatearCuil(value);
+    setCuit(cuilFormateado);
+  };
+
+  const handleTelefonoChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    // Permitir solo valores numéricos
+    if (/^\d*$/.test(value)) {
+      setTelefono(value);
+    }
+  };
+
+
 
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
           <>
-            <h4>Datos</h4>
+            <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del empleado</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            
             </div>
             <div className="inputBox">
               <input type="text" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
               <span>Email del empleado</span>
+              <div className="error-message">Formato incorrecto de e-mail.</div>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={cuil.replace(/-/g, '')} onChange={(e) => { setCuit(e.target.value) }} />
-              <span>Cuil del empleado</span>
+              <input type="text" pattern=".{13}" required={true} value={cuil} onChange={handleCuilChange} />
+              <span>CUIL del empleado</span>
             </div>
             <div className="inputBox">
-              <input type="number" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+              <input type="password" pattern=".{8,}" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
               <span>Contraseña del empleado</span>
+              <div className="error-message">La contraseña debe tener mínimo 8 dígitos.</div>
+
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-              <span>Telefono del empleado</span>
+              <input type="text" pattern="\d{10}" required={true} value={telefono} onChange={handleTelefonoChange} />
+              <span>Teléfono del empleado</span>
+              <div className="error-message">El número de teléfono no es válido. Mínimo 10 dígitos</div>
+
             </div>
             <div className="inputBox">
-              <input type="date" required={true} value={formatearFechaYYYYMMDD(new Date(fechaNacimiento))} onChange={(e) => setFechaNacimiento(new Date(e.target.value))} />
-              <span>Fecha de nacimiento</span>
+              
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
+              <input type="date" required={true} value={formatearFechaYYYYMMDD((fechaNacimiento))} onChange={(e) => setFechaNacimiento(new Date(e.target.value))} />
+              <div className="error-message" style={{ marginTop: '70px' }}>No es una fecha válida. (El empleado debe ser mayor a 18 años)</div>
+
             </div>
             <InputComponent disabled={false} placeHolder='Seleccionar sucursal...' onInputClick={() => setModalBusquedaSucursal(true)} selectedProduct={sucursal?.nombre ?? ''} />
             {modalBusquedaSucursal && <ModalFlotanteRecomendacionesSucursales datosOmitidos={sucursal?.nombre ?? ''} onCloseModal={handleModalClose} onSelectSucursal={(sucursal) => { setSucursal(sucursal); handleModalClose(); }} />}
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
       case 2:
         return (
           <>
-            <h4>Imagenes</h4>
+            <h4>Paso 2 - Imagenes (opcional)</h4>
             <div className="slider-container">
               <button onClick={prevImage} className="slider-button prev">◀</button>
               <div className='imagenes-wrapper'>
                 {imagenesMuestra.map((imagen, index) => (
                   <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
                     <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
-                    <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+                    <label style={{ fontSize: '20px' }}>_imagenes asociadas</label>
 
                     {imagen && (
                       <img
@@ -535,7 +678,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             ))}
             <br />
             <button onClick={añadirCampoImagen}>Añadir imagen</button>
-            <br />
+            <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
@@ -545,7 +688,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       case 3:
         return (
           <>
-            <h4>Roles</h4>
+            <h4>Paso 3 - Roles</h4>
             {rolesModificables && rolesModificables.map((roles, index) => (
               <div key={'domicilioMod' + index}>
                 <hr />
@@ -579,7 +722,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       case 4:
         return (
           <>
-            <h4>Domicilio/os</h4>
+            <h4>Paso 4 - Domicilio/os</h4>
             {domiciliosModificable && domiciliosModificable.map((domicilio, index) => (
               <div key={'domicilioMod' + index}>
                 <hr />
@@ -644,7 +787,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       case 5:
         return (
           <>
-            <h4>Privilegios comúnes</h4>
+            <h4>Paso 5 - Privilegios comunes</h4>
             {privilegios && privilegios.map((privilegio, index) => (
               <div key={index}>
                 {privilegio.nombre !== 'Empleados' && privilegio.nombre !== 'Sucursales' && privilegio.nombre !== 'Estadísticas' && privilegio.nombre !== 'Empresas' && (
@@ -680,7 +823,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       case 6:
         return (
           <>
-            <h4>Privilegios sensibles</h4>
+            <h4>Paso opcional - Privilegios sensibles</h4>
             <p>Recomendamos que estos privilegios estén deshabilitados ya que pueden dar acceso a datos sensibles</p>
             {privilegios && privilegios.map((privilegio, index) => (
               <div key={index}>

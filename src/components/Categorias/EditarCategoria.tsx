@@ -106,10 +106,11 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
     const categoria: Categoria = categoriaOriginal;
     categoria.borrado = 'NO';
 
-    if (!nombre) {
-      toast.info("Por favor, asigne el nombre");
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+      toast.info("Por favor, asigne un nombre válido");
       return;
     }
+
 
     categoria.nombre = nombre;
 
@@ -152,15 +153,20 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
       case 1:
         return (
           <>
-            <h2>Editar categoria</h2>
             <Toaster />
+            <div className="inputBox">
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" />
+              <span>Nombre del categoria</span>
+              
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            </div>
             <div className="slider-container">
               <button onClick={prevImage} className="slider-button prev">◀</button>
               <div className='imagenes-wrapper'>
                 {imagenesMuestra?.map((imagen, index) => (
                   <div key={index} className={`imagen-muestra ${index === currentIndex ? 'active' : ''}`}>
                     <p className='cierre-ingrediente' onClick={() => handleEliminarImagen(index)}>X</p>
-                    <label style={{ fontSize: '20px' }}>- Imagen {index + 1}</label>
+                    <label style={{ fontSize: '20px' }}>_imagenes asociadas</label>
 
                     {imagen && (
                       <img
@@ -176,6 +182,8 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
               </div>
 
             </div>
+
+            
 
             {imagenes.map((imagen, index) => (
               <div key={index} className='inputBox'>
@@ -201,18 +209,13 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
                 </div>
               </div>
             ))}
-            <br />
             <button onClick={añadirCampoImagen}>Añadir imagen</button>
-            <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-              <span>Nombre del categoria</span>
-            </div>
+            <hr />
             <div className="btns-pasos">
-              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button onClick={editarCategoria}>Editar categoria</button>
+                <button className='btn-accion-completar' onClick={editarCategoria}>Editar categoria ✓</button>
               )}
             </div>
           </>
@@ -249,7 +252,7 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
 
   return (
     <div className="modal-info">
-      <h2>&mdash; Agregar artículo para venta &mdash;</h2>
+      <h2>&mdash; Editar categoría &mdash;</h2>
       <Toaster />
       {renderStep()}
 

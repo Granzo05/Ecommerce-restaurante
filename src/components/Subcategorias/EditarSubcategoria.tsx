@@ -55,8 +55,8 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
   function editarCategoria() {
     const subcategoria: Subcategoria = subcategoriaOriginal;
 
-    if (!nombre) {
-      toast.info("Por favor, asigne el nombre");
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+      toast.info("Por favor, asigne un nombre válido");
       return;
     }
 
@@ -67,10 +67,10 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return message;
+        return "Subcategoría editada correctamente";
       },
       error: (message) => {
-        return message;
+        return "No se pudo editar la subcategoría";
       },
     });
   }
@@ -91,14 +91,17 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
         return (
           <>
             <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre de la subcategoria</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+
             </div>
-            <div>
+            <div className='btns-pasos'>
+
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button onClick={editarCategoria}>Editar categoria</button>
+                <button className='btn-accion-completar' onClick={editarCategoria}>Editar subcategoría ✓</button>
               )}
             </div >
           </>
