@@ -8,14 +8,14 @@ interface Props {
 export const DetallesPedido: React.FC<Props> = ({ pedido }) => {
 
   return (
-    <div id="grid-container-modal">
-      <div key={pedido.id} className="grid-item-modal">
+    <div id="modal-container">
+      <div key={pedido.id} className="detalle-item">
         <ul>
           {pedido.detallesPedido?.map(detalle => (
             <>
-              <p>Ingredientes:</p>
-              <li key={detalle.id}>{detalle.articuloMenu?.nombre}</li>
-              <p>Tiempo de cocción: {detalle.articuloMenu?.tiempoCoccion} minutos</p>
+              <h2 className="detalle-title"><strong>Ingredientes:</strong></h2>
+              <li className="detalle-info" key={detalle.id}>{detalle.articuloMenu?.nombre}</li>
+              <p className="detalle-info"><strong>Tiempo de cocción:</strong> {detalle.articuloMenu?.tiempoCoccion} minutos</p>
             </>
           ))}
         </ul>

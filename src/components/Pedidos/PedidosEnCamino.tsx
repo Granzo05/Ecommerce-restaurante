@@ -206,11 +206,10 @@ const PedidosEnCamino = () => {
                     </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
-                            <option value={0}>Seleccionar tipo de envío</option>
-                            <option value={EnumTipoEnvio.DELIVERY}>DELIVERY</option>
+                            <option value={0}>Seleccionar tipo de envío (Todos)</option>
+                            <option value={EnumTipoEnvio.DELIVERY}>Delivery</option>
                             <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Retiro en tienda</option>
                         </select>
-                        <span>Filtrar por tipo de envío</span>
                     </div>
                     <div className="inputBox-filtrado">
                         <input
