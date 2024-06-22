@@ -317,6 +317,11 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
   const validateAndNextStep2 = () => {
 
+    if (!domicilios || domicilios.length === 0) {
+      toast.info("Por favor, es necesario asignarle mínimo un domicilio al empleado");
+      return;
+    }
+
     for (let i = 0; i < domicilios.length; i++) {
       const calle = domicilios[i].calle;
       const numero = domicilios[i].numero;
@@ -352,10 +357,24 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
   }
 
   const validateAndNextStep3 = () => {
+
     if (!roles || rolesElegidos.length === 0) {
-      toast.info("Por favor, es necesario asignarle un rol al empleado");
+      toast.info("Por favor, es necesario asignarle mínimo un rol al empleado");
       return;
-    } else {
+    }
+    
+    for (let i = 0; i < roles.length; i++) {
+      const rol = roles[i].nombre
+
+      
+      if (!rol){
+        toast.info(`Complete el rol ${i + 1} que desea asignar`);
+        return;
+      }
+
+    }
+
+    if (roles) {
       nextStep();
     }
   }
@@ -450,14 +469,14 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             </div>
             <div className="inputBox">
               <input type="text" pattern="\d{10}" required={true} value={telefono} onChange={handleTelefonoChange} />
-              <span>Telefono del empleado</span>
+              <span>Teléfono del empleado</span>
               <div className="error-message">El número de teléfono no es válido. Mínimo 10 dígitos</div>
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
               <input type="date" required value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
-              <div className="error-message" style={{ marginTop: '-15px' }}>No es una fecha válida. (El empleado debe ser mayor a 18 años)</div>
-              <hr />
+              <div className="error-message" style={{ marginTop: '70px' }}>No es una fecha válida. (El empleado debe ser mayor a 18 años)</div>
+              
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
@@ -512,8 +531,8 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
               <div key={index}>
                 <p className='cierre-ingrediente' onClick={() => quitarCampoRol(index)}>X</p>
                 <h4 style={{ fontSize: '18px' }}>Rol {index + 1}</h4>
-                
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Rol del empleado:</label>
+
+                <label style={{ display: 'flex', fontWeight: 'bold' }}>Rol del empleado:</label>
                 <InputComponent disabled={false} placeHolder='Filtrar roles...' onInputClick={() => setModalBusquedaRoles(true)} selectedProduct={roles.nombre ?? ''} />
                 {modalBusquedaRoles && <ModalFlotanteRecomendacionesRoles datosOmitidos={rolesElegidos} onCloseModal={handleModalClose} onSelectRol={(rol) => { handleChangeRol(index, rol); handleModalClose(); }} />}
               </div>
@@ -620,7 +639,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion btn-accion-adelante' onClick={nextStep}>Siguiente (opcional) ⭢</button>
+              <button className='btn-accion btn-accion-adelante' onClick={nextStep}>Privilegios sensibles (opcional) ⭢</button>
               <button className='btn-accion btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
             </div>
           </>
