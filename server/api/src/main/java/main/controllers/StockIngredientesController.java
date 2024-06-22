@@ -62,6 +62,25 @@ public class StockIngredientesController {
     }
 
     @CrossOrigin
+    @GetMapping("/ingredientes/vacios/{idSucursal}")
+    public Set<Ingrediente> getIngredientesVacios(@PathVariable("idSucursal") Long idSucursal) {
+        List<Ingrediente> ingredientes = ingredienteRepository.findAllByIdSucursal(idSucursal);
+
+        Set<Ingrediente> ingredientesSinStock = new HashSet<>();
+
+        for (Ingrediente ingrediente: ingredientes) {
+            Optional<StockIngredientes> stockDB = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
+
+            if(stockDB.isPresent()) {
+                StockIngredientes stock = stockDB.get();
+                if (stock.getCantidadActual() == 0 && stock.getCantidadMinima() == 0 && stock.getCantidadMinima() == 0) ingredientesSinStock.add(ingrediente);
+            }
+        }
+
+        return ingredientesSinStock;
+    }
+
+    @CrossOrigin
     @GetMapping("sucursal/{idSucursal}/stockIngredientes/{nombre}/{cantidad}")
     public ResponseEntity<String> getStockPorNombre(@PathVariable("nombre") String nombre, @PathVariable("cantidad") int cantidad, @PathVariable("idSucursal") long id) {
         // Recibimos el nombre del menu y la cantidad pedida del mismo

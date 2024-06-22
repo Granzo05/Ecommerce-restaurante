@@ -39,25 +39,6 @@ public class IngredienteController {
     }
 
     @CrossOrigin
-    @GetMapping("/ingredientes/vacios/{idSucursal}")
-    public Set<Ingrediente> getIngredientesVacios(@PathVariable("idSucursal") Long idSucursal) {
-        List<Ingrediente> ingredientes = ingredienteRepository.findAllByIdSucursal(idSucursal);
-
-        Set<Ingrediente> ingredientesSinStock = new HashSet<>();
-
-        for (Ingrediente ingrediente: ingredientes) {
-            Optional<StockIngredientes> stockDB = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
-
-            if(stockDB.isPresent()) {
-                StockIngredientes stock = stockDB.get();
-                if (stock.getCantidadActual() == 0 && stock.getCantidadMinima() == 0 && stock.getCantidadMinima() == 0) ingredientesSinStock.add(ingrediente);
-            }
-        }
-
-        return ingredientesSinStock;
-    }
-
-    @CrossOrigin
     @Transactional
     @PostMapping("/ingrediente/create/{idSucursal}")
     public ResponseEntity<String> crearIngrediente(@RequestBody Ingrediente ingredienteDetails, @PathVariable("idSucursal") Long idSucursal) {

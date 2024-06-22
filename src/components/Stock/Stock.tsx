@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import EliminarStock from "./EliminarStock";
 import EditarStock from "./EditarStock";
 import '../../styles/stock.css';
@@ -33,44 +33,19 @@ const Stocks = () => {
 
     const [selectedStock, setSelectedStock] = useState<StockArticuloVenta | StockIngredientes>();
 
-    useEffect(() => {
-        getIngredientes();
-        getArticulos();
-    }, []);
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
-    const getIngredientes = async () => {
-        StockIngredientesService.getStock()
-            .then(data => {
-                setStockIngredientes(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    };
-
-    const getArticulos = async () => {
-        StockArticuloVentaService.getStock()
-            .then(data => {
-                setStockArticulos(data)
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    };
-
-    useEffect(() => {
-        checkPrivilegies();
-    }, []);
+    const [datosFiltrados, setDatosFiltrados] = useState<StockIngredientes[]>([]);
+    const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     const [empleado] = useState<Empleado | null>(() => {
         const empleadoString = localStorage.getItem('empleado');
-
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
     const [sucursal] = useState<Sucursal | null>(() => {
         const sucursalString = localStorage.getItem('sucursal');
-
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
@@ -79,27 +54,56 @@ const Stocks = () => {
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
-
-    const stocks = [...stockArticulos, ...stockIngredientes];
-
-    const [paginaActual, setPaginaActual] = useState(1);
-    const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
+    // Combinar los stocks
+    const stocks = useMemo(() => {
+        const combinados = [...stockArticulos, ...stockIngredientes];
+        return combinados.sort((a, b) => {
+            const nombreA = a.articuloVenta?.nombre || a.ingrediente?.nombre || '';
+            const nombreB = b.articuloVenta?.nombre || b.ingrediente?.nombre || '';
+            return nombreA.localeCompare(nombreB);
+        });
+    }, [stockArticulos, stockIngredientes]);
 
     // Calcular el índice del primer y último elemento de la página actual
     const indexUltimoProducto = paginaActual * cantidadProductosMostrables;
     const indexPrimerProducto = indexUltimoProducto - cantidadProductosMostrables;
 
     // Obtener los elementos de la página actual
-    const [datosFiltrados, setDatosFiltrados] = useState<StockIngredientes[]>([]);
+    useEffect(() => {
+        setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
+    }, [stocks, indexPrimerProducto, indexUltimoProducto]);
 
-    const [paginasTotales, setPaginasTotales] = useState<number>(1);
+    useEffect(() => {
+        getIngredientes();
+        getArticulos();
+    }, []);
 
-    // Cambiar de página
+    const getIngredientes = async () => {
+        try {
+            const data = await StockIngredientesService.getStock();
+            setStockIngredientes(data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const getArticulos = async () => {
+        try {
+            const data = await StockArticuloVentaService.getStock();
+            setStockArticulos(data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    useEffect(() => {
+        checkPrivilegies();
+    }, []);
+
     const paginate = (numeroPagina: number) => setPaginaActual(numeroPagina);
 
     function cantidadDatosMostrables(cantidad: number) {
         setCantidadProductosMostrables(cantidad);
-
         if (cantidad > stocks.length) {
             setPaginasTotales(1);
             setDatosFiltrados(stocks);
@@ -152,9 +156,6 @@ const Stocks = () => {
         }
     }
 
-    useEffect(() => {
-        setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
-    }, [stocks]);    
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -196,14 +197,24 @@ const Stocks = () => {
         setMostrarStocks(false);
     };
 
+    function verTipo(stock: StockIngredientes | StockArticuloVenta) {
+        if (stock.articuloVenta && stock.articuloVenta?.nombre?.length > 0) {
+            setTipo('articulo');
+        } else {
+            setTipo('ingrediente');
+        }
+    }
+
     const handleEditarStock = (stock: StockArticuloVenta | StockIngredientes) => {
         setSelectedStock(stock);
+        verTipo(stock);
         setShowEditarStockModal(true);
         setMostrarStocks(false);
     };
 
     const handleEliminarStock = (stock: StockArticuloVenta | StockIngredientes) => {
         setSelectedStock(stock);
+        verTipo(stock);
         setShowEliminarStockModal(true);
         setShowActivarStockModal(false);
         setMostrarStocks(false);
@@ -211,6 +222,7 @@ const Stocks = () => {
 
     const handleActivarStock = (stock: StockArticuloVenta | StockIngredientes) => {
         setSelectedStock(stock);
+        verTipo(stock);
         setShowEliminarStockModal(false);
         setShowActivarStockModal(true);
         setMostrarStocks(false);
@@ -347,10 +359,10 @@ const Stocks = () => {
                                         <td>
                                             <div className="btns-acciones">
                                                 {updateVisible && (
-                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
+                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
                                                 )}
                                                 {deleteVisible && (
-                                                    <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); setTipo('ingrediente') }}>ELIMINAR</button>
+                                                    <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); }}>ELIMINAR</button>
                                                 )}
                                             </div>
                                         </td>
@@ -358,10 +370,10 @@ const Stocks = () => {
                                         <td>
                                             <div className="btns-acciones">
                                                 {updateVisible && (
-                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setTipo('ingrediente'); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
+                                                    <button className="btn-accion-editar" onClick={() => { handleEditarStock(stock); setNombre(stock.ingrediente?.nombre) }}>EDITAR</button>
                                                 )}
                                                 {activateVisible && (
-                                                    <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock); setTipo('ingrediente') }}>ACTIVAR</button>
+                                                    <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock) }}>ACTIVAR</button>
                                                 )}
                                             </div>
                                         </td>

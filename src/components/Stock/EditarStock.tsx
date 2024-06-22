@@ -78,6 +78,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
       stock.borrado = 'NO';
       stock.precioCompra = costo;
       stock.id = stockOriginal.id;
+      stock.ingrediente = stockOriginal.ingrediente;
+
+      console.log(stock);
 
       toast.promise(StockIngredientesService.updateStock(stock), {
         loading: 'Creando stock del ingrediente...',
@@ -102,6 +105,8 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
       stock.precioCompra = costo;
       stock.id = stockOriginal.id;
       stock.borrado = 'NO';
+
+      if(stockOriginal.articuloVenta) stock.articuloVenta = stockOriginal.articuloVenta;
 
       toast.promise(StockArticuloVentaService.updateStock(stock), {
         loading: 'Editando stock del artículo...',
@@ -128,19 +133,19 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
         <input type="number" required={true} pattern="\d*" value={cantidadMinima} min={1} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
         <span>Cantidad mínima del ingrediente</span>
         <div className="error-message">La cantidad mínima solo debe contener números y no debe ser 0.</div>
-                
+
       </div><br />
       <div className="inputBox">
         <input type="number" required={true} pattern="\d*" value={cantidadMaxima} min={1} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
         <span>Cantidad máxima del ingrediente</span>
         <div className="error-message">La cantidad máxima solo debe contener números y no debe ser 0.</div>
-           
+
       </div><br />
       <div className="inputBox">
         <input type="number" required={true} pattern="\d*" value={cantidadActual} min={1} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
         <span>Cantidad actual del ingrediente</span>
         <div className="error-message">La cantidad actual solo debe contener números y no debe ser 0.</div>
-            
+
       </div><br />
       <div className="input-filtrado">
         <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida?.nombre ?? ''} />
@@ -148,10 +153,10 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
       </div>
       <br /><br />
       <div className="inputBox">
-        <input type="text" required={true} pattern="\d*" value={costo || ''}  onChange={(e) => { setCosto(parseFloat(e.target.value)) }} />
+        <input type="text" required={true} pattern="\d*" value={costo || ''} onChange={(e) => { setCosto(parseFloat(e.target.value)) }} />
         <span>Costo del ingrediente por unidad de medida ($)</span>
         <div className="error-message">El costo por unidad solo debe contener números.</div>
-         
+
       </div><br />
       <button type="button" onClick={editarStock}>Editar stock</button>
     </div>

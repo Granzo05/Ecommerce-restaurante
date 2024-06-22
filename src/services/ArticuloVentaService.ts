@@ -39,6 +39,25 @@ export const ArticuloVentaService = {
         }
     },
 
+    getArticulosVacios: async (): Promise<ArticuloVenta[]> => {
+        try {
+            const response = await fetch(URL_API + 'articulos/vacios/' + sucursalId(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
     createArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[]): Promise<string> => {
         try {
             const menuResponse = await fetch(URL_API + 'articulo/create/' + sucursalId(), {

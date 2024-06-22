@@ -8,6 +8,7 @@ import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
 import { Medida } from '../../types/Ingredientes/Medida';
 import ModalFlotanteRecomendacionesArticulo from '../../hooks/ModalFlotanteFiltroArticuloVenta';
+import ModalFlotanteRecomendacionesArticulosSinStock from '../../hooks/ModalFlotanteFiltroArticulosSinStock';
 
 interface AgregarStockArticuloProps {
   onCloseModal: () => void;
@@ -72,7 +73,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
     stock.precioCompra = precio;
     stock.borrado = 'NO';
 
-    toast.promise(StockArticuloVentaService.createStock(stock), {
+    toast.promise(StockArticuloVentaService.updateStock(stock), {
       loading: 'Creando stock...',
       success: (message) => {
         setTimeout(() => {
@@ -94,7 +95,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
       <div>
         <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
         <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={articulo?.nombre ?? ''} />
-        {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={articulo?.nombre} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { setArticulo(articulo); handleModalClose(); }} />}
+        {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulosSinStock datosOmitidos={articulo?.nombre} onCloseModal={handleModalClose} onSelectArticulo={(articulo) => { setArticulo(articulo); handleModalClose(); }} />}
       </div>
       <label>
         <div className="inputBox">
@@ -121,7 +122,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
         </div>
       </label>
       
-      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={articulo.medida?.nombre ?? medida.nombre ?? ''} />
+      <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
       {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
       <label>
         <div className="inputBox">

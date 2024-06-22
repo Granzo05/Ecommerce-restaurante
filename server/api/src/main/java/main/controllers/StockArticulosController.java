@@ -1,5 +1,6 @@
 package main.controllers;
 
+import main.entities.Ingredientes.Ingrediente;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
@@ -56,6 +57,25 @@ public class StockArticulosController {
         }
 
         return stocksCargados;
+    }
+
+    @CrossOrigin
+    @GetMapping("/articulos/vacios/{idSucursal}")
+    public Set<ArticuloVenta> getStockArticulosVacios(@PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloVenta> articulos = articuloVentaRepository.findAllBySucursal(idSucursal);
+
+        Set<ArticuloVenta> articulosSinStock = new HashSet<>();
+
+        for (ArticuloVenta articuloVenta: articulos) {
+            Optional<StockArticuloVenta> stockDB = stockArticuloRepository.findByArticuloNameAndIdSucursal(articuloVenta.getNombre(), idSucursal);
+
+            if(stockDB.isPresent()) {
+                StockArticuloVenta stock = stockDB.get();
+                if (stock.getCantidadActual() == 0 && stock.getCantidadMinima() == 0 && stock.getCantidadMinima() == 0) articulosSinStock.add(articuloVenta);
+            }
+        }
+
+        return articulosSinStock;
     }
 
     @CrossOrigin
@@ -135,7 +155,7 @@ public class StockArticulosController {
     @PutMapping("sucursal/{idSucursal}/stockArticulo/update")
     public ResponseEntity<String> actualizarStock(@RequestBody StockArticuloVenta stockArticuloVenta, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
-        Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findByIdAndIdSucursal(stockArticuloVenta.getId(), id);
+        Optional<StockArticuloVenta> stockEncontrado = stockArticuloRepository.findByArticuloNameAndIdSucursal(stockArticuloVenta.getArticuloVenta().getNombre(), id);
 
         if (stockEncontrado.isPresent() && stockEncontrado.get().getBorrado().equals(stockArticuloVenta.getBorrado())) {
             StockArticuloVenta stock = stockEncontrado.get();

@@ -99,7 +99,7 @@ NO ANDA EDITAR EMPRESA[x]
 [] El editar menú no borra los ingredientes.
 
 /*OPCIONES:
-[] Hacer andar filtros de Opciones.
+[] Hacer andar filtros de Opciones. QUE FILTROS?
 
 CATEGORÍA:
 [] No anda en lo de editar, borrar las imágenes. Te añade una y otra y otra.
@@ -111,10 +111,10 @@ EMPLEADOS:
 
 STOCK:
 [x] No me deja agregar stock de ingredientes desde Stock. Stock inexistente.
-[] Cuando quiero agregar stock de articulo desde Articulo, me trae la unidad de medida de venta y no me deja cambiarla.
-[] No me deja agregar stock de artículos desde Stock. Stock ya existe.
-[] Eliminas un stock y se elimina cualquiera, no el que seleccionaste.
-[] Si editas, pero no tocas la unidad de medida, te pone cualquiera por defecto.
+[x] Cuando quiero agregar stock de articulo desde Articulo, me trae la unidad de medida de venta y no me deja cambiarla. ME ANDA BIEN
+[x] No me deja agregar stock de artículos desde Stock. Stock ya existe.
+[x] Eliminas un stock y se elimina cualquiera, no el que seleccionaste.
+[x] Si editas, pero no tocas la unidad de medida, te pone cualquiera por defecto. NO ENCONTRE ESTE ERROR, ME ANDA NASHE
 
 STOCK ENTRANTE:
 [] La fecha te muestra el día siguiente al actual pero sigue tomando la fecha actual, por ende no te deja avanzar porque la fecha debe ser posterior.
