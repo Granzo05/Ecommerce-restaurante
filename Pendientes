@@ -105,8 +105,8 @@ CATEGORÍA:
 [x] No anda en lo de editar, borrar las imágenes. Te añade una y otra y otra.
 
 EMPLEADOS:
-[] Error 500 al cargar empleado.
-[] Editar empleado se rompe al pasar al paso 3 de roles.
+[x] Error 500 al cargar empleado.
+[x] Editar empleado se rompe al pasar al paso 3 de roles.
 [] Hay que pasar el CUIL a string, asi poder usar sus '-'.
 
 STOCK:
