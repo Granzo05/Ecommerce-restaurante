@@ -240,9 +240,9 @@ const Promociones = () => {
     return (
         <div className="opciones-pantallas">
 
-            <h1>- Promoción entrante -</h1>
+            <h1>- Promoción -</h1>
             {createVisible && (
-                <div className="btns-stock">
+                <div className="btns-empleados">
                     <button className="btn-agregar" onClick={() => handleAgregarPromocion()}> + Agregar promoción</button>
                 </div>)}
 
@@ -278,21 +278,23 @@ const Promociones = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado-fechas" style={{ marginRight: '10px' }}>
+                        <label style={{ fontWeight: 'bold' }}>Fecha inicio:</label>
+
                         <input
                             type="date"
                             required
                             onChange={(e) => filtrarFechas(e.target.value, '')}
                         />
-                        <span>Filtrar por fecha inicial</span>
                     </div>
-                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado-fechas" style={{ marginRight: '10px' }}>
+                    <label style={{ fontWeight: 'bold' }}>Fecha fin:</label>
+
                         <input
                             type="date"
                             required
                             onChange={(e) => filtrarFechas('', e.target.value)}
                         />
-                        <span>Filtrar por fecha final</span>
                     </div>
                     <div className="inputBox-filtrado">
                         <input
@@ -301,7 +303,10 @@ const Promociones = () => {
                             onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
-                        <select name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
+
+                    </div>
+                    <div className="inputBox-filtrado" style={{ marginLeft: '-15px' }}>
+                        <select id="signos" name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
                             <option value=">">&gt;</option>
                             <option value="<">&lt;</option>
                             <option value=">=">&gt;=</option>

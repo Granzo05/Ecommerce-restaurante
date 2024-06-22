@@ -14,6 +14,7 @@
 .inputBox input[type='email'],
 .inputBox input[type='time'],
 .inputBox input[type='date'],
+.inputBox input[type='datetime-local'],
 .inputBox input[type='phone'] {
     width: 100%;
     height: 100%;
@@ -164,7 +165,6 @@ select:focus {
 .inputBox-filtrado input[type='text'],
 .inputBox-filtrado input[type='email'],
 .inputBox-filtrado input[type='time'],
-.inputBox-filtrado input[type='date'],
 .inputBox-filtrado input[type='phone'] {
     width: 100%;
     height: 100%;
@@ -175,6 +175,35 @@ select:focus {
     outline: none;
     color: black;
     margin-bottom: 10px;
+}
+
+
+.inputBox-filtrado input[type='date']{
+    width: 100%;
+    height: 100%;
+    padding: 7px;
+    border: 1px solid rgb(82, 82, 82);
+    background: #fff;
+    border-radius: 4px;
+    outline: none;
+    color: black;
+    margin-bottom: 10px;
+}
+
+.inputBox-filtrado-fechas input[type='date']{
+    width: 100%;
+    height: 100%;
+    padding: 7px;
+    border: 1px solid rgb(82, 82, 82);
+    background: #fff;
+    border-radius: 4px;
+    outline: none;
+    color: black;
+    margin-bottom: 33px;
+}
+
+.inputBox-filtrado-fechas label{
+
 }
 
 .inputBox-filtrado input[type='file'] {

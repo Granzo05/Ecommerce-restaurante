@@ -351,6 +351,10 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
   const prevStep = () => {
     setStep(step - 1);
   };
+  
+
+  const fechaActual = new Date();
+  const fechaActualFormateada = formatearFechaYYYYMMDDHHMM(fechaActual);
 
   const renderStep = () => {
     switch (step) {
@@ -359,21 +363,28 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
               <span>Nombre de la promoción</span>
+
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
               <span>Descrición de la promoción</span>
+              <div className="error-message">La descripción debe contener letras y espacios.</div>
+
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
               <input
                 type="datetime-local"
                 required={true}
+                min={fechaActualFormateada}
                 value={formatearFechaYYYYMMDDHHMM(fechaDesde)}
                 onChange={(e) => { setFechaDesde(new Date(e.target.value)) }}
               />
+              <div className="error-message" style={{marginTop: '70px'}}>La fecha de inicio debe ser válida, y mayor o igual a la actual.</div>
+
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
@@ -382,7 +393,10 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
                 required={true}
                 value={formatearFechaYYYYMMDDHHMM(fechaHasta)}
                 onChange={(e) => { setFechaHasta(new Date(e.target.value)) }}
-              />            </div>
+              />
+              <div className="error-message" style={{marginTop: '70px'}}>La fecha de finalización debe ser válida, y mayor o igual a la actual.</div>
+
+            </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
