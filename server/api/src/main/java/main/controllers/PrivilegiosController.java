@@ -39,22 +39,32 @@ public class PrivilegiosController {
         Optional<PrivilegiosSucursales> privilegiosDB = privilegiosSucursalesRepository.findByNombreAndIdSucursal(privilegiosDetails.getNombre(), idSucursal);
 
         if (privilegiosDB.isEmpty()) {
+
+            privilegiosDetails.setBorrado("NO");
+
             if (!privilegiosDetails.getSucursales().isEmpty()) {
                 Set<Sucursal> sucursales = new HashSet<>(privilegiosDetails.getSucursales());
                 for (Sucursal sucursalVacia : sucursales) {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    sucursal.getPrivilegios().add(privilegiosDetails);
                     privilegiosDetails.getSucursales().add(sucursal);
-                    sucursalRepository.save(sucursal);
-                }
+
+                    privilegiosDetails = privilegiosSucursalesRepository.save(privilegiosDetails);
+
+                    sucursal.getPrivilegios().add(privilegiosDetails);
+
+                    sucursalRepository.save(sucursal);                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
                     if (!sucursal.getMedidas().contains(privilegiosDetails)) {
-                        sucursal.getPrivilegios().add(privilegiosDetails);
                         privilegiosDetails.getSucursales().add(sucursal);
+
+                        privilegiosDetails = privilegiosSucursalesRepository.save(privilegiosDetails);
+
+                        sucursal.getPrivilegios().add(privilegiosDetails);
+
                         sucursalRepository.save(sucursal);
                     }
                 } else {
@@ -62,9 +72,7 @@ public class PrivilegiosController {
                 }
             }
 
-            privilegiosDetails.setBorrado("NO");
 
-            privilegiosSucursalesRepository.save(privilegiosDetails);
 
             return new ResponseEntity<>("El privilegio ha sido añadido correctamente", HttpStatus.CREATED);
         }

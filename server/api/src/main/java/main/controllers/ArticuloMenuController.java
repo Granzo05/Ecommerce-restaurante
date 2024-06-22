@@ -151,13 +151,19 @@ public class ArticuloMenuController {
 
                 articuloMenu.setBorrado("NO");
 
+                articuloMenu.setCategoria(categoriaRepository.findById(articuloMenu.getCategoria().getId()).get());
+                articuloMenu.setSubcategoria(subcategoriaRepository.findById(articuloMenu.getSubcategoria().getId()).get());
+
                 if (!articuloMenu.getSucursales().isEmpty()) {
                     Set<Sucursal> sucursales = new HashSet<>(articuloMenu.getSucursales());
                     for (Sucursal sucursalVacia : sucursales) {
                         Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                        sucursal.getArticulosMenu().add(articuloMenu);
                         articuloMenu.getSucursales().add(sucursal);
+
+                        articuloMenu = articuloMenuRepository.save(articuloMenu);
+
+                        sucursal.getArticulosMenu().add(articuloMenu);
 
                         sucursalRepository.save(sucursal);
                     }
@@ -165,19 +171,18 @@ public class ArticuloMenuController {
                     Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                     if (sucursalOpt.isPresent()) {
                         Sucursal sucursal = sucursalOpt.get();
-                        sucursal.getArticulosMenu().add(articuloMenu);
+
                         articuloMenu.getSucursales().add(sucursal);
+
+                        articuloMenu = articuloMenuRepository.save(articuloMenu);
+
+                        sucursal.getArticulosMenu().add(articuloMenu);
+
                         sucursalRepository.save(sucursal);
                     } else {
                         return ResponseEntity.badRequest().body("Sucursal no encontrada");
                     }
                 }
-
-                articuloMenu.setCategoria(categoriaRepository.findById(articuloMenu.getCategoria().getId()).get());
-                articuloMenu.setSubcategoria(subcategoriaRepository.findById(articuloMenu.getSubcategoria().getId()).get());
-
-                articuloMenuRepository.save(articuloMenu);
-
                 return new ResponseEntity<>("El menú ha sido añadido correctamente", HttpStatus.OK);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Hubo un error al cargar el menú");

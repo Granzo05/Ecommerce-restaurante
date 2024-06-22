@@ -51,10 +51,15 @@ public class SubcategoriaController {
 
                     for (Categoria categoria : sucursal.getCategorias()) {
                         if (categoriaDetails.getCategoria().equals(categoria)) {
-                            categoria.getSubcategorias().add(categoriaDetails);
                             categoriaDetails.getSucursales().add(sucursal);
-                            sucursalRepository.save(sucursal);
-                        }
+
+                            categoriaDetails = subcategoriaRepository.save(categoriaDetails);
+
+                            categoria.getSubcategorias().add(categoriaDetails);
+
+                            sucursal.getCategorias().add(categoria);
+
+                            sucursalRepository.save(sucursal);                        }
                     }
                 }
             } else {
@@ -64,8 +69,14 @@ public class SubcategoriaController {
 
                     for (Categoria categoria : sucursal.getCategorias()) {
                         if (categoriaDetails.getCategoria().equals(categoria) && !sucursal.getPromociones().contains(categoriaDetails)) {
-                            categoria.getSubcategorias().add(categoriaDetails);
+
                             categoriaDetails.getSucursales().add(sucursal);
+
+                            categoriaDetails = subcategoriaRepository.save(categoriaDetails);
+
+                            categoria.getSubcategorias().add(categoriaDetails);
+
+                            sucursal.getCategorias().add(categoria);
 
                             sucursalRepository.save(sucursal);
                         }
@@ -76,7 +87,6 @@ public class SubcategoriaController {
                 }
             }
 
-            subcategoriaRepository.save(categoriaDetails);
 
             return new ResponseEntity<>("El subcategoria ha sido añadido correctamente", HttpStatus.CREATED);
         }

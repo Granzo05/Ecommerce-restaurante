@@ -40,13 +40,20 @@ public class RolesController {
         Optional<Roles> rolesDB = rolesRepository.findByDenominacionAndIdSucursal(rolDetails.getNombre(), idSucursal);
 
         if (rolesDB.isEmpty()) {
+
+            rolDetails.setBorrado("NO");
+
             if (!rolDetails.getSucursales().isEmpty()) {
                 Set<Sucursal> sucursales = new HashSet<>(rolDetails.getSucursales());
                 for (Sucursal sucursalVacia : sucursales) {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    sucursal.getRoles().add(rolDetails);
                     rolDetails.getSucursales().add(sucursal);
+
+                    rolDetails = rolesRepository.save(rolDetails);
+
+                    sucursal.getRoles().add(rolDetails);
+
                     sucursalRepository.save(sucursal);
                 }
             } else {
@@ -54,8 +61,12 @@ public class RolesController {
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
                     if (!sucursal.getMedidas().contains(rolDetails)) {
-                        sucursal.getRoles().add(rolDetails);
                         rolDetails.getSucursales().add(sucursal);
+
+                        rolDetails = rolesRepository.save(rolDetails);
+
+                        sucursal.getRoles().add(rolDetails);
+
                         sucursalRepository.save(sucursal);
                     }
                 } else {
@@ -63,9 +74,6 @@ public class RolesController {
                 }
             }
 
-            rolDetails.setBorrado("NO");
-
-            rolesRepository.save(rolDetails);
 
             return new ResponseEntity<>("El rol ha sido añadido correctamente", HttpStatus.CREATED);
         }

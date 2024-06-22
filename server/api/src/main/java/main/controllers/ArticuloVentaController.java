@@ -104,17 +104,24 @@ public class ArticuloVentaController {
                 for (Sucursal sucursalVacia : sucursales) {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    sucursal.getArticulosVenta().add(articuloVenta);
                     articuloVenta.getSucursales().add(sucursal);
-                    sucursalRepository.save(sucursal);
-                }
+
+                    articuloVenta = articuloVentaRepository.save(articuloVenta);
+
+                    sucursal.getArticulosVenta().add(articuloVenta);
+
+                    sucursalRepository.save(sucursal);                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
                     if (!sucursal.getArticulosVenta().contains(articuloVenta)) {
-                        sucursal.getArticulosVenta().add(articuloVenta);
                         articuloVenta.getSucursales().add(sucursal);
+
+                        articuloVenta = articuloVentaRepository.save(articuloVenta);
+
+                        sucursal.getArticulosVenta().add(articuloVenta);
+
                         sucursalRepository.save(sucursal);
                     }
                 } else {
@@ -122,7 +129,6 @@ public class ArticuloVentaController {
                 }
             }
 
-            articuloVentaRepository.save(articuloVenta);
 
             return new ResponseEntity<>("El artículo ha sido añadido correctamente", HttpStatus.OK);
         } else {

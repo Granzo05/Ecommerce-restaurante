@@ -51,8 +51,12 @@ public class IngredienteController {
                 for (Sucursal sucursalVacia : sucursales) {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    sucursal.getIngredientes().add(ingredienteDetails);
                     ingredienteDetails.getSucursales().add(sucursal);
+
+                    ingredienteDetails = ingredienteRepository.save(ingredienteDetails);
+
+                    sucursal.getIngredientes().add(ingredienteDetails);
+
                     sucursalRepository.save(sucursal);
                 }
             } else {
@@ -60,18 +64,19 @@ public class IngredienteController {
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
                     if (!sucursal.getIngredientes().contains(ingredienteDetails)) {
-                        sucursal.getIngredientes().add(ingredienteDetails);
                         ingredienteDetails.getSucursales().add(sucursal);
+                        ingredienteDetails.setBorrado("NO");
+
+                        ingredienteDetails = ingredienteRepository.save(ingredienteDetails);
+
+                        sucursal.getIngredientes().add(ingredienteDetails);
+
                         sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
                 }
             }
-
-            ingredienteDetails.setBorrado("NO");
-
-            ingredienteRepository.save(ingredienteDetails);
 
             return new ResponseEntity<>("El ingrediente ha sido añadido correctamente", HttpStatus.OK);
         } else {

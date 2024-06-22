@@ -52,29 +52,6 @@ public class PromocionController {
         Optional<Promocion> promocionDB = promocionRepository.findByNameAndIdSucursal(promocionDetails.getNombre(), idSucursal);
 
         if (promocionDB.isEmpty()) {
-            if (!promocionDetails.getSucursales().isEmpty()) {
-                Set<Sucursal> sucursales = new HashSet<>(promocionDetails.getSucursales());
-                for (Sucursal sucursalVacia : sucursales) {
-                    Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
-
-                    sucursal.getPromociones().add(promocionDetails);
-                    promocionDetails.getSucursales().add(sucursal);
-                    sucursalRepository.save(sucursal);
-                }
-            } else {
-                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
-                if (sucursalOpt.isPresent()) {
-                    Sucursal sucursal = sucursalOpt.get();
-                    if (!sucursal.getPromociones().contains(promocionDetails)) {
-                        sucursal.getPromociones().add(promocionDetails);
-                        promocionDetails.getSucursales().add(sucursal);
-                        sucursalRepository.save(sucursal);
-                    }
-                } else {
-                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
-                }
-            }
-
             Set<DetallePromocion> detalles = new HashSet<>();
             for (DetallePromocion detallePromocion : promocionDetails.getDetallesPromocion()) {
                 if (detallePromocion.getArticuloMenu().getNombre().length() > 2) {
@@ -98,7 +75,36 @@ public class PromocionController {
 
             promocionDetails.setDetallesPromocion(detalles);
 
-            promocionRepository.save(promocionDetails);
+            if (!promocionDetails.getSucursales().isEmpty()) {
+                Set<Sucursal> sucursales = new HashSet<>(promocionDetails.getSucursales());
+                for (Sucursal sucursalVacia : sucursales) {
+                    Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
+
+                    promocionDetails.getSucursales().add(sucursal);
+
+                    promocionDetails = promocionRepository.save(promocionDetails);
+
+                    sucursal.getPromociones().add(promocionDetails);
+
+                    sucursalRepository.save(sucursal);                }
+            } else {
+                Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
+                if (sucursalOpt.isPresent()) {
+                    Sucursal sucursal = sucursalOpt.get();
+                    if (!sucursal.getPromociones().contains(promocionDetails)) {
+                        promocionDetails.getSucursales().add(sucursal);
+
+                        promocionDetails = promocionRepository.save(promocionDetails);
+
+                        sucursal.getPromociones().add(promocionDetails);
+
+                        sucursalRepository.save(sucursal);
+                    }
+                } else {
+                    return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
+                }
+            }
+
 
             return ResponseEntity.ok("Promoción cargada con éxito");
         } else {

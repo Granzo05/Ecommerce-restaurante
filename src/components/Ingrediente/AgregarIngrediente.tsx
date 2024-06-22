@@ -110,7 +110,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
       }
     }
 
-    if (idsSucursalesElegidas.size === 0) {
+    if (empresa && idsSucursalesElegidas.size === 0) {
       toast.error("Por favor, seleccione al menos una sucursal");
       return;
     }
@@ -144,6 +144,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
 
     stockIngredientes.ingrediente = ingredienteStock;
 
+    console.log(ingrediente)
     toast.promise(IngredienteService.createIngrediente(ingrediente), {
       loading: 'Creando Ingrediente...',
       success: (message) => {

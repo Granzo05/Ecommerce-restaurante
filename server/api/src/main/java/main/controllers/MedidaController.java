@@ -44,25 +44,29 @@ public class MedidaController {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
                     sucursal.getMedidas().add(medidaDetails);
-                    medidaDetails.getSucursales().add(sucursal);
-                    sucursalRepository.save(sucursal);
-                }
+
+                    medidaDetails = medidaRepository.save(medidaDetails);
+
+                    sucursal.getMedidas().add(medidaDetails);
+
+                    sucursalRepository.save(sucursal);                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
                     if (!sucursal.getMedidas().contains(medidaDetails)) {
-                        sucursal.getMedidas().add(medidaDetails);
                         medidaDetails.getSucursales().add(sucursal);
+
+                        medidaDetails = medidaRepository.save(medidaDetails);
+
+                        sucursal.getMedidas().add(medidaDetails);
+
                         sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
                 }
             }
-
-            medidaRepository.save(medidaDetails);
-
             return new ResponseEntity<>("El medida ha sido añadido correctamente", HttpStatus.CREATED);
         }
 

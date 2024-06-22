@@ -62,25 +62,30 @@ public class CategoriaController {
                 for (Sucursal sucursalVacia : sucursales) {
                     Sucursal sucursal = sucursalRepository.findById(sucursalVacia.getId()).get();
 
-                    sucursal.getCategorias().add(categoriaDetails);
                     categoriaDetails.getSucursales().add(sucursal);
-                    sucursalRepository.save(sucursal);
-                }
+
+                    categoriaDetails = categoriaRepository.save(categoriaDetails);
+
+                    sucursal.getCategorias().add(categoriaDetails);
+
+                    sucursalRepository.save(sucursal);                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
                     Sucursal sucursal = sucursalOpt.get();
                     if (!sucursal.getCategorias().contains(categoriaDetails)) {
-                        sucursal.getCategorias().add(categoriaDetails);
                         categoriaDetails.getSucursales().add(sucursal);
+
+                        categoriaDetails = categoriaRepository.save(categoriaDetails);
+
+                        sucursal.getCategorias().add(categoriaDetails);
+
                         sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
                 }
             }
-
-            categoriaRepository.save(categoriaDetails);
 
             return new ResponseEntity<>("El categoria ha sido añadido correctamente", HttpStatus.CREATED);
         }
