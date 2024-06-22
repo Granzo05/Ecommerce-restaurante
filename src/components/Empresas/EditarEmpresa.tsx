@@ -57,11 +57,14 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
-    } else if (!cuit) {
+    } else if (!cuit || cuit.length !== 13) {
       toast.error("Por favor, es necesaria el cuit");
       return;
     } else if (!razonSocial) {
       toast.error("Por favor, es necesaria la razón social");
+      return;
+    } else if (!contraseña || contraseña.length < 8) {
+      toast.error("Por favor, es necesaria la contraseña");
       return;
     } else if (imagenes.length === 0 && imagenesMuestra.length === 0) {
       toast.error("Por favor, es necesaria una imagen");
@@ -107,10 +110,36 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
     );
   };
 
+  const formatearCuil = (value: string) => {
+    // Eliminar todos los caracteres no numéricos
+    const soloNumeros = value.replace(/\D/g, "");
+
+    // Insertar los guiones en las posiciones correctas
+    let cuilFormateado = "";
+    if (soloNumeros.length > 2) {
+      cuilFormateado += soloNumeros.slice(0, 2) + "-";
+      if (soloNumeros.length > 10) {
+        cuilFormateado += soloNumeros.slice(2, 10) + "-";
+        cuilFormateado += soloNumeros.slice(10, 11);
+      } else {
+        cuilFormateado += soloNumeros.slice(2);
+      }
+    } else {
+      cuilFormateado = soloNumeros;
+    }
+
+    return cuilFormateado;
+  };
+  const handleCuilChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    const cuilFormateado = formatearCuil(value);
+    setCuit(cuilFormateado);
+  };
+
   return (
     <div className="modal-info">
-      <Toaster />
       <h2>&mdash; Editar empresa &mdash;</h2>
+      <Toaster />
       <div className="slider-container">
         <button onClick={prevImage} className="slider-button prev">◀</button>
         <div className='imagenes-wrapper'>
@@ -131,7 +160,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
           <button onClick={nextImage} className="slider-button next">▶</button>
         </div>
       </div>
-      <br />
       {imagenes.map((imagen, index) => (
         <div key={index} className='inputBox'>
           <hr />
@@ -156,29 +184,41 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
           </div>
         </div>
       ))}
-      <br />
       <button onClick={añadirCampoImagen}>Añadir imagen</button>
+      <hr />
       <form>
         <div className="inputBox">
           <input autoComplete='false' type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-          <span>Nombre</span>
+          <span>Nombre de la empresa</span>
+          
+          <div className="error-message">El nombre no puede ser vacío.</div>
         </div>
         <div className="inputBox">
           <input type="text" required={true} value={razonSocial} onChange={(e) => { setRazonSocial(e.target.value) }} />
           <span>Razón social</span>
+          
+          <div className="error-message">La razón social no puede ser vacía.</div>
         </div>
         <div className="inputBox">
-          <input type="text" required={true} value={cuit} onChange={(e) => { setCuit(e.target.value) }} />
-          <span>Cuit</span>
+          <input type="text" pattern=".{13}" required={true} value={cuit} onChange={handleCuilChange} />
+          <span>CUIT</span>
+          
+          <div className="error-message">El CUIT debe contener sus 11 dígitos.</div>
         </div>
         <div className="inputBox">
-          <input type="text" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+          <input type="password" required={true} pattern=".{8,}" onChange={(e) => { setContraseña(e.target.value) }} />
           <span>Contraseña</span>
+          <div className="error-message">La contraseña debe tener mínimo 8 dígitos.</div>
+
         </div>
       </form>
       <hr />
-      <button type="button" onClick={handleCargarNegocio}>Agregar empresa</button>
+      <div className="btns-pasos">
+      <button className='btn-accion-completar' type="button" onClick={handleCargarNegocio}>Editar empresa ✓</button>
 
+      </div>
+      
+      
     </div>
   )
 }

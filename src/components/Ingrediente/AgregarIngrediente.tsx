@@ -23,6 +23,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
   const [medida, setMedida] = useState<Medida>(new Medida());
   const [costoIngrediente, setCostoIngrediente] = useState(0);
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
+  const [sucursalesElegidas, setSucursalesElegidas] = useState<{ [nombre: string]: string[] }>({});
 
   const handleModalClose = () => {
     setModalBusquedaMedida(false)
@@ -109,6 +110,11 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
       }
     }
 
+    if (idsSucursalesElegidas.size === 0) {
+      toast.error("Por favor, seleccione al menos una sucursal");
+      return;
+    }
+
     const ingrediente: Ingrediente = new Ingrediente();
 
     ingrediente.nombre = nombre;
@@ -176,6 +182,14 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+      toast.info("Por favor, asigne un nombre válido");
+      return;
+    } else {
+      nextStep();
+    }
+  }
 
 
 
@@ -185,8 +199,13 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
         return (
           <>
             <Toaster />
+            {empresa && empresa?.id > 0 ? (
+              <h4>Paso 1 - Datos</h4>
+            ) : (
+              <div></div>
+            )}
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
               <span>Nombre del ingrediente</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
@@ -231,14 +250,14 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
 
             <div className="btns-pasos">
               {empresa && empresa?.id > 0 ? (
-                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+                <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
               ) : (
                 <>
                   {!mostrarInputs && (
                     <button value="Agregar stock ahora (opcional)" id='agregarIngrediente' style={{ marginRight: '10px' }}
                       onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock ahora</button>
                   )}
-                  <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar ingrediente</button>
+                  <button className='btn-accion-completar' value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Agregar ingrediente ✓</button>
                 </>
               )}
             </div>
@@ -247,27 +266,33 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
       case 2:
         return (
           <>
-            <h4>Sucursales</h4>
-            {sucursales && sucursales.map((sucursal, index) => (
-              <div key={index}>
-                <>
-                  <hr />
-                  <p className='cierre-ingrediente' onClick={() => desmarcarSucursales()}>Desmarcar todas</p>
-                  <p className='cierre-ingrediente' onClick={() => marcarSucursales()}>Marcar todas</p>
-                  <h4 style={{ fontSize: '18px' }}>Sucursal: {sucursal.nombre}</h4>
-                  <input
-                    type="checkbox"
-                    value={sucursal.id}
-                    checked={idsSucursalesElegidas.has(sucursal.id) || false}
-                    onChange={() => handleSucursalesElegidas(sucursal.id)}
-                  />
-                  <label>{sucursal.nombre}</label>
-                </>
-              </div>
-            ))}
+            <h4 className="paso-titulo">Paso 2 - Sucursales</h4>
+            <div className="privilegios-container">
+              {sucursales && sucursales.map((sucursal, index) => (
+                <div key={index} className='privilegio'>
+                  <>
+                    <h4 className='privilegio-titulo' style={{ fontSize: '18px' }}>Sucursal: {sucursal.nombre}</h4>
+                    <div className="permisos-container">
+                      <div className="permiso">
+                        <input
+                          type="checkbox"
+                          value={sucursal.id}
+                          checked={idsSucursalesElegidas.has(sucursal.id) || false}
+                          onChange={() => handleSucursalesElegidas(sucursal.id)}
+                        />
+                        <label>{sucursal.nombre}</label>
+                      </div>
+                    </div>
+
+
+                  </>
+                </div>
+              ))}
+            </div>
+            <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Cargar</button>
+              <button className='btn-accion-completar' value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Agregar ingrediente ✓</button>
             </div>
           </>
         );
