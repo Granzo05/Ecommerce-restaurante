@@ -136,7 +136,9 @@ ARTÍCULOS:
 [x] Se rompen los filtros al editar articulo. No deja seleccionar otros.
 [x] Se rompe y no deja crear el articulo si te metes a agregar stock pero te salis porque no queres agregar.
 
-
+INGREDIENTES:
+[] Al añadir un ingrediente más su stock, no deja eliminarlo ni editarlo.
+[] Al editar un ingrediente desactivado, se edita y se activa.
 
  */
 
