@@ -187,7 +187,7 @@ const PrivilegiosEmpleados = () => {
             <h1>- Privilegios -</h1>
 
             {createVisible && (
-                <div className="btns-privilegios">
+                <div className="btns-empleados">
                     <button className="btn-agregar" onClick={() => handleAgregarPrivilegio()}> + Agregar privilegio</button>
                 </div>)}
             <hr />
