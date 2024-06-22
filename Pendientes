@@ -98,6 +98,23 @@ NO ANDA EDITAR EMPRESA[x]
 [] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
 [] El editar menú no borra los ingredientes.
 
+Permisos: 
+[] Si elijo COCINERO, cargarle previamente los permisos logicos que tendrian para que ya esten marcados en el paso siguiente
+
+PEDIDOS:
+[] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
+    los pedidos en general, por lo cual habrá una pantalla con el listado de todos los pedidos, los cuales se podrán filtran según su estado 
+    (por ejemplo, mediante un combobox) y también se podrán buscar mediante su id (mediante un cuadro de búsqueda).
+
+HORARIOS: 
+[] VER SI SE PUEDE PEDIR FUERA DEL HORARIO DE ATENCION
+
+COMPRA:
+[] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.
+
+CARRITO:
+[] AGREGAR PRECIO UNITARIO DE CADA PRODUCTO. AHORA SOLO TIENE SUBTOTAL PERO ADEMAS TIENE QUE TENER EL UNITARIO Y EL TOTAL DE LA COMPRA
+
 MODALES:
 [] EN LOS MODALES DE RECOMENDACION, HABRIA QUE PONER UNA OPCION DE SACAR LA OPCION SELECCIONADA, SI POR EJ ELIJO QUESO EQUIVOCADAMENTE Y NO TENGO OTROS INGREDIENTES NO PUEDO BORRARLO
 
@@ -118,6 +135,7 @@ STOCK:
 [x] No me deja agregar stock de artículos desde Stock. Stock ya existe.
 [x] Eliminas un stock y se elimina cualquiera, no el que seleccionaste.
 [x] Si editas, pero no tocas la unidad de medida, te pone cualquiera por defecto. NO ENCONTRE ESTE ERROR, ME ANDA NASHE
+[] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST
 
 STOCK ENTRANTE:
 [x] La fecha te muestra el día siguiente al actual pero sigue tomando la fecha actual, por ende no te deja avanzar porque la fecha debe ser posterior.
