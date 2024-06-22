@@ -143,6 +143,9 @@ INGREDIENTES:
 [] Al añadir un ingrediente más su stock, no deja eliminarlo ni editarlo.
 [] Al editar un ingrediente desactivado, se edita y se activa.
 
+MENÚS:
+[] Se duplican los ingredientes actuales al editar el menú.
+
  */
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]

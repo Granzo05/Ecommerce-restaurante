@@ -240,6 +240,10 @@ const Menus = () => {
         fetchMenu();
     };
 
+    const capitalizeFirstLetter = (string: string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    };
+
     return (
         <div className="opciones-pantallas">
             <h1>- Menú -</h1>
@@ -351,7 +355,7 @@ const Menus = () => {
                                         ))}
                                     </td>
                                     <td>${menu.precioVenta}</td>
-                                    <td>{menu.categoria.nombre}</td>
+                                    <td>{capitalizeFirstLetter(menu.categoria.nombre)}</td>
 
                                     {menu.borrado === 'NO' ? (
                                         <td>

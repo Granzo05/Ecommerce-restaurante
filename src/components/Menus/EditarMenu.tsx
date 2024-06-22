@@ -435,7 +435,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
   }
 
   const validateAndNextStep3 = () => {
-    if (imagenes.length > 0) {
+    if (imagenes.length === 0 && imagenesMuestra.length === 0) {
       toast.info("No se asignó ninguna imagen");
       return;
     } else {
