@@ -246,10 +246,10 @@ const Empleados = () => {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Cuil</th>
-                                <th>Telefono</th>
-                                <th>Email</th>
-                                <th>Domicilios</th>
+                                <th>CUIL</th>
+                                <th>Teléfono</th>
+                                <th>E-mail</th>
+                                <th>Domicilio/os</th>
                                 <th>Fecha de ingreso</th>
                                 <th>Acciones</th>
                             </tr>

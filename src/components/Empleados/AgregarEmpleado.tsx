@@ -291,26 +291,23 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     const hoy = new Date();
     const fechaMinima = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate()); // Fecha actual menos 18 años
 
-    if (!nombre || !nombre.match(/^[a-zA-Z\s]+$/)) {
-      toast.error("Por favor, es necesario el nombre");
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+      toast.error("Por favor, es necesario un nombre válido");
       return;
     } else if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
-      toast.error("Por favor, es necesaria el email");
+      toast.error("Por favor, es necesario un e-mail válido");
       return;
     } else if (!contraseña || contraseña.length < 8) {
-      toast.error("Por favor, es necesaria la contraseña");
+      toast.error("Por favor, es necesario una contraseña válida");
       return;
     } else if (!telefono || telefono.length < 10) {
-      toast.error("Por favor, es necesario el telefono");
+      toast.error("Por favor, es necesario un número de teléfono válido");
       return;
     } else if (!cuil || cuil.length !== 13) {
-      toast.error("Por favor, es necesario el cuil");
+      toast.error("Por favor, es necesario un CUIL válido");
       return;
     } else if (!fechaNacimiento || fechaNacimiento > fechaMinima) {
       toast.error("Por favor, es necesaria una fecha de nacimiento válida. (Empleado mayor a 18 años)");
-      return;
-    } else if (!roles && rolesElegidos[0].length === 0) {
-      toast.error("Por favor, es necesario el rol del empleado");
       return;
     } else {
       nextStep();
@@ -331,7 +328,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
       console.log(calle)
 
-      if (!calle || !calle.match(/^[a-zA-Z\s]+$/)) {
+      if (!calle || !calle.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
         toast.info(`Por favor, el domicilio ${i + 1} debe contener una calle`);
         return;
       } else if (!numero || (numero > 9999 || numero < 1)) {
@@ -353,6 +350,17 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       nextStep();
     }
   }
+
+  const validateAndNextStep3 = () => {
+    if (!roles || rolesElegidos.length === 0) {
+      toast.info("Por favor, es necesario asignarle un rol al empleado");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+
 
   //VALIDAR CUIL
 
@@ -421,7 +429,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-Z\s]+" />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" />
               <span>Nombre del empleado</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
@@ -448,7 +456,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
               <input type="date" required value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
-              <div className="error-message" style={{ marginTop: '-15px' }}>El empleado debe ser mayor a 18 años.</div>
+              <div className="error-message" style={{ marginTop: '-15px' }}>No es una fecha válida. (El empleado debe ser mayor a 18 años)</div>
               <hr />
             </div>
             <div className="btns-pasos">
@@ -459,7 +467,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       case 2:
         return (
           <>
-            <h4>Paso 2 - Imagenes</h4>
+            <h4>Paso 2 - Imagenes (opcional)</h4>
             <div >
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -491,7 +499,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <br />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
@@ -499,13 +507,14 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
         return (
           <>
             <h4>Paso 3 - Roles</h4>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Rol del empleado:</label>
 
             {roles && roles.map((roles, index) => (
               <div key={index}>
                 <p className='cierre-ingrediente' onClick={() => quitarCampoRol(index)}>X</p>
                 <h4 style={{ fontSize: '18px' }}>Rol {index + 1}</h4>
-                <InputComponent disabled={false} placeHolder='Seleccionar rol...' onInputClick={() => setModalBusquedaRoles(true)} selectedProduct={roles.nombre ?? ''} />
+                
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Rol del empleado:</label>
+                <InputComponent disabled={false} placeHolder='Filtrar roles...' onInputClick={() => setModalBusquedaRoles(true)} selectedProduct={roles.nombre ?? ''} />
                 {modalBusquedaRoles && <ModalFlotanteRecomendacionesRoles datosOmitidos={rolesElegidos} onCloseModal={handleModalClose} onSelectRol={(rol) => { handleChangeRol(index, rol); handleModalClose(); }} />}
               </div>
             ))}
@@ -514,7 +523,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep3}>Siguiente ⭢</button>
             </div>
           </>
         );
@@ -529,7 +538,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
                 <h4 style={{ fontSize: '18px' }}>Domicilio {index + 1}</h4>
 
                 <div className="inputBox">
-                  <input type="text" required={true} value={domicilio?.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} pattern="[a-zA-Z\s]+" />
+                  <input type="text" required={true} value={domicilio?.calle} onChange={(e) => { handleChangeCalle(index, e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" />
                   <span>Nombre de calle</span>
                   <div className="error-message">El nombre de la calle debe contener letras y espacios.</div>
                 </div>

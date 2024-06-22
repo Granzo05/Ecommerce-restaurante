@@ -6,6 +6,7 @@ import ModalCrud from "../components/ModalCrud";
 import AgregarSubcategoria from "../components/Subcategorias/AgregarSubcategoria";
 import { Roles } from "../types/Restaurante/Roles";
 import { RolesService } from "../services/RolesService";
+import AgregarRoles from "../components/Roles/AgregarRol";
 
 const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, onSelectRol: (rol: Roles) => void, datosOmitidos: string[] }> = ({ onSelectRol, onCloseModal, datosOmitidos }) => {
   const handleModalClose = () => {
@@ -69,14 +70,13 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar roles &mdash;</h2>
-          <div className="btns-stock">
-            <button onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar un nuevo rol</button>
+          <div className="btns-filtrado">
+            <button className="btn-agregar" onClick={() => setShowAgregarSubcategoriaModal(true)}>+ Agregar rol al inventario</button>
           </div>
           <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={handleModalAddSubClose}>
-            <AgregarSubcategoria onCloseModal={handleModalClose} />
+            <AgregarRoles onCloseModal={handleModalClose} />
           </ModalCrud>
-          <hr />
-          <div className="inputBox">
+          <div style={{marginBottom: '0px'}} className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
