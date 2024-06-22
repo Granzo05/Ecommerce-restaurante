@@ -3,17 +3,24 @@ import { Toaster, toast } from 'sonner'
 import { SucursalService } from '../../services/SucursalService';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empresa } from '../../types/Restaurante/Empresa';
-import { Privilegios } from '../../types/Restaurante/Privilegios';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
+import { PrivilegiosSucursales } from '../../types/Restaurante/PrivilegiosSucursales';
 
 interface EditarMedidaProps {
-  privilegioOriginal: Privilegios;
+  privilegioOriginal: PrivilegiosSucursales;
   onCloseModal: () => void;
 }
 
 const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onCloseModal }) => {
 
   const [tarea, setTarea] = useState(privilegioOriginal.nombre);
+  const [permisos, setPermisos] = useState<string[]>([]);
+
+
+  useEffect(() => {
+    setPermisos(privilegioOriginal.permisos)
+  }, []);
+  const opcionesDisponibles = ["CREATE", "READ", "UPDATE", "DELETE", "ACTIVATE"];
 
   function editarMedida() {
     privilegioOriginal.borrado = 'NO';
@@ -35,6 +42,8 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
 
     privilegioOriginal.sucursales = sucursalesElegidas;
 
+    privilegioOriginal.permisos = permisos;
+
     toast.promise(PrivilegiosService.updatePrivilegios(privilegioOriginal), {
       loading: 'Editando privilegio...',
       success: (message) => {
@@ -48,6 +57,27 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
       },
     });
   }
+
+  const handlePermisoChange = (permiso: string, index: number) => {
+    const nuevosPermisos = [...permisos];
+    nuevosPermisos[index] = permiso;
+    setPermisos(nuevosPermisos);
+  };
+
+  const añadirCampoPermiso = () => {
+    setPermisos([...permisos, '']);
+  };
+
+  const quitarCampoPermiso = (index: number) => {
+    const nuevosPermisos = permisos.filter((_, i) => i !== index);
+    setPermisos(nuevosPermisos);
+  };
+
+  const getOpcionesDisponibles = (index: number) => {
+    const opcionesSeleccionadas = permisos.filter((_, i) => i !== index);
+    return opcionesDisponibles.filter(opcion => !opcionesSeleccionadas.includes(opcion));
+  };
+
 
   const [empresa] = useState<Empresa | null>(() => {
     const empresaString = localStorage.getItem('empresa');
@@ -113,16 +143,45 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
               </div>
               <div className="btns-pasos">
                 <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-                {empresa && empresa?.id > 0 ? (
-                  <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
-                ) : (
-                  <button onClick={editarMedida}>Editar privilegio</button>
-                )}
+                <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
               </div>
             </div>
           </>
         );
       case 2:
+        return (
+          <>
+            <h2>Permisos actuales</h2>
+            <div>
+              {permisos.map((permiso, index) => (
+                <div className="inputBox" key={index}>
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoPermiso(index)}>X</p>
+                  <select
+                    required={true}
+                    value={permiso}
+                    onChange={(e) => handlePermisoChange(e.target.value, index)}
+                  >
+                    <option value="">Seleccionar una opción</option>
+                    {getOpcionesDisponibles(index).map(opcion => (
+                      <option key={opcion} value={opcion}>{opcion}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+            {permisos.length < 5 && (
+              <button onClick={añadirCampoPermiso}>Añadir permiso</button>
+            )}
+            <br />
+            <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+            {empresa && empresa?.id > 0 ? (
+              <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+            ) : (
+              <button onClick={editarMedida}>Editar privilegio</button>
+            )}
+          </>
+        );
+      case 3:
         return (
           <>
             <h4>Sucursales</h4>
@@ -154,7 +213,6 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
 
   return (
     <div className="modal-info">
-      <h2>&mdash; Editar privilegio &mdash;</h2>
       <Toaster />
       {renderStep()}
     </div >

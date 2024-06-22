@@ -33,7 +33,7 @@ public class PrivilegiosController {
 
     @CrossOrigin
     @Transactional
-    @PostMapping("/prvilegio/create/{idSucursal}")
+    @PostMapping("/privilegio/create/{idSucursal}")
     public ResponseEntity<String> crearPrivilegio(@RequestBody PrivilegiosSucursales privilegiosDetails, @PathVariable("idSucursal") Long idSucursal) {
         // Busco el privilegio en la base de datos
         Optional<PrivilegiosSucursales> privilegiosDB = privilegiosSucursalesRepository.findByNombreAndIdSucursal(privilegiosDetails.getNombre(), idSucursal);
@@ -71,9 +71,6 @@ public class PrivilegiosController {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);
                 }
             }
-
-
-
             return new ResponseEntity<>("El privilegio ha sido añadido correctamente", HttpStatus.CREATED);
         }
 
@@ -97,8 +94,10 @@ public class PrivilegiosController {
 
             rolDB.get().setNombre(privilegio.getNombre());
             rolDB.get().setBorrado(privilegio.getBorrado());
+            rolDB.get().setPermisos(privilegio.getPermisos());
+            
             privilegiosSucursalesRepository.save(rolDB.get());
-            return ResponseEntity.ok("Medida actualizada correctamente");
+            return ResponseEntity.ok("Privilegios actualizados correctamente");
         }
     }
 }

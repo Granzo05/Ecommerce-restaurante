@@ -3,7 +3,7 @@ import { PrivilegiosSucursales } from '../types/Restaurante/PrivilegiosSucursale
 import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const PrivilegiosService = {
-    createPrivilegio: async (privilegio: Privilegios): Promise<string> => {
+    createPrivilegio: async (privilegio: PrivilegiosSucursales): Promise<string> => {
         try {
             const response = await fetch(URL_API + `privilegio/create/${sucursalId()}`, {
                 method: 'POST',

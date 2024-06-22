@@ -4,7 +4,7 @@ import { PrivilegiosService } from '../../services/PrivilegiosService';
 import { SucursalService } from '../../services/SucursalService';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empresa } from '../../types/Restaurante/Empresa';
-import { Privilegios } from '../../types/Restaurante/Privilegios';
+import { PrivilegiosSucursales } from '../../types/Restaurante/PrivilegiosSucursales';
 
 interface AgregarPrivilegiosProps {
   onCloseModal: () => void;
@@ -12,9 +12,11 @@ interface AgregarPrivilegiosProps {
 
 const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal }) => {
   const [tarea, setTarea] = useState('');
+  const [permisos, setPermisos] = useState<string[]>([]);
+  const opcionesDisponibles = ["CREATE", "READ", "UPDATE", "DELETE", "ACTIVATE"];
 
   async function agregarPrivilegios() {
-    const privilegio: Privilegios = new Privilegios(0, '', 'NO');
+    const privilegio: PrivilegiosSucursales = new PrivilegiosSucursales(0, permisos, 0, tarea, 'NO');
 
     if (!tarea) {
       toast.info("Por favor, asigne el tarea");
@@ -67,6 +69,26 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
       });
   }, []);
 
+  const handlePermisoChange = (permiso: string, index: number) => {
+    const nuevosPermisos = [...permisos];
+    nuevosPermisos[index] = permiso;
+    setPermisos(nuevosPermisos);
+  };
+
+  const añadirCampoPermiso = () => {
+    setPermisos([...permisos, '']);
+  };
+
+  const quitarCampoPermiso = (index: number) => {
+    const nuevosPermisos = permisos.filter((_, i) => i !== index);
+    setPermisos(nuevosPermisos);
+  };
+
+  const getOpcionesDisponibles = (index: number) => {
+    const opcionesSeleccionadas = permisos.filter((_, i) => i !== index);
+    return opcionesDisponibles.filter(opcion => !opcionesSeleccionadas.includes(opcion));
+  };
+
   const handleSucursalesElegidas = (sucursalId: number) => {
     const updatedSelectedSucursales = new Set(idsSucursalesElegidas);
     if (updatedSelectedSucursales.has(sucursalId)) {
@@ -106,6 +128,25 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
                 <input type="text" required={true} onChange={(e) => { setTarea(e.target.value) }} />
                 <span>Tarea</span>
               </div>
+              <div>
+                {permisos.map((permiso, index) => (
+                  <div className="inputBox" key={index}>
+                    <p className='cierre-ingrediente' onClick={() => quitarCampoPermiso(index)}>X</p>
+                    <select
+                      required={true}
+                      value={permiso}
+                      onChange={(e) => handlePermisoChange(e.target.value, index)}
+                    >
+                      <option value="">Seleccionar una opción</option>
+                      {getOpcionesDisponibles(index).map(opcion => (
+                        <option key={opcion} value={opcion}>{opcion}</option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+                <button onClick={añadirCampoPermiso}>Añadir permiso</button>
+              </div>
+
               <div className="btns-pasos">
                 <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
                 {empresa && empresa?.id > 0 ? (
