@@ -53,6 +53,7 @@ public class SubcategoriaController {
                         if (categoriaDetails.getCategoria().equals(categoria)) {
                             categoria.getSubcategorias().add(categoriaDetails);
                             categoriaDetails.getSucursales().add(sucursal);
+                            sucursalRepository.save(sucursal);
                         }
                     }
                 }
@@ -65,6 +66,8 @@ public class SubcategoriaController {
                         if (categoriaDetails.getCategoria().equals(categoria) && !sucursal.getPromociones().contains(categoriaDetails)) {
                             categoria.getSubcategorias().add(categoriaDetails);
                             categoriaDetails.getSucursales().add(sucursal);
+
+                            sucursalRepository.save(sucursal);
                         }
                     }
 

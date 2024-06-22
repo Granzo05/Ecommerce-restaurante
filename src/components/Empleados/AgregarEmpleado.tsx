@@ -257,7 +257,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       let rolEmpleado: RolesEmpleado = new RolesEmpleado();
 
       rolEmpleado.rol = rol;
-      empleado.rolesEmpleado.push(rolEmpleado)
+      empleado.roles.push(rolEmpleado)
     });
 
     toast.promise(EmpleadoService.createEmpleado(empleado, imagenes), {

@@ -64,6 +64,7 @@ public class CategoriaController {
 
                     sucursal.getCategorias().add(categoriaDetails);
                     categoriaDetails.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -72,6 +73,7 @@ public class CategoriaController {
                     if (!sucursal.getCategorias().contains(categoriaDetails)) {
                         sucursal.getCategorias().add(categoriaDetails);
                         categoriaDetails.getSucursales().add(sucursal);
+                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);

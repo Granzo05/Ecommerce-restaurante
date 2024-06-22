@@ -509,19 +509,10 @@ public class Main {
 
                     sucursal.getMedidas().add(medida5);
 
-                    Empleado empleado = new Empleado();
-                    empleado.setContraseña(Encrypt.cifrarPassword("123456789"));
-                    empleado.setEmail(Encrypt.encriptarString("pepe@gmail.com"));
-                    empleado.setNombre(Encrypt.encriptarString("Pepito"));
-
-                    PrivilegiosEmpleados empleadoPrivilegio = new PrivilegiosEmpleados();
-                    empleadoPrivilegio.setEmpleado(empleado);
-
                     PrivilegiosSucursales privilegio = new PrivilegiosSucursales();
                     privilegio.setNombre("Articulos de venta");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -529,7 +520,6 @@ public class Main {
                     privilegio.setNombre("Artículos menú");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -537,7 +527,6 @@ public class Main {
                     privilegio.setNombre("Stock");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -545,7 +534,6 @@ public class Main {
                     privilegio.setNombre("Stock entrante");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -553,7 +541,6 @@ public class Main {
                     privilegio.setNombre("Ingredientes");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -561,7 +548,6 @@ public class Main {
                     privilegio.setNombre("Categorias");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -569,7 +555,6 @@ public class Main {
                     privilegio.setNombre("Medidas");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -577,7 +562,6 @@ public class Main {
                     privilegio.setNombre("Promociones");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -585,7 +569,6 @@ public class Main {
                     privilegio.setNombre("Subcategorias");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -593,7 +576,6 @@ public class Main {
                     privilegio.setNombre("Estadísticas");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -601,7 +583,6 @@ public class Main {
                     privilegio.setNombre("Pedidos entrantes");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -609,7 +590,6 @@ public class Main {
                     privilegio.setNombre("Pedidos aceptados");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -617,7 +597,6 @@ public class Main {
                     privilegio.setNombre("Pedidos cocinados");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -625,7 +604,6 @@ public class Main {
                     privilegio.setNombre("Pedidos entregados");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -633,7 +611,6 @@ public class Main {
                     privilegio.setNombre("Pedidos en camino");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -641,7 +618,6 @@ public class Main {
                     privilegio.setNombre("Empleados");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -649,7 +625,6 @@ public class Main {
                     privilegio.setNombre("Sucursales");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -657,7 +632,6 @@ public class Main {
                     privilegio.setNombre("Empresas");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
 
                     privilegio = new PrivilegiosSucursales();
@@ -665,12 +639,7 @@ public class Main {
                     privilegio.setNombre("Roles");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
 
-                    empleado.getPrivilegios().add(empleadoPrivilegio);
                     sucursal.getPrivilegios().add(privilegio);
-
-                    empleado.setCuil(Encrypt.encriptarString("20425148887"));
-
-                    empleado.getSucursales().add(sucursal);
 
                     Roles rolCajero = new Roles();
                     rolCajero.setBorrado("NO");
@@ -754,19 +723,6 @@ public class Main {
                     rolCocineroAyudante.getSucursales().add(sucursal);
 
                     sucursal.getRoles().add(rolCocineroAyudante);
-
-                    RolesEmpleados rolesEmpleados = new RolesEmpleados();
-                    rolesEmpleados.setEmpleado(empleado);
-                    rolesEmpleados.setRol(rolManejoStock);
-
-                    empleado.getRolesEmpleado().add(rolesEmpleados);
-
-                    rolesEmpleados = new RolesEmpleados();
-                    rolesEmpleados.setEmpleado(empleado);
-
-                    empleado.getRolesEmpleado().add(rolesEmpleados);
-
-                    sucursal.getEmpleados().add(empleado);
 
                     empresa.getSucursales().add(sucursal);
 

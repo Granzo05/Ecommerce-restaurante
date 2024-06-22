@@ -53,6 +53,7 @@ public class IngredienteController {
 
                     sucursal.getIngredientes().add(ingredienteDetails);
                     ingredienteDetails.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -61,6 +62,7 @@ public class IngredienteController {
                     if (!sucursal.getIngredientes().contains(ingredienteDetails)) {
                         sucursal.getIngredientes().add(ingredienteDetails);
                         ingredienteDetails.getSucursales().add(sucursal);
+                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);

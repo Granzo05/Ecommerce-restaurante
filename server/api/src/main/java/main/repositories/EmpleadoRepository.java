@@ -15,7 +15,7 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
     @Query("SELECT e FROM Empleado e WHERE e.email = :email")
     Optional<Empleado> findByEmail(@Param("email") String email);
 
-    @Query("SELECT COUNT(e) FROM Empleado e JOIN e.rolesEmpleado rol JOIN e.sucursales suc WHERE (rol.rol.nombre = 'COCINERO_JEFE' " +
+    @Query("SELECT COUNT(e) FROM Empleado e JOIN e.roles rol JOIN e.sucursales suc WHERE (rol.rol.nombre = 'COCINERO_JEFE' " +
             "OR rol.rol.nombre = 'COCINERO_AYUDANTE') " +
             "AND suc.id = :id AND e.borrado = 'NO'")
     int findCantidadCocineros(@Param("id") Long id);

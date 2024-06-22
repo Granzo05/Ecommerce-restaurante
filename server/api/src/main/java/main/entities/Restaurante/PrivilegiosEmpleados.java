@@ -18,9 +18,8 @@ import java.util.Set;
 public class PrivilegiosEmpleados extends Privilegios {
 
     @JsonIgnoreProperties(value = {"domicilios", "imagenes", "privilegios", "rolesEmpleado", "sucursales", "fechaContratacion"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empleado")
-    private Empleado empleado;
+    @ManyToMany(mappedBy = "privilegios", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Empleado> empleados = new HashSet<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "permisos_empleados", joinColumns = @JoinColumn(name = "id_privilegio"))

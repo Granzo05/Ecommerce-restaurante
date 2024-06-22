@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Productos.Imagenes;
+import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -51,19 +52,29 @@ public class Empleado {
     private String borrado = "NO";
 
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "empleados_privilegios",
+            joinColumns = @JoinColumn(name = "id_empleado"),
+            inverseJoinColumns = @JoinColumn(name = "id_privilegio")
+    )
     private Set<PrivilegiosEmpleados> privilegios = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"empleado"}, allowSetters = true)
-    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL)
-    private Set<RolesEmpleados> rolesEmpleado = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "empleados_roles",
+            joinColumns = @JoinColumn(name = "id_empleado"),
+            inverseJoinColumns = @JoinColumn(name = "id_rol")
+    )
+    private Set<RolesEmpleados> roles = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"articuloMenu", "articuloVenta", "promocion", "empresa", "sucursal", "categoria", "empleados"}, allowSetters = true)
     @ManyToMany(mappedBy = "empleados", fetch = FetchType.EAGER)
     private Set<Imagenes> imagenes = new HashSet<>();
 
     @JsonIgnoreProperties(value = {"domicilios", "empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "empleados_sucursales",
             joinColumns = @JoinColumn(name = "id_empleado"),

@@ -45,6 +45,7 @@ public class MedidaController {
 
                     sucursal.getMedidas().add(medidaDetails);
                     medidaDetails.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -53,6 +54,7 @@ public class MedidaController {
                     if (!sucursal.getMedidas().contains(medidaDetails)) {
                         sucursal.getMedidas().add(medidaDetails);
                         medidaDetails.getSucursales().add(sucursal);
+                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);

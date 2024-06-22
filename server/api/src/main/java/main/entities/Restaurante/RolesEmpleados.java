@@ -23,13 +23,12 @@ public class RolesEmpleados {
     private String borrado = "NO";
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_rol")
     private Roles rol;
 
-    @JsonIgnoreProperties(value = {"domicilios", "imagenes", "privilegios", "rolesEmpleado", "sucursales", "fechaContratacion"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empleado")
-    private Empleado empleado;
+    @JsonIgnoreProperties(value = {"domicilios", "imagenes", "privilegios", "roles", "sucursales", "fechaContratacion"}, allowSetters = true)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private Set<Empleado> empleados = new HashSet<>();
 
 }

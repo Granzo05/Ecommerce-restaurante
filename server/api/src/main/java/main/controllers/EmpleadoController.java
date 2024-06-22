@@ -23,13 +23,16 @@ public class EmpleadoController {
     private final EmpleadoRepository empleadoRepository;
     private final FechaContratacionRepository fechaContratacionRepository;
     private final DomicilioRepository domicilioRepository;
+    private final RolesEmpleadoRepository rolesEmpleadoRepository;
     private final ImagenesRepository imagenesRepository;
 
-    public EmpleadoController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, ImagenesRepository imagenesRepository) {
+
+    public EmpleadoController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, FechaContratacionRepository fechaContratacionRepository, DomicilioRepository domicilioRepository, RolesEmpleadoRepository rolesEmpleadoRepository, ImagenesRepository imagenesRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.fechaContratacionRepository = fechaContratacionRepository;
         this.domicilioRepository = domicilioRepository;
+        this.rolesEmpleadoRepository = rolesEmpleadoRepository;
         this.imagenesRepository = imagenesRepository;
     }
 
@@ -66,49 +69,59 @@ public class EmpleadoController {
     @PostMapping("/empleado/create/{idSucursal}")
     public ResponseEntity<String> crearEmpleado(@RequestBody Empleado empleadoDetails, @PathVariable("idSucursal") Long idSucursal) {
         try {
+            // Verificar si el empleado ya existe
             Optional<Empleado> empleadoDB = empleadoRepository.findByCuilAndIdSucursal(Encrypt.encriptarString(empleadoDetails.getCuil()), idSucursal);
-
             if (empleadoDB.isPresent()) {
                 return ResponseEntity.badRequest().body("Ya existe un empleado con ese cuil");
             }
 
+            // Encriptar datos del empleado
             empleadoDetails.setNombre(Encrypt.encriptarString(empleadoDetails.getNombre()));
             empleadoDetails.setEmail(Encrypt.encriptarString(empleadoDetails.getEmail()));
             empleadoDetails.setContraseña(Encrypt.cifrarPassword(empleadoDetails.getContraseña()));
 
+            // Encriptar y asignar datos de los domicilios
             for (Domicilio domicilio : empleadoDetails.getDomicilios()) {
                 domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setEmpleado(empleadoDetails);
             }
 
+            // Asignar y marcar privilegios como no borrados
             for (PrivilegiosEmpleados privilegio : empleadoDetails.getPrivilegios()) {
-                privilegio.setEmpleado(empleadoDetails);
+                privilegio.getEmpleados().add(empleadoDetails);
                 privilegio.setBorrado("NO");
             }
 
-            for (RolesEmpleados roles : empleadoDetails.getRolesEmpleado()) {
-                roles.setEmpleado(empleadoDetails);
+
+            // Asignar y marcar roles como no borrados
+            for (RolesEmpleados roles : empleadoDetails.getRoles()) {
+                roles.getEmpleados().add(empleadoDetails);
                 roles.setBorrado("NO");
             }
 
+            // Verificar y asignar la sucursal
             Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
-            if (sucursalOpt.isPresent()) {
-                empleadoDetails.getSucursales().add(sucursalOpt.get());
-            } else {
-                throw new Exception("Sucursal no encontrada");
+            if (!sucursalOpt.isPresent()) {
+                return ResponseEntity.badRequest().body("Sucursal no encontrada");
             }
+            empleadoDetails.getSucursales().add(sucursalOpt.get());
 
+            // Encriptar el CUIL nuevamente (después de la verificación inicial)
             empleadoDetails.setCuil(Encrypt.encriptarString(empleadoDetails.getCuil()));
 
+            // Asignar fecha de contratación y marcar como no borrado
             FechaContratacionEmpleado fecha = new FechaContratacionEmpleado();
             fecha.setEmpleado(empleadoDetails);
             empleadoDetails.getFechaContratacion().add(fecha);
             empleadoDetails.setBorrado("NO");
 
+            // Guardar el empleado en el repositorio
             empleadoRepository.save(empleadoDetails);
 
             return ResponseEntity.ok("Carga con éxito");
         } catch (Exception e) {
+            // Loggear el error para depuración
+            System.err.println("Error al crear el empleado: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el empleado: " + e.getMessage());
         }
     }
@@ -129,10 +142,10 @@ public class EmpleadoController {
 
             Set<RolesEmpleados> nuevosRoles = new HashSet<>();
 
-            for (RolesEmpleados rol : empleado.getRolesEmpleado()) {
+            for (RolesEmpleados rol : empleado.getRoles()) {
                 if (rol.getBorrado().equals("NO")) nuevosRoles.add(rol);
             }
-            empleado.setRolesEmpleado(nuevosRoles);
+            empleado.setRoles(nuevosRoles);
 
             List<Domicilio> domicilios = domicilioRepository.findByIdEmpleadoNotBorrado(empleado.getId());
 
@@ -289,17 +302,17 @@ public class EmpleadoController {
 
             Set<RolesEmpleados> rolesActualizados = new HashSet<>();
 
-            for (RolesEmpleados rolDB : empleadoDb.getRolesEmpleado()) {
+            for (RolesEmpleados rolDB : empleadoDb.getRoles()) {
                 boolean rolEncontrado = false;
 
-                for (RolesEmpleados rolNuevo : empleadoDetails.getRolesEmpleado()) {
+                for (RolesEmpleados rolNuevo : empleadoDetails.getRoles()) {
                     if (rolDB.getRol().getNombre().equals(rolNuevo.getRol().getNombre())) {
                         // Actualizar atributos del rol existente
                         if(rolDB.getBorrado().equals("SI")) {
                             rolDB.setBorrado("NO");
                             rolesActualizados.add(rolDB);
                         } else {
-                            rolDB.setEmpleado(empleadoDb);
+                            rolDB.getEmpleados().add(empleadoDb);
                             rolesActualizados.add(rolDB);
                             rolEncontrado = true;
                         }
@@ -316,29 +329,29 @@ public class EmpleadoController {
             }
 
             // Agregar roles nuevos que no estaban en empleadoDb
-            for (RolesEmpleados rolNuevo : empleadoDetails.getRolesEmpleado()) {
+            for (RolesEmpleados rolNuevo : empleadoDetails.getRoles()) {
                 boolean esNuevo = true;
-                for (RolesEmpleados rolDB : empleadoDb.getRolesEmpleado()) {
+                for (RolesEmpleados rolDB : empleadoDb.getRoles()) {
                     if (rolDB.getRol().getNombre().equals(rolNuevo.getRol().getNombre())) {
                         esNuevo = false;
                         break;
                     }
                 }
                 if (esNuevo) {
-                    rolNuevo.setEmpleado(empleadoDb);
+                    rolNuevo.getEmpleados().add(empleadoDb);
                     rolNuevo.setBorrado("NO");
                     rolesActualizados.add(rolNuevo);
                 }
             }
 
             // Actualizar la colección de roles en empleadoDb
-            empleadoDb.setRolesEmpleado(rolesActualizados);
+            empleadoDb.setRoles(rolesActualizados);
 
             empleadoDb.getPrivilegios().clear();
 
             // Actualizar los privilegios con los de empleadoDetails
             for (PrivilegiosEmpleados privilegiosEmpleados : empleadoDetails.getPrivilegios()) {
-                privilegiosEmpleados.setEmpleado(empleadoDb);
+                privilegiosEmpleados.getEmpleados().add(empleadoDb);
                 empleadoDb.getPrivilegios().add(privilegiosEmpleados);
             }
 

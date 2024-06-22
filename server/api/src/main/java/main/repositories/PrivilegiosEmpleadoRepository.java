@@ -15,13 +15,9 @@ import java.util.Optional;
 @Repository
 public interface PrivilegiosEmpleadoRepository extends JpaRepository<PrivilegiosEmpleados, Long> {
 
-    @Query("SELECT p FROM Privilegios p JOIN p.sucursales s WHERE s.id = :id AND p.nombre = :nombre")
-    Optional<Privilegios> findByNombreAndIdSucursal(@Param("nombre") String nombre, @Param("id") Long id);
+    @Query("SELECT p FROM Privilegios p WHERE p.nombre = :nombre")
+    Optional<Privilegios> findByNombreAndIdSucursal(@Param("nombre") String nombre);
 
-    @Query("SELECT p FROM Privilegios p JOIN p.sucursales s WHERE s.id = :idSucursal AND p.id = :idRol")
-    Optional<Privilegios> findByIdPrivilegioAndIdSucursal(@Param("idRol") Long idRol, @Param("idSucursal") Long idSucursal);
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM PrivilegiosEmpleados d WHERE d.empleado.id = :id")
-    void deleteAllByEmpleadoId(@Param("id") Long id);
+    @Query("SELECT p FROM Privilegios p WHERE p.id = :idRol")
+    Optional<Privilegios> findByIdPrivilegioAndIdSucursal(@Param("idRol") Long idRol);
 }

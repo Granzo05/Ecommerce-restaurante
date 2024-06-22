@@ -106,6 +106,7 @@ public class ArticuloVentaController {
 
                     sucursal.getArticulosVenta().add(articuloVenta);
                     articuloVenta.getSucursales().add(sucursal);
+                    sucursalRepository.save(sucursal);
                 }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
@@ -114,6 +115,7 @@ public class ArticuloVentaController {
                     if (!sucursal.getArticulosVenta().contains(articuloVenta)) {
                         sucursal.getArticulosVenta().add(articuloVenta);
                         articuloVenta.getSucursales().add(sucursal);
+                        sucursalRepository.save(sucursal);
                     }
                 } else {
                     return new ResponseEntity<>("Sucursal no encontrada con id: " + idSucursal, HttpStatus.NOT_FOUND);

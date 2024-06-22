@@ -44,7 +44,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
 
   const [indexRoles, setIndexRoles] = useState<number>(0);
   const [indexRolesModificables, setIndexRolesModificables] = useState<number>(0);
-  const [rolesModificables, setRolesModificables] = useState<RolesEmpleado[]>(empleadoOriginal.rolesEmpleado);
+  const [rolesModificables, setRolesModificables] = useState<RolesEmpleado[]>(empleadoOriginal.roles);
   const [roles, setRoles] = useState<RolesEmpleado[]>([]);
   const [rolesElegidos, setRolesElegidos] = useState<string[]>([]);
 
@@ -320,7 +320,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       return;
     }
 
-    if (rolesModificables.length === 0 && roles.length === 0) {
+    if (rolesModificables?.length === 0 && roles?.length === 0) {
       toast.info("Se debe agregar al menos un domicilio.");
       return;
     }
@@ -360,7 +360,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       }
     });
 
-    rolesModificables.forEach((rol) => {
+    rolesModificables?.forEach((rol) => {
       const existe = roles.some((rolNuevo) =>
         rol.rol === rolNuevo.rol
       );
@@ -396,17 +396,18 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     });
 
     roles.forEach(rol => {
-      if (rol && !empleadoActualizado.rolesEmpleado.some(s => s.rol === rol.rol)) {
-        empleadoActualizado.rolesEmpleado.push(rol);
+      if (rol && !empleadoActualizado.roles?.some(s => s.rol === rol.rol)) {
+        empleadoActualizado.roles?.push(rol);
       } else {
-        empleadoActualizado.rolesEmpleado = empleadoActualizado.rolesEmpleado.filter(s => s.id !== rol.id);
-        empleadoActualizado.rolesEmpleado.push(rol);
+        empleadoActualizado.roles = empleadoActualizado.roles?.filter(s => s.id !== rol.id);
+        empleadoActualizado.roles?.push(rol);
       }
     });
 
     empleadoActualizado.borrado = 'NO';
 
-    empleadoActualizado.rolesEmpleado = roles;
+    empleadoActualizado.roles = roles;
+
 
     toast.promise(EmpleadoService.updateEmpleado(empleadoActualizado, imagenes, imagenesEliminadas), {
       loading: 'Actualizando empleado...',
@@ -456,9 +457,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       return;
     } else if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
       toast.error("Por favor, es necesario un e-mail válido");
-      return;
-    } else if (!contraseña || contraseña.length < 8) {
-      toast.error("Por favor, es necesario una contraseña válida");
       return;
     } else if (!telefono || telefono < 10) {
       toast.error("Por favor, es necesario un número de teléfono válido");

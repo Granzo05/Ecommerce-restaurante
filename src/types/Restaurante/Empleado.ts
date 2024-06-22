@@ -17,7 +17,7 @@ export class Empleado {
     fechaNacimiento: Date = new Date();
     privilegios: PrivilegiosEmpleados[] = [];
     sucursales: Sucursal[] = [];
-    rolesEmpleado: RolesEmpleado[] = [];
+    roles: RolesEmpleado[] = [];
     borrado: string = '';
     imagenes: Imagenes[] = [];
     

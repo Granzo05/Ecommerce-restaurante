@@ -55,7 +55,7 @@ public class StockArticuloVenta implements Serializable {
     private LocalDate fechaLlegadaProxima;
 
     @JsonIgnoreProperties(value = {"domicilios", "empleados", "empresa", "stocksIngredientes", "stocksArticulo", "promociones", "localidadesDisponiblesDelivery", "articulosMenu", "articulosVenta", "medidas", "categorias", "imagenes", "ingredientes", "stocksEntranteSucursal"}, allowSetters = true)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "stock_articulos_sucursales",
             joinColumns = @JoinColumn(name = "id_stock"),

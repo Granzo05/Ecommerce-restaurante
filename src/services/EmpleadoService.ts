@@ -41,7 +41,7 @@ export const EmpleadoService = {
 
         } catch (error) {
             console.log(error)
-            return 'Error al intentar cargar el empleado';
+            throw new Error ('Error al intentar cargar el empleado');
         }
     },
 
