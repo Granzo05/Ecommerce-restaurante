@@ -50,10 +50,10 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return message;
+        return 'Privilegio editado correctamente';
       },
       error: (message) => {
-        return message;
+        return 'No se pudo editar el privilegio';
       },
     });
   }

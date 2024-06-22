@@ -18,7 +18,7 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
   async function agregarPrivilegios() {
     const privilegio: PrivilegiosSucursales = new PrivilegiosSucursales(0, permisos, 0, tarea, 'NO');
 
-    if (!tarea) {
+    if (!tarea || !tarea.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
       toast.info("Por favor, asigne el tarea");
       return;
     }
@@ -42,10 +42,10 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return message;
+        return 'Privilegio creado correctamente';
       },
       error: (message) => {
-        return message;
+        return 'No se pudo crear el privilegio';
       },
     });
   }
@@ -122,11 +122,11 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
       case 1:
         return (
           <>
-            <div >
               <Toaster />
               <div className="inputBox">
-                <input type="text" required={true} onChange={(e) => { setTarea(e.target.value) }} />
-                <span>Tarea</span>
+                <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" required={true} onChange={(e) => { setTarea(e.target.value) }} />
+                <span>Nombre de la tarea</span>
+                <div className="error-message">El nombre debe contener letras y espacios.</div>
               </div>
               <div>
                 {permisos.map((permiso, index) => (
@@ -148,14 +148,12 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
               </div>
 
               <div className="btns-pasos">
-                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
                 {empresa && empresa?.id > 0 ? (
                   <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
                 ) : (
-                  <button value="Agregar privilegio" id="agregarPrivilegios" onClick={agregarPrivilegios}>Cargar </button>
+                  <button className='btn-accion-completar' value="Agregar privilegio" id="agregarPrivilegios" onClick={agregarPrivilegios}>Agregar privilegio ✓</button>
                 )}
               </div>
-            </div>
           </>
         );
       case 2:
