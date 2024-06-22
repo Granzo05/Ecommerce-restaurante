@@ -181,12 +181,16 @@ const Medidas = () => {
         setMostrarMedidas(true);
     };
 
+    const capitalizeFirstLetter = (string: string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    };
+
     return (
         <div className="opciones-pantallas">
             <h1>- Medidas -</h1>
 
             {createVisible && (
-                <div className="btns-medidas">
+                <div className="btns-empleados">
                     <button className="btn-agregar" onClick={() => handleAgregarMedida()}> + Agregar medida</button>
                 </div>)}
             <hr />
@@ -228,7 +232,7 @@ const Medidas = () => {
                         <tbody>
                             {datosFiltrados.map(medida => (
                                 <tr key={medida.id}>
-                                    <td>{medida.nombre.toString().replace(/_/g, ' ')}</td>
+                                    <td>{capitalizeFirstLetter(medida.nombre.toString().replace(/_/g, ' '))}</td>
 
                                     {medida.borrado === 'NO' ? (
                                         <td>

@@ -271,14 +271,17 @@ const Menus = () => {
                         />
                         <span>Filtrar por nombre</span>
                     </div>
-                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado" >
                         <input
                             type="number"
                             required
                             onChange={(e) => filtrarTiempo(parseInt(e.target.value))}
                         />
                         <span>Filtrar por tiempo</span>
-                        <select name="signo" value={signoTiempo} onChange={(e) => setSignoTiempo(e.target.value)}>
+
+                    </div>
+                    <div className="inputBox-filtrado" style={{ marginLeft: '-15px', marginRight: '10px' }}>
+                        <select id="signos" name="signo" value={signoTiempo} onChange={(e) => setSignoTiempo(e.target.value)}>
                             <option value=">">&gt;</option>
                             <option value="<">&lt;</option>
                             <option value=">=">&gt;=</option>
@@ -286,14 +289,17 @@ const Menus = () => {
                             <option value="=">=</option>
                         </select>
                     </div>
-                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+
+                    <div className="inputBox-filtrado">
                         <input
                             type="number"
                             required
                             onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
-                        <select name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
+                    </div>
+                    <div className="inputBox-filtrado" style={{ marginLeft: '-15px', marginRight: '10px' }}>
+                        <select id="signos" name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
                             <option value=">">&gt;</option>
                             <option value="<">&lt;</option>
                             <option value=">=">&gt;=</option>

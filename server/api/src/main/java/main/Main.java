@@ -489,7 +489,7 @@ public class Main {
                     sucursal.getMedidas().add(medida2);
 
                     Medida medida3 = new Medida();
-                    medida3.setNombre("CENTIMETROS_CUBICOS");
+                    medida3.setNombre("CENTIMETROS CUBICOS");
                     medida3.getSucursales().add(sucursal);
                     medida3.setBorrado("NO");
 

@@ -19,8 +19,8 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
     const medida: Medida = medidaOriginal;
     medida.borrado = 'NO';
 
-    if (!nombre) {
-      toast.info("Por favor, asigne el nombre");
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+      toast.info("Por favor, asigne un nombre válido");
       return;
     }
 
@@ -102,24 +102,20 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
       case 1:
         return (
           <>
-            <div >
-              <Toaster />
-              <div className="modal-info">
-                <h2>Editar medida</h2>
-                <Toaster />
-                <div className="inputBox">
-                  <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-                  <span>Nombre del medida</span>
-                </div>
-              </div>
-              <div className="btns-pasos">
-                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-                {empresa && empresa?.id > 0 ? (
-                  <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
-                ) : (
-                  <button onClick={editarMedida}>Editar medida</button>
-                )}
-              </div>
+            <Toaster />
+            <Toaster />
+            <div className="inputBox">
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <span>Nombre del medida</span>
+              
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            </div>
+            <div className="btns-pasos">
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-completar' onClick={editarMedida}>Editar medida ✓</button>
+              )}
             </div>
           </>
         );

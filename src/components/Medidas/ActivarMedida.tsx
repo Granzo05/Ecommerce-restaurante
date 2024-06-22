@@ -17,10 +17,10 @@ const ActivarMedida: React.FC<ActivarMedidaProps> = ({ medidaOriginal, onCloseMo
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return message;
+        return 'Medida activada correctamente';
       },
       error: (message) => {
-        return message;
+        return 'No se pudo activar la medida';
       },
     });
   };

@@ -227,3 +227,9 @@ table tr:hover {
     margin-bottom: 10px;
 }
 
+.inputBox-filtrado #signos {
+    padding: 9.5px;
+    border-left: 0;
+    border-radius: 0 4px 4px 0;
+}
+

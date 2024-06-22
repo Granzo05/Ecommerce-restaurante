@@ -18,10 +18,10 @@ const EliminarMedida: React.FC<EliminarMedidaProps> = ({ medidaOriginal, onClose
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return message;
+        return 'Medida eliminada correctamente';
       },
       error: (message) => {
-        return message;
+        return 'No se puedo eliminar la medida';
       },
     });
   };
