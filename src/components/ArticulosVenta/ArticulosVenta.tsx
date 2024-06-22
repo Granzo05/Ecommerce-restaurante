@@ -162,31 +162,40 @@ const ArticuloVentas = () => {
         }
     }
 
-    function filtrarDatos(filtro: string) {
-        if (filtro.length > 0) {
-            const filtradas = articulosVenta.filter(recomendacion =>
-                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
-            );
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
-        } else {
-            setDatosFiltrados(articulosVenta.slice(indexPrimerProducto, indexUltimoProducto));
-            setPaginasTotales(Math.ceil(articulosVenta.length / cantidadProductosMostrables));
-        }
-    }
+    const [filtroNombre, setFiltroNombre] = useState('');
+    const [filtroPrecio, setFiltroPrecio] = useState('');
 
-    function filtrarPorPrecio(filtro: string) {
-        if (filtro.length > 0) {
-            const filtradas = articulosVenta.filter(recomendacion =>
-                recomendacion.precioVenta.toString().startsWith(filtro)
+    const filtrarDatos = (filtroNombre: string, filtroPrecio: string) => {
+        let filtradas = articulosVenta;
+
+        if (filtroNombre.length > 0) {
+            filtradas = filtradas.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
             );
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
-        } else {
-            setDatosFiltrados(articulosVenta.slice(indexPrimerProducto, indexUltimoProducto));
-            setPaginasTotales(Math.ceil(articulosVenta.length / cantidadProductosMostrables));
         }
-    }
+
+        if (filtroPrecio.length > 0) {
+            filtradas = filtradas.filter(recomendacion =>
+                recomendacion.precioVenta.toString().startsWith(filtroPrecio)
+            );
+        }
+
+        setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+        setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+    };
+
+    const handleFiltroNombreChange = (e: { target: { value: any; }; }) => {
+        const nuevoFiltroNombre = e.target.value;
+        setFiltroNombre(nuevoFiltroNombre);
+        filtrarDatos(nuevoFiltroNombre, filtroPrecio);
+    };
+
+    const handleFiltroPrecioChange = (e: { target: { value: any; }; }) => {
+        const nuevoFiltroPrecio = e.target.value;
+        setFiltroPrecio(nuevoFiltroPrecio);
+        filtrarDatos(filtroNombre, nuevoFiltroPrecio);
+    };
+
 
     useEffect(() => {
         if (articulosVenta.length > 0) {
@@ -223,7 +232,7 @@ const ArticuloVentas = () => {
                         <input
                             type="text"
                             required
-                            onChange={(e) => filtrarDatos(e.target.value)}
+                            onChange={handleFiltroNombreChange}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
@@ -231,7 +240,7 @@ const ArticuloVentas = () => {
                         <input
                             type="text"
                             required
-                            onChange={(e) => filtrarPorPrecio((e.target.value))}
+                            onChange={handleFiltroPrecioChange}
                         />
                         <span>Filtrar por precio</span>
                     </div>
