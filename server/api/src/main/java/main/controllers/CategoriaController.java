@@ -38,10 +38,12 @@ public class CategoriaController {
     public Set<Categoria> getCategorias(@PathVariable("idSucursal") Long idSucursal) {
         List<Categoria> categorias = categoriaRepository.findAllByIdSucursal(idSucursal);
 
-        for (Categoria Categoria : categorias) {
-            List<Subcategoria> subcategorias = subcategoriaRepository.findAllByIdCategoria(Categoria.getId());
+        for (Categoria categoria : categorias) {
+            List<Subcategoria> subcategorias = subcategoriaRepository.findAllByIdCategoria(categoria.getId());
 
-            if(!subcategorias.isEmpty()) Categoria.setSubcategorias(new HashSet<>(subcategorias));
+            if(!subcategorias.isEmpty()) categoria.setSubcategorias(new HashSet<>(subcategorias));
+
+            categoria.setImagenes(new HashSet<>(imagenesRepository.findByIdCategoria(categoria.getId())));
         }
 
         return new HashSet<>(categorias);

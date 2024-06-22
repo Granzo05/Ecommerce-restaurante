@@ -81,7 +81,7 @@ export const CategoriaService = {
             }
 
             // Cargar imágenes solo si se debe hacer
-            if (cargarImagenes && (imagenes || imagenesEliminadas)) {
+            if (cargarImagenes && imagenes) {
                 await Promise.all(imagenes.map(async (imagen) => {
                     if (imagen.file) {
                         // Crear objeto FormData para las imágenes
@@ -95,14 +95,14 @@ export const CategoriaService = {
                         });
                     }
                 }));
+            }
 
-                if (imagenesEliminadas) {
-                    await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        await fetch(URL_API + 'categoria/imagen/' + imagen.id + '/delete', {
-                            method: 'PUT',
-                        });
-                    }));
-                }
+            if (cargarImagenes && imagenesEliminadas) {
+                await Promise.all(imagenesEliminadas.map(async (imagen) => {
+                    await fetch(URL_API + 'categoria/imagen/' + imagen.id + '/delete', {
+                        method: 'PUT',
+                    });
+                }));
             }
 
             return await response.text();

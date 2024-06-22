@@ -123,7 +123,6 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
     });
 
     categoria.sucursales = sucursalesElegidas;
-
     toast.promise(CategoriaService.updateCategoria(categoria, imagenes, imagenesEliminadas), {
       loading: 'Editando Categoria...',
       success: (message) => {
@@ -157,7 +156,7 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
             <div className="inputBox">
               <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" />
               <span>Nombre del categoria</span>
-              
+
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="slider-container">
@@ -183,7 +182,7 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
 
             </div>
 
-            
+
 
             {imagenes.map((imagen, index) => (
               <div key={index} className='inputBox'>
