@@ -101,6 +101,14 @@ NO ANDA EDITAR EMPRESA[x]
 /*OPCIONES:
 [] Hacer andar filtros de Opciones.
 
+CATEGORÍA:
+[] No anda en lo de editar, borrar las imágenes. Te añade una y otra y otra.
+
+EMPLEADOS:
+[] Error 500 al cargar empleado.
+[] Editar empleado se rompe al pasar al paso 3 de roles.
+[] Hay que pasar el CUIL a string, asi poder usar sus '-'.
+
 STOCK:
 [] No me deja agregar stock de ingredientes desde Stock. Stock inexistente.
 [] Cuando quiero agregar stock de articulo desde Articulo, me trae la unidad de medida de venta y no me deja cambiarla.
@@ -127,6 +135,8 @@ ARTÍCULOS:
 [x] Solo deja eliminar una imagen a la vez, del slider, al editar.
 [] Se rompen los filtros al editar articulo. No deja seleccionar otros.
 [] Se rompe y no deja crear el articulo si te metes a agregar stock pero te salis porque no queres agregar.
+
+
 
  */
 
