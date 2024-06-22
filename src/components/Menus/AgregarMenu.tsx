@@ -272,7 +272,6 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
 
   const validateAndNextStep = () => {
 
-
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -285,10 +284,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     } else if (!comensales || comensales == 0) {
       toast.error("Por favor, es necesaria la cantidad de comensales y que no sea 0");
       return;
-    } else if (!categoria) {
+    } else if (!categoria || categoria.nombre.length === 0) {
       toast.error("Por favor, es necesaria la categoria");
       return;
-    } else if (!subcategoria) {
+    } else if (!subcategoria || subcategoria.nombre.length === 0) {
       toast.error("Por favor, es necesaria la subcategoria");
       return;
     } else {

@@ -144,7 +144,6 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
 
     stockIngredientes.ingrediente = ingredienteStock;
 
-    console.log(ingrediente)
     toast.promise(IngredienteService.createIngrediente(ingrediente), {
       loading: 'Creando Ingrediente...',
       success: (message) => {
