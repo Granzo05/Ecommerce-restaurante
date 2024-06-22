@@ -207,14 +207,38 @@ const Empresas = () => {
         fetchEmpresas();
     };
 
+    const formatearCuil = (value: string) => {
+        // Eliminar todos los caracteres no numéricos
+        const soloNumeros = value.replace(/\D/g, "");
+
+        // Insertar los guiones en las posiciones correctas
+        let cuilFormateado = "";
+        if (soloNumeros.length > 2) {
+            cuilFormateado += soloNumeros.slice(0, 2) + "-";
+            if (soloNumeros.length > 10) {
+                cuilFormateado += soloNumeros.slice(2, 10) + "-";
+                cuilFormateado += soloNumeros.slice(10, 11);
+            } else {
+                cuilFormateado += soloNumeros.slice(2);
+            }
+        } else {
+            cuilFormateado = soloNumeros;
+        }
+
+        return cuilFormateado;
+    };
+
+    
+
+
+
 
 
     return (
         <div className="opciones-pantallas">
             <h1>- Empresas -</h1>
-
             {createVisible && (
-                <div className="btns-stock">
+                <div className="btns-empleados">
                     <button className="btn-agregar" onClick={() => handleAgregarEmpresa()}> + Agregar empresa</button>
                 </div>
             )}
@@ -255,7 +279,7 @@ const Empresas = () => {
                     </div>
                     <div className="inputBox-filtrado">
                         <input
-                            type="number"
+                            type="text"
                             required
                             onChange={(e) => filtrarCuit(e.target.value)}
                         />

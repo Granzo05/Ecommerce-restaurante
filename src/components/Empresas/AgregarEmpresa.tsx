@@ -67,6 +67,11 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
 
     return cuilFormateado;
   };
+  const handleCuilChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    const cuilFormateado = formatearCuil(value);
+    setCuit(cuilFormateado);
+  };
 
   const handleCargarNegocio = async () => {
     if (!nombre) {
@@ -123,6 +128,25 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+    if (!nombre) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!cuit || cuit.length !== 13) {
+      toast.error("Por favor, es necesaria el cuit");
+      return;
+    } else if (!razonSocial) {
+      toast.error("Por favor, es necesaria la razón social");
+      return;
+    } else if (!contraseña || contraseña.length < 8) {
+      toast.error("Por favor, es necesaria la contraseña");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -131,28 +155,34 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
               <input autoComplete='false' type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
-              <span>Nombre</span>
+              <span>Nombre de la empresa</span>
+              <div className="error-message">El nombre no puede ser vacío.</div>
             </div>
             <div className="inputBox">
               <input type="text" required={true} value={razonSocial} onChange={(e) => { setRazonSocial(e.target.value) }} />
               <span>Razón social</span>
+              <div className="error-message">La razón social no puede ser vacía.</div>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} value={cuit} onChange={(e) => { setCuit(formatearCuil(e.target.value)) }} />
-              <span>Cuit</span>
+              <input type="text" pattern=".{13}" required={true} value={cuit} onChange={handleCuilChange} />
+              <span>CUIT</span>
+              <div className="error-message">El CUIT debe contener sus 11 dígitos.</div>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
+              <input type="password" required={true} pattern=".{8,}" value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
               <span>Contraseña</span>
+              <div className="error-message">La contraseña debe tener mínimo 8 dígitos.</div>
+
             </div>
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
       case 2:
         return (
           <>
+          <h4>Paso final - Imagenes</h4>
             <div>
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>

@@ -362,12 +362,12 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       toast.info("Por favor, es necesario asignarle mínimo un rol al empleado");
       return;
     }
-    
+
     for (let i = 0; i < roles.length; i++) {
       const rol = roles[i].nombre
 
-      
-      if (!rol){
+
+      if (!rol) {
         toast.info(`Complete el rol ${i + 1} que desea asignar`);
         return;
       }
@@ -476,7 +476,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
               <input type="date" required value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
               <div className="error-message" style={{ marginTop: '70px' }}>No es una fecha válida. (El empleado debe ser mayor a 18 años)</div>
-              
+
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
