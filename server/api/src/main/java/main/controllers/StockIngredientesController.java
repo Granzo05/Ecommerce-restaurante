@@ -167,7 +167,7 @@ public class StockIngredientesController {
     @PutMapping("sucursal/{idSucursal}/stockIngrediente/update")
     public ResponseEntity<String> actualizarStock(@RequestBody StockIngredientes stockIngredientes, @PathVariable("idSucursal") long id) {
         // Busco el stockIngredientes de ese ingrediente
-        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(stockIngredientes.getId(), id);
+        Optional<StockIngredientes> stockEncontrado = stockIngredientesRepository.findByIdAndIdSucursal(stockIngredientes.getIngrediente().getStockIngrediente().getId(), id);
         if (stockEncontrado.isPresent()) {
             StockIngredientes stock = stockEncontrado.get();
 

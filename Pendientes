@@ -102,7 +102,7 @@ NO ANDA EDITAR EMPRESA[x]
 [] Hacer andar filtros de Opciones.
 
 STOCK:
-[] No me deja agregar stock de ingredientes desde Stock. Stock inexistente.
+[x] No me deja agregar stock de ingredientes desde Stock. Stock inexistente.
 [] Cuando quiero agregar stock de articulo desde Articulo, me trae la unidad de medida de venta y no me deja cambiarla.
 [] No me deja agregar stock de artículos desde Stock. Stock ya existe.
 [] Eliminas un stock y se elimina cualquiera, no el que seleccionaste.

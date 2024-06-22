@@ -153,10 +153,8 @@ const Stocks = () => {
     }
 
     useEffect(() => {
-        if (stocks.length > 0) {
-            setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
-        }
-    }, [stocks, paginaActual, cantidadProductosMostrables]);
+        setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
+    }, [stocks]);    
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -328,7 +326,7 @@ const Stocks = () => {
 
                         <tbody>
                             {datosFiltrados.map(stock => (
-                                <tr key={stock.id}>
+                                <tr key={stock.ingrediente?.nombre}>
                                     <td>{stock.ingrediente?.nombre}{stock.articuloVenta?.nombre}</td>
                                     <td style={{ textTransform: 'lowercase' }}>{stock.cantidadActual} {stock.medida?.nombre}</td>
                                     <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMinima} {stock.medida?.nombre}</td>

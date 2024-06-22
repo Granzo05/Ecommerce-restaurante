@@ -82,6 +82,8 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
 
     stock.ingrediente = ingrediente;
 
+    console.log(stock)
+
     toast.promise(StockIngredientesService.updateStock(stock), {
       loading: 'Creando stock...',
       success: (message) => {
@@ -111,7 +113,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
           <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
           <span>Cantidad mínima del ingrediente</span>
           <div className="error-message">La cantidad mínima solo debe contener números.</div>
-                  
+
         </div>
       </label>
       <label>
@@ -119,7 +121,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
           <input type="text" required pattern="\d*" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
           <span>Cantidad máxima del ingrediente</span>
           <div className="error-message">La cantidad máxima solo debe contener números.</div>
-                  
+
         </div>
 
       </label>
@@ -128,7 +130,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
           <input type="text" required pattern="\d*" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
           <span>Cantidad actual del ingrediente</span>
           <div className="error-message">La cantidad actual solo debe contener números.</div>
-                  
+
         </div>
 
       </label>
@@ -139,7 +141,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
         <input type="text" required pattern="\d*" id="costoStock" onChange={(e) => { setCostoIngrediente(parseFloat(e.target.value)) }} />
         <span>Costo del ingrediente por una unidad de medida ($)</span>
         <div className="error-message">El costo por unidad solo debe contener números.</div>
-                 
+
       </div>
       <hr />
       <button onClick={crearStockIngrediente}>Agregar stock</button>
