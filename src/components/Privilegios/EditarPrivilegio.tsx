@@ -3,8 +3,6 @@ import { Toaster, toast } from 'sonner'
 import { SucursalService } from '../../services/SucursalService';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empresa } from '../../types/Restaurante/Empresa';
-import { Roles } from '../../types/Restaurante/Roles';
-import { RolesService } from '../../services/RolesService';
 import { Privilegios } from '../../types/Restaurante/Privilegios';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
 
@@ -15,7 +13,7 @@ interface EditarMedidaProps {
 
 const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onCloseModal }) => {
 
-  const [tarea, setTarea] = useState(privilegioOriginal.tarea);
+  const [tarea, setTarea] = useState(privilegioOriginal.nombre);
 
   function editarMedida() {
     privilegioOriginal.borrado = 'NO';
@@ -25,7 +23,7 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
       return;
     }
 
-    privilegioOriginal.tarea = tarea;
+    privilegioOriginal.nombre = tarea;
 
     let sucursalesElegidas: Sucursal[] = [];
 

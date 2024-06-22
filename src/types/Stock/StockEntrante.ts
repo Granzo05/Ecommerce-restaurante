@@ -6,6 +6,7 @@ export class StockEntrante {
     fechaLlegada: Date = new Date();
     // String para parsearlo a formato de $ ars
     costo: string = '';
+    estado: string = '';
     detallesStock: DetalleStock[] = [];
     sucursal: Sucursal | null = null;
     borrado: string = '';

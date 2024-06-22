@@ -25,6 +25,7 @@ const Subsubcategorias = () => {
     const [selectedCategoria, setSelectedCategoria] = useState<Subcategoria | null>(null);
 
     useEffect(() => {
+        setDatosFiltrados([]);
         fetchsubcategorias();
     }, []);
 

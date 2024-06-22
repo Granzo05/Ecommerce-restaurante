@@ -19,7 +19,7 @@ interface AgregarStockEntranteProps {
 
 
 const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModal }) => {
-  const [fecha, setFecha] = useState(new Date());
+  const [fecha, setFecha] = useState<Date>();
 
   // Aca almaceno los detalles para el stock
   const [detallesIngredienteStock, setDetallesIngredientesStock] = useState<DetalleStock[]>([])
@@ -129,14 +129,20 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
     });
   };
 
-  const quitarCampoIngrediente = () => {
+  const quitarCampoIngrediente = (nombreIngrediente: string) => {
+    const nuevosNombres = nombresIngredientes.filter(nombre => nombre !== nombreIngrediente);
+    setNombresIngredientes(nuevosNombres);
+
     setDetallesIngredientesStock(prevState => {
       const newState = prevState.slice(0, -1);
       return newState;
     });
   };
 
-  const quitarCampoArticulo = () => {
+  const quitarCampoArticulo = (nombreArticulo: string) => {
+    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+    setNombresIngredientes(nuevosNombres);
+
     setDetallesArticuloStock(prevState => {
       const newState = prevState.slice(0, -1);
       return newState;
@@ -153,25 +159,39 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
     setModalBusquedaIngrediente(false)
   };
 
+  function handleRecomendarMedidaIngrediente(ingrediente: Ingrediente, detalle: DetalleStock[], index: number) {
+    if (ingrediente && ingrediente.stockIngrediente?.medida?.nombre) {
+      detalle[index].medida = ingrediente.stockIngrediente.medida;
+    }
+  }
+
+  function handleRecomendarMedidaArticulo(articulo: ArticuloVenta, detalle: DetalleStock[], index: number) {
+    if (articulo && articulo.stockArticuloVenta?.medida?.nombre) {
+      detalle[index].medida = articulo.stockArticuloVenta.medida;
+    }
+  }
+
+
   async function agregarStockEntrante() {
     const hoy = new Date();
-    const fechaIngresada = new Date(fecha);
 
     if (!fecha) {
       toast.error("Por favor, la fecha es necesaria");
       return;
     }
 
+    const fechaIngresada = new Date(fecha);
+
     if (fechaIngresada <= hoy) {
       toast.error("Por favor, la fecha debe ser posterior a la fecha actual");
       return;
     }
 
-    if ((!detallesIngredienteStock.length || !detallesIngredienteStock[0].ingrediente?.nombre) && 
+    if ((!detallesIngredienteStock.length || !detallesIngredienteStock[0].ingrediente?.nombre) &&
       (!detallesArticuloStock.length || !detallesArticuloStock[0].articuloVenta?.nombre)) {
-    toast.error("Por favor, es necesario asignar un producto de venta o un ingrediente");
-    return;
-  }
+      toast.error("Por favor, es necesario asignar un producto de venta o un ingrediente");
+      return;
+    }
 
     const stockEntrante: StockEntrante = new StockEntrante();
 
@@ -202,6 +222,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
         return message;
       },
     });
+
   }
 
   //SEPARAR EN PASOS
@@ -218,24 +239,26 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
   const validateAndNextStep = () => {
 
     const hoy = new Date();
-    const fechaIngresada = new Date(fecha);
+    if (fecha) {
+      const fechaIngresada = new Date(fecha);
 
-    const fechaObj = new Date(fecha);
-  
-  // Verificar que la fecha sea válida
-  if (isNaN(fechaObj.getTime())) {
-    toast.error("La fecha no es válida");
-    return;
-  }
+      const fechaObj = new Date(fecha);
 
-    if (!fecha) {
+      // Verificar que la fecha sea válida
+      if (isNaN(fechaObj.getTime())) {
+        toast.error("La fecha no es válida");
+        return;
+      }
+
+      else if (fechaIngresada <= hoy) {
+        toast.error("Por favor, la fecha es necesaria y debe ser posterior a la fecha actual");
+        return;
+      } else {
+        nextStep();
+      }
+    } else {
       toast.error("Por favor, la fecha es necesaria");
       return;
-    } else if (fechaIngresada <= hoy) {
-      toast.error("Por favor, la fecha es necesaria y debe ser posterior a la fecha actual");
-      return;
-    } else {
-      nextStep();
     }
   }
 
@@ -314,31 +337,31 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
         return (
           <>
             <h4>Paso 2 - Agregar ingrediente al stock entrante</h4>
-            {detallesIngredienteStock.map((ingrediente, index) => (
+            {detallesIngredienteStock.map((detalle, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={quitarCampoIngrediente}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(detalle.ingrediente.nombre)}>X</p>
                 <h4>Ingrediente {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-                  <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={detallesIngredienteStock[index].ingrediente?.nombre ?? ''} />
-                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleModalClose(); }} />}
+                  <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={detalle.ingrediente?.nombre ?? ''} />
+                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(ingrediente, index); handleRecomendarMedidaIngrediente(ingrediente, detallesIngredienteStock, index); handleModalClose(); }} />}
                 </div>
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
-                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesIngredienteStock[index]?.ingrediente.medida?.nombre ?? detallesIngredienteStock[index]?.medida?.nombre ?? ''} />
-                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesIngredienteStock[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalle.medida?.nombre} />
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalle.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaIngrediente(medida, index); handleModalClose(); }} />}
 
                 <div className="inputBox">
-                  <input type="number" required={true} pattern="^[1-9]\d*$" value={detallesIngredienteStock[index]?.cantidad} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
+                  <input type="number" required={true} pattern="^[1-9]\d*$" value={detalle.cantidad} onChange={(e) => handleCantidadIngrediente(parseFloat(e.target.value), index)} />
                   <span>Cantidad de unidades</span>
                   <div className="error-message">La cantidad solo debe contener números.</div>
-              
+
                 </div>
                 <div className="inputBox">
-                  <input type="number" required={true} pattern="^[1-9]\d*$"  value={detallesIngredienteStock[index]?.costoUnitario} onChange={(e) => almacenarSubTotalIngrediente(parseFloat(e.target.value), index)} />
+                  <input type="number" required={true} pattern="^[1-9]\d*$" value={detallesIngredienteStock[index]?.costoUnitario} onChange={(e) => almacenarSubTotalIngrediente(parseFloat(e.target.value), index)} />
                   <span>Costo unitario ($)</span>
                   <div className="error-message">El costo por unidad solo debe contener números.</div>
-            
+
                 </div>
               </div>
             ))}
@@ -355,19 +378,19 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
         return (
           <>
             <h4>Paso final - Agregar artículo al stock entrante</h4>
-            {detallesArticuloStock.map((articulo, index) => (
+            {detallesArticuloStock.map((detalle, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoArticulo(detalle.articuloVenta.nombre)}>X</p>
                 <h4>Artículo {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
-                  <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.nombre ?? ''} />
-                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={nombresArticulos} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
+                  <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detalle.articuloVenta?.nombre ?? ''} />
+                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={nombresArticulos} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleRecomendarMedidaArticulo(articulo, detallesArticuloStock, index); handleModalClose(); }} />}
                 </div>
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida:</label>
-                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloStock[index].articuloVenta?.medida?.nombre ?? detallesArticuloStock[index]?.medida?.nombre ?? ''} />
-                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloStock[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+                <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalle.medida?.nombre} />
+                {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalle.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
 
                 <div className="inputBox">
                   <input type="number" required={true} value={detallesArticuloStock[index]?.cantidad} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />

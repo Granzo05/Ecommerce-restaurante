@@ -164,14 +164,20 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     });
   };
 
-  const quitarCampoArticuloMenu = () => {
+  const quitarCampoArticuloMenu = (nombreArticuloMenu: string) => {
+    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticuloMenu);
+    setNombresMenus(nuevosNombres);
+
     setDetallesArticulosMenu(prevState => {
       const newState = prevState.slice(0, -1);
       return newState;
     });
   };
 
-  const quitarCampoArticulo = () => {
+  const quitarCampoArticulo = (nombreArticulo: string) => {
+    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+    setNombresArticulos(nuevosNombres);
+
     setDetallesArticuloVenta(prevState => {
       const newState = prevState.slice(0, -1);
       return newState;
@@ -312,7 +318,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     });
 
     promocion.sucursales = sucursalesElegidas;
-  
+
     toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
       success: (message) => {
@@ -325,7 +331,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
         return message;
       },
     });
-   
+
   }
 
   //SEPARAR EN PASOS
@@ -389,7 +395,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
             {detallesArticuloMenu.map((articuloMenu, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={quitarCampoArticuloMenu}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoArticuloMenu(articuloMenu.articuloMenu.nombre)}>X</p>
                 <h4>Menú {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú:</label>
@@ -424,7 +430,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
             {detallesArticuloVenta.map((articulo, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={quitarCampoArticulo}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoArticulo(articulo.articuloVenta.nombre)}>X</p>
                 <h4>Artículo {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Artículo:</label>

@@ -24,6 +24,7 @@ const Medidas = () => {
     const [selectedMedida, setSelectedMedida] = useState<Medida>();
 
     useEffect(() => {
+        setDatosFiltrados([]);
         fetchMedidas();
     }, []);
 

@@ -23,6 +23,7 @@ const Promociones = () => {
     const [selectedPromocion, setSelectedPromocion] = useState<Promocion>(new Promocion());
 
     useEffect(() => {
+        setDatosFiltrados([]);
         buscarPromociones();
     }, []);
 

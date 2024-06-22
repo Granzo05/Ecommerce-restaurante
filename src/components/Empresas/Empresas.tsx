@@ -22,6 +22,7 @@ const Empresas = () => {
     const [showActivarEmpresaModal, setShowActivarEmpresaModal] = useState(false);
 
     useEffect(() => {
+        setDatosFiltrados([]);
         if (empresas.length === 0) fetchEmpresas();
     }, [empresas]);
 

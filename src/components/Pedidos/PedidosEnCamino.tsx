@@ -14,6 +14,7 @@ const PedidosEnCamino = () => {
     const [pedidosEnCamino, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
+        setDatosFiltrados([]);
         buscarPedidos();
     }, []);
 

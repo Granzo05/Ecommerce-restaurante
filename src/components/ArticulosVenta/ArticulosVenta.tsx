@@ -26,6 +26,7 @@ const ArticuloVentas = () => {
     const [selectedArticuloVenta, setSelectedArticuloVenta] = useState<ArticuloVenta | null>(null);
 
     useEffect(() => {
+        setDatosFiltrados([]);
         checkPrivilegies();
         fetchArticuloVenta();
     }, []);

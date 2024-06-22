@@ -23,6 +23,7 @@ const RolesEmpleado = () => {
     const [selectedRol, setSelectedRol] = useState<Roles>();
 
     useEffect(() => {
+        setDatosFiltrados([]);
         fetchRoles();
     }, []);
 

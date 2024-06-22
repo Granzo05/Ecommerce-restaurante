@@ -1,7 +1,5 @@
 import React from 'react';
 import { Toaster, toast } from 'sonner'
-import { Roles } from '../../types/Restaurante/Roles';
-import { RolesService } from '../../services/RolesService';
 import { PrivilegiosService } from '../../services/PrivilegiosService';
 import { Privilegios } from '../../types/Restaurante/Privilegios';
 

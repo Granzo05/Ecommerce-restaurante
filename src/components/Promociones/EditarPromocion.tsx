@@ -67,7 +67,6 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
 
     setDetallesArticuloMenuMuestra(nuevosDetallesMenu);
     setDetallesArticuloVentaMuestra(nuevosDetallesVenta);
-
   }
 
 
@@ -188,6 +187,16 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
     }
   };
 
+  useEffect(() => {
+    promocion.detallesPromocion.forEach(detalle => {
+      if (detalle.articuloMenu.nombre.length > 0) {
+        nombresMenus.push(detalle.articuloMenu.nombre)
+      } else if (detalle.articuloVenta.nombre.length > 0) {
+        nombresArticulos.push(detalle.articuloVenta.nombre)
+      }
+    });
+  }, []);
+
   const añadirCampoArticuloMenu = () => {
     setDetallesArticulosMenu(prevState => {
       const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
@@ -202,14 +211,40 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
     });
   };
 
-  const quitarCampoArticuloMenu = () => {
+  const quitarCampoArticuloMenuMuestra = (nombreArticulo: string) => {
+    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+    setNombresArticulos(nuevosNombres);
+
+    setDetallesArticuloMenuMuestra(prevState => {
+      const newState = prevState.slice(0, -1);
+      return newState;
+    });
+  };
+
+  const quitarCampoArticuloMenu = (nombreArticulo: string) => {
+    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+    setNombresArticulos(nuevosNombres);
+
     setDetallesArticulosMenu(prevState => {
       const newState = prevState.slice(0, -1);
       return newState;
     });
   };
 
-  const quitarCampoArticulo = () => {
+  const quitarCampoArticuloVentaMuestra = (nombreArticulo: string) => {
+    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+    setNombresArticulos(nuevosNombres);
+
+    setDetallesArticuloVentaMuestra(prevState => {
+      const newState = prevState.slice(0, -1);
+      return newState;
+    });
+  };
+
+  const quitarCampoArticulo = (nombreArticulo: string) => {
+    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+    setNombresArticulos(nuevosNombres);
+
     setDetallesArticuloVenta(prevState => {
       const newState = prevState.slice(0, -1);
       return newState;
@@ -438,7 +473,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             {detallesArticuloMenuMuestra.map((detalleMenu, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={quitarCampoArticuloMenu}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenuMuestra(detalleMenu.articuloMenu.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú guardado {index + 1}:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar articuloMenu...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detalleMenu?.articuloMenu.nombre ?? ''} />
@@ -460,7 +495,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             {detallesArticuloMenu.map((articuloMenu, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={quitarCampoArticuloMenu}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenu(articuloMenu.articuloMenu.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú nuevo {index + 1}:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar menús...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
@@ -498,7 +533,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             {detallesArticuloVentaMuestra.map((detalleArticulo, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={quitarCampoArticulo}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloVentaMuestra(detalleArticulo.articuloVenta.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo guardado {index + 1}:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detalleArticulo?.articuloVenta?.nombre ?? ''} />
@@ -522,7 +557,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             {detallesArticuloVenta.map((articulo, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={quitarCampoArticulo}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticulo(articulo.articuloVenta.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo nuevo {index + 1}:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />

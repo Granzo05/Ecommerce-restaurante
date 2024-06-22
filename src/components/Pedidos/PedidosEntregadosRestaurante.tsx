@@ -10,6 +10,7 @@ const PedidosEntregados = () => {
     const [pedidosEntregados, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
+        setDatosFiltrados([]);
         buscarPedidos();
     }, []);
 

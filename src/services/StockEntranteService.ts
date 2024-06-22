@@ -22,9 +22,29 @@ export const StockEntranteService = {
         }
     },
 
-    getStock: async (): Promise<StockEntrante[]> => {
+    getStockPendiente: async (): Promise<StockEntrante[]> => {
         try {
-            const response = await fetch(URL_API + 'stockEntrante/' + sucursalId(), {
+            const response = await fetch(URL_API + 'stockEntrante/pendientes/' + sucursalId(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
+    getStockEntregados: async (): Promise<StockEntrante[]> => {
+        try {
+            const response = await fetch(URL_API + 'stockEntrante/entregados/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
