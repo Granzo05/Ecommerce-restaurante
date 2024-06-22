@@ -192,7 +192,10 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     setIndexRoles(prevIndex => prevIndex + 1);
   };
 
-  const quitarCampoRol = (index: number) => {
+  const quitarCampoRol = (nombreRol: string, index: number) => {
+    const nuevosNombres = rolesElegidos.filter(nombre => nombre !== nombreRol);
+    setRolesElegidos(nuevosNombres);
+
     if (indexRoles > 0) {
       const nuevosRoles = [...roles];
       nuevosRoles.splice(index, 1);
@@ -207,7 +210,10 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     }
   };
 
-  const quitarCampoRolModificable = (index: number) => {
+  const quitarCampoRolModificable = (nombreRol: string, index: number) => {
+    const nuevosNombres = rolesElegidos.filter(nombre => nombre !== nombreRol);
+    setRolesElegidos(nuevosNombres);
+
     if (rolesModificables.length > 0) {
       const nuevosRoles = [...rolesModificables];
       nuevosRoles.splice(index, 1);
@@ -231,6 +237,12 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       .catch(err => {
         console.error(err);
       });
+  }, []);
+
+  useEffect(() => {
+    empleadoOriginal.roles.forEach(rol => {
+      rolesElegidos.push(rol.rol.nombre);
+    });
   }, []);
 
   const cargarPrivilegios = () => {
@@ -520,12 +532,12 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       toast.info("Por favor, es necesario asignarle mínimo un rol al empleado");
       return;
     }
-    
+
     for (let i = 0; i < roles.length; i++) {
       const rol = roles[i].rol
 
-      
-      if (!rol){
+
+      if (!rol) {
         toast.info(`Complete el rol ${i + 1} que desea asignar`);
         return;
       }
@@ -587,7 +599,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
               <input type="text" required={true} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del empleado</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
-            
+
             </div>
             <div className="inputBox">
               <input type="text" required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
@@ -611,8 +623,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
 
             </div>
             <div className="inputBox">
-              
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
+
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de nacimiento:</label>
               <input type="date" required={true} value={formatearFechaYYYYMMDD((fechaNacimiento))} onChange={(e) => setFechaNacimiento(new Date(e.target.value))} />
               <div className="error-message" style={{ marginTop: '70px' }}>No es una fecha válida. (El empleado debe ser mayor a 18 años)</div>
 
@@ -690,7 +702,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             {rolesModificables && rolesModificables.map((roles, index) => (
               <div key={'domicilioMod' + index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={() => quitarCampoRolModificable(index)}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoRolModificable(roles.rol.nombre, index)}>X</p>
 
                 <h2>Rol actual {index + 1}</h2>
                 <div className="inputBox">
@@ -702,7 +714,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
               <>
                 <div key={'domicilio' + index}>
                   <h2>Rol nuevo {index + 1}</h2>
-                  <p onClick={() => quitarCampoRol(index)}>X</p>
+                  <p onClick={() => quitarCampoRol(rol.rol.nombre, index)}>X</p>
                   <InputComponent disabled={false} placeHolder='Seleccionar rol...' onInputClick={() => setModalBusquedaRol(true)} selectedProduct={rol.rol.nombre ?? ''} />
                   {modalBusquedaRol && <ModalFlotanteRecomendacionesRoles datosOmitidos={rolesElegidos} onCloseModal={handleModalClose} onSelectRol={(rol) => { handleChangeRol(index, rol); handleModalClose(); }} />}
                 </div >

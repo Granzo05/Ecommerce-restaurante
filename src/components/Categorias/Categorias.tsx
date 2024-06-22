@@ -24,6 +24,7 @@ const Categorias = () => {
     const [selectedCategoria, setSelectedCategoria] = useState<Categoria>();
 
     useEffect(() => {
+        setDatosFiltrados([]);
         fetchCategorias();
     }, []);
 

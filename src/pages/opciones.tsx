@@ -15,6 +15,7 @@ import PedidosEnCamino from '../components/Pedidos/PedidosEnCamino';
 import { Roles } from '../types/Restaurante/Roles';
 import RolesEmpleado from '../components/Roles/Roles';
 import PrivilegiosEmpleados from '../components/Privilegios/Privilegios';
+import StocksEntregado from '../components/StockEntrante/StockEntregado';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -176,6 +177,8 @@ const Opciones = () => {
             return <RolesEmpleado />;
         } else if (opcionSeleccionada === 21) {
             return <PrivilegiosEmpleados />;
+        } else if (opcionSeleccionada === 22) {
+            return <StocksEntregado />;
         }
     };
 
@@ -467,6 +470,11 @@ const Opciones = () => {
                                                         Stock entrante
                                                     </p>
                                                 )}
+                                                {stockEntranteVisibleEmpleado && (
+                                                    <p className={opcionSeleccionada === 22 ? 'selected' : ''} onClick={() => handleOpcionClick(22)}>
+                                                        Stock entregado
+                                                    </p>
+                                                )}
                                             </>
                                         )}
                                     </div>
@@ -476,7 +484,7 @@ const Opciones = () => {
 
 
 
-                                
+
 
                                 {sucursalesVisibleEmpleado && (
                                     <h4 className={opcionSeleccionada === 9 ? 'selected' : ''} onClick={() => handleOpcionClick(9)}>

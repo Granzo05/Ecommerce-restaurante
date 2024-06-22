@@ -9,6 +9,7 @@ export class Ingrediente {
     borrado: string = '';
     stockIngrediente: StockIngredientes | null = null;
     sucursales: Sucursal[] = [];
+    
     constructor() {
     }
 }

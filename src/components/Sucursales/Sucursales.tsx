@@ -27,6 +27,7 @@ const Sucursales = () => {
     const [showActivarSucursalModal, setShowActivarSucursalModal] = useState(false);
 
     useEffect(() => {
+        setDatosFiltrados([]);
         if (sucursales.length === 0) fetchSucursales();
     }, [sucursales]);
 

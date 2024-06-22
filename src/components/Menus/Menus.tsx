@@ -25,6 +25,7 @@ const Menus = () => {
     const [selectedMenu, setSelectedMenu] = useState<ArticuloMenu>();
 
     useEffect(() => {
+        setDatosFiltrados([]);
         fetchMenu();
     }, []);
 

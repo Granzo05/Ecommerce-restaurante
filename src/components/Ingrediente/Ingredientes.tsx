@@ -24,6 +24,7 @@ const Ingredientes = () => {
     const [selectedIngrediente, setSelectedIngrediente] = useState<Ingrediente>();
 
     useEffect(() => {
+        setDatosFiltrados([]);
         fetchIngredientes();
     }, []);
 

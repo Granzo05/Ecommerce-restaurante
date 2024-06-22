@@ -14,14 +14,14 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
   const [tarea, setTarea] = useState('');
 
   async function agregarPrivilegios() {
-    const privilegio: Privilegios = new Privilegios(0, '', []);
+    const privilegio: Privilegios = new Privilegios(0, '', 'NO');
 
     if (!tarea) {
       toast.info("Por favor, asigne el tarea");
       return;
     }
 
-    privilegio.tarea = tarea;
+    privilegio.nombre = tarea;
     privilegio.borrado = 'NO';
 
     let sucursalesElegidas: Sucursal[] = [];

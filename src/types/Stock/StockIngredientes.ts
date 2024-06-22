@@ -10,7 +10,7 @@ export class StockIngredientes {
     cantidadActual: number = 0;
     cantidadMinima: number = 0;
     cantidadMaxima: number = 0;
-    medida: Medida | null = null;
+    medida: Medida = new Medida();
     borrado: string = '';
     fechaLlegadaProxima: Date | null = null;
 

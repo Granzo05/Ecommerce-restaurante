@@ -22,6 +22,7 @@ const Empleados = () => {
     const [showActivarEmpleadoModal, setShowActivarEmpleadoModal] = useState(false);
 
     useEffect(() => {
+        setDatosFiltrados([]);
         fetchEmpleados();
     }, []);
 

@@ -24,6 +24,7 @@ const PrivilegiosEmpleados = () => {
     const [selectedPrivilegio, setSelectedPrivilegio] = useState<PrivilegiosSucursales>();
 
     useEffect(() => {
+        setDatosFiltrados([]);
         fetchPrivilegios();
     }, []);
 

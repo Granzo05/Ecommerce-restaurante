@@ -133,9 +133,17 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     }
   };
 
-  const quitarCampoIngrediente = (index: number) => {
-    if (imagenes.length > 0) {
+  useEffect(() => {
+    menuOriginal.ingredientesMenu.forEach(ingredienteMenu => {
+      nombresIngredientes.push(ingredienteMenu.ingrediente.nombre);
+    });
+  }, []);
 
+  const quitarCampoIngrediente = (nombreIngrediente: string, index: number) => {
+    const nuevosNombres = nombresIngredientes.filter(nombre => nombre !== nombreIngrediente);
+    setNombresIngredientes(nuevosNombres);
+
+    if (imagenes.length > 0) {
       const nuevosIngredientes = [...ingredientes];
       nuevosIngredientes.splice(index, 1);
       setIngredientes(ingredientes);
@@ -151,7 +159,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     }
   };
 
-  const quitarCampoIngredienteMuestra = (index: number) => {
+  const quitarCampoIngredienteMuestra = (nombreIngrediente: string, index: number) => {
+    const nuevosNombres = nombresIngredientes.filter(nombre => nombre !== nombreIngrediente);
+    setNombresIngredientes(nuevosNombres);
+
     if (ingredientesMuestra.length > 0) {
       const nuevosIngredientes = [...ingredientesMuestra];
       nuevosIngredientes.splice(index, 1);
@@ -344,6 +355,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
   //SEPARAR EN PASOS
   const [step, setStep] = useState(1);
 
+  useEffect(() => {
+    calcularCostos();
+  }, [step]);
+
   const nextStep = () => {
     setStep(step + 1);
   };
@@ -439,13 +454,13 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
               <input type="text" pattern="[a-zA-Z\s\-]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del menu</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
-            
+
             </div>
             <div className="inputBox">
               <input type="text" pattern="[a-zA-Z\s\-]+" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
               <span>Descripción del menu</span>
               <div className="error-message">La descripción debe contener letras y espacios.</div>
-            
+
             </div>
             <div className="inputBox">
               <input type="number" pattern="^[1-9]\d*$" required={true} value={tiempoCoccion} onChange={(e) => { setTiempo(parseInt(e.target.value)) }} />
@@ -454,17 +469,17 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
 
             </div>
             <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
               {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
             </div>
             <div>
-            <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div className="inputBox">
-              <input type="number" pattern="^[1-9]\d*$"  required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
+              <input type="number" pattern="^[1-9]\d*$" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
               <span>Precio actual ($)</span>
               <div className="error-message">El precio actual solo debe contener números.</div>
 
@@ -491,7 +506,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
             {ingredientesMuestra.map((ingredienteMenu, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={() => quitarCampoIngredienteMuestra(index)}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoIngredienteMuestra(ingredienteMenu.ingrediente.nombre, index)}>X</p>
                 <h4 style={{ fontSize: '18px' }}>Ingrediente actual {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
@@ -513,7 +528,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
             {ingredientes.map((ingredienteMenu, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(ingredienteMenu.ingrediente.nombre, index)}>X</p>
                 <h4 style={{ fontSize: '18px' }}>Ingrediente nuevo {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
@@ -531,16 +546,16 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
                 </div>
               </div>
             ))}
-            
+
             <button onClick={añadirCampoIngrediente}>Añadir ingrediente al menú</button>
             <br />
-            
+
             <hr />
             <div className='btns-pasos'>
-              
+
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button style={{marginRight: '10px'}} onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente en el inventario (opcional)</button>
-            
+              <button style={{ marginRight: '10px' }} onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente en el inventario (opcional)</button>
+
               <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
             </div>
           </>
@@ -595,16 +610,16 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
                   </div>
                 </div>
               ))}
-              
-              
+
+
             </div>
-            
+
             <button onClick={añadirCampoImagen}>Añadir imagen al menú</button>
             <br />
             <div className="btns-pasos">
-                <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-                <button className='btn-accion-adelante' onClick={validateAndNextStep3}>Siguiente ⭢</button>
-              </div>
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep3}>Siguiente ⭢</button>
+            </div>
           </>
         );
       case 4:

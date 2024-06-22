@@ -26,6 +26,9 @@ public class StockEntrante {
     @Column(name = "borrado")
     private String borrado = "NO";
 
+    @Column(name = "estado")
+    private String estado = "PENDIENTES";
+
     @Column(name = "fecha_llegada", nullable = false)
     private LocalDate fechaLlegada;
 

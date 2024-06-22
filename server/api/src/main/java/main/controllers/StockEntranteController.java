@@ -38,9 +38,26 @@ public class StockEntranteController {
     }
 
     @CrossOrigin
-    @GetMapping("/stockEntrante/{idSucursal}")
-    public Set<StockEntrante> getStock(@PathVariable("idSucursal") long id) {
-        List<StockEntrante> stocksEntrantes = stockEntranteRepository.findAllByIdSucursal(id);
+    @GetMapping("/stockEntrante/pendientes/{idSucursal}")
+    public Set<StockEntrante> getStockPendiente(@PathVariable("idSucursal") long id) {
+        List<StockEntrante> stocksEntrantes = stockEntranteRepository.findAllPendientesByIdSucursal(id);
+
+        for (StockEntrante stock : stocksEntrantes) {
+            for (DetalleStock detalleStockDTO : detalleStockRepository.findIngredienteByIdStock(stock.getId())) {
+                stock.getDetallesStock().add(detalleStockDTO);
+            }
+            for (DetalleStock detalleStockDTO : detalleStockRepository.findArticuloByIdStock(stock.getId())) {
+                stock.getDetallesStock().add(detalleStockDTO);
+            }
+        }
+
+        return new HashSet<>(stocksEntrantes);
+    }
+
+    @CrossOrigin
+    @GetMapping("/stockEntrante/entregados/{idSucursal}")
+    public Set<StockEntrante> getStockEntregado(@PathVariable("idSucursal") long id) {
+        List<StockEntrante> stocksEntrantes = stockEntranteRepository.findAllEntregadosByIdSucursal(id);
 
         for (StockEntrante stock : stocksEntrantes) {
             for (DetalleStock detalleStockDTO : detalleStockRepository.findIngredienteByIdStock(stock.getId())) {
@@ -59,7 +76,6 @@ public class StockEntranteController {
     @PostMapping("/sucursal/{idSucursal}/StockEntrante/create")
     public ResponseEntity<String> crearStock(@RequestBody StockEntrante stockDetail, @PathVariable("idSucursal") long id) {
         Optional<StockEntrante> stockEntranteDB = stockEntranteRepository.findByIdSucursalAndFecha(id, stockDetail.getFechaLlegada());
-        System.out.println(stockDetail);
         // Verificar si existe un pedido para la misma fecha y comparar los detalles
         if (stockEntranteDB.isPresent()) {
             StockEntrante stock = stockEntranteDB.get();
@@ -67,6 +83,8 @@ public class StockEntranteController {
                 return ResponseEntity.badRequest().body("Ya hay un pedido cargado para esa fecha con los mismos detalles");
             }
         }
+
+        stockDetail.setEstado("PENDIENTES");
 
         // Obtener la sucursal y asignarla al stockDetail
         Sucursal sucursal = sucursalRepository.findById(id).get();
@@ -180,6 +198,8 @@ public class StockEntranteController {
             }
 
             stock.setBorrado(stockEntrante.getBorrado());
+
+            stock.setEstado(stockEntrante.getEstado());
 
             stockEntranteRepository.save(stock);
             return ResponseEntity.ok("El stock ha sido actualizado correctamente");

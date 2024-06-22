@@ -89,7 +89,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     }
   };
 
-  const quitarCampoIngrediente = (index: number) => {
+  const quitarCampoIngrediente = (nombreIngrediente: string, index: number) => {
+    const nuevosNombres = nombresIngredientes.filter(nombre => nombre !== nombreIngrediente);
+    setNombresIngredientes(nuevosNombres);
+
     if (ingredientesMenu.length > 0) {
       const nuevosIngredientes = [...ingredientesMenu];
       nuevosIngredientes.splice(index, 1);
@@ -384,7 +387,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
               {ingredientesMenu.map((ingredienteMenu, index) => (
                 <div key={index}>
                   <hr />
-                  <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(index)}>X</p>
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(ingredienteMenu.ingrediente.nombre, index)}>X</p>
                   <h4 style={{ fontSize: '18px' }}>Ingrediente {index + 1}</h4>
                   <div>
                     <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>

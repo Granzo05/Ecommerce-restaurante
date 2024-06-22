@@ -6,7 +6,6 @@ import { StockIngredientesService } from "../../services/StockIngredientesServic
 import { StockArticuloVentaService } from "../../services/StockArticulosService";
 import AgregarStockArticulo from "./AgregarStockArticulo";
 import AgregarStockIngrediente from "./AgregarStockIngrediente";
-import ModalFlotante from "../ModalFlotante";
 import ActivarStock from "./ActivarStock";
 import ModalCrud from "../ModalCrud";
 import { StockArticuloVenta } from "../../types/Stock/StockArticuloVenta";
@@ -15,7 +14,6 @@ import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
-import { Ingrediente } from "../../types/Ingredientes/Ingrediente";
 
 
 const Stocks = () => {
@@ -36,7 +34,7 @@ const Stocks = () => {
     const [paginaActual, setPaginaActual] = useState(1);
     const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
-    const [datosFiltrados, setDatosFiltrados] = useState<StockIngredientes[]>([]);
+    const [datosFiltrados, setDatosFiltrados] = useState<(StockIngredientes | StockArticuloVenta)[]>([]);
     const [paginasTotales, setPaginasTotales] = useState<number>(1);
 
     const [empleado] = useState<Empleado | null>(() => {
@@ -74,6 +72,7 @@ const Stocks = () => {
     }, [stocks, indexPrimerProducto, indexUltimoProducto]);
 
     useEffect(() => {
+        setDatosFiltrados([]);
         getIngredientes();
         getArticulos();
     }, []);

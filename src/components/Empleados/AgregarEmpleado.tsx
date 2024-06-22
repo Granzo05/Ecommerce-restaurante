@@ -221,7 +221,10 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     }
   };
 
-  const quitarCampoRol = (index: number) => {
+  const quitarCampoRol = (nombreRol: string, index: number) => {
+    const nuevosNombres = rolesElegidos.filter(nombre => nombre !== nombreRol);
+    setRolesElegidos(nuevosNombres);
+
     if (roles.length > 0) {
       const nuevosRoles = [...roles];
       nuevosRoles.splice(index, 1);
@@ -529,7 +532,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
 
             {roles && roles.map((roles, index) => (
               <div key={index}>
-                <p className='cierre-ingrediente' onClick={() => quitarCampoRol(index)}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoRol(roles.nombre, index)}>X</p>
                 <h4 style={{ fontSize: '18px' }}>Rol {index + 1}</h4>
 
                 <label style={{ display: 'flex', fontWeight: 'bold' }}>Rol del empleado:</label>
