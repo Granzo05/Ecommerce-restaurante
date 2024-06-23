@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Cliente } from "../../types/Cliente/Cliente";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { Empresa } from "../../types/Restaurante/Empresa";
@@ -37,6 +36,21 @@ export function sucursalId(): number {
             return sucursal.id;
         }
     } else if (empresaString) {
+        const empresa: Empresa = JSON.parse(empresaString);
+
+        if (empresa && empresa.id && empresa.id !== undefined && empresa.id > 0) {
+            return empresa.id;
+        }
+    }
+
+    return 0;
+}
+
+export function empresaId(): number {
+
+    const empresaString = localStorage.getItem('empresa');
+
+    if (empresaString) {
         const empresa: Empresa = JSON.parse(empresaString);
 
         if (empresa && empresa.id && empresa.id !== undefined && empresa.id > 0) {

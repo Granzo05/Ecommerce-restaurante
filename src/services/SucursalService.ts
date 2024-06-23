@@ -1,8 +1,8 @@
+import { Cliente } from '../types/Cliente/Cliente';
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
-import { getBaseUrl, URL_API } from '../utils/global_variables/const';
-import { EmpleadoService } from './EmpleadoService';
+import { getBaseUrl, sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const SucursalService = {
     createSucursal: async (sucursal: Sucursal, imagenes: Imagenes[]): Promise<string> => {
@@ -81,9 +81,9 @@ export const SucursalService = {
         }
     },
 
-    getSucursales: async (): Promise<Sucursal[]> => {
+    getClientes: async (): Promise<Cliente[]> => {
         try {
-            const response = await fetch(URL_API + 'sucursales/' + 1, {
+            const response = await fetch(URL_API + 'clientes/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

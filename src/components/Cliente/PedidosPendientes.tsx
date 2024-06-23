@@ -5,6 +5,8 @@ import '../../styles/pedidos.css';
 import { Toaster } from 'sonner';
 import { CarritoService } from '../../services/CarritoService';
 import { useLocation } from 'react-router-dom';
+import { ClienteService } from '../../services/ClienteService';
+import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -40,25 +42,20 @@ const PedidosPendientes = () => {
 
     const buscarPedidos = async () => {
         try {
-            const data = await PedidoService.getPedidosClientes();
+            const data = await ClienteService.getPedidos(EnumEstadoPedido.ENTRANTES);
             if (data) {
-                const entregados = [];
                 const pendientes = [];
                 const horasFinalizacion = [];
 
                 for (const pedido of data) {
-                    const estado = pedido.estado?.toString().trim().toLowerCase();
-                    if (estado === 'entregados') {
-                        entregados.push(pedido);
-                    } else {
-                        pendientes.push(pedido);
-                        if (pedido.horaFinalizacion) {
-                            horasFinalizacion.push(pedido.horaFinalizacion);
-                        }
+                    pendientes.push(pedido);
+                    if (pedido.horaFinalizacion) {
+                        horasFinalizacion.push(pedido.horaFinalizacion);
                     }
                 }
 
                 setPedidosPendientes(pendientes);
+
                 setHoraFinalizacion(horasFinalizacion);
             }
         } catch (error) {

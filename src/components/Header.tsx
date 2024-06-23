@@ -157,6 +157,7 @@ const Header = () => {
                                                     <div key={item.id} className="cart-item">
                                                         <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
                                                         <p id="name-item">{item.nombre}</p>
+                                                        <p id="price-item"><strong>Precio unitario:&nbsp;</strong>${formatPrice(item.precioVenta)}</p>
                                                         <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precioVenta * item.cantidad)}</p>
                                                         <div className="quantity-controls">
                                                             <p>Cantidad:&nbsp;</p>
@@ -177,6 +178,7 @@ const Header = () => {
                                                         <div key={item.id} className="cart-item">
                                                             <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
                                                             <p id="name-item">{item.nombre}</p>
+                                                            <p id="price-item"><strong>Precio unitario:&nbsp;</strong>${formatPrice(item.precioVenta)}</p>
                                                             <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precioVenta * item.cantidad)}</p>
                                                             <div className="quantity-controls">
                                                                 <p>Cantidad:&nbsp;</p>
@@ -198,6 +200,7 @@ const Header = () => {
                                                         <div key={item.id} className="cart-item">
                                                             <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
                                                             <p id="name-item">{item.nombre}</p>
+                                                            <p id="price-item"><strong>Precio unitario:&nbsp;</strong>${formatPrice(item.precio)}</p>
                                                             <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precio * item.cantidad)}</p>
                                                             <div className="quantity-controls">
                                                                 <p>Cantidad:&nbsp;</p>

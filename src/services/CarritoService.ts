@@ -56,6 +56,28 @@ export const CarritoService = {
         CarritoService.actualizarCarrito(carrito);
     },
 
+    descontarAlCarrito: async (articuloMenu: ArticuloMenu | null, articuloVenta: ArticuloVenta | null, cantidad = 1) => {
+        // Busco el carrito existente
+        let carrito = await CarritoService.getCarrito();
+        if (articuloMenu) {
+            // Veo si el articulo entrante ya está cargado en el carrito
+            carrito.articuloMenu?.forEach((producto, index) => {
+                if (producto.nombre === articuloMenu.nombre) {
+                    carrito.articuloMenu[index].cantidad -= cantidad;
+                }
+            });
+
+        } else if (articuloVenta) {
+            carrito.articuloVenta?.forEach((producto, index) => {
+                if (producto.nombre === articuloVenta.nombre) {
+                    carrito.articuloVenta[index].cantidad -= cantidad;
+                }
+            });
+        }
+
+        CarritoService.actualizarCarrito(carrito);
+    },
+
     agregarPromocionAlCarrito: async (promocion: Promocion, cantidad: number) => {
         // Busco el carrito existente
         let carrito = await CarritoService.getCarrito();
@@ -78,29 +100,6 @@ export const CarritoService = {
             carrito.totalProductos += cantidad;
         }
 
-        CarritoService.actualizarCarrito(carrito);
-    },
-
-    descontarAlCarrito: async (articuloMenu: ArticuloMenu | null, articuloVenta: ArticuloVenta | null, cantidad = 1) => {
-        // Busco el carrito existente
-        let carrito = await CarritoService.getCarrito();
-
-        if (articuloMenu) {
-            // Veo si el articulo entrante ya está cargado en el carrito
-            carrito.articuloMenu.forEach((producto, index) => {
-                if (producto.nombre === articuloMenu.nombre) {
-                    // Si existe, simplemente sumamos la cantidad
-                    if (carrito.articuloMenu[index]?.cantidad > 0) carrito.articuloMenu[index].cantidad -= cantidad;
-                }
-            });
-        } else if (articuloVenta) {
-            carrito.articuloVenta.forEach((producto, index) => {
-                if (producto.nombre === articuloVenta.nombre) {
-                    // Si existe, simplemente restamos la cantidad
-                    if (carrito.articuloMenu[index]?.cantidad > 0) carrito.articuloVenta[index].cantidad -= cantidad;
-                }
-            });
-        }
         CarritoService.actualizarCarrito(carrito);
     },
 

@@ -1,6 +1,7 @@
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Empresa } from '../types/Restaurante/Empresa';
-import { getBaseUrl, limpiarCredenciales, URL_API } from '../utils/global_variables/const';
+import { Sucursal } from '../types/Restaurante/Sucursal';
+import { empresaId, getBaseUrl, limpiarCredenciales, URL_API } from '../utils/global_variables/const';
 import { EmpleadoService } from './EmpleadoService';
 import { SucursalService } from './SucursalService';
 
@@ -39,6 +40,27 @@ export const EmpresaService = {
         }
 
         return await response.text();
+    },
+
+    getSucursales: async (): Promise<Sucursal[]> => {
+        try {
+            const response = await fetch(URL_API + 'sucursales/' + empresaId(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     getEmpresa: async (email: string, contraseña: string): Promise<string> => {
@@ -139,7 +161,7 @@ export const EmpresaService = {
 
     updateEmpresa: async (empresa: Empresa, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]) => {
         try {
-            const response = await fetch(URL_API + 'empresa/update', {
+            const response = await fetch(URL_API + 'empresa/update/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -189,7 +211,7 @@ export const EmpresaService = {
 
     updateEmpresaBorrado: async (empresa: Empresa) => {
         try {
-            const response = await fetch(URL_API + 'empresa/update', {
+            const response = await fetch(URL_API + 'empresa/update/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

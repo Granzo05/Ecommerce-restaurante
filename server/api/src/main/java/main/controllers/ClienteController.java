@@ -45,6 +45,7 @@ public class ClienteController {
                 // Buscamos si hay un restaurante en la localidad del cliente para enviarlo a esa sucursal en el main
                 if(domicilio.getBorrado() == "NO") clienteDetails.setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
             }
+
             clienteDetails.setBorrado("NO");
             clienteDetails = clienteRepository.save(clienteDetails);
 
@@ -148,6 +149,8 @@ public class ClienteController {
         if (Encrypt.cifrarPassword(clienteDetails.getContraseña()).equals(cliente.getContraseña()) && clienteDetails.getContraseña() != null) {
             cliente.setContraseña(Encrypt.cifrarPassword(clienteDetails.getContraseña()));
         }
+
+        cliente.setBorrado(clienteDetails.getBorrado());
 
         clienteRepository.save(cliente);
 

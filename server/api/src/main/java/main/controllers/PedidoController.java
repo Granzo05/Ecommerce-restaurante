@@ -104,7 +104,8 @@ public class PedidoController {
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Pedido> pedidoDB = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
 
-        if (pedidoDB.isEmpty()) {
+        // Revisamos que el pedido exista y que el cliente no tenga la cuenta bloqueada
+        if (pedidoDB.isEmpty() && pedido.getCliente().getBorrado().equals("NO")) {
             for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
                 detallesPedido.setPedido(pedido);
                 descontarStock(detallesPedido, idSucursal);
@@ -122,10 +123,11 @@ public class PedidoController {
             pedidoRepository.save(pedido);
 
             return ResponseEntity.ok("Pedido creado con éxito");
+        } else if (pedido.getCliente().getBorrado().equals("SI")) {
+            return ResponseEntity.badRequest().body("Tu cuenta ha sido bloqueada por el restaurante");
         }
 
         return ResponseEntity.badRequest().body("Ocurrió un error al generar el pedido");
-
     }
 
     @Transactional
@@ -135,7 +137,7 @@ public class PedidoController {
 
         Optional<Pedido> pedidoDB = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
 
-        if (pedidoDB.isEmpty() && pedido.getPreferencia() == null) {
+        if (pedidoDB.isEmpty() && pedido.getPreferencia() == null && pedido.getCliente().getBorrado().equals("NO")) {
             for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
                 detallesPedido.setPedido(pedido);
                 descontarStock(detallesPedido, idSucursal);
@@ -219,6 +221,8 @@ public class PedidoController {
             } catch (MPException | MPApiException e) {
                 throw new RuntimeException(e);
             }
+        } else if (pedido.getCliente().getBorrado().equals("SI")) {
+            return null;
         } else {
             PreferenceMP mpPreference = new PreferenceMP();
             mpPreference.setStatusCode(200);
@@ -300,13 +304,13 @@ public class PedidoController {
             if (pedido.getTipoEnvio().equals(EnumTipoEnvio.DELIVERY)) {
                 Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
 
-                if(sucursal.isPresent()) {
+                if (sucursal.isPresent()) {
                     gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", pedido.getCliente().getEmail(), sucursal.get().getEmail(), archivo.getBody());
                 }
             } else {
                 Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
 
-                if(sucursal.isPresent()) {
+                if (sucursal.isPresent()) {
                     gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", pedido.getCliente().getEmail(), sucursal.get().getEmail(), archivo.getBody());
                 }
             }

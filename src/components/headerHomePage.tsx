@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
 import { Cliente } from '../types/Cliente/Cliente';
-import SearchIcon from '@mui/icons-material/Search';
 import { toast, Toaster } from 'sonner';
 import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { Empleado } from '../types/Restaurante/Empleado';
@@ -123,7 +122,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                 <nav className="navbar">
                     <input type="text" className='search-input' placeholder='¿Que deseas comer hoy?' onChange={(e) => setComidaBuscada(e.target.value)} />
                     <img className='menu-icono-search' src="../src/assets/icons/header-icono-busqueda.png" alt="Carrito" onClick={handleCartClick} />
-                         
+
                     <ul>
                         <li><a href={`/${id ?? 1}/#inicio`}>Inicio</a></li>
                         <li><a href={`/${id ?? 1}/#servicios`}>Nosotros</a></li>
@@ -160,6 +159,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                                                     <div key={item.id} className="cart-item">
                                                         <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
                                                         <p id="name-item">{item.nombre}</p>
+                                                        <p id="price-item"><strong>Precio unitario:&nbsp;</strong>${formatPrice(item.precioVenta)}</p>
                                                         <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precioVenta * item.cantidad)}</p>
                                                         <div className="quantity-controls">
                                                             <p>Cantidad:&nbsp;</p>
@@ -180,6 +180,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                                                         <div key={item.id} className="cart-item">
                                                             <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
                                                             <p id="name-item">{item.nombre}</p>
+                                                            <p id="price-item"><strong>Precio unitario:&nbsp;</strong>${formatPrice(item.precioVenta)}</p>
                                                             <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precioVenta * item.cantidad)}</p>
                                                             <div className="quantity-controls">
                                                                 <p>Cantidad:&nbsp;</p>
@@ -201,6 +202,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                                                         <div key={item.id} className="cart-item">
                                                             <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
                                                             <p id="name-item">{item.nombre}</p>
+                                                            <p id="price-item"><strong>Precio unitario:&nbsp;</strong>${formatPrice(item.precio)}</p>
                                                             <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precio * item.cantidad)}</p>
                                                             <div className="quantity-controls">
                                                                 <p>Cantidad:&nbsp;</p>

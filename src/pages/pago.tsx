@@ -108,7 +108,7 @@ const Pago = () => {
         const now = new Date();
         const horaActual = now.toTimeString().slice(0, 5);
 
-        if (sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual) {
+        if ((sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual) && verificarTiempo()) {
             let hayStock = true;
             let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
 
@@ -209,6 +209,7 @@ const Pago = () => {
                         success: (message) => {
                             CarritoService.limpiarCarrito();
                             window.location.href = getBaseUrl() + '/cliente'
+                            localStorage.setItem('lastPedidoTime', now.getTime().toString());
                             return message;
                         },
                         error: (message) => {
@@ -226,11 +227,11 @@ const Pago = () => {
         }
     }
 
-
     async function crearPreferencia(domicilio: Domicilio) {
         const now = new Date();
         const horaActual = now.toTimeString().slice(0, 5);
-        if (sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual) {
+
+        if (sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual && verificarTiempo()) {
             if (envio === 0) {
                 let hayStock = true;
                 let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
@@ -321,7 +322,12 @@ const Pago = () => {
 
                             let preference = await PedidoService.crearPedidoMercadopago(pedido);
 
-                            setPreferenceId(preference.id);
+                            if (preference === null) {
+                                toast.error('Tu cuenta ha sido bloqueada por el restaurante')
+                            } else {
+                                localStorage.setItem('lastPedidoTime', now.getTime().toString());
+                                setPreferenceId(preference.id);
+                            }
                         } else {
                             setPreferenceId(preferenceId);
                         }
@@ -335,7 +341,22 @@ const Pago = () => {
         } else {
             toast.info(`El local está cerrado, el horario de atención es entre las ${sucursal.horarioApertura} y las ${sucursal.horarioCierre}`);
         }
+    }
 
+    function verificarTiempo(): boolean {
+        const lastPedidoTime = localStorage.getItem('lastPedidoTime');
+
+        if (lastPedidoTime) {
+            const lastPedidoTimeNumber = parseInt(lastPedidoTime, 10);
+            const now = new Date().getTime();
+            const timeDifference = now - lastPedidoTimeNumber;
+
+            if (timeDifference < 60000) {
+                toast('Debes esperar unos minutos antes de repetir un pedido');
+                return false;
+            }
+        }
+        return true;
     }
 
     useEffect(() => {
@@ -346,10 +367,10 @@ const Pago = () => {
 
     useEffect(() => {
         const handleBeforeUnload = (event: { preventDefault: () => void; returnValue: string; }) => {
-                event.preventDefault();
-                event.returnValue = ''; // Este mensaje no se muestra en todos los navegadores
-                setShowExitModal(true);
-                return '';
+            event.preventDefault();
+            event.returnValue = ''; // Este mensaje no se muestra en todos los navegadores
+            setShowExitModal(true);
+            return '';
         };
 
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -491,9 +512,9 @@ const Pago = () => {
                     isOpen={showExitModal}
                     onClose={handleExitCancel}
                 >
-                    
+
                     <div className="modal-info">
-                    <h2>Si sales ahora, perderás todos los productos agregados al carrito. ¿Deseas continuar?</h2>
+                        <h2>Si sales ahora, perderás todos los productos agregados al carrito. ¿Deseas continuar?</h2>
                         <button onClick={handleExitConfirm}>Sí, salir</button>
                         <br />
                         <br />

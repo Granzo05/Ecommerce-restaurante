@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { PedidoService } from '../../services/PedidoService';
 import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
@@ -8,6 +7,7 @@ import { FacturaService } from '../../services/FacturaService';
 import FacturaIMG from '../../assets/icons/facturas.png'
 import { CarritoService } from '../../services/CarritoService';
 import { useNavigate } from 'react-router-dom';
+import { ClienteService } from '../../services/ClienteService';
 
 const PedidosRealizados = () => {
     const [pedidosRealizados, setPedidosRealizados] = useState<Pedido[]>([]);
@@ -18,7 +18,7 @@ const PedidosRealizados = () => {
     }, []);
 
     const buscarPedidosRealizados = async () => {
-        PedidoService.getPedidos(EnumEstadoPedido.ENTREGADOS)
+        ClienteService.getPedidos(EnumEstadoPedido.ENTREGADOS)
             .then(data => {
                 setPedidosRealizados(data);
             })

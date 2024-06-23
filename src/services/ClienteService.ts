@@ -1,5 +1,7 @@
 import { Cliente } from '../types/Cliente/Cliente'
 import { Domicilio } from '../types/Domicilio/Domicilio';
+import { EnumEstadoPedido } from '../types/Pedidos/EnumEstadoPedido';
+import { Pedido } from '../types/Pedidos/Pedido';
 import { limpiarCredenciales, URL_API } from '../utils/global_variables/const';
 
 export const ClienteService = {
@@ -120,6 +122,35 @@ export const ClienteService = {
         } catch (error) {
             console.error('Error:', error);
             throw error;
+        }
+    },
+
+    getPedidos: async (estado: EnumEstadoPedido): Promise<Pedido[]> => {
+        const usuarioString = localStorage.getItem('usuario');
+
+        if (usuarioString) {
+            const usuario: Cliente = JSON.parse(usuarioString);
+
+            try {
+                const response = await fetch(URL_API + `cliente/${usuario.id}/pedidos/${estado}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+                }
+
+                return await response.json();
+
+            } catch (error) {
+                console.error('Error:', error);
+                throw error;
+            }
+        } else {
+            return [];
         }
     },
 

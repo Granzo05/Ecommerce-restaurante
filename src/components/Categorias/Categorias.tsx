@@ -3,10 +3,10 @@ import ModalCrud from "../ModalCrud";
 import '../../styles/stock.css';
 import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from '../../types/Ingredientes/Categoria';
-import EliminarCategoria from "./EliminarCategoria";
+import EliminarCategoria from "../Cliente/ClientesSucursales/EliminarCliente";
 import EditarCategoria from "./EditarCategoria";
 import AgregarCategoria from "./AgregarCategoria";
-import ActivarCategoria from "./ActivarCategoria";
+import ActivarCategoria from "../Cliente/ClientesSucursales/ActivarCliente";
 import '../../styles/categorias.css'
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
