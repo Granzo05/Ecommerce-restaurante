@@ -17,18 +17,20 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }
   };
 
   const [fecha, setFecha] = useState(stockEntrante.fechaLlegada ? new Date(stockEntrante.fechaLlegada) : new Date());
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   function editarStock() {
+    setIsLoading(true);
     const hoy = new Date();
     const fechaIngresada = new Date(fecha);
 
     const fechaObj = new Date(fecha);
-  
-  // Verificar que la fecha sea válida
-  if (isNaN(fechaObj.getTime())) {
-    toast.error("La fecha no es válida");
-    return;
-  }
+
+    // Verificar que la fecha sea válida
+    if (isNaN(fechaObj.getTime())) {
+      toast.error("La fecha no es válida");
+      return;
+    }
 
     if (!fecha) {
       toast.error("Por favor, la fecha es necesaria");
@@ -51,6 +53,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -59,16 +64,18 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }
       <h2>&mdash; Editar stock entrante &mdash;</h2>
       <Toaster />
       <div className="inputBox">
-      <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
-              
+        <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de entrada:</label>
+
         <input
           type="date"
           required={true}
           value={fecha.toISOString().substring(0, 10)}
           onChange={(e) => setFecha(new Date(e.target.value))}
-        />        
+        />
       </div>
-      <button type="button" onClick={editarStock}>Editar stock entrante</button>
+      <button className='btn-accion-completar' onClick={editarStock} disabled={isLoading}>
+        {isLoading ? 'Cargando...' : 'Editar stock entrante ✓'}
+      </button>
     </div>
   )
 }

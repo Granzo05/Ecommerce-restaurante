@@ -66,7 +66,10 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
     setIdsSucursalesElegidas(new Set());
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   async function agregarIngrediente() {
+    setIsLoading(true);
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
       toast.info("Por favor, asigne un nombre válido");
@@ -156,6 +159,9 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -257,7 +263,9 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                     <button value="Agregar stock ahora (opcional)" id='agregarIngrediente' style={{ marginRight: '10px' }}
                       onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock ahora</button>
                   )}
-                  <button className='btn-accion-completar' value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Agregar ingrediente ✓</button>
+                  <button className='btn-accion-completar' onClick={agregarIngrediente} disabled={isLoading}>
+                    {isLoading ? 'Cargando...' : 'Agregar ingrediente ✓'}
+                  </button>
                 </>
               )}
             </div>
@@ -292,7 +300,9 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Agregar ingrediente ✓</button>
+              <button className='btn-accion-completar' onClick={agregarIngrediente} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar ingrediente ✓'}
+              </button>
             </div>
           </>
         );

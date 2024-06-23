@@ -66,7 +66,10 @@ const PedidosParaEntregar = () => {
             });
     }
 
+    const [isLoading, setIsLoading] = useState(false);
+
     async function handleEntregarPedido(pedido: Pedido) {
+        setIsLoading(true);
         // Por default la entrega es en el restaurante
         let estadoPedido = EnumEstadoPedido.ENTREGADOS;
 
@@ -84,6 +87,9 @@ const PedidosParaEntregar = () => {
             error: (message) => {
                 return message;
             },
+            finally: () => {
+                setIsLoading(false);
+            }
         });
         buscarPedidos();
     }
@@ -102,6 +108,8 @@ const PedidosParaEntregar = () => {
     }
 
     async function handleCancelarPedido(pedido: Pedido) {
+        setIsLoading(true);
+
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
             loading: 'Rechazando el pedido...',
             success: (message) => {
@@ -111,6 +119,9 @@ const PedidosParaEntregar = () => {
             error: (message) => {
                 return message;
             },
+            finally: () => {
+                setIsLoading(false);
+            }
         });
     }
 
@@ -303,10 +314,14 @@ const PedidosParaEntregar = () => {
                                     ${total.toLocaleString('es-AR')}
                                 </td>
                                 {updateVisible && (
-                                    <td><button onClick={() => handleEntregarPedido(pedido)}>Entregar</button></td>
+                                    <button className='btn-accion-completar' onClick={() => handleEntregarPedido(pedido)} disabled={isLoading}>
+                                        {isLoading ? 'Cargando...' : 'Entregar ✓'}
+                                    </button>
                                 )}
                                 {updateVisible && (
-                                    <td><button onClick={() => handleCancelarPedido(pedido)}>Cancelar</button></td>
+                                    <button className='btn-accion-completar' onClick={() => handleCancelarPedido(pedido)} disabled={isLoading}>
+                                        {isLoading ? 'Cargando...' : 'Cancelar ✓'}
+                                    </button>
                                 )}
                             </tr>
                         ))}

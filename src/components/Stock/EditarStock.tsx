@@ -39,8 +39,12 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
     if (stockOriginal.medida) setMedida(stockOriginal.medida);
   }, []);
 
+  const [isLoading, setIsLoading] = useState(false);
+
 
   function editarStock() {
+    setIsLoading(true);
+
     if (!cantidadMinima || cantidadMinima < 0) {
       toast.error("Por favor, es necesaria la cantidad mínima");
       return;
@@ -93,6 +97,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
         error: (message) => {
           return message;
         },
+        finally: () => {
+          setIsLoading(false);
+      }
       });
 
     } else {
@@ -119,6 +126,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
         error: (message) => {
           return message;
         },
+        finally: () => {
+          setIsLoading(false);
+      }
       });
     }
 
@@ -158,7 +168,9 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
         <div className="error-message">El costo por unidad solo debe contener números.</div>
 
       </div><br />
-      <button type="button" onClick={editarStock}>Editar stock</button>
+      <button className='btn-accion-completar' onClick={editarStock} disabled={isLoading}>
+        {isLoading ? 'Cargando...' : 'Editar stock ✓'}
+      </button>
     </div>
   )
 }

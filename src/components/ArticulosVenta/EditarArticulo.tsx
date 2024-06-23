@@ -115,7 +115,10 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
     setIdsSucursalesElegidas(new Set());
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function editarArticuloVenta() {
+    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -172,6 +175,9 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
 
     if (imagenes.length === 0) {
@@ -335,8 +341,9 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
               {empresa && empresa.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-completar' onClick={editarArticuloVenta}>Editar articulo ✓</button>
-              )}
+                <button className='btn-accion-completar' onClick={editarArticuloVenta} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Editar artículo ✓'}
+                </button>)}
             </div >
           </>
         );
@@ -363,7 +370,9 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={editarArticuloVenta}>Editar artículo ✓</button>
+              <button className='btn-accion-completar' onClick={editarArticuloVenta} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar artículo ✓'}
+              </button>
             </div>
           </>
         );

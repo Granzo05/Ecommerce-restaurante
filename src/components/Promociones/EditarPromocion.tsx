@@ -331,7 +331,10 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
     setIdsSucursalesElegidas(new Set());
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   async function editarPromocion() {
+    setIsLoading(true);
     const hoy = new Date();
 
     fechaDesde.setDate(fechaDesde.getDate() + 1);
@@ -417,6 +420,9 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -677,8 +683,9 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button type="button" onClick={editarPromocion}>Editar promoción</button>
-              )}
+                <button className='btn-accion-completar' onClick={editarPromocion} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Editar promoción ✓'}
+                </button>)}
             </div>
           </>
         );
@@ -705,7 +712,9 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button type="button" onClick={editarPromocion}>Editar promoción</button>
+              <button className='btn-accion-completar' onClick={editarPromocion} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar promoción ✓'}
+              </button>
             </div>
           </>
         );

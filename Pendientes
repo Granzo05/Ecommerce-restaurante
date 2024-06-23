@@ -116,6 +116,8 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [x] Si elijo COCINERO, cargarle previamente los permisos logicos que tendrian para que ya esten marcados en el paso siguiente
 [x] Hacer andar el input de busqueda de productos en ambos headers
 [x] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
+[x] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
+[x] Validar que el botón de agregar te tome un solo click, porque me añadió dos veces al hacer click dos veces sin querer.
 
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
@@ -166,8 +168,6 @@ STOCK:
 [] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST que avise que queda poco
 
 STOCK ENTRANTE:
-[] Validar que el botón de agregar te tome un solo click, porque me añadió dos veces al hacer click dos veces sin querer.
-[x] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
 [] Ordenar la tabla por fecha ascendente.
 STOCK ENTRANTE:
 [] Filtros de fechas. Filtrar entre 2 fechas.

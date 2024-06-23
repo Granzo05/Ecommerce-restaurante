@@ -92,7 +92,10 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
     setIdsSucursalesElegidas(new Set());
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   async function agregarArticulo() {
+    setIsLoading(true);
     if (imagenes.length === 0) {
       toast.info("No se asignó ninguna imagen");
       return;
@@ -187,6 +190,9 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -231,11 +237,11 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
 
   const validateAndNextStep = () => {
 
-    
+
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
       toast.error("Por favor, es necesario el nombre del articulo");
       return;
-    } else if (!precio || precio == 0){
+    } else if (!precio || precio == 0) {
       toast.error("Por favor, es necesario el precio de venta del articulo válido");
       return;
     } else if (!categoria) {
@@ -290,7 +296,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
               <input type="number" required={true} pattern="\d*" value={cantidadMedida} onChange={(e) => setCantidadMedida(parseFloat(e.target.value))} />
               <span>Cantidad de la medida de venta</span>
               <div className="error-message">El precio de venta solo debe contener números.</div>
-            
+
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
@@ -336,10 +342,10 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
                 <button className='btn-accion-adelante' onClick={() => setStep(4)}>Seleccionar sucursales ⭢</button>
               ) : (
                 <>
-                <button className='btn-accion-adelante' onClick={nextStep}>Agregar stock (opcional) ⭢</button>
-                <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
+                  <button className='btn-accion-adelante' onClick={nextStep}>Agregar stock (opcional) ⭢</button>
+                  <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
                 </>
-                
+
               )}
             </div >
           </>
@@ -347,13 +353,13 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
       case 3:
         return (
           <>
-            <h4 style={{ textTransform: 'lowercase'}}> <strong style={{fontWeight: '100', textTransform: 'capitalize'}}>Paso opcional - Stock</strong>  {nombre}</h4>
+            <h4 style={{ textTransform: 'lowercase' }}> <strong style={{ fontWeight: '100', textTransform: 'capitalize' }}>Paso opcional - Stock</strong>  {nombre}</h4>
             <label>
               <div className="inputBox">
                 <input type="number" pattern="\d*" required value={cantidadMinima} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
                 <span>Cantidad mínima del articulo (opcional)</span>
                 <div className="error-message">La cantidad mínima solo debe contener números.</div>
-                  
+
               </div>
             </label>
             <label>
@@ -361,7 +367,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
                 <input type="number" pattern="\d*" required value={cantidadMaxima} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
                 <span>Cantidad máxima del articulo (opcional)</span>
                 <div className="error-message">La cantidad máxima solo debe contener números.</div>
-                  
+
               </div>
             </label>
             <label>
@@ -369,18 +375,18 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
                 <input type="number" pattern="\d*" required value={cantidadActual} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
                 <span>Cantidad actual del articulo (opcional)</span>
                 <div className="error-message">La cantidad actual solo debe contener números.</div>
-                  
+
               </div>
             </label>
             <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medidaStock.nombre ?? ''} />
             {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medidaStock?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedidaStock(medida); handleModalClose(); }} />}
-            
+
             <label>
               <div className="inputBox">
                 <input type="number" pattern="\d*" required value={precioStock} onChange={(e) => { setPrecioStock(parseFloat(e.target.value)) }} />
                 <span>Costo por unidad ($) (opcional)</span>
                 <div className="error-message">El costo por unidad solo debe contener números.</div>
-                  
+
               </div>
             </label>
             <div className="btns-pasos">
@@ -388,8 +394,9 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
-              )}
+                <button className='btn-accion-completar' onClick={agregarArticulo} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Agregar artículo ✓'}
+                </button>)}
             </div>
           </>
         );
@@ -416,7 +423,9 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={agregarArticulo}>Agregar artículo ✓</button>
+              <button className='btn-accion-completar' onClick={agregarArticulo} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar artículo ✓'}
+              </button>
             </div>
           </>
         );

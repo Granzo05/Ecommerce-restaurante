@@ -239,7 +239,10 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     setIdLocalidadesElegidas(updatedSelectedLocalidades);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleCargarNegocio = async () => {
+    setIsLoading(true);
     if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
       toast.error("Por favor, es necesario el email");
       return;
@@ -270,7 +273,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     } else if (localidadesMostrablesCheckbox.length === 0) {
       toast.error("Por favor, es necesaria aunque sea una localidad donde alcance el delivery");
       return;
-    } else if (imagenes.length === 0){
+    } else if (imagenes.length === 0) {
       toast.error("Por favor, es necesaria una imagen");
       return;
     }
@@ -323,6 +326,9 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -381,7 +387,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
 
   }
 
-  const validateAndNextStep3 = () =>{
+  const validateAndNextStep3 = () => {
 
     if (localidadesMostrablesCheckbox.length === 0) {
       toast.error("Por favor, es necesaria aunque sea un departamento donde alcance el delivery");
@@ -389,7 +395,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     } else if (!localidadesProvincia) {
       toast.error("Por favor, es necesaria aunque sea unos departamentos donde alcance el delivery");
       return;
-    } else{
+    } else {
       nextStep();
     }
 
@@ -665,8 +671,9 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={handleCargarNegocio}>Agregar sucursal ✓</button>
-
+              <button className='btn-accion-completar' onClick={handleCargarNegocio} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar sucursal ✓'}
+              </button>
             </div>
           </>
         );

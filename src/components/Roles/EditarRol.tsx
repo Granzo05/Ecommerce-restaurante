@@ -105,7 +105,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
             <div >
               <Toaster />
               <div className="modal-info">
-                
+
                 <Toaster />
                 <div className="inputBox">
                   <input type="text" required={true} pattern="[a-zA-Z\s]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
@@ -117,8 +117,9 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
                 {empresa && empresa?.id > 0 ? (
                   <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
                 ) : (
-                  <button onClick={editarMedida}>Editar rol</button>
-                )}
+                  <button className='btn-accion-completar' onClick={editarMedida} disabled={isLoading}>
+                    {isLoading ? 'Cargando...' : 'Editar rol ✓'}
+                  </button>)}
               </div>
             </div>
           </>
@@ -146,7 +147,9 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button onClick={editarMedida}>Editar medida</button>
+              <button className='btn-accion-completar' onClick={editarMedida} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar rol ✓'}
+              </button>
             </div>
           </>
         );

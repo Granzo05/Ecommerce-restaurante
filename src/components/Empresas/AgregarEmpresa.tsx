@@ -72,8 +72,11 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
     const cuilFormateado = formatearCuil(value);
     setCuit(cuilFormateado);
   };
+  
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCargarNegocio = async () => {
+    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -114,6 +117,9 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -182,7 +188,7 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
       case 2:
         return (
           <>
-          <h4>Paso final - Imagenes</h4>
+            <h4>Paso final - Imagenes</h4>
             <div>
               {imagenes.map((imagen, index) => (
                 <div key={index} className='inputBox'>
@@ -213,8 +219,9 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={handleCargarNegocio}>Agregar empresa ✓</button>
-
+              <button className='btn-accion-completar' onClick={handleCargarNegocio} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar empresa ✓'}
+              </button>
             </div>
           </>
         );

@@ -62,9 +62,11 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
     setModalBusquedaCategoria(false);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
 
   async function agregarCategoria() {
     const subcategoria: Subcategoria = new Subcategoria();
+    setIsLoading(true);
 
     if (!categoria) {
       toast.info("Por favor, es necesaria la categoria");
@@ -97,6 +99,9 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
       error: (message) => {
         return "No se pudo crear la subcategoría";
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -130,7 +135,9 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
             <div className="btns-pasos">{empresa && empresa?.id > 0 ? (
               <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
             ) : (
-              <button className='btn-accion-completar' value="Agregar categoria" id="agregarCategoria" onClick={agregarCategoria}>Agregar subcategoría ✓</button>
+              <button className='btn-accion-completar' onClick={agregarCategoria} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Cargar ✓'}
+              </button>
             )}</div>
 
           </>
@@ -158,7 +165,9 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button value="Agregar categoria" id="agregarCategoria" onClick={agregarCategoria}>Cargar</button>
+              <button className='btn-accion-completar' onClick={agregarCategoria} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Cargar ✓'}
+              </button>
             </div>
           </>
         );

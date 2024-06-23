@@ -171,8 +171,10 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
     }
   }
 
+  const [isLoading, setIsLoading] = useState(false);
 
   async function agregarStockEntrante() {
+    setIsLoading(true);
     const hoy = new Date();
 
     if (!fecha) {
@@ -223,7 +225,10 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
         error: (message) => {
           return message;
         },
-        duration: 5000, 
+        finally: () => {
+          setIsLoading(false);
+        },
+        duration: 5000,
       },
     );
 
@@ -412,9 +417,10 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={validateAndNextStep3}>Agregar stock entrante ✓</button>
-
-            </div>
+              <button className='btn-accion-completar' onClick={validateAndNextStep3} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar stock entrante ✓'}
+              </button>
+            </div >
           </>
         );
     }

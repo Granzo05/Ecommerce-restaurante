@@ -30,6 +30,8 @@ const PedidosEnCamino = () => {
     }
 
     async function handleAceptarPedido(pedido: Pedido) {
+        setIsLoading(true);
+
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ENTREGADOS), {
             loading: 'Enviando factura al cliente...',
             success: (message) => {
@@ -38,6 +40,9 @@ const PedidosEnCamino = () => {
             error: (message) => {
                 return message;
             },
+            finally: () => {
+                setIsLoading(false);
+            }
         });
 
         buscarPedidos();
@@ -55,8 +60,11 @@ const PedidosEnCamino = () => {
             setPaginasTotales(Math.ceil(pedidosEnCamino.length / cantidadProductosMostrables));
         }
     }
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleRechazarPedido(pedido: Pedido) {
+        setIsLoading(true);
+
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
             loading: 'Rechazando pedido...',
             success: (message) => {
@@ -65,6 +73,9 @@ const PedidosEnCamino = () => {
             error: (message) => {
                 return message;
             },
+            finally: () => {
+                setIsLoading(false);
+            }
         });
 
         buscarPedidos();
@@ -279,10 +290,14 @@ const PedidosEnCamino = () => {
                                     ))}
                                 </td>
                                 {updateVisible && (
-                                    <td><button onClick={() => handleAceptarPedido(pedido)}>Aceptar</button></td>
+                                    <button className='btn-accion-completar' onClick={() => handleAceptarPedido(pedido)} disabled={isLoading}>
+                                        {isLoading ? 'Cargando...' : 'Aceptar ✓'}
+                                    </button>
                                 )}
                                 {updateVisible && (
-                                    <td><button onClick={() => handleRechazarPedido(pedido)}>Rechazar</button></td>
+                                    <button className='btn-accion-completar' onClick={() => handleRechazarPedido(pedido)} disabled={isLoading}>
+                                        {isLoading ? 'Cargando...' : 'Rechazar ✓'}
+                                    </button>
                                 )}
                             </tr>
                         ))}

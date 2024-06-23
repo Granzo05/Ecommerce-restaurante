@@ -309,7 +309,10 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
     return new Date(year, month - 1, day);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   async function editarEmpleado() {
+    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -432,6 +435,9 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -825,7 +831,9 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={editarEmpleado}>Editar empleado ✓</button>
+              <button className='btn-accion-completar' onClick={editarEmpleado} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar empleado ✓'}
+              </button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
           </>
@@ -862,7 +870,9 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={editarEmpleado}>Editar empleado ✓</button>
+              <button className='btn-accion-completar' onClick={editarEmpleado} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar empleado ✓'}
+              </button>
             </div>
           </>
         )

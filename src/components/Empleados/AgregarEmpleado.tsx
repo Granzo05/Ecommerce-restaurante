@@ -383,7 +383,10 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     }
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   async function agregarEmpleado() {
+    setIsLoading(true);
     const empleado = new Empleado();
     empleado.nombre = nombre;
     empleado.email = email;
@@ -418,6 +421,9 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -787,8 +793,9 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <div className="btns-pasos">
               <button className='btn-accion btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion btn-accion-adelante' onClick={nextStep}>Privilegios sensibles (opcional) ⭢</button>
-              <button className='btn-accion btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
-            </div>
+              <button className='btn-accion-completar' onClick={agregarEmpleado} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar empleado ✓'}
+              </button>            </div>
           </>
         );
       case 6:
@@ -840,7 +847,9 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={agregarEmpleado}>Agregar empleado ✓</button>
+              <button className='btn-accion-completar' onClick={agregarEmpleado} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar empleado ✓'}
+              </button>
             </div>
           </>
         );

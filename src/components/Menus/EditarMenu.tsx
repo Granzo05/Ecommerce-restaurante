@@ -226,8 +226,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     setIdsSucursalesElegidas(new Set());
   };
 
+  const [isLoading, setIsLoading] = useState(false);
 
   function editarMenu() {
+    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -319,6 +321,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -644,8 +649,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-completar' type='button' onClick={editarMenu}>Editar menú ✓</button>
-              )}
+                <button className='btn-accion-completar' onClick={editarMenu} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Editar menú ✓'}
+                </button>)}
             </div>
           </>
         );
@@ -672,7 +678,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='button-form' type='button' onClick={editarMenu}>Editar menu</button>
+              <button className='btn-accion-completar' onClick={editarMenu} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar menú ✓'}
+              </button>
             </div>
           </>
         );

@@ -184,7 +184,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
+  const [isLoading, setIsLoading] = useState(false);
+
   async function agregarMenu() {
+    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -255,6 +258,9 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -491,8 +497,9 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-completar' onClick={agregarMenu}>Agregar menú ✓</button>
-              )}
+                <button className='btn-accion-completar' onClick={agregarMenu} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Agregar menú ✓'}
+                </button>)}
             </div>
           </>
         );
@@ -519,7 +526,9 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={agregarMenu}>Agregar menú ✓</button>
+              <button className='btn-accion-completar' onClick={agregarMenu} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar menú ✓'}
+              </button>
             </div>
           </>
         );

@@ -36,8 +36,11 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
     setModalBusquedaIngrediente(false)
   };
 
+  const [isLoading, setIsLoading] = useState(false);
 
   async function crearStockIngrediente() {
+    setIsLoading(true);
+
     if (!medida && !cantidadMaxima && !costoIngrediente && !cantidadMinima && !cantidadActual && !nombreIngrediente) {
       toast.error("Por favor, llene todos los campos");
       return;
@@ -95,6 +98,9 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+    }
     });
   }
 
@@ -143,7 +149,9 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
 
       </div>
       <hr />
-      <button onClick={crearStockIngrediente}>Agregar stock</button>
+      <button className='btn-accion-completar' onClick={crearStockIngrediente} disabled={isLoading}>
+        {isLoading ? 'Cargando...' : 'Agregar stock ✓'}
+      </button>
     </div>
   )
 }

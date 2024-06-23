@@ -226,8 +226,12 @@ const StocksEntrantes = () => {
         setShowDetallesStock(false);
         setMostrarStocks(false);
     };
+    
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleCargarStock = (stock: StockEntrante) => {
+        setIsLoading(true);
+
         setSelectedStock(stock);
 
         const promises = stock.detallesStock.map(detalle => {
@@ -248,6 +252,7 @@ const StocksEntrantes = () => {
         );
 
         stock.estado = 'ENTREGADOS';
+
         toast.promise(StockEntranteService.updateStock(stock), {
             loading: 'Creando stock entrante...',
             success: (message) => {
@@ -257,6 +262,9 @@ const StocksEntrantes = () => {
             error: (message) => {
                 return message;
             },
+            finally: () => {
+                setIsLoading(false);
+            }
         });
     };
 
@@ -412,7 +420,9 @@ const StocksEntrantes = () => {
                                                 <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
                                             )}
                                             {updateVisible && (
-                                                <button className="btn-accion-entregado" onClick={() => handleCargarStock(stock)}>MARCAR COMO ENTREGADO</button>
+                                                <button className="btn-accion-entregado" onClick={() => handleCargarStock(stock)} disabled={isLoading}>
+                                                    {isLoading ? 'Cargando...' : 'MARCAR COMO ENTREGADO'}
+                                                </button>
                                             )}
                                         </td>
                                     ) : (
