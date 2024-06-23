@@ -81,7 +81,7 @@ const Opciones = () => {
         if (opcionElegida === undefined) {
             setOpcionSeleccionada(0);
         } else {
-            setOpcionSeleccionada(parseInt(opcionElegida));
+            handleOpcionClick(parseInt(opcionElegida));
         }
     }, [opcionElegida]);
 
