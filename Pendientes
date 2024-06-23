@@ -88,21 +88,54 @@ EL CARRITO CON LAS PROMOCIONES NO ANDA, OSEA ANDA PERO TE CARGA TODO[x]
 [x] Agregar imagenes al empleado
 ERROR AL CARGAR EMPRESA[x]
 NO ANDA EDITAR EMPRESA[x]
+[x] Error 500 al cargar empleado.
+[x] Editar empleado se rompe al pasar al paso 3 de roles.
+[x] AGREGAR PRECIO UNITARIO DE CADA PRODUCTO. AHORA SOLO TIENE SUBTOTAL PERO ADEMAS TIENE QUE TENER EL UNITARIO Y EL TOTAL DE LA COMPRA
+[x] Hacer andar filtros de Opciones. QUE FILTROS?
+[x] No anda en lo de editar, borrar las imágenes. Te añade una y otra y otra.
+[x] No me deja agregar stock de ingredientes desde Stock. Stock inexistente.
+[x] Cuando quiero agregar stock de articulo desde Articulo, me trae la unidad de medida de venta y no me deja cambiarla. ME ANDA BIEN
+[x] No me deja agregar stock de artículos desde Stock. Stock ya existe.
+[x] Eliminas un stock y se elimina cualquiera, no el que seleccionaste.
+[x] Si editas, pero no tocas la unidad de medida, te pone cualquiera por defecto. NO ENCONTRE ESTE ERROR, ME ANDA NASHE
+[x] La fecha te muestra el día siguiente al actual pero sigue tomando la fecha actual, por ende no te deja avanzar porque la fecha debe ser posterior.
+[x] Cuando quiero agregar un articulo, siempre me trae la unidad de medida de venta, por ejemplo LITROS de Coca.. y el stock se mide en unidades.
+[x] Si seleccionas un ingrediente, pero borras ese stock entrante y queres añadir otro, ese ingrediente que elegiste ya no aparece en el filtrado.
+[x] Se rompe la fecha con el ToISO en Editar, pero de andar, anda.
+[x] Faltaría agregar la función de Marcar como entregado.
+[x] Al seleccionar un producto para añadir, debería traer su unidad de medida del stock, porque una equivocación de unidad de medida, rompería el sistema. QUE DECIS FANTASMA 
+[x] Al agregar menú, te pone cualquier categoría y subcategoria si no le añadis ninguna.
+[x] No me deja añadir categoría. Error.
+[x] Solo deja eliminar una imagen a la vez, del slider, al editar.
+[x] Se rompen los filtros al editar articulo. No deja seleccionar otros.
+[x] Se rompe y no deja crear el articulo si te metes a agregar stock pero te salis porque no queres agregar.
+[x] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
+carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
+
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
-[] Formatear y mejorar la legibilidad del codigo
-[] Hacer la recuperacion de contraseña
-[] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
 [] Costo recomendado de articulos por sucursal
 [] Configurar rutas privadas
 [] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
 [] El editar menú no borra los ingredientes.
 
+
+sucursales/ Pagina
+[] Filtrar sucursales por provincia antes de buscarlas, para no traer todas
+
+header
+[] Si como sucursal tocas en pedidos que te lleve a opciones con pedidos entrantes abierto
+
+
+Login
+[] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
+[] Hacer la recuperacion de contraseña
+
 Permisos: 
 [] Si elijo COCINERO, cargarle previamente los permisos logicos que tendrian para que ya esten marcados en el paso siguiente
 
-PEDIDOS:
-[x] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
+PEDIDOS FALTA PROBAR:
+[] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
     los pedidos en general, por lo cual habrá una pantalla con el listado de todos los pedidos, los cuales se podrán filtran según su estado 
     (por ejemplo, mediante un combobox) y también se podrán buscar mediante su id (mediante un cuadro de búsqueda).
 
@@ -113,49 +146,29 @@ COMPRA:
 [] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.
 
 CARRITO:
-[x] AGREGAR PRECIO UNITARIO DE CADA PRODUCTO. AHORA SOLO TIENE SUBTOTAL PERO ADEMAS TIENE QUE TENER EL UNITARIO Y EL TOTAL DE LA COMPRA
 
 MODALES:
 [] EN LOS MODALES DE RECOMENDACION, HABRIA QUE PONER UNA OPCION DE SACAR LA OPCION SELECCIONADA, SI POR EJ ELIJO QUESO EQUIVOCADAMENTE Y NO TENGO OTROS INGREDIENTES NO PUEDO BORRARLO
 
-/*OPCIONES:
-[x] Hacer andar filtros de Opciones. QUE FILTROS?
+OPCIONES:
 
 CATEGORÍA:
-[x] No anda en lo de editar, borrar las imágenes. Te añade una y otra y otra.
 
 EMPLEADOS:
-[x] Error 500 al cargar empleado.
-[x] Editar empleado se rompe al pasar al paso 3 de roles.
 [] Hay que pasar el CUIL a string, asi poder usar sus '-'.
 
 STOCK:
-[x] No me deja agregar stock de ingredientes desde Stock. Stock inexistente.
-[x] Cuando quiero agregar stock de articulo desde Articulo, me trae la unidad de medida de venta y no me deja cambiarla. ME ANDA BIEN
-[x] No me deja agregar stock de artículos desde Stock. Stock ya existe.
-[x] Eliminas un stock y se elimina cualquiera, no el que seleccionaste.
-[x] Si editas, pero no tocas la unidad de medida, te pone cualquiera por defecto. NO ENCONTRE ESTE ERROR, ME ANDA NASHE
-[] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST
+[] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST que avise que queda poco
 
 STOCK ENTRANTE:
-[x] La fecha te muestra el día siguiente al actual pero sigue tomando la fecha actual, por ende no te deja avanzar porque la fecha debe ser posterior.
-[x] Cuando quiero agregar un articulo, siempre me trae la unidad de medida de venta, por ejemplo LITROS de Coca.. y el stock se mide en unidades.
 [] Validar que el botón de agregar te tome un solo click, porque me añadió dos veces al hacer click dos veces sin querer.
-[x] Si seleccionas un ingrediente, pero borras ese stock entrante y queres añadir otro, ese ingrediente que elegiste ya no aparece en el filtrado.
 [] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
-[x] Al seleccionar un producto para añadir, debería traer su unidad de medida del stock, porque una equivocación de unidad de medida, rompería el sistema. QUE DECIS FANTASMA 
 [] Ordenar la tabla por fecha ascendente.
-[x] Se rompe la fecha con el ToISO en Editar, pero de andar, anda.
-[x] Faltaría agregar la función de Marcar como entregado.
+
 
 MENÚ:
-[x] Al agregar menú, te pone cualquier categoría y subcategoria si no le añadis ninguna.
-[x] No me deja añadir categoría. Error.
 
 ARTÍCULOS:
-[x] Solo deja eliminar una imagen a la vez, del slider, al editar.
-[x] Se rompen los filtros al editar articulo. No deja seleccionar otros.
-[x] Se rompe y no deja crear el articulo si te metes a agregar stock pero te salis porque no queres agregar.
 
 INGREDIENTES:
 [] Al añadir un ingrediente más su stock, no deja eliminarlo ni editarlo.
@@ -173,7 +186,6 @@ PROMOCIONES:
 [] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
 [] Arreglar los filtros de fechas.
 
- */
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
 TERMINAR REPORTES[]
@@ -187,13 +199,8 @@ loginNegocio: FALTA VALIDAR EN EL RECUPERO DE CONTRA, QUE EL CORREO SEA CORRECTO
 opcionesCliente: FALTA MOSTRAR DOMICILIOS DEL USUARIO Y VALIDAR CAMBIOS DE LA CUENTA EN LA BASE DE DATOS.[]
 opciones: VALIDACIONES Y TOAST. FILTROS DE LAS TABLAS. RESPONSIVE.[]
 
-carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 homePage: IMAGENES A LAS CATEGORIAS.[]
 
-
-                                                                            MERCADOPAGO
-                                                                            TESTUSER1528571974
-                                                                            5Yeclsr88o
 
 
 Pruebas

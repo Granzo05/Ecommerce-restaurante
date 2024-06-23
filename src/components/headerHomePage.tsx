@@ -27,6 +27,11 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
         cargarUsuario();
     }, []);
 
+    const [sucursal] = useState<Sucursal | null>(() => {
+        const sucursalString = localStorage.getItem('sucursal');
+        return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
+    });
+
     const cargarUsuario = async () => {
         const clienteString = localStorage.getItem('usuario');
         const empleadoString = localStorage.getItem('empleado');

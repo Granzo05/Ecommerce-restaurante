@@ -43,10 +43,10 @@ const Footer: React.FC<FooterProps> = ({ sucursal }) => {
               </ul>
             </li>
             <li>
-              <h3 style={{ fontSize: '19px', color: '#FFFFFF' }}>&mdash; Horario &mdash;</h3>
 
-              {sucursal ? (
+              {sucursal && sucursal.horarioApertura.length > 0 ? (
                 <>
+                  <h3 style={{ fontSize: '19px', color: '#FFFFFF' }}>&mdash; Horario &mdash;</h3>
                   <h4 style={{ textAlign: 'center' }}><a>DE LUNES A DOMINGO:</a></h4>
                   <ul>
                     <li><a>Horario de apertura: {sucursal.horarioApertura}</a></li>
@@ -55,7 +55,7 @@ const Footer: React.FC<FooterProps> = ({ sucursal }) => {
                 </>
               ) : (
                 <><ul>
-                  <li><a>NO HA SELECCIONADO UNA SUCURSAL. </a><a href="/sucursales" style={{ textDecoration: 'underline' }}>HÁGALO AHORA</a></li>
+                  <li><a>NO HA SELECCIONADO UNA SUCURSAL. </a><br /><a href="/sucursales" style={{ textDecoration: 'underline' }}>HÁGALO AHORA</a></li>
                 </ul>
                 </>
               )}

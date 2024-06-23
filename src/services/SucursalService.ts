@@ -61,7 +61,7 @@ export const SucursalService = {
             }
 
             const data = await response.json();
-
+            console.log(data)
             if (data.id > 0) {
                 let sucursal = {
                     id: data.id,
@@ -78,6 +78,27 @@ export const SucursalService = {
             }
         } catch (error) {
             throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+        }
+    },
+
+    getSucursales: async (): Promise<Sucursal[]> => {
+        try {
+            const response = await fetch(URL_API + 'sucursales', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
         }
     },
 

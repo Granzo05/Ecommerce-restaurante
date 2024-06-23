@@ -91,7 +91,6 @@ export const EmpresaService = {
 
                 return 'Sesión iniciada correctamente';
             } else {
-                // Intenta iniciar sesión en la sucursal
                 const mensajeSucursal = await SucursalService.getSucursal(email, contraseña);
                 if (mensajeSucursal) {
                     return mensajeSucursal;

@@ -299,7 +299,7 @@ const Opciones = () => {
                     <div className="modal-info">
                         <>
                             <h2>¿Qué desea hacer?</h2>
-                            <button onClick={() => { limpiarCredenciales; window.location.href = getBaseUrl() }}>Cerrar sesión</button>
+                            <button onClick={() => { limpiarCredenciales(); window.location.href = getBaseUrl() }}>Cerrar sesión</button>
                             <br />
                             <button onClick={() => { localStorage.removeItem('sucursal'); window.location.href = getBaseUrl() + '/empresa' }}>Volver a cuenta de empresa</button>
                         </>
@@ -309,8 +309,6 @@ const Opciones = () => {
             <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
                 <div className="title-header">
                     <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/opciones'} />
-
-
                 </div>
 
                 <hr />
@@ -547,7 +545,7 @@ const Opciones = () => {
                             <label className="name-account">{empleado?.nombre}{sucursal?.nombre}{empresa?.nombre}</label>
                         </div>
 
-                        {empresa ? (
+                        {empresa && sucursal ? (
                             <LogoutIcon onClick={() => setShowDecisionEmpresa(true)} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />
                         ) : (
                             <LogoutIcon onClick={() => { limpiarCredenciales(); window.location.href = 'http://localhost:5173/login-negocio' }} className="logout-icon" style={{ fontSize: '38px', display: 'inline' }} />

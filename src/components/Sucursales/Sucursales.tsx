@@ -32,7 +32,7 @@ const Sucursales = () => {
     }, [sucursales]);
 
     const fetchSucursales = async () => {
-        SucursalService.getSucursales()
+        EmpresaService.getSucursales()
             .then(data => {
                 setSucursales(data);
             })
@@ -40,7 +40,6 @@ const Sucursales = () => {
                 console.error('Error:', error);
             });
     }
-
 
     const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
     const [idSucursalElegida, setIdSucursalElegida] = useState<number>();

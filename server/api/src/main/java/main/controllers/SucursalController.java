@@ -59,13 +59,29 @@ public class SucursalController {
     @GetMapping("/sucursal/login/{email}/{password}")
     public Sucursal loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<Sucursal> sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
+        System.out.println(email);
+        System.out.println(password);
         return sucursal.orElse(new Sucursal());
     }
 
     @CrossOrigin
     @GetMapping("/sucursales/{idEmpresa}")
-    public Set<Sucursal> getSucursales(@PathVariable("idEmpresa") Long idEmpresa) throws Exception {
+    public Set<Sucursal> getSucursalesEmpresa(@PathVariable("idEmpresa") Long idEmpresa) throws Exception {
         List<Sucursal> sucursales = sucursalRepository.findByIdEmpresa(idEmpresa);
+
+        for (Sucursal sucursal : sucursales) {
+            Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
+            sucursal.getDomicilios().add(domicilio);
+            sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
+        }
+
+        return new HashSet<>(sucursales);
+    }
+
+    @CrossOrigin
+    @GetMapping("/sucursales")
+    public Set<Sucursal> getSucursales() throws Exception {
+        List<Sucursal> sucursales = sucursalRepository.findAll();
 
         for (Sucursal sucursal : sucursales) {
             Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
