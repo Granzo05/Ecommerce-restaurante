@@ -181,12 +181,16 @@ const RolesEmpleado = () => {
         setMostrarRoles(true);
     };
 
+    const capitalizeFirstLetter = (string: string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    };
+
     return (
         <div className="opciones-pantallas">
             <h1>- Roles -</h1>
 
             {createVisible && (
-                <div className="btns-roles">
+                <div className="btns-empleados">
                     <button className="btn-agregar" onClick={() => handleAgregarRol()}> + Agregar rol</button>
                 </div>)}
             <hr />
@@ -228,7 +232,7 @@ const RolesEmpleado = () => {
                         <tbody>
                             {datosFiltrados.map(rol => (
                                 <tr key={rol.id}>
-                                    <td>{rol.nombre.toString().replace(/_/g, ' ')}</td>
+                                    <td>{capitalizeFirstLetter(rol.nombre.toString().replace(/_/g, ' '))}</td>
 
                                     {rol.borrado === 'NO' ? (
                                         <td>
