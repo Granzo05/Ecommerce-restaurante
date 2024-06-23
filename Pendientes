@@ -111,6 +111,8 @@ NO ANDA EDITAR EMPRESA[x]
 [x] Se rompe y no deja crear el articulo si te metes a agregar stock pero te salis porque no queres agregar.
 [x] Editar el perfil del header para que si sos empleado o negocio no te muestre las mismas opciones que al cliente, por ej en vez de domicilios que haya una opcion de ir a opciones xd
 carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
+[x] EN LOS MODALES DE RECOMENDACION, HABRIA QUE PONER UNA OPCION DE SACAR LA OPCION SELECCIONADA, SI POR EJ ELIJO QUESO EQUIVOCADAMENTE Y NO TENGO OTROS INGREDIENTES NO PUEDO BORRARLO
+[x] Filtrar sucursales por provincia antes de buscarlas, para no traer todas
 
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
@@ -122,11 +124,10 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 notFound; REVISAR ESTE TSX QUE TA RARO EL HEADER: esta en pages
 
 sucursales/ Pagina
-[x] Filtrar sucursales por provincia antes de buscarlas, para no traer todas
 
 header
 [AYUDA] Si como sucursal tocas en pedidos que te lleve a opciones con pedidos entrantes abierto AYUDA HICE ANDARLO PERO SE COJE EL LOGO
-[] Hacer andar el input de busqueda de productos en ambos headers
+[x] Hacer andar el input de busqueda de productos en ambos headers
 
 Login
 [] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
@@ -149,7 +150,6 @@ COMPRA:
 CARRITO:
 
 MODALES:
-[x] EN LOS MODALES DE RECOMENDACION, HABRIA QUE PONER UNA OPCION DE SACAR LA OPCION SELECCIONADA, SI POR EJ ELIJO QUESO EQUIVOCADAMENTE Y NO TENGO OTROS INGREDIENTES NO PUEDO BORRARLO
 
 OPCIONES:
 
@@ -192,7 +192,6 @@ SUCURSALES:
 [] Deja avanzar sin seleccionar país, provincia, depto. o localidad.
 [] Agregar un marcar todo para cuando seleccionar lugares para delivery.
 [] Error al cargar sucursal. Credenciales invalidas.
-
 
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]

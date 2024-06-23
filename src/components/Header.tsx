@@ -8,6 +8,7 @@ import { Cliente } from '../types/Cliente/Cliente';
 import { toast, Toaster } from 'sonner';
 import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { Sucursal } from '../types/Restaurante/Sucursal';
+import searchIcon from '../assets/icons/header-icono-busqueda.png'
 
 const Header = () => {
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
@@ -103,7 +104,7 @@ const Header = () => {
         <header id="inicio" className="header-all">
             <Toaster />
             <div className="menu container">
-                <a onClick={() => window.location.href = getBaseUrl()} className="logo"><img src={Logo} alt="" /></a>
+                <a onClick={() => window.location.href = getBaseUrl()} style={{cursor: 'pointer'}} className="logo"><img src={Logo} alt="" /></a>
 
                 <input type="checkbox" id="menu" />
                 <label htmlFor="menu">
@@ -111,13 +112,8 @@ const Header = () => {
                 </label>
 
                 <nav className="navbar">
-                    <input
-                        type="text"
-                        className='search-input'
-                        placeholder='¿Que deseas comer hoy?'
-                        onChange={(e) => setComidaBuscada(e.target.value)}
-                        style={{ display: location.pathname !== ':id/pago' ? 'none' : 'block' }} // Ocultar campo de búsqueda en /pago
-                    />
+                    <input type="text" className='search-input' placeholder='¿Que deseas comer hoy?' onChange={(e) => setComidaBuscada(e.target.value)} />
+                    <img className='menu-icono-search' src={searchIcon} alt="Carrito" onClick={buscarProducto} />
                     <img
                         className='menu-icono-search-header-normal'
                         src="../../src/assets/icons/header-icono-busqueda.png"
@@ -144,7 +140,7 @@ const Header = () => {
                                         )}
                                         <img
                                             className={`menu-icono ${isCartOpen ? 'cart-icon-open' : ''}`}
-                                            src="../src/assets/icons/header-icono-carrito.png"
+                                            src={searchIcon}
                                             alt="Carrito"
                                             onClick={handleCartClick}
                                         />

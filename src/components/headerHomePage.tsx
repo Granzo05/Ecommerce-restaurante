@@ -8,6 +8,7 @@ import { toast, Toaster } from 'sonner';
 import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { Empleado } from '../types/Restaurante/Empleado';
 import { Sucursal } from '../types/Restaurante/Sucursal';
+import searchIcon from '../assets/icons/header-icono-busqueda.png'
 
 interface HeaderHomePageProps {
     scrolled: boolean;
@@ -118,7 +119,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
         <header id='inicio' className={`header ${scrolled ? 'scrolled' : ''}`}>
             <Toaster />
             <div className="menu container">
-                <a onClick={() => window.location.href = getBaseUrl()} className="logo"><img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="" /></a>
+                <a onClick={() => window.location.href = getBaseUrl()} style={{cursor: 'pointer'}} className="logo"><img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="" /></a>
 
                 <input type="checkbox" id="menu" />
                 <label htmlFor="menu">
@@ -126,8 +127,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                 </label>
                 <nav className="navbar">
                     <input type="text" className='search-input' placeholder='¿Que deseas comer hoy?' onChange={(e) => setComidaBuscada(e.target.value)} />
-                    <img className='menu-icono-search' src="../src/assets/icons/header-icono-busqueda.png" alt="Carrito" onClick={handleCartClick} />
-
+                    <img className='menu-icono-search' src={searchIcon} alt="Carrito" onClick={buscarProducto} />
                     <ul>
                         <li><a href={`/${id ?? 1}/#inicio`}>Inicio</a></li>
                         <li><a href={`/${id ?? 1}/#servicios`}>Nosotros</a></li>
