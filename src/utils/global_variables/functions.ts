@@ -60,7 +60,7 @@ export const formatearFechaYYYYMMDD = (date: Date | undefined) => {
 };
 
 export const formatearFechaFinalYYYYMMDDHHMM = (date: Date) => {
-  const dia = date.getDate() -1 ;
+  const dia = date.getDate() - 1;
   const mes = date.getMonth() + 1;
   const año = date.getFullYear();
 
@@ -122,3 +122,16 @@ export const formatearFechaDDMMYYYYHHMMPromociones = (date: Date) => {
 
   return `las ${horas}:${minutos} del ${diaFormateado}/${mesFormateado}/${añoFormateado}`;
 };
+
+export default function decodeJWT(token: string) {
+  const parts = token.split(".");
+
+  if (parts.length !== 3) {
+    throw new Error("Token incorrecto");
+  }
+
+  const header = JSON.parse(atob(parts[0]));
+  const payload = JSON.parse(atob(parts[1]));
+
+  return { header, payload }
+}

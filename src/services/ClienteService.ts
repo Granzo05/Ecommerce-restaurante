@@ -77,7 +77,7 @@ export const ClienteService = {
 
             const data = await response.json();
 
-            if (data.id > 0) {
+            if (data.id != null || data.id > 0) {
                 let cliente = {
                     id: data.id,
                     nombre: data.nombre,
@@ -97,6 +97,51 @@ export const ClienteService = {
             }
 
             return 'Los datos ingresados no corresponden a una cuenta activa';
+
+
+        } catch (error) {
+            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+        }
+    },
+
+    getUserByEmail: async (email: string): Promise<boolean> => {
+        limpiarCredenciales();
+        try {
+            const response = await fetch(URL_API + 'cliente/email/' + email, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+            }
+
+            const data = await response.json();
+
+            if (data.id != null && data.id > 0) {
+                console.log('retorna true')
+                let cliente = {
+                    id: data.id,
+                    nombre: data.nombre,
+                    email: data.email,
+                    telefono: data.telefono,
+                    idSucursalRecomendada: data.idSucursalRecomendada
+                }
+
+                localStorage.setItem('usuario', JSON.stringify(cliente));
+
+                // Redirige al usuario al menú principal
+                if (cliente.idSucursalRecomendada > 0) {
+                    window.location.href = `/${cliente.idSucursalRecomendada}}`
+                } else {
+                    window.location.href = `/sucursales`
+                }
+                return true;
+            } else {
+                return false;
+            }
 
 
         } catch (error) {
