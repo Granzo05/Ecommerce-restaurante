@@ -80,6 +80,7 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
+          <button onClick={() => onSelectRol(new Roles())}>BORRAR OPCIÓN ELEGIDA</button>
           <table className="tabla-recomendaciones">
             <thead>
               <tr>

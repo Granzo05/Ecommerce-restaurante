@@ -57,6 +57,7 @@ const ModalFlotanteRecomendacionesPais: React.FC<{ onCloseModal: () => void, onS
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
+          <button onClick={() => onSelectPais(new Pais())}>BORRAR OPCIÓN ELEGIDA</button>
           <table className="tabla-recomendaciones">
             <thead>
               <tr>

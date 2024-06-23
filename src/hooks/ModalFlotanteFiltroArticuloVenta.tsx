@@ -65,7 +65,7 @@ const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void,
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <button className="modal-close" onClick={() => onSelectArticuloVenta(new ArticuloVenta())}>BORRAR OPCIÓN ELEGIDA</button>
+          <button onClick={() => onSelectArticuloVenta(new ArticuloVenta())}>BORRAR OPCIÓN ELEGIDA</button>
 
           <table className="tabla-recomendaciones">
             <thead>
