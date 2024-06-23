@@ -164,6 +164,10 @@ STOCK ENTRANTE:
 [] Validar que el botón de agregar te tome un solo click, porque me añadió dos veces al hacer click dos veces sin querer.
 [] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
 [] Ordenar la tabla por fecha ascendente.
+STOCK ENTRANTE:
+[] Filtros de fechas. Filtrar entre 2 fechas.
+
+
 
 
 MENÚ:
