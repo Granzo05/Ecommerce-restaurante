@@ -18,7 +18,7 @@
 #icon-lock {
     color: #2c2c2c;;
     position: absolute;
-    right: 0p;
+    right: 0px;
     margin-top: 4px;
     padding: 5px;
 }
@@ -254,4 +254,10 @@ a {
     .form-content .btn {
         font-size: 12px;
     }
+}
+
+.login-google{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

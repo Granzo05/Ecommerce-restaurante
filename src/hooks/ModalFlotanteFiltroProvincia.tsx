@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import '../styles/modalFlotante.css'
 import '../styles/modalCrud.css'
 
-const ModalFlotanteRecomendacionesProvincias: React.FC<{ onCloseModal: () => void, onSelectProvincia: (provincia: Provincia) => void}> = ({ onCloseModal, onSelectProvincia }) => {
+const ModalFlotanteRecomendacionesProvincias: React.FC<{ onCloseModal: () => void, onSelectProvincia: (provincia: Provincia) => void }> = ({ onCloseModal, onSelectProvincia }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -52,11 +52,15 @@ const ModalFlotanteRecomendacionesProvincias: React.FC<{ onCloseModal: () => voi
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar provincias &mdash;</h2>
-          <div className="inputBox">
+          <div className="btns-filtrado">
+            <button className="btn-agregar" onClick={() => onSelectProvincia(new Provincia())}>Eliminar opción elegida</button>
+
+          </div>
+          <div className="inputBox" style={{ marginBottom: '0px' }}>
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <button onClick={() => onSelectProvincia(new Provincia())}>BORRAR OPCIÓN ELEGIDA</button>
+
           <table className="tabla-recomendaciones">
             <thead>
               <tr>
