@@ -164,6 +164,10 @@ STOCK ENTRANTE:
 [] Validar que el botón de agregar te tome un solo click, porque me añadió dos veces al hacer click dos veces sin querer.
 [] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
 [] Ordenar la tabla por fecha ascendente.
+STOCK ENTRANTE:
+[] Filtros de fechas. Filtrar entre 2 fechas.
+
+
 
 
 MENÚ:
@@ -184,7 +188,7 @@ PROMOCIONES:
 [] No deja cargar promoción si no hay menú. 
 [] Error al editar la promoción.
 [] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
-[] Arreglar los filtros de fechas.
+[] Arreglar los filtros de fechas en este y en stock entrante.
 
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]

@@ -309,7 +309,7 @@ const StocksEntrantes = () => {
             <Toaster />
 
             {createVisible && (
-                <div className="btns-stock">
+                <div className="btns-empleados">
                     <button className="btn-agregar" onClick={() => handleAgregarStock()}> + Agregar stock entrante</button>
                 </div>)}
             <hr />
@@ -347,21 +347,22 @@ const StocksEntrantes = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado-fechas" style={{ marginRight: '10px' }}>
+                        <label style={{ fontWeight: 'bold' }}>Filtrar entre fecha:</label>
                         <input
                             type="date"
                             required
                             onChange={(e) => filtrarFechas(e.target.value, '')}
                         />
-                        <span>Filtrar por fecha inicial</span>
                     </div>
-                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado-fechas" style={{ marginRight: '10px' }}>
+                        <label style={{ fontWeight: 'bold' }}>y fecha:</label>
+
                         <input
                             type="date"
                             required
                             onChange={(e) => filtrarFechas('', e.target.value)}
                         />
-                        <span>Filtrar por fecha final</span>
                     </div>
                     <div className="inputBox-filtrado">
                         <input
@@ -370,7 +371,10 @@ const StocksEntrantes = () => {
                             onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
-                        <select name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
+
+                    </div>
+                    <div className="inputBox-filtrado" style={{ marginLeft: '-15px' }}>
+                        <select id="signos" name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
                             <option value=">">&gt;</option>
                             <option value="<">&lt;</option>
                             <option value=">=">&gt;=</option>
@@ -388,7 +392,7 @@ const StocksEntrantes = () => {
                     <table>
                         <thead>
                             <tr>
-                                <th>Fecha</th>
+                                <th>Fecha de entrada</th>
                                 <th>Costo total</th>
                                 <th>Detalles</th>
                                 <th>Acciones</th>
