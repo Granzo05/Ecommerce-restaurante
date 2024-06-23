@@ -12,7 +12,6 @@ import { DESACTIVAR_PRIVILEGIOS, getBaseUrl, limpiarCredenciales } from '../util
 import { Empresa } from '../types/Restaurante/Empresa';
 import ModalFlotante from '../components/ModalFlotante';
 import PedidosEnCamino from '../components/Pedidos/PedidosEnCamino';
-import { Roles } from '../types/Restaurante/Roles';
 import RolesEmpleado from '../components/Roles/Roles';
 import PrivilegiosEmpleados from '../components/Privilegios/Privilegios';
 import StocksEntregado from '../components/StockEntrante/StockEntregado';
@@ -36,7 +35,9 @@ const Empleados = lazy(() => import('../components/Empleados/Empleados'));
 const Menus = lazy(() => import('../components/Menus/Menus'));
 
 const Opciones = () => {
+    const { opcionElegida } = useParams();
     const [opcionSeleccionada, setOpcionSeleccionada] = useState<number>(0);
+
     const [isVisible, setVisible] = useState<boolean>(true);
     const [pedidosVisible, setPedidosVisible] = useState(false);
     const [stockVisible, setStockVisible] = useState(false);
@@ -75,6 +76,14 @@ const Opciones = () => {
     if (((sucursal && id) && (sucursal.id > 0 && parseInt(id) > 0) && sucursal.id !== parseInt(id) || ((id && empleado) && parseInt(id) !== empleado.sucursales[0].id))) {
         window.location.href = getBaseUrl() + '/opciones';
     }
+
+    useEffect(() => {
+        if (opcionElegida === undefined) {
+            setOpcionSeleccionada(0);
+        } else {
+            setOpcionSeleccionada(parseInt(opcionElegida));
+        }
+    }, [opcionElegida]);
 
     const toggleStockVisibility = () => {
         setStockVisible(!stockVisible);
@@ -308,7 +317,7 @@ const Opciones = () => {
             )}
             <div className={`opciones-menu ${menuVisible ? 'hidden' : 'visible'}`}>
                 <div className="title-header">
-                    <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" className="logo-opciones" onClick={() => window.location.href = 'http://localhost:5173/opciones'} />
+                    <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" className="logo-opciones" onClick={() => window.location.href = getBaseUrl()} />
                 </div>
 
                 <hr />

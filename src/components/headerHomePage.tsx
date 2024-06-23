@@ -257,6 +257,29 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                         ) : (
                             <li className='btn-iniciar-sesion'><a onClick={handleLoginClick}>Iniciar sesión</a></li>
                         )}
+                        {sucursal && isAccountOpen && (
+                            <div className="account-dropdown">
+                                <h4>Preferencias de cuenta</h4>
+                                <button className="close-cart" onClick={handleCloseCart}>
+                                    X<strong>(cerrar)</strong>
+                                </button>
+                                <p className="nombre-email-usuario">- {sucursal.nombre} -</p>
+                                <ul className="preferences-list">
+                                    <li>
+                                        <button onClick={() => window.location.href = getBaseUrl() + '/opciones'}>Opciones</button>
+                                    </li>
+                                    <li>
+                                        <button onClick={() => window.location.href = getBaseUrl() + `/opciones/${1}`}>Pedidos entrantes</button>
+                                    </li>
+                                    <li>
+                                        <button onClick={() => window.location.href = getBaseUrl() + `/opciones/${3}`}>Pedidos para entregar</button>
+                                    </li>
+                                </ul>
+                                <div className="button-logout-div">
+                                    <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>
+                                </div>
+                            </div>
+                        )}
                     </ul>
                 </nav>
             </div>

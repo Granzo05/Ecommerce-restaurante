@@ -119,12 +119,15 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
 [] El editar menú no borra los ingredientes.
 
+notFound; REVISAR ESTE TSX QUE TA RARO EL HEADER: esta en pages
 
 sucursales/ Pagina
 [x] Filtrar sucursales por provincia antes de buscarlas, para no traer todas
 
 header
-[] Si como sucursal tocas en pedidos que te lleve a opciones con pedidos entrantes abierto
+[] Si como sucursal tocas en pedidos que te lleve a opciones con pedidos entrantes abierto AYUDA HICE ANDARLO PERO ME TIRA UN OPCIONES SIN CSS, PODRIAS VER QUE ONDA PORFIS.
+ABRI DESDE EL LOGO DE USUARIO DEL HEADER (SIENDO SUCURSAL) EL PEDIDOS ENTRANTES O PARA ENTREGAR Y SE COJE TODO EL OPCIONES
+[] Hacer andar el input de busqueda de productos en ambos headers
 
 Login
 [] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email

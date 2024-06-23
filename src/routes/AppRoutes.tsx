@@ -46,6 +46,8 @@ const AppRoutes: React.FC = () => {
 
           <Route path="/:id/opciones" element={<Opciones />} />
 
+          <Route path="/:id/opciones/:opcionElegida" element={<Opciones />} />
+
           <Route path="/cliente" element={<OpcionesCliente />}>
             <Route path="pedidos-pendientes" element={<PedidosPendientes />} />
             <Route path="pedidos-realizados" element={<PedidosRealizados />} />

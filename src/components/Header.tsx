@@ -304,7 +304,10 @@ const Header = () => {
                                         <button onClick={() => window.location.href = getBaseUrl() + '/opciones'}>Opciones</button>
                                     </li>
                                     <li>
-                                        <button onClick={() => window.location.href = getBaseUrl() + '/opciones'}>Pedidos</button>
+                                        <button onClick={() => window.location.href = getBaseUrl() + `/opciones/${1}`}>Pedidos entrantes</button>
+                                    </li>
+                                    <li>
+                                        <button onClick={() => window.location.href = getBaseUrl() + `/opciones/${3}`}>Pedidos para entregar</button>
                                     </li>
                                 </ul>
                                 <div className="button-logout-div">
