@@ -19,6 +19,7 @@ const PedidosEnCamino = () => {
     }, []);
 
     const buscarPedidos = async () => {
+        setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.EN_CAMINO)
             .then(data => {
                 setPedidos(data);

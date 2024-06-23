@@ -27,6 +27,7 @@ const Empleados = () => {
     }, []);
 
     const fetchEmpleados = async () => {
+        setDatosFiltrados([]);
         try {
             let data = await EmpleadoService.getEmpleados();
             setEmpleados(data);

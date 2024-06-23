@@ -55,6 +55,7 @@ const PedidosParaEntregar = () => {
     const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
 
     const buscarPedidos = async () => {
+        setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.COCINADOS)
             .then(data => {
                 setPedidos(data);

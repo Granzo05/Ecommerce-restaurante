@@ -10,7 +10,6 @@ import { MedidaService } from "../../services/MedidaService";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
-import ProductosPorCategoria from "../../pages/menu";
 
 const Medidas = () => {
     const [medidas, setMedidas] = useState<Medida[]>([]);
@@ -29,6 +28,7 @@ const Medidas = () => {
     }, []);
 
     const fetchMedidas = async () => {
+        setDatosFiltrados([]);
         try {
             MedidaService.getMedidas()
                 .then(data => {

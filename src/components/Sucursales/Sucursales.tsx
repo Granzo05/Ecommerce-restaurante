@@ -32,6 +32,7 @@ const Sucursales = () => {
     }, [sucursales]);
 
     const fetchSucursales = async () => {
+        setDatosFiltrados([]);
         EmpresaService.getSucursales()
             .then(data => {
                 setSucursales(data);

@@ -113,6 +113,9 @@ NO ANDA EDITAR EMPRESA[x]
 carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [x] EN LOS MODALES DE RECOMENDACION, HABRIA QUE PONER UNA OPCION DE SACAR LA OPCION SELECCIONADA, SI POR EJ ELIJO QUESO EQUIVOCADAMENTE Y NO TENGO OTROS INGREDIENTES NO PUEDO BORRARLO
 [x] Filtrar sucursales por provincia antes de buscarlas, para no traer todas
+[x] Si elijo COCINERO, cargarle previamente los permisos logicos que tendrian para que ya esten marcados en el paso siguiente
+[x] Hacer andar el input de busqueda de productos en ambos headers
+[x] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
 
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
@@ -127,14 +130,11 @@ sucursales/ Pagina
 
 header
 [AYUDA] Si como sucursal tocas en pedidos que te lleve a opciones con pedidos entrantes abierto AYUDA HICE ANDARLO PERO SE COJE EL LOGO
-[x] Hacer andar el input de busqueda de productos en ambos headers
 
 Login
-[x] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
 [] Hacer la recuperacion de contraseña
 
 Permisos: 
-[x] Si elijo COCINERO, cargarle previamente los permisos logicos que tendrian para que ya esten marcados en el paso siguiente
 
 PEDIDOS FALTA PROBAR:
 [] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
@@ -147,6 +147,9 @@ HORARIOS:
 COMPRA:
 [] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.
 
+CLIENTE:
+[] HACER TODO LO DEL PERFIL DEL CLIENTE Y LOS DOMICILIOS
+
 CARRITO:
 
 MODALES:
@@ -157,13 +160,14 @@ CATEGORÍA:
 
 EMPLEADOS:
 [] Hay que pasar el CUIL a string, asi poder usar sus '-'.
+[] Acomodar los privilegios del editar empleado que se ven como taban original sin los cuadrados
 
 STOCK:
 [] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST que avise que queda poco
 
 STOCK ENTRANTE:
 [] Validar que el botón de agregar te tome un solo click, porque me añadió dos veces al hacer click dos veces sin querer.
-[] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
+[x] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
 [] Ordenar la tabla por fecha ascendente.
 STOCK ENTRANTE:
 [] Filtros de fechas. Filtrar entre 2 fechas.

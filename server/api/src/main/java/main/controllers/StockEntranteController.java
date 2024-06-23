@@ -75,14 +75,16 @@ public class StockEntranteController {
     @Transactional
     @PostMapping("/sucursal/{idSucursal}/StockEntrante/create")
     public ResponseEntity<String> crearStock(@RequestBody StockEntrante stockDetail, @PathVariable("idSucursal") long id) {
-        Optional<StockEntrante> stockEntranteDB = stockEntranteRepository.findByIdSucursalAndFecha(id, stockDetail.getFechaLlegada());
+        List<StockEntrante> stockEntranteDB = stockEntranteRepository.findByIdSucursalAndFecha(id, stockDetail.getFechaLlegada());
         // Verificar si existe un pedido para la misma fecha y comparar los detalles
-        if (stockEntranteDB.isPresent()) {
-            StockEntrante stock = stockEntranteDB.get();
-            if (compararStocks(stock, stockDetail)) {
+        if (stockEntranteDB.size() > 1) {
+            // Si devuelve true es porque es el mismo pero repetido
+            if (compararStocks(stockEntranteDB, stockDetail)) {
                 return ResponseEntity.badRequest().body("Ya hay un pedido cargado para esa fecha con los mismos detalles");
             }
         }
+
+        List<String> productosStockEntranteMayorAlMaximo = new ArrayList<>();
 
         stockDetail.setEstado("PENDIENTES");
 
@@ -111,6 +113,9 @@ public class StockEntranteController {
 
                 // Comparamos el precio almacenado de compra con la nueva compra
                 if(stockArticulo.isPresent()) {
+                    // Verificamos si el posible stock entrante supera los maximos
+                    if(detalle.getCantidad() + stockArticulo.get().getCantidadActual() >= stockArticulo.get().getCantidadMaxima()) productosStockEntranteMayorAlMaximo.add(articulo.getNombre());
+
                     // Si los precios son distintos, asignamos el precio de compra nuevo para poder calcular mejor el costo de los menus y no perder plata
                     if(stockArticulo.get().getPrecioCompra() != detalle.getCostoUnitario()) {
                         stockArticulo.get().setPrecioCompra(detalle.getCostoUnitario());
@@ -120,6 +125,7 @@ public class StockEntranteController {
                 }
             } else if (detalle.getIngrediente() != null && detalle.getIngrediente().getNombre().length() > 2) {
                 Ingrediente ingrediente = ingredienteRepository.findByNameAndIdSucursal(detalle.getIngrediente().getNombre(), id).get();
+
                 nuevoDetalle.setIngrediente(ingrediente);
 
                 // Buscamos el stock almacenado del articulo
@@ -127,6 +133,8 @@ public class StockEntranteController {
 
                 // Comparamos el precio almacenado de compra con la nueva compra
                 if(stockIngrediente.isPresent()) {
+                    if(detalle.getCantidad() + stockIngrediente.get().getCantidadActual() >= stockIngrediente.get().getCantidadMaxima()) productosStockEntranteMayorAlMaximo.add(ingrediente.getNombre());
+
                     // Si los precios son distintos, asignamos el precio de compra nuevo para poder calcular mejor el costo de los menus y no perder plata
                     if(stockIngrediente.get().getPrecioCompra() != detalle.getCostoUnitario()) {
                         stockIngrediente.get().setPrecioCompra(detalle.getCostoUnitario());
@@ -149,30 +157,52 @@ public class StockEntranteController {
         // Guardar el StockEntrante y sus detalles
         stockEntranteRepository.save(stockDetail);
 
-        return ResponseEntity.ok("El pedido fue cargado con éxito");
+        if(productosStockEntranteMayorAlMaximo.isEmpty()) {
+            return ResponseEntity.ok("El pedido fue cargado con éxito");
+        } else {
+            StringBuilder mensaje = new StringBuilder("Stock entrante guardado, tenga en cuenta que los siguientes productos superan sus máximos en almacenamiento: \n");
+
+            for(String producto: productosStockEntranteMayorAlMaximo) {
+                mensaje.append("\n *").append(producto).append("\n");
+            }
+
+            return ResponseEntity.ok(mensaje.toString());
+        }
     }
 
 
     // Método auxiliar para comparar los detalles del stock
-    private boolean compararStocks(StockEntrante stockDB, StockEntrante stockEntrante) {
-        if (stockDB.getDetallesStock().size() != stockEntrante.getDetallesStock().size()) {
-            return false;
-        }
+    private boolean compararStocks(List<StockEntrante> stocksDB, StockEntrante stockEntrante) {
+        for (StockEntrante stockDB : stocksDB) {
+            // Si las listas de detalles tienen tamaños diferentes, no son iguales
+            if (stockDB.getDetallesStock().size() != stockEntrante.getDetallesStock().size()) {
+                continue;
+            }
 
-        for (DetalleStock detalleDB : stockDB.getDetallesStock()) {
-            boolean encontrado = false;
-            for (DetalleStock detalleEntrante : stockEntrante.getDetallesStock()) {
-                if (detalleDB.equals(detalleEntrante)) {
-                    encontrado = true;
+            boolean todosDetallesIguales = true;
+
+            for (DetalleStock detalleDB : stockDB.getDetallesStock()) {
+                boolean encontrado = false;
+                for (DetalleStock detalleEntrante : stockEntrante.getDetallesStock()) {
+                    if (detalleDB.equals(detalleEntrante)) {
+                        encontrado = true;
+                        break;
+                    }
+                }
+                if (!encontrado) {
+                    todosDetallesIguales = false;
                     break;
                 }
             }
-            if (!encontrado) {
-                return false;
+
+            // Si se encontró un stock con todos los detalles iguales, devuelve true
+            if (todosDetallesIguales) {
+                return true;
             }
         }
 
-        return true;
+        // Si ningún stock en la lista coincidió con el stockEntrante, devuelve false
+        return false;
     }
 
     @CrossOrigin

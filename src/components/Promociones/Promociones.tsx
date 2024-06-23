@@ -29,6 +29,7 @@ const Promociones = () => {
     }, []);
 
     function buscarPromociones() {
+        setDatosFiltrados([]);
         PromocionService.getPromociones()
             .then(data => {
                 setPromociones(data);

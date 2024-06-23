@@ -15,6 +15,7 @@ const PedidosEntregados = () => {
     }, []);
 
     const buscarPedidos = async () => {
+        setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.ENTREGADOS)
             .then(data => {
                 setPedidos(data);

@@ -3,14 +3,14 @@ import ModalCrud from "../ModalCrud";
 import '../../styles/stock.css';
 import { CategoriaService } from "../../services/CategoriaService";
 import { Categoria } from '../../types/Ingredientes/Categoria';
-import EliminarCategoria from "../Cliente/ClientesSucursales/EliminarCliente";
 import EditarCategoria from "./EditarCategoria";
 import AgregarCategoria from "./AgregarCategoria";
-import ActivarCategoria from "../Cliente/ClientesSucursales/ActivarCliente";
 import '../../styles/categorias.css'
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
+import ActivarCategoria from "./ActivarCategoria";
+import EliminarCategoria from "./EliminarCategoria";
 
 const Categorias = () => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -29,6 +29,7 @@ const Categorias = () => {
     }, []);
 
     const fetchCategorias = async () => {
+        setDatosFiltrados([]);
         try {
             CategoriaService.getCategorias()
                 .then(data => {

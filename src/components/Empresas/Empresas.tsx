@@ -27,6 +27,7 @@ const Empresas = () => {
     }, [empresas]);
 
     const fetchEmpresas = async () => {
+        setDatosFiltrados([]);
         EmpresaService.getEmpresas()
             .then(data => {
                 setEmpresas(data);
@@ -229,7 +230,7 @@ const Empresas = () => {
         return cuilFormateado;
     };
 
-    
+
 
 
 

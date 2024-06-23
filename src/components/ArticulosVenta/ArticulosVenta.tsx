@@ -79,6 +79,7 @@ const ArticuloVentas = () => {
     }
 
     const fetchArticuloVenta = async () => {
+        setDatosFiltrados([]);
         try {
             ArticuloVentaService.getArticulos()
                 .then(data => {

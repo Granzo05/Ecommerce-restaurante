@@ -106,7 +106,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
       stock.id = stockOriginal.id;
       stock.borrado = 'NO';
 
-      if(stockOriginal.articuloVenta) stock.articuloVenta = stockOriginal.articuloVenta;
+      if (stockOriginal.articuloVenta) stock.articuloVenta = stockOriginal.articuloVenta;
 
       toast.promise(StockArticuloVentaService.updateStock(stock), {
         loading: 'Editando stock del artículo...',

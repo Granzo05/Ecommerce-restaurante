@@ -28,6 +28,7 @@ const RolesEmpleado = () => {
     }, []);
 
     const fetchRoles = async () => {
+        setDatosFiltrados([]);
         try {
             RolesService.getRoles()
                 .then(data => {
