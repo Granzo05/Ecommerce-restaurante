@@ -267,7 +267,7 @@ const Sucursales = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado">
                         <input
                             type="text"
                             required
