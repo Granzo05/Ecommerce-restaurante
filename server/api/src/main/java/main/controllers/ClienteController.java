@@ -90,7 +90,23 @@ public class ClienteController {
 
             return cliente.get();
 
-        } else return null;
+        } else return new Cliente();
+    }
+
+    @CrossOrigin
+    @GetMapping("/cliente/email/{email}")
+    public Cliente getUser(@PathVariable("email") String email) throws Exception {
+        Optional<Cliente> cliente = clienteRepository.findByEmail(email);
+
+        if (cliente.isPresent()) {
+            // Buscamos la sucursal más cercana a los domicilios existentes del usuario
+            for (Domicilio domicilio : cliente.get().getDomicilios()) {
+                if(domicilio.getBorrado() == "NO") cliente.get().setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
+            }
+
+            return cliente.get();
+
+        } else return new Cliente();
     }
 
     @CrossOrigin
@@ -102,7 +118,7 @@ public class ClienteController {
             return null;
         }
 
-        List<Domicilio> domicilios = domicilioRepository.findByIdCliente(cliente.get().getId());
+        List<Domicilio> domicilios = domicilioRepository.findByIdClienteNotBorrado(cliente.get().getId());
 
         for (Domicilio domicilio : domicilios) {
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));

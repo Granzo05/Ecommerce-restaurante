@@ -121,11 +121,10 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 
 
 sucursales/ Pagina
-[] Filtrar sucursales por provincia antes de buscarlas, para no traer todas
+[x] Filtrar sucursales por provincia antes de buscarlas, para no traer todas
 
 header
 [] Si como sucursal tocas en pedidos que te lleve a opciones con pedidos entrantes abierto
-
 
 Login
 [] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
@@ -167,9 +166,6 @@ STOCK ENTRANTE:
 STOCK ENTRANTE:
 [] Filtros de fechas. Filtrar entre 2 fechas.
 
-
-
-
 MENÚ:
 
 ARTÍCULOS:
@@ -208,10 +204,7 @@ loginCliente: FALTA HACER VALIDAR LA RECUPERACION DE LA CONTRASEÑA. FALTA VALID
 loginNegocio: FALTA VALIDAR EN EL RECUPERO DE CONTRA, QUE EL CORREO SEA CORRECTO Y ESTE DENTRO DE LA BASE DE DATOS.[]
 opcionesCliente: FALTA MOSTRAR DOMICILIOS DEL USUARIO Y VALIDAR CAMBIOS DE LA CUENTA EN LA BASE DE DATOS.[]
 opciones: VALIDACIONES Y TOAST. FILTROS DE LAS TABLAS. RESPONSIVE.[]
-
 homePage: IMAGENES A LAS CATEGORIAS.[]
-
-
 
 Pruebas
 [x] Carga empresa [] Probar validación

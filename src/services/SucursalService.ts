@@ -102,6 +102,27 @@ export const SucursalService = {
         }
     },
 
+    getSucursalesByProvincia: async (provincia: string): Promise<Sucursal[]> => {
+        try {
+            const response = await fetch(URL_API + 'sucursales/provincia/' + provincia, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
     getClientes: async (): Promise<Cliente[]> => {
         try {
             const response = await fetch(URL_API + 'clientes/' + sucursalId(), {

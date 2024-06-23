@@ -14,8 +14,9 @@ import ModalFlotanteRecomendacionesDepartamentos from '../hooks/ModalFlotanteFil
 import ModalFlotanteRecomendacionesLocalidades from '../hooks/ModalFlotanteFiltroLocalidades';
 import HeaderLogin from '../components/headerLogin';
 import ModalFlotanteRecomendacionesPais from '../hooks/ModalFlotanteFiltroPais';
-import { formatearFechaYYYYMMDD } from '../utils/global_variables/functions';
+import decodeJWT, { formatearFechaYYYYMMDD } from '../utils/global_variables/functions';
 import { useNavigate } from 'react-router-dom'; // Importa useHistory desde React Route
+import { GoogleLogin } from '@react-oauth/google';
 
 const LoginCliente = () => {
     const [step, setStep] = useState(1);
@@ -49,6 +50,14 @@ const LoginCliente = () => {
     const [telefono, setTelefono] = useState('');
 
     const handleIniciarSesionUsuario = () => {
+        if (email.length === 0) {
+            toast.error('Debe ingresar una email');
+            return;
+        } else if (contraseña.length === 0) {
+            toast.error('Debe ingresar una contraseña');
+            return;
+        }
+
         ClienteService.getUser(email, contraseña);
     };
 
@@ -236,13 +245,11 @@ const LoginCliente = () => {
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
                             <InputComponent disabled={inputPais.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
                             {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
-
                         </div>
                         <div>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
                             <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
                             {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
-
                         </div>
                         <div>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
@@ -277,10 +284,16 @@ const LoginCliente = () => {
         }
     };
 
-
+    async function buscarCliente(email: string) {
+        try {
+            return await ClienteService.getUserByEmail(email);
+        } catch (error) {
+            console.error('Error buscando cliente:', error);
+            return false;
+        }
+    }
 
     return (
-
         <>
             <HeaderLogin></HeaderLogin>
             <Toaster />
@@ -292,7 +305,30 @@ const LoginCliente = () => {
                     <div className="box">
                         <h3>- BIENVENIDO -</h3>
                         <p id='subtitle'>¡Si ya tienes una cuenta, inicia sesión con tus datos!</p>
-                        <p id='subtitle'>o inicia sesión con: <img id='icon-gmail' src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new" /></p>
+                        <GoogleLogin
+                            onSuccess={async (credentialResponse) => {
+                                if (credentialResponse.credential) {
+                                    const { payload } = decodeJWT(credentialResponse.credential);
+
+                                    const cliente = await buscarCliente(payload.email);
+                                    // Si no ha creado sesión previamente lo hacemos registrarse
+
+                                    if (!cliente) {
+                                        toast.info('Necesitamos unos datos extras antes de finalizar');
+
+                                        setNombre(payload.given_name);
+                                        setApellido(payload.family_name);
+                                        setEmail(payload.email);
+                                        mostrarSeccion('crearCuenta');
+                                    } else {
+                                        toast.info('Iniciando sesión');
+                                    }
+                                }
+                            }}
+                            onError={() => {
+                                console.log('Login cancelado');
+                            }}
+                        />
                         <form action="">
                             <div className="inputBox">
                                 <input type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
@@ -338,11 +374,10 @@ const LoginCliente = () => {
             <section className="form-main" style={{ display: mostrarCrearCuenta ? '' : 'none' }}>
                 <div className="form-content">
                     <div className="box">
-                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a href=""><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
+                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a style={{ cursor: 'pointer' }}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
                         <h3>- CREAR UNA CUENTA -</h3>
-                        <p id='subtitle'>o registrate con: <img id='icon-gmail' src="https://img.icons8.com/color/48/gmail-new.png" alt="gmail-new" /></p>
                         {renderStep()}
-                        <p id='subtitle'>¿Ya tienes una cuenta?&nbsp;<a href="" className='gradient-text' onClick={() => mostrarSeccion('iniciarSesion')}>Iniciar sesión</a></p>
+                        <p id='subtitle'>¿Ya tienes una cuenta?&nbsp;<a style={{ cursor: 'pointer' }} className='gradient-text' onClick={() => mostrarSeccion('iniciarSesion')}>Iniciar sesión</a></p>
                     </div>
                 </div>
             </section>
