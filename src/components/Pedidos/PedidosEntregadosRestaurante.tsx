@@ -82,6 +82,19 @@ const PedidosEntregados = () => {
         }
     }
 
+    function filtrarId(filtro: number) {
+        if (filtro > 0) {
+            const filtradas = pedidosEntregados.filter(recomendacion =>
+                recomendacion.id === filtro
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(pedidosEntregados.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(pedidosEntregados.length / cantidadProductosMostrables));
+        }
+    }
+
     function filtrarMenus(filtro: string) {
         if (filtro.length > 0) {
             let filtradas = pedidosEntregados.filter(recomendacion =>
@@ -126,6 +139,14 @@ const PedidosEntregados = () => {
                 </div>
 
                 <div className="filtros-datos">
+                <div className="inputBox-filtrado">
+                        <input
+                            type="text"
+                            required
+                            onChange={(e) => filtrarId(parseInt(e.target.value))}
+                        />
+                        <span>Filtrar pedido por ID</span>
+                    </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"

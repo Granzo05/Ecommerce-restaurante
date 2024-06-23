@@ -129,6 +129,19 @@ const PedidosEntrantes = () => {
         buscarPedidos();
     }
 
+    function filtrarId(filtro: number) {
+        if (filtro > 0) {
+            const filtradas = pedidosEntrantes.filter(recomendacion =>
+                recomendacion.id === filtro
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(pedidosEntrantes.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(pedidosEntrantes.length / cantidadProductosMostrables));
+        }
+    }
+
     useEffect(() => {
         checkPrivilegies();
     }, []);
@@ -274,6 +287,14 @@ const PedidosEntrantes = () => {
                 </div>
 
                 <div className="filtros-datos">
+                    <div className="inputBox-filtrado">
+                        <input
+                            type="text"
+                            required
+                            onChange={(e) => filtrarId(parseInt(e.target.value))}
+                        />
+                        <span>Filtrar pedido por ID</span>
+                    </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"

@@ -102,7 +102,7 @@ Permisos:
 [] Si elijo COCINERO, cargarle previamente los permisos logicos que tendrian para que ya esten marcados en el paso siguiente
 
 PEDIDOS:
-[] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
+[x] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
     los pedidos en general, por lo cual habrá una pantalla con el listado de todos los pedidos, los cuales se podrán filtran según su estado 
     (por ejemplo, mediante un combobox) y también se podrán buscar mediante su id (mediante un cuadro de búsqueda).
 

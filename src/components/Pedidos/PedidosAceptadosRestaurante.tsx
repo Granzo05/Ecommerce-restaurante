@@ -150,6 +150,19 @@ const PedidosAceptados = () => {
         }
     }
 
+    function filtrarId(filtro: number) {
+        if (filtro > 0) {
+            const filtradas = pedidosAceptados.filter(recomendacion =>
+                recomendacion.id === filtro
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(pedidosAceptados.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(pedidosAceptados.length / cantidadProductosMostrables));
+        }
+    }
+
     useEffect(() => {
         if (pedidosAceptados.length > 0) {
             setDatosFiltrados(pedidosAceptados.slice(indexPrimerProducto, indexUltimoProducto));
@@ -180,6 +193,14 @@ const PedidosAceptados = () => {
                 </div>
 
                 <div className="filtros-datos">
+                    <div className="inputBox-filtrado">
+                        <input
+                            type="text"
+                            required
+                            onChange={(e) => filtrarId(parseInt(e.target.value))}
+                        />
+                        <span>Filtrar por ID</span>
+                    </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
                             <option value={0}>Seleccionar tipo de envío (Todos)</option>

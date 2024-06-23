@@ -87,6 +87,19 @@ const PedidosParaEntregar = () => {
         buscarPedidos();
     }
 
+    function filtrarId(filtro: number) {
+        if (filtro > 0) {
+            const filtradas = pedidosEntregables.filter(recomendacion =>
+                recomendacion.id === filtro
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(pedidosEntregables.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(pedidosEntregables.length / cantidadProductosMostrables));
+        }
+    }
+
     async function handleCancelarPedido(pedido: Pedido) {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
             loading: 'Rechazando el pedido...',
@@ -217,6 +230,14 @@ const PedidosParaEntregar = () => {
                 </div>
 
                 <div className="filtros-datos">
+                    <div className="inputBox-filtrado">
+                        <input
+                            type="text"
+                            required
+                            onChange={(e) => filtrarId(parseInt(e.target.value))}
+                        />
+                        <span>Filtrar pedido por ID</span>
+                    </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
