@@ -184,7 +184,7 @@ PROMOCIONES:
 [] No deja cargar promoción si no hay menú. 
 [] Error al editar la promoción.
 [] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
-[] Arreglar los filtros de fechas.
+[] Arreglar los filtros de fechas en este y en stock entrante.
 
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]

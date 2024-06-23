@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useState } from "react";
 import EliminarStock from "./EliminarStock";
 import EditarStock from "./EditarStock";
 import '../../styles/stock.css';
@@ -14,6 +14,7 @@ import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
+import Ingredientes from "../Ingrediente/Ingredientes";
 
 
 const Stocks = () => {
@@ -239,6 +240,36 @@ const Stocks = () => {
         getIngredientes();
     };
 
+    const [filtroVenta, setFiltroVenta] = useState('');
+
+    useEffect(() => {
+        filtrarVentas(filtroVenta);
+    }, [filtroVenta, stocks]);
+
+    const filtrarVentas = (filtro: string) => {
+        let filtradas = [];
+        if (filtro === 'venta') {
+            filtradas = stocks.filter(recomendacion =>
+                !recomendacion.ingrediente || recomendacion.ingrediente.nombre.length === 0
+            );
+        } else if (filtro === 'no-venta') {
+            filtradas = stocks.filter(recomendacion =>
+                recomendacion.ingrediente && recomendacion.ingrediente.nombre.length > 0
+            );
+        } else {
+            filtradas = stocks.slice(indexPrimerProducto, indexUltimoProducto);
+        }
+
+        setDatosFiltrados(filtradas);
+        setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+    };
+
+    const handleFiltroChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+        setFiltroVenta(e.target.value);
+    };
+
+
+
     return (
         <div className="opciones-pantallas">
 
@@ -249,7 +280,7 @@ const Stocks = () => {
 
             </div>
             {createVisible && (
-                <div className="btns-stock">
+                <div className="btns-empleados">
                     <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}>+ Agregar stock ingrediente</button>
                     <button className="btn-agregar" onClick={() => handleAgregarArticulo()}>+ Agregar stock articulo</button>
                 </div>)}
@@ -306,12 +337,22 @@ const Stocks = () => {
                             onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
-                        <select name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
+
+                    </div>
+                    <div className="inputBox-filtrado" style={{ marginLeft: '-15px', marginRight: '10px' }}>
+                        <select id="signos" name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
                             <option value=">">&gt;</option>
                             <option value="<">&lt;</option>
                             <option value=">=">&gt;=</option>
                             <option value="<=">&lt;=</option>
                             <option value="=">=</option>
+                        </select>
+                    </div>
+                    <div className="inputBox-filtrado">
+                        <select name="venta?" onChange={handleFiltroChange}>
+                            <option value="">Filtrar por venta (Todos)</option>
+                            <option value="venta">Para venta</option>
+                            <option value="no-venta">Para no venta</option>
                         </select>
                     </div>
                 </div>

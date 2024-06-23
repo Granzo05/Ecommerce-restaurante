@@ -309,7 +309,7 @@ const StocksEntrantes = () => {
             <Toaster />
 
             {createVisible && (
-                <div className="btns-stock">
+                <div className="btns-empleados">
                     <button className="btn-agregar" onClick={() => handleAgregarStock()}> + Agregar stock entrante</button>
                 </div>)}
             <hr />
@@ -348,6 +348,7 @@ const StocksEntrantes = () => {
 
                 <div className="filtros-datos">
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <label style={{ fontWeight: 'bold' }}>Fecha inicio:</label>
                         <input
                             type="date"
                             required
