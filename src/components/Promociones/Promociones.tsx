@@ -10,6 +10,7 @@ import { formatearFechaDDMMYYYY, formatearFechaYYYYMMDDHHMM } from "../../utils/
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
+import onConfirm from './EliminarPromocion';
 
 const Promociones = () => {
     const [promociones, setPromociones] = useState<Promocion[]>([]);
@@ -235,6 +236,67 @@ const Promociones = () => {
         // Convierte la diferencia en milisegundos a días
         const segundos = 1000 * 60 * 60 * 24;
         return Math.ceil(diasTotales / segundos);
+
+
+    }
+
+    function tiempoRestante(fechaHasta: string | number | Date) {
+        // Convertir la fechaHasta a un objeto Date
+        const fechaHastaDate = new Date(fechaHasta);
+        const hoy = new Date();
+
+        // Calcular la diferencia en milisegundos
+        const diferencia = fechaHastaDate.getTime() - hoy.getTime();
+
+        // Calcular días, horas, minutos y segundos restantes
+        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+
+
+        if (diferencia > 0) {
+            // Si diferencia es positiva, falta tiempo para que empiece la promoción
+            if (dias > 0) {
+                return `Faltan ${dias} días`;
+            } else if (horas > 0) {
+                return `Faltan ${horas} horas`;
+            } else if (minutos > 0) {
+                return `Faltan ${minutos} minutos`;
+            } else {
+                return `Faltan ${segundos} segundos`;
+            }
+        } else if (diferencia < 0) {
+            if (dias > 0) {
+                return `Quedan ${dias} días`;
+            } else if (horas > 0) {
+                return `Quedan ${horas} horas`;
+            } else if (minutos > 0) {
+                return `Quedan ${minutos} minutos`;
+            } else if (segundos > 0) {
+                return `Quedan ${segundos} segundos`;
+            } else if (segundos < 0) {
+                return 'La promoción ha caducado'
+            }
+        } else {
+            // Si diferencia es cero, se está en el momento exacto de inicio
+            return 'La promoción está comenzando justo ahora';
+        }
+
+
+    }
+
+    function mostrarFecha(fecha: Date) {
+        // Obtener los componentes de la fecha
+        const año = fecha.getFullYear();
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        const dia = fecha.getDate().toString().padStart(2, '0');
+        const horas = fecha.getHours().toString().padStart(2, '0');
+        const minutos = fecha.getMinutes().toString().padStart(2, '0');
+
+        // Formatear la fecha y hora
+        return `${dia}-${mes}-${año} - ${horas}:${minutos} `;
     }
 
     return (
@@ -288,7 +350,7 @@ const Promociones = () => {
                         />
                     </div>
                     <div className="inputBox-filtrado-fechas" style={{ marginRight: '10px' }}>
-                    <label style={{ fontWeight: 'bold' }}>Fecha fin:</label>
+                        <label style={{ fontWeight: 'bold' }}>Fecha fin:</label>
 
                         <input
                             type="date"
@@ -325,7 +387,7 @@ const Promociones = () => {
                             <tr>
                                 <th>Duración</th>
                                 <th>Detalles de Promoción</th>
-                                <th>Costo</th>
+                                <th>Precio final</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -333,8 +395,8 @@ const Promociones = () => {
                             {datosFiltrados.map(promocion => (
                                 <tr key={promocion.id}>
                                     <td>
-                                        {formatearFechaYYYYMMDDHHMM(new Date(promocion.fechaDesde))} - {formatearFechaYYYYMMDDHHMM(new Date(promocion.fechaHasta))}
-                                        (Quedan {diasRestantes(promocion.fechaHasta.toString())} días)
+                                        Desde: {mostrarFecha(new Date(promocion.fechaDesde))}| Hasta: {mostrarFecha(new Date(promocion.fechaHasta))}
+                                        ({tiempoRestante(promocion.fechaHasta.toString())})
                                     </td>
                                     <td>
                                         {promocion.detallesPromocion && promocion.detallesPromocion.map((detalle, index) => (
@@ -343,7 +405,7 @@ const Promociones = () => {
                                             </div>
                                         ))}
                                     </td>
-                                    <td>{promocion.precio}</td>
+                                    <td>${promocion.precio}</td>
                                     <td>
                                         {promocion.borrado === 'NO' ? (
                                             <>

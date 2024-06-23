@@ -250,11 +250,22 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     setIdsSucursalesElegidas(new Set());
   };
 
+  function restarDiaYHoras(fecha: string | number | Date) {
+    // Crear una nueva fecha basada en la fecha original
+    let nuevaFecha = new Date(fecha);
+    
+    
+    // Restar tres horas
+    nuevaFecha.setHours(nuevaFecha.getHours() - 3);
+    
+    return nuevaFecha;
+}
+
   async function agregarStockEntrante() {
     const hoy = new Date();
 
-    fechaDesde.setDate(fechaDesde.getDate() + 1);
-    fechaHasta.setDate(fechaHasta.getDate() + 1);
+    console.log(fechaDesde);
+    console.log(fechaHasta);
 
     if (!fechaDesde) {
       toast.error("Por favor, la fecha de inicio es necesaria");
@@ -262,7 +273,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     } else if (!fechaHasta) {
       toast.error("Por favor, la fecha de finalización es necesaria");
       return;
-    } else if (new Date(fechaDesde) <= hoy || new Date(fechaHasta) <= hoy) {
+    } else if (new Date(fechaDesde) < hoy || new Date(fechaHasta) < hoy) {
       toast.error("Por favor, las fechas debe ser posterior a la fecha actual");
       return;
     } else if (new Date(fechaHasta) <= new Date(fechaDesde)) {
@@ -284,8 +295,14 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
     const promocion: Promocion = new Promocion();
 
-    promocion.fechaDesde = fechaDesde;
-    promocion.fechaHasta = fechaHasta;
+    console.log(fechaDesde);
+    console.log(fechaHasta);
+
+    promocion.fechaDesde = restarDiaYHoras(fechaDesde);
+    promocion.fechaHasta = restarDiaYHoras(fechaHasta);
+
+    console.log(fechaDesde);
+    console.log(fechaHasta);
 
     promocion.borrado = 'NO';
 
@@ -356,6 +373,8 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
   const fechaActual = new Date();
   const fechaActualFormateada = formatearFechaYYYYMMDDHHMM(fechaActual);
 
+  
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -363,13 +382,13 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\+]+" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
               <span>Nombre de la promoción</span>
 
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\+]+" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
               <span>Descrición de la promoción</span>
               <div className="error-message">La descripción debe contener letras y espacios.</div>
 
@@ -383,6 +402,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
                 value={formatearFechaYYYYMMDDHHMM(fechaDesde)}
                 onChange={(e) => { setFechaDesde(new Date(e.target.value)) }}
               />
+              
               <div className="error-message" style={{marginTop: '70px'}}>La fecha de inicio debe ser válida, y mayor o igual a la actual.</div>
 
             </div>
@@ -391,6 +411,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
               <input
                 type="datetime-local"
                 required={true}
+                min={formatearFechaYYYYMMDDHHMM(fechaDesde)}
                 value={formatearFechaYYYYMMDDHHMM(fechaHasta)}
                 onChange={(e) => { setFechaHasta(new Date(e.target.value)) }}
               />

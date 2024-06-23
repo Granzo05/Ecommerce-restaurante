@@ -164,6 +164,18 @@ INGREDIENTES:
 MENÚS:
 [] Se duplican los ingredientes actuales al editar el menú.
 
+PRIVILEGIOS:
+[] Faltan agregar y editar.
+
+PROMOCIONES:
+[] No deja cargar promoción si no hay menú. 
+[] Error al editar la promoción.
+[] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
+[] Arreglar los filtros de fechas.
+
+
+
+
  */
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
