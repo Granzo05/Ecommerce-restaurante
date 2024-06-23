@@ -25,9 +25,9 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [calle, setCalle] = useState('');
-  const [numeroCalle, setNumeroCalle] = useState(0);
-  const [codigoPostal, setCodigoPostal] = useState(0);
-  const [telefono, setTelefono] = useState(0);
+  const [numeroCalle, setNumeroCalle] = useState(parseInt(''));
+  const [codigoPostal, setCodigoPostal] = useState(parseInt(''));
+  const [telefono, setTelefono] = useState('');
   const [horarioApertura, setHorarioApertura] = useState('');
   const [horarioCierre, setHorarioCierre] = useState('');
   const [nombre, setNombre] = useState('');
@@ -240,16 +240,16 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
   };
 
   const handleCargarNegocio = async () => {
-    if (!email) {
+    if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
       toast.error("Por favor, es necesario el email");
       return;
-    } else if (!nombre) {
+    } else if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\.]+$/)) {
       toast.error("Por favor, es necesario el nombre");
       return;
-    } else if (!contraseña) {
+    } else if (!contraseña || contraseña.length < 8) {
       toast.error("Por favor, es necesaria la contraseña");
       return;
-    } else if (!telefono) {
+    } else if (!telefono || telefono.length < 10) {
       toast.error("Por favor, es necesario el telefono");
       return;
     } else if (!calle) {
@@ -270,6 +270,9 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     } else if (localidadesMostrablesCheckbox.length === 0) {
       toast.error("Por favor, es necesaria aunque sea una localidad donde alcance el delivery");
       return;
+    } else if (imagenes.length === 0){
+      toast.error("Por favor, es necesaria una imagen");
+      return;
     }
 
     let sucursal: Sucursal = new Sucursal();
@@ -287,7 +290,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
 
     sucursal.contraseña = contraseña;
 
-    sucursal.telefono = telefono;
+    sucursal.telefono = parseInt(telefono);
 
     sucursal.email = email;
 
@@ -334,6 +337,81 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
     setStep(step - 1);
   };
 
+  const validateAndNextStep = () => {
+    if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
+      toast.error("Por favor, es necesario el email");
+      return;
+    } else if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\.]+$/)) {
+      toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!contraseña || contraseña.length < 8) {
+      toast.error("Por favor, es necesaria la contraseña");
+      return;
+    } else if (!telefono || telefono.length < 10) {
+      toast.error("Por favor, es necesario el telefono");
+      return;
+    } else if (!horarioApertura) {
+      toast.error("Por favor, es necesaria la hora de apertura");
+      return;
+    } else if (!horarioCierre) {
+      toast.error("Por favor, es necesaria la hora de cierre");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+  const validateAndNextStep2 = () => {
+
+    if (!calle) {
+      toast.error("Por favor, es necesario la calle para el domicilio");
+      return;
+    } else if (!numeroCalle) {
+      toast.error("Por favor, es necesario el numero del domicilio");
+      return;
+    } else if (!codigoPostal) {
+      toast.error("Por favor, es necesario el código postal del domicilio");
+      return;
+    } else if (!localidadesProvincia) {
+      toast.error("Por favor, es necesaria aunque sea una localidad");
+      return;
+    } else {
+      nextStep();
+    }
+
+  }
+
+  const validateAndNextStep3 = () =>{
+
+    if (localidadesMostrablesCheckbox.length === 0) {
+      toast.error("Por favor, es necesaria aunque sea un departamento donde alcance el delivery");
+      return;
+    } else if (!localidadesProvincia) {
+      toast.error("Por favor, es necesaria aunque sea unos departamentos donde alcance el delivery");
+      return;
+    } else{
+      nextStep();
+    }
+
+  }
+
+  const validateAndNextStep4 = () => {
+    if (departamentosMostrablesCheckBox.length === 0) {
+      toast.error("Por favor, es necesaria aunque sea una localidad donde alcance el delivery");
+      return;
+    } else {
+      nextStep();
+    }
+  }
+
+  const handleTelefonoChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    // Permitir solo valores numéricos
+    if (/^\d*$/.test(value)) {
+      setTelefono(value);
+    }
+  };
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -341,20 +419,26 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input autoComplete='false' type="text" value={nombre} required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <input autoComplete='false' pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\.]+" type="text" value={nombre} required={true} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre de la sucursal</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+
             </div>
             <div className="inputBox">
-              <input autoComplete='false' type="text" value={email} required={true} onChange={(e) => { setEmail(e.target.value) }} />
+              <input autoComplete='false' type="email" value={email} required={true} onChange={(e) => { setEmail(e.target.value) }} />
               <span>Correo electrónico</span>
+              <div className="error-message">Formato incorrecto de e-mail.</div>
+
             </div>
             <div className="inputBox">
-              <input type="password" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
+              <input type="password" pattern=".{8,}" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
               <span>Contraseña</span>
             </div>
             <div className="inputBox">
-              <input type="phone" required={true} value={telefono} onChange={(e) => { setTelefono(parseInt(e.target.value)) }} />
-              <span>Telefono</span>
+              <input type="text" pattern="\d{10}" required={true} value={telefono} onChange={handleTelefonoChange} />
+              <span>Teléfono de la sucursal</span>
+              <div className="error-message">El número de teléfono no es válido. Mínimo 10 dígitos</div>
+
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Horario de apertura:</label>
@@ -367,25 +451,31 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
 
             </div>
             <div className="btns-pasos">
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
       case 2:
         return (
           <>
-            <h4>Paso 2 - Domicilio</h4>
+            <h4>Paso 2 - Domicilio/os</h4>
             <div className="inputBox">
-              <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
               <span>Nombre de calle</span>
+              <div className="error-message">El nombre de la calle debe contener letras y espacios.</div>
+
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={numeroCalle} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
+              <input type="number" required={true} min={1} max={9999} value={numeroCalle} onChange={(e) => { setNumeroCalle(parseInt(e.target.value)) }} />
               <span>Número de domicilio</span>
+              <div className="error-message">El número de la calle no es válido.</div>
+
             </div>
             <div className="inputBox">
-              <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+              <input type="number" min={1001} max={9431} required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
               <span>Código Postal</span>
+              <div className="error-message">El codigo postal no es válido.</div>
+
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
@@ -412,7 +502,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
             </div>
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
 
             </div>
           </>
@@ -421,11 +511,8 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
         return (
           <>
             <h4>Paso 3 - Departamentos para delivery</h4>
-            <div className="inputBox">
-              <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamentos disponibles para delivery dentro de la provincia de {inputProvincia}:</label>
-            </div>
             <div className="filtros">
-              <div className="inputBox-filtrado">
+              <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                 <select id="cantidad" name="cantidadProductos" value={cantidadDepartamentosMostrablesFiltrada} onChange={(e) => cantidadMostradaDepartamentos(parseInt(e.target.value))}>
                   <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                   <option value={5}>5</option>
@@ -438,7 +525,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
               </div>
 
               <div className="filtros-datos">
-                <div className="inputBox-filtrado" >
+                <div className="inputBox-filtrado">
                   <input
                     type="text"
                     required
@@ -473,9 +560,10 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
                 </button>
               ))}
             </div>
+            <br />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+              <button className='btn-accion-adelante' onClick={validateAndNextStep3}>Siguiente ⭢</button>
 
             </div>
           </>
@@ -484,11 +572,8 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
         return (
           <>
             <h4>Paso 4 - Localidades para delivery</h4>
-            <div className="inputBox">
-              <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidades disponibles para delivery:</label>
-            </div>
             <div className="filtros">
-              <div className="inputBox-filtrado">
+              <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                 <select id="cantidad" name="cantidadProductos" value={cantidadLocalidadesMostrablesFiltradas} onChange={(e) => cantidadMostradaLocalidades(parseInt(e.target.value))}>
                   <option value={11} disabled >Selecciona una cantidad a mostrar</option>
                   <option value={5}>5</option>
@@ -538,6 +623,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
                 </button>
               ))}
             </div>
+            <br />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>

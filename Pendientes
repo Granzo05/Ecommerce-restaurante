@@ -189,6 +189,12 @@ PROMOCIONES:
 [] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
 [] Arreglar los filtros de fechas en este y en stock entrante.
 
+SUCURSALES:
+[] Deja avanzar sin seleccionar país, provincia, depto. o localidad.
+[] Agregar un marcar todo para cuando seleccionar lugares para delivery.
+[] Error al cargar sucursal. Credenciales invalidas.
+
+
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
 TERMINAR REPORTES[]
