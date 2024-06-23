@@ -75,6 +75,8 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
           
           <h2>&mdash; Filtrar ingredientes &mdash;</h2>
           <div className="btns-filtrado">
+          <button className="btn-agregar" style={{marginRight: '10px'}} onClick={() => onSelectIngrediente(new Ingrediente())}>Eliminar opción elegida</button>
+
           <button className="btn-agregar" onClick={() => setShowAgregarModalIngrediente(true)}> + Agregar ingrediente al inventario</button>
           
           </div>
@@ -83,7 +85,6 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <button onClick={() => onSelectIngrediente(new Ingrediente())}>BORRAR OPCIÓN ELEGIDA</button>
           <table className="tabla-recomendaciones">
             <thead>
               <tr>

@@ -255,7 +255,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
                 <>
                   {!mostrarInputs && (
                     <button value="Agregar stock ahora (opcional)" id='agregarIngrediente' style={{ marginRight: '10px' }}
-                      onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock ahora</button>
+                      onClick={() => setMostrarInputs(!mostrarInputs)}>Agregar stock (opcional)</button>
                   )}
                   <button className='btn-accion-completar' value="Agregar ingrediente" id="agregarIngrediente" onClick={agregarIngrediente}>Agregar ingrediente ✓</button>
                 </>

@@ -72,16 +72,21 @@ const ModalFlotanteRecomendacionesIngredientesSinStock: React.FC<{ onCloseModal:
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <ModalCrud isOpen={showAgregarModalIngrediente} onClose={buscarIngredientes}>
-            <AgregarIngrediente onCloseModal={handleModalClose}/>
+            <AgregarIngrediente onCloseModal={handleModalClose} />
           </ModalCrud>
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente</button>
-          <h2>&mdash; Filtrar ingredientes &mdash;</h2>
-          <div className="inputBox">
+          
+
+          <h2>&mdash; Filtrar ingredientes sin stock &mdash;</h2>
+          <div className="btns-filtrado">
+            <button className="btn-agregar" style={{ marginRight: '10px' }} onClick={() => onSelectIngrediente(new Ingrediente())}>Eliminar opción elegida</button>
+
+            <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente al inventario</button>
+          </div>
+          <div style={{marginBottom: '0px'}} className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <button onClick={() => onSelectIngrediente(new Ingrediente())}>BORRAR OPCIÓN ELEGIDA</button>
           <table className="tabla-recomendaciones">
             <thead>
               <tr>

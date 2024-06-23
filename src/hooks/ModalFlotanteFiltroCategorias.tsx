@@ -73,8 +73,9 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar categorías &mdash;</h2>
           <div className="btns-filtrado">
-            <button className="btn-agregar" onClick={() => setShowAgregarCategoriaModal(true)}>+ Agregar categoría en el inventario</button>
-
+            
+          <button className="btn-agregar" style={{marginRight: '10px'}} onClick={() => onSelectCategoria(new Categoria())}>Eliminar opción elegida</button>
+            <button className="btn-agregar"  onClick={() => setShowAgregarCategoriaModal(true)}>+ Agregar categoría en el inventario</button>
           </div>
           <ModalCrud isOpen={showAgregarCategoriaModal} onClose={handleModalAddCategoriaClose}>
             <AgregarCategoria onCloseModal={handleModalClose}/>
@@ -83,7 +84,7 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <button onClick={() => onSelectCategoria(new Categoria())}>BORRAR OPCIÓN ELEGIDA</button>
+          
           <table className="tabla-recomendaciones">
             <thead>
               <tr>

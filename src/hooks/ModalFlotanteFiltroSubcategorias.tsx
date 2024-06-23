@@ -71,7 +71,9 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar subcategorías &mdash;</h2>
           <div className="btns-filtrado">
-            <button className="btn-agregar" onClick={() => setShowAgregarSubcategoriaModal(true)}>Cargar nueva subcategoria</button>
+          <button className="btn-agregar" style={{marginRight: '10px'}} onClick={() => onSelectSubcategoria(new Subcategoria())}>Eliminar opción elegida</button>
+
+            <button className="btn-agregar" onClick={() => setShowAgregarSubcategoriaModal(true)}>+ Agregar subcategoria en el inventario</button>
 
           </div>
           <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={handleModalAddSubClose}>
@@ -81,7 +83,6 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <button onClick={() => onSelectSubcategoria(new Subcategoria())}>BORRAR OPCIÓN ELEGIDA</button>
           <table className="tabla-recomendaciones">
             <thead>
               <tr>

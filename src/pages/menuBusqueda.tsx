@@ -124,7 +124,7 @@ function ProductosBuscados() {
                   <h5>{ }</h5>
                   <h5 className='price'>${articulo.precioVenta}</h5>
                 </div>
-                <h5>{articulo.nombre}</h5>
+                <h5>{articulo.nombre} - {articulo.cantidadMedida} {articulo.medida.nombre}</h5>
                 <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(null, articulo, 1)}>Añadir al carrito</button>
               </div>
             </div>

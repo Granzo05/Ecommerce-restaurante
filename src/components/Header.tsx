@@ -9,6 +9,8 @@ import { toast, Toaster } from 'sonner';
 import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import searchIcon from '../assets/icons/header-icono-busqueda.png'
+import cartIcon from '../assets/icons/header-icono-carrito.png';
+import accountIcon from '../assets/icons/header-icono-cuenta.png';
 
 const Header = () => {
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
@@ -140,7 +142,7 @@ const Header = () => {
                                         )}
                                         <img
                                             className={`menu-icono ${isCartOpen ? 'cart-icon-open' : ''}`}
-                                            src={searchIcon}
+                                            src={cartIcon}
                                             alt="Carrito"
                                             onClick={handleCartClick}
                                         />
@@ -151,13 +153,10 @@ const Header = () => {
                                 )}
                                 <img
                                     className={`menu-icono ${isAccountOpen ? 'cart-icon-open' : ''}`}
-                                    src="../src/assets/icons/header-icono-cuenta.png"
+                                    src={accountIcon}
                                     alt="Cuenta"
                                     onClick={handleAccountClick}
                                 />
-                                <p className="nombre-email-usuario" style={{ color: 'white' }}>
-                                    - {cliente.nombre ? cliente.nombre : cliente.email} -
-                                </p>
                                 <li style={{ cursor: 'pointer' }} className="text-replacement" onClick={handleAccountClick}>
                                     <a>Cuenta: {cliente.nombre ? cliente.nombre : cliente.email}</a>
                                 </li>
@@ -242,7 +241,7 @@ const Header = () => {
                                             <div className="cart-total">
                                                 <p><strong>Precio final: </strong>${formatPrice(carrito?.totalPrecio)}</p>
                                                 <button
-                                                    style={{ marginRight: '20px', color: 'red' }}
+                                                    style={{ marginRight: '20px', backgroundColor: 'red' }}
                                                     className="finalizar-pedido"
                                                     onClick={() => {
                                                         setCarrito(new Carrito());
@@ -252,7 +251,7 @@ const Header = () => {
                                                     Limpiar carrito
                                                 </button>
                                                 <Link to={`${getBaseUrl()}/pago`}>
-                                                    <button style={{ color: 'green' }} className="finalizar-pedido">Finalizar pedido</button>
+                                                    <button style={{ backgroundColor: 'green' }} className="finalizar-pedido">Finalizar pedido</button>
                                                 </Link>
                                             </div>
                                         )}

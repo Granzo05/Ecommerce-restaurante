@@ -142,8 +142,11 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
         <div className="error-message">El costo por unidad solo debe contener números.</div>
 
       </div>
-      <hr />
-      <button onClick={crearStockIngrediente}>Agregar stock</button>
+      <br />
+      <div className="btns-pasos">
+      <button className='btn-accion-completar' onClick={crearStockIngrediente}>Agregar stock ✓</button>
+
+      </div>
     </div>
   )
 }

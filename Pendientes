@@ -197,6 +197,9 @@ SUCURSALES:
 [] Agregar un marcar todo para cuando seleccionar lugares para delivery.
 [] Error al cargar sucursal. Credenciales invalidas.
 
+PAGO:
+[] No me trae los domicilios pal delivery.
+
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
 TERMINAR REPORTES[]

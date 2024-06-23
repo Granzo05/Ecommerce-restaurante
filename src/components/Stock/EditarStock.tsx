@@ -128,36 +128,35 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockOriginal, tipo, nombre, 
     <div className="modal-info">
       <Toaster />
 
-      <h2>&mdash; Editar stock &mdash;</h2>
+      <h2>&mdash; Editar stock de: {nombre} &mdash;</h2>
       <div className="inputBox">
         <input type="number" required={true} pattern="\d*" value={cantidadMinima} min={1} onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
         <span>Cantidad mínima del ingrediente</span>
         <div className="error-message">La cantidad mínima solo debe contener números y no debe ser 0.</div>
 
-      </div><br />
+      </div>
       <div className="inputBox">
         <input type="number" required={true} pattern="\d*" value={cantidadMaxima} min={1} onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
         <span>Cantidad máxima del ingrediente</span>
         <div className="error-message">La cantidad máxima solo debe contener números y no debe ser 0.</div>
 
-      </div><br />
+      </div>
       <div className="inputBox">
         <input type="number" required={true} pattern="\d*" value={cantidadActual} min={1} onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
         <span>Cantidad actual del ingrediente</span>
         <div className="error-message">La cantidad actual solo debe contener números y no debe ser 0.</div>
 
-      </div><br />
+      </div>
       <div className="input-filtrado">
         <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => handleAbrirRecomendaciones()} selectedProduct={medida?.nombre ?? ''} />
         {modalBusqueda && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre ?? ''} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
       </div>
-      <br /><br />
       <div className="inputBox">
         <input type="text" required={true} pattern="\d*" value={costo || ''} onChange={(e) => { setCosto(parseFloat(e.target.value)) }} />
         <span>Costo del ingrediente por unidad de medida ($)</span>
         <div className="error-message">El costo por unidad solo debe contener números.</div>
 
-      </div><br />
+      </div>
       <button type="button" onClick={editarStock}>Editar stock</button>
     </div>
   )

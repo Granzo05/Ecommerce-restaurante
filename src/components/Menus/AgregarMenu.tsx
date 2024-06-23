@@ -311,7 +311,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
       } else if (!medida) {
         toast.info(`Por favor, el ingrediente ${i + 1} debe contener una unidad de medida`);
         return;
-      } else if (!cantidad || (cantidad == 0)) {
+      } else if (!cantidad || (cantidad <= 0)) {
         toast.info(`Por favor, el ingrediente ${i + 1} debe contener una cantidad válida y no debe ser 0`);
         return;
       }

@@ -229,9 +229,9 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
                                         {carrito && carrito?.totalProductos > 0 && (
                                             <div className="cart-total">
                                                 <p><strong>Precio final: </strong>${formatPrice(carrito?.totalPrecio)}</p>
-                                                <button style={{ marginRight: '20px', color: 'red' }} className="finalizar-pedido" onClick={() => { setCarrito(new Carrito()); CarritoService.limpiarCarrito(); }}>Limpiar carrito</button>
+                                                <button style={{ marginRight: '20px', backgroundColor: 'red' }} className="finalizar-pedido" onClick={() => { setCarrito(new Carrito()); CarritoService.limpiarCarrito(); }}>Limpiar carrito</button>
                                                 <Link to={`${getBaseUrl()}/pago`}>
-                                                    <button style={{ color: 'green' }} className="finalizar-pedido">Finalizar pedido</button>
+                                                    <button style={{ backgroundColor: 'green' }} className="finalizar-pedido">Finalizar pedido</button>
                                                 </Link>
                                             </div>
                                         )}
