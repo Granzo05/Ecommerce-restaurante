@@ -28,8 +28,8 @@ public interface StockEntranteRepository extends JpaRepository<StockEntrante, Lo
     @Query("SELECT s FROM StockEntrante s JOIN s.sucursales suc WHERE s.id = :id AND suc.id = :idSucursal AND s.fechaLlegada = :fecha")
     Optional<StockEntrante> findByIdAndIdSucursalAndFecha(@Param("id") Long id, @Param("idSucursal") Long idSucursal, @Param("fecha") LocalDate fecha);
 
-    @Query("SELECT s FROM StockEntrante s JOIN s.sucursales suc WHERE suc.id = :idSucursal AND s.fechaLlegada = :fecha")
-    Optional<StockEntrante> findByIdSucursalAndFecha(@Param("idSucursal") Long idSucursal, @Param("fecha") LocalDate fecha);
+    @Query("SELECT s FROM StockEntrante s JOIN s.sucursales suc WHERE suc.id = :idSucursal AND s.fechaLlegada = :fecha AND s.estado = 'PENDIENTES'")
+    List<StockEntrante> findByIdSucursalAndFecha(@Param("idSucursal") Long idSucursal, @Param("fecha") LocalDate fecha);
 
     @Query("SELECT s FROM StockEntrante s JOIN s.sucursales suc WHERE s.id = :id AND suc.id = :idSucursal")
     Optional<StockEntrante> findByIdAndIdSucursal(@Param("id") Long id, @Param("idSucursal") Long idSucursal);

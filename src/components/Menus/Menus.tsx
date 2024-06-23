@@ -185,6 +185,7 @@ const Menus = () => {
     }
 
     const fetchMenu = async () => {
+        setDatosFiltrados([]);
         try {
             MenuService.getMenus()
                 .then(data => {

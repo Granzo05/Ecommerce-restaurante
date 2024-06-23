@@ -29,6 +29,7 @@ const PrivilegiosEmpleados = () => {
     }, []);
 
     const fetchPrivilegios = async () => {
+        setDatosFiltrados([]);
         try {
             PrivilegiosService.getPrivilegios()
                 .then(data => {

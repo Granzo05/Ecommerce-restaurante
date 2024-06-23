@@ -42,11 +42,11 @@ const StocksEntrantes = () => {
 
 
     useEffect(() => {
-        setDatosFiltrados([]);
         buscarStocks();
     }, []);
 
     function buscarStocks() {
+        setDatosFiltrados([]);
         StockEntranteService.getStockPendiente()
             .then((stocks) => {
                 setStockEntrante(stocks);
@@ -251,15 +251,13 @@ const StocksEntrantes = () => {
         toast.promise(StockEntranteService.updateStock(stock), {
             loading: 'Creando stock entrante...',
             success: (message) => {
+                buscarStocks();
                 return message;
             },
             error: (message) => {
                 return message;
             },
         });
-
-        buscarStocks();
-
     };
 
     const handleEliminarStock = (stock: StockEntrante) => {

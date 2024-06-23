@@ -30,6 +30,7 @@ const Subsubcategorias = () => {
     }, []);
 
     const fetchsubcategorias = async () => {
+        setDatosFiltrados([]);
         try {
             const data = await CategoriaService.getCategorias();
             setsubcategorias(data);

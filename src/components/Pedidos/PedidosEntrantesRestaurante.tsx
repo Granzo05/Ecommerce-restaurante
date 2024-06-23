@@ -36,9 +36,9 @@ const PedidosEntrantes = () => {
     }
 
     const buscarCantidadCocineros = async () => {
+        setDatosFiltrados([]);
         EmpleadoService.getCantidadCocineros()
             .then(data => {
-                console.log(data)
                 setCantidadCocineros(data);
             })
             .catch(error => {

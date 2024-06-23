@@ -16,6 +16,7 @@ export const StockEntranteService = {
             }
 
             return await response.text();
+
         } catch (error) {
             console.error('Error:', error);
             throw error;

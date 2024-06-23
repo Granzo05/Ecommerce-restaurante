@@ -29,6 +29,7 @@ const Ingredientes = () => {
     }, []);
 
     const fetchIngredientes = async () => {
+        setDatosFiltrados([]);
         try {
             IngredienteService.getIngredientes()
                 .then(data => {

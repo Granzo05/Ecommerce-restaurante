@@ -29,6 +29,7 @@ const PedidosAceptados = () => {
     }
 
     async function handleFinalizarPedido(pedido: Pedido) {
+        setDatosFiltrados([]);
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.COCINADOS), {
             loading: 'Enviando pedido al administrador...',
             success: (message) => {

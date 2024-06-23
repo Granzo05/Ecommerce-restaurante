@@ -41,6 +41,7 @@ public class ClienteController {
                 domicilio.setLocalidad(domicilio.getLocalidad());
                 domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setCliente(clienteDetails);
+                domicilio.setBorrado("NO");
 
                 // Buscamos si hay un restaurante en la localidad del cliente para enviarlo a esa sucursal en el main
                 if(domicilio.getBorrado() == "NO") clienteDetails.setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));

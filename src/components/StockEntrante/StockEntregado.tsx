@@ -27,11 +27,11 @@ const StocksEntregado = () => {
 
 
     useEffect(() => {
-        setDatosFiltrados([]);
         buscarStocks();
     }, []);
 
     function buscarStocks() {
+        setDatosFiltrados([]);
         StockEntranteService.getStockEntregados()
             .then((stocks: StockEntrante[]) => {
                 setStockEntrante(stocks);

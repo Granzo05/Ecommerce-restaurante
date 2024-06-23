@@ -55,7 +55,7 @@ public class StockIngredientesController {
                 stock.setFechaLlegadaProxima(stockEntrante.get().toList().get(0).getFechaLlegada());
             }
 
-            if (stock.getCantidadActual() > 0 && stock.getCantidadMinima() > 0 && stock.getCantidadMinima() > 0) stocksCargados.add(stock);
+            if (stock.getCantidadActual() > 0) stocksCargados.add(stock);
         }
 
         return stocksCargados;

@@ -210,18 +210,22 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
 
     stockEntrante.detallesStock = detallesStock;
 
-    toast.promise(StockEntranteService.createStock(stockEntrante), {
-      loading: 'Creando stock entrante...',
-      success: (message) => {
-        setTimeout(() => {
-          onCloseModal();
-        }, 800);
-        return message;
+    toast.promise(
+      StockEntranteService.createStock(stockEntrante),
+      {
+        loading: 'Creando stock entrante...',
+        success: (message) => {
+          setTimeout(() => {
+            onCloseModal();
+          }, 800);
+          return message;
+        },
+        error: (message) => {
+          return message;
+        },
+        duration: 5000, 
       },
-      error: (message) => {
-        return message;
-      },
-    });
+    );
 
   }
 
