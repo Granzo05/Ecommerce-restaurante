@@ -134,7 +134,7 @@ Login
 [] Hacer la recuperacion de contraseña
 
 Permisos: 
-[] Si elijo COCINERO, cargarle previamente los permisos logicos que tendrian para que ya esten marcados en el paso siguiente
+[x] Si elijo COCINERO, cargarle previamente los permisos logicos que tendrian para que ya esten marcados en el paso siguiente
 
 PEDIDOS FALTA PROBAR:
 [] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 

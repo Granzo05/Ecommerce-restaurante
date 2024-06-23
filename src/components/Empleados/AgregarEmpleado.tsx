@@ -101,6 +101,150 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
     const nuevosNombresRoles = [...rolesElegidos];
     nuevosNombresRoles[index] = rol.nombre;
     setRolesElegidos(nuevosNombresRoles);
+
+    rellenarPrivilegios(rol);
+  };
+
+  const rellenarPrivilegios = (rol: Roles) => {
+    let newPrivilegios = { ...privilegiosElegidos };
+
+    switch (rol.nombre) {
+      case 'ADMINISTRATIVO' || 'CAJERO':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Articulos de venta': ['READ'],
+          'Artículos menú': ['READ'],
+          'Categorias': ['READ'],
+          'Ingredientes': ['READ'],
+          'Medidas': ['READ'],
+          'Pedidos aceptados': ['READ', 'UPDATE'],
+          'Pedidos cocinados': ['READ', 'UPDATE'],
+          'Pedidos en camino': ['READ', 'UPDATE'],
+          'Pedidos entrantes': ['READ', 'UPDATE'],
+          'Pedidos entregados': ['READ'],
+          'Promociones': ['READ'],
+          'Stock': ['READ'],
+          'Stock entrante': ['READ'],
+          'Subcategorias': ['READ'],
+        };
+        break;
+      case 'BARTENDER':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Articulos de venta': ['READ'],
+          'Pedidos aceptados': ['READ', 'UPDATE'],
+          'Pedidos cocinados': ['READ', 'UPDATE'],
+          'Pedidos en camino': ['READ', 'UPDATE'],
+          'Pedidos entrantes': ['READ', 'UPDATE'],
+          'Pedidos entregados': ['READ'],
+          'Promociones': ['READ'],
+          'Stock': ['READ'],
+        };
+        break;
+      case 'COCINERO_AYUDANTE':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Articulos de venta': ['READ'],
+          'Artículos menú': ['READ'],
+          'Ingredientes': ['READ'],
+          'Medidas': ['READ'],
+          'Pedidos aceptados': ['READ', 'UPDATE'],
+          'Pedidos cocinados': ['READ'],
+          'Pedidos entregados': ['READ'],
+          'Promociones': ['READ'],
+          'Stock': ['READ'],
+          'Stock entrante': ['READ'],
+        };
+        break;
+      case 'COCINERO_JEFE':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Articulos de venta': ['READ'],
+          'Artículos menú': ['READ'],
+          'Ingredientes': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Pedidos aceptados': ['READ', 'UPDATE'],
+          'Pedidos cocinados': ['READ'],
+          'Pedidos entrantes': ['READ'],
+          'Pedidos entregados': ['READ'],
+          'Promociones': ['READ'],
+          'Stock': ['READ', 'CREATE', 'UPDATE'],
+          'Stock entrante': ['READ', 'CREATE'],
+        };
+        break;
+      case 'DELIVERY':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Pedidos cocinados': ['READ'],
+        };
+        break;
+      case 'ENCARGADO':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Articulos de venta': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Artículos menú': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Categorias': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Ingredientes': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Medidas': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Pedidos aceptados': ['READ', 'UPDATE'],
+          'Pedidos cocinados': ['READ', 'UPDATE'],
+          'Pedidos en camino': ['READ', 'UPDATE'],
+          'Pedidos entrantes': ['READ', 'UPDATE'],
+          'Pedidos entregados': ['READ', 'UPDATE'],
+          'Promociones': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Stock': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Roles': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Stock entrante': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Subcategorias': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+        };
+        break;
+      case 'MANEJO_DE_STOCK':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Stock': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Stock entrante': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+        };
+        break;
+      case 'MOZO':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Articulos de venta': ['READ'],
+          'Artículos menú': ['READ'],
+          'Pedidos aceptados': ['READ'],
+          'Pedidos cocinados': ['READ'],
+          'Pedidos en camino': ['READ'],
+          'Pedidos entrantes': ['READ'],
+          'Pedidos entregados': ['READ', 'UPDATE'],
+          'Promociones': ['READ'],
+        };
+        break;
+      case 'SUPERVISOR':
+        newPrivilegios = {
+          ...newPrivilegios,
+          'Articulos de venta': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Artículos menú': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Categorias': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Empleados': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Estadísticas': ['READ'],
+          'Ingredientes': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Medidas': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Pedidos aceptados': ['READ', 'UPDATE'],
+          'Pedidos cocinados': ['READ', 'UPDATE'],
+          'Pedidos en camino': ['READ', 'UPDATE'],
+          'Pedidos entrantes': ['READ', 'UPDATE'],
+          'Pedidos entregados': ['READ', 'UPDATE'],
+          'Promociones': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Stock': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Roles': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Stock entrante': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Subcategorias': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+          'Sucursales': ['READ', 'CREATE', 'UPDATE', 'DELETE', 'ACTIVATE'],
+        };
+        break;
+      default:
+        break;
+    }
+
+    setPrivilegiosElegidos(newPrivilegios);
   };
 
   const handleModificarPrivilegios = (nombre: string, permiso: string) => {
@@ -525,7 +669,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             </div>
           </>
         );
-      case 3:
+      case 4:
         return (
           <>
             <h4>Paso 3 - Roles</h4>
@@ -549,7 +693,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
             </div>
           </>
         );
-      case 4:
+      case 3:
         return (
           <>
             <h4>Paso 4 - Domicilio/os</h4>
