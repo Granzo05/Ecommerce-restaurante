@@ -31,8 +31,11 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
   const [precio, setPrecio] = useState(0);
   const [medida, setMedida] = useState<Medida>(new Medida());
   const [articulo, setArticulo] = useState<ArticuloVenta>(new ArticuloVenta());
+  const [isLoading, setIsLoading] = useState(false);
 
   async function agregarStock() {
+    setIsLoading(true);
+
     if (!articulo.nombre) {
       toast.error("Por favor, es necesario el nombre del articulo");
       return;
@@ -84,6 +87,9 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+    }
     });
   }
 
@@ -102,7 +108,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
           <input type="number" required pattern="\d*" onChange={(e) => { setCantidadMinima(parseFloat(e.target.value)) }} />
           <span>Cantidad mínima del articulo</span>
           <div className="error-message">La cantidad mínima solo debe contener números.</div>
-                
+
         </div>
       </label>
       <label>
@@ -110,7 +116,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
           <input type="number" required pattern="\d*" onChange={(e) => { setCantidadMaxima(parseFloat(e.target.value)) }} />
           <span>Cantidad máxima del articulo</span>
           <div className="error-message">La cantidad máxima solo debe contener números.</div>
-            
+
         </div>
       </label>
       <label>
@@ -118,10 +124,10 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
           <input type="number" required pattern="\d*" onChange={(e) => { setCantidadActual(parseFloat(e.target.value)) }} />
           <span>Cantidad actual del articulo</span>
           <div className="error-message">La cantidad actual solo debe contener números.</div>
-              
+
         </div>
       </label>
-      
+
       <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida.nombre ?? ''} />
       {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
       <label>
@@ -129,11 +135,13 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
           <input type="number" required pattern="\d*" onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
           <span>Costo del ingrediente por una unidad de medida ($)</span>
           <div className="error-message">El costo por unidad solo debe contener números.</div>
-         
+
         </div>
       </label>
       <br />
-      <button type="button" onClick={agregarStock}>Agregar stock</button>
+      <button className='btn-accion-completar' onClick={agregarStock} disabled={isLoading}>
+        {isLoading ? 'Cargando...' : 'Agregar stock ✓'}
+      </button>
     </div>
   )
 }

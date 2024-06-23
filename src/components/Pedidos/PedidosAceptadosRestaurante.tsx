@@ -19,6 +19,7 @@ const PedidosAceptados = () => {
     }, []);
 
     const buscarPedidos = async () => {
+        setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.ACEPTADOS)
             .then(data => {
                 setPedidos(data);
@@ -27,9 +28,10 @@ const PedidosAceptados = () => {
                 console.error('Error:', error);
             });
     }
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleFinalizarPedido(pedido: Pedido) {
-        setDatosFiltrados([]);
+        setIsLoading(true);
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.COCINADOS), {
             loading: 'Enviando pedido al administrador...',
             success: (message) => {
@@ -39,6 +41,9 @@ const PedidosAceptados = () => {
             error: (message) => {
                 return message;
             },
+            finally: () => {
+                setIsLoading(false);
+            }
         });
     }
 
@@ -243,7 +248,9 @@ const PedidosAceptados = () => {
                                     ))}
                                 </td>
                                 {updateVisible && (
-                                    <td><button onClick={() => handleFinalizarPedido(pedido)}>Finalizar</button></td>
+                                    <button className='btn-accion-completar' onClick={() => handleFinalizarPedido(pedido)} disabled={isLoading}>
+                                        {isLoading ? 'Cargando...' : 'Finalizar ✓'}
+                                    </button>
                                 )}
                             </tr>
                         ))}

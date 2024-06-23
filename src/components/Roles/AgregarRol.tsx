@@ -101,19 +101,20 @@ const AgregarRoles: React.FC<AgregarRolesProps> = ({ onCloseModal }) => {
       case 1:
         return (
           <>
-              <Toaster />
-              <div className="inputBox">
-                <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} onChange={(e) => { setNombre(e.target.value) }} />
-                <span>Nombre del rol</span>
-                <div className="error-message">El nombre debe contener letras y espacios.</div>
-              </div>
-              <div className="btns-pasos">
-                {empresa && empresa?.id > 0 ? (
-                  <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
-                ) : (
-                  <button className='btn-accion-completar' value="Agregar rol" id="agregarRoles" onClick={agregarRoles}>Agregar rol ✓</button>
-                )}
-              </div>
+            <Toaster />
+            <div className="inputBox">
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <span>Nombre del rol</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            </div>
+            <div className="btns-pasos">
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-completar' onClick={agregarRoles} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Agregar rol ✓'}
+                </button>)}
+            </div>
           </>
         );
       case 2:
@@ -139,7 +140,9 @@ const AgregarRoles: React.FC<AgregarRolesProps> = ({ onCloseModal }) => {
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button value="Agregar rol" id="agregarRoles" onClick={agregarRoles}>Cargar </button>
+              <button className='btn-accion-completar' onClick={agregarRoles} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar rol ✓'}
+              </button>
             </div>
           </>
         );

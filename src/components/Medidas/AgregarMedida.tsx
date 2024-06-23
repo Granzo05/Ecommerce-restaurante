@@ -10,8 +10,10 @@ interface AgregarMedidaProps {
   onCloseModal: () => void;
 }
 
+const [isLoading, setIsLoading] = useState(false);
 
 const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
+  setIsLoading(true);
   const [nombre, setNombre] = useState('');
 
   async function agregarMedida() {
@@ -46,6 +48,9 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -101,19 +106,20 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
       case 1:
         return (
           <>
-              <Toaster />
-              <div className="inputBox">
-                <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
-                <span>Nombre de la unidad de medida</span>
+            <Toaster />
+            <div className="inputBox">
+              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <span>Nombre de la unidad de medida</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
-              </div>
-              <div className="btns-pasos">
-                {empresa && empresa?.id > 0 ? (
-                  <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
-                ) : (
-                  <button className='btn-accion-completar' value="Agregar medida" id="agregarMedida" onClick={agregarMedida}>Agregar medida ✓</button>
-                )}
-              </div>
+            </div>
+            <div className="btns-pasos">
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-completar' onClick={agregarMedida} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Cargar medida ✓'}
+                </button>)}
+            </div>
           </>
         );
       case 2:
@@ -139,7 +145,9 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button value="Agregar medida" id="agregarMedida" onClick={agregarMedida}>Cargar </button>
+              <button className='btn-accion-completar' onClick={agregarMedida} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Cargar medida ✓'}
+              </button>
             </div>
           </>
         );

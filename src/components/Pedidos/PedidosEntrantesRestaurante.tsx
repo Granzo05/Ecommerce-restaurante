@@ -46,7 +46,12 @@ const PedidosEntrantes = () => {
             });
     }
 
+    const [isLoading, setIsLoading] = useState(false);
+
+
     async function handleAceptarPedido(pedido: Pedido) {
+        setIsLoading(true);
+
         const horaActual = new Date();
 
         // Calcular el tiempo de preparación en minutos
@@ -79,6 +84,9 @@ const PedidosEntrantes = () => {
                 error: (message) => {
                     return message;
                 },
+                finally: () => {
+                    setIsLoading(false);
+                }
             }
         );
 
@@ -116,6 +124,8 @@ const PedidosEntrantes = () => {
 
 
     async function handleRechazarPedido(pedido: Pedido) {
+        setIsLoading(true);
+
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
             loading: 'Rechazando pedido...',
             success: (message) => {
@@ -124,6 +134,9 @@ const PedidosEntrantes = () => {
             error: (message) => {
                 return message;
             },
+            finally: () => {
+                setIsLoading(false);
+            }
         });
 
         buscarPedidos();
@@ -364,10 +377,14 @@ const PedidosEntrantes = () => {
                                     ))}
                                 </td>
                                 {updateVisible && (
-                                    <td><button onClick={() => handleAceptarPedido(pedido)}>Aceptar</button></td>
+                                    <button className='btn-accion-completar' onClick={() => handleAceptarPedido(pedido)} disabled={isLoading}>
+                                        {isLoading ? 'Cargando...' : 'Aceptar ✓'}
+                                    </button>
                                 )}
                                 {updateVisible && (
-                                    <td><button onClick={() => handleRechazarPedido(pedido)}>Rechazar</button></td>
+                                    <button className='btn-accion-completar' onClick={() => handleRechazarPedido(pedido)} disabled={isLoading}>
+                                        {isLoading ? 'Cargando...' : 'Rechazar ✓'}
+                                    </button>
                                 )}
                             </tr>
                         ))}

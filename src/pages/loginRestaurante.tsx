@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import '../styles/loginRestaurante.css'
-import { SucursalService } from '../services/SucursalService';
 import { Toaster, toast } from 'sonner';
 import Modal from 'react-modal';
 import { frases } from '../utils/global_variables/const';
@@ -10,13 +9,6 @@ import HeaderLogin from '../components/headerLogin';
 import { EmpresaService } from '../services/EmpresaService';
 
 const LoginNegocio = () => {
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    console.log(event.key)
-    if (event.key === 'Enter') {
-      handleIniciarSesionNegocio();
-    }
-  };
-
   const [showResetContraModal, SetShowResetContraModal] = useState(false);
 
   const handleModalClose = () => {
@@ -29,8 +21,10 @@ const LoginNegocio = () => {
 
   const [email, setEmail] = useState('');
   const [contraseña, setContraseña] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleIniciarSesionNegocio = () => {
+    setIsLoading(true);
     if (email.length === 0) {
       toast.error('Debe ingresar una email');
       return;
@@ -44,6 +38,9 @@ const LoginNegocio = () => {
       success: 'Abriendo sesión',
       error: 'Credenciales inválidas',
       duration: 3000,
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   };
 
@@ -121,7 +118,7 @@ const LoginNegocio = () => {
                 placeholder="tu@ejemplo.com o 12345678901"
                 required
                 value={email}
-                onChange={(e) => {setEmail(e.target.value); validateEmailOrCuit()}}
+                onChange={(e) => { setEmail(e.target.value); validateEmailOrCuit() }}
               />
               {error.length > 0 && <div className="error-message">{error}</div>}
             </div>
@@ -177,8 +174,8 @@ const LoginNegocio = () => {
 
               </div>
             </div>
-            <button type='button' className="my-form__button" onClick={handleIniciarSesionNegocio}>
-              Ingresar
+            <button className="my-form__button" onClick={handleIniciarSesionNegocio} disabled={isLoading}>
+              {isLoading ? 'Iniciando sesión...' : 'Ingresar'}
             </button>
           </div>
         </main>

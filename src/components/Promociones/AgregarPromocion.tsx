@@ -253,15 +253,18 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
   function restarDiaYHoras(fecha: string | number | Date) {
     // Crear una nueva fecha basada en la fecha original
     let nuevaFecha = new Date(fecha);
-    
-    
+
+
     // Restar tres horas
     nuevaFecha.setHours(nuevaFecha.getHours() - 3);
-    
+
     return nuevaFecha;
-}
+  }
+
+  const [isLoading, setIsLoading] = useState(false);
 
   async function agregarStockEntrante() {
+    setIsLoading(true);
     const hoy = new Date();
 
     console.log(fechaDesde);
@@ -295,14 +298,8 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
     const promocion: Promocion = new Promocion();
 
-    console.log(fechaDesde);
-    console.log(fechaHasta);
-
     promocion.fechaDesde = restarDiaYHoras(fechaDesde);
     promocion.fechaHasta = restarDiaYHoras(fechaHasta);
-
-    console.log(fechaDesde);
-    console.log(fechaHasta);
 
     promocion.borrado = 'NO';
 
@@ -347,6 +344,9 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
 
   }
@@ -368,12 +368,12 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
   const prevStep = () => {
     setStep(step - 1);
   };
-  
+
 
   const fechaActual = new Date();
   const fechaActualFormateada = formatearFechaYYYYMMDDHHMM(fechaActual);
 
-  
+
 
   const renderStep = () => {
     switch (step) {
@@ -402,8 +402,8 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
                 value={formatearFechaYYYYMMDDHHMM(fechaDesde)}
                 onChange={(e) => { setFechaDesde(new Date(e.target.value)) }}
               />
-              
-              <div className="error-message" style={{marginTop: '70px'}}>La fecha de inicio debe ser válida, y mayor o igual a la actual.</div>
+
+              <div className="error-message" style={{ marginTop: '70px' }}>La fecha de inicio debe ser válida, y mayor o igual a la actual.</div>
 
             </div>
             <div className="inputBox">
@@ -415,7 +415,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
                 value={formatearFechaYYYYMMDDHHMM(fechaHasta)}
                 onChange={(e) => { setFechaHasta(new Date(e.target.value)) }}
               />
-              <div className="error-message" style={{marginTop: '70px'}}>La fecha de finalización debe ser válida, y mayor o igual a la actual.</div>
+              <div className="error-message" style={{ marginTop: '70px' }}>La fecha de finalización debe ser válida, y mayor o igual a la actual.</div>
 
             </div>
             <div className="btns-pasos">
@@ -596,7 +596,9 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={agregarStockEntrante}>Agregar promoción ✓</button>
+              <button className='btn-accion-completar' onClick={agregarStockEntrante} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar promoción ✓'}
+              </button>
             </div>
           </>
         );

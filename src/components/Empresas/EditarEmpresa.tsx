@@ -53,7 +53,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
     setImagenesEliminadas([...imagenesEliminadas, imagenEliminada]);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function handleCargarNegocio() {
+    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -95,6 +98,9 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -190,19 +196,19 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
         <div className="inputBox">
           <input autoComplete='false' type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
           <span>Nombre de la empresa</span>
-          
+
           <div className="error-message">El nombre no puede ser vacío.</div>
         </div>
         <div className="inputBox">
           <input type="text" required={true} value={razonSocial} onChange={(e) => { setRazonSocial(e.target.value) }} />
           <span>Razón social</span>
-          
+
           <div className="error-message">La razón social no puede ser vacía.</div>
         </div>
         <div className="inputBox">
           <input type="text" pattern=".{13}" required={true} value={cuit} onChange={handleCuilChange} />
           <span>CUIT</span>
-          
+
           <div className="error-message">El CUIT debe contener sus 11 dígitos.</div>
         </div>
         <div className="inputBox">
@@ -214,11 +220,12 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
       </form>
       <hr />
       <div className="btns-pasos">
-      <button className='btn-accion-completar' type="button" onClick={handleCargarNegocio}>Editar empresa ✓</button>
-
+        <button className='btn-accion-completar' onClick={handleCargarNegocio} disabled={isLoading}>
+          {isLoading ? 'Cargando...' : 'Editar empresa ✓'}
+        </button>
       </div>
-      
-      
+
+
     </div>
   )
 }

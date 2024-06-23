@@ -22,7 +22,10 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
   }, []);
   const opcionesDisponibles = ["CREATE", "READ", "UPDATE", "DELETE", "ACTIVATE"];
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function editarMedida() {
+    setIsLoading(true);
     privilegioOriginal.borrado = 'NO';
 
     if (!tarea) {
@@ -55,6 +58,9 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
       error: (message) => {
         return 'No se pudo editar el privilegio';
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -204,7 +210,9 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button onClick={editarMedida}>Editar privilegio</button>
+              <button className='btn-accion-completar' onClick={editarMedida} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar privilegio ✓'}
+              </button>
             </div>
           </>
         );

@@ -78,7 +78,10 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
 
   const [nombre, setNombre] = useState('');
 
+  const [isLoading, setIsLoading] = useState(false);
+
   async function agregarCategoria() {
+    setIsLoading(true);
     const categoria: Categoria = new Categoria();
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
@@ -91,7 +94,7 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
 
     categoria.nombre = nombre;
     categoria.borrado = 'NO';
-    
+
     let sucursalesElegidas: Sucursal[] = [];
 
     idsSucursalesElegidas.forEach(idSucursal => {
@@ -114,6 +117,9 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
         return message;
       },
     });
+
+    setIsLoading(false);
+
   }
 
   const [step, setStep] = useState(1);
@@ -135,7 +141,7 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
             <div className="inputBox">
               <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" />
               <span>Nombre del categoria</span>
-              
+
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div >
@@ -166,12 +172,14 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
             </div>
             <button onClick={añadirCampoImagen}>Añadir imagen</button>
             <hr />
-            
+
             <div className="btns-pasos">
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-completar' onClick={agregarCategoria}>Agregar categoría ✓</button>
+                <button className='btn-accion-completar' onClick={agregarCategoria} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Agregar categoría ✓'}
+                </button>
               )}
             </div>
           </>
@@ -199,8 +207,9 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={agregarCategoria}>Agregar categoría ✓</button>
-            </div>
+              <button className='btn-accion-completar' onClick={agregarCategoria} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar categoría ✓'}
+              </button>            </div>
           </>
         );
     }

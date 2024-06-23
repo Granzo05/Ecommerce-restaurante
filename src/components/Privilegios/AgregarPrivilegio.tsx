@@ -15,7 +15,11 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
   const [permisos, setPermisos] = useState<string[]>([]);
   const opcionesDisponibles = ["CREATE", "READ", "UPDATE", "DELETE", "ACTIVATE"];
 
+  const [isLoading, setIsLoading] = useState(false);
+
   async function agregarPrivilegios() {
+    setIsLoading(true);
+
     const privilegio: PrivilegiosSucursales = new PrivilegiosSucursales(0, permisos, 0, tarea, 'NO');
 
     if (!tarea || !tarea.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
@@ -47,6 +51,9 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
       error: (message) => {
         return 'No se pudo crear el privilegio';
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -122,38 +129,40 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
       case 1:
         return (
           <>
-              <Toaster />
-              <div className="inputBox">
-                <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" required={true} onChange={(e) => { setTarea(e.target.value) }} />
-                <span>Nombre de la tarea</span>
-                <div className="error-message">El nombre debe contener letras y espacios.</div>
-              </div>
-              <div>
-                {permisos.map((permiso, index) => (
-                  <div className="inputBox" key={index}>
-                    <p className='cierre-ingrediente' onClick={() => quitarCampoPermiso(index)}>X</p>
-                    <select
-                      required={true}
-                      value={permiso}
-                      onChange={(e) => handlePermisoChange(e.target.value, index)}
-                    >
-                      <option value="">Seleccionar una opción</option>
-                      {getOpcionesDisponibles(index).map(opcion => (
-                        <option key={opcion} value={opcion}>{opcion}</option>
-                      ))}
-                    </select>
-                  </div>
-                ))}
-                <button onClick={añadirCampoPermiso}>Añadir permiso</button>
-              </div>
+            <Toaster />
+            <div className="inputBox">
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" required={true} onChange={(e) => { setTarea(e.target.value) }} />
+              <span>Nombre de la tarea</span>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            </div>
+            <div>
+              {permisos.map((permiso, index) => (
+                <div className="inputBox" key={index}>
+                  <p className='cierre-ingrediente' onClick={() => quitarCampoPermiso(index)}>X</p>
+                  <select
+                    required={true}
+                    value={permiso}
+                    onChange={(e) => handlePermisoChange(e.target.value, index)}
+                  >
+                    <option value="">Seleccionar una opción</option>
+                    {getOpcionesDisponibles(index).map(opcion => (
+                      <option key={opcion} value={opcion}>{opcion}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+              <button onClick={añadirCampoPermiso}>Añadir permiso</button>
+            </div>
 
-              <div className="btns-pasos">
-                {empresa && empresa?.id > 0 ? (
-                  <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
-                ) : (
-                  <button className='btn-accion-completar' value="Agregar privilegio" id="agregarPrivilegios" onClick={agregarPrivilegios}>Agregar privilegio ✓</button>
-                )}
-              </div>
+            <div className="btns-pasos">
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-completar' onClick={agregarPrivilegios} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Agregar privilegio ✓'}
+                </button>
+              )}
+            </div>
           </>
         );
       case 2:
@@ -179,8 +188,9 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button value="Agregar privilegio" id="agregarPrivilegios" onClick={agregarPrivilegios}>Cargar </button>
-            </div>
+              <button className='btn-accion-completar' onClick={agregarPrivilegios} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Agregar privilegio ✓'}
+              </button>            </div>
           </>
         );
     }

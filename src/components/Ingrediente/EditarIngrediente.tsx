@@ -52,7 +52,10 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
     setIdsSucursalesElegidas(new Set());
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function editarIngrediente() {
+    setIsLoading(true);
     const ingrediente: Ingrediente = ingredienteOriginal;
     ingrediente.borrado = 'NO';
 
@@ -84,6 +87,9 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -102,21 +108,22 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
       case 1:
         return (
           <>
-              <Toaster />
-              <div className="inputBox">
-                <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
-                <span>Nombre del ingrediente</span>
+            <Toaster />
+            <div className="inputBox">
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <span>Nombre del ingrediente</span>
 
-                <div className="error-message">El nombre debe contener letras y espacios.</div>
-              </div>
+              <div className="error-message">El nombre debe contener letras y espacios.</div>
+            </div>
 
-              <div className="btns-pasos">
-                {empresa && empresa?.id > 0 ? (
-                  <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
-                ) : (
-                  <button className='btn-accion-completar' onClick={editarIngrediente}>Editar ingrediente ✓</button>
-                )}
-              </div>
+            <div className="btns-pasos">
+              {empresa && empresa?.id > 0 ? (
+                <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
+              ) : (
+                <button className='btn-accion-completar' onClick={editarIngrediente} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Editar ingrediente ✓'}
+                </button>)}
+            </div>
           </>
         );
       case 2:
@@ -142,7 +149,9 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button className='btn-accion-completar' onClick={editarIngrediente}>Editar ingrediente ✓</button>
+              <button className='btn-accion-completar' onClick={editarIngrediente} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar ingrediente ✓'}
+              </button>
             </div>
           </>
         );

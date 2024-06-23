@@ -15,7 +15,10 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
 
   const [nombre, setNombre] = useState(medidaOriginal.nombre);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function editarMedida() {
+    setIsLoading(true);
     const medida: Medida = medidaOriginal;
     medida.borrado = 'NO';
 
@@ -47,6 +50,9 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -107,15 +113,16 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
             <div className="inputBox">
               <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
               <span>Nombre del medida</span>
-              
+
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="btns-pasos">
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-completar' onClick={editarMedida}>Editar medida ✓</button>
-              )}
+                <button className='btn-accion-completar' onClick={editarMedida} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Editar medida ✓'}
+                </button>)}
             </div>
           </>
         );
@@ -142,7 +149,9 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button onClick={editarMedida}>Editar medida</button>
+              <button className='btn-accion-completar' onClick={editarMedida} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar medida ✓'}
+              </button>
             </div>
           </>
         );

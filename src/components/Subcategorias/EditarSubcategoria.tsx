@@ -51,8 +51,10 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
   };
 
   const [nombre, setNombre] = useState(subcategoriaOriginal.nombre);
+  const [isLoading, setIsLoading] = useState(false);
 
   function editarCategoria() {
+    setIsLoading(true);
     const subcategoria: Subcategoria = subcategoriaOriginal;
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
@@ -72,6 +74,9 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
       error: (message) => {
         return "No se pudo editar la subcategoría";
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -129,7 +134,9 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button onClick={editarCategoria}>Editar categoria</button>
+              <button className='btn-accion-completar' onClick={editarCategoria} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar categoria ✓'}
+              </button>
             </div>
           </>
         );

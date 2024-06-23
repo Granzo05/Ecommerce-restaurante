@@ -295,8 +295,10 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
     }
     setIdLocalidadesElegidas(updatedSelectedLocalidades);
   };
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCargarNegocio = async () => {
+    setIsLoading(true);
     if (!email) {
       toast.error("Por favor, es necesario el email");
       return;
@@ -379,6 +381,9 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
   }
 
@@ -572,7 +577,9 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
 
       </form>
       <hr />
-      <button type="button" onClick={handleCargarNegocio}>Editar sucursal</button>
+      <button className='btn-accion-completar' onClick={handleCargarNegocio} disabled={isLoading}>
+        {isLoading ? 'Cargando...' : 'Editar sucursal ✓'}
+      </button>
     </div >
   )
 }

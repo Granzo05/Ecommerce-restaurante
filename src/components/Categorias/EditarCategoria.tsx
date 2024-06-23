@@ -101,8 +101,11 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
   };
 
   const [nombre, setNombre] = useState(categoriaOriginal.nombre);
+  
+  const [isLoading, setIsLoading] = useState(false);
 
   function editarCategoria() {
+    setIsLoading(true);
     const categoria: Categoria = categoriaOriginal;
     categoria.borrado = 'NO';
 
@@ -134,7 +137,12 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
       error: (message) => {
         return message;
       },
+      finally: () => {
+        setIsLoading(false);
+      }
     });
+
+
   }
 
   const [step, setStep] = useState(1);
@@ -214,8 +222,9 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>
               ) : (
-                <button className='btn-accion-completar' onClick={editarCategoria}>Editar categoria ✓</button>
-              )}
+                <button className='btn-accion-completar' onClick={editarCategoria} disabled={isLoading}>
+                  {isLoading ? 'Cargando...' : 'Editar categoría ✓'}
+                </button>)}
             </div>
           </>
         );
@@ -242,7 +251,9 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
             ))}
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-              <button onClick={editarCategoria}>Editar categoria</button>
+              <button className='btn-accion-completar' onClick={editarCategoria} disabled={isLoading}>
+                {isLoading ? 'Cargando...' : 'Editar categoría ✓'}
+              </button>
             </div>
           </>
         );

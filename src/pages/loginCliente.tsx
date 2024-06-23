@@ -48,8 +48,10 @@ const LoginCliente = () => {
     const [codigoPostal, setCodigoPostal] = useState(parseInt(''));
     const [apellido, setApellido] = useState('');
     const [telefono, setTelefono] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleIniciarSesionUsuario = () => {
+        setIsLoading(true);
         if (email.length === 0) {
             toast.error('Debe ingresar una email');
             return;
@@ -58,7 +60,16 @@ const LoginCliente = () => {
             return;
         }
 
-        ClienteService.getUser(email, contraseña);
+        toast.promise(ClienteService.getUser(email, contraseña), {
+            loading: 'Iniciando sesión...',
+            success: () => {
+                return `Iniciando sesión...`;
+            },
+            error: 'Error',
+            finally: () => {
+                setIsLoading(false);
+            }
+        });
     };
 
     // Modal flotante de ingrediente
@@ -80,6 +91,7 @@ const LoginCliente = () => {
     };
 
     const handleCargarUsuario = () => {
+        setIsLoading(true);
         if (!nombre) {
             toast.error("Por favor, es necesario el nombre");
             return;
@@ -147,6 +159,9 @@ const LoginCliente = () => {
                 return `Iniciando sesión...`;
             },
             error: 'Error',
+            finally: () => {
+                setIsLoading(false);
+            }
         });
     };
 
@@ -365,8 +380,9 @@ const LoginCliente = () => {
                         
                         <div className="btns-crear-cuenta">
                             <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-                            <button className='btn-accion-registrarse' onClick={handleCargarUsuario}>Registrarse ✓</button>
-
+                            <button className="btn-accion-entregado" onClick={handleCargarUsuario} disabled={isLoading}>
+                                {isLoading ? 'Registrándose...' : 'Registrarse ✓'}
+                            </button>
                         </div>
                     </>
                 );
@@ -449,7 +465,9 @@ const LoginCliente = () => {
                                 <p id='pass-forg'>¿Has olvidado tu contraseña?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('reestablecerContraseña')}>Click aquí</a></p>
                             </div>
                             <br />
-                            <input type="button" className='btn' value="INICIAR SESIÓN" onClick={handleIniciarSesionUsuario} />
+                            <button className="btn" onClick={handleIniciarSesionUsuario} disabled={isLoading}>
+                                {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
+                            </button>
                         </form>
                         <p id='create-account'>¿No tienes una cuenta?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('crearCuenta')}>Crear cuenta</a></p>
                     </div>
