@@ -118,7 +118,7 @@ public class ClienteController {
             return null;
         }
 
-        List<Domicilio> domicilios = domicilioRepository.findByIdCliente(cliente.get().getId());
+        List<Domicilio> domicilios = domicilioRepository.findByIdClienteNotBorrado(cliente.get().getId());
 
         for (Domicilio domicilio : domicilios) {
             domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));

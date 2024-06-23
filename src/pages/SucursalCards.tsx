@@ -5,18 +5,47 @@ import { SucursalService } from '../services/SucursalService';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { getBaseUrl } from '../utils/global_variables/const';
 import { Cliente } from '../types/Cliente/Cliente';
+import InputComponent from '../components/InputFiltroComponent';
+import ModalFlotanteRecomendacionesProvincias from '../hooks/ModalFlotanteFiltroProvincia';
+import { ClienteService } from '../services/ClienteService';
+import ModalFlotanteRecomendacionesDepartamentos from '../hooks/ModalFlotanteFiltroDepartamentos';
+import { toast, Toaster } from 'sonner';
 
 const SucursalCards: React.FC = () => {
   const [sucursales, setSucursales] = useState<Sucursal[]>([]);
 
-  useEffect(() => {
-    if (sucursales.length === 0) fetchSucursales();
-  }, [sucursales]);
+  const [usuario] = useState<Cliente | null>(() => {
+    const usuarioString = localStorage.getItem('usuario');
+    return usuarioString ? (JSON.parse(usuarioString) as Cliente) : null;
+  });
 
-  const fetchSucursales = async () => {
+
+  useEffect(() => {
+    fetchDomiciliosYSucursales();
+  }, [usuario]);
+
+  const fetchDomiciliosYSucursales = async () => {
+    if (usuario) {
+      try {
+        const domicilios = await ClienteService.getDomicilios(usuario.id);
+        if (domicilios.length > 0 && domicilios[0].localidad.nombre.length > 0) {
+          fetchSucursalesProvincia(domicilios[0].localidad.departamento.provincia.nombre);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  };
+
+  const fetchSucursalesProvincia = async (provincia: string) => {
     try {
-      const data = await SucursalService.getSucursales();
-      setSucursales(data);
+      const data = await SucursalService.getSucursalesByProvincia(provincia);
+      if (data.length > 0) {
+        setSucursales(data);
+      } else {
+        toast.info('No hay sucursales disponibles en la provincia elegida')
+      }
+
     } catch (error) {
       console.error('Error:', error);
     }
@@ -44,13 +73,51 @@ const SucursalCards: React.FC = () => {
       window.location.href = getBaseUrl();
     }
   }
+  const [inputProvincia, setInputProvincia] = useState<string>('');
+  const [inputDepartamento, setInputDepartamento] = useState<string>('');
+  const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
+  const [modalBusquedaProvincia, setModalBusquedaProvincia] = useState<boolean>(false);
+
+
+  const handleModalClose = () => {
+    setModalBusquedaDepartamento(false)
+    setModalBusquedaProvincia(false)
+  };
+
+  function filtrarSucursalesDepartamento(filtro: string) {
+    if (filtro.length > 0) {
+      const filtradas = sucursales.filter(recomendacion =>
+        recomendacion.domicilios[0].localidad.departamento.nombre.toLowerCase().includes(filtro.toLowerCase())
+      );
+      console.log(sucursales)
+      if (filtradas.length > 0) {
+        setSucursales(filtradas);
+      } else {
+        toast.info('No hay sucursales disponibles en el departamento elegido')
+      }
+    } else {
+      setSucursales(sucursales);
+    }
+  }
 
   return (
     <>
       <HeaderLogin />
       <div className="outer-container-sucursal-card">
+        <Toaster />
+
         <div className="inner-container-sucursal-card">
           <h1 className="header-sucursal-card">&mdash; Selecciona una sucursal &mdash;</h1>
+          <div style={{ width: '50%', marginLeft: '40px' }}>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Coloca tu provincia:</label>
+            <InputComponent disabled={false} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
+            {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); fetchSucursalesProvincia(provincia.nombre); handleModalClose(); }} />}
+          </div>
+          <div style={{ width: '50%', marginLeft: '40px', marginBottom: '25px' }}>
+            <label style={{ display: 'flex', fontWeight: 'bold' }}>Si ya colocaste tu provincia, podés filtrar por tu departamento</label>
+            <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
+            {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); filtrarSucursalesDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
+          </div>
           <div className="sucursal-card-container">
             {sucursales.map((sucursal) => (
               <div

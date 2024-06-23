@@ -93,6 +93,20 @@ public class SucursalController {
     }
 
     @CrossOrigin
+    @GetMapping("/sucursales/provincia/{provincia}")
+    public Set<Sucursal> getSucursalesPorProvincia(@PathVariable("provincia") String provincia) throws Exception {
+        List<Sucursal> sucursales = sucursalRepository.findByProvincia(provincia);
+
+        for (Sucursal sucursal : sucursales) {
+            Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
+            sucursal.getDomicilios().add(domicilio);
+            sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
+        }
+
+        return new HashSet<>(sucursales);
+    }
+
+    @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}")
     public Sucursal getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
         Optional<Sucursal> sucursalDB = sucursalRepository.findById(idSucursal);

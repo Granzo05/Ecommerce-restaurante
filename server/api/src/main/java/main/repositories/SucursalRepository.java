@@ -10,12 +10,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
 
     @Query("SELECT s FROM Sucursal s WHERE s.email = :email")
     Optional<Sucursal> findByEmail(@Param("email") String email);
+
+    @Query("SELECT s FROM Sucursal s JOIN s.domicilios dom WHERE dom.localidad.departamento.provincia.nombre = :provincia AND dom.borrado = 'NO'")
+    List<Sucursal> findByProvincia(@Param("provincia") String provincia);
 
     @Query("SELECT s FROM Sucursal s WHERE s.nombre = :nombre")
     Optional<Sucursal> findByName(@Param("nombre") String nombre);

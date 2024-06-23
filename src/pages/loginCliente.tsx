@@ -245,13 +245,11 @@ const LoginCliente = () => {
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
                             <InputComponent disabled={inputPais.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
                             {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
-
                         </div>
                         <div>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
                             <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
                             {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
-
                         </div>
                         <div>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
