@@ -45,7 +45,7 @@ const LoginCliente = () => {
     const [calle, setCalle] = useState('');
     const [numeroCasa, setNumeroCasa] = useState('');
     const [fechaNacimiento, setFechaNacimiento] = useState<Date>(new Date());
-    const [codigoPostal, setCodigoPostal] = useState(0);
+    const [codigoPostal, setCodigoPostal] = useState(parseInt(''));
     const [apellido, setApellido] = useState('');
     const [telefono, setTelefono] = useState('');
 
@@ -99,15 +99,23 @@ const LoginCliente = () => {
         } else if (!localidadCliente) {
             toast.error("Por favor, es necesario la localidad para asignar el domicilio");
             return;
-        } else if (!calle) {
+        } else if (!calle || !calle.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
             toast.error("Por favor, es necesario la calle para el domicilio");
             return;
-        } else if (!numeroCasa.replace(/\D/g, '')) {
+        } else if (!numeroCasa.replace(/\D/g, '') || (parseInt(numeroCasa) > 9999 || parseInt(numeroCasa) < 1)) {
             toast.error("Por favor, es necesario el número del domicilio");
             return;
-        } else if (!codigoPostal) {
+        } else if (!codigoPostal || (codigoPostal > 9431 || codigoPostal < 1001)) {
             toast.error("Por favor, es necesario el código postal del domicilio");
             return;
+        } else if (localidadCliente.departamento.provincia.pais.nombre == '') {
+            toast.info(`Por favor, el domicilio debe contener un país`);
+        } else if (localidadCliente.departamento.provincia.nombre == '') {
+            toast.info(`Por favor, el domicilio debe contener una provincia`);
+        } else if (localidadCliente.departamento.nombre == '') {
+            toast.info(`Por favor, el domicilio debe contener un departamento`);
+        } else if (localidadCliente.nombre == '') {
+            toast.info(`Por favor, el domicilio debe contener una localidad`);
         } else if (!apellido) {
             toast.error("Por favor, es necesario el apellido");
             return;
@@ -146,6 +154,7 @@ const LoginCliente = () => {
     const [mostrarIniciarSesion, setMostrarIniciarSesion] = useState(true);
     const [mostrarReestablecerContraseña, setMostrarReestablecerContraseña] = useState(false);
     const [mostrarCrearCuenta, setMostrarCrearCuenta] = useState(false);
+    const [mostrarCrearCuentaGmail, setMostrarCrearCuentaGmail] = useState(false);
 
     const toggleTipoInput = () => {
         setTipoInput(tipoInput === 'password' ? 'text' : 'password');
@@ -156,16 +165,25 @@ const LoginCliente = () => {
             setMostrarIniciarSesion(true);
             setMostrarReestablecerContraseña(false);
             setMostrarCrearCuenta(false);
+            setMostrarCrearCuentaGmail(false);
             setStep(1); // Reinicia el paso al iniciar sesión
         } else if (seccion === 'reestablecerContraseña') {
             setMostrarIniciarSesion(false);
             setMostrarReestablecerContraseña(true);
             setMostrarCrearCuenta(false);
+            setMostrarCrearCuentaGmail(false);
         } else if (seccion === 'crearCuenta') {
             setMostrarIniciarSesion(false);
             setMostrarReestablecerContraseña(false);
             setMostrarCrearCuenta(true);
+            setMostrarCrearCuentaGmail(false);
             setStep(1); // Reinicia el paso al crear una cuenta
+        } else if (seccion === 'crearCuentaGmail') {
+            setMostrarIniciarSesion(false);
+            setMostrarReestablecerContraseña(false);
+            setMostrarCrearCuenta(false);
+            setMostrarCrearCuentaGmail(true);
+            setStep(1);
         }
     };
 
@@ -173,26 +191,98 @@ const LoginCliente = () => {
         document.title = 'El Buen Sabor - Iniciar sesión';
     }, []);
 
+
+
+    const validateAndNextStep = () => {
+
+        if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+            toast.error("Por favor, es necesario un nombre válido");
+            return;
+        } else if (!apellido || !apellido.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+            toast.error("Por favor, es necesario un apellido válido");
+            return;
+        } else if (!fechaNacimiento) {
+            toast.error("Por favor, es necesaria una fecha de nacimiento válida y ser mayor a 12 años.");
+            return;
+        } else {
+            // Convertir la fecha de nacimiento a un objeto Date
+            const fechaNacimientoDate = new Date(fechaNacimiento);
+
+            // Obtener la fecha actual
+            const fechaActual = new Date();
+
+            // Restar 12 años a la fecha actual
+            const fechaMinima = new Date();
+            fechaMinima.setFullYear(fechaActual.getFullYear() - 12);
+
+            // Comparar la fecha de nacimiento con la fecha mínima
+            if (fechaNacimientoDate > fechaMinima) {
+                toast.error("Debes ser mayor a 12 años.");
+                return;
+            } else {
+                nextStep();
+            }
+
+        }
+    }
+
+    const validateAndNextStep2 = () => {
+
+        if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
+            toast.error("Por favor, es necesario un e-mail válido");
+            return;
+        } else if (!contraseña || contraseña.length < 8) {
+            toast.error("Por favor, es necesaria una contraseña válido");
+            return;
+        } else if (!telefono.replace(/\D/g, '') || telefono.length < 10) {
+            // /\D/g, reemplaza todos las letras
+            toast.error("Por favor, es necesario un número de telefono válido");
+            return;
+        } else {
+            nextStep();
+        }
+
+    }
+
+
+    const handleTelefonoChange = (e: { target: { value: any; }; }) => {
+        const value = e.target.value;
+        // Permitir solo valores numéricos
+        if (/^\d*$/.test(value)) {
+            setTelefono(value);
+        }
+    };
+
+
+
+
     const renderStep = () => {
         switch (step) {
             case 1:
                 return (
                     <>
+                        <h5 style={{ textAlign: 'center' }}>Paso 1 - Datos personales</h5>
                         {/* Datos personales */}
-                        <div className="inputBox">
-                            <input type='text' required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
+                            <input type='text' required={true} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
                             <span>Nombre</span>
+                            <div className="error-message">El nombre debe contener letras y espacios.</div>
+
                         </div>
-                        <div className="inputBox">
-                            <input type='text' required={true} value={apellido} onChange={(e) => { setApellido(e.target.value) }} />
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
+                            <input type='text' required={true} value={apellido} onChange={(e) => { setApellido(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" />
                             <span>Apellido</span>
+                            <div className="error-message">El apellido debe contener letras y espacios.</div>
+
                         </div>
-                        <div className="inputBox">
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold', marginTop: '-5px' }}>Fecha de nacimiento:</label>
                             <input type='date' required={true} value={formatearFechaYYYYMMDD(fechaNacimiento)} onChange={(e) => { setFechaNacimiento(new Date(e.target.value)) }} />
+                            <div className="error-message" style={{ marginTop: '65px' }}>La fecha de nacimiento debe ser válida.</div>
+
                         </div>
                         <div className="btns-crear-cuenta">
-                            <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+                            <button style={{ marginRight: '0px' }} className='btn-accion-adelante' onClick={validateAndNextStep}>Siguiente ⭢</button>
                         </div>
 
                     </>
@@ -201,26 +291,31 @@ const LoginCliente = () => {
                 return (
                     <>
                         {/* Datos del correo */}
-                        <div className="inputBox">
-                            <input type='number' required={true} value={telefono} onChange={(e) => { setTelefono(e.target.value) }} />
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
+                            <input type='text' pattern="\d{10}" required={true} value={telefono} onChange={handleTelefonoChange} />
                             <span>Teléfono</span>
+                            <div className="error-message">El número de teléfono no es válido. Mínimo 10 dígitos</div>
+
                         </div>
-                        <div className="inputBox">
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
                             <input type='email' required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
                             <span>Correo electrónico</span>
+                            <div className="error-message">Formato incorrecto de e-mail.</div>
                         </div>
 
 
-                        <div className="inputBox">
-                            <input type={tipoInput} required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
+                            <input type={tipoInput} pattern=".{8,}" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
                             <span>Contraseña</span>
                             <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
+                            <div className="error-message">La contraseña debe tener mínimo 8 dígitos.</div>
+
                         </div>
 
 
                         <div className='btns-crear-cuenta'>
                             <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-                            <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
+                            <button style={{ marginRight: '0px' }} className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
                         </div>
                     </>
                 );
@@ -228,39 +323,46 @@ const LoginCliente = () => {
                 return (
                     <>
                         {/* Domicilio */}
-                        <div className="inputBox">
-                            <input type="text" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
+                            <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
                             <span>Nombre de la calle</span>
+                            <div className="error-message">El nombre de la calle debe contener letras y espacios.</div>
+
                         </div>
-                        <div className="inputBox">
-                            <input type="text" required={true} value={numeroCasa} onChange={(e) => { setNumeroCasa(e.target.value) }} />
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
+                            <input type="number" min={1} max={9999} required={true} value={numeroCasa} onChange={(e) => { setNumeroCasa(e.target.value) }} />
                             <span>Número de la casa</span>
+                            <div className="error-message">El número de la calle no es válido.</div>
+
                         </div>
-                        <div>
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
+                            <input type="number" min={1001} max={9431} required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
+                            <span>Código postal</span>
+                            <div className="error-message">El codigo postal no es válido.</div>
+
+                        </div>
+                        <div style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
                             <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={inputPais ?? ''} />
                             {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { setInputPais(pais.nombre); handleModalClose(); }} />}
                         </div>
-                        <div>
+                        <div style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
                             <InputComponent disabled={inputPais.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
                             {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
                         </div>
-                        <div>
+                        <div style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
                             <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
                             {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
                         </div>
-                        <div>
+                        <div style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
                             <InputComponent disabled={inputDepartamento.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadCliente.nombre ?? ''} />
                             {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
                         </div>
-                        <div className="inputBox">
-                            <input type="number" required={true} value={codigoPostal} onChange={(e) => { setCodigoPostal(parseInt(e.target.value)) }} />
-                            <span>Código postal</span>
-                        </div>
+                        
                         <div className="btns-crear-cuenta">
                             <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
                             <button className='btn-accion-registrarse' onClick={handleCargarUsuario}>Registrarse ✓</button>
@@ -305,30 +407,33 @@ const LoginCliente = () => {
                     <div className="box">
                         <h3>- BIENVENIDO -</h3>
                         <p id='subtitle'>¡Si ya tienes una cuenta, inicia sesión con tus datos!</p>
-                        <GoogleLogin
-                            onSuccess={async (credentialResponse) => {
-                                if (credentialResponse.credential) {
-                                    const { payload } = decodeJWT(credentialResponse.credential);
+                        <div className="login-google">
+                            <GoogleLogin
+                                onSuccess={async (credentialResponse) => {
+                                    if (credentialResponse.credential) {
+                                        const { payload } = decodeJWT(credentialResponse.credential);
 
-                                    const cliente = await buscarCliente(payload.email);
-                                    // Si no ha creado sesión previamente lo hacemos registrarse
+                                        const cliente = await buscarCliente(payload.email);
+                                        // Si no ha creado sesión previamente lo hacemos registrarse
 
-                                    if (!cliente) {
-                                        toast.info('Necesitamos unos datos extras antes de finalizar');
+                                        if (!cliente) {
+                                            toast.info('Necesitamos unos datos extras antes de finalizar');
 
-                                        setNombre(payload.given_name);
-                                        setApellido(payload.family_name);
-                                        setEmail(payload.email);
-                                        mostrarSeccion('crearCuenta');
-                                    } else {
-                                        toast.info('Iniciando sesión');
+                                            setNombre(payload.given_name);
+                                            setApellido(payload.family_name);
+                                            setEmail(payload.email);
+                                            mostrarSeccion('crearCuenta');
+                                        } else {
+                                            toast.info('Iniciando sesión');
+                                        }
                                     }
-                                }
-                            }}
-                            onError={() => {
-                                console.log('Login cancelado');
-                            }}
-                        />
+                                }}
+                                onError={() => {
+                                    console.log('Login cancelado');
+                                }}
+                            />
+                        </div>
+                        <hr />
                         <form action="">
                             <div className="inputBox">
                                 <input type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
@@ -369,6 +474,8 @@ const LoginCliente = () => {
                     </div>
                 </div>
             </section>
+
+
 
             {/*CREAR CUENTA*/}
             <section className="form-main" style={{ display: mostrarCrearCuenta ? '' : 'none' }}>
