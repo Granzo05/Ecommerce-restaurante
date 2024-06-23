@@ -130,7 +130,7 @@ header
 [x] Hacer andar el input de busqueda de productos en ambos headers
 
 Login
-[] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
+[x] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
 [] Hacer la recuperacion de contraseña
 
 Permisos: 

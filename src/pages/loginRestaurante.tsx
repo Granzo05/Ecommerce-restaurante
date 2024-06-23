@@ -67,6 +67,21 @@ const LoginNegocio = () => {
     setModalIsOpenP(false);
   };
 
+  const [error, setError] = useState('');
+
+  const validateEmailOrCuit = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const cuitRegex = /^\d{11}$/;
+
+    if (emailRegex.test(email)) {
+      setError('');
+    } else if (cuitRegex.test(email)) {
+      setError('');
+    } else {
+      setError('Formato incorrecto de e-mail o CUIT.');
+    }
+  };
+
 
   return (
     <>
@@ -97,18 +112,18 @@ const LoginNegocio = () => {
               <h2>- Ingresa a tu cuenta -</h2>
             </div>
             <div className="text-field">
-              <label htmlFor="email">E-mail o cuil:</label>
+              <label htmlFor="emailOrCuit">E-mail o CUIT:</label>
               <input
-                type="email"
-                id="email"
-                name="email"
+                type="text"
+                id="emailOrCuit"
+                name="emailOrCuit"
                 autoComplete="off"
-                placeholder="tu@ejemplo.com"
+                placeholder="tu@ejemplo.com o 12345678901"
                 required
-                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                onChange={(e) => {setEmail(e.target.value); validateEmailOrCuit()}}
               />
-
-              <div className="error-message">Formato incorrecto de e-mail.</div>
+              {error.length > 0 && <div className="error-message">{error}</div>}
             </div>
             <div className="text-field">
               <label htmlFor="password">Contraseña:</label>
