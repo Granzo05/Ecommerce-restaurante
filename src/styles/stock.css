@@ -105,8 +105,10 @@ table tr:hover {
 }
 
 .btn-accion-entregado{
-    background-color: #19cc37;
-    width: 272px;
+    background-color: #04a11e;
+    width: 100%;
+    border: none;
+    color: white;
 }
 
 .btn-accion-entregado:hover{
