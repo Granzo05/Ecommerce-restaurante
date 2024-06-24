@@ -117,11 +117,11 @@ public class StockEntranteController {
                     if(detalle.getCantidad() + stockArticulo.get().getCantidadActual() >= stockArticulo.get().getCantidadMaxima()) productosStockEntranteMayorAlMaximo.add(articulo.getNombre());
 
                     // Si los precios son distintos, asignamos el precio de compra nuevo para poder calcular mejor el costo de los menus y no perder plata
-                    if(stockArticulo.get().getPrecioCompra() != detalle.getCostoUnitario()) {
+                    if(stockArticulo.get().getPrecioCompra() != detalle.getCostoUnitario() && detalle.isModificarPrecio()) {
                         stockArticulo.get().setPrecioCompra(detalle.getCostoUnitario());
-
-                        stockArticuloRepository.save(stockArticulo.get());
                     }
+
+                    stockArticuloRepository.save(stockArticulo.get());
                 }
             } else if (detalle.getIngrediente() != null && detalle.getIngrediente().getNombre().length() > 2) {
                 Ingrediente ingrediente = ingredienteRepository.findByNameAndIdSucursal(detalle.getIngrediente().getNombre(), id).get();
@@ -130,17 +130,17 @@ public class StockEntranteController {
 
                 // Buscamos el stock almacenado del articulo
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findStockByIngredienteNameAndIdSucursal(ingrediente.getNombre(), id);
-
+                System.out.println(detalle.isModificarPrecio());
                 // Comparamos el precio almacenado de compra con la nueva compra
                 if(stockIngrediente.isPresent()) {
                     if(detalle.getCantidad() + stockIngrediente.get().getCantidadActual() >= stockIngrediente.get().getCantidadMaxima()) productosStockEntranteMayorAlMaximo.add(ingrediente.getNombre());
 
                     // Si los precios son distintos, asignamos el precio de compra nuevo para poder calcular mejor el costo de los menus y no perder plata
-                    if(stockIngrediente.get().getPrecioCompra() != detalle.getCostoUnitario()) {
+                    if(stockIngrediente.get().getPrecioCompra() != detalle.getCostoUnitario() && detalle.isModificarPrecio()) {
                         stockIngrediente.get().setPrecioCompra(detalle.getCostoUnitario());
-
-                        stockIngredientesRepository.save(stockIngrediente.get());
                     }
+
+                    stockIngredientesRepository.save(stockIngrediente.get());
                 }
             } else {
                 return ResponseEntity.badRequest().body("No se han recibido los articulos correctamente");

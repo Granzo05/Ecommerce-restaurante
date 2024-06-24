@@ -6,6 +6,7 @@ import lombok.*;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Getter
 @Setter
@@ -44,5 +45,9 @@ public class DetalleStock {
     @JsonIgnoreProperties(value = {"sucursal"}, allowSetters = true)
     @JoinColumn(name = "id_stock_entrante")
     private StockEntrante stockEntrante;
+
+    @Column(name = "modificar_precio")
+    private boolean modificarPrecio = false;
+
 
 }
