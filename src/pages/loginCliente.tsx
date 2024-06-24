@@ -52,22 +52,27 @@ const LoginCliente = () => {
 
     const handleIniciarSesionUsuario = () => {
         setIsLoading(true);
-        if (email.length === 0) {
-            toast.error('Debe ingresar una email');
+        if (email.length === 0 || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
+            toast.error('Debe ingresar un e-mail válida');
+            setIsLoading(false);
             return;
-        } else if (contraseña.length === 0) {
-            toast.error('Debe ingresar una contraseña');
+        } else if (contraseña.length === 0 || contraseña.length < 8) {
+            
+            setIsLoading(false);
+            toast.error('Debe ingresar una contraseña válida');
             return;
         }
 
         toast.promise(ClienteService.getUser(email, contraseña), {
             loading: 'Iniciando sesión...',
             success: () => {
+                setIsLoading(true);
                 return `Iniciando sesión...`;
             },
-            error: 'Error',
             finally: () => {
                 setIsLoading(false);
+                toast.error(`Error. Correo o contraseña no encontrados...`);
+                
             }
         });
     };
@@ -94,42 +99,60 @@ const LoginCliente = () => {
         setIsLoading(true);
         if (!nombre) {
             toast.error("Por favor, es necesario el nombre");
+            setIsLoading(false);
             return;
         } else if (!email) {
             toast.error("Por favor, es necesaria el email");
+            setIsLoading(false);
             return;
         } else if (!contraseña) {
             toast.error("Por favor, es necesaria la contraseña");
+            setIsLoading(false);
             return;
         } else if (!telefono.replace(/\D/g, '')) {
             // /\D/g, reemplaza todos las letras
             toast.error("Por favor, es necesario el telefono");
+            setIsLoading(false);
             return;
         } else if (!fechaNacimiento) {
             toast.error("Por favor, es necesaria la fecha de nacimiento");
+            setIsLoading(false);
             return;
         } else if (!localidadCliente) {
             toast.error("Por favor, es necesario la localidad para asignar el domicilio");
+            setIsLoading(false);
             return;
-        } else if (!calle || !calle.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+        } else if (!calle || !calle.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\-0-9]+$/)) {
             toast.error("Por favor, es necesario la calle para el domicilio");
+            setIsLoading(false);
             return;
         } else if (!numeroCasa.replace(/\D/g, '') || (parseInt(numeroCasa) > 9999 || parseInt(numeroCasa) < 1)) {
             toast.error("Por favor, es necesario el número del domicilio");
+            setIsLoading(false);
             return;
         } else if (!codigoPostal || (codigoPostal > 9431 || codigoPostal < 1001)) {
             toast.error("Por favor, es necesario el código postal del domicilio");
+            setIsLoading(false);
             return;
         } else if (localidadCliente.departamento.provincia.pais.nombre == '') {
             toast.info(`Por favor, el domicilio debe contener un país`);
+            setIsLoading(false);
+            return;
         } else if (localidadCliente.departamento.provincia.nombre == '') {
             toast.info(`Por favor, el domicilio debe contener una provincia`);
+            setIsLoading(false);
+            return;
         } else if (localidadCliente.departamento.nombre == '') {
             toast.info(`Por favor, el domicilio debe contener un departamento`);
+            setIsLoading(false);
+            return;
         } else if (localidadCliente.nombre == '') {
             toast.info(`Por favor, el domicilio debe contener una localidad`);
+            setIsLoading(false);
+            return;
         } else if (!apellido) {
             toast.error("Por favor, es necesario el apellido");
+            setIsLoading(false);
             return;
         }
 
@@ -156,11 +179,14 @@ const LoginCliente = () => {
         toast.promise(ClienteService.createUser(cliente), {
             loading: 'Creando usuario...',
             success: () => {
+                setIsLoading(true);
                 return `Iniciando sesión...`;
             },
             error: 'Error',
             finally: () => {
                 setIsLoading(false);
+                toast.error(`Error. Intente nuevamente...`);
+                
             }
         });
     };
@@ -323,7 +349,7 @@ const LoginCliente = () => {
                             <input type={tipoInput} pattern=".{8,}" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
                             <span>Contraseña</span>
                             <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
-                            <div className="error-message">La contraseña debe tener mínimo 8 dígitos.</div>
+                            <div className="error-message">Mínimo 8 dígitos.</div>
 
                         </div>
 
@@ -339,7 +365,7 @@ const LoginCliente = () => {
                     <>
                         {/* Domicilio */}
                         <div className="inputBox" style={{ marginBottom: '12px' }}>
-                            <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
+                            <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-0-9]+" required={true} value={calle} onChange={(e) => { setCalle(e.target.value) }} />
                             <span>Nombre de la calle</span>
                             <div className="error-message">El nombre de la calle debe contener letras y espacios.</div>
 
@@ -358,22 +384,22 @@ const LoginCliente = () => {
                         </div>
                         <div style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
-                            <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={inputPais ?? ''} />
+                            <InputComponent disabled={false} placeHolder='Filtrar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={inputPais ?? ''} />
                             {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { setInputPais(pais.nombre); handleModalClose(); }} />}
                         </div>
                         <div style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-                            <InputComponent disabled={inputPais.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
+                            <InputComponent disabled={inputPais.length === 0} placeHolder='Filtrar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
                             {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); handleModalClose(); }} />}
                         </div>
                         <div style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
-                            <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
+                            <InputComponent disabled={inputProvincia.length === 0} placeHolder='Filtrar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
                             {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
                         </div>
                         <div style={{ marginBottom: '12px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
-                            <InputComponent disabled={inputDepartamento.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadCliente.nombre ?? ''} />
+                            <InputComponent disabled={inputDepartamento.length === 0} placeHolder='Filtrar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadCliente.nombre ?? ''} />
                             {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
                         </div>
@@ -451,14 +477,17 @@ const LoginCliente = () => {
                         </div>
                         <hr />
                         <form action="">
-                            <div className="inputBox">
-                                <input type="text" required={true} onChange={(e) => { setEmail(e.target.value) }} />
+                            <div className="inputBox" style={{ marginBottom: '12px' }}>
+                                <input type="email" required={true} onChange={(e) => { setEmail(e.target.value) }} />
                                 <span>Correo electrónico</span>
+                                <div className="error-message">Formato incorrecto de e-mail.</div>
+
                             </div>
-                            <div className="inputBox">
-                                <input type={tipoInput} required={true} onChange={(e) => { setContraseña(e.target.value) }} />
+                            <div className="inputBox" style={{ marginBottom: '12px' }}>
+                                <input type={tipoInput} pattern=".{8,}" required={true} onChange={(e) => { setContraseña(e.target.value) }} />
                                 <span>Contraseña</span>
                                 <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
+                                <div className="error-message">Mínimo 8 dígitos.</div>
 
                             </div>
                             <div className="input-link">
@@ -487,7 +516,7 @@ const LoginCliente = () => {
                                 <span>Correo electrónico</span>
                             </div>
                             <br />
-                            <input type="button" className='btn' value="ENVIAR CORREO DE RECUPERACIÓN" onClick={handlePasswordResetRequest} style={{ marginTop: '0.5px' }} />
+                            <input type="button" className='btn' value="ENVIAR CORREO" onClick={handlePasswordResetRequest} style={{ marginTop: '0.5px' }} />
                         </form>
                     </div>
                 </div>
@@ -499,7 +528,7 @@ const LoginCliente = () => {
             <section className="form-main" style={{ display: mostrarCrearCuenta ? '' : 'none' }}>
                 <div className="form-content">
                     <div className="box">
-                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a style={{ cursor: 'pointer' }}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
+                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a href='' style={{ cursor: 'pointer' }}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
                         <h3>- CREAR UNA CUENTA -</h3>
                         {renderStep()}
                         <p id='subtitle'>¿Ya tienes una cuenta?&nbsp;<a style={{ cursor: 'pointer' }} className='gradient-text' onClick={() => mostrarSeccion('iniciarSesion')}>Iniciar sesión</a></p>
