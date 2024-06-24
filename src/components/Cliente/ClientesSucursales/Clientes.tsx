@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import '../../styles/stock.css';
-import '../../styles/clientes.css'
 import { Empleado } from "../../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../../utils/global_variables/const";
 import { Sucursal } from "../../../types/Restaurante/Sucursal";
