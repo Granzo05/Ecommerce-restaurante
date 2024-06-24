@@ -18,7 +18,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
 
   function editarMedida() {
     const rol: Roles = rolOriginal;
-    rol.borrado = 'NO';
+    rol.borrado = rolOriginal.borrado;
 
     if (!nombre || !nombre.match(/^[a-zA-Z\s]+$/)) {
       toast.info("Por favor, asigne un nombre válido");

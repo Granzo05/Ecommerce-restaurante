@@ -63,6 +63,7 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
     setIsLoading(true);
 
     subcategoria.nombre = nombre;
+    
     toast.promise(SubcategoriaService.updateSubcategoria(subcategoria), {
       loading: 'Editando Subcategoria...',
       success: (message) => {

@@ -84,7 +84,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
 
     if (contraseña.length > 2) empresa.contraseña = contraseña;
 
-    empresa.borrado = 'NO';
+    empresa.borrado = empresaOriginal.borrado;
 
     toast.promise(EmpresaService.updateEmpresa(empresa, imagenes, imagenesEliminadas), {
       loading: 'Editando empresa...',

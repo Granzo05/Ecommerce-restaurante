@@ -279,7 +279,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     menuActualizado.precioVenta = precioVenta;
     menuActualizado.descripcion = descripcion;
     menuActualizado.id = menuOriginal.id;
-    menuActualizado.borrado = 'NO';
+    menuActualizado.borrado = menuOriginal.borrado;
     menuActualizado.subcategoria = subcategoria;
 
     if (ingredientesMuestra.length > 0) {

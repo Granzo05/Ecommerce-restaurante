@@ -106,7 +106,8 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
 
   function editarCategoria() {
     const categoria: Categoria = categoriaOriginal;
-    categoria.borrado = 'NO';
+
+    categoria.borrado = categoriaOriginal.borrado;
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
       toast.info("Por favor, asigne un nombre válido");

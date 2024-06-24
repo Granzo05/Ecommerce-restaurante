@@ -420,7 +420,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       }
     });
 
-    empleadoActualizado.borrado = 'NO';
+    empleadoActualizado.borrado = empleadoOriginal.borrado;
 
     empleadoActualizado.roles = roles;
 

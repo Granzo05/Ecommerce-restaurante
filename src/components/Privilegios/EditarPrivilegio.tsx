@@ -25,7 +25,6 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
   const [isLoading, setIsLoading] = useState(false);
 
   function editarMedida() {
-    privilegioOriginal.borrado = 'NO';
 
     if (!tarea) {
       toast.info("Por favor, asigne la tarea");
@@ -34,7 +33,7 @@ const EditarPrivilegio: React.FC<EditarMedidaProps> = ({ privilegioOriginal, onC
     setIsLoading(true);
 
     privilegioOriginal.nombre = tarea;
-
+    
     let sucursalesElegidas: Sucursal[] = [];
 
     idsSucursalesElegidas.forEach(idSucursal => {

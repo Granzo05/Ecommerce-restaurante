@@ -371,7 +371,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
     promocionUpdated.fechaDesde = fechaDesde;
     promocionUpdated.fechaHasta = fechaHasta;
 
-    promocionUpdated.borrado = 'NO';
+    promocionUpdated.borrado = promocion.borrado;
 
     const detallesPromocion: DetallePromocion[] = [];
 

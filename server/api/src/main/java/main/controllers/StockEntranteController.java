@@ -130,7 +130,6 @@ public class StockEntranteController {
 
                 // Buscamos el stock almacenado del articulo
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findStockByIngredienteNameAndIdSucursal(ingrediente.getNombre(), id);
-                System.out.println(detalle.isModificarPrecio());
                 // Comparamos el precio almacenado de compra con la nueva compra
                 if(stockIngrediente.isPresent()) {
                     if(detalle.getCantidad() + stockIngrediente.get().getCantidadActual() >= stockIngrediente.get().getCantidadMaxima()) productosStockEntranteMayorAlMaximo.add(ingrediente.getNombre());

@@ -125,6 +125,11 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
     (por ejemplo, mediante un combobox) y también se podrán buscar mediante su id (mediante un cuadro de búsqueda).
     [x] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.
     [x] Acomodar el regex de la calle, si pongo 25 de mayo me da error
+    [x] Ordenar la tabla por fecha ascendente.
+    [x] Faltan agregar y editar.
+    ERROR AL SELECCIONAR SUCURSAL[x] 
+    [x] Al añadir un ingrediente más su stock, no deja eliminarlo ni editarlo.
+    [x] Al editar un ingrediente desactivado, se edita y se activa.
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Costo recomendado de articulos por sucursal
@@ -173,8 +178,6 @@ STOCK:
 [] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST que avise que queda poco
 
 STOCK ENTRANTE:
-[] Ordenar la tabla por fecha ascendente.
-STOCK ENTRANTE:
 [] Filtros de fechas. Filtrar entre 2 fechas.
 
 MENÚ:
@@ -182,14 +185,11 @@ MENÚ:
 ARTÍCULOS:
 
 INGREDIENTES:
-[] Al añadir un ingrediente más su stock, no deja eliminarlo ni editarlo.
-[] Al editar un ingrediente desactivado, se edita y se activa.
 
 MENÚS:
 [] Se duplican los ingredientes actuales al editar el menú.
 
 PRIVILEGIOS:
-[] Faltan agregar y editar.
 
 PROMOCIONES:
 [] No deja cargar promoción si no hay menú. 
@@ -210,7 +210,7 @@ SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
 TERMINAR REPORTES[]
 ARREGLAR PREFERENCIAS DE EMPLEADO[]
 EL HOME SE ROMPE Y NO TRAE A VECES LAS PROMOCIONES Y LAS CATEGORIAS[]
-SucursalCards: FALTA VALIDACIONES Y RUTAPRIVADA. ERROR AL SELECCIONAR SUCURSAL[x]  []
+SucursalCards: FALTA VALIDACIONES Y RUTAPRIVADA. []
 Footer: BUG, MUESTRA SUCURSAL VACIA.[]
 pago: NO TE DEBE DEJAR ENTRAR SI NO ESTAS LOGUEADO. ARREGLAR MODAL DE SALIDA.[] RUTAS PRIVADA EVITA ESTO :D
 loginCliente: FALTA HACER VALIDAR LA RECUPERACION DE LA CONTRASEÑA. FALTA VALIDAR INGRESO CON GMAIL. FALTAN VALIDACIONES A LOS INPUTS.[]

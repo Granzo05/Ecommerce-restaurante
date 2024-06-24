@@ -19,7 +19,6 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
 
   function editarMedida() {
     const medida: Medida = medidaOriginal;
-    medida.borrado = 'NO';
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
       toast.info("Por favor, asigne un nombre válido");
@@ -28,6 +27,8 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
     setIsLoading(true);
 
     medida.nombre = nombre;
+
+    medida.borrado = medidaOriginal.borrado;
 
     let sucursalesElegidas: Sucursal[] = [];
 

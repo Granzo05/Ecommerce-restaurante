@@ -163,7 +163,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
 
     articuloActualizado.sucursales = sucursalesElegidas;
 
-    articuloActualizado.borrado = 'NO';
+    articuloActualizado.borrado = articuloOriginal.borrado;
 
     toast.promise(ArticuloVentaService.updateArticulo(articuloActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando articulo...',
