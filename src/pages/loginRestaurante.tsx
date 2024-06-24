@@ -36,10 +36,10 @@ const LoginNegocio = () => {
     toast.promise(EmpresaService.getEmpresa(email, contraseña), {
       loading: 'Iniciando sesión...',
       success: 'Abriendo sesión',
-      error: 'Credenciales inválidas',
       duration: 3000,
       finally: () => {
         setIsLoading(false);
+        toast.error ('Credenciales inválidas');
       }
     });
   };
