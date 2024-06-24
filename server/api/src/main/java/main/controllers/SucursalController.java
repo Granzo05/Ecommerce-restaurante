@@ -59,9 +59,15 @@ public class SucursalController {
     @GetMapping("/sucursal/login/{email}/{password}")
     public Sucursal loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
         Optional<Sucursal> sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-        System.out.println(email);
-        System.out.println(password);
         return sucursal.orElse(new Sucursal());
+    }
+
+    @CrossOrigin
+    @GetMapping("/clientes/{idSucursal}")
+    public Set<Cliente> getClientes(@PathVariable("idSucursal") Long idSucursal) throws Exception {
+        List<Cliente> clientes = clienteRepository.findBySucursal(idSucursal);
+
+        return new HashSet<>(clientes);
     }
 
     @CrossOrigin
@@ -160,7 +166,7 @@ public class SucursalController {
 
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(idSucursal)));
 
-            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now().plusDays(5))));
+            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now())));
 
             return sucursal;
         }

@@ -81,7 +81,6 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarCategoria() {
-    setIsLoading(true);
     const categoria: Categoria = new Categoria();
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
@@ -91,6 +90,8 @@ const AgregarCategoria: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
       toast.info("No se asignó ninguna imagen");
       return;
     }
+    
+    setIsLoading(true);
 
     categoria.nombre = nombre;
     categoria.borrado = 'NO';

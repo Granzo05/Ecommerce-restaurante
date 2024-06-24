@@ -19,6 +19,7 @@ import ModalCrud from '../ModalCrud';
 import { SucursalService } from '../../services/SucursalService';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empresa } from '../../types/Restaurante/Empresa';
+import { StockIngredientesService } from '../../services/StockIngredientesService';
 
 interface AgregarMenuProps {
   onCloseModal: () => void;
@@ -102,20 +103,25 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     }
   };
 
-  function calcularCostos() {
+  async function calcularCostos() {
     let precioRecomendado: number = 0;
-    if (ingredientesMenu[0]?.ingrediente?.nombre?.length > 0 && precioSugerido === 0) {
-      ingredientesMenu.forEach(ingredienteMenu => {
-        if (ingredienteMenu.medida?.nombre === ingredienteMenu.ingrediente?.stockIngrediente?.medida?.nombre) {
-          // Si coinciden las medidas, ej gramos y gramos entonces se calcula por igual
-          precioRecomendado += ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad;
-        } else if (ingredienteMenu?.medida?.nombre !== ingredienteMenu?.ingrediente?.stockIngrediente?.medida?.nombre && ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra) {
-          // Si no coinciden entonces hay que llevar la medida al mimso tipo ya que el precio se calcula por unidad de medida del stock
-          precioRecomendado += (ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad) / 1000;
+
+    for (const ingredienteMenu of ingredientesMenu) {
+      if (ingredienteMenu.ingrediente?.nombre.length > 0) {
+        const medidaIngredienteMenu = ingredienteMenu.medida?.nombre;
+
+        let stock = await StockIngredientesService.getStockPorProducto(ingredienteMenu.ingrediente.nombre);
+
+        if (medidaIngredienteMenu === stock.medida.nombre) {
+          // Si coinciden las medidas, el cálculo es directo
+          precioRecomendado += stock.precioCompra * ingredienteMenu.cantidad;
+        } else if (stock.medida.nombre && ingredienteMenu.ingrediente.stockIngrediente?.precioCompra) {
+          // Si no coinciden, se necesita ajustar la cantidad a la medida del stock
+          precioRecomendado += (stock.precioCompra * ingredienteMenu.cantidad) / 1000;
         }
-      });
-      setPrecioSugerido(precioRecomendado);
+      }
     }
+    setPrecioSugerido(precioRecomendado);
   }
 
   const [empresa] = useState<Empresa | null>(() => {
@@ -187,7 +193,6 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarMenu() {
-    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -224,6 +229,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
         return;
       }
     }
+    setIsLoading(true);
 
     const menu: ArticuloMenu = new ArticuloMenu();
 
@@ -268,6 +274,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
+    if(step === 4)
     calcularCostos();
   }, [step]);
 

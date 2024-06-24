@@ -123,6 +123,19 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [x] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
     los pedidos en general, por lo cual habrá una pantalla con el listado de todos los pedidos, los cuales se podrán filtran según su estado 
     (por ejemplo, mediante un combobox) y también se podrán buscar mediante su id (mediante un cuadro de búsqueda).
+    [x] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.
+    [x] Acomodar el regex de la calle, si pongo 25 de mayo me da error
+    [x] Ordenar la tabla por fecha ascendente.
+    [x] Faltan agregar y editar.
+    ERROR AL SELECCIONAR SUCURSAL[x] 
+    [x] Al añadir un ingrediente más su stock, no deja eliminarlo ni editarlo.
+    [x] Al editar un ingrediente desactivado, se edita y se activa.
+    [x] Ver la suma de precio sugerido
+    [x] Se duplican los ingredientes actuales al editar el menú.
+    [x] No me trae los domicilios pal delivery.
+    [x] No deja cargar promoción si no hay menú. 
+    [x] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
+    [x] Error al editar la promoción.
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Costo recomendado de articulos por sucursal
@@ -130,7 +143,8 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
 [] El editar menú no borra los ingredientes.
 
-notFound; REVISAR ESTE TSX QUE TA RARO EL HEADER: esta en pages
+notFound
+[]REVISAR ESTE TSX QUE TA RARO EL HEADER: esta en pages
 
 sucursales/ Pagina
 
@@ -139,7 +153,6 @@ header
 
 Login
 [] Hacer la recuperacion de contraseña
-[] Acomodar el regex de la calle, si pongo 25 de mayo me da error
 
 PDFS
 [] Arreglar el diseño de los pdfs
@@ -151,7 +164,6 @@ PEDIDOS FALTA PROBAR:
 HORARIOS: 
 
 COMPRA:
-[] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.
 
 CLIENTE:
 [] HACER TODO LO DEL PERFIL DEL CLIENTE Y LOS DOMICILIOS
@@ -167,13 +179,11 @@ CATEGORÍA:
 
 EMPLEADOS:
 [] Hay que pasar el CUIL a string, asi poder usar sus '-'.
-[] Acomodar los privilegios del editar empleado que se ven como taban original sin los cuadrados
+[] Acomodar los privilegios del editar empleado que se ven como taban original sin los cuadrados FALTA CSS
 
 STOCK:
 [] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST que avise que queda poco
 
-STOCK ENTRANTE:
-[] Ordenar la tabla por fecha ascendente.
 STOCK ENTRANTE:
 [] Filtros de fechas. Filtrar entre 2 fechas.
 
@@ -182,19 +192,12 @@ MENÚ:
 ARTÍCULOS:
 
 INGREDIENTES:
-[] Al añadir un ingrediente más su stock, no deja eliminarlo ni editarlo.
-[] Al editar un ingrediente desactivado, se edita y se activa.
 
 MENÚS:
-[] Se duplican los ingredientes actuales al editar el menú.
 
 PRIVILEGIOS:
-[] Faltan agregar y editar.
 
 PROMOCIONES:
-[] No deja cargar promoción si no hay menú. 
-[] Error al editar la promoción.
-[] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
 [] Arreglar los filtros de fechas en este y en stock entrante.
 
 SUCURSALES:
@@ -203,14 +206,13 @@ SUCURSALES:
 [] Error al cargar sucursal. Credenciales invalidas.
 
 PAGO:
-[] No me trae los domicilios pal delivery.
 
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]
 TERMINAR REPORTES[]
 ARREGLAR PREFERENCIAS DE EMPLEADO[]
 EL HOME SE ROMPE Y NO TRAE A VECES LAS PROMOCIONES Y LAS CATEGORIAS[]
-SucursalCards: FALTA VALIDACIONES Y RUTAPRIVADA. ERROR AL SELECCIONAR SUCURSAL[x]  []
+SucursalCards: FALTA VALIDACIONES Y RUTAPRIVADA. []
 Footer: BUG, MUESTRA SUCURSAL VACIA.[]
 pago: NO TE DEBE DEJAR ENTRAR SI NO ESTAS LOGUEADO. ARREGLAR MODAL DE SALIDA.[] RUTAS PRIVADA EVITA ESTO :D
 loginCliente: FALTA HACER VALIDAR LA RECUPERACION DE LA CONTRASEÑA. FALTA VALIDAR INGRESO CON GMAIL. FALTAN VALIDACIONES A LOS INPUTS.[]

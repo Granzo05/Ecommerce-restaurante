@@ -30,6 +30,7 @@ const SucursalCards: React.FC = () => {
         const domicilios = await ClienteService.getDomicilios(usuario.id);
         if (domicilios.length > 0 && domicilios[0].localidad.nombre.length > 0) {
           fetchSucursalesProvincia(domicilios[0].localidad.departamento.provincia.nombre);
+          setInputProvincia(domicilios[0].localidad.departamento.provincia.nombre);
         }
       } catch (error) {
         console.error('Error:', error);

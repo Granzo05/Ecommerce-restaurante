@@ -95,7 +95,6 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarArticulo() {
-    setIsLoading(true);
     if (imagenes.length === 0) {
       toast.info("No se asignó ninguna imagen");
       return;
@@ -143,6 +142,8 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
         return;
       }
     }
+    
+    setIsLoading(true);
 
     const articulo: ArticuloVenta = new ArticuloVenta();
 
@@ -188,6 +189,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
         return message;
       },
       error: (message) => {
+        setIsLoading(false);
         return message;
       },
       finally: () => {

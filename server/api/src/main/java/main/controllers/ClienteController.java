@@ -44,7 +44,8 @@ public class ClienteController {
                 domicilio.setBorrado("NO");
 
                 // Buscamos si hay un restaurante en la localidad del cliente para enviarlo a esa sucursal en el main
-                if(domicilio.getBorrado() == "NO") clienteDetails.setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
+                if (domicilio.getBorrado() == "NO")
+                    clienteDetails.setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
             }
 
             clienteDetails.setBorrado("NO");
@@ -53,30 +54,32 @@ public class ClienteController {
 
             return clienteDetails;
         } else {
-            return null;
+            return new Cliente();
         }
     }
 
     private Long buscarRestauranteCercano(Domicilio domicilio) {
-        Long idSucursal = sucursalRepository.findIdByIdLocalidadDomicilio(domicilio.getLocalidad().getId()).get(0);
-        if(idSucursal > 0) {
-            return idSucursal;
+        List<Long> idSucursales = sucursalRepository.findIdByIdLocalidadDomicilio(domicilio.getLocalidad().getId());
+
+        if (!idSucursales.isEmpty()) {
+            return idSucursales.get(0);
         } else {
             // Si no encontramos localidad, entonces por departamento
-            idSucursal = sucursalRepository.findIdByIdDepartamentoDomicilio(domicilio.getLocalidad().getDepartamento().getId()).get(0);
-            if(idSucursal > 0) {
-                return idSucursal;
+            List<Long> idSucursal = sucursalRepository.findIdByIdDepartamentoDomicilio(domicilio.getLocalidad().getDepartamento().getId());
+            if (!idSucursal.isEmpty()) {
+                return idSucursal.get(0);
             } else {
                 // finalmente por provincia
-                idSucursal = sucursalRepository.findIdByIdProvinciaDomicilio(domicilio.getLocalidad().getDepartamento().getProvincia().getId()).get(0);
-                if(idSucursal > 0) {
-                    return idSucursal;
+                idSucursal = sucursalRepository.findIdByIdProvinciaDomicilio(domicilio.getLocalidad().getDepartamento().getProvincia().getId());
+                if (!idSucursal.isEmpty()) {
+                    return idSucursal.get(0);
                 } else {
                     // En este caso se le avisa al cliente que no hay ningun restaurante en su provincia
                     return 0l;
                 }
             }
         }
+
     }
 
     @CrossOrigin
@@ -86,7 +89,8 @@ public class ClienteController {
         if (cliente.isPresent()) {
             // Buscamos la sucursal más cercana a los domicilios existentes del usuario
             for (Domicilio domicilio : cliente.get().getDomicilios()) {
-                if(domicilio.getBorrado() == "NO") cliente.get().setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
+                if (domicilio.getBorrado() == "NO")
+                    cliente.get().setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
             }
 
             return cliente.get();
@@ -102,7 +106,8 @@ public class ClienteController {
         if (cliente.isPresent()) {
             // Buscamos la sucursal más cercana a los domicilios existentes del usuario
             for (Domicilio domicilio : cliente.get().getDomicilios()) {
-                if(domicilio.getBorrado() == "NO") cliente.get().setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
+                if (domicilio.getBorrado() == "NO")
+                    cliente.get().setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
             }
 
             return cliente.get();

@@ -44,4 +44,5 @@ public class StockEntrante {
     @JsonIgnoreProperties(value = {"sucursal", "stockEntrante"}, allowSetters = true)
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "stockEntrante", cascade = CascadeType.ALL)
     private Set<DetalleStock> detallesStock = new HashSet<>();
+
 }

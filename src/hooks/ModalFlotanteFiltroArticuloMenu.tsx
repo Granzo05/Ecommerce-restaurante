@@ -5,7 +5,7 @@ import '../styles/modalCrud.css'
 import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 import { MenuService } from "../services/MenuService";
 
-const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => void, onSelectArticuloMenu: (articulo: ArticuloMenu) => void, datosOmitidos: string[] | string }> = ({ onCloseModal, onSelectArticuloMenu, datosOmitidos }) => {
+const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => void, onSelectArticuloMenu: (articulo: ArticuloMenu) => void, datosOmitidos: string[] | string | undefined }> = ({ onCloseModal, onSelectArticuloMenu, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -18,7 +18,7 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
   useEffect(() => {
     MenuService.getMenus()
       .then(async articulos => {
-        if (datosOmitidos?.length > 0) {
+        if (datosOmitidos && datosOmitidos?.length > 0) {
           const articulosFiltrados = articulos.filter(articulo =>
             !datosOmitidos.includes(articulo.nombre)
           );

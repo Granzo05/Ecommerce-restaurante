@@ -11,8 +11,10 @@ interface AgregarRolesProps {
 }
 
 
+
 const AgregarRoles: React.FC<AgregarRolesProps> = ({ onCloseModal }) => {
-  const [nombre, setNombre] = useState('');
+const [isLoading, setIsLoading] = useState(false);
+const [nombre, setNombre] = useState('');
 
   async function agregarRoles() {
     const rol: Roles = new Roles();
@@ -21,6 +23,7 @@ const AgregarRoles: React.FC<AgregarRolesProps> = ({ onCloseModal }) => {
       toast.info("Por favor, asigne un rol válido");
       return;
     }
+    setIsLoading(true);
 
     rol.nombre = nombre;
     rol.borrado = 'NO';

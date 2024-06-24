@@ -55,14 +55,14 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
   const [isLoading, setIsLoading] = useState(false);
 
   function editarIngrediente() {
-    setIsLoading(true);
     const ingrediente: Ingrediente = ingredienteOriginal;
-    ingrediente.borrado = 'NO';
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
+
+    setIsLoading(true);
 
     ingrediente.nombre = nombre;
 
@@ -73,6 +73,8 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
       sucursal.id = idSucursal;
       sucursalesElegidas.push(sucursal);
     });
+
+    ingrediente.borrado = ingredienteOriginal.borrado;
 
     ingrediente.sucursales = sucursalesElegidas;
 

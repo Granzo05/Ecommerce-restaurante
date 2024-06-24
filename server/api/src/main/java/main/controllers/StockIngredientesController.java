@@ -114,6 +114,12 @@ public class StockIngredientesController {
     }
 
     @CrossOrigin
+    @GetMapping("sucursal/{idSucursal}/stock/{nombre}")
+    public StockIngredientes getCostoStockPorNombre(@PathVariable("nombre") String nombre, @PathVariable("idSucursal") long id) {
+        return stockIngredientesRepository.findStockByIngredienteNameAndIdSucursal(nombre, id).get();
+    }
+
+    @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}/stockIngredientes/check/{idIngrediente}/{idMedida}/{cantidadNecesaria}")
     public boolean checkStock(@PathVariable("idIngrediente") long idIngrediente, @PathVariable("idSucursal") long idSucursal, @PathVariable("idMedida") Long idMedida, @PathVariable("cantidadNecesaria") int cantidad) {
         // True hay stock, false no

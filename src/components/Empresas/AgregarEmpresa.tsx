@@ -76,7 +76,6 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCargarNegocio = async () => {
-    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -93,6 +92,8 @@ const AgregarEmpresa: React.FC<AgregarEmpresaProps> = ({ onCloseModal }) => {
       toast.error("Por favor, es necesaria una imagen");
       return;
     }
+    
+    setIsLoading(true);
 
     let empresa: Empresa = new Empresa();
 

@@ -12,7 +12,7 @@ import { Promocion } from '../../types/Productos/Promocion';
 import { PromocionService } from '../../services/PromocionService';
 import ModalFlotanteRecomendacionesArticuloMenu from '../../hooks/ModalFlotanteFiltroArticuloMenu';
 import { Imagenes } from '../../types/Productos/Imagenes';
-import { formatearFechaYYYYMMDD, formatearFechaYYYYMMDDHHMM } from '../../utils/global_variables/functions';
+import { formatearFechaYYYYMMDDHHMM } from '../../utils/global_variables/functions';
 import { SucursalService } from '../../services/SucursalService';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empresa } from '../../types/Restaurante/Empresa';
@@ -23,8 +23,8 @@ interface AgregarPromocionProps {
 
 
 const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => {
-  const [fechaDesde, setFechaDesde] = useState(new Date());
-  const [fechaHasta, setFechaHasta] = useState(new Date());
+  const [fechaDesde, setFechaDesde] = useState<Date>();
+  const [fechaHasta, setFechaHasta] = useState<Date>();
   const [nombre, setNombre] = useState<string>('');
   const [descripcion, setDescripcion] = useState<string>('');
   const [precioSugerido, setPrecioSugerido] = useState<number>(0);
@@ -152,36 +152,40 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
   const añadirCampoArticuloMenu = () => {
     setDetallesArticulosMenu(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: null, stockEntrante: null, borrado: 'NO' }];
       return newState;
     });
   };
 
   const añadirCampoArticulo = () => {
     setDetallesArticuloVenta(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: null, articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
       return newState;
     });
   };
 
-  const quitarCampoArticuloMenu = (nombreArticuloMenu: string) => {
-    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticuloMenu);
-    setNombresMenus(nuevosNombres);
+  const quitarCampoArticuloMenu = (nombreArticuloMenu: string | undefined) => {
+    if (nombreArticuloMenu) {
+      const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticuloMenu);
+      setNombresMenus(nuevosNombres);
 
-    setDetallesArticulosMenu(prevState => {
-      const newState = prevState.slice(0, -1);
-      return newState;
-    });
+      setDetallesArticulosMenu(prevState => {
+        const newState = prevState.slice(0, -1);
+        return newState;
+      });
+    }
   };
 
-  const quitarCampoArticulo = (nombreArticulo: string) => {
-    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
-    setNombresArticulos(nuevosNombres);
+  const quitarCampoArticulo = (nombreArticulo: string | undefined) => {
+    if (nombreArticulo) {
+      const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+      setNombresArticulos(nuevosNombres);
 
-    setDetallesArticuloVenta(prevState => {
-      const newState = prevState.slice(0, -1);
-      return newState;
-    });
+      setDetallesArticuloVenta(prevState => {
+        const newState = prevState.slice(0, -1);
+        return newState;
+      });
+    }
   };
 
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
@@ -198,14 +202,14 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     let precioRecomendado: number = 0;
     console.log(detallesArticuloMenu)
     detallesArticuloMenu.forEach(detalle => {
-      if (detalle?.articuloMenu.nombre.length > 0) {
+      if (detalle?.articuloMenu && detalle?.articuloMenu.nombre.length > 0) {
         precioRecomendado += detalle?.articuloMenu?.precioVenta * detalle?.cantidad;
       }
     });
     console.log(detallesArticuloVenta)
 
     detallesArticuloVenta.forEach(detalle => {
-      if (detalle?.articuloVenta.nombre.length > 0) {
+      if (detalle.articuloVenta && detalle?.articuloVenta.nombre.length > 0) {
         precioRecomendado += detalle?.articuloVenta?.precioVenta * detalle?.cantidad;
       }
     });
@@ -264,11 +268,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarStockEntrante() {
-    setIsLoading(true);
     const hoy = new Date();
-
-    console.log(fechaDesde);
-    console.log(fechaHasta);
 
     if (!fechaDesde) {
       toast.error("Por favor, la fecha de inicio es necesaria");
@@ -282,7 +282,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     } else if (new Date(fechaHasta) <= new Date(fechaDesde)) {
       toast.error("Por favor, las fecha de inicio no puede ser posterior a la de finalización");
       return;
-    } else if ((!detallesArticuloMenu[0].articuloMenu?.nombre.length && !detallesArticuloVenta[0].articuloVenta?.nombre)) {
+    } else if ((!detallesArticuloMenu[0]?.articuloMenu?.nombre.length && !detallesArticuloVenta[0]?.articuloVenta?.nombre)) {
       toast.error("Por favor, es necesario asignar un producto de venta o un menú");
       return;
     } else if (imagenes.length === 0) {
@@ -295,6 +295,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
       toast.error("Por favor, es necesaria la descripción");
       return;
     }
+    setIsLoading(true);
 
     const promocion: Promocion = new Promocion();
 
@@ -332,6 +333,8 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     });
 
     promocion.sucursales = sucursalesElegidas;
+
+    console.log(promocion)
 
     toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
@@ -430,7 +433,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
             {detallesArticuloMenu.map((articuloMenu, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={() => quitarCampoArticuloMenu(articuloMenu.articuloMenu.nombre)}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoArticuloMenu(articuloMenu?.articuloMenu?.nombre)}>X</p>
                 <h4>Menú {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú:</label>
@@ -465,7 +468,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
             {detallesArticuloVenta.map((articulo, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-ingrediente' onClick={() => quitarCampoArticulo(articulo.articuloVenta.nombre)}>X</p>
+                <p className='cierre-ingrediente' onClick={() => quitarCampoArticulo(articulo?.articuloVenta?.nombre)}>X</p>
                 <h4>Artículo {index + 1}</h4>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Artículo:</label>

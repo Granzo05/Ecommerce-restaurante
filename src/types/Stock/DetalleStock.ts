@@ -10,6 +10,7 @@ export class DetalleStock {
     ingrediente: Ingrediente = new Ingrediente();
     articuloVenta: ArticuloVenta = new ArticuloVenta();
     borrado: string = '';
+    modificarPrecio: boolean = false;
 
     constructor() {
 

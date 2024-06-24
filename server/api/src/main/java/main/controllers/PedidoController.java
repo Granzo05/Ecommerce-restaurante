@@ -16,6 +16,7 @@ import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
 import jakarta.transaction.Transactional;
 import main.EncryptMD5.Encrypt;
+import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Factura.Factura;
 import main.entities.Ingredientes.IngredienteMenu;
@@ -114,12 +115,16 @@ public class PedidoController {
     public ResponseEntity<String> crearPedido(@RequestBody Pedido pedido, @PathVariable("idSucursal") Long idSucursal) {
         Optional<Pedido> pedidoDB = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
 
+        Cliente cliente = clienteRepository.findById(pedido.getCliente().getId()).get();
+
         // Revisamos que el pedido exista y que el cliente no tenga la cuenta bloqueada
-        if (pedidoDB.isEmpty() && pedido.getCliente().getBorrado().equals("NO")) {
+        if (pedidoDB.isEmpty() && cliente.getBorrado().equals("NO")) {
             for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
                 detallesPedido.setPedido(pedido);
                 descontarStock(detallesPedido, idSucursal);
             }
+
+            pedido.setCliente(cliente);
 
             Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
             pedido.getSucursales().add(sucursal);
@@ -133,7 +138,7 @@ public class PedidoController {
             pedidoRepository.save(pedido);
 
             return ResponseEntity.ok("Pedido creado con éxito");
-        } else if (pedido.getCliente().getBorrado().equals("SI")) {
+        } else if (cliente.getBorrado().equals("SI")) {
             return ResponseEntity.badRequest().body("Tu cuenta ha sido bloqueada por el restaurante");
         }
 
@@ -147,13 +152,17 @@ public class PedidoController {
 
         Optional<Pedido> pedidoDB = pedidoRepository.findByIdAndIdSucursal(pedido.getId(), idSucursal);
 
-        if (pedidoDB.isEmpty() && pedido.getPreferencia() == null && pedido.getCliente().getBorrado().equals("NO")) {
+        Cliente cliente = clienteRepository.findById(pedido.getCliente().getId()).get();
+
+        if (pedidoDB.isEmpty() && pedido.getPreferencia() == null && cliente.getBorrado().equals("NO")) {
             for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
                 detallesPedido.setPedido(pedido);
                 descontarStock(detallesPedido, idSucursal);
             }
 
             pedido.setEstado(EnumEstadoPedido.PROCESO_DE_PAGO);
+
+            pedido.setCliente(cliente);
 
             Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
             pedido.getSucursales().add(sucursal);
@@ -231,8 +240,10 @@ public class PedidoController {
             } catch (MPException | MPApiException e) {
                 throw new RuntimeException(e);
             }
-        } else if (pedido.getCliente().getBorrado().equals("SI")) {
-            return null;
+        } else if (cliente.getBorrado().equals("SI")) {
+            PreferenceMP preferencia = new PreferenceMP();
+            preferencia.setId("0");
+            return preferencia;
         } else {
             PreferenceMP mpPreference = new PreferenceMP();
             mpPreference.setStatusCode(200);

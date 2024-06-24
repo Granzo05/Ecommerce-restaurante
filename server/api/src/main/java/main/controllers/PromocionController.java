@@ -54,7 +54,7 @@ public class PromocionController {
         if (promocionDB.isEmpty()) {
             Set<DetallePromocion> detalles = new HashSet<>();
             for (DetallePromocion detallePromocion : promocionDetails.getDetallesPromocion()) {
-                if (detallePromocion.getArticuloMenu().getNombre().length() > 2) {
+                if (detallePromocion.getArticuloMenu() != null) {
                     DetallePromocion detalleNuevo = new DetallePromocion();
                     detalleNuevo.setMedida(detallePromocion.getMedida());
                     detalleNuevo.setCantidad(detallePromocion.getCantidad());
@@ -62,7 +62,7 @@ public class PromocionController {
                     detalleNuevo.setPromocion(promocionDetails);
 
                     detalles.add(detalleNuevo);
-                } else if (detallePromocion.getArticuloVenta().getNombre().length() > 2) {
+                } else if (detallePromocion.getArticuloVenta() != null) {
                     DetallePromocion detalleNuevo = new DetallePromocion();
                     detalleNuevo.setMedida(detallePromocion.getMedida());
                     detalleNuevo.setCantidad(detallePromocion.getCantidad());
@@ -208,13 +208,15 @@ public class PromocionController {
             if (promocion.getBorrado().equals(promocionDetails.getBorrado())) {
                 // Borrar todas los articulos y menus
                 detallePromocionRepository.deleteAllByPromocionId(promocion.getId());
+                promocion.getDetallesPromocion().clear();
 
                 // Actualizar horarios
                 promocion.setFechaDesde(LocalDateTime.parse(promocionDetails.getFechaDesde().toString()));
                 promocion.setFechaHasta(LocalDateTime.parse(promocionDetails.getFechaHasta().toString()));
 
                 for (DetallePromocion detallePromocion : promocionDetails.getDetallesPromocion()) {
-                    detallePromocion.setPromocion(promocionDetails);
+                    detallePromocion.setPromocion(promocion);
+                    promocion.getDetallesPromocion().add(detallePromocion);
                 }
 
                 Set<Sucursal> nuevasSucursales = new HashSet<>();

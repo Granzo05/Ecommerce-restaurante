@@ -298,7 +298,6 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCargarNegocio = async () => {
-    setIsLoading(true);
     if (!email) {
       toast.error("Por favor, es necesario el email");
       return;
@@ -315,6 +314,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
       toast.error("Por favor, es necesaria aunque sea una localidad donde alcance el delivery");
       return;
     }
+    setIsLoading(true);
 
     let sucursal: Sucursal = new Sucursal();
 
@@ -367,7 +367,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
       }
     }
 
-    sucursal.borrado = 'NO';
+    sucursal.borrado = sucursalOriginal.borrado;
     sucursal.localidadesDisponiblesDelivery = localidadesDelivery;
 
     toast.promise(SucursalService.updateSucursal(sucursal, imagenes, imagenesEliminadas), {

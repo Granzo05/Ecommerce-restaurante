@@ -117,14 +117,14 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
 
   const añadirCampoIngrediente = () => {
     setDetallesIngredientesStock(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: parseInt(''), costoUnitario: parseInt(''), subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+      const newState = [...prevState, { id: 0, cantidad: parseInt(''), costoUnitario: parseInt(''), subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO', modificarPrecio: false }];
       return newState;
     });
   };
 
   const añadirCampoArticulo = () => {
     setDetallesArticuloStock(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: parseInt(''), costoUnitario: parseInt(''), subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+      const newState = [...prevState, { id: 0, cantidad: parseInt(''), costoUnitario: parseInt(''), subtotal: 0, medida: new Medida(), ingrediente: new Ingrediente(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO', modificarPrecio: false }];
       return newState;
     });
   };
@@ -171,10 +171,29 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
     }
   }
 
+  const [checkboxStatesIngredientes, setCheckboxStatesIngredientes] = useState(detallesIngredienteStock.map(() => false));
+  const [checkboxStatesArticulos, setCheckboxStatesArticulos] = useState(detallesIngredienteStock.map(() => false));
+
+  const handleCheckboxChangeIngrediente = (index: number) => {
+    const newCheckboxStates = [...checkboxStatesIngredientes];
+    newCheckboxStates[index] = !newCheckboxStates[index];
+
+    detallesIngredienteStock[index].modificarPrecio = newCheckboxStates[index];
+    setCheckboxStatesIngredientes(newCheckboxStates);
+  };
+
+  const handleCheckboxChangeArticulos = (index: number) => {
+    const newCheckboxStates = [...checkboxStatesArticulos];
+    newCheckboxStates[index] = !newCheckboxStates[index];
+
+    detallesArticuloStock[index].modificarPrecio = newCheckboxStates[index];
+
+    setCheckboxStatesArticulos(newCheckboxStates);
+  };
+
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarStockEntrante() {
-    setIsLoading(true);
     const hoy = new Date();
 
     if (!fecha) {
@@ -196,6 +215,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
     }
 
     const stockEntrante: StockEntrante = new StockEntrante();
+    setIsLoading(true);
 
     stockEntrante.fechaLlegada = fecha;
     stockEntrante.borrado = 'NO';
@@ -370,7 +390,16 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
                   <input type="number" required={true} pattern="^[1-9]\d*$" value={detallesIngredienteStock[index]?.costoUnitario} onChange={(e) => almacenarSubTotalIngrediente(parseFloat(e.target.value), index)} />
                   <span>Costo unitario ($)</span>
                   <div className="error-message">El costo por unidad solo debe contener números.</div>
-
+                </div>
+                <div className="inputBox">
+                  <label htmlFor={`costo-${index}`}>Asignar el costo al precio del stock actual</label>
+                  <input
+                    type="checkbox"
+                    name={`costo-${index}`}
+                    id={`costo-${index}`}
+                    checked={checkboxStatesIngredientes[index]}
+                    onChange={() => handleCheckboxChangeIngrediente(index)}
+                  />
                 </div>
               </div>
             ))}
@@ -410,7 +439,16 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
                   <input type="number" required={true} value={detallesArticuloStock[index]?.costoUnitario ?? 0} onChange={(e) => almacenarSubTotalArticulo(parseFloat(e.target.value), index)} />
                   <span>Costo unitario ($)</span>
                 </div>
-
+                <div className="inputBox">
+                  <label htmlFor={`costo-${index}`}>Asignar el costo al precio del stock actual</label>
+                  <input
+                    type="checkbox"
+                    name={`costo-${index}`}
+                    id={`costo-${index}`}
+                    checked={checkboxStatesArticulos[index]}
+                    onChange={() => handleCheckboxChangeArticulos(index)}
+                  />
+                </div>
               </div>
             ))}
             <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>

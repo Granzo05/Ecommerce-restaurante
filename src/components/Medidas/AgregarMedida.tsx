@@ -17,7 +17,6 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
   const [nombre, setNombre] = useState('');
 
   async function agregarMedida() {
-    setIsLoading(true);
 
     const medida: Medida = new Medida();
 
@@ -25,6 +24,7 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
+    setIsLoading(true);
 
     medida.nombre = nombre;
     medida.borrado = 'NO';

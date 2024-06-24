@@ -15,6 +15,7 @@ import { Sucursal } from "../../types/Restaurante/Sucursal";
 import { toast, Toaster } from "sonner";
 import { StockArticuloVentaService } from "../../services/StockArticulosService";
 import { StockIngredientesService } from "../../services/StockIngredientesService";
+import { Pedido } from "../../types/Pedidos/Pedido";
 
 const StocksEntrantes = () => {
     const [stockEntrante, setStockEntrante] = useState<StockEntrante[]>([]);
@@ -172,11 +173,28 @@ const StocksEntrantes = () => {
         }
     }
 
+    const ordenarPorFecha = (a: StockEntrante, b: StockEntrante) => {
+        // Suponiendo que 'fecha' es un atributo Date en cada objeto
+        const fechaA = new Date(a.fechaLlegada);
+        const fechaB = new Date(b.fechaLlegada);
+    
+        // Comparamos las fechas
+        if (fechaA < fechaB) {
+            return -1;
+        }
+        if (fechaA > fechaB) {
+            return 1;
+        }
+        return 0;
+    };
     useEffect(() => {
         if (stockEntrante.length > 0) {
-            setDatosFiltrados(stockEntrante.slice(indexPrimerProducto, indexUltimoProducto));
+            const stockOrdenado = [...stockEntrante].sort(ordenarPorFecha);
+            // Aquí puedes aplicar cualquier otra lógica de paginación o filtrado si es necesario
+            setDatosFiltrados(stockOrdenado.slice(indexPrimerProducto, indexUltimoProducto));
         }
     }, [stockEntrante, paginaActual, cantidadProductosMostrables]);
+    
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -226,7 +244,7 @@ const StocksEntrantes = () => {
         setShowDetallesStock(false);
         setMostrarStocks(false);
     };
-    
+
     const [isLoading, setIsLoading] = useState(false);
 
     const handleCargarStock = (stock: StockEntrante) => {
