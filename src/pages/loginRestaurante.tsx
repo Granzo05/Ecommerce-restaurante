@@ -26,10 +26,12 @@ const LoginNegocio = () => {
   const handleIniciarSesionNegocio = () => {
     setIsLoading(true);
     if (email.length === 0) {
-      toast.error('Debe ingresar una email');
+      toast.error('Debe ingresar un e-mail o CUIT válido');
+      setIsLoading(false);
       return;
     } else if (contraseña.length === 0) {
-      toast.error('Debe ingresar una contraseña');
+      toast.error('Debe ingresar una contraseña válida');
+      setIsLoading(false);
       return;
     }
 
@@ -39,7 +41,7 @@ const LoginNegocio = () => {
       duration: 3000,
       finally: () => {
         setIsLoading(false);
-        toast.error ('Credenciales inválidas');
+        toast.error('Credenciales inválidas');
       }
     });
   };
@@ -66,17 +68,23 @@ const LoginNegocio = () => {
 
   const [error, setError] = useState('');
 
-  const validateEmailOrCuit = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const cuitRegex = /^\d{11}$/;
+  const validateEmailOrCuit = (value: string) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const cuitPattern = /^\d{11}$/;
 
-    if (emailRegex.test(email)) {
+    if (emailPattern.test(value)) {
       setError('');
-    } else if (cuitRegex.test(email)) {
+    } else if (cuitPattern.test(value)) {
       setError('');
     } else {
-      setError('Formato incorrecto de e-mail o CUIT.');
+      setError('Por favor ingresa un correo válido o un CUIT de 11 dígitos.');
     }
+  };
+
+  const handleChange = (e: { target: { value: any; }; }) => {
+    const value = e.target.value;
+    setEmail(value);
+    validateEmailOrCuit(value);
   };
 
 
@@ -118,9 +126,8 @@ const LoginNegocio = () => {
                 placeholder="tu@ejemplo.com o 12345678901"
                 required
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); validateEmailOrCuit() }}
+                onChange={handleChange}
               />
-              {error.length > 0 && <div className="error-message">{error}</div>}
             </div>
             <div className="text-field">
               <label htmlFor="password">Contraseña:</label>
@@ -129,11 +136,9 @@ const LoginNegocio = () => {
                 type="password"
                 name="password"
                 placeholder="tu contraseña"
-                pattern=".{3,}"
                 onChange={(e) => setContraseña(e.target.value)}
                 required
               />
-              <div className="error-message">Mínimo 3 caracteres.</div>
             </div>
             <div className="my-form__actions">
               <div className="my-form__row_contra">
