@@ -130,6 +130,8 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
     ERROR AL SELECCIONAR SUCURSAL[x] 
     [x] Al añadir un ingrediente más su stock, no deja eliminarlo ni editarlo.
     [x] Al editar un ingrediente desactivado, se edita y se activa.
+    [x] Ver la suma de precio sugerido
+    [x] Se duplican los ingredientes actuales al editar el menú.
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Costo recomendado de articulos por sucursal
@@ -187,7 +189,6 @@ ARTÍCULOS:
 INGREDIENTES:
 
 MENÚS:
-[] Se duplican los ingredientes actuales al editar el menú.
 
 PRIVILEGIOS:
 

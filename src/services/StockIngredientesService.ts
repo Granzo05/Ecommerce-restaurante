@@ -45,9 +45,9 @@ export const StockIngredientesService = {
         }
     },
 
-    getStockProduct: async (nombre: string, cantidad: number): Promise<string> => {
+    getStockPorProducto: async (nombre: string): Promise<StockIngredientes> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId()}/stockproduct/${nombre}/${cantidad}`, {
+            const response = await fetch(URL_API + `sucursal/${sucursalId()}/stock/${nombre}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -57,8 +57,7 @@ export const StockIngredientesService = {
                 throw new Error(await response.text());
             }
 
-            return await response.text();
-
+            return await response.json();
 
         } catch (error) {
             console.error('Error:', error);

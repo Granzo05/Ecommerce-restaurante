@@ -29,7 +29,6 @@ interface EditarMenuProps {
 const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) => {
   const [ingredientes, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [ingredientesMuestra, setIngredientesMuestra] = useState<IngredienteMenu[]>(menuOriginal.ingredientesMenu);
-  let [selectIndexIngredientes, setSelectIndexIngredientes] = useState<number>(0);
   const [imagenesMuestra, setImagenesMuestra] = useState<Imagenes[]>(menuOriginal.imagenes);
   const [imagenesEliminadas, setImagenesEliminadas] = useState<Imagenes[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
@@ -129,7 +128,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
       setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: parseInt(''), medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
     } else {
       setIngredientes([...ingredientes, { id: 0, ingrediente: new Ingrediente(), cantidad: parseInt(''), medida: new Medida(), articuloMenu: new ArticuloMenu(), borrado: 'NO' }]);
-      setSelectIndexIngredientes(prevIndex => prevIndex + 1);
     }
   };
 
@@ -140,26 +138,19 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
   }, []);
 
   const quitarCampoIngrediente = (nombreIngrediente: string, index: number) => {
+    // Filtrar los nombres de ingredientes
     const nuevosNombres = nombresIngredientes.filter(nombre => nombre !== nombreIngrediente);
     setNombresIngredientes(nuevosNombres);
 
-    if (imagenes.length > 0) {
+    if (ingredientesMuestra.length > 0) {
       const nuevosIngredientes = [...ingredientes];
       nuevosIngredientes.splice(index, 1);
-      setIngredientes(ingredientes);
-
-      if (selectIndexIngredientes > 0) {
-        selectIndexIngredientes--;
-      }
-    } else {
-      const nuevosIngredientes = [...ingredientes];
-      nuevosIngredientes.pop();
       setIngredientes(nuevosIngredientes);
-      selectIndexIngredientes = 0;
     }
   };
 
   const quitarCampoIngredienteMuestra = (nombreIngrediente: string, index: number) => {
+    // Filtrar los nombres de ingredientes
     const nuevosNombres = nombresIngredientes.filter(nombre => nombre !== nombreIngrediente);
     setNombresIngredientes(nuevosNombres);
 
@@ -282,6 +273,8 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     menuActualizado.borrado = menuOriginal.borrado;
     menuActualizado.subcategoria = subcategoria;
 
+    menuActualizado.ingredientesMenu = [];
+
     if (ingredientesMuestra.length > 0) {
       ingredientesMuestra.forEach(ingredienteDTO => {
         let ingredienteMenu: IngredienteMenu = new IngredienteMenu();
@@ -310,6 +303,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
 
     menuActualizado.sucursales = sucursalesElegidas;
 
+    console.log(menuActualizado)
     toast.promise(MenuService.updateMenu(menuActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando menu...',
       success: (message) => {
@@ -509,7 +503,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
               <AgregarIngrediente onCloseModal={handleModalClose} />
             </ModalCrud>
             {ingredientesMuestra.map((ingredienteMenu, index) => (
-              <div key={index}>
+              <div key={ingredienteMenu.id}>
                 <hr />
                 <p className='cierre-ingrediente' onClick={() => quitarCampoIngredienteMuestra(ingredienteMenu.ingrediente.nombre, index)}>X</p>
                 <h4 style={{ fontSize: '18px' }}>Ingrediente actual {index + 1}</h4>
@@ -522,7 +516,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
                   <input type="number" required={true} pattern="^[1-9]\d*$" min={0} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteMostrableChange(index, parseFloat(e.target.value))} />
                   <span>Cantidad necesaria</span>
                   <div className="error-message">La cantidad solo debe contener números.</div>
-
                 </div>
                 <div className="input-filtrado">
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={ingredienteMenu.ingrediente.medida?.nombre ?? ingredienteMenu.medida?.nombre ?? ''} />
@@ -531,7 +524,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
               </div>
             ))}
             {ingredientes.map((ingredienteMenu, index) => (
-              <div key={index}>
+              <div key={ingredienteMenu.ingrediente.nombre}>
                 <hr />
                 <p className='cierre-ingrediente' onClick={() => quitarCampoIngrediente(ingredienteMenu.ingrediente.nombre, index)}>X</p>
                 <h4 style={{ fontSize: '18px' }}>Ingrediente nuevo {index + 1}</h4>

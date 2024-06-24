@@ -292,6 +292,8 @@ public class ArticuloMenuController {
 
             ingredienteMenuRepository.deleteAllByIdArticuloMenu(articuloMenu.getId());
 
+            articuloMenu.getIngredientesMenu().clear();
+
             articuloMenu.setPrecioVenta(articuloMenuDetail.getPrecioVenta());
 
             for (IngredienteMenu ingredienteMenuDTO : articuloMenuDetail.getIngredientesMenu()) {
