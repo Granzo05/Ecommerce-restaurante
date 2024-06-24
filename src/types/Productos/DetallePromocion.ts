@@ -6,8 +6,8 @@ export class DetallePromocion {
     id: number = 0;
     cantidad: number = 0;
     medida: Medida = new Medida();
-    articuloMenu: ArticuloMenu = new ArticuloMenu();
-    articuloVenta: ArticuloVenta = new ArticuloVenta();
+    articuloMenu: ArticuloMenu | null = null;
+    articuloVenta: ArticuloVenta | null = null;
 
     constructor() {
 

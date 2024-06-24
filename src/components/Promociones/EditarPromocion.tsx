@@ -17,6 +17,7 @@ import { Imagenes } from '../../types/Productos/Imagenes';
 import { SucursalService } from '../../services/SucursalService';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empresa } from '../../types/Restaurante/Empresa';
+import { formatearFechaYYYYMMDDHHMM } from '../../utils/global_variables/functions';
 
 interface EditarPromocionProps {
   promocion: Promocion;
@@ -58,9 +59,9 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
     const nuevosDetallesVenta: DetallePromocion[] = [];
 
     promocion.detallesPromocion.forEach(detalle => {
-      if (detalle.articuloMenu?.nombre?.length > 0) {
+      if (detalle.articuloMenu && detalle.articuloMenu?.nombre?.length > 0) {
         nuevosDetallesMenu.push(detalle);
-      } else if (detalle.articuloVenta?.nombre?.length > 0) {
+      } else if (detalle.articuloVenta && detalle.articuloVenta?.nombre?.length > 0) {
         nuevosDetallesVenta.push(detalle);
       }
     });
@@ -189,9 +190,9 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
 
   useEffect(() => {
     promocion.detallesPromocion.forEach(detalle => {
-      if (detalle.articuloMenu.nombre.length > 0) {
+      if (detalle.articuloMenu && detalle.articuloMenu?.nombre?.length > 0) {
         nombresMenus.push(detalle.articuloMenu.nombre)
-      } else if (detalle.articuloVenta.nombre.length > 0) {
+      } else if (detalle.articuloVenta && detalle.articuloVenta?.nombre?.length > 0) {
         nombresArticulos.push(detalle.articuloVenta.nombre)
       }
     });
@@ -199,56 +200,65 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
 
   const añadirCampoArticuloMenu = () => {
     setDetallesArticulosMenu(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: null, stockEntrante: null, borrado: 'NO' }];
       return newState;
     });
   };
 
   const añadirCampoArticulo = () => {
     setDetallesArticuloVenta(prevState => {
-      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: new ArticuloMenu(), articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
+      const newState = [...prevState, { id: 0, cantidad: 0, costoUnitario: 0, subtotal: 0, medida: new Medida(), articuloMenu: null, articuloVenta: new ArticuloVenta(), stockEntrante: null, borrado: 'NO' }];
       return newState;
     });
   };
 
-  const quitarCampoArticuloMenuMuestra = (nombreArticulo: string) => {
-    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
-    setNombresArticulos(nuevosNombres);
+  const quitarCampoArticuloMenuMuestra = (nombreArticulo: string | undefined) => {
+    if (nombreArticulo) {
+      const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+      setNombresArticulos(nuevosNombres);
 
-    setDetallesArticuloMenuMuestra(prevState => {
-      const newState = prevState.slice(0, -1);
-      return newState;
-    });
+      setDetallesArticuloMenuMuestra(prevState => {
+        const newState = prevState.slice(0, -1);
+        return newState;
+      });
+    }
+
   };
 
-  const quitarCampoArticuloMenu = (nombreArticulo: string) => {
-    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
-    setNombresArticulos(nuevosNombres);
+  const quitarCampoArticuloMenu = (nombreArticulo: string | undefined) => {
+    if (nombreArticulo) {
+      const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+      setNombresArticulos(nuevosNombres);
 
-    setDetallesArticulosMenu(prevState => {
-      const newState = prevState.slice(0, -1);
-      return newState;
-    });
+      setDetallesArticulosMenu(prevState => {
+        const newState = prevState.slice(0, -1);
+        return newState;
+      });
+    }
   };
 
-  const quitarCampoArticuloVentaMuestra = (nombreArticulo: string) => {
-    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
-    setNombresArticulos(nuevosNombres);
+  const quitarCampoArticuloVentaMuestra = (nombreArticulo: string | undefined) => {
+    if (nombreArticulo) {
+      const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+      setNombresArticulos(nuevosNombres);
 
-    setDetallesArticuloVentaMuestra(prevState => {
-      const newState = prevState.slice(0, -1);
-      return newState;
-    });
+      setDetallesArticuloVentaMuestra(prevState => {
+        const newState = prevState.slice(0, -1);
+        return newState;
+      });
+    }
   };
 
-  const quitarCampoArticulo = (nombreArticulo: string) => {
-    const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
-    setNombresArticulos(nuevosNombres);
+  const quitarCampoArticulo = (nombreArticulo: string | undefined) => {
+    if (nombreArticulo) {
+      const nuevosNombres = nombresArticulos.filter(nombre => nombre !== nombreArticulo);
+      setNombresArticulos(nuevosNombres);
 
-    setDetallesArticuloVenta(prevState => {
-      const newState = prevState.slice(0, -1);
-      return newState;
-    });
+      setDetallesArticuloVenta(prevState => {
+        const newState = prevState.slice(0, -1);
+        return newState;
+      });
+    }
   };
 
   const [modalBusquedaMedida, setModalBusquedaMedida] = useState<boolean>(false);
@@ -284,9 +294,25 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
     let precioRecomendado: number = 0;
 
     detallesArticuloMenu.forEach(detalle => {
-      if (detalle?.articuloMenu.nombre.length > 0) {
+      if (detalle.articuloMenu && detalle?.articuloMenu.nombre.length > 0) {
         precioRecomendado += detalle?.articuloMenu?.precioVenta * detalle?.cantidad;
-      } else if (detalle?.articuloVenta.nombre.length > 0) {
+      }
+    });
+
+    detallesArticuloVenta.forEach(detalle => {
+      if (detalle?.articuloVenta && detalle?.articuloVenta.nombre.length > 0) {
+        precioRecomendado += detalle?.articuloVenta?.precioVenta * detalle?.cantidad;
+      }
+    });
+
+    detallesArticuloMenuMuestra.forEach(detalle => {
+      if (detalle?.articuloMenu && detalle?.articuloMenu.nombre.length > 0) {
+        precioRecomendado += detalle?.articuloMenu?.precioVenta * detalle?.cantidad;
+      }
+    });
+
+    detallesArticuloVentaMuestra.forEach(detalle => {
+      if (detalle?.articuloVenta && detalle?.articuloVenta.nombre.length > 0) {
         precioRecomendado += detalle?.articuloVenta?.precioVenta * detalle?.cantidad;
       }
     });
@@ -345,7 +371,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
     } else if (!fechaHasta) {
       toast.error("Por favor, la fecha de finalización es necesaria");
       return;
-    } else if (new Date(fechaDesde) <= hoy || new Date(fechaHasta) <= hoy) {
+    } else if (new Date(fechaHasta) <= hoy) {
       toast.error("Por favor, las fechas debe ser posterior a la fecha actual");
       return;
     } else if (new Date(fechaHasta) <= new Date(fechaDesde)) {
@@ -431,9 +457,8 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   const [step, setStep] = useState(1);
 
   const nextStep = () => {
-    if (step === 3) {
-      calcularCostos();
-    }
+    calcularCostos();
+
     setStep(step + 1);
   };
 
@@ -461,11 +486,16 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
-              <input type="datetime-local" value={fechaDesde.toISOString().substring(0, 10)} required={true} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
+              <input type="datetime-local" value={formatearFechaYYYYMMDDHHMM(fechaDesde)} required={true} onChange={(e) => { setFechaDesde(new Date(e.target.value)) }} />
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de finalización:</label>
-              <input type="datetime-local" required={true} value={fechaHasta.toISOString().substring(0, 10)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
+              <input type="datetime-local" required={true} value={formatearFechaYYYYMMDDHHMM(fechaHasta)} onChange={(e) => { setFechaHasta(new Date(e.target.value)) }} />
+            </div>
+            <hr />
+            <div className="btns-pasos">
+              <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
             <ModalFlotante isOpen={showAgregarMedidaModal} onClose={handleModalClose}>
               <AgregarMedida onCloseModal={handleModalClose} />
@@ -479,11 +509,11 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             {detallesArticuloMenuMuestra.map((detalleMenu, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenuMuestra(detalleMenu.articuloMenu.nombre)}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenuMuestra(detalleMenu?.articuloMenu?.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú guardado {index + 1}:</label>
-                  <InputComponent disabled={false} placeHolder='Filtrar articuloMenu...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detalleMenu?.articuloMenu.nombre ?? ''} />
-                  {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu datosOmitidos={detalleMenu?.articuloMenu.nombre} onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
+                  <InputComponent disabled={false} placeHolder='Filtrar articuloMenu...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detalleMenu?.articuloMenu?.nombre ?? ''} />
+                  {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu datosOmitidos={detalleMenu?.articuloMenu?.nombre} onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <div className="input-filtrado">
@@ -501,15 +531,12 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             {detallesArticuloMenu.map((articuloMenu, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenu(articuloMenu.articuloMenu.nombre)}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenu(articuloMenu?.articuloMenu?.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú nuevo {index + 1}:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar menús...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
                   {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu datosOmitidos={nombresMenus} onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
                 </div>
-                <br />
-                <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
-                <br />
                 <br />
                 <div className="input-filtrado">
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida?.nombre ?? ''} />
@@ -528,7 +555,6 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
-
             </div>
           </>
         );
@@ -539,7 +565,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             {detallesArticuloVentaMuestra.map((detalleArticulo, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloVentaMuestra(detalleArticulo.articuloVenta.nombre)}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloVentaMuestra(detalleArticulo?.articuloVenta?.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo guardado {index + 1}:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detalleArticulo?.articuloVenta?.nombre ?? ''} />
@@ -563,15 +589,12 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             {detallesArticuloVenta.map((articulo, index) => (
               <div key={index}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticulo(articulo.articuloVenta.nombre)}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticulo(articulo?.articuloVenta?.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo nuevo {index + 1}:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />
                   {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={nombresArticulos} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
                 </div>
-                <br />
-                <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
-                <br />
                 <br />
                 <div className="input-filtrado">
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida?.nombre ?? ''} />
@@ -579,7 +602,6 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
                 </div>
                 <br />
                 <br />
-                <button onClick={() => setShowAgregarMedidaModal(true)}>Crear medida</button>
                 <div className="inputBox">
                   <input type="number" required={true} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />
                   <span>Cantidad de unidades</span>

@@ -132,6 +132,10 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
     [x] Al editar un ingrediente desactivado, se edita y se activa.
     [x] Ver la suma de precio sugerido
     [x] Se duplican los ingredientes actuales al editar el menú.
+    [x] No me trae los domicilios pal delivery.
+    [x] No deja cargar promoción si no hay menú. 
+    [x] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
+    [x] Error al editar la promoción.
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Costo recomendado de articulos por sucursal
@@ -139,7 +143,8 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
 [] El editar menú no borra los ingredientes.
 
-notFound; REVISAR ESTE TSX QUE TA RARO EL HEADER: esta en pages
+notFound
+[]REVISAR ESTE TSX QUE TA RARO EL HEADER: esta en pages
 
 sucursales/ Pagina
 
@@ -174,7 +179,7 @@ CATEGORÍA:
 
 EMPLEADOS:
 [] Hay que pasar el CUIL a string, asi poder usar sus '-'.
-[] Acomodar los privilegios del editar empleado que se ven como taban original sin los cuadrados
+[] Acomodar los privilegios del editar empleado que se ven como taban original sin los cuadrados FALTA CSS
 
 STOCK:
 [] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST que avise que queda poco
@@ -193,9 +198,6 @@ MENÚS:
 PRIVILEGIOS:
 
 PROMOCIONES:
-[] No deja cargar promoción si no hay menú. 
-[] Error al editar la promoción.
-[] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
 [] Arreglar los filtros de fechas en este y en stock entrante.
 
 SUCURSALES:
@@ -204,7 +206,6 @@ SUCURSALES:
 [] Error al cargar sucursal. Credenciales invalidas.
 
 PAGO:
-[] No me trae los domicilios pal delivery.
 
 
 SE BUGEAN LOS FILTROS AL CARGAR PROMOCION PERO SE CARGAN BIEN[]

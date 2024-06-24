@@ -166,7 +166,7 @@ public class SucursalController {
 
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(idSucursal)));
 
-            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now().plusDays(5))));
+            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now())));
 
             return sucursal;
         }
