@@ -120,8 +120,13 @@ const PedidosEntregados = () => {
         }
     }
 
-    return (
+    useEffect(() => {
+        if (pedidosEntregados.length > 0) {
+            setDatosFiltrados(pedidosEntregados.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [pedidosEntregados, paginaActual, cantidadProductosMostrables]);
 
+    return (
         <div className="opciones-pantallas">
             <h1>- Pedidos entregados -</h1>
             <hr />
@@ -178,6 +183,7 @@ const PedidosEntregados = () => {
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
                             <th>Factura de la compra</th>
@@ -186,6 +192,7 @@ const PedidosEntregados = () => {
                     <tbody>
                         {datosFiltrados.map(pedido => (
                             <tr key={pedido.id}>
+                                <td>{pedido.id}</td>
                                 <td>
                                     <div>
                                         <p>{pedido.cliente?.nombre}</p>

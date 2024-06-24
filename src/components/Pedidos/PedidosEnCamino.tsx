@@ -257,6 +257,7 @@ const PedidosEnCamino = () => {
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
                             <th>Menu</th>
@@ -267,6 +268,7 @@ const PedidosEnCamino = () => {
                     <tbody>
                         {datosFiltrados.map(pedido => (
                             <tr key={pedido.id}>
+                                <td>{pedido.id}</td>
                                 <td>
                                     <div>
                                         <p>{pedido.cliente?.nombre}</p>
@@ -289,16 +291,20 @@ const PedidosEnCamino = () => {
                                         </div>
                                     ))}
                                 </td>
-                                {updateVisible && (
-                                    <button className='btn-accion-completar' onClick={() => handleAceptarPedido(pedido)} disabled={isLoading}>
-                                        {isLoading ? 'Cargando...' : 'Aceptar ✓'}
-                                    </button>
-                                )}
-                                {updateVisible && (
-                                    <button className='btn-accion-completar' onClick={() => handleRechazarPedido(pedido)} disabled={isLoading}>
-                                        {isLoading ? 'Cargando...' : 'Rechazar ✓'}
-                                    </button>
-                                )}
+                                <td>
+                                    {updateVisible && (
+                                        <button className='btn-accion-completar' onClick={() => handleAceptarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'Aceptar ✓'}
+                                        </button>
+                                    )}
+                                </td>
+                                <td>
+                                    {updateVisible && (
+                                        <button className='btn-accion-completar' onClick={() => handleRechazarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'Rechazar ✓'}
+                                        </button>
+                                    )}
+                                </td>
                             </tr>
                         ))}
 

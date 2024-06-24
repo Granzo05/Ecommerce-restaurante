@@ -221,8 +221,13 @@ const PedidosParaEntregar = () => {
         setTotal(nuevoTotal);
     }
 
-    return (
+    useEffect(() => {
+        if (pedidosEntregables.length > 0) {
+            setDatosFiltrados(pedidosEntregables.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [pedidosEntregables, paginaActual, cantidadProductosMostrables]);
 
+    return (
         <div className="opciones-pantallas">
             <h1>- Pedidos listos -</h1>
             <Toaster />
@@ -280,6 +285,7 @@ const PedidosParaEntregar = () => {
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
                             <th>Menu</th>
@@ -291,6 +297,7 @@ const PedidosParaEntregar = () => {
                     <tbody>
                         {datosFiltrados.map(pedido => (
                             <tr key={pedido.id}>
+                                <td>{pedido.id}</td>
                                 <td>
                                     <div>
                                         <p>{pedido.cliente?.nombre}</p>
@@ -298,6 +305,7 @@ const PedidosParaEntregar = () => {
                                         <p>{pedido.cliente?.email}</p>
                                     </div>
                                 </td>
+                                
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
                                     <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></td>
                                 ) : (
@@ -313,16 +321,21 @@ const PedidosParaEntregar = () => {
                                 <td>
                                     ${total.toLocaleString('es-AR')}
                                 </td>
-                                {updateVisible && (
-                                    <button className='btn-accion-completar' onClick={() => handleEntregarPedido(pedido)} disabled={isLoading}>
-                                        {isLoading ? 'Cargando...' : 'Entregar ✓'}
-                                    </button>
-                                )}
-                                {updateVisible && (
-                                    <button className='btn-accion-completar' onClick={() => handleCancelarPedido(pedido)} disabled={isLoading}>
-                                        {isLoading ? 'Cargando...' : 'Cancelar ✓'}
-                                    </button>
-                                )}
+
+                                <td>
+                                    {updateVisible && (
+                                        <button className='btn-accion-completar' onClick={() => handleEntregarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'Entregar ✓'}
+                                        </button>
+                                    )}
+                                </td>
+                                <td>
+                                    {updateVisible && (
+                                        <button className='btn-accion-completar' onClick={() => handleCancelarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'Cancelar ✓'}
+                                        </button>
+                                    )}
+                                </td>
                             </tr>
                         ))}
 

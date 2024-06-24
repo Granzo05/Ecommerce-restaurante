@@ -112,136 +112,7 @@ const Pago = () => {
         const horaActual = now.toTimeString().slice(0, 5);
 
         if (verificarPedidos()) {
-            let hayStock = true;
-            let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
-
-            // Verificar stock de ArticuloMenu
-            if (carrito?.articuloMenu) {
-                for (const producto of carrito.articuloMenu) {
-                    for (const ingrediente of producto.ingredientesMenu) {
-                        hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
-
-                        if (!hayStock) {
-                            productoFaltante = producto;
-                            break;
-                        }
-                    }
-                    if (!hayStock) break;
-                }
-            }
-
-            // Verificar stock de ArticuloVenta
-            if (hayStock && carrito?.articuloVenta) {
-                for (const articulo of carrito.articuloVenta) {
-                    hayStock = await StockArticuloVentaService.checkStock(articulo.id, articulo.cantidad);
-
-                    if (!hayStock) {
-                        productoFaltante = articulo;
-                        break;
-                    }
-                }
-            }
-
-            if (cliente && cliente?.email?.length > 0) {
-
-                if (hayStock) {
-                    let pedido = new Pedido();
-                    if (cliente) pedido.cliente = cliente;
-                    pedido.tipoEnvio = envio;
-
-                    let detalles: DetallesPedido[] = [];
-
-                    carrito?.articuloMenu?.forEach(producto => {
-                        let detalle = new DetallesPedido();
-                        detalle.articuloMenu = producto;
-                        detalle.cantidad = producto.cantidad;
-                        detalle.subTotal = producto.cantidad * producto.precioVenta;
-                        detalles.push(detalle);
-                    });
-
-                    carrito?.articuloVenta?.forEach(producto => {
-                        let detalle = new DetallesPedido();
-                        detalle.articuloVenta = producto;
-                        detalle.cantidad = producto.cantidad;
-                        detalle.subTotal = producto.cantidad * producto.precioVenta;
-                        detalles.push(detalle);
-                    });
-
-                    carrito?.promociones?.forEach(promocion => {
-                        promocion.detallesPromocion.forEach(detallePromo => {
-                            if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
-                                let detalle = new DetallesPedido();
-                                detalle.articuloMenu = detallePromo.articuloMenu;
-                                detalle.cantidad = detallePromo.cantidad;
-
-                                // Aplicar el descuento correctamente
-                                let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
-                                detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                detalles.push(detalle);
-                            } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
-                                let detalle = new DetallesPedido();
-                                detalle.articuloVenta = detallePromo.articuloVenta;
-                                detalle.cantidad = detallePromo.cantidad;
-
-                                // Aplicar el descuento correctamente
-                                let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
-                                detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                detalles.push(detalle);
-                            }
-                        });
-                    });
-
-                    pedido.factura = null;
-                    pedido.detallesPedido = detalles;
-                    pedido.estado = EnumEstadoPedido.ENTRANTES;
-                    pedido.borrado = 'NO';
-
-                    if (envio === EnumTipoEnvio.RETIRO_EN_TIENDA) {
-                        pedido.domicilioEntrega = null;
-                    }
-
-                    if (preferenceId) {
-                        PedidoService.eliminarPedidoFallido(preferenceId);
-                    }
-
-                    toast.promise(PedidoService.crearPedido(pedido), {
-                        loading: 'Creando pedido...',
-                        success: (message) => {
-                            actualizarPedidos();
-                            setTimeout(() => {
-                                toast.info('Dirigiéndose a pedidos...')
-                                CarritoService.limpiarCarrito();
-                                window.location.href = getBaseUrlCliente() + `/cliente/${1}`
-                            }, 3000);
-                            return message;
-                        },
-                        error: (message) => {
-                            return message;
-                        },
-                        finally: () => {
-                            setIsLoading(false);
-                        }
-                    });
-                } else {
-                    toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
-                }
-            } else {
-                toast.error('Debe estar logueado para realizar su pedido');
-            }
-        } else {
-            toast.info(`El local está cerrado, el horario de atención es entre las ${sucursal.horarioApertura} y las ${sucursal.horarioCierre}`);
-        }
-    }
-
-    async function crearPreferencia(domicilio: Domicilio) {
-        const now = new Date();
-        const horaActual = now.toTimeString().slice(0, 5);
-        setIsLoading(true);
-
-        if ((sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual) && verificarPedidos()) {
-            if (envio === 0) {
+            if ((sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual)) {
                 let hayStock = true;
                 let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
 
@@ -273,97 +144,245 @@ const Pago = () => {
                 }
 
                 if (cliente && cliente?.email?.length > 0) {
+
                     if (hayStock) {
-                        if (preferenceId === null && domicilio) {
-                            let pedido = new Pedido();
-                            if (cliente) pedido.cliente = cliente;
-                            pedido.tipoEnvio = envio;
+                        let pedido = new Pedido();
+                        if (cliente) pedido.cliente = cliente;
+                        pedido.tipoEnvio = envio;
 
-                            let detalles: DetallesPedido[] = [];
+                        let detalles: DetallesPedido[] = [];
 
-                            carrito?.articuloMenu?.forEach(producto => {
-                                let detalle = new DetallesPedido();
-                                detalle.articuloMenu = producto;
-                                detalle.cantidad = producto.cantidad;
-                                detalle.subTotal = producto.cantidad * producto.precioVenta;
-                                detalles.push(detalle);
+                        carrito?.articuloMenu?.forEach(producto => {
+                            let detalle = new DetallesPedido();
+                            detalle.articuloMenu = producto;
+                            detalle.cantidad = producto.cantidad;
+                            detalle.subTotal = producto.cantidad * producto.precioVenta;
+                            detalles.push(detalle);
+                        });
+
+                        carrito?.articuloVenta?.forEach(producto => {
+                            let detalle = new DetallesPedido();
+                            detalle.articuloVenta = producto;
+                            detalle.cantidad = producto.cantidad;
+                            detalle.subTotal = producto.cantidad * producto.precioVenta;
+                            detalles.push(detalle);
+                        });
+
+                        carrito?.promociones?.forEach(promocion => {
+                            promocion.detallesPromocion.forEach(detallePromo => {
+                                if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
+                                    let detalle = new DetallesPedido();
+                                    detalle.articuloMenu = detallePromo.articuloMenu;
+                                    detalle.cantidad = detallePromo.cantidad;
+
+                                    // Aplicar el descuento correctamente
+                                    let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
+                                    detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                    detalles.push(detalle);
+                                } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
+                                    let detalle = new DetallesPedido();
+                                    detalle.articuloVenta = detallePromo.articuloVenta;
+                                    detalle.cantidad = detallePromo.cantidad;
+
+                                    // Aplicar el descuento correctamente
+                                    let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
+                                    detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                    detalles.push(detalle);
+                                }
                             });
+                        });
 
-                            carrito?.articuloVenta?.forEach(producto => {
-                                let detalle = new DetallesPedido();
-                                detalle.articuloVenta = producto;
-                                detalle.cantidad = producto.cantidad;
-                                detalle.subTotal = producto.cantidad * producto.precioVenta;
-                                detalles.push(detalle);
-                            });
+                        pedido.factura = null;
+                        pedido.detallesPedido = detalles;
+                        pedido.estado = EnumEstadoPedido.ENTRANTES;
+                        pedido.borrado = 'NO';
 
-                            carrito?.promociones?.forEach(promocion => {
-                                promocion.detallesPromocion.forEach(detallePromo => {
-                                    if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
-                                        let detalle = new DetallesPedido();
-                                        detalle.articuloMenu = detallePromo.articuloMenu;
-                                        detalle.cantidad = detallePromo.cantidad;
-
-                                        // Aplicar el descuento correctamente
-                                        let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
-                                        detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                        detalles.push(detalle);
-                                    } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
-                                        let detalle = new DetallesPedido();
-                                        detalle.articuloVenta = detallePromo.articuloVenta;
-                                        detalle.cantidad = detallePromo.cantidad;
-
-                                        // Aplicar el descuento correctamente
-                                        let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
-                                        detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                        detalles.push(detalle);
-                                    }
-                                });
-                            });
-
-                            pedido.factura = null;
-                            pedido.detallesPedido = detalles;
-                            pedido.borrado = 'NO';
-
-                            pedido.domicilioEntrega = domicilio;
-
-                            let preference = await PedidoService.crearPedidoMercadopago(pedido);
-
-                            if (preference === null) {
-                                toast.error('Tu cuenta ha sido bloqueada por el restaurante')
-                            } else {
-                                actualizarPedidos();
-                                setPreferenceId(preference.id);
-                            }
-                        } else {
-                            setPreferenceId(preferenceId);
+                        if (envio === EnumTipoEnvio.RETIRO_EN_TIENDA) {
+                            pedido.domicilioEntrega = null;
                         }
+
+                        if (preferenceId) {
+                            PedidoService.eliminarPedidoFallido(preferenceId);
+                        }
+
+                        toast.promise(PedidoService.crearPedido(pedido), {
+                            loading: 'Creando pedido...',
+                            success: (message) => {
+                                actualizarPedidos();
+                                setTimeout(() => {
+                                    toast.info('Dirigiéndose a pedidos...')
+                                    CarritoService.limpiarCarrito();
+                                    window.location.href = getBaseUrlCliente() + `/cliente/${1}`
+                                }, 3000);
+                                return message;
+                            },
+                            error: (message) => {
+                                return message;
+                            },
+                            finally: () => {
+                                setIsLoading(false);
+                            }
+                        });
                     } else {
                         toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
+                        setIsLoading(false);
                     }
                 } else {
                     toast.error('Debe estar logueado para realizar su pedido');
+                    setIsLoading(false);
                 }
+            } else {
+                toast.info(`El local está cerrado, el horario de atención es entre las ${sucursal.horarioApertura} y las ${sucursal.horarioCierre}`);
+                setIsLoading(false);
             }
-        } else {
-            toast.info(`El local está cerrado, el horario de atención es entre las ${sucursal.horarioApertura} y las ${sucursal.horarioCierre}`);
         }
+        setIsLoading(false);
+    }
+
+    async function crearPreferencia(domicilio: Domicilio) {
+        const now = new Date();
+        const horaActual = now.toTimeString().slice(0, 5);
+        setIsLoading(true);
+
+        if (verificarPedidos()) {
+            if ((sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual)) {
+                if (envio === 0) {
+                    let hayStock = true;
+                    let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
+
+                    // Verificar stock de ArticuloMenu
+                    if (carrito?.articuloMenu) {
+                        for (const producto of carrito.articuloMenu) {
+                            for (const ingrediente of producto.ingredientesMenu) {
+                                hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
+
+                                if (!hayStock) {
+                                    productoFaltante = producto;
+                                    break;
+                                }
+                            }
+                            if (!hayStock) break;
+                        }
+                    }
+
+                    // Verificar stock de ArticuloVenta
+                    if (hayStock && carrito?.articuloVenta) {
+                        for (const articulo of carrito.articuloVenta) {
+                            hayStock = await StockArticuloVentaService.checkStock(articulo.id, articulo.cantidad);
+
+                            if (!hayStock) {
+                                productoFaltante = articulo;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (cliente && cliente?.email?.length > 0) {
+                        if (hayStock) {
+                            if (preferenceId === null && domicilio) {
+                                let pedido = new Pedido();
+                                if (cliente) pedido.cliente = cliente;
+                                pedido.tipoEnvio = envio;
+
+                                let detalles: DetallesPedido[] = [];
+
+                                carrito?.articuloMenu?.forEach(producto => {
+                                    let detalle = new DetallesPedido();
+                                    detalle.articuloMenu = producto;
+                                    detalle.cantidad = producto.cantidad;
+                                    detalle.subTotal = producto.cantidad * producto.precioVenta;
+                                    detalles.push(detalle);
+                                });
+
+                                carrito?.articuloVenta?.forEach(producto => {
+                                    let detalle = new DetallesPedido();
+                                    detalle.articuloVenta = producto;
+                                    detalle.cantidad = producto.cantidad;
+                                    detalle.subTotal = producto.cantidad * producto.precioVenta;
+                                    detalles.push(detalle);
+                                });
+
+                                carrito?.promociones?.forEach(promocion => {
+                                    promocion.detallesPromocion.forEach(detallePromo => {
+                                        if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
+                                            let detalle = new DetallesPedido();
+                                            detalle.articuloMenu = detallePromo.articuloMenu;
+                                            detalle.cantidad = detallePromo.cantidad;
+
+                                            // Aplicar el descuento correctamente
+                                            let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
+                                            detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                            detalles.push(detalle);
+                                        } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
+                                            let detalle = new DetallesPedido();
+                                            detalle.articuloVenta = detallePromo.articuloVenta;
+                                            detalle.cantidad = detallePromo.cantidad;
+
+                                            // Aplicar el descuento correctamente
+                                            let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
+                                            detalle.subTotal = precioConDescuento * detallePromo.cantidad;
+
+                                            detalles.push(detalle);
+                                        }
+                                    });
+                                });
+
+                                pedido.factura = null;
+                                pedido.detallesPedido = detalles;
+                                pedido.borrado = 'NO';
+
+                                pedido.domicilioEntrega = domicilio;
+
+                                let preference = await PedidoService.crearPedidoMercadopago(pedido);
+
+                                if (preference === null) {
+                                    toast.error('Tu cuenta ha sido bloqueada por el restaurante')
+                                } else {
+                                    actualizarPedidos();
+                                    setPreferenceId(preference.id);
+                                }
+                            } else {
+                                setPreferenceId(preferenceId);
+                            }
+                            setIsLoading(false);
+
+                        } else {
+                            toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
+                            setIsLoading(false);
+                        }
+                    } else {
+                        toast.error('Debe estar logueado para realizar su pedido');
+                        setIsLoading(false);
+                    }
+                }
+            } else {
+                toast.info(`El local está cerrado, el horario de atención es entre las ${sucursal.horarioApertura} y las ${sucursal.horarioCierre}`);
+                setIsLoading(false);
+            }
+        }
+        setIsLoading(false);
     }
 
     function verificarPedidos(): boolean {
-        const pedidosString = localStorage.getItem('lastPedidoTime');
-
+        const pedidosString = localStorage.getItem('ultimoPedidoGuardado');
+        const nowTimestamp = new Date().getTime();
 
         if (pedidosString) {
-            const pedido = JSON.parse(pedidosString);
-            const today = new Date().getTime();
+            let pedido;
 
-            const timeDifference = today - pedido.fecha;
+            try {
+                pedido = JSON.parse(pedidosString);
+            } catch (e) {
+                pedido = { cantidadPedidosHoy: 0, ultimoPedido: nowTimestamp };
+            }
 
-            if (timeDifference < 3600000 && pedido.fecha === today && pedido.cantidadPedidosHoy >= 3) {
-                toast('Alcanzaste el límite de 3 pedidos por día.');
+            const hora = 3600000;
+
+            if (nowTimestamp - pedido.ultimoPedido < hora && pedido.cantidadPedidosHoy >= 3) {
+                toast('Alcanzaste el límite de 3 pedidos por hora.');
                 return false;
             }
         }
@@ -372,31 +391,47 @@ const Pago = () => {
     }
 
     function actualizarPedidos() {
-        let pedidosString = localStorage.getItem('lastPedidoTime');
+        let pedidosString = localStorage.getItem('ultimoPedidoGuardado');
         const now = new Date();
-        const today = now.toDateString();
+        const nowTimestamp = now.getTime();
 
         if (pedidosString) {
-            const pedido = JSON.parse(pedidosString);
+            let pedido;
 
-            // Verifica si la fecha guardada es hoy
-            if (pedido.fecha === today) {
-                pedido.cantidadPedidosHoy += 1;
-            } else {
-                // Si no es hoy, reinicia el conteo
-                pedido.cantidadPedidosHoy = 1;
-                pedido.fecha = today;
+            try {
+                pedido = JSON.parse(pedidosString);
+            } catch (e) {
+                // En caso de que no sea un objeto, inicializamos uno nuevo
+                pedido = { cantidadPedidosHoy: 0, ultimoPedido: nowTimestamp };
             }
 
-            localStorage.setItem('lastPedidoTime', JSON.stringify(pedido));
+            const hora = 3600000; // milisegundos en una hora
+
+            // Verifica si la fecha guardada es hoy
+            if (nowTimestamp - pedido.ultimoPedido < hora) {
+                if (pedido.cantidadPedidosHoy >= 3) {
+                    toast('Alcanzaste el límite de 3 pedidos por hora.');
+                    return false;
+                } else {
+                    pedido.cantidadPedidosHoy += 1;
+                }
+            } else {
+                // Si ha pasado más de una hora, reinicia el conteo
+                pedido.cantidadPedidosHoy = 1;
+            }
+
+            pedido.ultimoPedido = nowTimestamp;
+            localStorage.setItem('ultimoPedidoGuardado', JSON.stringify(pedido));
         } else {
             const pedido = {
                 cantidadPedidosHoy: 1,
-                fecha: today
+                ultimoPedido: nowTimestamp
             };
-            localStorage.setItem('lastPedidoTime', JSON.stringify(pedido));
+            localStorage.setItem('ultimoPedidoGuardado', JSON.stringify(pedido));
         }
     }
+
+
 
     useEffect(() => {
         document.title = 'Detalle del pedido y pago';
@@ -518,6 +553,7 @@ const Pago = () => {
                             <button
                                 type="submit"
                                 className="cancelar-btn"
+                                onClick={() => {CarritoService.limpiarCarrito(); window.location.href = getBaseUrl()}}
                             >
                                 Cancelar pedido
                             </button>
@@ -535,6 +571,7 @@ const Pago = () => {
                             <button
                                 type="submit"
                                 className="cancelar-btn"
+                                onClick={() => {CarritoService.limpiarCarrito(); window.location.href = getBaseUrl()}}
                             >
                                 Cancelar pedido
                             </button>
