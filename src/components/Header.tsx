@@ -57,6 +57,7 @@ const Header = () => {
 
     const handleLogout = () => {
         limpiarCredenciales();
+        setIsAccountOpen(false);
         setCliente(null)
     };
 

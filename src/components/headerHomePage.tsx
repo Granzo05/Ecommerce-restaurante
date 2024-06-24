@@ -72,7 +72,7 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
 
     const handleLogout = () => {
         limpiarCredenciales();
-        setIsAccountOpen(!isAccountOpen);
+        setIsAccountOpen(false);
         setCliente(null)
     };
 
