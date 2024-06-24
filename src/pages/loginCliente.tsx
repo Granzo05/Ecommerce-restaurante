@@ -380,7 +380,7 @@ const LoginCliente = () => {
                         
                         <div className="btns-crear-cuenta">
                             <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
-                            <button className="btn-accion-entregado" onClick={handleCargarUsuario} disabled={isLoading}>
+                            <button style={{ marginRight: '0px' }} className="btn-accion-entregado" onClick={handleCargarUsuario} disabled={isLoading}>
                                 {isLoading ? 'Registrándose...' : 'Registrarse ✓'}
                             </button>
                         </div>
