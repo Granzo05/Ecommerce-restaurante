@@ -67,6 +67,10 @@ export function getBaseUrl(): string {
     return `${window.location.protocol}//${window.location.host}/${idSucursal}`;
 }
 
+export function getBaseUrlCliente(): string {
+    return `${window.location.protocol}//${window.location.host}`;
+}
+
 export function limpiarCredenciales() {
     localStorage.clear();
 }

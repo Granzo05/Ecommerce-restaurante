@@ -135,6 +135,8 @@ header
 
 Login
 [] Hacer la recuperacion de contraseña
+[] Acomodar el regex de la calle, si pongo 25 de mayo me da error
+
 
 Permisos: 
 
@@ -144,7 +146,8 @@ PEDIDOS FALTA PROBAR:
     (por ejemplo, mediante un combobox) y también se podrán buscar mediante su id (mediante un cuadro de búsqueda).
 
 HORARIOS: 
-[] VER SI SE PUEDE PEDIR FUERA DEL HORARIO DE ATENCION y que si ya hice un pedido no me deje pedir si no ha pasado un minuto
+[x] VER SI SE PUEDE PEDIR FUERA DEL HORARIO DE ATENCION y 
+[] que si ya hice un pedido no me deje pedir si no ha pasado un minuto
 
 COMPRA:
 [] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.
@@ -155,6 +158,7 @@ CLIENTE:
 CARRITO:
 
 MODALES:
+[] Añadir botones de agregar el objeto en todos los modales de recomendacion, para no tener que cerrar y abrir y volver, manso viaje
 
 OPCIONES:
 

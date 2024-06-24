@@ -199,6 +199,35 @@ export const ClienteService = {
         }
     },
 
+    getPedidosPorOtrosEstados: async (estado: EnumEstadoPedido): Promise<Pedido[]> => {
+        const usuarioString = localStorage.getItem('usuario');
+
+        if (usuarioString) {
+            const usuario: Cliente = JSON.parse(usuarioString);
+
+            try {
+                const response = await fetch(URL_API + `cliente/${usuario.id}/pedidos/distintos/${estado}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+                }
+
+                return await response.json();
+
+            } catch (error) {
+                console.error('Error:', error);
+                throw error;
+            }
+        } else {
+            return [];
+        }
+    },
+
     updateUser: async (cliente: Cliente): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'cliente/update', {

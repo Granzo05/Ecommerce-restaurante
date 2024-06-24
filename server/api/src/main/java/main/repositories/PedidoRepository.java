@@ -13,8 +13,11 @@ import java.util.Optional;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
-    @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :id AND p.borrado = 'NO'")
-    List<Pedido> findOrderByIdCliente(@Param("id") long id);
+    @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :id AND p.estado = :estado AND p.borrado = 'NO'")
+    List<Pedido> findPedidosByEstadoAndIdCliente(@Param("estado") EnumEstadoPedido estado, @Param("id") long id);
+
+    @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :id AND p.estado != :estado AND p.borrado = 'NO'")
+    List<Pedido> findPedidosByEstadosDistntosAndIdCliente(@Param("estado") EnumEstadoPedido estado, @Param("id") long id);
 
     @Query("SELECT p FROM Pedido p JOIN p.sucursales s WHERE s.id = :idSucursal")
     List<Pedido> findAllByIdSucursal(@Param("idSucursal") Long idSucursal);

@@ -67,9 +67,19 @@ public class PedidoController {
     }
 
     @CrossOrigin
-    @GetMapping("/cliente/{id}/pedidos")
-    public Set<Pedido> getPedidosPorCliente(@PathVariable("id") Long idCliente) {
-        List<Pedido> pedidos = pedidoRepository.findOrderByIdCliente(idCliente);
+    @GetMapping("/cliente/{id}/pedidos/{estado}")
+    public Set<Pedido> getPedidosPorClienteYEstado(@PathVariable("id") Long idCliente, @PathVariable("estado") int estadoValue) {
+        EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
+        List<Pedido> pedidos = pedidoRepository.findPedidosByEstadoAndIdCliente(estado, idCliente);
+
+        return new HashSet<>(pedidos);
+    }
+
+    @CrossOrigin
+    @GetMapping("/cliente/{id}/pedidos/distintos/{estado}")
+    public Set<Pedido> getPedidosPorClienteDistintosAlEstado(@PathVariable("id") Long idCliente, @PathVariable("estado") int estadoValue) {
+        EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
+        List<Pedido> pedidos = pedidoRepository.findPedidosByEstadosDistntosAndIdCliente(estado, idCliente);
 
         return new HashSet<>(pedidos);
     }

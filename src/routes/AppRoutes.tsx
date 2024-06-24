@@ -54,6 +54,8 @@ const AppRoutes: React.FC = () => {
             <Route path="preferencias" element={<Preferencias />} />
           </Route>
 
+          <Route path="/cliente/:opcionElegida" element={<OpcionesCliente />}></Route>
+
           <Route path="/cambio-contra" element={<CambioContra />} />
 
           <Route path="*" element={<NotFound />} />

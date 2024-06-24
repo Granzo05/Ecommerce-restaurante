@@ -10,13 +10,15 @@ interface AgregarMedidaProps {
   onCloseModal: () => void;
 }
 
-const [isLoading, setIsLoading] = useState(false);
 
 const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
-  setIsLoading(true);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [nombre, setNombre] = useState('');
 
   async function agregarMedida() {
+    setIsLoading(true);
+
     const medida: Medida = new Medida();
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {

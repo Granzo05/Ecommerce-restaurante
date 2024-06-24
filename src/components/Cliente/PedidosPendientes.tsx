@@ -42,7 +42,7 @@ const PedidosPendientes = () => {
 
     const buscarPedidos = async () => {
         try {
-            const data = await ClienteService.getPedidos(EnumEstadoPedido.ENTRANTES);
+            const data = await ClienteService.getPedidosPorOtrosEstados(EnumEstadoPedido.ENTREGADOS);
             if (data) {
                 const pendientes = [];
                 const horasFinalizacion = [];
@@ -107,6 +107,7 @@ const PedidosPendientes = () => {
                                     <tr key={pedido.id}>
                                         <td>
                                             <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
+                                            <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero}, {pedido.domicilioEntrega?.localidad?.nombre}</p>
                                             {tiempoRestante[index] > 0 && pedido.estado !== 'ENTREGADOS' && (
                                                 <>
                                                     <p>El restaurante está preparando tu pedido</p>

@@ -5,7 +5,7 @@ import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
 import { Cliente } from '../types/Cliente/Cliente';
 import { toast, Toaster } from 'sonner';
-import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
+import { getBaseUrl, getBaseUrlCliente, limpiarCredenciales } from '../utils/global_variables/const';
 import { Empleado } from '../types/Restaurante/Empleado';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import searchIcon from '../assets/icons/header-icono-busqueda.png'
@@ -72,19 +72,20 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
 
     const handleLogout = () => {
         limpiarCredenciales();
+        setIsAccountOpen(!isAccountOpen);
         setCliente(null)
     };
 
     const handleEditarPerfilClick = () => {
-        navigate('/cliente', { state: { opcionSeleccionada: 4 } });
+        window.location.href = getBaseUrlCliente() + `/cliente/${4}`
     };
 
     const handleEditarDomiciliosClick = () => {
-        navigate('/cliente', { state: { opcionSeleccionada: 3 } });
+        window.location.href = getBaseUrlCliente() + `/cliente/${3}`
     };
 
     const handlePedidosClick = () => {
-        navigate('/cliente', { state: { opcionSeleccionada: 2 } });
+        window.location.href = getBaseUrlCliente() + `/cliente/${2}`
     };
 
     const [carrito, setCarrito] = useState<Carrito>(new Carrito());

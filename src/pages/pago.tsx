@@ -23,7 +23,7 @@ import { CarritoService } from "../services/CarritoService";
 import { SucursalService } from "../services/SucursalService";
 import { SucursalDTO } from "../types/Restaurante/SucursalDTO";
 import ModalCrud from "../components/ModalCrud";
-import { getBaseUrl } from "../utils/global_variables/const";
+import { getBaseUrl, getBaseUrlCliente } from "../utils/global_variables/const";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -104,11 +104,14 @@ const Pago = () => {
         setCarrito(await CarritoService.getCarrito());
     }
 
+    const [isLoading, setIsLoading] = useState(false);
+
     async function enviarPedidoARestaurante() {
+        setIsLoading(true);
         const now = new Date();
         const horaActual = now.toTimeString().slice(0, 5);
 
-        if ((sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual) && verificarTiempo()) {
+        if (verificarPedidos()) {
             let hayStock = true;
             let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
 
@@ -200,21 +203,26 @@ const Pago = () => {
                     }
 
                     if (preferenceId) {
-                        console.log(preferenceId)
                         PedidoService.eliminarPedidoFallido(preferenceId);
                     }
 
                     toast.promise(PedidoService.crearPedido(pedido), {
                         loading: 'Creando pedido...',
                         success: (message) => {
-                            CarritoService.limpiarCarrito();
-                            window.location.href = getBaseUrl() + '/cliente'
-                            localStorage.setItem('lastPedidoTime', now.getTime().toString());
+                            actualizarPedidos();
+                            setTimeout(() => {
+                                toast.info('Dirigiéndose a pedidos...')
+                                CarritoService.limpiarCarrito();
+                                window.location.href = getBaseUrlCliente() + `/cliente/${1}`
+                            }, 3000);
                             return message;
                         },
                         error: (message) => {
                             return message;
                         },
+                        finally: () => {
+                            setIsLoading(false);
+                        }
                     });
                 } else {
                     toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
@@ -230,8 +238,9 @@ const Pago = () => {
     async function crearPreferencia(domicilio: Domicilio) {
         const now = new Date();
         const horaActual = now.toTimeString().slice(0, 5);
+        setIsLoading(true);
 
-        if (sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual && verificarTiempo()) {
+        if ((sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual) && verificarPedidos()) {
             if (envio === 0) {
                 let hayStock = true;
                 let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
@@ -325,7 +334,7 @@ const Pago = () => {
                             if (preference === null) {
                                 toast.error('Tu cuenta ha sido bloqueada por el restaurante')
                             } else {
-                                localStorage.setItem('lastPedidoTime', now.getTime().toString());
+                                actualizarPedidos();
                                 setPreferenceId(preference.id);
                             }
                         } else {
@@ -343,20 +352,50 @@ const Pago = () => {
         }
     }
 
-    function verificarTiempo(): boolean {
-        const lastPedidoTime = localStorage.getItem('lastPedidoTime');
+    function verificarPedidos(): boolean {
+        const pedidosString = localStorage.getItem('lastPedidoTime');
 
-        if (lastPedidoTime) {
-            const lastPedidoTimeNumber = parseInt(lastPedidoTime, 10);
-            const now = new Date().getTime();
-            const timeDifference = now - lastPedidoTimeNumber;
 
-            if (timeDifference < 60000) {
-                toast('Debes esperar unos minutos antes de repetir un pedido');
+        if (pedidosString) {
+            const pedido = JSON.parse(pedidosString);
+            const today = new Date().getTime();
+
+            const timeDifference = today - pedido.fecha;
+
+            if (timeDifference < 3600000 && pedido.fecha === today && pedido.cantidadPedidosHoy >= 3) {
+                toast('Alcanzaste el límite de 3 pedidos por día.');
                 return false;
             }
         }
+
         return true;
+    }
+
+    function actualizarPedidos() {
+        let pedidosString = localStorage.getItem('lastPedidoTime');
+        const now = new Date();
+        const today = now.toDateString();
+
+        if (pedidosString) {
+            const pedido = JSON.parse(pedidosString);
+
+            // Verifica si la fecha guardada es hoy
+            if (pedido.fecha === today) {
+                pedido.cantidadPedidosHoy += 1;
+            } else {
+                // Si no es hoy, reinicia el conteo
+                pedido.cantidadPedidosHoy = 1;
+                pedido.fecha = today;
+            }
+
+            localStorage.setItem('lastPedidoTime', JSON.stringify(pedido));
+        } else {
+            const pedido = {
+                cantidadPedidosHoy: 1,
+                fecha: today
+            };
+            localStorage.setItem('lastPedidoTime', JSON.stringify(pedido));
+        }
     }
 
     useEffect(() => {
@@ -364,25 +403,25 @@ const Pago = () => {
     }, []);
 
     const [showExitModal, setShowExitModal] = useState(false);
-
-    useEffect(() => {
-        const handleBeforeUnload = (event: { preventDefault: () => void; returnValue: string; }) => {
-            event.preventDefault();
-            event.returnValue = ''; // Este mensaje no se muestra en todos los navegadores
-            setShowExitModal(true);
-            return '';
-        };
-
-        window.addEventListener('beforeunload', handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-    }, [carrito]);
-
+    /*
+        useEffect(() => {
+            const handleBeforeUnload = (event: { preventDefault: () => void; returnValue: string; }) => {
+                event.preventDefault();
+                event.returnValue = ''; // Este mensaje no se muestra en todos los navegadores
+                setShowExitModal(true);
+                return '';
+            };
+    
+            window.addEventListener('beforeunload', handleBeforeUnload);
+    
+            return () => {
+                window.removeEventListener('beforeunload', handleBeforeUnload);
+            };
+        }, [carrito]);
+    */
     const handleExitConfirm = () => {
         setShowExitModal(false);
-        window.location.href = '/'; // Redirigir al usuario a la página de inicio o a otra página
+        window.location.href = getBaseUrl(); // Redirigir al usuario a la página de inicio o a otra página
     };
 
     const handleExitCancel = () => {
@@ -464,10 +503,12 @@ const Pago = () => {
                             {domicilio && domicilio?.calle?.length > 0 ? (
                                 <div className={isVisible ? "divVisible" : "divInvisible"}>
                                     {preferenceId && preferenceId.length > 2 && (
-                                        <Wallet
-                                            initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
-                                            customization={{ texts: { valueProp: "smart_option" } }}
-                                        />
+                                        <button disabled={isLoading}>
+                                            <Wallet
+                                                initialization={{ preferenceId: preferenceId, redirectMode: "self" }}
+                                                customization={{ texts: { valueProp: "smart_option" } }}
+                                            />
+                                        </button>
                                     )}
                                 </div>
                             ) : (
@@ -488,12 +529,8 @@ const Pago = () => {
                                 <h2><strong>Total:</strong> ${Math.ceil(carrito.totalPrecio * 0.9)}</h2>
                             )}
                             <p style={{ color: '#007bff' }}>*Retiro en tienda con 10% de descuento</p>
-                            <button
-                                type="submit"
-                                className="checkout-btn"
-                                onClick={() => enviarPedidoARestaurante()}
-                            >
-                                Realizar encargo
+                            <button className='checkout-btn' onClick={enviarPedidoARestaurante} disabled={isLoading}>
+                                {isLoading ? 'Cargando...' : 'Realizar encargo ✓'}
                             </button>
                             <button
                                 type="submit"
