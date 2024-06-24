@@ -334,7 +334,6 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   const [isLoading, setIsLoading] = useState(false);
 
   async function editarPromocion() {
-    setIsLoading(true);
     const hoy = new Date();
 
     fechaDesde.setDate(fechaDesde.getDate() + 1);
@@ -365,6 +364,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
       toast.error("Por favor, es necesaria la descripción");
       return;
     }
+    setIsLoading(true);
 
     const promocionUpdated: Promocion = promocion;
 

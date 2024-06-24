@@ -18,7 +18,6 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarPrivilegios() {
-    setIsLoading(true);
 
     const privilegio: PrivilegiosSucursales = new PrivilegiosSucursales(0, permisos, 0, tarea, 'NO');
 
@@ -26,6 +25,7 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
       toast.info("Por favor, asigne el tarea");
       return;
     }
+    setIsLoading(true);
 
     privilegio.nombre = tarea;
     privilegio.borrado = 'NO';

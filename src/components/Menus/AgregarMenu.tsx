@@ -187,7 +187,6 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarMenu() {
-    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -224,6 +223,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
         return;
       }
     }
+    setIsLoading(true);
 
     const menu: ArticuloMenu = new ArticuloMenu();
 

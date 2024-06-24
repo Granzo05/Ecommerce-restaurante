@@ -229,7 +229,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
   const [isLoading, setIsLoading] = useState(false);
 
   function editarMenu() {
-    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -269,6 +268,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
         return;
       }
     }
+    setIsLoading(true);
 
     let menuActualizado: ArticuloMenu = menuOriginal;
 

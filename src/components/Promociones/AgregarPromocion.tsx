@@ -264,7 +264,6 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarStockEntrante() {
-    setIsLoading(true);
     const hoy = new Date();
 
     console.log(fechaDesde);
@@ -295,6 +294,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
       toast.error("Por favor, es necesaria la descripción");
       return;
     }
+    setIsLoading(true);
 
     const promocion: Promocion = new Promocion();
 

@@ -105,7 +105,6 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
   const [isLoading, setIsLoading] = useState(false);
 
   function editarCategoria() {
-    setIsLoading(true);
     const categoria: Categoria = categoriaOriginal;
     categoria.borrado = 'NO';
 
@@ -114,6 +113,7 @@ const EditarCategoria: React.FC<EditarCategoriaProps> = ({ categoriaOriginal, on
       return;
     }
 
+    setIsLoading(true);
 
     categoria.nombre = nombre;
 

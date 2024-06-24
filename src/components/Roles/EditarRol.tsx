@@ -14,6 +14,7 @@ interface EditarMedidaProps {
 const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }) => {
 
   const [nombre, setNombre] = useState(rolOriginal.nombre);
+  const [isLoading, setIsLoading] = useState(false);
 
   function editarMedida() {
     const rol: Roles = rolOriginal;
@@ -23,6 +24,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
+    setIsLoading(true);
 
     rol.nombre = nombre;
 

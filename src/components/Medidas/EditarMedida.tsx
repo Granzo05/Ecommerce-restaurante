@@ -18,7 +18,6 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
   const [isLoading, setIsLoading] = useState(false);
 
   function editarMedida() {
-    setIsLoading(true);
     const medida: Medida = medidaOriginal;
     medida.borrado = 'NO';
 
@@ -26,6 +25,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
+    setIsLoading(true);
 
     medida.nombre = nombre;
 

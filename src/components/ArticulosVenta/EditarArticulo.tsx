@@ -118,7 +118,6 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const [isLoading, setIsLoading] = useState(false);
 
   function editarArticuloVenta() {
-    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -141,6 +140,8 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       toast.error("Por favor, es necesario una imagen");
       return;
     }
+    
+    setIsLoading(true);
 
     let sucursalesElegidas: Sucursal[] = [];
 

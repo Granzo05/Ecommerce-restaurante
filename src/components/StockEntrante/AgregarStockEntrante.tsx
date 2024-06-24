@@ -174,7 +174,6 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarStockEntrante() {
-    setIsLoading(true);
     const hoy = new Date();
 
     if (!fecha) {
@@ -196,6 +195,7 @@ const AgregarStockEntrante: React.FC<AgregarStockEntranteProps> = ({ onCloseModa
     }
 
     const stockEntrante: StockEntrante = new StockEntrante();
+    setIsLoading(true);
 
     stockEntrante.fechaLlegada = fecha;
     stockEntrante.borrado = 'NO';

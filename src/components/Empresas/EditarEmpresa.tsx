@@ -56,7 +56,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
   const [isLoading, setIsLoading] = useState(false);
 
   function handleCargarNegocio() {
-    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -73,6 +72,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
       toast.error("Por favor, es necesaria una imagen");
       return;
     }
+    setIsLoading(true);
 
     let empresa: Empresa = empresaOriginal;
 
@@ -86,7 +86,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ empresaOriginal, onCloseModal }
 
     empresa.borrado = 'NO';
 
-    console.log(empresa);
     toast.promise(EmpresaService.updateEmpresa(empresa, imagenes, imagenesEliminadas), {
       loading: 'Editando empresa...',
       success: (message) => {

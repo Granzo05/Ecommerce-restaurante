@@ -55,7 +55,6 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
   const [isLoading, setIsLoading] = useState(false);
 
   function editarIngrediente() {
-    setIsLoading(true);
     const ingrediente: Ingrediente = ingredienteOriginal;
     ingrediente.borrado = 'NO';
 
@@ -63,6 +62,7 @@ const EditarIngrediente: React.FC<EditarIngredienteProps> = ({ ingredienteOrigin
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
+    setIsLoading(true);
 
     ingrediente.nombre = nombre;
 

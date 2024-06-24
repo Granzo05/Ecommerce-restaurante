@@ -36,6 +36,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
     setModalBusquedaIngrediente(false)
   };
 
+  const [isLoading, setIsLoading] = useState(false);
 
   async function crearStockIngrediente() {
     if (!medida && !cantidadMaxima && !costoIngrediente && !cantidadMinima && !cantidadActual && !nombreIngrediente) {
@@ -69,6 +70,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
       toast.error("Por favor, la cantidad actual no puede ser menor a la minima");
       return;
     }
+    setIsLoading(true);
 
     const stock: StockIngredientes = new StockIngredientes();
     stock.cantidadActual = cantidadActual;
@@ -81,8 +83,6 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
     stock.borrado = 'NO';
 
     stock.ingrediente = ingrediente;
-
-    console.log(stock)
 
     toast.promise(StockIngredientesService.updateStock(stock), {
       loading: 'Creando stock...',
@@ -144,8 +144,9 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
       </div>
       <br />
       <div className="btns-pasos">
-      <button className='btn-accion-completar' onClick={crearStockIngrediente}>Agregar stock ✓</button>
-
+        <button className='btn-accion-completar' onClick={crearStockIngrediente} disabled={isLoading}>
+          {isLoading ? 'Cargando...' : 'Agregar stock ✓'}
+        </button>
       </div>
     </div>
   )

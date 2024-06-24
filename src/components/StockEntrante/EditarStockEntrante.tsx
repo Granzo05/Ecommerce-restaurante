@@ -20,7 +20,6 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }
   const [isLoading, setIsLoading] = useState(false);
 
   function editarStock() {
-    setIsLoading(true);
     const hoy = new Date();
     const fechaIngresada = new Date(fecha);
 
@@ -40,6 +39,7 @@ const EditarStock: React.FC<EditarStockProps> = ({ stockEntrante, onCloseModal }
       return;
     }
     stockEntrante.borrado = 'NO';
+    setIsLoading(true);
 
     stockEntrante.fechaLlegada = formatDate(new Date(fecha));
     toast.promise(StockEntranteService.updateStock(stockEntrante), {

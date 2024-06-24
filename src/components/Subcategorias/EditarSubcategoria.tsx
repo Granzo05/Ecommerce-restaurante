@@ -54,13 +54,13 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
   const [isLoading, setIsLoading] = useState(false);
 
   function editarCategoria() {
-    setIsLoading(true);
     const subcategoria: Subcategoria = subcategoriaOriginal;
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
+    setIsLoading(true);
 
     subcategoria.nombre = nombre;
     toast.promise(SubcategoriaService.updateSubcategoria(subcategoria), {
@@ -69,10 +69,10 @@ const EditarSubcategoria: React.FC<EditarSubcategoriaProps> = ({ subcategoriaOri
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return "Subcategoría editada correctamente";
+        return message;
       },
       error: (message) => {
-        return "No se pudo editar la subcategoría";
+        return message;
       },
       finally: () => {
         setIsLoading(false);

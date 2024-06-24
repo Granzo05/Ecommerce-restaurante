@@ -66,7 +66,6 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
 
   async function agregarCategoria() {
     const subcategoria: Subcategoria = new Subcategoria();
-    setIsLoading(true);
 
     if (!categoria) {
       toast.info("Por favor, es necesaria la categoria");
@@ -75,6 +74,7 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
+    setIsLoading(true);
 
     subcategoria.nombre = nombreSubcategoria;
     subcategoria.borrado = 'NO';
@@ -86,18 +86,16 @@ const AgregarSubcategoria: React.FC<AgregarSubcategoriaProps> = ({ onCloseModal 
       categoria.subcategorias.push(subcategoria);
     }
 
-    console.log(categoria)
-
     toast.promise(CategoriaService.updateCategoriaBorrado(categoria), {
       loading: 'Creando subcategoria...',
       success: (message) => {
         setTimeout(() => {
           onCloseModal();
         }, 800);
-        return "Subcategoría creada correctamente";
+        return message;
       },
       error: (message) => {
-        return "No se pudo crear la subcategoría";
+        return message;
       },
       finally: () => {
         setIsLoading(false);

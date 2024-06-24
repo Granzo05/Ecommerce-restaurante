@@ -34,7 +34,6 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarStock() {
-    setIsLoading(true);
 
     if (!articulo.nombre) {
       toast.error("Por favor, es necesario el nombre del articulo");
@@ -64,6 +63,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
       toast.error("Por favor, la cantidad mínima no puede ser mayor a la máxima");
       return;
     }
+    setIsLoading(true);
 
     const stock: StockArticuloVenta = new StockArticuloVenta();
 

@@ -312,7 +312,6 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [isLoading, setIsLoading] = useState(false);
 
   async function editarEmpleado() {
-    setIsLoading(true);
     if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
@@ -339,6 +338,8 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       toast.info("Se debe agregar al menos un domicilio.");
       return;
     }
+    
+    setIsLoading(true);
 
     let domiciliosValidos = [...domiciliosModificable, ...domicilios].filter(domicilio =>
       domicilio.calle && domicilio.numero && domicilio.codigoPostal

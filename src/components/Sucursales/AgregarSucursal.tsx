@@ -242,7 +242,6 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCargarNegocio = async () => {
-    setIsLoading(true);
     if (!email || !email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,}/)) {
       toast.error("Por favor, es necesario el email");
       return;
@@ -277,6 +276,7 @@ const AgregarSucursal: React.FC<AgregarSucursalProps> = ({ onCloseModal }) => {
       toast.error("Por favor, es necesaria una imagen");
       return;
     }
+    setIsLoading(true);
 
     let sucursal: Sucursal = new Sucursal();
 

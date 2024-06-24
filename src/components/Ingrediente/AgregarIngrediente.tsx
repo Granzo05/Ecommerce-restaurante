@@ -69,7 +69,6 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarIngrediente() {
-    setIsLoading(true);
 
     if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
       toast.info("Por favor, asigne un nombre válido");
@@ -117,6 +116,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
       toast.error("Por favor, seleccione al menos una sucursal");
       return;
     }
+    setIsLoading(true);
 
     const ingrediente: Ingrediente = new Ingrediente();
 
