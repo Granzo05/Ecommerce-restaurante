@@ -1,57 +1,62 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
 
-.form-main{
-    background: url('../assets/img/backgrounds/bg-login-cliente.jpg') no-repeat center center fixed; 
+.form-main {
+    background: url('../assets/img/backgrounds/bg-login-cliente.jpg') no-repeat center center fixed;
     background-size: cover;
     min-height: 100%;
 }
 
-#pass-forg{
-    color: #2c2c2c;;
+#pass-forg {
+    color: #2c2c2c;
+    ;
 }
 
 #create-account {
     text-align: center;
-    color: #2c2c2c;;
+    color: #2c2c2c;
+    ;
 }
 
 #icon-lock {
-    color: #2c2c2c;;
+    color: #2c2c2c;
+    ;
     position: absolute;
     right: 0px;
     margin-top: 4px;
     padding: 5px;
 }
 
-#icon-lock:hover{
+#icon-lock:hover {
     cursor: pointer;
     background-color: gray;
     border-radius: 20px;
 }
 
-#icon-gmail{
+#icon-gmail {
     height: 50px;
     width: 50px;
-    border: 1px solid #2c2c2c;;
+    border: 1px solid #2c2c2c;
+    ;
     padding: 5px;
     margin-left: 8px;
     border-radius: 25px;
 }
 
-#icon-gmail:hover{
-    background-color: #2c2c2c;;
+#icon-gmail:hover {
+    background-color: #2c2c2c;
+    ;
     transition: .2s;
     cursor: pointer;
 }
 
-#back-icon{
+#back-icon {
     color: #2c2c2c;
     position: absolute;
     top: 10px;
     left: 15px;
 }
 
-#back-icon:hover{
+#back-icon:hover {
     cursor: pointer;
     color: grey;
     transition: .2s;
@@ -105,7 +110,8 @@ a {
     font-size: 35px;
     text-align: center;
     line-height: 1.2;
-    color: #2c2c2c;;
+    color: #2c2c2c;
+    ;
     font-weight: 500;
 }
 
@@ -113,7 +119,8 @@ a {
 
 
 .form-content #subtitle {
-    color: #2c2c2c;;
+    color: #2c2c2c;
+    ;
     display: flex;
     text-align: center;
 }
@@ -135,8 +142,10 @@ a {
     padding: 2px;
     background-color: transparent;
     border: none;
-    border-bottom: 2px solid #2c2c2c;;
-    border-right: 2px solid #2c2c2c;;
+    border-bottom: 2px solid #2c2c2c;
+    ;
+    border-right: 2px solid #2c2c2c;
+    ;
     font-weight: inherit;
     font-family: inherit;
     font-size: 16px;
@@ -182,34 +191,36 @@ a {
     transition: .8s;
 }
 
-#subtitle{
+#subtitle {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.btns-crear-cuenta{
+.btns-crear-cuenta {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
 }
 
-.btns-crear-cuenta .btn-accion-atras{
+.btns-crear-cuenta .btn-accion-atras {
     margin-right: 20px;
     width: 100%;
 }
 
-.btns-crear-cuenta .btn-accion-adelante{
+.btns-crear-cuenta .btn-accion-adelante {
     width: 100%;
 }
 
-.btns-crear-cuenta .btn-accion-registrarse, .btns-stock .btn-accion-registrarse{
+.btns-crear-cuenta .btn-accion-registrarse,
+.btns-stock .btn-accion-registrarse {
     background-color: green;
     width: 100%;
 }
 
-.btns-crear-cuenta .btn-accion-registrarse:hover, .btns-stock .btn-accion-registrarse:hover{
+.btns-crear-cuenta .btn-accion-registrarse:hover,
+.btns-stock .btn-accion-registrarse:hover {
     background-color: rgb(1, 73, 1);
 }
 
@@ -237,7 +248,7 @@ a {
         padding: 10px;
     }
 
-    .form-content .btns-crear-cuenta{
+    .form-content .btns-crear-cuenta {
         width: 50%;
         margin-left: auto;
         margin-right: auto;
@@ -254,9 +265,16 @@ a {
     .form-content .btn {
         font-size: 12px;
     }
+
+    .login-google {
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
-.login-google{
+.login-google {
     display: flex;
     align-items: center;
     justify-content: center;
