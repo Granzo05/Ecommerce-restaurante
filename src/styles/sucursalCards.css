@@ -3,27 +3,28 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    background: url('../assets/img/backgrounds/bg-sucursal-card.jpg') no-repeat center center fixed; 
+    background: url('../assets/img/backgrounds/bg-sucursal-card.jpg') no-repeat center center fixed;
     background-size: cover;
     min-height: 100%;
   }
-  
+
   .inner-container-sucursal-card {
     background-color: white;
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 4px 40px black; /* Sombra para dar efecto de elevación */
+    box-shadow: 0 4px 40px black;
+    /* Sombra para dar efecto de elevación */
     text-align: center;
     margin: 10px;
-    
+
     width: 56%;
   }
-  
+
   .header-sucursal-card {
     margin-bottom: 20px;
-    
+
   }
-  
+
   .sucursal-card-container {
     display: flex;
     gap: 20px;
@@ -31,7 +32,7 @@
     justify-content: center;
     height: 500px;
   }
-  
+
   .sucursal-card {
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -39,56 +40,80 @@
     text-align: center;
     cursor: pointer;
     transition: transform 0.2s;
-    width: 40%; /* Añadido para mantener las tarjetas con un tamaño uniforme */
-    background-color: #fafafa; /* Fondo blanco de las tarjetas */
+    width: 40%;
+    /* Añadido para mantener las tarjetas con un tamaño uniforme */
+    background-color: #fafafa;
+    /* Fondo blanco de las tarjetas */
   }
-  
+
   .sucursal-card:hover {
     transform: scale(1.05);
     background-color: #2b86c4;
   }
-  
+
   .sucursal-card h2 {
     font-size: 25px;
   }
-  
+
   .sucursal-card p {
     font-size: 14px;
     color: #555;
   }
 
+  .filtros-cards {
+    width: 96%;
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+
   /* Media Queries para hacer el diseño responsivo */
-@media (max-width: 1200px) {
-  .sucursal-card {
-    width: 45%; /* Dos tarjetas por fila en pantallas medianas */
+  @media (max-width: 1200px) {
+    .sucursal-card {
+      width: 45%;
+      /* Dos tarjetas por fila en pantallas medianas */
+    }
   }
-}
 
-@media (max-width: 768px) or (max-height: 664px) {
-  #header-login{
-    display: none;
-  }
-  
-  .sucursal-card-container {
-    height: auto; /* Permitir que la altura se ajuste automáticamente en pantallas pequeñas */
-  }
-  .sucursal-card {
-    width: 100%; /* Una tarjeta por fila en pantallas pequeñas */
-  }
-}
+  @media (max-width: 768px) or (max-height: 664px) {
+    #header-login {
+      display: none;
+    }
 
-@media (max-width: 480px) {
-  .inner-container-sucursal-card {
-    padding: 10px; /* Reducir padding en pantallas muy pequeñas */
+    .sucursal-card-container {
+      height: auto;
+      /* Permitir que la altura se ajuste automáticamente en pantallas pequeñas */
+    }
+
+    .sucursal-card {
+      width: 100%;
+      /* Una tarjeta por fila en pantallas pequeñas */
+    }
   }
-  .sucursal-card {
-    padding: 10px; /* Reducir padding en tarjetas en pantallas muy pequeñas */
+
+  @media (max-width: 480px) {
+    .inner-container-sucursal-card {
+      padding: 10px;
+      /* Reducir padding en pantallas muy pequeñas */
+      width: 300px;
+    }
+
+    .filtros-cards{
+      width: 90%;
+    }
+
+
+    .sucursal-card {
+      padding: 10px;
+      /* Reducir padding en tarjetas en pantallas muy pequeñas */
+    }
+
+    .sucursal-card h2 {
+      font-size: 16px;
+      /* Ajustar tamaño de fuente en pantallas muy pequeñas */
+    }
+
+    .sucursal-card p {
+      font-size: 12px;
+      /* Ajustar tamaño de fuente en pantallas muy pequeñas */
+    }
   }
-  .sucursal-card h2 {
-    font-size: 16px; /* Ajustar tamaño de fuente en pantallas muy pequeñas */
-  }
-  .sucursal-card p {
-    font-size: 12px; /* Ajustar tamaño de fuente en pantallas muy pequeñas */
-  }
-}
-  

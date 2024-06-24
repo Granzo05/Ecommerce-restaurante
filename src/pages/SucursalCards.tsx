@@ -108,14 +108,14 @@ const SucursalCards: React.FC = () => {
 
         <div className="inner-container-sucursal-card">
           <h1 className="header-sucursal-card">&mdash; Selecciona una sucursal &mdash;</h1>
-          <div style={{ width: '50%', marginLeft: '40px' }}>
+          <div className='filtros-cards' >
             <label style={{ display: 'flex', fontWeight: 'bold' }}>Coloca tu provincia:</label>
-            <InputComponent disabled={false} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
+            <InputComponent disabled={false} placeHolder='Filtrar por provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={inputProvincia ?? ''} />
             {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { setInputProvincia(provincia.nombre); fetchSucursalesProvincia(provincia.nombre); handleModalClose(); }} />}
           </div>
-          <div style={{ width: '50%', marginLeft: '40px', marginBottom: '25px' }}>
+          <div className='filtros-cards' >
             <label style={{ display: 'flex', fontWeight: 'bold' }}>Si ya colocaste tu provincia, podés filtrar por tu departamento</label>
-            <InputComponent disabled={inputProvincia.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
+            <InputComponent disabled={inputProvincia.length === 0} placeHolder='Filtrar por departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={inputDepartamento ?? ''} />
             {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { setInputDepartamento(departamento.nombre); filtrarSucursalesDepartamento(departamento.nombre); handleModalClose(); }} inputProvincia={inputProvincia} />}
           </div>
           <div className="sucursal-card-container">

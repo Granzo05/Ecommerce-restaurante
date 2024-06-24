@@ -100,5 +100,45 @@
   .modal-flotante-content button {
     width: 40%;
   }
+
+  .btns-filtrado{
+    width: 500px;
+  }
+
+}
+
+/* Media queries para hacer el modal responsive */
+@media screen and (max-width: 768px) {
+  .modal-flotante-content {
+    width: 90%;
+    max-width: 90%;
+  }
+
+  .modal-flotante-content button {
+    width: 30%;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .modal-flotante-content {
+    width: 90%;
+    max-width: 90%;
+  }
+
+  .modal-flotante-content button {
+    width: 40%;
+  }
+}
+
+/* Media query adicional para pantallas muy pequeñas */
+@media screen and (max-width: 360px) {
+  .modal-flotante-content button {
+    width: 50%;
+  }
+
+  .modal-close {
+    font-size: 1.2rem;
+    padding: 5px;
+  }
 }
 
