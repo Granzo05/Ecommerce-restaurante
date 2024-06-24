@@ -57,7 +57,7 @@ const LoginCliente = () => {
             setIsLoading(false);
             return;
         } else if (contraseña.length === 0 || contraseña.length < 8) {
-            
+
             setIsLoading(false);
             toast.error('Debe ingresar una contraseña válida');
             return;
@@ -72,7 +72,7 @@ const LoginCliente = () => {
             finally: () => {
                 setIsLoading(false);
                 toast.error(`Error. Correo o contraseña no encontrados...`);
-                
+
             }
         });
     };
@@ -126,7 +126,7 @@ const LoginCliente = () => {
             toast.error("Por favor, es necesario la calle para el domicilio");
             setIsLoading(false);
             return;
-        } else if (!numeroCasa.replace(/\D/g, '') || (parseInt(numeroCasa) > 9999 || parseInt(numeroCasa) < 1)) {
+        } else if (!numeroCasa.replace(/\D/g, '') || (parseInt(numeroCasa) > 99999 || parseInt(numeroCasa) < 1)) {
             toast.error("Por favor, es necesario el número del domicilio");
             setIsLoading(false);
             return;
@@ -182,11 +182,12 @@ const LoginCliente = () => {
                 setIsLoading(true);
                 return `Iniciando sesión...`;
             },
-            error: 'Error',
+            error: (err) => {
+                setIsLoading(false);
+                return err.message;
+            },
             finally: () => {
                 setIsLoading(false);
-                toast.error(`Error. Intente nuevamente...`);
-                
             }
         });
     };
@@ -330,27 +331,21 @@ const LoginCliente = () => {
                     <>
                         {/* Datos del correo */}
                         <div className="inputBox" style={{ marginBottom: '12px' }}>
-                            <input type='text' pattern="\d{10}" required={true} value={telefono} onChange={handleTelefonoChange} />
-                            <span>Teléfono</span>
-                            <div className="error-message">El número de teléfono no es válido. Mínimo 10 dígitos</div>
-
-                        </div>
-                        <div className="inputBox" style={{ marginBottom: '12px' }}>
                             <input type='email' required={true} value={email} onChange={(e) => { setEmail(e.target.value) }} />
                             <span>Correo electrónico</span>
                             <div className="error-message">Formato incorrecto de e-mail.</div>
                         </div>
-
-
+                        <div className="inputBox" style={{ marginBottom: '12px' }}>
+                            <input type='text' pattern="\d{10}" required={true} value={telefono} onChange={handleTelefonoChange} />
+                            <span>Teléfono</span>
+                            <div className="error-message">El número de teléfono no es válido. Mínimo 10 dígitos</div>
+                        </div>
                         <div className="inputBox" style={{ marginBottom: '12px' }}>
                             <input type={tipoInput} pattern=".{8,}" required={true} value={contraseña} onChange={(e) => { setContraseña(e.target.value) }} />
                             <span>Contraseña</span>
                             <i id='icon-lock' onClick={toggleTipoInput}>{tipoInput === 'password' ? <LockIcon /> : <LockOpenIcon />}</i>
                             <div className="error-message">Mínimo 8 dígitos.</div>
-
                         </div>
-
-
                         <div className='btns-crear-cuenta'>
                             <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
                             <button style={{ marginRight: '0px' }} className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
@@ -368,7 +363,7 @@ const LoginCliente = () => {
 
                         </div>
                         <div className="inputBox" style={{ marginBottom: '12px' }}>
-                            <input type="number" min={1} max={9999} required={true} value={numeroCasa} onChange={(e) => { setNumeroCasa(e.target.value) }} />
+                            <input type="number" min={1} max={99999} required={true} value={numeroCasa} onChange={(e) => { setNumeroCasa(e.target.value) }} />
                             <span>Número de la casa</span>
                             <div className="error-message">El número de la calle no es válido.</div>
 
@@ -400,7 +395,7 @@ const LoginCliente = () => {
                             {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
 
                         </div>
-                        
+
                         <div className="btns-crear-cuenta">
                             <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
                             <button style={{ marginRight: '0px' }} className="btn-accion-entregado" onClick={handleCargarUsuario} disabled={isLoading}>

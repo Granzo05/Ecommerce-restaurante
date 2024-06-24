@@ -7,40 +7,43 @@ import { limpiarCredenciales, URL_API } from '../utils/global_variables/const';
 export const ClienteService = {
     createUser: async (cliente: Cliente) => {
         limpiarCredenciales();
-        fetch(URL_API + 'cliente/create', {
+
+        const response = await fetch(URL_API + 'cliente/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(cliente)
-        })
-            .then(async response => {
-                if (!response.ok) {
-                    throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
-                }
-                return await response.json()
-            })
-            .then(data => {
-                let cliente = {
-                    id: data.id,
-                    nombre: data.nombre,
-                    email: data.email,
-                    telefono: data.telefono,
-                    idSucursalRecomendada: data.idSucursalRecomendada
-                }
+        });
 
-                localStorage.setItem('usuario', JSON.stringify(cliente));
+        if (!response.ok) {
+            throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`);
+        }
 
-                // Redirige al usuario al menú principal
-                if (cliente.idSucursalRecomendada > 0) {
-                    window.location.href = `/${cliente.idSucursalRecomendada}}`
-                } else {
-                    window.location.href = `/sucursales`
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-            })
+        const data = await response.json();
+
+        if (data.id > 0 && data.id != null) {
+            const cliente = {
+                id: data.id,
+                nombre: data.nombre,
+                email: data.email,
+                telefono: data.telefono,
+                idSucursalRecomendada: data.idSucursalRecomendada
+            };
+
+            localStorage.setItem('usuario', JSON.stringify(cliente));
+
+            // Redirige al usuario al menú principal
+            if (cliente.idSucursalRecomendada > 0) {
+                window.location.href = `/${cliente.idSucursalRecomendada}}`;
+            } else {
+                window.location.href = `/sucursales`;
+            }
+
+            return `Usuario creado con éxito.`;
+        } else {
+            throw new Error(`Hay una cuenta creada con ese email`);
+        }
     },
 
     //CONTRASEÑA OLVIDADA--------------------------------------------------//
