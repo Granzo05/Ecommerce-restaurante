@@ -231,6 +231,7 @@ const PedidosAceptados = () => {
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Tipo de envío</th>
                             <th>Menu</th>
                             <th>Finalizar</th>
@@ -239,6 +240,7 @@ const PedidosAceptados = () => {
                     <tbody>
                         {datosFiltrados.map(pedido => (
                             <tr key={pedido.id}>
+                                <td>{pedido.id}</td>
                                 <td>{pedido.tipoEnvio.toString().replace(/_/g, ' ')}</td>
                                 <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
                                     {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
@@ -247,11 +249,14 @@ const PedidosAceptados = () => {
                                         </div>
                                     ))}
                                 </td>
-                                {updateVisible && (
-                                    <button className='btn-accion-completar' onClick={() => handleFinalizarPedido(pedido)} disabled={isLoading}>
-                                        {isLoading ? 'Cargando...' : 'Finalizar ✓'}
-                                    </button>
-                                )}
+                                <td>
+                                    {updateVisible && (
+                                        <button className='btn-accion-completar' onClick={() => handleFinalizarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'Finalizar ✓'}
+                                        </button>
+                                    )}
+                                </td>
+
                             </tr>
                         ))}
                     </tbody>

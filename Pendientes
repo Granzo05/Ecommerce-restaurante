@@ -118,7 +118,11 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [x] Permitir como email y cuit, al ingresar cuit dice que es un formato erroneo de email
 [x] No te debería dejar cargar más stock del máximo que permite ese producto. Agregar un modal que consulte si queremos cambiar el stock máximo al que estamos añadiendo, para ahorrar tiempos.
 [x] Validar que el botón de agregar te tome un solo click, porque me añadió dos veces al hacer click dos veces sin querer.
-
+[x] VER SI SE PUEDE PEDIR FUERA DEL HORARIO DE ATENCION y 
+[x] que si ya hice un pedido no me deje pedir si no ha pasado un minuto (Te deja pedir hasta 3 cosas por hora)
+[x] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
+    los pedidos en general, por lo cual habrá una pantalla con el listado de todos los pedidos, los cuales se podrán filtran según su estado 
+    (por ejemplo, mediante un combobox) y también se podrán buscar mediante su id (mediante un cuadro de búsqueda).
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Costo recomendado de articulos por sucursal
@@ -137,17 +141,14 @@ Login
 [] Hacer la recuperacion de contraseña
 [] Acomodar el regex de la calle, si pongo 25 de mayo me da error
 
+PDFS
+[] Arreglar el diseño de los pdfs
 
 Permisos: 
 
 PEDIDOS FALTA PROBAR:
-[] FILTRO POR ID ●	Vista de pedidos: el usuario que tenga el rol de “cajero” (a partir de ahora: el cajero) se encarga de gestionar el estado de todos 
-    los pedidos en general, por lo cual habrá una pantalla con el listado de todos los pedidos, los cuales se podrán filtran según su estado 
-    (por ejemplo, mediante un combobox) y también se podrán buscar mediante su id (mediante un cuadro de búsqueda).
 
 HORARIOS: 
-[x] VER SI SE PUEDE PEDIR FUERA DEL HORARIO DE ATENCION y 
-[x] que si ya hice un pedido no me deje pedir si no ha pasado un minuto (Te deja pedir hasta 3 cosas por hora)
 
 COMPRA:
 [] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.

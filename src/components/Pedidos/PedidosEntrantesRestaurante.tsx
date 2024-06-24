@@ -36,7 +36,6 @@ const PedidosEntrantes = () => {
     }
 
     const buscarCantidadCocineros = async () => {
-        setDatosFiltrados([]);
         EmpleadoService.getCantidadCocineros()
             .then(data => {
                 setCantidadCocineros(data);
@@ -202,7 +201,6 @@ const PedidosEntrantes = () => {
         return `${day}/${month}/${year}  ${hours}:${minutes}`
     };
 
-
     const [paginaActual, setPaginaActual] = useState(1);
     const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
 
@@ -280,6 +278,12 @@ const PedidosEntrantes = () => {
         }
     }
 
+    useEffect(() => {
+        if (pedidosEntrantes.length > 0) {
+            setDatosFiltrados(pedidosEntrantes.slice(indexPrimerProducto, indexUltimoProducto));
+        }
+    }, [pedidosEntrantes, paginaActual, cantidadProductosMostrables]);
+
     return (
 
         <div className="opciones-pantallas">
@@ -339,6 +343,7 @@ const PedidosEntrantes = () => {
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
                             <th>Menu</th>
@@ -349,6 +354,7 @@ const PedidosEntrantes = () => {
                     <tbody>
                         {datosFiltrados.map(pedido => (
                             <tr key={pedido.id}>
+                                <td>{pedido.id}</td>
                                 <td>
                                     <div>
                                         <p>{pedido.cliente?.nombre}</p>
@@ -376,16 +382,21 @@ const PedidosEntrantes = () => {
                                         </div>
                                     ))}
                                 </td>
-                                {updateVisible && (
-                                    <button className='btn-accion-completar' onClick={() => handleAceptarPedido(pedido)} disabled={isLoading}>
-                                        {isLoading ? 'Cargando...' : 'Aceptar ✓'}
-                                    </button>
-                                )}
-                                {updateVisible && (
-                                    <button className='btn-accion-completar' onClick={() => handleRechazarPedido(pedido)} disabled={isLoading}>
-                                        {isLoading ? 'Cargando...' : 'Rechazar ✓'}
-                                    </button>
-                                )}
+                                <td>
+                                    {updateVisible && (
+                                        <button className='btn-accion-completar' onClick={() => handleAceptarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'Aceptar ✓'}
+                                        </button>
+                                    )}
+                                </td>
+
+                                <td>
+                                    {updateVisible && (
+                                        <button className='btn-accion-completar' onClick={() => handleRechazarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'Rechazar ✓'}
+                                        </button>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
