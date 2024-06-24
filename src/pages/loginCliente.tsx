@@ -41,10 +41,10 @@ const LoginCliente = () => {
 
     const [nombre, setNombre] = useState('');
     const [email, setEmail] = useState('');
+    const [fechaNacimiento, setFechaNacimiento] = useState<Date>(new Date());
     const [contraseña, setContraseña] = useState('');
     const [calle, setCalle] = useState('');
     const [numeroCasa, setNumeroCasa] = useState('');
-    const [fechaNacimiento, setFechaNacimiento] = useState<Date>(new Date());
     const [codigoPostal, setCodigoPostal] = useState(parseInt(''));
     const [apellido, setApellido] = useState('');
     const [telefono, setTelefono] = useState('');
@@ -96,7 +96,6 @@ const LoginCliente = () => {
     };
 
     const handleCargarUsuario = () => {
-        setIsLoading(true);
         if (!nombre) {
             toast.error("Por favor, es necesario el nombre");
             setIsLoading(false);
@@ -155,6 +154,8 @@ const LoginCliente = () => {
             setIsLoading(false);
             return;
         }
+
+        setIsLoading(true);
 
         const cliente = new Cliente();
 
@@ -393,7 +394,6 @@ const LoginCliente = () => {
                             <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
                             <InputComponent disabled={inputDepartamento.length === 0} placeHolder='Filtrar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={localidadCliente.nombre ?? ''} />
                             {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { setLocalidadCliente(localidad); handleModalClose(); }} inputDepartamento={inputDepartamento} inputProvincia={inputProvincia} />}
-
                         </div>
 
                         <div className="btns-crear-cuenta">
@@ -422,7 +422,7 @@ const LoginCliente = () => {
 
     async function buscarCliente(email: string) {
         try {
-            return await ClienteService.getUserByEmail(email);
+            return await ClienteService.getUserByEmailLogin(email);
         } catch (error) {
             console.error('Error buscando cliente:', error);
             return false;
