@@ -119,6 +119,7 @@ export const ClienteService = {
             }
 
             const data = await response.json();
+            console.log(data)
 
             if (data.id != null && data.id > 0) {
                 console.log('retorna true')

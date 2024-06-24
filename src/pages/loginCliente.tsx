@@ -268,9 +268,6 @@ const LoginCliente = () => {
         }
     };
 
-
-
-
     const renderStep = () => {
         switch (step) {
             case 1:
@@ -431,7 +428,6 @@ const LoginCliente = () => {
 
                                         const cliente = await buscarCliente(payload.email);
                                         // Si no ha creado sesión previamente lo hacemos registrarse
-
                                         if (!cliente) {
                                             toast.info('Necesitamos unos datos extras antes de finalizar');
 

@@ -24,6 +24,7 @@ import { SucursalService } from "../services/SucursalService";
 import { SucursalDTO } from "../types/Restaurante/SucursalDTO";
 import ModalCrud from "../components/ModalCrud";
 import { getBaseUrl, getBaseUrlCliente } from "../utils/global_variables/const";
+import { ClienteService } from "../services/ClienteService";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -338,7 +339,7 @@ const Pago = () => {
 
                                 let preference = await PedidoService.crearPedidoMercadopago(pedido);
 
-                                if (preference === null) {
+                                if (preference.id === "0") {
                                     toast.error('Tu cuenta ha sido bloqueada por el restaurante')
                                 } else {
                                     actualizarPedidos();
@@ -553,7 +554,7 @@ const Pago = () => {
                             <button
                                 type="submit"
                                 className="cancelar-btn"
-                                onClick={() => {CarritoService.limpiarCarrito(); window.location.href = getBaseUrl()}}
+                                onClick={() => { CarritoService.limpiarCarrito(); window.location.href = getBaseUrl() }}
                             >
                                 Cancelar pedido
                             </button>
@@ -571,7 +572,7 @@ const Pago = () => {
                             <button
                                 type="submit"
                                 className="cancelar-btn"
-                                onClick={() => {CarritoService.limpiarCarrito(); window.location.href = getBaseUrl()}}
+                                onClick={() => { CarritoService.limpiarCarrito(); window.location.href = getBaseUrl() }}
                             >
                                 Cancelar pedido
                             </button>
