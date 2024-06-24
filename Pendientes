@@ -147,7 +147,7 @@ PEDIDOS FALTA PROBAR:
 
 HORARIOS: 
 [x] VER SI SE PUEDE PEDIR FUERA DEL HORARIO DE ATENCION y 
-[] que si ya hice un pedido no me deje pedir si no ha pasado un minuto
+[x] que si ya hice un pedido no me deje pedir si no ha pasado un minuto (Te deja pedir hasta 3 cosas por hora)
 
 COMPRA:
 [] Si un usuario está dado de baja en el sistema, no podrá hacer pedidos.
