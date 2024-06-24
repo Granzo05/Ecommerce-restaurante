@@ -15,6 +15,7 @@ import PedidosEnCamino from '../components/Pedidos/PedidosEnCamino';
 import RolesEmpleado from '../components/Roles/Roles';
 import PrivilegiosEmpleados from '../components/Privilegios/Privilegios';
 import StocksEntregado from '../components/StockEntrante/StockEntregado';
+import Clientes from '../components/Cliente/ClientesSucursales/Clientes';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -188,6 +189,8 @@ const Opciones = () => {
             return <PrivilegiosEmpleados />;
         } else if (opcionSeleccionada === 22) {
             return <StocksEntregado />;
+        } else if (opcionSeleccionada === 23) {
+            return <Clientes />;
         }
     };
 
@@ -211,6 +214,7 @@ const Opciones = () => {
     const [pedidosEnCaminoVisibleEmpleado, setPedidosEnCaminoVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [rolesVisibleEmpleado, setRolesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
     const [privilegiosVisibleEmpleado, setPrivilegiosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [clientesVisibleEmpleado, setClientesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
 
     useEffect(() => {
         checkPrivilegies();
@@ -261,6 +265,8 @@ const Opciones = () => {
                         setRolesVisibleEmpleado(true);
                     } else if (privilegio.nombre === 'Privilegios' && privilegio.permisos.includes('READ')) {
                         setPrivilegiosVisibleEmpleado(true);
+                    } else if (privilegio.nombre === 'Clientes' && privilegio.permisos.includes('READ')) {
+                        setClientesVisibleEmpleado(true);
                     }
                 });
             } catch (error) {
@@ -287,6 +293,7 @@ const Opciones = () => {
             setPedidosEnCaminoVisibleEmpleado(true);
             setRolesVisibleEmpleado(true);
             setPrivilegiosVisibleEmpleado(true);
+            setClientesVisibleEmpleado(true);
         }
     }
 
@@ -357,6 +364,12 @@ const Opciones = () => {
                                                 </>
                                             )}
                                         </div>
+                                    )}
+
+                                    {clientesVisibleEmpleado && (
+                                        <h4 className={opcionSeleccionada === 23 ? 'selected' : ''} onClick={() => handleOpcionClick(23)}>
+                                            Clientes
+                                        </h4>
                                     )}
 
                                     {empleadosVisibleEmpleado && (

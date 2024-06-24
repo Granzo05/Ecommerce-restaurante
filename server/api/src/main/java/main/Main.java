@@ -110,17 +110,17 @@ public class Main {
 
                     Subcategoria subcategoria0 = new Subcategoria();
                     subcategoria0.setCategoria(categoria);
-                    subcategoria0.setNombre("Stress cheddar");
+                    subcategoria0.setNombre("Vegana");
                     subcategoria0.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria1 = new Subcategoria();
                     subcategoria1.setCategoria(categoria);
-                    subcategoria1.setNombre("Actitud positiva");
+                    subcategoria1.setNombre("Pollo");
                     subcategoria1.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria2 = new Subcategoria();
                     subcategoria2.setCategoria(categoria);
-                    subcategoria2.setNombre("Demichelis la concha de tu madre");
+                    subcategoria2.setNombre("Carne");
                     subcategoria2.getSucursales().add(sucursal);
 
                     categoria.getSubcategorias().add(subcategoria0);
@@ -342,12 +342,12 @@ public class Main {
 
                     Subcategoria subcategoria70 = new Subcategoria();
                     subcategoria70.setCategoria(categoria7);
-                    subcategoria70.setNombre("Peronista (Ñoquis)");
+                    subcategoria70.setNombre("Ñoquis");
                     subcategoria70.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria71 = new Subcategoria();
                     subcategoria71.setCategoria(categoria7);
-                    subcategoria71.setNombre("Di Maria (Fideos)");
+                    subcategoria71.setNombre("Fideos");
                     subcategoria71.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria72 = new Subcategoria();
@@ -519,6 +519,13 @@ public class Main {
                     privilegio.getSucursales().add(sucursal);
                     privilegio.setNombre("Artículos menú");
                     privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+                    sucursal.getPrivilegios().add(privilegio);
+
+                    privilegio = new PrivilegiosSucursales();
+                    privilegio.getSucursales().add(sucursal);
+                    privilegio.setNombre("Clientes");
+                    privilegio.setPermisos(Arrays.asList("READ", "DELETE", "ACTIVATE"));
 
                     sucursal.getPrivilegios().add(privilegio);
 
