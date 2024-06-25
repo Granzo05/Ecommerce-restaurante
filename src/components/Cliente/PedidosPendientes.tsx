@@ -4,7 +4,7 @@ import { Pedido } from '../../types/Pedidos/Pedido';
 import '../../styles/pedidos.css';
 import { Toaster } from 'sonner';
 import { CarritoService } from '../../services/CarritoService';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ClienteService } from '../../services/ClienteService';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 
@@ -20,11 +20,13 @@ const PedidosPendientes = () => {
 
     const externalReference = query.get('external_reference');
     const preference = query.get('preference_id');
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (externalReference && parseInt(externalReference) > 0 && preference) {
             PedidoService.updateEstadoPedidoMercadopago(parseInt(externalReference), preference);
             CarritoService.limpiarCarrito();
+            navigate('/cliente/opciones/1');
         }
     }, [externalReference, preference]);
 

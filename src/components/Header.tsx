@@ -6,7 +6,7 @@ import { Carrito } from '../types/Pedidos/Carrito';
 import { CarritoService } from '../services/CarritoService';
 import { Cliente } from '../types/Cliente/Cliente';
 import { toast, Toaster } from 'sonner';
-import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
+import { getBaseUrl, getBaseUrlCliente, limpiarCredenciales } from '../utils/global_variables/const';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import searchIcon from '../assets/icons/header-icono-busqueda.png'
 import cartIcon from '../assets/icons/header-icono-carrito.png';
@@ -92,22 +92,22 @@ const Header = () => {
     }
 
     const handleEditarPerfilClick = () => {
-        navigate('/cliente', { state: { opcionSeleccionada: 4 } });
+        window.location.href = getBaseUrlCliente() + `/cliente/opciones/${4}`
     };
 
     const handleEditarDomiciliosClick = () => {
-        navigate('/cliente', { state: { opcionSeleccionada: 3 } });
+        window.location.href = getBaseUrlCliente() + `/cliente/opciones/${3}`
     };
 
     const handlePedidosClick = () => {
-        navigate('/cliente', { state: { opcionSeleccionada: 2 } });
+        window.location.href = getBaseUrlCliente() + `/cliente/opciones/${2}`
     };
 
     return (
         <header id="inicio" className="header-all">
             <Toaster />
             <div className="menu container">
-                <a onClick={() => window.location.href = getBaseUrl()} style={{cursor: 'pointer'}} className="logo"><img src={Logo} alt="" /></a>
+                <a onClick={() => window.location.href = getBaseUrl()} style={{ cursor: 'pointer' }} className="logo"><img src={Logo} alt="" /></a>
 
                 <input type="checkbox" id="menu" />
                 <label htmlFor="menu">
@@ -267,15 +267,9 @@ const Header = () => {
                                         </button>
                                         <p className="nombre-email-usuario">- {cliente.nombre ? cliente.nombre : cliente.email} -</p>
                                         <ul className="preferences-list">
-                                            <li>
-                                                <button onClick={handleEditarPerfilClick}>Editar perfil</button>
-                                            </li>
-                                            <li>
-                                                <button onClick={handleEditarDomiciliosClick}>Editar domicilios</button>
-                                            </li>
-                                            <li>
-                                                <button onClick={handlePedidosClick}>Pedidos</button>
-                                            </li>
+                                            <li><button onClick={handleEditarPerfilClick}>Editar perfil</button></li>
+                                            <li><button onClick={handleEditarDomiciliosClick}>Editar domicilios</button></li>
+                                            <li><button onClick={handlePedidosClick}>Pedidos</button></li>
                                         </ul>
                                         <div className="button-logout-div">
                                             <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>

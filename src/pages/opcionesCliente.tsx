@@ -11,6 +11,7 @@ import { Cliente } from '../types/Cliente/Cliente';
 import { useLocation, useParams } from 'react-router-dom';
 import { getBaseUrl } from '../utils/global_variables/const';
 import Domicilios from '../components/Cliente/Domicilios';
+import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
 
 const OpcionesCliente = () => {
     const { opcionElegida } = useParams();
@@ -82,7 +83,7 @@ const OpcionesCliente = () => {
                 <div className={`opciones-menu`}>
                     <div className="title-header">
                         <p onClick={() => window.location.href = getBaseUrl()} className='volver-menu'>⭠ Volver</p>
-                        <img src="../src/assets/img/HatchfulExport-All/logo_transparent_header.png" alt="Logo" title='VOLVER AL MENU PRINCIPAL' className="logo-opciones" onClick={() => window.location.href = getBaseUrl()} />
+                        <img src={Logo} alt="Logo" title='VOLVER AL MENU PRINCIPAL' className="logo-opciones" onClick={() => window.location.href = getBaseUrl()} />
                     </div>
                     <hr />
                     <label id="label" className={`opciones-link ${opcionesBg}`} onClick={() => setOpcionSeleccionada(0)}>

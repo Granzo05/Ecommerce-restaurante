@@ -90,8 +90,7 @@ export const PedidoService = {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(pedido),
-                mode: 'cors'
+                body: JSON.stringify(pedido)
             });
 
             if (!response.ok) {
@@ -105,7 +104,7 @@ export const PedidoService = {
             throw error;
         }
     },
-    
+
 
     updateEstadoPedido: async (pedido: Pedido, estado: EnumEstadoPedido): Promise<string> => {
         pedido.estado = estado;

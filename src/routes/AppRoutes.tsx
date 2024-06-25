@@ -18,7 +18,6 @@ const PedidosRealizados = lazy(() => import('../components/Cliente/PedidosRealiz
 const Menu = lazy(() => import('../pages/menu'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
 const SucursalCards = lazy(() => import('../pages/SucursalCards'));
-const Preferencias = lazy(() => import('../components/Preferencias'));
 const ProductosBuscados = lazy(() => import('../pages/menuBusqueda'));
 
 const AppRoutes: React.FC = () => {
@@ -45,15 +44,12 @@ const AppRoutes: React.FC = () => {
 
           <Route path="/:id/busqueda/:nombre" element={<ProductosBuscados />} />
 
-          <Route path="/cliente" element={<OpcionesCliente />}>
-            <Route path="pedidos-pendientes" element={<PedidosPendientes />} />
-            <Route path="pedidos-realizados" element={<PedidosRealizados />} />
-            <Route path="preferencias" element={<Preferencias />} />
-          </Route>
+          <Route path="/cliente/opciones" element={<OpcionesCliente />} />
+
+          <Route path="/cliente/opciones/:opcionElegida" element={<OpcionesCliente />} />
 
           <Route path="*" element={<NotFound />} />
 
-          <Route path="/cliente/:opcionElegida" element={<OpcionesCliente />}></Route>
 
           <Route path="/:id/pago" element={
             <RutaPrivadaCliente>

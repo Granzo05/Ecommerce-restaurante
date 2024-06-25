@@ -81,7 +81,7 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
           <h2>&mdash; Filtrar domicilios &mdash;</h2>
           <div className="btns-filtrado">
             <button className="btn-agregar" style={{ marginRight: '10px' }} onClick={() => onSelectedDomicilio(new Domicilio())}>BORRAR OPCIÓN ELEGIDA</button>
-            <button className="btn-agregar" onClick={() => handleAgregar()}> + Agregar menú</button>
+            <button className="btn-agregar" onClick={() => handleAgregar()}> + Agregar domicilio</button>
           </div>
           <ModalCrud isOpen={showAgregarModal} onClose={() => setShowAgregarModal(false)}>
             <AgregarDomicilio onCloseModal={buscarDomicilios} />

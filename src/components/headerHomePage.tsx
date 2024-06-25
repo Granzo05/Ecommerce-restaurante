@@ -77,15 +77,15 @@ const HeaderHomePage: React.FC<HeaderHomePageProps> = ({ scrolled }) => {
     };
 
     const handleEditarPerfilClick = () => {
-        window.location.href = getBaseUrlCliente() + `/cliente/${4}`
+        window.location.href = getBaseUrlCliente() + `/cliente/opciones/${4}`
     };
 
     const handleEditarDomiciliosClick = () => {
-        window.location.href = getBaseUrlCliente() + `/cliente/${3}`
+        window.location.href = getBaseUrlCliente() + `/cliente/opciones/${3}`
     };
 
     const handlePedidosClick = () => {
-        window.location.href = getBaseUrlCliente() + `/cliente/${2}`
+        window.location.href = getBaseUrlCliente() + `/cliente/opciones/${2}`
     };
 
     const [carrito, setCarrito] = useState<Carrito>(new Carrito());

@@ -69,9 +69,16 @@ public class PedidoController {
 
     @CrossOrigin
     @GetMapping("/cliente/{id}/pedidos/{estado}")
-    public Set<Pedido> getPedidosPorClienteYEstado(@PathVariable("id") Long idCliente, @PathVariable("estado") int estadoValue) {
+    public Set<Pedido> getPedidosPorClienteYEstado(@PathVariable("id") Long idCliente, @PathVariable("estado") int estadoValue) throws Exception {
         EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
         List<Pedido> pedidos = pedidoRepository.findPedidosByEstadoAndIdCliente(estado, idCliente);
+
+        for (Pedido pedido : pedidos) {
+            try {
+                pedido.getDomicilioEntrega().setCalle(Encrypt.desencriptarString(pedido.getDomicilioEntrega().getCalle()));
+            } catch (Exception ignored) {
+            }
+        }
 
         return new HashSet<>(pedidos);
     }
@@ -82,6 +89,13 @@ public class PedidoController {
         EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
         List<Pedido> pedidos = pedidoRepository.findPedidosByEstadosDistntosAndIdCliente(estado, idCliente);
 
+        for (Pedido pedido : pedidos) {
+            try {
+                pedido.getDomicilioEntrega().setCalle(Encrypt.desencriptarString(pedido.getDomicilioEntrega().getCalle()));
+            } catch (Exception ignored) {
+            }
+        }
+        
         return new HashSet<>(pedidos);
     }
 
@@ -209,7 +223,7 @@ public class PedidoController {
                 }
 
                 PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                        .success("http://localhost:5173/cliente/pedidos-pendientes")
+                        .success("http://localhost:5173/cliente/opciones/1")
                         .failure("http://localhost:5173/pago")
                         .build();
 

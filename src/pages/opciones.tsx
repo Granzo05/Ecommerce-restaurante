@@ -24,7 +24,6 @@ const ArticuloVentas = lazy(() => import('../components/ArticulosVenta/Articulos
 const Categorias = lazy(() => import('../components/Categorias/Categorias'));
 const Subcategorias = lazy(() => import('../components/Subcategorias/Subcategorias'));
 const Medidas = lazy(() => import('../components/Medidas/Medidas'));
-const Preferencias = lazy(() => import('../components/Preferencias'));
 const Promociones = lazy(() => import('../components/Promociones/Promociones'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
 const Reportes = lazy(() => import('../components/Reportes/Reportes'));
@@ -173,8 +172,6 @@ const Opciones = () => {
             return <Subcategorias />;
         } else if (opcionSeleccionada === 14) {
             return <Medidas />;
-        } else if (opcionSeleccionada === 15) {
-            return <Preferencias />;
         } else if (opcionSeleccionada === 16) {
             return <Promociones />;
         } else if (opcionSeleccionada === 17) {

@@ -248,7 +248,7 @@ const Pago = () => {
         setIsLoading(true);
 
         if (verificarPedidos()) {
-            if ((sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual)) {
+            if (true) {
                 if (envio === 0) {
                     let hayStock = true;
                     let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
