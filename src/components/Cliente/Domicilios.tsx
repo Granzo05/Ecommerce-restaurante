@@ -312,9 +312,9 @@ const Domicilios = () => {
                                     )}
                                 </div>
                             ))}
-                            <br />
-                            <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
                             <hr />
+                            <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
+                            <br />
                         </label>
                         <button className='btn-guardar-cambios' style={{ marginRight: '0px' }} onClick={actualizarDomicilios} disabled={isLoading}>
                             {isLoading ? 'Actualizando domicilios...' : 'Guardar cambios ✓'}
