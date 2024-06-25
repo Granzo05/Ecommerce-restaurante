@@ -300,10 +300,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     } else if (!comensales || comensales == 0) {
       toast.error("Por favor, es necesaria la cantidad de comensales y que no sea 0");
       return;
-    } else if (!categoria || categoria.nombre.length === 0) {
+    } else if (!categoria || categoria.nombre == '') {
       toast.error("Por favor, es necesaria la categoria");
       return;
-    } else if (!subcategoria || subcategoria.nombre.length === 0) {
+    } else if (!subcategoria || subcategoria.nombre == '') {
       toast.error("Por favor, es necesaria la subcategoria");
       return;
     } else {
@@ -318,10 +318,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
       const medida = ingredientesMenu[i].medida;
       const cantidad = ingredientesMenu[i].cantidad;
 
-      if (!ingrediente) {
+      if (!ingrediente || ingrediente.nombre == '') {
         toast.info(`Por favor, el ingrediente ${i + 1} debe contener un ingrediente`);
         return;
-      } else if (!medida) {
+      } else if (!medida || medida.nombre == '') {
         toast.info(`Por favor, el ingrediente ${i + 1} debe contener una unidad de medida`);
         return;
       } else if (!cantidad || (cantidad <= 0)) {

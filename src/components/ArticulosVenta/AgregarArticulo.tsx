@@ -131,7 +131,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
       } else if (cantidadActual < cantidadMinima) {
         toast.error("Por favor, los datos con opcionales en conjunto, la cantidad actual no puede ser menor a la minima");
         return;
-      } else if (!medidaStock) {
+      } else if (!medidaStock || medidaStock.nombre == '') {
         toast.error("Por favor, los datos con opcionales en conjunto, es necesario la medida");
         return;
       } else if (!precioStock || precioStock < 0) {
@@ -240,19 +240,19 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
   const validateAndNextStep = () => {
 
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)]+$/)) {
       toast.error("Por favor, es necesario el nombre del articulo");
       return;
     } else if (!precio || precio == 0) {
       toast.error("Por favor, es necesario el precio de venta del articulo válido");
       return;
-    } else if (!categoria) {
+    } else if (!categoria || categoria.nombre == '') {
       toast.error("Por favor, es necesario el tipo");
       return;
-    } else if (!subcategoria) {
+    } else if (!subcategoria || subcategoria.nombre == '') {
       toast.error("Por favor, es necesaria la subcategoría");
       return;
-    } else if (!medida) {
+    } else if (!medida || medida.nombre == '') {
       toast.error("Por favor, es necesaria la medida");
       return;
     } else if (!cantidadMedida || cantidadMedida == 0) {
@@ -270,7 +270,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" required={true} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del articulo</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>

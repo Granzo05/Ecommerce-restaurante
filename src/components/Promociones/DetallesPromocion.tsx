@@ -31,23 +31,23 @@ export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion, onCloseM
         <Carousel>
           {imagenesInvertidas.map((imagen, index) => (
             <Carousel.Item key={index} interval={4000}>
-              <img src={imagen.ruta} />
             </Carousel.Item>
           ))}
         </Carousel>
         <h2>{selectedPromocion.nombre}</h2>
-        <p>Descripción: {selectedPromocion.descripcion}</p>
-        <p>Productos:</p>
+        <h4><strong>Descripción: </strong>{selectedPromocion.descripcion}</h4>
+        <hr />
+        <h3 className='productos'>Productos:</h3>
         <ul>
           {selectedPromocion.detallesPromocion?.map((detalle) => (
             <div key={detalle.id}>
-              <img src={detalle.articuloMenu?.imagenes[0]?.ruta} alt="" />
-              <img src={detalle.articuloVenta?.imagenes[0]?.ruta} alt="" />
+              <img className='art-menu' src={detalle.articuloMenu?.imagenes[0]?.ruta} alt="" />
+              <img className='art-venta' src={detalle.articuloVenta?.imagenes[0]?.ruta} alt="" />
               <li key={detalle.id}>* {detalle.articuloMenu?.nombre} {detalle.articuloVenta?.nombre} - {detalle.cantidad} - {detalle.medida?.nombre}</li>
             </div>
           ))}
         </ul>
-        <p>Precio: ${selectedPromocion.precio}</p>
+        <h4>Precio: ${selectedPromocion.precio}</h4>
 
         <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '20%' }} className="inputBox">
           <label style={{ display: 'flex', fontWeight: 'bold' }}>Cantidad:</label>

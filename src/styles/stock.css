@@ -235,3 +235,19 @@ table tr:hover {
     border-radius: 0 4px 4px 0;
 }
 
+.grid-item-modal .art-menu, .grid-item-modal .art-venta{
+    max-width: 300px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.productos{
+    margin-right: 305px;
+}
+

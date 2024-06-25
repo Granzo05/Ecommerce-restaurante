@@ -66,22 +66,31 @@ const ModalFlotanteRecomendacionesArticulosSinStock: React.FC<{ onCloseModal: ()
     setShowAgregarModal(true);
   };
 
+  const handleClose = () => {
+    setShowAgregarModal(false)
+  };
+
   return (
     <div>
       <div className="modal-overlay">
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <ModalCrud isOpen={showAgregarModal} onClose={buscarIngredientes}>
-            <AgregarArticuloVenta onCloseModal={handleModalClose} />
+          <ModalCrud isOpen={showAgregarModal} onClose={handleClose}>
+            <AgregarArticuloVenta onCloseModal={handleClose} />
           </ModalCrud>
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar artículo</button>
-          <h2>&mdash; Filtrar artículos &mdash;</h2>
-          <div className="inputBox">
+          <h2>&mdash; Filtrar artículos sin stock &mdash;</h2>
+          <div className="btns-filtrado">
+          <button className="btn-agregar" style={{ marginRight: '10px' }} onClick={() => onSelectArticulo(new ArticuloVenta())}>Eliminar opción elegida</button>
+
+          <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar artículo al inventario</button>
+
+          </div>
+          
+          <div className="inputBox" style={{ marginBottom: '0px' }}>
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <button onClick={() => onSelectArticulo(new ArticuloVenta())}>BORRAR OPCIÓN ELEGIDA</button>
           <table className="tabla-recomendaciones">
             <thead>
               <tr>

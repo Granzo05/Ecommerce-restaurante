@@ -51,7 +51,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
     } else if (!cantidadActual || cantidadActual < 0) {
       toast.error("Por favor, es necesaria la cantidad actual");
       return;
-    } else if (!medida) {
+    } else if (!medida || medida.nombre == '') {
       toast.error("Por favor, es necesario la medida");
       return;
     } else if (!costoIngrediente || costoIngrediente < 0) {
@@ -60,7 +60,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
     } else if (cantidadMaxima < cantidadMinima) {
       toast.error("Por favor, la cantidad mínima no puede ser mayor a la máxima");
       return;
-    } else if (!nombreIngrediente) {
+    } else if (!ingrediente || ingrediente.nombre == '') {
       toast.error("Por favor, es necesario el nombre del ingrediente");
       return;
     } else if (cantidadActual > cantidadMaxima) {
@@ -145,7 +145,7 @@ const AgregarStockIngrediente: React.FC<AgregarStockIngredienteProps> = ({ onClo
       <br />
       <div className="btns-pasos">
         <button className='btn-accion-completar' onClick={crearStockIngrediente} disabled={isLoading}>
-          {isLoading ? 'Cargando...' : 'Agregar stock ✓'}
+          {isLoading ? 'Cargando...' : 'Agregar stock ingrediente ✓'}
         </button>
       </div>
     </div>

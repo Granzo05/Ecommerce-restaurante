@@ -35,7 +35,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
 
   async function agregarStock() {
 
-    if (!articulo.nombre) {
+    if (!articulo.nombre || articulo.nombre == '') {
       toast.error("Por favor, es necesario el nombre del articulo");
       return;
     } else if (!cantidadMinima || cantidadMinima < 0) {
@@ -53,7 +53,7 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
     } else if (cantidadActual < cantidadMinima) {
       toast.error("Por favor, la cantidad actual no puede ser menor a la minima");
       return;
-    } else if (!medida) {
+    } else if (!medida || medida.nombre == '') {
       toast.error("Por favor, es necesario la medida");
       return;
     } else if (!precio || precio < 0) {
@@ -139,9 +139,12 @@ const AgregarStockArticulo: React.FC<AgregarStockArticuloProps> = ({ onCloseModa
         </div>
       </label>
       <br />
+      <div className="btns-pasos">
       <button className='btn-accion-completar' onClick={agregarStock} disabled={isLoading}>
-        {isLoading ? 'Cargando...' : 'Agregar stock ✓'}
+        {isLoading ? 'Cargando...' : 'Agregar stock artículo ✓'}
       </button>
+      </div>
+      
     </div>
   )
 }

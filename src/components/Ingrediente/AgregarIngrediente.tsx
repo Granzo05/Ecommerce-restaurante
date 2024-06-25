@@ -100,7 +100,7 @@ const AgregarIngrediente: React.FC<AgregarIngredienteProps> = ({ onCloseModal })
       } else if (cantidadActual < cantidadMinima) {
         toast.error("Por favor, los datos con opcionales en conjunto, la cantidad actual no puede ser menor a la minima");
         return;
-      } else if (!medida) {
+      } else if (!medida || medida.nombre == '') {
         toast.error("Por favor, los datos con opcionales en conjunto, es necesario la medida");
         return;
       } else if (!costoIngrediente || costoIngrediente < 0) {

@@ -410,6 +410,7 @@ h3 {
 }
 
 .menu-img {
+    max-width: 500px;
     width: 100%;
     display: block;
     transition: opacity 0.3s;
