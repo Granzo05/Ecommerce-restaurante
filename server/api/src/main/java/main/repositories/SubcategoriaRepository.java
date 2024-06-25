@@ -25,10 +25,7 @@ public interface SubcategoriaRepository extends JpaRepository<Subcategoria, Long
 
     @Query("SELECT sc FROM Subcategoria sc JOIN sc.sucursales s WHERE sc.categoria.id = :idCategoria AND s.id = :idSucursal")
     List<Subcategoria> findAllByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Subcategoria sc WHERE sc.id IN :ids")
-    void deleteAllByIds(@Param("ids") List<Long> ids);
+    @Query("SELECT sc FROM Subcategoria sc JOIN sc.sucursales s WHERE sc.categoria.id = :idCategoria AND s.id = :idSucursal AND sc.borrado = 'NO'")
+    List<Subcategoria> findAllByIdCategoriaAndIdSucursalNotBorrado(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 
 }

@@ -21,6 +21,25 @@ export const IngredienteService = {
         }
     },
 
+    getIngredientesNoBorrados: async (): Promise<Ingrediente[]> => {
+        try {
+            const response = await fetch(URL_API + 'ingredientes/disponibles/' + sucursalId(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
     getIngredientesVacios: async (): Promise<Ingrediente[]> => {
         try {
             const response = await fetch(URL_API + 'ingredientes/vacios/' + sucursalId(), {

@@ -26,7 +26,7 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
 
   async function buscarSubcategorias() {
     setShowAgregarSubcategoriaModal(false);
-    SubcategoriaService.getSubcategoriasByCategoriaId(categoria.id)
+    SubcategoriaService.getSubcategoriasByCategoriaIdNoBorradas(categoria.id)
       .then(subcategorias => {
         if (datosOmitidos?.length > 0) {
           const subcategoriasFiltrados = subcategorias.filter(articulo =>

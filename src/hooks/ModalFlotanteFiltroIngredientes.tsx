@@ -23,7 +23,7 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
 
   async function buscarIngredientes() {
     setShowAgregarModal(false);
-    IngredienteService.getIngredientes()
+    IngredienteService.getIngredientesNoBorrados()
       .then(async ingredientes => {
         if (datosOmitidos?.length > 0) {
           const ingredientesFiltrados = ingredientes.filter(articulo =>

@@ -23,7 +23,7 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
 
   async function buscarCategorias() {
     setShowAgregarModal(false);
-    CategoriaService.getCategorias()
+    CategoriaService.getCategoriasNoBorradas()
       .then(async categorias => {
         if (datosOmitidos?.length > 0) {
           const categoriasFiltradas = categorias.filter(articulo =>

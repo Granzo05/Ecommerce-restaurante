@@ -37,6 +37,12 @@ public class SubcategoriaController {
     }
 
     @CrossOrigin
+    @GetMapping("categoria/{idCategoria}/subcategorias/disponibles/{idSucursal}")
+    public Set<Subcategoria> getCategoriasByCategoriaIdDisponibles(@PathVariable("idCategoria") Long idCategoria, @PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(subcategoriaRepository.findAllByIdCategoriaAndIdSucursalNotBorrado(idCategoria, idSucursal));
+    }
+
+    @CrossOrigin
     @Transactional
     @PostMapping("/subcategoria/create/{idSucursal}")
     public ResponseEntity<String> crearCategoria(@RequestBody Subcategoria categoriaDetails, @PathVariable("idSucursal") Long idSucursal) {

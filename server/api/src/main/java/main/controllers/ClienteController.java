@@ -152,6 +152,24 @@ public class ClienteController {
             return null;
         }
 
+        List<Domicilio> domicilios = domicilioRepository.findByIdCliente(cliente.get().getId());
+
+        for (Domicilio domicilio : domicilios) {
+            domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
+        }
+
+        return new HashSet<>(domicilios);
+    }
+
+    @CrossOrigin
+    @GetMapping("/cliente/{idCliente}/domicilios/disponibles")
+    public Set<Domicilio> getDomiciliosDisponibles(@PathVariable("idCliente") Long idCliente) throws Exception {
+        Optional<Cliente> cliente = clienteRepository.findById(idCliente);
+
+        if (cliente.isEmpty()) {
+            return null;
+        }
+
         List<Domicilio> domicilios = domicilioRepository.findByIdClienteNotBorrado(cliente.get().getId());
 
         for (Domicilio domicilio : domicilios) {

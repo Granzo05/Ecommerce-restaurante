@@ -5,7 +5,6 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 export const ArticuloVentaService = {
 
     getArticulos: async (): Promise<ArticuloVenta[]> => {
-        console.log(sucursalId())
         try {
             const response = await fetch(URL_API + `articulos/${sucursalId()}`)
 
@@ -14,7 +13,17 @@ export const ArticuloVentaService = {
             console.error('Error:', error);
             throw error;
         }
+    },
 
+    getArticulosNoBorrados: async (): Promise<ArticuloVenta[]> => {
+        try {
+            const response = await fetch(URL_API + `articulos/disponibles/${sucursalId()}`)
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
     },
 
     getArticulosPorCategoriaAndIdSucursal: async (nombreCategoria: string, idSucursal: number): Promise<ArticuloVenta[]> => {

@@ -33,6 +33,12 @@ public class RolesController {
     }
 
     @CrossOrigin
+    @GetMapping("/roles/disponibles/{idSucursal}")
+    public Set<Roles> getRolesDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(rolesRepository.findAllByIdSucursalNotBorrado(idSucursal));
+    }
+
+    @CrossOrigin
     @Transactional
     @PostMapping("/roles/create/{idSucursal}")
     public ResponseEntity<String> crearRol(@RequestBody Roles rolDetails, @PathVariable("idSucursal") Long idSucursal) {

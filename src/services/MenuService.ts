@@ -16,6 +16,18 @@ export const MenuService = {
 
     },
 
+    getMenusNoBorrados: async (): Promise<ArticuloMenu[]> => {
+        try {
+            const response = await fetch(URL_API + 'menus/disponibles/' + sucursalId())
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+
+    },
+
     getMenusPorTipoAndIdSucursal: async (tipoComida: string, idSucursal: number): Promise<ArticuloMenu[]> => {
         try {
             const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + idSucursal);

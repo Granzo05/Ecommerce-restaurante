@@ -29,7 +29,7 @@ const AppRoutes: React.FC = () => {
 
           <Route path="/sucursales" element={<SucursalCards />} />
 
-          <Route path="/" element={<MainMenu />} />
+          <Route path="/" element={<SucursalCards />} />
 
           <Route path="/:id" element={<MainMenu />} />
 

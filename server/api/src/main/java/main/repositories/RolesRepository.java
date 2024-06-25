@@ -23,4 +23,7 @@ public interface RolesRepository extends JpaRepository<Roles, Long> {
 
     @Query("SELECT r FROM Roles r JOIN r.sucursales s WHERE s.id = :id")
     List<Roles> findAllByIdSucursal(@Param("id") Long id);
+
+    @Query("SELECT r FROM Roles r JOIN r.sucursales s WHERE s.id = :id AND r.borrado = 'NO'")
+    List<Roles> findAllByIdSucursalNotBorrado(@Param("id") Long id);
 }

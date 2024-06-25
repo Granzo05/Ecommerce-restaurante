@@ -3,7 +3,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import '../styles/modalFlotante.css'
 import '../styles/modalCrud.css'
 import ModalCrud from "../components/ModalCrud";
-import AgregarSubcategoria from "../components/Subcategorias/AgregarSubcategoria";
 import { Roles } from "../types/Restaurante/Roles";
 import { RolesService } from "../services/RolesService";
 import AgregarRoles from "../components/Roles/AgregarRol";
@@ -26,7 +25,7 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
 
   async function buscarRoles() {
     setShowAgregarSubcategoriaModal(false);
-    RolesService.getRoles()
+    RolesService.getRolesNoBorrados()
       .then(roles => {
         if (datosOmitidos?.length > 0) {
           const rolesFiltrados = roles.filter(rol =>

@@ -26,7 +26,7 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
   async function buscarDomicilios() {
     if (cliente) {
       setShowAgregarModal(false);
-      ClienteService.getDomicilios(cliente.id)
+      ClienteService.getDomiciliosNoBorrados(cliente.id)
         .then(async domicilios => {
           if (datosOmitidos?.length > 0) {
             const domiciliosFiltrados = domicilios.filter(articulo =>

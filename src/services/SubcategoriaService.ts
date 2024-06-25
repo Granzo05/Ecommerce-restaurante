@@ -40,6 +40,25 @@ export const SubcategoriaService = {
         }
     },
 
+    getSubcategoriasByCategoriaIdNoBorradas: async (idCategoria: number): Promise<Subcategoria[]> => {
+        try {
+            const response = await fetch(URL_API + 'categoria/' + idCategoria + '/subcategorias/disponibles/' + sucursalId(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
     updateSubcategoria: async (subcategoria: Subcategoria): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'subcategoria/update/' + sucursalId(), {

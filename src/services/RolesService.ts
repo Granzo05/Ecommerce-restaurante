@@ -41,6 +41,25 @@ export const RolesService = {
         }
     },
 
+    getRolesNoBorrados: async (): Promise<Roles[]> => {
+        try {
+            const response = await fetch(URL_API + 'roles/disponibles/' + sucursalId(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
     updateRol: async (rol: Roles): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'rol/update/' + sucursalId(), {

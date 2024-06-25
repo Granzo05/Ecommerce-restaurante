@@ -122,11 +122,11 @@ public class SucursalController {
 
             Set<Categoria> categorias = new HashSet<>();
 
-            for (Categoria categoria : categoriaRepository.findAllByIdSucursal(idSucursal)) {
+            for (Categoria categoria : categoriaRepository.findAllByIdSucursalNotBorrado(idSucursal)) {
                 boolean articulaVentaExistente = false;
                 // Es menos trabajo buscar un articulo ya que no involucra ingredientes, por lo tanto es mejor filtrar que en caso que exista un articulo venta
                 // no va a existir un menú en la misma categoría
-                int cantidadArticulosDisponibles = articuloVentaRepository.findCantidadDisponiblesByIdCategoriaAndIdSucursal(categoria.getId(), idSucursal);
+                int cantidadArticulosDisponibles = articuloVentaRepository.findCantidadDisponiblesByIdCategoriaAndIdSucursalNotBorrado(categoria.getId(), idSucursal);
 
                 // Si se encuentra minimo un articulo, entonces añadimos la categoria y evitamos que se busquen los menus
                 if (cantidadArticulosDisponibles > 0) {
@@ -135,7 +135,7 @@ public class SucursalController {
                 }
                 // En caso que el articulo no existe entonces si revisamos que haya por lo menos un menu mostrable con stock
                 if (!articulaVentaExistente) {
-                    for (ArticuloMenu menu : articuloMenuRepository.findByIdCategoriaAndIdSucursal(categoria.getId(), idSucursal)) {
+                    for (ArticuloMenu menu : articuloMenuRepository.findByIdCategoriaAndIdSucursalNotBorrado(categoria.getId(), idSucursal)) {
                         // Vemos si hay stock de cada ingrediente del menu
                         int ingredientesEncontrados = 0;
 
@@ -220,7 +220,7 @@ public class SucursalController {
                 sucursalDetails.getMedidas().add(medida);
             }
 
-            HashSet<Categoria> categorias = new HashSet<>(categoriaRepository.findAllByIdSucursal(1l));
+            HashSet<Categoria> categorias = new HashSet<>(categoriaRepository.findAllByIdSucursalNotBorrado(1l));
 
             for (Categoria categoriaDTO : categorias) {
                 Categoria categoria = new Categoria();

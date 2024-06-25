@@ -22,6 +22,25 @@ export const CategoriaService = {
         }
     },
 
+    getCategoriasNoBorradas: async (): Promise<Categoria[]> => {
+        try {
+            const response = await fetch(URL_API + 'categorias/disponibles/' + sucursalId(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos(${response.status}): ${response.statusText}`);
+            }
+            return await response.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    },
+
     createCategoria: async (categoria: Categoria, imagenes: Imagenes[]): Promise<string> => {
         try {
             const response = await fetch(URL_API + 'categoria/create/' + sucursalId(), {

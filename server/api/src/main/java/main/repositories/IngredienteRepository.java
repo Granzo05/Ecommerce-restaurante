@@ -18,6 +18,9 @@ public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> 
     @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE s.id = :idIngrediente")
     List<Ingrediente> findAllByIdSucursal(@Param("idIngrediente") Long idIngrediente);
 
+    @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE s.id = :idIngrediente AND i.borrado = 'NO'")
+    List<Ingrediente> findAllByIdSucursalNotBorrado(@Param("idIngrediente") Long idIngrediente);
+
     @Query("SELECT i FROM Ingrediente i JOIN i.sucursales s WHERE i.id = :idIngrediente AND s.id = :idSucursal")
     Optional<Ingrediente> findByIdIngredienteAndIdSucursal(@Param("idSucursal") Long idSucursal, @Param("idIngrediente") Long idIngrediente);
 

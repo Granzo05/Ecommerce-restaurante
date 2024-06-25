@@ -20,4 +20,7 @@ public interface MedidaRepository extends JpaRepository<Medida, Long> {
 
     @Query("SELECT m FROM Medida m JOIN m.sucursales s WHERE s.id = :id")
     List<Medida> findAllByIdSucursal(@Param("id") Long id);
+
+    @Query("SELECT m FROM Medida m JOIN m.sucursales s WHERE s.id = :id AND m.borrado = 'NO'")
+    List<Medida> findAllByIdSucursalNotBorrado(@Param("id") Long id);
 }

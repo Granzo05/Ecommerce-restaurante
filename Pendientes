@@ -149,6 +149,7 @@ opcionesCliente: FALTA MOSTRAR DOMICILIOS DEL USUARIO Y VALIDAR CAMBIOS DE LA CU
 loginCliente: FALTA HACER VALIDAR LA RECUPERACION DE LA CONTRASEÑA. FALTA VALIDAR INGRESO CON GMAIL. FALTAN VALIDACIONES A LOS INPUTS.[x]
 loginNegocio: FALTA VALIDAR EN EL RECUPERO DE CONTRA, QUE EL CORREO SEA CORRECTO Y ESTE DENTRO DE LA BASE DE DATOS.[x]
 [x] Configurar rutas privadas
+[x] Los artículos eliminados y sin stock siguen apareciendo en el menú de compras.
 
 PARA OTRO MOMENTO
 [] Costo recomendado de articulos por sucursal
@@ -196,7 +197,6 @@ MENÚ:
 
 ARTICULOS:
 [] Se rompen las categorías, sub y medidas al querer editarlas.
-[] Los artículos eliminados y sin stock siguen apareciendo en el menú de compras.
 
 INGREDIENTES:
 

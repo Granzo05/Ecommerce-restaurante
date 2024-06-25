@@ -23,7 +23,7 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
 
   async function buscarMedidas() {
     setShowAgregarMedidaModal(false);
-    MedidaService.getMedidas()
+    MedidaService.getMedidasNoBorradas()
       .then(async medidas => {
         if (datosOmitidos?.length > 0) {
           const medidasFiltradas = medidas.filter(articulo =>

@@ -39,6 +39,12 @@ public class IngredienteController {
     }
 
     @CrossOrigin
+    @GetMapping("/ingredientes/disponibles/{idSucursal}")
+    public Set<Ingrediente> getIngredientesDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(ingredienteRepository.findAllByIdSucursalNotBorrado(idSucursal));
+    }
+
+    @CrossOrigin
     @Transactional
     @PostMapping("/ingrediente/create/{idSucursal}")
     public ResponseEntity<String> crearIngrediente(@RequestBody Ingrediente ingredienteDetails, @PathVariable("idSucursal") Long idSucursal) {

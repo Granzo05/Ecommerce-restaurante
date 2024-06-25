@@ -62,7 +62,7 @@ public class StockArticulosController {
     @CrossOrigin
     @GetMapping("/articulos/vacios/{idSucursal}")
     public Set<ArticuloVenta> getStockArticulosVacios(@PathVariable("idSucursal") Long idSucursal) {
-        List<ArticuloVenta> articulos = articuloVentaRepository.findAllBySucursal(idSucursal);
+        List<ArticuloVenta> articulos = articuloVentaRepository.findAllBySucursalNotBorrado(idSucursal);
 
         Set<ArticuloVenta> articulosSinStock = new HashSet<>();
 

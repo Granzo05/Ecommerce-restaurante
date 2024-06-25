@@ -50,6 +50,22 @@ public class CategoriaController {
     }
 
     @CrossOrigin
+    @GetMapping("/categorias/disponibles/{idSucursal}")
+    public Set<Categoria> getCategoriasDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        List<Categoria> categorias = categoriaRepository.findAllByIdSucursalNotBorrado(idSucursal);
+
+        for (Categoria categoria : categorias) {
+            List<Subcategoria> subcategorias = subcategoriaRepository.findAllByIdCategoria(categoria.getId());
+
+            if(!subcategorias.isEmpty()) categoria.setSubcategorias(new HashSet<>(subcategorias));
+
+            categoria.setImagenes(new HashSet<>(imagenesRepository.findByIdCategoria(categoria.getId())));
+        }
+
+        return new HashSet<>(categorias);
+    }
+
+    @CrossOrigin
     @Transactional
     @PostMapping("/categoria/create/{idSucursal}")
     public ResponseEntity<String> crearCategoria(@RequestBody Categoria categoriaDetails, @PathVariable("idSucursal") Long idSucursal) {

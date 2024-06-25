@@ -44,11 +44,23 @@ public class ArticuloMenuController {
         this.stockIngredientesRepository = stockIngredientesRepository;
     }
 
-    // Busca por id de menu
     @GetMapping("/menus/{idSucursal}")
     @CrossOrigin
-    public Set<ArticuloMenu> getMenusDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+    public Set<ArticuloMenu> getMenus(@PathVariable("idSucursal") Long idSucursal) {
         List<ArticuloMenu> menus = articuloMenuRepository.findAllBySucursal(idSucursal);
+
+        for (ArticuloMenu menu : menus) {
+            menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
+            menu.setIngredientesMenu(new HashSet<>(ingredienteMenuRepository.findByMenuId(menu.getId())));
+        }
+
+        return new HashSet<>(menus);
+    }
+
+    @GetMapping("/menus/disponibles/{idSucursal}")
+    @CrossOrigin
+    public Set<ArticuloMenu> getMenusDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloMenu> menus = articuloMenuRepository.findAllBySucursalNotBorrado(idSucursal);
 
         for (ArticuloMenu menu : menus) {
             menu.setImagenes(new HashSet<>(imagenesRepository.findByIdMenu(menu.getId())));
@@ -61,11 +73,11 @@ public class ArticuloMenuController {
     @CrossOrigin
     @GetMapping("/menu/tipo/{categoria}/{idSucursal}")
     public Set<ArticuloMenu> getMenusPorTipo(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
-        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
+        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursalNotBorrado(categoria, idSucursal);
 
         Set<ArticuloMenu> menus = new HashSet<>();
         if (categoriaDB.isPresent()) {
-            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByIdCategoriaAndIdSucursal(categoriaDB.get().getId(), idSucursal);
+            List<ArticuloMenu> articuloMenus = articuloMenuRepository.findByIdCategoriaAndIdSucursalNotBorrado(categoriaDB.get().getId(), idSucursal);
 
             for (ArticuloMenu menu : articuloMenus) {
                 boolean hayStock = true;
@@ -97,7 +109,7 @@ public class ArticuloMenuController {
     @CrossOrigin
     @GetMapping("/menu/busqueda/{nombre}/{idSucursal}")
     public Set<ArticuloMenu> getMenusPorNombre(@PathVariable("nombre") String nombre, @PathVariable("idSucursal") Long idSucursal) {
-        List<ArticuloMenu> menus = articuloMenuRepository.findByNameMenuAndIdSucursalEquals(nombre, idSucursal);
+        List<ArticuloMenu> menus = articuloMenuRepository.findByNameMenuAndIdSucursalEqualsNotBorrado(nombre, idSucursal);
 
         Set<ArticuloMenu> menusFiltrados = new HashSet<>();
 

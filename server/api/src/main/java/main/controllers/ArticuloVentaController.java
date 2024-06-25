@@ -41,8 +41,20 @@ public class ArticuloVentaController {
 
     @CrossOrigin
     @GetMapping("/articulos/{idSucursal}")
-    public Set<ArticuloVenta> getArticulosDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+    public Set<ArticuloVenta> getArticulos(@PathVariable("idSucursal") Long idSucursal) {
         List<ArticuloVenta> articulos = articuloVentaRepository.findAllBySucursal(idSucursal);
+
+        for (ArticuloVenta articulo : articulos) {
+            articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));
+        }
+
+        return new HashSet<>(articulos);
+    }
+
+    @CrossOrigin
+    @GetMapping("/articulos/disponibles/{idSucursal}")
+    public Set<ArticuloVenta> getArticulosDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        List<ArticuloVenta> articulos = articuloVentaRepository.findAllBySucursalNotBorrado(idSucursal);
 
         for (ArticuloVenta articulo : articulos) {
             articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));
@@ -54,10 +66,10 @@ public class ArticuloVentaController {
     @CrossOrigin
     @GetMapping("/articulos/tipo/{categoria}/{idSucursal}")
     public Set<ArticuloVenta> getArticulosPorCategoria(@PathVariable("categoria") String categoria, @PathVariable("idSucursal") Long idSucursal) {
-        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursal(categoria, idSucursal);
+        Optional<Categoria> categoriaDB = categoriaRepository.findByNameAndIdSucursalNotBorrado(categoria, idSucursal);
 
         if (categoriaDB.isPresent()) {
-            List<ArticuloVenta> articulos = articuloVentaRepository.findByCategoriaNameAndIdSucursal(categoriaDB.get().getNombre(), idSucursal);
+            List<ArticuloVenta> articulos = articuloVentaRepository.findByCategoriaNameAndIdSucursalNotBorrado(categoriaDB.get().getNombre(), idSucursal);
 
             for (ArticuloVenta articulo : articulos) {
                 articulo.setImagenes(new HashSet<>(imagenesRepository.findByIdArticulo(articulo.getId())));
@@ -71,7 +83,7 @@ public class ArticuloVentaController {
     @CrossOrigin
     @GetMapping("/articulos/busqueda/{nombre}/{idSucursal}")
     public Set<ArticuloVenta> getArticulosPorNombre(@PathVariable("nombre") String nombre, @PathVariable("idSucursal") Long idSucursal) {
-        List<ArticuloVenta> articulos = articuloVentaRepository.findByNameArticuloAndIdSucursalEquals(nombre, idSucursal);
+        List<ArticuloVenta> articulos = articuloVentaRepository.findByNameArticuloAndIdSucursalEqualsNotBorrado(nombre, idSucursal);
 
         if(articulos.isEmpty()) {
             articulos = articuloVentaRepository.findByNameCategoriaAndIdSucursalEquals(nombre, idSucursal);

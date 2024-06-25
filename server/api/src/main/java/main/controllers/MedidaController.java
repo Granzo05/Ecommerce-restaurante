@@ -31,6 +31,12 @@ public class MedidaController {
     }
 
     @CrossOrigin
+    @GetMapping("/medidas/disponibles/{idSucursal}")
+    public Set<Medida> getMedidasDisponibles(@PathVariable("idSucursal") Long idSucursal) {
+        return new HashSet<>(medidaRepository.findAllByIdSucursalNotBorrado(idSucursal));
+    }
+
+    @CrossOrigin
     @Transactional
     @PostMapping("/medida/create/{idSucursal}")
     public ResponseEntity<String> crearMedida(@RequestBody Medida medidaDetails, @PathVariable("idSucursal") Long idSucursal) {

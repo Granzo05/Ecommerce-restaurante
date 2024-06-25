@@ -23,7 +23,7 @@ const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void,
 
   async function buscarArticulos() {
     setShowAgregarModal(false);
-    ArticuloVentaService.getArticulos()
+    ArticuloVentaService.getArticulosNoBorrados()
       .then(async articulos => {
         if (datosOmitidos && datosOmitidos?.length > 0) {
           const articulosFiltrados = articulos.filter(articulo =>

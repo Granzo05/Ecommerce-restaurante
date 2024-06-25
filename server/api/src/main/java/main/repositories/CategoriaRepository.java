@@ -15,9 +15,14 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
     @Query("SELECT c FROM Categoria c JOIN c.sucursales s WHERE s.id = :id AND c.nombre = :nombre")
     Optional<Categoria> findByNameAndIdSucursal(@Param("nombre") String nombre, @Param("id") Long id);
 
+    @Query("SELECT c FROM Categoria c JOIN c.sucursales s WHERE s.id = :id AND c.nombre = :nombre AND c.borrado = 'NO'")
+    Optional<Categoria> findByNameAndIdSucursalNotBorrado(@Param("nombre") String nombre, @Param("id") Long id);
+
     @Query("SELECT c FROM Categoria c JOIN c.sucursales s WHERE s.id = :idSucursal AND c.id = :idCategoria")
     Optional<Categoria> findByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 
+    @Query("SELECT c FROM Categoria c JOIN c.sucursales s WHERE s.id = :idSucursal AND c.borrado = 'NO'")
+    List<Categoria> findAllByIdSucursalNotBorrado(@Param("idSucursal") Long idSucursal);
     @Query("SELECT c FROM Categoria c JOIN c.sucursales s WHERE s.id = :idSucursal")
     List<Categoria> findAllByIdSucursal(@Param("idSucursal") Long idSucursal);
 

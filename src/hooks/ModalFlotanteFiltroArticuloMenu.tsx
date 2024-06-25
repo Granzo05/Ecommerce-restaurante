@@ -23,7 +23,7 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
 
   async function buscarMenus() {
     setShowAgregarModal(false);
-    MenuService.getMenus()
+    MenuService.getMenusNoBorrados()
       .then(async articulos => {
         if (datosOmitidos && datosOmitidos?.length > 0) {
           const articulosFiltrados = articulos.filter(articulo =>
