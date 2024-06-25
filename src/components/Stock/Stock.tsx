@@ -113,9 +113,14 @@ const Stocks = () => {
         }
     }
 
+    const [precioBuscado, setPrecioBuscado] = useState<number>(0);
     const [signoPrecio, setSignoPrecio] = useState('>');
 
-    function filtrarPrecio(filtro: number) {
+    useEffect(() => {
+        filtrarPrecio();
+    }, [signoPrecio, precioBuscado]);
+
+    function filtrarPrecio() {
         const comparadores: { [key: string]: (a: number, b: number) => boolean } = {
             '>': (a, b) => a > b,
             '<': (a, b) => a < b,
@@ -124,12 +129,16 @@ const Stocks = () => {
             '=': (a, b) => a === b
         };
 
-        if (filtro > 0 && comparadores[signoPrecio]) {
-            const filtradas = stocks.filter(recomendacion =>
-                comparadores[signoPrecio](recomendacion.precioCompra, filtro)
-            );
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        if (precioBuscado > 0 && comparadores[signoPrecio] && datosFiltrados.length > 0) {
+            setDatosFiltrados(datosFiltrados.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precioCompra, precioBuscado)
+            ));
+            setPaginasTotales(Math.ceil(datosFiltrados.length / cantidadProductosMostrables));
+        } else if (precioBuscado > 0 && stocks.length > 0) {
+            setDatosFiltrados(stocks.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precioCompra, precioBuscado)
+            ));
+            setPaginasTotales(Math.ceil(datosFiltrados.length / cantidadProductosMostrables));
         } else {
             setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
             setPaginasTotales(Math.ceil(stocks.length / cantidadProductosMostrables));
@@ -334,7 +343,7 @@ const Stocks = () => {
                         <input
                             type="number"
                             required
-                            onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
+                            onChange={(e) => setPrecioBuscado(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
 

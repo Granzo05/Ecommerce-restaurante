@@ -165,38 +165,57 @@ const ArticuloVentas = () => {
     }
 
     const [filtroNombre, setFiltroNombre] = useState('');
-    const [filtroPrecio, setFiltroPrecio] = useState('');
 
-    const filtrarDatos = (filtroNombre: string, filtroPrecio: string) => {
-        let filtradas = articulosVenta;
+    useEffect(() => {
+        filtrarNombre();
+    }, [filtroNombre]);
 
-        if (filtroNombre.length > 0) {
-            filtradas = filtradas.filter(recomendacion =>
+    const filtrarNombre = () => {
+        if (filtroNombre.length > 0 && datosFiltrados.length > 0) {
+            setDatosFiltrados(datosFiltrados.filter(recomendacion =>
                 recomendacion.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
-            );
+            ));
+        } else if (filtroNombre.length > 0 && articulosVenta.length > 0) {
+            setDatosFiltrados(articulosVenta.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
+            ));
+        } else {
+            setDatosFiltrados(datosFiltrados.length > 0 ? datosFiltrados : []);
+            setPaginasTotales(Math.ceil(datosFiltrados.length / cantidadProductosMostrables));
         }
+    };
 
-        if (filtroPrecio.length > 0) {
-            filtradas = filtradas.filter(recomendacion =>
-                recomendacion.precioVenta.toString().startsWith(filtroPrecio)
-            );
+    const [precioBuscado, setPrecioBuscado] = useState<number>(0);
+    const [signoPrecio, setSignoPrecio] = useState('>');
+
+    useEffect(() => {
+        filtrarPrecio();
+    }, [signoPrecio, precioBuscado]);
+
+    function filtrarPrecio() {
+        const comparadores: { [key: string]: (a: number, b: number) => boolean } = {
+            '>': (a, b) => a > b,
+            '<': (a, b) => a < b,
+            '>=': (a, b) => a >= b,
+            '<=': (a, b) => a <= b,
+            '=': (a, b) => a === b
+        };
+
+        if (precioBuscado > 0 && comparadores[signoPrecio] && datosFiltrados.length > 0) {
+            setDatosFiltrados(datosFiltrados.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precioVenta, precioBuscado)
+            ));
+            setPaginasTotales(Math.ceil(datosFiltrados.length / cantidadProductosMostrables));
+        } else if (precioBuscado > 0 && articulosVenta.length > 0) {
+            setDatosFiltrados(articulosVenta.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precioVenta, precioBuscado)
+            ));
+            setPaginasTotales(Math.ceil(datosFiltrados.length / cantidadProductosMostrables));
+        } else {
+            setDatosFiltrados(articulosVenta.slice(indexPrimerProducto, indexUltimoProducto));
+            setPaginasTotales(Math.ceil(articulosVenta.length / cantidadProductosMostrables));
         }
-
-        setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-        setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
-    };
-
-    const handleFiltroNombreChange = (e: { target: { value: any; }; }) => {
-        const nuevoFiltroNombre = e.target.value;
-        setFiltroNombre(nuevoFiltroNombre);
-        filtrarDatos(nuevoFiltroNombre, filtroPrecio);
-    };
-
-    const handleFiltroPrecioChange = (e: { target: { value: any; }; }) => {
-        const nuevoFiltroPrecio = e.target.value;
-        setFiltroPrecio(nuevoFiltroPrecio);
-        filtrarDatos(filtroNombre, nuevoFiltroPrecio);
-    };
+    }
 
 
     useEffect(() => {
@@ -234,7 +253,7 @@ const ArticuloVentas = () => {
                         <input
                             type="text"
                             required
-                            onChange={handleFiltroNombreChange}
+                            onChange={(e) => setFiltroNombre(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
@@ -242,14 +261,20 @@ const ArticuloVentas = () => {
                         <input
                             type="text"
                             required
-                            onChange={handleFiltroPrecioChange}
+                            onChange={(e) => setPrecioBuscado(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
                     </div>
-
+                    <div className="inputBox-filtrado" style={{ marginLeft: '-15px' }}>
+                        <select id="signos" name="signo" value={signoPrecio} onChange={(e) => setSignoPrecio(e.target.value)}>
+                            <option value=">">&gt;</option>
+                            <option value="<">&lt;</option>
+                            <option value=">=">&gt;=</option>
+                            <option value="<=">&lt;=</option>
+                            <option value="=">=</option>
+                        </select>
+                    </div>
                 </div>
-
-
             </div>
             {mostrarArticuloVenta && (
                 <div id="menus">

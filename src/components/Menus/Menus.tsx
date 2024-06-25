@@ -90,7 +90,6 @@ const Menus = () => {
         }
     }
 
-    const [signoPrecio, setSignoPrecio] = useState('>');
     const [signoTiempo, setSignoTiempo] = useState('>');
 
     function filtrarTiempo(filtro: number) {
@@ -114,7 +113,14 @@ const Menus = () => {
         }
     }
 
-    function filtrarPrecio(filtro: number) {
+    const [precioBuscado, setPrecioBuscado] = useState<number>(0);
+    const [signoPrecio, setSignoPrecio] = useState('>');
+
+    useEffect(() => {
+        filtrarPrecio();
+    }, [signoPrecio, precioBuscado]);
+
+    function filtrarPrecio() {
         const comparadores: { [key: string]: (a: number, b: number) => boolean } = {
             '>': (a, b) => a > b,
             '<': (a, b) => a < b,
@@ -123,12 +129,16 @@ const Menus = () => {
             '=': (a, b) => a === b
         };
 
-        if (filtro > 0 && comparadores[signoPrecio]) {
-            const filtradas = menus.filter(recomendacion =>
-                comparadores[signoPrecio](recomendacion.precioVenta, filtro)
-            );
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        if (precioBuscado > 0 && comparadores[signoPrecio] && datosFiltrados.length > 0) {
+            setDatosFiltrados(datosFiltrados.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precioVenta, precioBuscado)
+            ));
+            setPaginasTotales(Math.ceil(datosFiltrados.length / cantidadProductosMostrables));
+        } else if (precioBuscado > 0 && menus.length > 0) {
+            setDatosFiltrados(menus.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precioVenta, precioBuscado)
+            ));
+            setPaginasTotales(Math.ceil(datosFiltrados.length / cantidadProductosMostrables));
         } else {
             setDatosFiltrados(menus.slice(indexPrimerProducto, indexUltimoProducto));
             setPaginasTotales(Math.ceil(menus.length / cantidadProductosMostrables));
@@ -300,7 +310,7 @@ const Menus = () => {
                         <input
                             type="number"
                             required
-                            onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
+                            onChange={(e) => setPrecioBuscado(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
                     </div>

@@ -105,7 +105,13 @@ const Promociones = () => {
             '=': (a, b) => a === b
         };
 
-        if (precioBuscado > 0 && comparadores[signoPrecio]) {
+        if (precioBuscado > 0 && comparadores[signoPrecio] && datosFiltrados.length > 0) {
+            const filtradas = datosFiltrados.filter(recomendacion =>
+                comparadores[signoPrecio](recomendacion.precio, precioBuscado)
+            );
+            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+        } else if (precioBuscado > 0 && comparadores[signoPrecio] && promociones.length > 0) {
             const filtradas = promociones.filter(recomendacion =>
                 comparadores[signoPrecio](recomendacion.precio, precioBuscado)
             );
