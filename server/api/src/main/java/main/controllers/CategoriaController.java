@@ -205,13 +205,6 @@ public class CategoriaController {
 
             categoriaDB.get().setBorrado(categoria.getBorrado());
 
-            // Creación de subcategorias
-            for (Subcategoria subcategoria : categoria.getSubcategorias()) {
-                subcategoriaRepository.deleteById(subcategoria.getId());
-                subcategoria.getSucursales().add(sucursalRepository.findById(idSucursal).get());
-                subcategoria.setCategoria(categoriaDB.get());
-            }
-
             categoriaDB.get().setSubcategorias(categoria.getSubcategorias());
 
             categoriaRepository.save(categoriaDB.get());

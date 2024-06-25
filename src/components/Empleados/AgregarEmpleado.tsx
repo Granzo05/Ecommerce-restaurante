@@ -486,8 +486,6 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       const departamento = domicilios[i].localidad.departamento;
       const localidad = domicilios[i].localidad;
 
-      console.log(calle)
-
       if (!calle || !calle.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
         toast.info(`Por favor, el domicilio ${i + 1} debe contener una calle`);
         return;
@@ -680,7 +678,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       case 4:
         return (
           <>
-            <h4>Paso 3 - Roles</h4>
+            <h4>Paso 4 - Roles</h4>
 
             {roles && roles.map((roles, index) => (
               <div key={index}>
@@ -704,7 +702,7 @@ const AgregarEmpleado: React.FC<AgregarEmpleadoProps> = ({ onCloseModal }) => {
       case 3:
         return (
           <>
-            <h4>Paso 4 - Domicilio/os</h4>
+            <h4>Paso 3 - Domicilio/os</h4>
             {domicilios && domicilios.map((domicilio, index) => (
               <div key={index}>
                 <hr />

@@ -101,7 +101,7 @@ const Empleados = () => {
     function filtrarCuil(filtro: string) {
         if (filtro.length > 0) {
             const filtradas = empleados.filter(recomendacion =>
-                recomendacion.cuil.toLowerCase().includes(filtro.toLowerCase())
+                recomendacion.cuil.toLowerCase().replace(/-/g, '').includes(filtro.toLowerCase())
             );
             setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
             setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
