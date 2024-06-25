@@ -7,10 +7,10 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PedidosPendientes from '../components/Cliente/PedidosPendientes';
 import PedidosRealizados from '../components/Cliente/PedidosRealizados';
 import Cuenta from '../components/Cliente/Cuenta';
-import Perfil from '../components/Cliente/Domicilios';
 import { Cliente } from '../types/Cliente/Cliente';
 import { useLocation, useParams } from 'react-router-dom';
 import { getBaseUrl } from '../utils/global_variables/const';
+import Domicilios from '../components/Cliente/Domicilios';
 
 const OpcionesCliente = () => {
     const { opcionElegida } = useParams();
@@ -66,7 +66,7 @@ const OpcionesCliente = () => {
             case 2:
                 return <PedidosRealizados />;
             case 3:
-                return <Perfil />;
+                return <Domicilios />;
             case 4:
                 return <Cuenta />;
         }
@@ -108,7 +108,7 @@ const OpcionesCliente = () => {
                                 )}
                             </div>
                             <h4 className={opcionSeleccionada === 3 ? 'selected' : ''} onClick={() => handleOpcionClick(3)}>
-                                Perfil
+                                Domicilios
                             </h4>
                             <h4 className={opcionSeleccionada === 4 ? 'selected' : ''} onClick={() => handleOpcionClick(4)}>
                                 Cuenta

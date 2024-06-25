@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../styles/perfil.css'
 import { Cliente } from '../../types/Cliente/Cliente';
 import { Domicilio } from '../../types/Domicilio/Domicilio';
 import { ClienteService } from '../../services/ClienteService';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import ModalFlotanteRecomendacionesPais from '../../hooks/ModalFlotanteFiltroPais';
 import ModalFlotanteRecomendacionesProvincias from '../../hooks/ModalFlotanteFiltroProvincia';
 import ModalFlotanteRecomendacionesDepartamentos from '../../hooks/ModalFlotanteFiltroDepartamentos';
@@ -16,9 +16,10 @@ import { Pais } from '../../types/Domicilio/Pais';
 
 const Domicilios = () => {
     const [cliente, setCliente] = useState<Cliente | null>(null);
-    const [domicilios, setDomicilios] = useState<Domicilio[]>([]);
     const [newDomicilios, setNewDomicilios] = useState<Domicilio[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [borrado, setBorrado] = useState(false);
+    const [cambios, setCambios] = useState(false);
 
     useEffect(() => {
         if (cliente && cliente?.domicilios.length > 0) setNewDomicilios(cliente.domicilios);
@@ -73,12 +74,38 @@ const Domicilios = () => {
 
             setIsLoading(true);
 
-            cliente.domicilios = domicilios;
+            if (!borrado) {
+                // Verificar si los arrays son idénticos
+                if (cliente.domicilios.length === newDomicilios.length &&
+                    cliente.domicilios.every(domicilio =>
+                        newDomicilios.some(newDomicilio => sonDomiciliosIguales(domicilio, newDomicilio))
+                    )) {
+                    toast.info(`Los domicilios no poseen cambios`);
+                    setIsLoading(false);
+                    return;
+                }
+            }
+
+            if (cliente.domicilios.length !== newDomicilios.length) {
+                // Si algún domicilio se ha borrado, marcarlo
+                cliente.domicilios.forEach(domicilio => {
+                    const existeEnNewDomicilios = newDomicilios.some(newDomicilio => sonDomiciliosIguales(domicilio, newDomicilio));
+                    if (!existeEnNewDomicilios) {
+                        domicilio.borrado = 'SI';
+                    }
+                });
+
+                newDomicilios.forEach(domicilio => {
+                    cliente.domicilios.push(domicilio);
+                });
+            }
+
+            cliente.domicilios = eliminarDuplicados(cliente.domicilios);
 
             toast.promise(ClienteService.updateUser(cliente), {
-                loading: 'Actualizando el correo...',
+                loading: 'Actualizando los domicilios...',
                 success: () => {
-                    return `Correo actualizado con éxito...`;
+                    return `Domicilios actualizados con éxito...`;
                 },
                 error: (err) => {
                     setIsLoading(false);
@@ -91,70 +118,91 @@ const Domicilios = () => {
         }
     }
 
+    function sonDomiciliosIguales(domicilio1: Domicilio, domicilio2: Domicilio) {
+        return domicilio1.calle === domicilio2.calle && domicilio1.numero === domicilio2.numero && domicilio1.codigoPostal === domicilio2.codigoPostal && domicilio1.localidad.nombre === domicilio2.localidad.nombre;
+    }
+
+    function eliminarDuplicados(domicilios: Domicilio[]) {
+        return domicilios.filter((domicilio, index, self) =>
+            index === self.findIndex(d => sonDomiciliosIguales(d, domicilio))
+        );
+    }
+
     const handleChangeCalle = (index: number, calle: string) => {
-        const nuevosDomicilios = [...domicilios];
+        const nuevosDomicilios = [...newDomicilios];
         nuevosDomicilios[index].calle = calle;
-        setDomicilios(nuevosDomicilios);
+        setNewDomicilios(nuevosDomicilios);
     };
 
     const handleChangeNumeroCasa = (index: number, numero: number) => {
-        const nuevosDomicilios = [...domicilios];
+        const nuevosDomicilios = [...newDomicilios];
         nuevosDomicilios[index].numero = numero;
-        setDomicilios(nuevosDomicilios);
+        setNewDomicilios(nuevosDomicilios);
     };
 
     const handleChangeCodigoPostal = (index: number, codigoPostal: number) => {
-        const nuevosDomicilios = [...domicilios];
+        const nuevosDomicilios = [...newDomicilios];
         nuevosDomicilios[index].codigoPostal = codigoPostal;
-        setDomicilios(nuevosDomicilios);
+        setNewDomicilios(nuevosDomicilios);
     };
 
     const handleChangePais = (index: number, pais: Pais) => {
-        const nuevosDomicilios = [...domicilios];
+        const nuevosDomicilios = [...newDomicilios];
         if (pais) {
             nuevosDomicilios[index].localidad.departamento.provincia.pais = pais;
-            setDomicilios(nuevosDomicilios);
+            setNewDomicilios(nuevosDomicilios);
         }
     };
 
     const handleChangeProvincia = (index: number, provincia: Provincia) => {
-        const nuevosDomicilios = [...domicilios];
+        const nuevosDomicilios = [...newDomicilios];
         if (provincia) {
             nuevosDomicilios[index].localidad.departamento.provincia = provincia;
-            setDomicilios(nuevosDomicilios);
+            setNewDomicilios(nuevosDomicilios);
         }
     };
 
     const handleChangeDepartamento = (index: number, departamento: Departamento) => {
-        const nuevosDomicilios = [...domicilios];
+        const nuevosDomicilios = [...newDomicilios];
         if (departamento) {
             nuevosDomicilios[index].localidad.departamento = departamento;
-            setDomicilios(nuevosDomicilios);
+            setNewDomicilios(nuevosDomicilios);
         }
     };
 
-
     const handleChangeLocalidad = (index: number, localidad: Localidad) => {
-        const nuevosDomicilios = [...domicilios];
+        const nuevosDomicilios = [...newDomicilios];
         if (localidad) {
             nuevosDomicilios[index].localidad = localidad;
-            setDomicilios(nuevosDomicilios);
+            setNewDomicilios(nuevosDomicilios);
         }
     };
 
     const añadirCampoDomicilio = () => {
-        setDomicilios([...domicilios, { id: 0, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
+        setNewDomicilios([...newDomicilios, { id: newDomicilios.length + 1, calle: '', numero: 0, codigoPostal: 0, localidad: new Localidad(), borrado: 'NO' }]);
     };
 
     const quitarCampoDomicilio = (index: number) => {
-        if (domicilios.length > 0) {
-            const nuevosDomicilios = [...domicilios];
-            nuevosDomicilios.splice(index, 1);
-            setDomicilios(nuevosDomicilios);
-        } else {
-            setDomicilios([])
-        }
+        const nuevosDomicilios = [...newDomicilios];
+        nuevosDomicilios.splice(index, 1);
+        setNewDomicilios(nuevosDomicilios);
     };
+
+    const activarDomicilio = (domicilio: Domicilio) => {
+        domicilio.borrado = 'NO';
+        setBorrado(true);
+        setCambios(!cambios);
+    };
+
+    const desactivarDomicilio = (domicilio: Domicilio) => {
+        domicilio.borrado = 'SI';
+        setBorrado(true);
+        setCambios(!cambios);
+    };
+
+    useEffect(() => {
+        setNewDomicilios(newDomicilios)
+    }, [cambios]);
 
     const [modalBusquedaLocalidad, setModalBusquedaLocalidad] = useState<boolean>(false);
     const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
@@ -174,58 +222,62 @@ const Domicilios = () => {
         setEditDomicilioId(id);
     };
 
-    const handleCancelEdit = () => {
-        setEditDomicilioId(0);
-    };
-
     return (
         <>
             <div className="opciones-pantallas">
                 <h1>- Perfil -</h1>
+                <Toaster />
                 <div className="preference-section">
                     <h2>&mdash; Información de Perfil &mdash;</h2>
                     <div className="settings-data">
                         <label id='nombre'>
-                            {domicilios && domicilios.length > 0 && domicilios.map((domicilio, index) => (
+                            {newDomicilios && newDomicilios.map((domicilio, index) => (
                                 <div key={domicilio.id}>
                                     <hr />
                                     {editDomicilioId === domicilio.id ? (
                                         <>
                                             &mdash; Cambiar domicilio &mdash;
-                                            <div key={'domicilio-' + domicilio.id}>
-                                                <hr /><p onClick={() => quitarCampoDomicilio(index)}>Eliminar domicilio</p>
-                                                <div className="inputBox">
-                                                    <input type="text" value={domicilio.calle} required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
-                                                    <span>Nombre de calle</span>
-                                                </div>
-                                                <div className="inputBox">
-                                                    <input type="number" value={domicilio.numero} required={true} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
-                                                    <span>Número de domicilio</span>
-                                                </div>
-                                                <div className="inputBox">
-                                                    <input type="number" value={domicilio.codigoPostal} required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
-                                                    <span>Código Postal</span>
-                                                </div>
-                                                <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
-                                                <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.pais?.nombre ?? ''} />
-                                                {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { handleChangePais(index, pais); handleModalClose(); }} />}
-                                                <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-                                                <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.pais.nombre.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
-                                                {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
-                                                <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
-                                                <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />
-                                                {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { handleChangeDepartamento(index, departamento); handleModalClose(); }} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
-                                                <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
-                                                <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
-                                                {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
-                                                <hr />
+                                            <hr />
+                                            {domicilio.borrado === 'NO' ? (
+                                                <p onClick={() => quitarCampoDomicilio(index)}>Eliminar domicilio</p>
+                                            ) : (
+                                                <p onClick={() => newDomicilios[index].borrado === 'NO'}>Activar domicilio</p>
+                                            )}
+                                            <div className="inputBox">
+                                                <input type="text" value={domicilio.calle} required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
+                                                <span>Nombre de calle</span>
                                             </div>
-                                            <button onClick={() => handleEditClick(domicilio.id)}>Terminar de editar domicilio</button>
-                                            <button onClick={handleCancelEdit}>Cancelar</button>
+                                            <div className="inputBox">
+                                                <input type="number" value={domicilio.numero} required={true} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
+                                                <span>Número de domicilio</span>
+                                            </div>
+                                            <div className="inputBox">
+                                                <input type="number" value={domicilio.codigoPostal} required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
+                                                <span>Código Postal</span>
+                                            </div>
+                                            <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
+                                            <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.pais?.nombre ?? ''} />
+                                            {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { handleChangePais(index, pais); handleModalClose(); }} />}
+                                            <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
+                                            <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.pais.nombre.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
+                                            {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
+                                            <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
+                                            <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />
+                                            {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { handleChangeDepartamento(index, departamento); handleModalClose(); }} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+                                            <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
+                                            <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
+                                            {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+                                            <hr />
+                                            <button onClick={() => handleEditClick(0)}>Terminar de editar domicilio</button>
+                                            <button onClick={() => quitarCampoDomicilio(index)}>Cancelar</button>
                                         </>
                                     ) : (
                                         <>
-                                            Nombre:
+                                            {domicilio.borrado === 'NO' ? (
+                                                <p>Domicilio activo:</p>
+                                            ) : (
+                                                <p>Domicilio desactivado:</p>
+                                            )}
                                             {domicilio.calle.length > 0 ? (
                                                 <>
                                                     <input className='current-nombre'
@@ -233,22 +285,34 @@ const Domicilios = () => {
                                                         placeholder={`${domicilio.calle} ${domicilio.numero}, ${domicilio.localidad.nombre}, ${domicilio.localidad.departamento.nombre}, ${domicilio.localidad.departamento.provincia.nombre}`}
                                                         readOnly
                                                     />
-                                                    <button onClick={() => handleEditClick(domicilio.id)}>Editar nombre</button>
+                                                    {domicilio.borrado === 'NO' ? (
+                                                        <>
+                                                            <button onClick={() => handleEditClick(domicilio.id)}>Editar domicilio</button>
+                                                            <button onClick={() => desactivarDomicilio(domicilio)}>Desactivar domicilio</button>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <button onClick={() => handleEditClick(domicilio.id)}>Editar domicilio</button>
+                                                            <button onClick={() => activarDomicilio(domicilio)}>Activar domicilio</button>
+                                                        </>
+                                                    )}
                                                 </>
                                             ) : (
                                                 <>
                                                     <input className='current-nombre'
                                                         type="text"
-                                                        placeholder={'El domicilio ha sido eliminado'}
+                                                        placeholder={'Domicilio vacio'}
+                                                        onClick={() => handleEditClick(domicilio.id)}
                                                         readOnly
                                                     />
-                                                    <button onClick={() => handleEditClick(domicilio.id)}>Editar nombre</button>
+                                                    <button onClick={() => handleEditClick(domicilio.id)}>Editar domicilio</button>
                                                 </>
                                             )}
                                         </>
                                     )}
                                 </div>
                             ))}
+                            <br /><br />
                             <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
                         </label>
                         <button style={{ marginRight: '0px' }} onClick={actualizarDomicilios} disabled={isLoading}>

@@ -135,7 +135,8 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
     [x] No me trae los domicilios pal delivery.
     [x] No deja cargar promoción si no hay menú. 
     [x] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
-    [x] Error al editar la promoción.
+[x] HACER TODO LO DEL PERFIL DEL CLIENTE Y LOS DOMICILIOS
+[x] Error al editar la promoción.
 
 [] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Costo recomendado de articulos por sucursal
@@ -166,7 +167,6 @@ HORARIOS:
 COMPRA:
 
 CLIENTE:
-[] HACER TODO LO DEL PERFIL DEL CLIENTE Y LOS DOMICILIOS
 
 CARRITO:
 

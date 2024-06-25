@@ -167,20 +167,14 @@ public class ClienteController {
         }
 
         Cliente cliente = clienteOptional.get();
+        cliente.getDomicilios().clear();
 
         for (Domicilio domicilio : clienteDetails.getDomicilios()) {
-            if (cliente.getDomicilios().stream().anyMatch(d ->
-            {
-                try {
-                    return Encrypt.encriptarString(d.getCalle()).equals(domicilio.getCalle());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            })) {
-                cliente.setDomicilios(clienteDetails.getDomicilios());
-            }
-        }
+            domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
+            domicilio.setCliente(cliente);
 
+            cliente.getDomicilios().add(domicilio);
+        }
 
         if (cliente.getTelefono() != clienteDetails.getTelefono() && clienteDetails.getTelefono() > 120000) {
             cliente.setTelefono(clienteDetails.getTelefono());
