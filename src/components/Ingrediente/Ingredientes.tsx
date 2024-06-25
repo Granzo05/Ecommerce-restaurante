@@ -47,6 +47,10 @@ const Ingredientes = () => {
         checkPrivilegies();
     }, []);
 
+    useEffect(() => {
+        if (ingredientes.length > 0) cantidadDatosMostrables(11);
+    }, [ingredientes]);
+
     const [empleado] = useState<Empleado | null>(() => {
         const empleadoString = localStorage.getItem('empleado');
 

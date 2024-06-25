@@ -174,6 +174,10 @@ const Promociones = () => {
         }
     }, [promociones, paginaActual, cantidadProductosMostrables]);
 
+    useEffect(() => {
+        if (promociones.length > 0) cantidadDatosMostrables(11);
+    }, [promociones]);
+
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
             try {

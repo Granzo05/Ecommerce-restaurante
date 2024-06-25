@@ -60,6 +60,11 @@ const PedidosEnCamino = () => {
             setPaginasTotales(Math.ceil(pedidosEnCamino.length / cantidadProductosMostrables));
         }
     }
+
+    useEffect(() => {
+        if (pedidosEnCamino.length > 0) cantidadDatosMostrables(11);
+    }, [pedidosEnCamino]);
+
     const [isLoading, setIsLoading] = useState(false);
 
     async function handleRechazarPedido(pedido: Pedido) {

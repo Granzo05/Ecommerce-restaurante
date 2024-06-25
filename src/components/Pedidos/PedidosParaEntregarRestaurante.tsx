@@ -22,6 +22,10 @@ const PedidosParaEntregar = () => {
         checkPrivilegies();
     }, []);
 
+    useEffect(() => {
+        if (pedidosEntregables.length > 0) cantidadDatosMostrables(11);
+    }, [pedidosEntregables]);
+
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
             try {
@@ -305,7 +309,7 @@ const PedidosParaEntregar = () => {
                                         <p>{pedido.cliente?.email}</p>
                                     </div>
                                 </td>
-                                
+
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
                                     <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')} <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p></td>
                                 ) : (

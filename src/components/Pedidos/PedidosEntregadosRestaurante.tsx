@@ -25,6 +25,10 @@ const PedidosEntregados = () => {
             });
     }
 
+    useEffect(() => {
+        if (pedidosEntregados.length > 0) cantidadDatosMostrables(11);
+    }, [pedidosEntregados]);
+
     async function descargarFactura(idPedido: number) {
         await FacturaService.getPdfFactura(idPedido);
     }

@@ -122,6 +122,10 @@ const Subsubcategorias = () => {
         }
     }, [subcategorias, paginaActual, cantidadProductosMostrables]);
 
+    useEffect(() => {
+        if (subcategorias.length > 0) cantidadDatosMostrables(11);
+    }, [subcategorias]);
+
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
             try {

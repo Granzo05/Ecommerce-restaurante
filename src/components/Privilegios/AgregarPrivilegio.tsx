@@ -144,16 +144,15 @@ const AgregarPrivilegios: React.FC<AgregarPrivilegiosProps> = ({ onCloseModal })
                     value={permiso}
                     onChange={(e) => handlePermisoChange(e.target.value, index)}
                   >
-                    <option value="">Seleccionar una opción</option>
+                    <option value="">Seleccionar un permiso</option>
                     {getOpcionesDisponibles(index).map(opcion => (
                       <option key={opcion} value={opcion}>{opcion}</option>
                     ))}
                   </select>
                 </div>
               ))}
-              <button onClick={añadirCampoPermiso}>Añadir permiso</button>
             </div>
-
+            <button className='btn-accion-adelante' onClick={añadirCampoPermiso}>Añadir permiso</button>
             <div className="btns-pasos">
               {empresa && empresa?.id > 0 ? (
                 <button className='btn-accion-adelante' onClick={nextStep}>Seleccionar sucursales ⭢</button>

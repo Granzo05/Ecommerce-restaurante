@@ -110,6 +110,10 @@ const RolesEmpleado = () => {
         }
     }, [roles, paginaActual, cantidadProductosMostrables]);
 
+    useEffect(() => {
+        if (roles.length > 0) cantidadDatosMostrables(11);
+    }, [roles]);
+
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
             try {

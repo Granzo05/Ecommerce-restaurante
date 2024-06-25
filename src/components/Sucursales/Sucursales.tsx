@@ -221,6 +221,10 @@ const Sucursales = () => {
         }
     }, [sucursales, paginaActual, cantidadProductosMostrables]);
 
+    useEffect(() => {
+        if (sucursales.length > 0) cantidadDatosMostrables(11);
+    }, [sucursales]);
+
     return (
         <div className="opciones-pantallas">
             <Toaster />

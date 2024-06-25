@@ -42,6 +42,10 @@ const Empresas = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        if (empresas.length > 0) cantidadDatosMostrables(11);
+    }, [empresas]);
+
     const [empleado] = useState<Empleado | null>(() => {
         const empleadoString = localStorage.getItem('empleado');
 

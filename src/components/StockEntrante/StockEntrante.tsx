@@ -214,6 +214,9 @@ const StocksEntrantes = () => {
         }
     }, [stockEntrante, paginaActual, cantidadProductosMostrables]);
 
+    useEffect(() => {
+        if (stockEntrante.length > 0) cantidadDatosMostrables(11);
+    }, [stockEntrante]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {

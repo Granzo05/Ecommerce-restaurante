@@ -91,6 +91,10 @@ const Medidas = () => {
         }
     }
 
+    useEffect(() => {
+        if (medidas.length > 0) cantidadDatosMostrables(11);
+    }, [medidas]);
+
     function filtrarDatos(filtro: string) {
         if (filtro.length > 0) {
             const filtradas = medidas.filter(recomendacion =>

@@ -141,6 +141,10 @@ const StocksEntregado = () => {
         }
     }, [stockEntrante, paginaActual, cantidadProductosMostrables]);
 
+    useEffect(() => {
+        if (stockEntrante.length > 0) cantidadDatosMostrables(11);
+    }, [stockEntrante]);
+
     const handleModalClose = () => {
         setShowDetallesStock(false);
         setMostrarStocks(true);

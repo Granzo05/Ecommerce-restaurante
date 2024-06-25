@@ -47,6 +47,9 @@ const PedidosEntrantes = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    useEffect(() => {
+        if (pedidosEntrantes.length > 0) cantidadDatosMostrables(11);
+    }, [pedidosEntrantes]);
 
     async function handleAceptarPedido(pedido: Pedido) {
         setIsLoading(true);

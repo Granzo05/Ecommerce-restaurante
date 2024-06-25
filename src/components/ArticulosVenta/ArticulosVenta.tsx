@@ -217,6 +217,9 @@ const ArticuloVentas = () => {
         }
     }
 
+    useEffect(() => {
+        if (articulosVenta.length > 0) cantidadDatosMostrables(11);
+    }, [articulosVenta]);
 
     useEffect(() => {
         if (articulosVenta.length > 0) {

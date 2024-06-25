@@ -105,6 +105,10 @@ const Categorias = () => {
     }
 
     useEffect(() => {
+        if (categorias.length > 0) cantidadDatosMostrables(11);
+    }, [categorias]);
+
+    useEffect(() => {
         if (categorias.length > 0) {
             setDatosFiltrados(categorias.slice(indexPrimerProducto, indexUltimoProducto));
         }

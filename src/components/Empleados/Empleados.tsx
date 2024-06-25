@@ -112,6 +112,10 @@ const Empleados = () => {
     }
 
     useEffect(() => {
+        if (empleados.length > 0) cantidadDatosMostrables(11);
+    }, [empleados]);
+
+    useEffect(() => {
         if (empleados.length > 0) {
             setDatosFiltrados(empleados.slice(indexPrimerProducto, indexUltimoProducto));
         }

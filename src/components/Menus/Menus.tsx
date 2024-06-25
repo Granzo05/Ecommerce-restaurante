@@ -251,6 +251,10 @@ const Menus = () => {
         fetchMenu();
     };
 
+    useEffect(() => {
+        if (menus.length > 0) cantidadDatosMostrables(11);
+    }, [menus]);
+
     const capitalizeFirstLetter = (string: string) => {
         return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
     };

@@ -163,6 +163,9 @@ const Stocks = () => {
         }
     }
 
+    useEffect(() => {
+        if (stocks.length > 0) cantidadDatosMostrables(11);
+    }, [stocks]);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {

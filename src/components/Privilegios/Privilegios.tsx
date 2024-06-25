@@ -106,6 +106,10 @@ const PrivilegiosEmpleados = () => {
     }
 
     useEffect(() => {
+        if (privilegios.length > 0) cantidadDatosMostrables(11);
+    }, [privilegios]);
+
+    useEffect(() => {
         if (privilegios.length > 0) {
             setDatosFiltrados(privilegios.slice(indexPrimerProducto, indexUltimoProducto));
         }

@@ -118,6 +118,10 @@ const PedidosAceptados = () => {
         }
     }
 
+    useEffect(() => {
+        if (pedidosAceptados.length > 0) cantidadDatosMostrables(11);
+    }, [pedidosAceptados]);
+
     function filtrarMenus(filtro: string) {
         if (filtro.length > 0) {
             let filtradas = pedidosAceptados.filter(recomendacion =>
