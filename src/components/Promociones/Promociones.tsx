@@ -6,11 +6,10 @@ import EliminarPromocionEntrante from "./EliminarPromocion";
 import { PromocionService } from "../../services/PromocionService";
 import { Promocion } from "../../types/Productos/Promocion";
 import AgregarPromocion from "./AgregarPromocion";
-import { formatearFechaDDMMYYYY, formatearFechaYYYYMMDD, formatearFechaYYYYMMDDHHMM } from "../../utils/global_variables/functions";
+import { formatearFechaYYYYMMDD } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
-import onConfirm from './EliminarPromocion';
 
 const Promociones = () => {
     const [promociones, setPromociones] = useState<Promocion[]>([]);

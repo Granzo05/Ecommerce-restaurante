@@ -15,7 +15,6 @@ import ModalFlotanteRecomendacionesLocalidades from '../hooks/ModalFlotanteFiltr
 import HeaderLogin from '../components/headerLogin';
 import ModalFlotanteRecomendacionesPais from '../hooks/ModalFlotanteFiltroPais';
 import decodeJWT, { formatearFechaYYYYMMDD } from '../utils/global_variables/functions';
-import { useNavigate } from 'react-router-dom'; // Importa useHistory desde React Route
 import { GoogleLogin } from '@react-oauth/google';
 
 const LoginCliente = () => {
@@ -28,16 +27,6 @@ const LoginCliente = () => {
     const prevStep = () => {
         setStep(step - 1);
     };
-
-    /*const history = useNavigate(); // Obtiene el objeto history
-
-    useEffect(() => {
-        const sucursalSeleccionada = localStorage.getItem('sucursal'); // Verifica si hay una sucursal seleccionada en el localStorage
-        if (!sucursalSeleccionada) {
-            // Si no hay una sucursal seleccionada, redirige al usuario a la página selec-sucursal
-            history('/selec-sucursal');
-        }
-    }, [history]);*/
 
     const [nombre, setNombre] = useState('');
     const [email, setEmail] = useState('');
@@ -195,7 +184,6 @@ const LoginCliente = () => {
     const [mostrarIniciarSesion, setMostrarIniciarSesion] = useState(true);
     const [mostrarReestablecerContraseña, setMostrarReestablecerContraseña] = useState(false);
     const [mostrarCrearCuenta, setMostrarCrearCuenta] = useState(false);
-    const [mostrarCrearCuentaGmail, setMostrarCrearCuentaGmail] = useState(false);
 
     const toggleTipoInput = () => {
         setTipoInput(tipoInput === 'password' ? 'text' : 'password');
@@ -206,24 +194,20 @@ const LoginCliente = () => {
             setMostrarIniciarSesion(true);
             setMostrarReestablecerContraseña(false);
             setMostrarCrearCuenta(false);
-            setMostrarCrearCuentaGmail(false);
             setStep(1); // Reinicia el paso al iniciar sesión
         } else if (seccion === 'reestablecerContraseña') {
             setMostrarIniciarSesion(false);
             setMostrarReestablecerContraseña(true);
             setMostrarCrearCuenta(false);
-            setMostrarCrearCuentaGmail(false);
         } else if (seccion === 'crearCuenta') {
             setMostrarIniciarSesion(false);
             setMostrarReestablecerContraseña(false);
             setMostrarCrearCuenta(true);
-            setMostrarCrearCuentaGmail(false);
             setStep(1); // Reinicia el paso al crear una cuenta
         } else if (seccion === 'crearCuentaGmail') {
             setMostrarIniciarSesion(false);
             setMostrarReestablecerContraseña(false);
             setMostrarCrearCuenta(false);
-            setMostrarCrearCuentaGmail(true);
             setStep(1);
         }
     };

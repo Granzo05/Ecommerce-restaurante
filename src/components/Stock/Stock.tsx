@@ -14,8 +14,6 @@ import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
-import Ingredientes from "../Ingrediente/Ingredientes";
-
 
 const Stocks = () => {
     const [stockIngredientes, setStockIngredientes] = useState<StockIngredientes[]>([]);

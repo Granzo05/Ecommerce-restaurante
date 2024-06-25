@@ -3,6 +3,10 @@ import { Route, Routes } from "react-router-dom"
 import MainMenu from "../pages/HomePage";
 import SpinnerSuspense from "../hooks/SpinnerSuspense";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { RutaPrivadaEmpresa } from "../hooks/RutaPrivadaEmpresa";
+import { RutaPrivadaCliente } from "../hooks/RutaPrivadaCliente";
+import { RutaPrivadaEmpleado } from "../hooks/RutaPrivadaEmpleado";
+import { RutaPrivadaLogin } from "../hooks/RutaPrivadaLogin";
 const Opciones = lazy(() => import('../pages/opciones'));
 const NotFound = lazy(() => import('../pages/notFound'));
 const OpcionesCliente = lazy(() => import('../pages/opcionesCliente'));
@@ -25,27 +29,21 @@ const AppRoutes: React.FC = () => {
 
           <Route path="/sucursales" element={<SucursalCards />} />
 
-          <Route path="/panel" element={<Empresas />} />
-
-          <Route path=":id/empresa" element={<Opciones />} />
-
           <Route path="/" element={<MainMenu />} />
 
           <Route path="/:id" element={<MainMenu />} />
 
           <Route path="/login-cliente" element={<LoginCliente />} />
 
-          <Route path="/login-negocio" element={<LoginNegocio />} />
+          <Route path="/login-negocio" element={
+            <RutaPrivadaLogin>
+              <LoginNegocio />
+            </RutaPrivadaLogin>}>
+          </Route>
 
           <Route path="/:id/:categoria" element={<Menu />} />
 
           <Route path="/:id/busqueda/:nombre" element={<ProductosBuscados />} />
-
-          <Route path="/:id/pago" element={<Pago />} />
-
-          <Route path="/:id/opciones" element={<Opciones />} />
-
-          <Route path="/:id/opciones/:opcionElegida" element={<Opciones />} />
 
           <Route path="/cliente" element={<OpcionesCliente />}>
             <Route path="pedidos-pendientes" element={<PedidosPendientes />} />
@@ -53,9 +51,40 @@ const AppRoutes: React.FC = () => {
             <Route path="preferencias" element={<Preferencias />} />
           </Route>
 
+          <Route path="*" element={<NotFound />} />
+
           <Route path="/cliente/:opcionElegida" element={<OpcionesCliente />}></Route>
 
-          <Route path="*" element={<NotFound />} />
+          <Route path="/:id/pago" element={
+            <RutaPrivadaCliente>
+              <Pago />
+            </RutaPrivadaCliente>}>
+          </Route>
+
+          <Route path="/panel" element={
+            <RutaPrivadaEmpresa>
+              <Empresas />
+            </RutaPrivadaEmpresa>}>
+          </Route>
+
+          <Route path=":id/empresa" element={
+            <RutaPrivadaEmpresa>
+              <Opciones />
+            </RutaPrivadaEmpresa>}>
+          </Route>
+
+          <Route path="/:id/opciones" element={
+            <RutaPrivadaEmpleado>
+              <Opciones />
+            </RutaPrivadaEmpleado>}>
+          </Route>
+
+          <Route path="/:id/opciones/:opcionElegida" element={
+            <RutaPrivadaEmpleado>
+              <Opciones />
+            </RutaPrivadaEmpleado>}>
+          </Route>
+
         </Routes>
       </GoogleOAuthProvider>
 

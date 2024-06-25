@@ -135,7 +135,7 @@ export function desparsearMonedaArgentina(value: string): number {
 }
 
 
-export function decodeJWT(token: string) {
+export default function decodeJWT(token: string) {
   const parts = token.split(".");
 
   if (parts.length !== 3) {
