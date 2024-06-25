@@ -194,7 +194,9 @@ STOCK ENTRANTE:
 
 MENÚ:
 
-ARTÍCULOS:
+ARTICULOS:
+[] Se rompen las categorías, sub y medidas al querer editarlas.
+[] Los artículos eliminados y sin stock siguen apareciendo en el menú de compras.
 
 INGREDIENTES:
 

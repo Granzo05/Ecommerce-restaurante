@@ -211,19 +211,19 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const validateAndNextStep = () => {
 
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)0-9]+$/)) {
       toast.error("Por favor, es necesario el nombre del articulo");
       return;
     } else if (!precioVenta || precioVenta == 0) {
       toast.error("Por favor, es necesario el precio de venta del articulo válido");
       return;
-    } else if (!categoria) {
+    } else if (!categoria || categoria.nombre == '') {
       toast.error("Por favor, es necesario el tipo");
       return;
-    } else if (!subcategoria) {
+    } else if (!subcategoria || subcategoria.nombre == '') {
       toast.error("Por favor, es necesaria la subcategoría");
       return;
-    } else if (!medida) {
+    } else if (!medida || medida.nombre == '') {
       toast.error("Por favor, es necesaria la medida");
       return;
     } else if (!cantidad || cantidad == 0) {
@@ -242,7 +242,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
             <h4>Paso 1 - Datos</h4>
 
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)0-9]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del articulo</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
 
