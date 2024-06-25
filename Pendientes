@@ -143,6 +143,12 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [x] Hacer la recuperacion de contraseña
 [x] Hay que pasar el CUIL a string, asi poder usar sus '-'.
 [x] Añadir botones de agregar el objeto en todos los modales de recomendacion, para no tener que cerrar y abrir y volver, manso viaje
+[x] Filtros de fechas. Filtrar entre 2 fechas.
+[x] Arreglar los filtros de fechas en este y en stock entrante.
+opcionesCliente: FALTA MOSTRAR DOMICILIOS DEL USUARIO Y VALIDAR CAMBIOS DE LA CUENTA EN LA BASE DE DATOS.[x]
+loginCliente: FALTA HACER VALIDAR LA RECUPERACION DE LA CONTRASEÑA. FALTA VALIDAR INGRESO CON GMAIL. FALTAN VALIDACIONES A LOS INPUTS.[x]
+loginNegocio: FALTA VALIDAR EN EL RECUPERO DE CONTRA, QUE EL CORREO SEA CORRECTO Y ESTE DENTRO DE LA BASE DE DATOS.[x]
+
 
 [] Costo recomendado de articulos por sucursal
 [] Configurar rutas privadas
@@ -185,7 +191,6 @@ STOCK:
 [] MARCAR LOS PRODUCTOS QUE ESTAN POR DEBAJO DEL STOCK MINIMO CON ALGUN COLOR Y ALGUN TOAST que avise que queda poco
 
 STOCK ENTRANTE:
-[] Filtros de fechas. Filtrar entre 2 fechas.
 
 MENÚ:
 
@@ -198,7 +203,6 @@ MENÚS:
 PRIVILEGIOS:
 
 PROMOCIONES:
-[] Arreglar los filtros de fechas en este y en stock entrante.
 
 SUCURSALES:
 [] Deja avanzar sin seleccionar país, provincia, depto. o localidad.
@@ -215,9 +219,7 @@ EL HOME SE ROMPE Y NO TRAE A VECES LAS PROMOCIONES Y LAS CATEGORIAS[]
 SucursalCards: FALTA VALIDACIONES Y RUTAPRIVADA. []
 Footer: BUG, MUESTRA SUCURSAL VACIA.[]
 pago: NO TE DEBE DEJAR ENTRAR SI NO ESTAS LOGUEADO. ARREGLAR MODAL DE SALIDA.[] RUTAS PRIVADA EVITA ESTO :D
-loginCliente: FALTA HACER VALIDAR LA RECUPERACION DE LA CONTRASEÑA. FALTA VALIDAR INGRESO CON GMAIL. FALTAN VALIDACIONES A LOS INPUTS.[]
-loginNegocio: FALTA VALIDAR EN EL RECUPERO DE CONTRA, QUE EL CORREO SEA CORRECTO Y ESTE DENTRO DE LA BASE DE DATOS.[]
-opcionesCliente: FALTA MOSTRAR DOMICILIOS DEL USUARIO Y VALIDAR CAMBIOS DE LA CUENTA EN LA BASE DE DATOS.[]
+
 opciones: VALIDACIONES Y TOAST. FILTROS DE LAS TABLAS. RESPONSIVE.[]
 homePage: IMAGENES A LAS CATEGORIAS.[]
 

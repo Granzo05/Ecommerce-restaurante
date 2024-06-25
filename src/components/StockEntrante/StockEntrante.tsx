@@ -15,7 +15,7 @@ import { Sucursal } from "../../types/Restaurante/Sucursal";
 import { toast, Toaster } from "sonner";
 import { StockArticuloVentaService } from "../../services/StockArticulosService";
 import { StockIngredientesService } from "../../services/StockIngredientesService";
-import { Pedido } from "../../types/Pedidos/Pedido";
+import { desparsearMonedaArgentina, formatearFechaYYYYMMDD, parsearMonedaArgentina } from "../../utils/global_variables/functions";
 
 const StocksEntrantes = () => {
     const [stockEntrante, setStockEntrante] = useState<StockEntrante[]>([]);
@@ -114,45 +114,60 @@ const StocksEntrantes = () => {
         }
     }
 
-    function filtrarFechas(fechaInicio: string, fechaFin: string) {
+    const [fechaInicio, setFechaInicio] = useState('');
+    const [fechaFin, setFechaFin] = useState('');
+
+    useEffect(() => {
         if (fechaInicio.length > 0 && fechaFin.length > 0) {
-            const fechaFiltroInicio = new Date(fechaInicio);
-            const fechaFiltroFin = new Date(fechaFin);
+            const fechaFiltroInicio = formatearFechaYYYYMMDD(new Date(fechaInicio));
+            const fechaFiltroFin = formatearFechaYYYYMMDD(new Date(fechaFin));
 
-            const filtradas = stockEntrante.filter(promocion => {
-                const fechaPromocion = new Date(promocion.fechaLlegada);
-                return fechaPromocion >= fechaFiltroInicio && fechaPromocion <= fechaFiltroFin;
-            });
+            if (fechaFiltroInicio && fechaFiltroFin) {
+                const filtradas = stockEntrante.filter(promocion => {
+                    const fechaPromocion = formatearFechaYYYYMMDD(new Date(promocion.fechaLlegada));
+                    if (fechaPromocion) return fechaPromocion >= fechaFiltroInicio && fechaPromocion <= fechaFiltroFin;
+                });
 
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+                setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+                setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+            }
         } else if (fechaInicio.length > 0) {
-            const fechaFiltro = new Date(fechaInicio);
+            const fechaFiltro = formatearFechaYYYYMMDD(new Date(fechaInicio));
+            if (fechaFiltro) {
+                const filtradas = stockEntrante.filter(promocion => {
+                    const fechaPromocion = formatearFechaYYYYMMDD(new Date(promocion.fechaLlegada));
+                    if (fechaPromocion) return fechaPromocion >= fechaFiltro;
+                });
 
-            const filtradas = stockEntrante.filter(promocion => {
-                const fechaPromocion = new Date(promocion.fechaLlegada);
-                return fechaPromocion.toDateString() === fechaFiltro.toDateString();
-            });
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+                setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+                setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+            }
         } else if (fechaFin.length > 0) {
-            const fechaFiltro = new Date(fechaFin);
+            const fechaFiltro = formatearFechaYYYYMMDD(new Date(fechaInicio));
+            if (fechaFiltro) {
+                const filtradas = stockEntrante.filter(promocion => {
+                    const fechaPromocion = formatearFechaYYYYMMDD(new Date(promocion.fechaLlegada));
+                    if (fechaPromocion) return fechaPromocion <= fechaFiltro;
+                });
 
-            const filtradas = stockEntrante.filter(promocion => {
-                const fechaPromocion = new Date(promocion.fechaLlegada);
-                return fechaPromocion.toDateString() === fechaFiltro.toDateString();
-            });
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+                setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+                setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+            }
         } else {
             setDatosFiltrados(stockEntrante.slice(indexPrimerProducto, indexUltimoProducto));
             setPaginasTotales(Math.ceil(stockEntrante.length / cantidadProductosMostrables));
         }
-    }
+    }, [fechaInicio, fechaFin]);
 
     const [signoPrecio, setSignoPrecio] = useState('>');
 
-    function filtrarPrecio(filtro: number) {
+    const [precioBuscado, setPrecioBuscado] = useState<number>(0);
+
+    useEffect(() => {
+        filtrarPrecio();
+    }, [signoPrecio, precioBuscado]);
+
+    function filtrarPrecio() {
         const comparadores: { [key: string]: (a: number, b: number) => boolean } = {
             '>': (a, b) => a > b,
             '<': (a, b) => a < b,
@@ -161,10 +176,14 @@ const StocksEntrantes = () => {
             '=': (a, b) => a === b
         };
 
-        if (filtro > 0 && comparadores[signoPrecio]) {
+        if (precioBuscado > 0 && comparadores[signoPrecio]) {
             const filtradas = stockEntrante.filter(recomendacion =>
-                comparadores[signoPrecio](parseFloat(recomendacion.costo), filtro)
+                comparadores[signoPrecio](
+                    desparsearMonedaArgentina(recomendacion.costo),
+                    precioBuscado
+                )
             );
+
             setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
             setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
         } else {
@@ -177,7 +196,7 @@ const StocksEntrantes = () => {
         // Suponiendo que 'fecha' es un atributo Date en cada objeto
         const fechaA = new Date(a.fechaLlegada);
         const fechaB = new Date(b.fechaLlegada);
-    
+
         // Comparamos las fechas
         if (fechaA < fechaB) {
             return -1;
@@ -194,7 +213,7 @@ const StocksEntrantes = () => {
             setDatosFiltrados(stockOrdenado.slice(indexPrimerProducto, indexUltimoProducto));
         }
     }, [stockEntrante, paginaActual, cantidadProductosMostrables]);
-    
+
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {
@@ -376,7 +395,7 @@ const StocksEntrantes = () => {
                         <input
                             type="date"
                             required
-                            onChange={(e) => filtrarFechas(e.target.value, '')}
+                            onChange={(e) => setFechaInicio(e.target.value)}
                         />
                     </div>
                     <div className="inputBox-filtrado-fechas" style={{ marginRight: '10px' }}>
@@ -385,14 +404,14 @@ const StocksEntrantes = () => {
                         <input
                             type="date"
                             required
-                            onChange={(e) => filtrarFechas('', e.target.value)}
+                            onChange={(e) => setFechaFin(e.target.value)}
                         />
                     </div>
                     <div className="inputBox-filtrado">
                         <input
                             type="number"
                             required
-                            onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
+                            onChange={(e) => setPrecioBuscado(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
 

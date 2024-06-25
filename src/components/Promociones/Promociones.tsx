@@ -6,7 +6,7 @@ import EliminarPromocionEntrante from "./EliminarPromocion";
 import { PromocionService } from "../../services/PromocionService";
 import { Promocion } from "../../types/Productos/Promocion";
 import AgregarPromocion from "./AgregarPromocion";
-import { formatearFechaDDMMYYYY, formatearFechaYYYYMMDDHHMM } from "../../utils/global_variables/functions";
+import { formatearFechaDDMMYYYY, formatearFechaYYYYMMDD, formatearFechaYYYYMMDDHHMM } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
@@ -90,7 +90,13 @@ const Promociones = () => {
 
     const [signoPrecio, setSignoPrecio] = useState('>');
 
-    function filtrarPrecio(filtro: number) {
+    const [precioBuscado, setPrecioBuscado] = useState<number>(0);
+
+    useEffect(() => {
+        filtrarPrecio();
+    }, [signoPrecio, precioBuscado]);
+
+    function filtrarPrecio() {
         const comparadores: { [key: string]: (a: number, b: number) => boolean } = {
             '>': (a, b) => a > b,
             '<': (a, b) => a < b,
@@ -99,9 +105,9 @@ const Promociones = () => {
             '=': (a, b) => a === b
         };
 
-        if (filtro > 0 && comparadores[signoPrecio]) {
+        if (precioBuscado > 0 && comparadores[signoPrecio]) {
             const filtradas = promociones.filter(recomendacion =>
-                comparadores[signoPrecio](recomendacion.precio, filtro)
+                comparadores[signoPrecio](recomendacion.precio, precioBuscado)
             );
             setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
             setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
@@ -111,41 +117,51 @@ const Promociones = () => {
         }
     }
 
-    function filtrarFechas(fechaInicio: string, fechaFin: string) {
+    const [fechaInicio, setFechaInicio] = useState('');
+    const [fechaFin, setFechaFin] = useState('');
+
+    useEffect(() => {
         if (fechaInicio.length > 0 && fechaFin.length > 0) {
-            const fechaFiltroInicio = new Date(fechaInicio);
-            const fechaFiltroFin = new Date(fechaFin);
+            const fechaFiltroInicio = formatearFechaYYYYMMDD(new Date(fechaInicio));
+            const fechaFiltroFin = formatearFechaYYYYMMDD(new Date(fechaFin));
 
-            const filtradas = promociones.filter(promocion => {
-                const fechaPromocion = new Date(promocion.fechaDesde);
-                return fechaPromocion >= fechaFiltroInicio && fechaPromocion <= fechaFiltroFin;
-            });
+            if (fechaFiltroInicio && fechaFiltroFin) {
+                const filtradas = promociones.filter(promocion => {
+                    const fechaPromocionDesde = formatearFechaYYYYMMDD(new Date(promocion.fechaDesde));
+                    const fechaPromocionHasta = formatearFechaYYYYMMDD(new Date(promocion.fechaHasta));
+                    if (fechaPromocionDesde && fechaPromocionHasta) return fechaPromocionDesde >= fechaFiltroInicio && fechaPromocionHasta <= fechaFiltroFin;
+                });
 
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+                setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+                setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+            }
         } else if (fechaInicio.length > 0) {
-            const fechaFiltro = new Date(fechaInicio);
+            const fechaFiltro = formatearFechaYYYYMMDD(new Date(fechaInicio));
+            if (fechaFiltro) {
+                const filtradas = promociones.filter(promocion => {
+                    const fechaPromocion = formatearFechaYYYYMMDD(new Date(promocion.fechaDesde));
+                    if (fechaPromocion) return fechaPromocion >= fechaFiltro;
+                });
 
-            const filtradas = promociones.filter(promocion => {
-                const fechaPromocion = new Date(promocion.fechaDesde);
-                return fechaPromocion.toDateString() === fechaFiltro.toDateString();
-            });
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+                setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+                setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+            }
         } else if (fechaFin.length > 0) {
-            const fechaFiltro = new Date(fechaFin);
+            const fechaFiltro = formatearFechaYYYYMMDD(new Date(fechaInicio));
+            if (fechaFiltro) {
+                const filtradas = promociones.filter(promocion => {
+                    const fechaPromocion = formatearFechaYYYYMMDD(new Date(promocion.fechaHasta));
+                    if (fechaPromocion) return fechaPromocion <= fechaFiltro;
+                });
 
-            const filtradas = promociones.filter(promocion => {
-                const fechaPromocion = new Date(promocion.fechaHasta);
-                return fechaPromocion.toDateString() === fechaFiltro.toDateString();
-            });
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+                setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
+                setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+            }
         } else {
             setDatosFiltrados(promociones.slice(indexPrimerProducto, indexUltimoProducto));
             setPaginasTotales(Math.ceil(promociones.length / cantidadProductosMostrables));
         }
-    }
+    }, [fechaInicio, fechaFin]);
 
     useEffect(() => {
         if (promociones.length > 0) {
@@ -226,20 +242,6 @@ const Promociones = () => {
         setMostrarPromociones(true);
         buscarPromociones();
     };
-
-    function diasRestantes(dateString: string): number {
-        const hoy = new Date();
-        const fechaLimite = new Date(dateString);
-
-        // Calcula la diferencia en milisegundos
-        const diasTotales = fechaLimite.getTime() - hoy.getTime();
-
-        // Convierte la diferencia en milisegundos a días
-        const segundos = 1000 * 60 * 60 * 24;
-        return Math.ceil(diasTotales / segundos);
-
-
-    }
 
     function tiempoRestante(fechaHasta: string | number | Date) {
         // Convertir la fechaHasta a un objeto Date
@@ -347,7 +349,7 @@ const Promociones = () => {
                         <input
                             type="date"
                             required
-                            onChange={(e) => filtrarFechas(e.target.value, '')}
+                            onChange={(e) => setFechaInicio(e.target.value)}
                         />
                     </div>
                     <div className="inputBox-filtrado-fechas" style={{ marginRight: '10px' }}>
@@ -356,14 +358,14 @@ const Promociones = () => {
                         <input
                             type="date"
                             required
-                            onChange={(e) => filtrarFechas('', e.target.value)}
+                            onChange={(e) => setFechaFin(e.target.value)}
                         />
                     </div>
                     <div className="inputBox-filtrado">
                         <input
                             type="number"
                             required
-                            onChange={(e) => filtrarPrecio(parseInt(e.target.value))}
+                            onChange={(e) => setPrecioBuscado(parseInt(e.target.value))}
                         />
                         <span>Filtrar por precio</span>
 
