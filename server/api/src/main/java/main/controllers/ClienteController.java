@@ -8,20 +8,26 @@ import main.repositories.ClienteRepository;
 import main.repositories.DomicilioRepository;
 import main.repositories.LocalidadRepository;
 import main.repositories.SucursalRepository;
+import main.utility.Gmail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 @RestController
 public class ClienteController {
     private final ClienteRepository clienteRepository;
     private final DomicilioRepository domicilioRepository;
     private final SucursalRepository sucursalRepository;
+    private static final String EMAIL_RESPALDO = "contactodelbuensabor@gmail.com";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public ClienteController(ClienteRepository clienteRepository, DomicilioRepository domicilioRepository, LocalidadRepository localidadRepository, SucursalRepository sucursalRepository) {
         this.clienteRepository = clienteRepository;
@@ -197,6 +203,36 @@ public class ClienteController {
         clienteRepository.save(cliente);
 
         return ResponseEntity.ok("Cuenta actualizada con éxito");
+    }
+
+    @CrossOrigin
+    @PutMapping("/cliente/recoverpassword")
+    public ResponseEntity<String> reiniciarContraseña(@RequestBody String email) throws GeneralSecurityException, IOException, MessagingException {
+        Optional<Cliente> cliente = clienteRepository.findByEmail(email);
+
+        if (cliente.isEmpty()) {
+            return ResponseEntity.badRequest().body("No existe ningun usuario con ese email");
+        }
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(8);
+
+        for (int i = 0; i < 8; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            password.append(CHARACTERS.charAt(index));
+        }
+
+        cliente.get().setContraseña(Encrypt.cifrarPassword(String.valueOf(password)));
+
+        String mensaje = "Tu contraseña ha sido cambiada, para ingresar nuevamente a tu cuenta usa la siguiente generada aleatoriamente. Una vez que ingreses puedes modificarla a tu gusto: \n " + password;
+
+        Gmail gmail = new Gmail();
+
+        gmail.enviarCorreo("Cambio de contraseña de tu cuenta del buen sabor", mensaje, email, EMAIL_RESPALDO);
+
+        clienteRepository.save(cliente.get());
+
+        return ResponseEntity.ok().body("La contraseña ha sido actualizada correctamente. revisa tu correo para usarla");
     }
 
     @CrossOrigin

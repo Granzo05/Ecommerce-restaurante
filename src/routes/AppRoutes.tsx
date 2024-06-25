@@ -11,7 +11,6 @@ const LoginCliente = lazy(() => import('../pages/loginCliente'));
 const Pago = lazy(() => import('../pages/pago'));
 const PedidosPendientes = lazy(() => import('../components/Cliente/PedidosPendientes'));
 const PedidosRealizados = lazy(() => import('../components/Cliente/PedidosRealizados'));
-const CambioContra = lazy(() => import('../components/PasswordResetForm'));
 const Menu = lazy(() => import('../pages/menu'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
 const SucursalCards = lazy(() => import('../pages/SucursalCards'));
@@ -55,8 +54,6 @@ const AppRoutes: React.FC = () => {
           </Route>
 
           <Route path="/cliente/:opcionElegida" element={<OpcionesCliente />}></Route>
-
-          <Route path="/cambio-contra" element={<CambioContra />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

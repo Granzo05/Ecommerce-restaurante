@@ -71,8 +71,6 @@ const LoginCliente = () => {
             },
             finally: () => {
                 setIsLoading(false);
-                toast.error(`Error. Correo o contraseña no encontrados...`);
-
             }
         });
     };
@@ -410,14 +408,19 @@ const LoginCliente = () => {
     };
 
     const handlePasswordResetRequest = async () => {
-        try {
-            await ClienteService.requestPasswordReset(email);
-            toast.success('Correo de recuperación enviado');
-            return;
-        } catch (error) {
-            toast.error('Error al enviar el correo de recuperación');
-            return;
-        }
+        setIsLoading(true);
+        toast.promise(ClienteService.requestPasswordReset(email), {
+            loading: 'Creando nueva contraseña...',
+            success: (message) => {
+                return message;
+            },
+            error: (message) => {
+                return message;
+            },
+            finally: () => {
+                setIsLoading(false);
+            }
+        });
     };
 
     async function buscarCliente(email: string) {
@@ -437,7 +440,6 @@ const LoginCliente = () => {
 
             <section className="form-main" style={{ display: mostrarIniciarSesion ? '' : 'none' }}>
                 <div className="form-content">
-                    <button style={{ marginBottom: '20px' }} className='btn' onClick={() => window.location.href = '/sucursales#login'}>SELECCIONAR SUCURSAL</button>
                     <div className="box">
                         <h3>- BIENVENIDO -</h3>
                         <p id='subtitle'>¡Si ya tienes una cuenta, inicia sesión con tus datos!</p>
@@ -482,14 +484,14 @@ const LoginCliente = () => {
 
                             </div>
                             <div className="input-link">
-                                <p id='pass-forg'>¿Has olvidado tu contraseña?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('reestablecerContraseña')}>Click aquí</a></p>
+                                <p id='pass-forg'>¿Has olvidado tu contraseña?&nbsp;<a style={{ cursor: 'pointer' }} className='gradient-text' onClick={() => mostrarSeccion('reestablecerContraseña')}>Click aquí</a></p>
                             </div>
                             <br />
                             <button className="btn" onClick={handleIniciarSesionUsuario} disabled={isLoading}>
                                 {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
                             </button>
                         </form>
-                        <p id='create-account'>¿No tienes una cuenta?&nbsp;<a href="#" className='gradient-text' onClick={() => mostrarSeccion('crearCuenta')}>Crear cuenta</a></p>
+                        <p id='create-account'>¿No tienes una cuenta?&nbsp;<a style={{ cursor: 'pointer' }} className='gradient-text' onClick={() => mostrarSeccion('crearCuenta')}>Crear cuenta</a></p>
                     </div>
                 </div>
             </section>
@@ -498,7 +500,7 @@ const LoginCliente = () => {
             <section className="form-main" style={{ display: mostrarReestablecerContraseña ? '' : 'none' }}>
                 <div className="form-content">
                     <div className="box">
-                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a href=""><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
+                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a style={{ cursor: 'pointer' }}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
                         <h3>- REESTABLECER CONTRASEÑA -</h3>
                         <p id='subtitle'>¡Necesitamos que coloques un correo electrónico para ayudarte a reestablecer tu contraseña!</p>
                         <form action="">
@@ -519,7 +521,7 @@ const LoginCliente = () => {
             <section className="form-main" style={{ display: mostrarCrearCuenta ? '' : 'none' }}>
                 <div className="form-content">
                     <div className="box">
-                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a href='' style={{ cursor: 'pointer' }}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
+                        <h2 id='back-icon' onClick={() => mostrarSeccion('iniciarSesion')}><a style={{ cursor: 'pointer' }}><KeyboardBackspaceIcon></KeyboardBackspaceIcon></a></h2>
                         <h3>- CREAR UNA CUENTA -</h3>
                         {renderStep()}
                         <p id='subtitle'>¿Ya tienes una cuenta?&nbsp;<a style={{ cursor: 'pointer' }} className='gradient-text' onClick={() => mostrarSeccion('iniciarSesion')}>Iniciar sesión</a></p>

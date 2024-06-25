@@ -137,15 +137,16 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
     [x] Si la promoción aun no ha empezado, no debería mostrarse hasta que comienze y luego ocultarse cuando termine y eliminarse automáticamente.
 [x] HACER TODO LO DEL PERFIL DEL CLIENTE Y LOS DOMICILIOS
 [x] Error al editar la promoción.
+[x] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
+[x] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
+[x] El editar menú no borra los ingredientes.
+[x] Hacer la recuperacion de contraseña
 
-[] Cambiar los inputs number a text, validar que son number y parsearlos antes de asignarlos al objeto porque loss type number se cogen si borras todos los caracteres
 [] Costo recomendado de articulos por sucursal
 [] Configurar rutas privadas
-[] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
-[] El editar menú no borra los ingredientes.
 
 notFound
-[]REVISAR ESTE TSX QUE TA RARO EL HEADER: esta en pages
+[] REVISAR ESTE TSX QUE TA RARO EL HEADER: esta en pages
 
 sucursales/ Pagina
 
@@ -153,7 +154,6 @@ header
 [AYUDA] Si como sucursal tocas en pedidos que te lleve a opciones con pedidos entrantes abierto AYUDA HICE ANDARLO PERO SE COJE EL LOGO
 
 Login
-[] Hacer la recuperacion de contraseña
 
 PDFS
 [] Arreglar el diseño de los pdfs

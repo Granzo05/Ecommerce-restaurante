@@ -48,18 +48,20 @@ export const ClienteService = {
 
     //CONTRASEÑA OLVIDADA--------------------------------------------------//
 
-    requestPasswordReset: async (email: string) => {
-        const response = await fetch('/cliente/forgot-password', {
-            method: 'POST',
+    requestPasswordReset: async (email: string): Promise<string> => {
+        const response = await fetch(URL_API + 'cliente/recoverpassword', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email }),
+            body: email,
         });
 
         if (!response.ok) {
-            throw new Error('Error al enviar la solicitud');
+            throw new Error(await response.text());
         }
+
+        return response.text();
     },
 
     //CONTRASEÑA OLVIDADA--------------------------------------------------//
