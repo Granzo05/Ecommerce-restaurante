@@ -191,6 +191,7 @@ public class PromocionController {
     }
 
     @CrossOrigin
+    @Transactional
     @PutMapping("/promocion/update/{idSucursal}")
     public ResponseEntity<String> updatePromocion(@RequestBody Promocion promocionDetails, @PathVariable("idSucursal") Long idSucursal) throws Exception {
         Optional<Promocion> promocionDB = promocionRepository.findByIdPromocionAndIdSucursal(promocionDetails.getId(), idSucursal);

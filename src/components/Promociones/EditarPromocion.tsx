@@ -136,7 +136,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   };
 
   const handleCantidadArticuloMenu = (cantidad: number, index: number) => {
-    if (cantidad) {
+    if (cantidad > 0) {
       setDetallesArticulosMenu(prevState => {
         const newState = [...prevState];
         newState[index].cantidad = cantidad;
@@ -148,6 +148,39 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   const handleMedidaArticuloMenu = (medida: Medida, index: number) => {
     if (medida) {
       setDetallesArticulosMenu(prevState => {
+        const newState = [...prevState];
+        newState[index].medida = medida;
+        return newState;
+      });
+    }
+  };
+
+  const handleArticuloMenuModificableChange = (articuloMenu: ArticuloMenu, index: number) => {
+    setDetallesArticuloMenuMuestra(prevState => {
+      const newState = [...prevState];
+      newState[index].articuloMenu = articuloMenu;
+
+      const nuevosNombresArticulos = [...nombresArticulos];
+      nuevosNombresArticulos[index] = articuloMenu.nombre;
+      setNombresMenus(nuevosNombresArticulos);
+
+      return newState;
+    });
+  };
+
+  const handleCantidadArticuloMenuModificable = (cantidad: number, index: number) => {
+    if (cantidad > 0) {
+      setDetallesArticuloMenuMuestra(prevState => {
+        const newState = [...prevState];
+        newState[index].cantidad = cantidad;
+        return newState;
+      });
+    }
+  };
+
+  const handleMedidaArticuloMenuModificable = (medida: Medida, index: number) => {
+    if (medida) {
+      setDetallesArticuloMenuMuestra(prevState => {
         const newState = [...prevState];
         newState[index].medida = medida;
         return newState;
@@ -169,7 +202,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   };
 
   const handleCantidadArticulo = (cantidad: number, index: number) => {
-    if (cantidad) {
+    if (cantidad > 0) {
       setDetallesArticuloVenta(prevState => {
         const newState = [...prevState];
         newState[index].cantidad = cantidad;
@@ -188,12 +221,45 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
     }
   };
 
+  const handleArticuloModificableChange = (articulo: ArticuloVenta, index: number) => {
+    setDetallesArticuloVentaMuestra(prevState => {
+      const newState = [...prevState];
+      newState[index].articuloVenta = articulo;
+
+      const nuevosNombresArticulos = [...nombresArticulos];
+      nuevosNombresArticulos[index] = articulo.nombre;
+      setNombresArticulos(nuevosNombresArticulos);
+
+      return newState;
+    });
+  };
+
+  const handleCantidadArticuloModificable = (cantidad: number, index: number) => {
+    if (cantidad > 0) {
+      setDetallesArticuloVentaMuestra(prevState => {
+        const newState = [...prevState];
+        newState[index].cantidad = cantidad;
+        return newState;
+      });
+    }
+  };
+
+  const handleMedidaArticuloModificable = (medida: Medida, index: number) => {
+    if (medida) {
+      setDetallesArticuloVentaMuestra(prevState => {
+        const newState = [...prevState];
+        newState[index].medida = medida;
+        return newState;
+      });
+    }
+  };
+
   useEffect(() => {
-    promocion.detallesPromocion.forEach(detalle => {
-      if (detalle.articuloMenu && detalle.articuloMenu?.nombre?.length > 0) {
-        nombresMenus.push(detalle.articuloMenu.nombre)
-      } else if (detalle.articuloVenta && detalle.articuloVenta?.nombre?.length > 0) {
-        nombresArticulos.push(detalle.articuloVenta.nombre)
+    promocion?.detallesPromocion?.forEach(detalle => {
+      if (detalle?.articuloMenu && detalle?.articuloMenu?.nombre?.length > 0) {
+        nombresMenus.push(detalle?.articuloMenu?.nombre)
+      } else if (detalle?.articuloVenta && detalle?.articuloVenta?.nombre?.length > 0) {
+        nombresArticulos.push(detalle?.articuloVenta?.nombre)
       }
     });
   }, []);
@@ -330,13 +396,14 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   const [sucursales, setSucursales] = useState<Sucursal[]>([]);
 
   useEffect(() => {
-    SucursalService.getSucursales()
-      .then(data => {
-        setSucursales(data);
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    if (empresa)
+      SucursalService.getSucursales()
+        .then(data => {
+          setSucursales(data);
+        })
+        .catch(err => {
+          console.error(err);
+        });
   }, []);
 
   const handleSucursalesElegidas = (sucursalId: number) => {
@@ -457,7 +524,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
   const [step, setStep] = useState(1);
 
   const nextStep = () => {
-    calcularCostos();
+    if (step === 4) calcularCostos();
 
     setStep(step + 1);
   };
@@ -479,10 +546,6 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
             <div className="inputBox">
               <input type="text" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
               <span>Descrición de la promoción</span>
-            </div>
-            <div className="inputBox">
-              <input type="number" required={true} value={total} onChange={(e) => setTotal(parseFloat(e.target.value))} />
-              <span>Precio ($)</span>
             </div>
             <div className="inputBox">
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Fecha de inicio:</label>
@@ -507,40 +570,40 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
           <>
             <h4>Paso 2 - Agregar menú a la promoción</h4>
             {detallesArticuloMenuMuestra.map((detalleMenu, index) => (
-              <div key={index}>
+              <div key={detalleMenu.id}>
                 <hr />
                 <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenuMuestra(detalleMenu?.articuloMenu?.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú guardado {index + 1}:</label>
-                  <InputComponent disabled={false} placeHolder='Filtrar articuloMenu...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detalleMenu?.articuloMenu?.nombre ?? ''} />
-                  {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu datosOmitidos={detalleMenu?.articuloMenu?.nombre} onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
+                  <InputComponent disabled={true} placeHolder='Filtrar menús...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detalleMenu?.articuloMenu?.nombre ?? ''} />
+                  {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu datosOmitidos={detalleMenu?.articuloMenu?.nombre} onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuModificableChange(articuloMenu, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <div className="input-filtrado">
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalleMenu?.medida?.nombre ?? ''} />
-                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleMenu?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleMenu?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenuModificable(medida, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <div className="inputBox">
-                  <input type="number" required={true} value={detalleMenu.cantidad} onChange={(e) => handleCantidadArticuloMenu(parseFloat(e.target.value), index)} />
+                  <input type="number" required={true} value={detalleMenu?.cantidad} onChange={(e) => handleCantidadArticuloMenuModificable(parseFloat(e.target.value), index)} />
                   <span>Cantidad de unidades</span>
                 </div>
               </div>
             ))}
             <br />
-            {detallesArticuloMenu.map((articuloMenu, index) => (
-              <div key={index}>
+            {detallesArticuloMenu.map((detalleMenu, index) => (
+              <div key={detalleMenu.articuloMenu?.nombre}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenu(articuloMenu?.articuloMenu?.nombre)}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloMenu(detalleMenu?.articuloMenu?.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Menú nuevo {index + 1}:</label>
-                  <InputComponent disabled={false} placeHolder='Filtrar menús...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detallesArticuloMenu[index].articuloMenu?.nombre ?? ''} />
+                  <InputComponent disabled={false} placeHolder='Filtrar menús...' onInputClick={() => setModalBusquedaArticuloMenu(true)} selectedProduct={detalleMenu?.articuloMenu?.nombre ?? ''} />
                   {modalBusquedaArticuloMenu && <ModalFlotanteRecomendacionesArticuloMenu datosOmitidos={nombresMenus} onCloseModal={handleModalClose} onSelectArticuloMenu={(articuloMenu) => { handleArticuloMenuChange(articuloMenu, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <div className="input-filtrado">
-                  <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloMenu[index]?.medida?.nombre ?? ''} />
-                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloMenu[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
+                  <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalleMenu?.medida?.nombre ?? ''} />
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleMenu?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloMenu(medida, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <div className="inputBox">
@@ -563,42 +626,41 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
           <>
             <h4>Paso 3 - Agregar artículo a la promoción</h4>
             {detallesArticuloVentaMuestra.map((detalleArticulo, index) => (
-              <div key={index}>
+              <div key={detalleArticulo.id}>
                 <hr />
                 <p className='cierre-articuloMenu' onClick={() => quitarCampoArticuloVentaMuestra(detalleArticulo?.articuloVenta?.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo guardado {index + 1}:</label>
-                  <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detalleArticulo?.articuloVenta?.nombre ?? ''} />
-                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={detalleArticulo?.articuloVenta?.nombre} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
+                  <InputComponent disabled={true} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detalleArticulo?.articuloVenta?.nombre ?? ''} />
+                  {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={detalleArticulo?.articuloVenta?.nombre} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloModificableChange(articulo, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <br />
                 <div className="input-filtrado">
                   <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalleArticulo?.medida?.nombre ?? ''} />
-                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleArticulo?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalleArticulo?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticuloModificable(medida, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <br />
                 <div className="inputBox">
-                  <input type="number" required={true} value={detalleArticulo.cantidad} onChange={(e) => handleCantidadArticulo(parseFloat(e.target.value), index)} />
+                  <input type="number" required={true} value={detalleArticulo?.cantidad} onChange={(e) => handleCantidadArticuloModificable(parseFloat(e.target.value), index)} />
                   <span>Cantidad de unidades</span>
                 </div>
               </div>
             ))}
-
-            {detallesArticuloVenta.map((articulo, index) => (
-              <div key={index}>
+            {detallesArticuloVenta.map((detalle, index) => (
+              <div key={detalle.articuloVenta?.nombre}>
                 <hr />
-                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticulo(articulo?.articuloVenta?.nombre)}>X</p>
+                <p className='cierre-articuloMenu' onClick={() => quitarCampoArticulo(detalle?.articuloVenta?.nombre)}>X</p>
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Articulo nuevo {index + 1}:</label>
-                  <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detallesArticuloVenta[index].articuloVenta?.nombre ?? ''} />
+                  <InputComponent disabled={false} placeHolder='Filtrar artículo...' onInputClick={() => setModalBusquedaArticulo(true)} selectedProduct={detalle?.articuloVenta?.nombre ?? ''} />
                   {modalBusquedaArticulo && <ModalFlotanteRecomendacionesArticulo datosOmitidos={nombresArticulos} onCloseModal={handleModalClose} onSelectArticuloVenta={(articulo) => { handleArticuloChange(articulo, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <div className="input-filtrado">
-                  <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detallesArticuloVenta[index]?.medida?.nombre ?? ''} />
-                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detallesArticuloVenta[index]?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
+                  <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={detalle?.medida?.nombre ?? ''} />
+                  {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={detalle?.medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { handleMedidaArticulo(medida, index); handleModalClose(); }} />}
                 </div>
                 <br />
                 <br />
@@ -608,7 +670,8 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
                 </div>
               </div>
             ))}
-            <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>          <hr />
+            <button onClick={añadirCampoArticulo}>+ Añadir artículo</button>
+            <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
@@ -680,7 +743,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
           <>
             <h4>Paso final - Precio</h4>
             <div>
-              {precioSugerido !== undefined && precioSugerido > 0 ? (
+              {precioSugerido > 0 ? (
                 <>
                   <p>Precio de los artículos sin descuentos: ${precioSugerido.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                   <>
@@ -692,7 +755,7 @@ const EditarPromocion: React.FC<EditarPromocionProps> = ({ promocion, onCloseMod
 
                   <div className="inputBox">
                     <input type="number" required={true} value={total | 0} onChange={(e) => { handleTotalChange(parseFloat(e.target.value)) }} />
-                    <span>Precio</span>
+                    <span>Precio actual</span>
                   </div>
                 </>
               ) : (
