@@ -275,6 +275,7 @@ public class ArticuloVentaController {
             articuloVenta.setPrecioVenta(articuloVentaDetail.getPrecioVenta());
             articuloVenta.setNombre(articuloVentaDetail.getNombre());
             articuloVenta.setCategoria(categoriaRepository.findByNameAndIdSucursal(articuloVentaDetail.getCategoria().getNombre(), id).get());
+            articuloVenta.setSubcategoria(articuloVentaDetail.getSubcategoria());
             articuloVenta.setMedida(medidaRepository.findByDenominacionAndIdSucursal(articuloVentaDetail.getMedida().getNombre(), id).get());
             articuloVenta.setCantidadMedida(articuloVentaDetail.getCantidadMedida());
 

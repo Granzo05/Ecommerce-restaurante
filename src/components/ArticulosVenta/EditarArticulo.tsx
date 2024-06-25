@@ -27,12 +27,18 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
-  const [categoria, setCategoria] = useState<Categoria>(articuloOriginal.categoria);
-  const [subcategoria, setSubcategoria] = useState<Subcategoria>(articuloOriginal.subcategoria);
+  const [categoria, setCategoria] = useState<Categoria>();
+  const [subcategoria, setSubcategoria] = useState<Subcategoria | null>();
   const [precioVenta, setPrecio] = useState(articuloOriginal.precioVenta);
   const [nombre, setNombre] = useState(articuloOriginal.nombre);
-  const [medida, setMedida] = useState<Medida>(articuloOriginal.medida);
+  const [medida, setMedida] = useState<Medida>();
   const [cantidad, setCantidad] = useState(articuloOriginal.cantidadMedida);
+
+  useEffect(() => {
+    setCategoria(articuloOriginal.categoria);
+    setSubcategoria(articuloOriginal.subcategoria);
+    setMedida(articuloOriginal.medida);
+  }, []);
 
 
   const handleImagen = (index: number, file: File | null) => {
@@ -75,7 +81,7 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const handleModalClose = () => {
     setModalBusquedaCategoria(false);
     setModalBusquedaMedida(false);
-    setModalBusquedaMedida(false);
+    setModalBusquedasubcategoria(false);
   };
 
   const [empresa] = useState<Empresa | null>(() => {
@@ -131,16 +137,16 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
       toast.error("Por favor, es necesario el precio");
       return;
     } else if (!categoria) {
-      toast.error("Por favor, es necesario la categoria");
+      toast.error("Por favor, es necesaria la categoria");
       return;
     } else if (!subcategoria) {
-      toast.error("Por favor, es necesario la subcategoria");
+      toast.error("Por favor, es necesaria la subcategoria");
       return;
     } else if (imagenes.length === 0 && imagenesMuestra.length === 0) {
       toast.error("Por favor, es necesario una imagen");
       return;
     }
-    
+
     setIsLoading(true);
 
     let sucursalesElegidas: Sucursal[] = [];
@@ -258,17 +264,15 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); setSubcategoria(null); handleModalClose(); }} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
-
-              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedasubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
+              <InputComponent disabled={categoria?.nombre.length === 0} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedasubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
               {modalBusquedasubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Unidad de medida de venta:</label>
-
               <InputComponent disabled={false} placeHolder={'Filtrar unidades de medida...'} onInputClick={() => setModalBusquedaMedida(true)} selectedProduct={medida?.nombre ?? ''} />
               {modalBusquedaMedida && <ModalFlotanteRecomendacionesMedidas datosOmitidos={medida?.nombre} onCloseModal={handleModalClose} onSelectMedida={(medida) => { setMedida(medida); handleModalClose(); }} />}
             </div>

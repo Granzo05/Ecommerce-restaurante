@@ -36,7 +36,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
 
   const [tiempoCoccion, setTiempo] = useState(menuOriginal.tiempoCoccion);
   const [categoria, setCategoria] = useState<Categoria>(new Categoria());
-  const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
+  const [subcategoria, setSubcategoria] = useState<Subcategoria | null>();
   const [comensales, setComensales] = useState(menuOriginal.comensales);
   const [precioVenta, setPrecio] = useState(menuOriginal.precioVenta);
   const [nombre, setNombre] = useState(menuOriginal.nombre);
@@ -173,10 +173,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
   };
 
   const handleModalClose = () => {
-    setShowAgregarIngredienteModal(false);
-    setModalBusquedaCategoria(false)
+    setModalBusquedaCategoria(false);
     setModalBusquedaMedida(false)
     setModalBusquedaIngrediente(false)
+    setShowAgregarIngredienteModal(false)
     setModalBusquedaSubcategoria(false)
   };
 
@@ -271,7 +271,8 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     menuActualizado.descripcion = descripcion;
     menuActualizado.id = menuOriginal.id;
     menuActualizado.borrado = menuOriginal.borrado;
-    menuActualizado.subcategoria = subcategoria;
+
+    if (subcategoria) menuActualizado.subcategoria = subcategoria;
 
     menuActualizado.ingredientesMenu = [];
 
@@ -473,11 +474,11 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); setSubcategoria(null); handleModalClose(); }} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
-              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
+              <InputComponent disabled={categoria.nombre.length === 0} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div className="inputBox">
@@ -534,7 +535,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
                 <div>
                   <label style={{ display: 'flex', fontWeight: 'bold' }}>Nombre:</label>
                   <InputComponent disabled={false} placeHolder='Filtrar ingrediente...' onInputClick={() => setModalBusquedaIngrediente(true)} selectedProduct={ingredienteMenu.ingrediente?.nombre ?? ''} />
-                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente) }} />}
+                  {modalBusquedaIngrediente && <ModalFlotanteRecomendacionesIngredientes datosOmitidos={nombresIngredientes} onCloseModal={handleModalClose} onSelectIngrediente={(ingrediente) => { handleIngredienteChange(index, ingrediente); handleModalClose(); }} />}
                 </div>
                 <div className="inputBox">
                   <input type="number" required={true} pattern="^[1-9]\d*$" min={0} value={ingredienteMenu.cantidad} onChange={(e) => handleCantidadIngredienteChange(index, parseFloat(e.target.value))} />

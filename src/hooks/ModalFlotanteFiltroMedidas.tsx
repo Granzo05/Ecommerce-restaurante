@@ -7,7 +7,7 @@ import { MedidaService } from "../services/MedidaService";
 import AgregarMedida from "../components/Medidas/AgregarMedida";
 import ModalCrud from "../components/ModalCrud";
 
-const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, onSelectMedida: (medida: Medida) => void, datosOmitidos: string }> = ({ onCloseModal, onSelectMedida, datosOmitidos }) => {
+const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, onSelectMedida: (medida: Medida) => void, datosOmitidos: string | undefined}> = ({ onCloseModal, onSelectMedida, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -25,7 +25,7 @@ const ModalFlotanteRecomendacionesMedidas: React.FC<{ onCloseModal: () => void, 
     setShowAgregarMedidaModal(false);
     MedidaService.getMedidasNoBorradas()
       .then(async medidas => {
-        if (datosOmitidos?.length > 0) {
+        if (datosOmitidos && datosOmitidos?.length > 0) {
           const medidasFiltradas = medidas.filter(articulo =>
             !datosOmitidos.includes(articulo.nombre)
           );

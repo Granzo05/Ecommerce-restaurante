@@ -29,7 +29,7 @@ interface AgregarMenuProps {
 const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
   const [ingredientesMenu, setIngredientes] = useState<IngredienteMenu[]>([]);
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
-  const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
+  const [subcategoria, setSubcategoria] = useState<Subcategoria | null>();
   const [precioSugerido, setPrecioSugerido] = useState<number>(0);
   const [nombresIngredientes, setNombresIngredientes] = useState<string[]>([]);
 
@@ -370,11 +370,11 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); setSubcategoria(null); handleModalClose(); }} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
-              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
+              <InputComponent disabled={categoria.nombre.length === 0} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { handleSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div className="inputBox">

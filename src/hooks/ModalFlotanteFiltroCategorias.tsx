@@ -7,7 +7,7 @@ import { CategoriaService } from "../services/CategoriaService";
 import ModalCrud from "../components/ModalCrud";
 import AgregarCategoria from "../components/Categorias/AgregarCategoria";
 
-const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void, onSelectCategoria: (categoria: Categoria) => void, datosOmitidos: string }> = ({ onCloseModal, onSelectCategoria, datosOmitidos }) => {
+const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void, onSelectCategoria: (categoria: Categoria) => void, datosOmitidos: string | undefined }> = ({ onCloseModal, onSelectCategoria, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -25,7 +25,7 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
     setShowAgregarModal(false);
     CategoriaService.getCategoriasNoBorradas()
       .then(async categorias => {
-        if (datosOmitidos?.length > 0) {
+        if (datosOmitidos && datosOmitidos?.length > 0) {
           const categoriasFiltradas = categorias.filter(articulo =>
             !datosOmitidos.includes(articulo.nombre)
           );
@@ -36,6 +36,7 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
           categorias.sort((a, b) => a.nombre.localeCompare(b.nombre));
           setRecomendaciones(categorias);
           setRecomendacionesFiltradas(categorias);
+
         }
       })
       .catch(error => {

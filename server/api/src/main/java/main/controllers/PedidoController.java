@@ -95,7 +95,7 @@ public class PedidoController {
             } catch (Exception ignored) {
             }
         }
-        
+
         return new HashSet<>(pedidos);
     }
 

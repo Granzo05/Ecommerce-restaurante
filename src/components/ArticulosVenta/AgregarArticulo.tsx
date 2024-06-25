@@ -55,7 +55,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
   };
 
   const [categoria, setCategoria] = useState<Categoria>(new Categoria());
-  const [subcategoria, setSubcategoria] = useState<Subcategoria>(new Subcategoria());
+  const [subcategoria, setSubcategoria] = useState<Subcategoria | null>();
   const [precio, setPrecio] = useState(parseInt(''));
   const [nombre, setNombre] = useState('');
   const [medida, setMedida] = useState<Medida>(new Medida);
@@ -142,7 +142,7 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
         return;
       }
     }
-    
+
     setIsLoading(true);
 
     const articulo: ArticuloVenta = new ArticuloVenta();
@@ -153,7 +153,8 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
     articulo.medida = medida;
     articulo.cantidadMedida = cantidadMedida;
     articulo.borrado = 'NO';
-    articulo.subcategoria = subcategoria;
+
+    if (subcategoria) articulo.subcategoria = subcategoria;
 
     let sucursalesElegidas: Sucursal[] = [];
 
@@ -214,8 +215,6 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
     setModalBusquedaMedida(false)
     setModalBusquedaSubcategoria(false)
   };
-
-  const [mostrarInputs, setMostrarInputs] = useState(false);
 
   const handleClose = () => {
     setStep(step - 1);
@@ -282,11 +281,11 @@ const AgregarArticuloVenta: React.FC<AgregarArticuloVentaProps> = ({ onCloseModa
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Categoría:</label>
               <InputComponent disabled={false} placeHolder={'Filtrar categorias...'} onInputClick={() => setModalBusquedaCategoria(true)} selectedProduct={categoria?.nombre ?? ''} />
-              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); handleModalClose(); }} />}
+              {modalBusquedaCategoria && <ModalFlotanteRecomendacionesCategoria datosOmitidos={categoria?.nombre} onCloseModal={handleModalClose} onSelectCategoria={(categoria) => { setCategoria(categoria); setSubcategoria(null); handleModalClose(); }} />}
             </div>
             <div>
               <label style={{ display: 'flex', fontWeight: 'bold' }}>Subcategoría:</label>
-              <InputComponent disabled={false} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
+              <InputComponent disabled={categoria.nombre.length === 0} placeHolder={'Filtrar subcategorias...'} onInputClick={() => setModalBusquedaSubcategoria(true)} selectedProduct={subcategoria?.nombre ?? ''} />
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div>

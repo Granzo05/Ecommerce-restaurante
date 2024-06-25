@@ -8,7 +8,7 @@ import { SubcategoriaService } from "../services/SubcategoriaService";
 import ModalCrud from "../components/ModalCrud";
 import AgregarSubcategoria from "../components/Subcategorias/AgregarSubcategoria";
 
-const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => void, onSelectSubcategoria: (subcategoria: Subcategoria) => void, categoria: Categoria, datosOmitidos: string }> = ({ onCloseModal, onSelectSubcategoria, categoria, datosOmitidos }) => {
+const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => void, onSelectSubcategoria: (subcategoria: Subcategoria) => void, categoria: Categoria | undefined, datosOmitidos: string | undefined }> = ({ onCloseModal, onSelectSubcategoria, categoria, datosOmitidos }) => {
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
@@ -26,24 +26,25 @@ const ModalFlotanteRecomendacionesSubcategoria: React.FC<{ onCloseModal: () => v
 
   async function buscarSubcategorias() {
     setShowAgregarSubcategoriaModal(false);
-    SubcategoriaService.getSubcategoriasByCategoriaIdNoBorradas(categoria.id)
-      .then(subcategorias => {
-        if (datosOmitidos?.length > 0) {
-          const subcategoriasFiltrados = subcategorias.filter(articulo =>
-            !datosOmitidos.includes(articulo.nombre)
-          );
-          subcategoriasFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
-          setRecomendaciones(subcategoriasFiltrados);
-          setRecomendacionesFiltradas(subcategoriasFiltrados);
-        } else {
-          subcategorias.sort((a, b) => a.nombre.localeCompare(b.nombre));
-          setRecomendaciones(subcategorias);
-          setRecomendacionesFiltradas(subcategorias);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    if (categoria)
+      SubcategoriaService.getSubcategoriasByCategoriaIdNoBorradas(categoria.id)
+        .then(subcategorias => {
+          if (datosOmitidos && datosOmitidos?.length > 0) {
+            const subcategoriasFiltrados = subcategorias.filter(articulo =>
+              !datosOmitidos.includes(articulo.nombre)
+            );
+            subcategoriasFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            setRecomendaciones(subcategoriasFiltrados);
+            setRecomendacionesFiltradas(subcategoriasFiltrados);
+          } else {
+            subcategorias.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            setRecomendaciones(subcategorias);
+            setRecomendacionesFiltradas(subcategorias);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
   }
 
   function filtrarRecomendaciones(filtro: string) {
