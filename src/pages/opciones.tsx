@@ -160,9 +160,9 @@ const Opciones = () => {
                 <div className="welcome-employee">
                     <br /><br /><br /><br /><br /><br /><br /><br />
                     {empresa && empresa?.nombre?.length > 0 ? (
-                        <h1 id="welcome">¡BIENVENIDO, {empresa?.nombre}!</h1>
+                        <h1 id="welcome">¡BIENVENIDO a {empresa?.nombre}!</h1>
                     ) : (
-                        <h1 id="welcome">¡BIENVENIDO, {empleado?.nombre} a {sucursal?.nombre}!</h1>
+                        <h1 id="welcome">¡BIENVENIDO {empleado?.nombre} a {sucursal?.nombre}!</h1>
                     )}
                 </div>
             );
