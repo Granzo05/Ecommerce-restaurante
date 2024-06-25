@@ -11,7 +11,6 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
   const handleModalClose = () => {
     setRecomendaciones([])
     setRecomendacionesFiltradas([])
-    setShowAgregarModalIngrediente(false)
     onCloseModal();
   };
 
@@ -23,6 +22,7 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
   }, []);
 
   async function buscarIngredientes() {
+    setShowAgregarModal(false);
     IngredienteService.getIngredientes()
       .then(async ingredientes => {
         if (datosOmitidos?.length > 0) {
@@ -61,15 +61,15 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
     }
   }
 
-  const [showAgregarModalIngrediente, setShowAgregarModalIngrediente] = useState(false);
+  const [showAgregarModal, setShowAgregarModal] = useState(false);
 
   return (
     <div>
       <div className="modal-overlay">
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <ModalCrud isOpen={showAgregarModalIngrediente} onClose={() => setShowAgregarModalIngrediente(!showAgregarModalIngrediente)}>
-            <AgregarIngrediente onCloseModal={() => {setShowAgregarModalIngrediente(false); buscarIngredientes()}}/>
+          <ModalCrud isOpen={showAgregarModal} onClose={() => setShowAgregarModal(false)}>
+            <AgregarIngrediente onCloseModal={() => {buscarIngredientes()}}/>
           </ModalCrud>
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           
@@ -77,7 +77,7 @@ const ModalFlotanteRecomendacionesIngredientes: React.FC<{ onCloseModal: () => v
           <div className="btns-filtrado">
           <button className="btn-agregar" style={{marginRight: '10px'}} onClick={() => onSelectIngrediente(new Ingrediente())}>Eliminar opción elegida</button>
 
-          <button className="btn-agregar" onClick={() => setShowAgregarModalIngrediente(true)}> + Agregar ingrediente al inventario</button>
+          <button className="btn-agregar" onClick={() => setShowAgregarModal(true)}> + Agregar ingrediente al inventario</button>
           
           </div>
           

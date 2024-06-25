@@ -5,6 +5,8 @@ import '../styles/modalCrud.css'
 import { Domicilio } from "../types/Domicilio/Domicilio";
 import { Cliente } from "../types/Cliente/Cliente";
 import { ClienteService } from "../services/ClienteService";
+import ModalCrud from "../components/ModalCrud";
+import AgregarDomicilio from "../components/Cliente/AgregarDomicilio";
 
 const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => void, onSelectedDomicilio: (domicilio: Domicilio) => void, cliente: Cliente | null, datosOmitidos: string[] | string }> = ({ onCloseModal, onSelectedDomicilio, cliente, datosOmitidos }) => {
   const handleModalClose = () => {
@@ -17,7 +19,13 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
   const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Domicilio[]>([]);
 
   useEffect(() => {
+    buscarDomicilios()
+
+  }, [cliente]);
+
+  async function buscarDomicilios() {
     if (cliente) {
+      setShowAgregarModal(false);
       ClienteService.getDomicilios(cliente.id)
         .then(async domicilios => {
           if (datosOmitidos?.length > 0) {
@@ -38,8 +46,7 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
           console.error('Error:', error);
         })
     }
-
-  }, [cliente]);
+  }
 
   function filtrarRecomendaciones(filtro: string) {
     let recomendacionesFiltradas = recomendaciones;
@@ -58,6 +65,12 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
     }
   }
 
+  const [showAgregarModal, setShowAgregarModal] = useState(false);
+
+  const handleAgregar = () => {
+    setShowAgregarModal(true);
+  };
+
   return (
     <div>
       <div className="modal-overlay">
@@ -67,9 +80,12 @@ const ModalFlotanteRecomendacionesDomicilios: React.FC<{ onCloseModal: () => voi
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar domicilios &mdash;</h2>
           <div className="btns-filtrado">
-          <button className="btn-agregar" style={{ marginRight: '10px' }} onClick={() => onSelectedDomicilio(new Domicilio())}>BORRAR OPCIÓN ELEGIDA</button>
-
+            <button className="btn-agregar" style={{ marginRight: '10px' }} onClick={() => onSelectedDomicilio(new Domicilio())}>BORRAR OPCIÓN ELEGIDA</button>
+            <button className="btn-agregar" onClick={() => handleAgregar()}> + Agregar menú</button>
           </div>
+          <ModalCrud isOpen={showAgregarModal} onClose={() => setShowAgregarModal(false)}>
+            <AgregarDomicilio onCloseModal={buscarDomicilios} />
+          </ModalCrud>
           <div style={{ marginBottom: '0px' }} className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre de la calle...</span>

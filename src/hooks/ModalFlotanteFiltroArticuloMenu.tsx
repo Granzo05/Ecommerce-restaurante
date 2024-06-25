@@ -4,6 +4,8 @@ import '../styles/modalFlotante.css'
 import '../styles/modalCrud.css'
 import { ArticuloMenu } from "../types/Productos/ArticuloMenu";
 import { MenuService } from "../services/MenuService";
+import ModalCrud from "../components/ModalCrud";
+import AgregarMenu from "../components/Menus/AgregarMenu";
 
 const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => void, onSelectArticuloMenu: (articulo: ArticuloMenu) => void, datosOmitidos: string[] | string | undefined }> = ({ onCloseModal, onSelectArticuloMenu, datosOmitidos }) => {
   const handleModalClose = () => {
@@ -16,6 +18,11 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
   const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<ArticuloMenu[]>([]);
 
   useEffect(() => {
+    buscarMenus();
+  }, []);
+
+  async function buscarMenus() {
+    setShowAgregarModal(false);
     MenuService.getMenus()
       .then(async articulos => {
         if (datosOmitidos && datosOmitidos?.length > 0) {
@@ -35,7 +42,7 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
       .catch(error => {
         console.error('Error:', error);
       });
-  }, []);
+  }
 
   function filtrarRecomendaciones(filtro: string) {
     let recomendacionesFiltradas = recomendaciones;
@@ -54,6 +61,13 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
     }
   }
 
+
+  const [showAgregarModal, setShowAgregarModal] = useState(false);
+
+  const handleAgregar = () => {
+    setShowAgregarModal(true);
+  };
+
   return (
     <div>
       <div className="modal-overlay">
@@ -63,10 +77,13 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar menús &mdash;</h2>
           <div className="btns-filtrado">
-          <button className="btn-agregar" onClick={() => onSelectArticuloMenu(new ArticuloMenu())}>BORRAR OPCIÓN ELEGIDA</button>
-
+            <button className="btn-agregar" onClick={() => onSelectArticuloMenu(new ArticuloMenu())}>BORRAR OPCIÓN ELEGIDA</button>
+            <button className="btn-agregar" onClick={() => handleAgregar()}> + Agregar menú</button>
           </div>
-          <div className="inputBox" style={{marginBottom: '0px'}}>
+          <ModalCrud isOpen={showAgregarModal} onClose={() => setShowAgregarModal(false)}>
+            <AgregarMenu onCloseModal={buscarMenus} />
+          </ModalCrud>
+          <div className="inputBox" style={{ marginBottom: '0px' }}>
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>

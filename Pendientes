@@ -141,6 +141,8 @@ carrito: NO ME DESCUENTA LAS CANTIDADES.[x]
 [x] Arreglar inputs de filtrado, te toman cualquier cosa al azar si no seleccionas nada.
 [x] El editar menú no borra los ingredientes.
 [x] Hacer la recuperacion de contraseña
+[x] Hay que pasar el CUIL a string, asi poder usar sus '-'.
+[x] Añadir botones de agregar el objeto en todos los modales de recomendacion, para no tener que cerrar y abrir y volver, manso viaje
 
 [] Costo recomendado de articulos por sucursal
 [] Configurar rutas privadas
@@ -171,14 +173,12 @@ CLIENTE:
 CARRITO:
 
 MODALES:
-[] Añadir botones de agregar el objeto en todos los modales de recomendacion, para no tener que cerrar y abrir y volver, manso viaje
 
 OPCIONES:
 
 CATEGORÍA:
 
 EMPLEADOS:
-[] Hay que pasar el CUIL a string, asi poder usar sus '-'.
 [] Acomodar los privilegios del editar empleado que se ven como taban original sin los cuadrados FALTA CSS
 
 STOCK:

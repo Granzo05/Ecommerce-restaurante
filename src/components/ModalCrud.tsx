@@ -18,7 +18,7 @@ const ModalCrud: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       {isOpen && (
         <div className="modal-div">
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={handleModalClose}><CloseIcon/></button>
+            <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
             {children}
           </div>
         </div>

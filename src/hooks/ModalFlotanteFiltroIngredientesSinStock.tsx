@@ -22,6 +22,7 @@ const ModalFlotanteRecomendacionesIngredientesSinStock: React.FC<{ onCloseModal:
   }, []);
 
   async function buscarIngredientes() {
+    setShowAgregarModalIngrediente(false);
     IngredienteService.getIngredientesVacios()
       .then(async ingredientes => {
         if (datosOmitidos?.length > 0) {
@@ -71,19 +72,16 @@ const ModalFlotanteRecomendacionesIngredientesSinStock: React.FC<{ onCloseModal:
       <div className="modal-overlay">
 
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <ModalCrud isOpen={showAgregarModalIngrediente} onClose={buscarIngredientes}>
-            <AgregarIngrediente onCloseModal={handleModalClose} />
+          <ModalCrud isOpen={showAgregarModalIngrediente} onClose={() => setShowAgregarModalIngrediente(false)}>
+            <AgregarIngrediente onCloseModal={buscarIngredientes} />
           </ModalCrud>
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
-          
-
           <h2>&mdash; Filtrar ingredientes sin stock &mdash;</h2>
           <div className="btns-filtrado">
             <button className="btn-agregar" style={{ marginRight: '10px' }} onClick={() => onSelectIngrediente(new Ingrediente())}>Eliminar opción elegida</button>
-
             <button className="btn-agregar" onClick={() => handleAgregarIngrediente()}> + Agregar ingrediente al inventario</button>
           </div>
-          <div style={{marginBottom: '0px'}} className="inputBox">
+          <div style={{ marginBottom: '0px' }} className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>

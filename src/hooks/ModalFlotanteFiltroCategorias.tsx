@@ -18,6 +18,11 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
   const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Categoria[]>([]);
 
   useEffect(() => {
+    buscarCategorias();
+  }, []);
+
+  async function buscarCategorias() {
+    setShowAgregarModal(false);
     CategoriaService.getCategorias()
       .then(async categorias => {
         if (datosOmitidos?.length > 0) {
@@ -36,8 +41,7 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
       .catch(error => {
         console.error('Error:', error);
       })
-  }, []);
-
+  }
   function filtrarRecomendaciones(filtro: string) {
     let recomendacionesFiltradas = recomendaciones;
 
@@ -55,14 +59,7 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
     }
   }
 
-
-  const [showAgregarCategoriaModal, setShowAgregarCategoriaModal] = useState(false);
-
-  const handleModalAddCategoriaClose = () => {
-    setShowAgregarCategoriaModal(false)
-  };
-
-
+  const [showAgregarModal, setShowAgregarModal] = useState(false);
 
   return (
     <div>
@@ -73,18 +70,19 @@ const ModalFlotanteRecomendacionesCategoria: React.FC<{ onCloseModal: () => void
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar categorías &mdash;</h2>
           <div className="btns-filtrado">
-            
-          <button className="btn-agregar" style={{marginRight: '10px'}} onClick={() => onSelectCategoria(new Categoria())}>Eliminar opción elegida</button>
-            <button className="btn-agregar"  onClick={() => setShowAgregarCategoriaModal(true)}>+ Agregar categoría en el inventario</button>
+
+            <button className="btn-agregar" style={{ marginRight: '10px' }} onClick={() => onSelectCategoria(new Categoria())}>Eliminar opción elegida</button>
+            <button className="btn-agregar" onClick={() => setShowAgregarModal(true)}>+ Agregar categoría en el inventario</button>
           </div>
-          <ModalCrud isOpen={showAgregarCategoriaModal} onClose={handleModalAddCategoriaClose}>
-            <AgregarCategoria onCloseModal={handleModalClose}/>
+          <ModalCrud isOpen={showAgregarModal} onClose={() => setShowAgregarModal(false)}>
+            <AgregarCategoria onCloseModal={buscarCategorias} />
           </ModalCrud>
-          <div style={{marginBottom: '0px'}} className="inputBox">
+
+          <div style={{ marginBottom: '0px' }} className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          
+
           <table className="tabla-recomendaciones">
             <thead>
               <tr>
