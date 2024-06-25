@@ -539,7 +539,7 @@ const Pago = () => {
                             {domicilio && domicilio?.calle?.length > 0 ? (
                                 <div className={isVisible ? "divVisible" : "divInvisible"}>
                                     {preferenceId && preferenceId.length > 2 && (
-                                        <button disabled={isLoading}>
+                                        <button className="checkout-btn" disabled={isLoading}>
                                             <Wallet
                                                 initialization={{ preferenceId: preferenceId, redirectMode: "self" }}
                                                 customization={{ texts: { valueProp: "smart_option" } }}
@@ -550,14 +550,16 @@ const Pago = () => {
                             ) : (
                                 <p>El botón de pago se mostrará una vez que se asigne un domicilio de entrega</p>
                             )}
+                            <div className="btn-cancelar-pedido">
+                                <button
+                                    type="submit"
+                                    className="cancelar-btn"
+                                    onClick={() => { CarritoService.limpiarCarrito(); window.location.href = getBaseUrl() }}
+                                >
+                                    Cancelar pedido
+                                </button>
+                            </div>
 
-                            <button
-                                type="submit"
-                                className="cancelar-btn"
-                                onClick={() => { CarritoService.limpiarCarrito(); window.location.href = getBaseUrl() }}
-                            >
-                                Cancelar pedido
-                            </button>
                         </div>
 
                     ) : (

@@ -97,7 +97,8 @@ h2 {
     cursor: pointer;
     transition: background-color 0.3s;
     width: 100%;
-    margin-bottom: 15px;
+    
+    font-size: 15px;
 }
 
 .checkout-btn:hover {
@@ -107,11 +108,11 @@ h2 {
 .cancelar-btn{
     background-color: #c00808;
     color: #fff;
-    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 15px;
     width: 100%;
 }
 

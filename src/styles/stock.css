@@ -247,9 +247,6 @@ table tr:hover {
     margin-left: auto;
 }
 
-.productos{
-    margin-right: 305px;
-}
 
 .btn-guardar-cambios{
     background-color: #04a11e !important;
@@ -274,5 +271,7 @@ table tr:hover {
     color: #333;
     margin-bottom: 117%;
 }
+
+
 
 

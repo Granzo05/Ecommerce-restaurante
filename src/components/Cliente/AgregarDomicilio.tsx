@@ -198,54 +198,48 @@ const AgregarDomicilio: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
 
   return (
     <>
-      <div className="opciones-pantallas">
+      <div className="modal-info">
         <Toaster />
-        <div className="preference-section">
-          <div className="settings-data">
-            <label id='nombre'>
-              {newDomicilios && newDomicilios.map((domicilio, index) => (
-                <div key={domicilio.id}>
-                  <hr />
-                  <>
-                    &mdash; Agregar domicilio &mdash;
-                    <hr />
-                    <div className="inputBox">
-                      <input type="text" value={domicilio.calle} required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
-                      <span>Nombre de calle</span>
-                    </div>
-                    <div className="inputBox">
-                      <input type="number" value={domicilio.numero} required={true} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
-                      <span>Número de domicilio</span>
-                    </div>
-                    <div className="inputBox">
-                      <input type="number" value={domicilio.codigoPostal} required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
-                      <span>Código Postal</span>
-                    </div>
-                    <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
-                    <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.pais?.nombre ?? ''} />
-                    {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { handleChangePais(index, pais); handleModalClose(); }} />}
-                    <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
-                    <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.pais.nombre.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
-                    {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
-                    <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
-                    <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />
-                    {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { handleChangeDepartamento(index, departamento); handleModalClose(); }} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
-                    <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
-                    <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
-                    {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
-                    <hr />
-                  </>
-                </div>
-              ))}
-              <br /><br />
-              <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
-            </label>
-            <button style={{ marginRight: '0px' }} onClick={actualizarDomicilios} disabled={isLoading}>
-              {isLoading ? 'Agregando domicilio...' : 'Guardar cambios ✓'}
-            </button>
+        <h2>&mdash; Agregar domicilio &mdash;</h2>
+        {newDomicilios && newDomicilios.map((domicilio, index) => (
+          <div key={domicilio.id}>
+            <>
+              <div className="inputBox">
+                <input type="text" value={domicilio.calle} required={true} onChange={(e) => { handleChangeCalle(index, e.target.value) }} />
+                <span>Nombre de calle</span>
+              </div>
+              <div className="inputBox">
+                <input type="number" value={domicilio.numero} required={true} onChange={(e) => { handleChangeNumeroCasa(index, parseInt(e.target.value)) }} />
+                <span>Número de domicilio</span>
+              </div>
+              <div className="inputBox">
+                <input type="number" value={domicilio.codigoPostal} required={true} onChange={(e) => { handleChangeCodigoPostal(index, parseInt(e.target.value)) }} />
+                <span>Código Postal</span>
+              </div>
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Pais:</label>
+              <InputComponent disabled={false} placeHolder='Seleccionar pais...' onInputClick={() => setModalBusquedaPais(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.pais?.nombre ?? ''} />
+              {modalBusquedaPais && <ModalFlotanteRecomendacionesPais onCloseModal={handleModalClose} onSelectPais={(pais) => { handleChangePais(index, pais); handleModalClose(); }} />}
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Provincia:</label>
+              <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.pais.nombre.length === 0} placeHolder='Seleccionar provincia...' onInputClick={() => setModalBusquedaProvincia(true)} selectedProduct={domicilio.localidad?.departamento?.provincia?.nombre ?? ''} />
+              {modalBusquedaProvincia && <ModalFlotanteRecomendacionesProvincias onCloseModal={handleModalClose} onSelectProvincia={(provincia) => { handleChangeProvincia(index, provincia); handleModalClose(); }} />}
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Departamento:</label>
+              <InputComponent disabled={domicilio.localidad?.departamento?.provincia?.nombre.length === 0} placeHolder='Seleccionar departamento...' onInputClick={() => setModalBusquedaDepartamento(true)} selectedProduct={domicilio.localidad?.departamento?.nombre ?? ''} />
+              {modalBusquedaDepartamento && <ModalFlotanteRecomendacionesDepartamentos onCloseModal={handleModalClose} onSelectDepartamento={(departamento) => { handleChangeDepartamento(index, departamento); handleModalClose(); }} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Localidad:</label>
+              <InputComponent disabled={domicilio.localidad?.departamento?.nombre.length === 0} placeHolder='Seleccionar localidad...' onInputClick={() => setModalBusquedaLocalidad(true)} selectedProduct={domicilio.localidad.nombre ?? ''} />
+              {modalBusquedaLocalidad && <ModalFlotanteRecomendacionesLocalidades onCloseModal={handleModalClose} onSelectLocalidad={(localidad) => { handleChangeLocalidad(index, localidad); handleModalClose(); }} inputDepartamento={domicilio.localidad?.departamento?.nombre} inputProvincia={domicilio.localidad?.departamento?.provincia?.nombre} />}
+              
+            </>
           </div>
-        </div >
-      </div >
+        ))}
+        <hr />
+        <div className="btns-pasos">
+        <button className='btn-accion-completar' style={{ marginRight: '0px' }} onClick={actualizarDomicilios} disabled={isLoading}>
+          {isLoading ? 'Agregando domicilio...' : 'Agregar domicilio ✓'}
+        </button>
+        </div>
+        
+      </div>
     </>
   );
 }

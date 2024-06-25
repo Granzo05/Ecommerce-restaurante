@@ -11,6 +11,7 @@ import { Sucursal } from '../types/Restaurante/Sucursal';
 import searchIcon from '../assets/icons/header-icono-busqueda.png'
 import cartIcon from '../assets/icons/header-icono-carrito.png';
 import accountIcon from '../assets/icons/header-icono-cuenta.png';
+import responsiveIcon from '../assets/icons/header-icono-responsive.png'
 
 const Header = () => {
     const [isCartOpen, setIsCartOpen] = useState(false); // Estado para controlar la visibilidad del carrito
@@ -111,7 +112,7 @@ const Header = () => {
 
                 <input type="checkbox" id="menu" />
                 <label htmlFor="menu">
-                    <img src="../src/assets/icons/header-icono-responsive.png" className="menu-icono-responsive" alt="menu" />
+                    <img src={responsiveIcon} className="menu-icono-responsive" alt="menu" />
                 </label>
 
                 <nav className="navbar">
