@@ -20,7 +20,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
     const rol: Roles = rolOriginal;
     rol.borrado = rolOriginal.borrado;
 
-    if (!nombre || !nombre.match(/^[a-zA-Z\s]+$/)) {
+    if (!nombre) {
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
@@ -110,7 +110,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ rolOriginal, onCloseModal }
 
                 <Toaster />
                 <div className="inputBox">
-                  <input type="text" required={true} pattern="[a-zA-Z\s]+" value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+                  <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
                   <span>Nombre del rol</span>
                   <div className="error-message">El nombre debe contener letras y espacios.</div>
                 </div>

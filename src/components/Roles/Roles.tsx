@@ -32,7 +32,7 @@ const RolesEmpleado = () => {
         try {
             RolesService.getRoles()
                 .then(data => {
-                    setRoles(data);
+                    setRoles(data.sort((a, b) => a.nombre.localeCompare(b.nombre)));
                 })
                 .catch(error => {
                     console.error('Error:', error);

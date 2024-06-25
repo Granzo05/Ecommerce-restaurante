@@ -19,7 +19,7 @@ const [nombre, setNombre] = useState('');
   async function agregarRoles() {
     const rol: Roles = new Roles();
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+    if (!nombre) {
       toast.info("Por favor, asigne un rol válido");
       return;
     }
@@ -106,7 +106,7 @@ const [nombre, setNombre] = useState('');
           <>
             <Toaster />
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+" required={true} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del rol</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
