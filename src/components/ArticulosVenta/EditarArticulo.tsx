@@ -211,19 +211,19 @@ const EditarArticuloVenta: React.FC<EditarArticuloVentaProps> = ({ articuloOrigi
   const validateAndNextStep = () => {
 
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]+$/)) {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)]+$/)) {
       toast.error("Por favor, es necesario el nombre del articulo");
       return;
     } else if (!precioVenta || precioVenta == 0) {
       toast.error("Por favor, es necesario el precio de venta del articulo válido");
       return;
-    } else if (!categoria) {
+    } else if (!categoria || categoria.nombre == '') {
       toast.error("Por favor, es necesario el tipo");
       return;
-    } else if (!subcategoria) {
+    } else if (!subcategoria || subcategoria.nombre == '') {
       toast.error("Por favor, es necesaria la subcategoría");
       return;
-    } else if (!medida) {
+    } else if (!medida || medida.nombre == '') {
       toast.error("Por favor, es necesaria la medida");
       return;
     } else if (!cantidad || cantidad == 0) {
