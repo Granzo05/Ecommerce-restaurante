@@ -251,3 +251,21 @@ table tr:hover {
     margin-right: 305px;
 }
 
+.btn-guardar-cambios{
+    background-color: #04a11e !important;
+    border-radius: 5px !important;
+}
+
+.btn-guardar-cambios:hover{
+    background-color: #088a1e !important;
+}
+
+.btn-editar{
+    width: 50%;
+    border-right: .5px solid white !important;
+}
+
+.btn-desactivar{
+    width: 50%;
+    border-left: .5px solid white !important;
+}
