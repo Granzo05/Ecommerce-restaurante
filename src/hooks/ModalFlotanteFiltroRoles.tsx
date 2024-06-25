@@ -15,16 +15,17 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
     onCloseModal();
   };
 
-  const handleModalAddSubClose = () => {
-    setShowAgregarSubcategoriaModal(false)
-  };
-
   const [recomendaciones, setRecomendaciones] = useState<Roles[]>([]);
   const [recomendacionesFiltradas, setRecomendacionesFiltradas] = useState<Roles[]>([]);
 
   const [showAgregarSubcategoriaModal, setShowAgregarSubcategoriaModal] = useState(false);
 
   useEffect(() => {
+    buscarRoles();
+  }, []);
+
+  async function buscarRoles() {
+    setShowAgregarSubcategoriaModal(false);
     RolesService.getRoles()
       .then(roles => {
         if (datosOmitidos?.length > 0) {
@@ -43,7 +44,7 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
       .catch(error => {
         console.error('Error:', error);
       });
-  }, []);
+  }
 
   function filtrarRecomendaciones(filtro: string) {
     let recomendacionesFiltradas = recomendaciones;
@@ -73,10 +74,10 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
           <div className="btns-filtrado">
             <button className="btn-agregar" onClick={() => setShowAgregarSubcategoriaModal(true)}>+ Agregar rol al inventario</button>
           </div>
-          <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={handleModalAddSubClose}>
-            <AgregarRoles onCloseModal={handleModalClose} />
+          <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={() => setShowAgregarSubcategoriaModal(false)}>
+            <AgregarRoles onCloseModal={buscarRoles} />
           </ModalCrud>
-          <div style={{marginBottom: '0px'}} className="inputBox">
+          <div style={{ marginBottom: '0px' }} className="inputBox">
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
