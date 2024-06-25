@@ -288,10 +288,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
 
   const validateAndNextStep = () => {
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)]+$/)) {
       toast.error("Por favor, es necesario el nombre");
       return;
-    } else if (!descripcion || !descripcion.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+    } else if (!descripcion || !descripcion.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)]+$/)) {
       toast.error("Por favor, es necesario una descripcion");
       return;
     } else if (!tiempoCoccion || tiempoCoccion == 0) {

@@ -369,8 +369,11 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
   const validateAndNextStep = () => {
 
 
-    if (!nombre) {
+    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)]+$/)) {
       toast.error("Por favor, es necesario el nombre");
+      return;
+    } else if (!descripcion || !descripcion.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)]+$/)) {
+      toast.error("Por favor, es necesario una descripcion");
       return;
     } else if (!tiempoCoccion || tiempoCoccion == 0) {
       toast.error("Por favor, es necesaria el tiempo de cocción y que no sea 0");
@@ -381,10 +384,10 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
     } else if (!precioVenta || precioVenta == 0) {
       toast.error("Por favor, es necesario el precio de venta y que no sea 0");
       return;
-    } else if (!categoria) {
+    } else if (!categoria || categoria.nombre == '') {
       toast.error("Por favor, es necesaria la categoria");
       return;
-    } else if (!subcategoria) {
+    } else if (!subcategoria || subcategoria.nombre == '') {
       toast.error("Por favor, es necesaria la subcategoria");
       return;
     } else {
@@ -450,13 +453,13 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-Z\s\-]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del menu</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
 
             </div>
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-Z\s\-]+" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
+              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\(\)]+" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
               <span>Descripción del menu</span>
               <div className="error-message">La descripción debe contener letras y espacios.</div>
 
