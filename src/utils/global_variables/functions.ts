@@ -125,7 +125,17 @@ export const formatearFechaDDMMYYYYHHMMPromociones = (date: Date) => {
   return `las ${horas}:${minutos} del ${diaFormateado}/${mesFormateado}/${añoFormateado}`;
 };
 
-export default function decodeJWT(token: string) {
+export function parsearMonedaArgentina(value: number): string {
+  return value.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+export function desparsearMonedaArgentina(value: string): number {
+  const soloNumeros = value.replace(/[^0-9,.-]+/g, '').replace('.', '').replace(',', '.');
+  return parseFloat(soloNumeros);
+}
+
+
+export function decodeJWT(token: string) {
   const parts = token.split(".");
 
   if (parts.length !== 3) {
@@ -136,4 +146,5 @@ export default function decodeJWT(token: string) {
   const payload = JSON.parse(atob(parts[1]));
 
   return { header, payload }
-}
+};
+
