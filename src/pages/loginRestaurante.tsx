@@ -3,7 +3,6 @@ import '../styles/loginRestaurante.css'
 import { Toaster, toast } from 'sonner';
 import Modal from 'react-modal';
 import { frases } from '../utils/global_variables/const';
-import ReestablecerContra from '../components/ReestablecerContra';
 import ModalCrud from '../components/ModalCrud';
 import HeaderLogin from '../components/headerLogin';
 import { EmpresaService } from '../services/EmpresaService';
@@ -16,7 +15,7 @@ const LoginNegocio = () => {
   };
 
   const handleAgregarArticulo = () => {
-    SetShowResetContraModal(true);
+    setModalIsOpenP(true);
   };
 
   const [email, setEmail] = useState('');
@@ -145,19 +144,14 @@ const LoginNegocio = () => {
                 <span>¿Has olvidado tu contraseña? <a href="#reestablecerContra" title="Reset Password" onClick={handleAgregarArticulo}>
                   Reestablecela
                 </a></span>
-                <ModalCrud isOpen={showResetContraModal} onClose={handleModalClose}>
-                  <ReestablecerContra />
-                </ModalCrud>
                 <div>
-                  <Modal
+                  <ModalCrud
                     isOpen={modalIsOpenP}
-                    onRequestClose={closeModalP}
-                    shouldCloseOnOverlayClick={false}
+                    onClose={closeModalP}
                   >
                     <div className="modal-info">
-                      <p className='cierre-ingrediente' onClick={closeModalP}>X</p>
-                      <h2>Restablecer Contraseña</h2>
-                      <p>Por favor, ingresa tu correo electrónico para restablecer tu contraseña.</p>
+                      <h2>&mdash; Reestablecer contraseña &mdash;</h2>
+                      <p>Por favor, ingresa tu correo electrónico para reestablecer tu contraseña:</p>
                       <div>
                         <div className="inputBox">
                           <input
@@ -170,11 +164,14 @@ const LoginNegocio = () => {
                           <span>E-mail de recuperación:</span>
                           <div className="error-message">Formato incorrecto de e-mail.</div>
                         </div>
-                        <button>Enviar</button>
+                        <div className="btns-pasos">
+                        <button className='btn-agregar'>Enviar correo</button>
+
+                        </div>
                       </div>
 
                     </div>
-                  </Modal>
+                  </ModalCrud>
                 </div>
 
               </div>
