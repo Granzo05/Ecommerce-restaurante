@@ -287,13 +287,13 @@ const Domicilios = () => {
                                                     />
                                                     {domicilio.borrado === 'NO' ? (
                                                         <>
-                                                            <button onClick={() => handleEditClick(domicilio.id)}>Editar domicilio</button>
-                                                            <button onClick={() => desactivarDomicilio(domicilio)}>Desactivar domicilio</button>
+                                                            <button className='btn-editar' onClick={() => handleEditClick(domicilio.id)}>Editar</button>
+                                                            <button className='btn-desactivar' onClick={() => desactivarDomicilio(domicilio)}>Desactivar</button>
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <button onClick={() => handleEditClick(domicilio.id)}>Editar domicilio</button>
-                                                            <button onClick={() => activarDomicilio(domicilio)}>Activar domicilio</button>
+                                                            <button className='btn-editar' onClick={() => handleEditClick(domicilio.id)}>Editar</button>
+                                                            <button className='btn-activar' onClick={() => activarDomicilio(domicilio)}>Activar</button>
                                                         </>
                                                     )}
                                                 </>
@@ -305,17 +305,18 @@ const Domicilios = () => {
                                                         onClick={() => handleEditClick(domicilio.id)}
                                                         readOnly
                                                     />
-                                                    <button onClick={() => handleEditClick(domicilio.id)}>Editar domicilio</button>
+                                                    <button className='btn-editar' onClick={() => handleEditClick(domicilio.id)}>Editar</button>
                                                 </>
                                             )}
                                         </>
                                     )}
                                 </div>
                             ))}
-                            <br /><br />
+                            <hr />
                             <button onClick={añadirCampoDomicilio}>Añadir domicilio</button>
+                            <br />
                         </label>
-                        <button style={{ marginRight: '0px' }} onClick={actualizarDomicilios} disabled={isLoading}>
+                        <button className='btn-guardar-cambios' style={{ marginRight: '0px' }} onClick={actualizarDomicilios} disabled={isLoading}>
                             {isLoading ? 'Actualizando domicilios...' : 'Guardar cambios ✓'}
                         </button>
                     </div>

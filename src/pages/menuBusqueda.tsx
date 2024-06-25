@@ -72,64 +72,75 @@ function ProductosBuscados() {
       <Header></Header>
       <div className='menu-tipo'>
         <div className="heading">
-          <h1>Menús</h1>
+          <h1>Búsqueda</h1>
         </div>
 
-        {menus && menus?.map(menu =>
-          <div key={menu.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
-            <div className="front">
-              <div className='img-food'>
-                <img src={menu.imagenes[0].ruta} alt={menu.descripcion} />
-                <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
-              </div>
-              <div className="details">
-                <div className="details-sub">
-                  <h5>{ }</h5>
-                  <h5 className='price'>${menu.precioVenta}</h5>
-                </div>
-                <h5>{menu.nombre}</h5>
-                <p>{menu.descripcion}</p>
-                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
-              </div>
-            </div>
-            <div className="back">
-              <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
-              <div className="table">
-                <div className="table-header">
-                  <div className="table-cell">INGREDIENTES</div>
-                  <div className="table-cell">CANTIDAD</div>
-                </div>
-                {menu.ingredientesMenu && menu.ingredientesMenu.map(ingrediente =>
-                  <div key={ingrediente.id} className="table-row">
-                    <div className="table-cell">{ingrediente.ingrediente.nombre}</div>
-                    <div className="table-cell">{ingrediente.cantidad} {ingrediente.medida.nombre}</div>
-                  </div>
-                )}
-              </div>
-              <div className='details-back'>
-                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
-              </div>
-            </div>
-          </div>
-        )}
+        {menus.length === 0 && articulos.length === 0 ? (
+          <div className="no-result">
+            <h1>NO SE ENCUENTRA LO QUE ESTÁS BUSCANDO😞</h1>
 
-        {articulos && articulos?.map(articulo =>
-          <div key={articulo.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
-            <div className="front">
-              <div className='img-food'>
-                <img src={articulo?.imagenes[0]?.ruta} alt={articulo?.nombre} />
-              </div>
-              <div className="details">
-                <div className="details-sub">
-                  <h5>{ }</h5>
-                  <h5 className='price'>${articulo.precioVenta}</h5>
-                </div>
-                <h5>{articulo.nombre} - {articulo.cantidadMedida} {articulo.medida.nombre}</h5>
-                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(null, articulo, 1)}>Añadir al carrito</button>
-              </div>
-            </div>
           </div>
+          
+        ) : (
+          <>
+            {menus && menus?.map(menu =>
+              <div key={menu.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+                <div className="front">
+                  <div className='img-food'>
+                    <img src={menu.imagenes[0].ruta} alt={menu.descripcion} />
+                    <h5 className='ver-ingredientes' onClick={flipCard}>VER INGREDIENTES</h5>
+                  </div>
+                  <div className="details">
+                    <div className="details-sub">
+                      <h5>{ }</h5>
+                      <h5 className='price'>${menu.precioVenta}</h5>
+                    </div>
+                    <h5>{menu.nombre}</h5>
+                    <p>{menu.descripcion}</p>
+                    <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
+                  </div>
+                </div>
+                <div className="back">
+                  <h5 onClick={flipCard} className='volver-ingrediente'>⭠ VOLVER</h5>
+                  <div className="table">
+                    <div className="table-header">
+                      <div className="table-cell">INGREDIENTES</div>
+                      <div className="table-cell">CANTIDAD</div>
+                    </div>
+                    {menu.ingredientesMenu && menu.ingredientesMenu.map(ingrediente =>
+                      <div key={ingrediente.id} className="table-row">
+                        <div className="table-cell">{ingrediente.ingrediente.nombre}</div>
+                        <div className="table-cell">{ingrediente.cantidad} {ingrediente.medida.nombre}</div>
+                      </div>
+                    )}
+                  </div>
+                  <div className='details-back'>
+                    <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {articulos && articulos?.map(articulo =>
+              <div key={articulo.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+                <div className="front">
+                  <div className='img-food'>
+                    <img src={articulo?.imagenes[0]?.ruta} alt={articulo?.nombre} />
+                  </div>
+                  <div className="details">
+                    <div className="details-sub">
+                      <h5>{ }</h5>
+                      <h5 className='price'>${articulo.precioVenta}</h5>
+                    </div>
+                    <h5>{articulo.nombre} - {articulo.cantidadMedida} {articulo.medida.nombre}</h5>
+                    <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(null, articulo, 1)}>Añadir al carrito</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
+        
 
 
       </div>
