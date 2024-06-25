@@ -30,7 +30,7 @@ export const formatearFechaDDMMYYYY = (date: Date) => {
     } else {
       const diaFormateado = dia < 10 ? `0${dia}` : dia;
       const mesFormateado = mes < 10 ? `0${mes}` : mes;
-      return `${año}-${mesFormateado}-${diaFormateado}`;
+      return `${diaFormateado}-${mesFormateado}-${año}`;
     }
   }
 };

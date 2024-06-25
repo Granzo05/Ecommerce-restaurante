@@ -1,11 +1,9 @@
 package main.controllers;
 
-import main.entities.Ingredientes.Ingrediente;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockEntrante;
-import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -45,17 +42,34 @@ public class StockArticulosController {
         Set<StockArticuloVenta> stocksCargados = new HashSet<>();
 
         for (StockArticuloVenta stock : stocks) {
-            // Busco el stock entrante más cercano en cuanto a fechaLlegada
-            PageRequest pageable = PageRequest.of(0, 1);
-            Page<StockEntrante> stockEntrante = stockEntranteRepository.findByIdArticuloAndIdSucursal(stock.getArticuloVenta().getId(), id, pageable);
+            boolean stockEncontrado = false;
+            int page = 0;
+            int pageSize = 10;
 
-            if (!stockEntrante.isEmpty()) {
-                stock.setFechaLlegadaProxima(stockEntrante.get().toList().get(0).getFechaLlegada());
+            while (!stockEncontrado) {
+                PageRequest pageable = PageRequest.of(page, pageSize);
+                Page<StockEntrante> stockEntrantePage = stockEntranteRepository.findByIdArticuloAndIdSucursal(stock.getArticuloVenta().getId(), id, pageable);
+
+                if (stockEntrantePage.isEmpty()) {
+                    break;
+                }
+
+                List<StockEntrante> stockEntranteList = stockEntrantePage.getContent();
+                for (StockEntrante se : stockEntranteList) {
+                    if (se.getEstado().equals("PENDIENTES")) {
+                        stock.setFechaLlegadaProxima(se.getFechaLlegada());
+                        stockEncontrado = true;
+                        break;
+                    }
+                }
+
+                page++;
             }
 
-            if (stock.getCantidadActual() > 0) stocksCargados.add(stock);
+            if (stock.getCantidadActual() > 0) {
+                stocksCargados.add(stock);
+            }
         }
-
         return stocksCargados;
     }
 
@@ -66,12 +80,13 @@ public class StockArticulosController {
 
         Set<ArticuloVenta> articulosSinStock = new HashSet<>();
 
-        for (ArticuloVenta articuloVenta: articulos) {
+        for (ArticuloVenta articuloVenta : articulos) {
             Optional<StockArticuloVenta> stockDB = stockArticuloRepository.findByArticuloNameAndIdSucursal(articuloVenta.getNombre(), idSucursal);
 
-            if(stockDB.isPresent()) {
+            if (stockDB.isPresent()) {
                 StockArticuloVenta stock = stockDB.get();
-                if (stock.getCantidadActual() == 0 && stock.getCantidadMinima() == 0 && stock.getCantidadMinima() == 0) articulosSinStock.add(articuloVenta);
+                if (stock.getCantidadActual() == 0 && stock.getCantidadMinima() == 0 && stock.getCantidadMinima() == 0)
+                    articulosSinStock.add(articuloVenta);
             }
         }
 

@@ -47,15 +47,33 @@ public class StockIngredientesController {
         Set<StockIngredientes> stocksCargados = new HashSet<>();
 
         for (StockIngredientes stock : stockIngredientes) {
-            // Busco el stock entrante más cercano en cuanto a fechaLlegada
-            PageRequest pageable = PageRequest.of(0, 1);
-            Page<StockEntrante> stockEntrante = stockEntranteRepository.findByIdIngredienteAndIdSucursal(stock.getIngrediente().getId(), id, pageable);
+            boolean stockEncontrado = false;
+            int page = 0;
+            int pageSize = 10;
 
-            if (!stockEntrante.isEmpty()) {
-                stock.setFechaLlegadaProxima(stockEntrante.get().toList().get(0).getFechaLlegada());
+            while (!stockEncontrado) {
+                PageRequest pageable = PageRequest.of(page, pageSize);
+                Page<StockEntrante> stockEntrantePage = stockEntranteRepository.findByIdIngredienteAndIdSucursal(stock.getIngrediente().getId(), id, pageable);
+
+                if (stockEntrantePage.isEmpty()) {
+                    break;
+                }
+
+                List<StockEntrante> stockEntranteList = stockEntrantePage.getContent();
+                for (StockEntrante se : stockEntranteList) {
+                    if (se.getEstado().equals("PENDIENTES")) {
+                        stock.setFechaLlegadaProxima(se.getFechaLlegada());
+                        stockEncontrado = true;
+                        break;
+                    }
+                }
+
+                page++;
             }
 
-            if (stock.getCantidadActual() > 0) stocksCargados.add(stock);
+            if (stock.getCantidadActual() > 0) {
+                stocksCargados.add(stock);
+            }
         }
 
         return stocksCargados;
