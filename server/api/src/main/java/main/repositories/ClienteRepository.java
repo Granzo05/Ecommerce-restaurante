@@ -12,13 +12,16 @@ import java.util.Optional;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
-    @Query("SELECT c FROM Cliente c WHERE c.email = :email")
+    @Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.borrado = 'NO'")
     Optional<Cliente> findByEmail(@Param("email") String email);
+
+    @Query("SELECT c FROM Cliente c WHERE c.id = :id AND c.contraseña = :contraseña AND c.borrado = 'NO'")
+    Optional<Cliente> findByIdAndPassword(@Param("id") Long id, @Param("contraseña") String contraseña);
 
     @Query("SELECT c FROM Cliente c JOIN c.pedidos ped JOIN ped.sucursales suc WHERE suc.id = :idSucursal")
     List<Cliente> findBySucursal(@Param("idSucursal") Long idSucursal);
 
-    @Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.contraseña = :contraseña")
+    @Query("SELECT c FROM Cliente c WHERE c.email = :email AND c.contraseña = :contraseña AND c.borrado = 'NO'")
     Optional<Cliente> findByEmailAndPassword(@Param("email") String email, @Param("contraseña") String contraseña);
 
 

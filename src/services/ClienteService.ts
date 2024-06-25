@@ -107,7 +107,7 @@ export const ClienteService = {
         }
     },
 
-    getUserByEmail: async (email: string): Promise<boolean> => {
+    getUserByEmailLogin: async (email: string): Promise<boolean> => {
         limpiarCredenciales();
         try {
             const response = await fetch(URL_API + 'cliente/email/' + email, {
@@ -122,10 +122,8 @@ export const ClienteService = {
             }
 
             const data = await response.json();
-            console.log(data)
 
             if (data.id != null && data.id > 0) {
-                console.log('retorna true')
                 let cliente = {
                     id: data.id,
                     nombre: data.nombre,
@@ -147,6 +145,46 @@ export const ClienteService = {
                 return false;
             }
 
+
+        } catch (error) {
+            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+        }
+    },
+
+    getUserById: async (id: number): Promise<Cliente> => {
+        try {
+            const response = await fetch(URL_API + 'cliente/id/' + id, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+        }
+    },
+
+    checkPassword: async (id: number, contraseña: string): Promise<boolean> => {
+        try {
+            const response = await fetch(URL_API + `cliente/check/${id}/${contraseña}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error(`Error al obtener datos (${response.status}): ${response.statusText}`)
+            }
+
+            return await response.json();
 
         } catch (error) {
             throw new Error('Los datos ingresados no corresponden a una cuenta activa');
@@ -245,6 +283,22 @@ export const ClienteService = {
             if (!response.ok) {
                 throw new Error(await response.text());
             }
+
+            const usuarioString = localStorage.getItem('usuario');
+            if (usuarioString) {
+                const clienteMem = JSON.parse(usuarioString);
+
+                let usuario = {
+                    id: cliente.id,
+                    nombre: cliente.nombre,
+                    email: cliente.email,
+                    telefono: cliente.telefono,
+                    idSucursalRecomendada: clienteMem.idSucursalRecomendada
+                }
+
+                localStorage.setItem('usuario', JSON.stringify(usuario));
+            }
+
 
             return await response.text();
 

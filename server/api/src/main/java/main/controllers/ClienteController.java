@@ -50,8 +50,6 @@ public class ClienteController {
 
             clienteDetails.setBorrado("NO");
             clienteDetails = clienteRepository.save(clienteDetails);
-
-
             return clienteDetails;
         } else {
             return new Cliente();
@@ -99,6 +97,15 @@ public class ClienteController {
     }
 
     @CrossOrigin
+    @GetMapping("/cliente/check/{id}/{password}")
+    public boolean checkPassword(@PathVariable("id") Long id, @PathVariable("password") String password) throws Exception {
+        Optional<Cliente> cliente = clienteRepository.findByIdAndPassword(id, Encrypt.cifrarPassword(password));
+        if (cliente.isPresent()) {
+            return true;
+        } else return false;
+    }
+
+    @CrossOrigin
     @GetMapping("/cliente/email/{email}")
     public Cliente getUser(@PathVariable("email") String email) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmail(email);
@@ -108,6 +115,21 @@ public class ClienteController {
             for (Domicilio domicilio : cliente.get().getDomicilios()) {
                 if (domicilio.getBorrado() == "NO")
                     cliente.get().setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
+            }
+
+            return cliente.get();
+
+        } else return new Cliente();
+    }
+
+    @CrossOrigin
+    @GetMapping("/cliente/id/{id}")
+    public Cliente getUserById(@PathVariable("id") Long id) throws Exception {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+
+        if (cliente.isPresent()) {
+            for (Domicilio domicilio : cliente.get().getDomicilios()) {
+                domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
             }
 
             return cliente.get();
@@ -168,7 +190,11 @@ public class ClienteController {
             cliente.setEmail(clienteDetails.getEmail());
         }
 
-        if (Encrypt.cifrarPassword(clienteDetails.getContraseña()).equals(cliente.getContraseña()) && clienteDetails.getContraseña() != null) {
+        if (cliente.getNombre() != clienteDetails.getNombre() && clienteDetails.getNombre() != null) {
+            cliente.setNombre(clienteDetails.getNombre());
+        }
+
+        if (clienteDetails.getContraseña().length() > 6 && !Encrypt.cifrarPassword(clienteDetails.getContraseña()).equals(cliente.getContraseña()) && clienteDetails.getContraseña() != null) {
             cliente.setContraseña(Encrypt.cifrarPassword(clienteDetails.getContraseña()));
         }
 

@@ -7,7 +7,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PedidosPendientes from '../components/Cliente/PedidosPendientes';
 import PedidosRealizados from '../components/Cliente/PedidosRealizados';
 import Cuenta from '../components/Cliente/Cuenta';
-import Perfil from '../components/Cliente/Perfil';
+import Perfil from '../components/Cliente/Domicilios';
 import { Cliente } from '../types/Cliente/Cliente';
 import { useLocation, useParams } from 'react-router-dom';
 import { getBaseUrl } from '../utils/global_variables/const';
