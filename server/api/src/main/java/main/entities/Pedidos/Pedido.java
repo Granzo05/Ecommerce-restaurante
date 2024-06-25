@@ -48,7 +48,7 @@ public class Pedido implements Serializable {
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Factura factura;
 
-    @JsonIgnoreProperties(value = {"pedidos"}, allowSetters = true)
+    @JsonIgnoreProperties(value = {"domicilios", "pedidos"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;

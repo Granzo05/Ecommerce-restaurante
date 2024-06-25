@@ -45,16 +45,16 @@ function ProductosPorCategoria() {
 
   useEffect(() => {
     if (id)
-        SucursalService.getSucursalDTOById(parseInt(id))
-            .then(async sucursal => {
-                if (sucursal) {
-                    setSucursal(sucursal);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-}, [id]);
+      SucursalService.getSucursalDTOById(parseInt(id))
+        .then(async sucursal => {
+          if (sucursal) {
+            setSucursal(sucursal);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+  }, [id]);
 
 
   useEffect(() => {
@@ -76,8 +76,8 @@ function ProductosPorCategoria() {
           <h3>&mdash;{categoria}&mdash;</h3>
         </div>
 
-        {menus && menus?.map(menu =>
-          <div key={menu.id}  className={`food-items ${isFlipped ? 'flipped' : ''}`}>
+        {menus && menus.length > 0 && menus?.map(menu =>
+          <div key={menu.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
             <div className="front">
               <div className='img-food'>
                 <img src={menu.imagenes[0].ruta} alt={menu.descripcion} />
@@ -114,7 +114,7 @@ function ProductosPorCategoria() {
           </div>
         )}
 
-        {articulos && articulos?.map(articulo =>
+        {articulos && articulos.length > 0 && articulos?.map(articulo =>
           <div key={articulo.id} className={`food-items ${isFlipped ? 'flipped' : ''}`}>
             <div className="front">
               <div className='img-food'>
@@ -134,7 +134,7 @@ function ProductosPorCategoria() {
 
 
       </div>
-      <Footer sucursal={sucursal}/>
+      <Footer sucursal={sucursal} />
     </>
   );
 
