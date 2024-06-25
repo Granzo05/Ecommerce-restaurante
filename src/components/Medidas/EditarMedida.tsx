@@ -20,7 +20,7 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
   function editarMedida() {
     const medida: Medida = medidaOriginal;
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+    if (!nombre) {
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
@@ -112,9 +112,8 @@ const EditarMedida: React.FC<EditarMedidaProps> = ({ medidaOriginal, onCloseModa
             <Toaster />
             <Toaster />
             <div className="inputBox">
-              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del medida</span>
-
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="btns-pasos">

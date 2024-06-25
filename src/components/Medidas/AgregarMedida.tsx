@@ -20,7 +20,7 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
 
     const medida: Medida = new Medida();
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)) {
+    if (!nombre) {
       toast.info("Por favor, asigne un nombre válido");
       return;
     }
@@ -110,7 +110,7 @@ const AgregarMedida: React.FC<AgregarMedidaProps> = ({ onCloseModal }) => {
           <>
             <Toaster />
             <div className="inputBox">
-              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" />
+              <input type="text" required={true} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre de la unidad de medida</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>

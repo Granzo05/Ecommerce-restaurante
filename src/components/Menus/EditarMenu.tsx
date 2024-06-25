@@ -20,6 +20,7 @@ import { SucursalService } from '../../services/SucursalService';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empresa } from '../../types/Restaurante/Empresa';
 import ModalCrud from '../ModalCrud';
+import { StockIngredientesService } from '../../services/StockIngredientesService';
 
 interface EditarMenuProps {
   menuOriginal: ArticuloMenu;
@@ -324,21 +325,25 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
 
   const [precioSugerido, setPrecioSugerido] = useState<number>(0);
 
-  function calcularCostos() {
+  async function calcularCostos() {
     let precioRecomendado: number = 0;
-    if (ingredientes[0]?.ingrediente?.nombre?.length > 0 && precioSugerido === 0) {
-      ingredientes.forEach(ingredienteMenu => {
-        if (ingredienteMenu.medida?.nombre === ingredienteMenu.ingrediente?.stockIngrediente?.medida?.nombre) {
-          // Si coinciden las medidas, ej gramos y gramos entonces se calcula por igual
-          precioRecomendado += ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad;
-        } else if (ingredienteMenu?.medida?.nombre !== ingredienteMenu?.ingrediente?.stockIngrediente?.medida?.nombre && ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra) {
-          // Si no coinciden entonces hay que llevar la medida al mimso tipo ya que el precio se calcula por unidad de medida del stock
-          precioRecomendado += (ingredienteMenu?.ingrediente?.stockIngrediente?.precioCompra * ingredienteMenu?.cantidad) / 1000;
-        }
-      });
 
-      setPrecioSugerido(precioRecomendado);
+    for (const ingredienteMenu of menuOriginal.ingredientesMenu) {
+      if (ingredienteMenu.ingrediente?.nombre.length > 0) {
+        const medidaIngredienteMenu = ingredienteMenu.medida?.nombre;
+
+        let stock = await StockIngredientesService.getStockPorProducto(ingredienteMenu.ingrediente.nombre);
+
+        if (medidaIngredienteMenu === stock.medida.nombre) {
+          // Si coinciden las medidas, el cálculo es directo
+          precioRecomendado += stock.precioCompra * ingredienteMenu.cantidad;
+        } else if (stock.medida.nombre && ingredienteMenu.ingrediente.stockIngrediente?.precioCompra) {
+          // Si no coinciden, se necesita ajustar la cantidad a la medida del stock
+          precioRecomendado += (stock.precioCompra * ingredienteMenu.cantidad) / 1000;
+        }
+      }
     }
+    setPrecioSugerido(precioRecomendado);
   }
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -356,7 +361,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
   const [step, setStep] = useState(1);
 
   useEffect(() => {
-    calcularCostos();
+    if(step === 4) calcularCostos();
   }, [step]);
 
   const nextStep = () => {
@@ -482,12 +487,6 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
               {modalBusquedaSubcategoria && <ModalFlotanteRecomendacionesSubcategoria datosOmitidos={subcategoria?.nombre} onCloseModal={handleModalClose} onSelectSubcategoria={(subcategoria) => { setSubcategoria(subcategoria); handleModalClose(); }} categoria={categoria} />}
             </div>
             <div className="inputBox">
-              <input type="number" pattern="^[1-9]\d*$" required={true} value={precioVenta} onChange={(e) => { setPrecio(parseFloat(e.target.value)) }} />
-              <span>Precio actual ($)</span>
-              <div className="error-message">El precio actual solo debe contener números.</div>
-
-            </div>
-            <div className="inputBox">
               <input type="number" pattern="^[1-9]\d*$" required={true} value={comensales} onChange={(e) => { setComensales(parseInt(e.target.value)) }} />
               <span>Comensales</span>
               <div className="error-message">La cantidad de comensales solo debe contener números.</div>
@@ -554,10 +553,8 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
 
             <hr />
             <div className='btns-pasos'>
-
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
               <button style={{ marginRight: '10px' }} onClick={() => handleAgregarIngrediente()}>Cargar nuevo ingrediente en el inventario (opcional)</button>
-
               <button className='btn-accion-adelante' onClick={validateAndNextStep2}>Siguiente ⭢</button>
             </div>
           </>
@@ -612,10 +609,7 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
                   </div>
                 </div>
               ))}
-
-
             </div>
-
             <button onClick={añadirCampoImagen}>Añadir imagen al menú</button>
             <br />
             <div className="btns-pasos">
