@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +38,16 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     @Query("SELECT p FROM Pedido p JOIN p.sucursales s WHERE p.estado = :estado AND s.id =:idSucursal")
     List<Pedido> findPedidosByEstadoAndIdSucursal(@Param("estado") EnumEstadoPedido estado, @Param("idSucursal") Long idSucursal);
+
+    @Query("SELECT dp.articuloMenu.nombre AS nombreComida, SUM(dp.cantidad) AS cantidadTotal " +
+            "FROM DetallesPedido dp " +
+            "JOIN dp.pedido p " +
+            "WHERE p.fechaPedido BETWEEN :fechaInicio AND :fechaFin " +
+            "GROUP BY dp.articuloMenu.nombre " +
+            "ORDER BY cantidadTotal DESC")
+    List<Object[]> findTopComidasByFecha(@Param("fechaInicio") LocalDateTime fechaInicio, @Param("fechaFin") LocalDateTime fechaFin);
+
+
 
 }
 
