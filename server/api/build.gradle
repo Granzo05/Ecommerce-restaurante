@@ -68,6 +68,9 @@ dependencies {
     // CSV
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
 
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+    implementation 'com.lowagie:itext:2.1.7'
+
 }
 
 tasks.named('test') {

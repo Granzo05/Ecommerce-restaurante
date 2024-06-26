@@ -305,7 +305,8 @@ const EditarMenu: React.FC<EditarMenuProps> = ({ menuOriginal, onCloseModal }) =
 
     menuActualizado.sucursales = sucursalesElegidas;
 
-    console.log(menuActualizado)
+    menuActualizado.ganancia = precioVenta - precioSugerido;
+
     toast.promise(MenuService.updateMenu(menuActualizado, imagenes, imagenesEliminadas), {
       loading: 'Editando menu...',
       success: (message) => {

@@ -14,6 +14,7 @@ export class ArticuloMenu extends Articulo{
     descripcion: string = '';
     ingredientesMenu: IngredienteMenu[] = [];
     sucursales: Sucursal[] = [];
+    ganancia: number = 0;
 
     constructor() {
         super();

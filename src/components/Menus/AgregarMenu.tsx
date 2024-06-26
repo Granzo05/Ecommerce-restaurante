@@ -253,6 +253,8 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
 
     menu.sucursales = sucursalesElegidas;
 
+    menu.ganancia = precio - precioSugerido;
+
     toast.promise(MenuService.createMenu(menu, imagenes), {
       loading: 'Creando menu...',
       success: (message) => {

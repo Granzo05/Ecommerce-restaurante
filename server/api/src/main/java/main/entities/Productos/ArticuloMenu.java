@@ -67,4 +67,7 @@ public class ArticuloMenu {
             inverseJoinColumns = @JoinColumn(name = "id_sucursal")
     )
     private Set<Sucursal> sucursales = new HashSet<>();
+
+    @Column(name = "ganancia")
+    private double ganancia;
 }

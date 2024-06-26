@@ -303,6 +303,8 @@ public class ArticuloMenuController {
 
             ArticuloMenu articuloMenu = menuEncontrado.get();
 
+            articuloMenu.setGanancia(articuloMenuDetail.getGanancia());
+
             ingredienteMenuRepository.deleteAllByIdArticuloMenu(articuloMenu.getId());
 
             articuloMenu.getIngredientesMenu().clear();

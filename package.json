@@ -17,6 +17,7 @@
     "@mui/joy": "^5.0.0-beta.36",
     "@mui/material": "^5.15.15",
     "@react-oauth/google": "^0.12.1",
+    "@types/file-saver": "^2.0.7",
     "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.6.8",
     "blob-util": "^2.0.2",
@@ -24,6 +25,7 @@
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "express": "^4.18.3",
+    "file-saver": "^2.0.5",
     "formik": "^2.4.5",
     "fs": "^0.0.1-security",
     "gmail": "^0.5.0",
@@ -39,6 +41,7 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.22.3",
     "sonner": "^1.4.41",
+    "xlsx": "^0.18.5",
     "yup": "^1.4.0"
   },
   "devDependencies": {
