@@ -248,6 +248,9 @@ const RolesEmpleado = () => {
                                                 {deleteVisible && (
                                                     <button className="btn-accion-eliminar" onClick={() => handleEliminarRol(rol)}>ELIMINAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
                                             </div>
 
                                         </td>
@@ -260,6 +263,10 @@ const RolesEmpleado = () => {
                                                 {activateVisible && (
                                                     <button className="btn-accion-activar" onClick={() => handleActivarRol(rol)}>ACTIVAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
+
                                             </div>
                                         </td>
                                     )}

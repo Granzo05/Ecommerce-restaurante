@@ -333,7 +333,7 @@ const Sucursales = () => {
                                                 )}
                                                 {updateVisible && (
                                                     <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
-                                                )}
+                                                )}                          
                                             </div>
                                         </td>
                                     )}

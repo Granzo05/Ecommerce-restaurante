@@ -381,6 +381,9 @@ const Menus = () => {
                                                 {deleteVisible && (
                                                     <button className="btn-accion-eliminar" onClick={() => handleEliminarMenu(menu)}>ELIMINAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
                                             </div>
                                         </td>
                                     ) : (
@@ -391,6 +394,9 @@ const Menus = () => {
                                                 )}
                                                 {updateVisible && (
                                                     <button className="btn-accion-editar" onClick={() => handleEditarMenu(menu)}>EDITAR</button>
+                                                )}
+                                                {!updateVisible && !activateVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
                                                 )}
                                             </div>
                                         </td>

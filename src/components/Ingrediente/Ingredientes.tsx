@@ -245,6 +245,9 @@ const Ingredientes = () => {
                                                 {deleteVisible && (
                                                     <button className="btn-accion-eliminar" onClick={() => handleEliminarIngrediente(ingrediente)}>ELIMINAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
                                             </div>
 
                                         </td>
@@ -256,6 +259,9 @@ const Ingredientes = () => {
                                                 )}
                                                 {activateVisible && (
                                                     <button className="btn-accion-activar" onClick={() => handleActivarIngrediente(ingrediente)}>ACTIVAR</button>
+                                                )}
+                                                {!updateVisible && !activateVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
                                                 )}
                                             </div>
                                         </td>

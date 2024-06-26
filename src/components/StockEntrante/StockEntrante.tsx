@@ -464,6 +464,9 @@ const StocksEntrantes = () => {
                                                     {isLoading ? 'Cargando...' : 'MARCAR COMO ENTREGADO'}
                                                 </button>
                                             )}
+                                            {!updateVisible && !deleteVisible && (
+                                                <p>No tenes privilegios para interactuar con estos datos</p>
+                                            )}
                                         </td>
                                     ) : (
                                         <td>
@@ -472,6 +475,9 @@ const StocksEntrantes = () => {
                                             )}
                                             {updateVisible && (
                                                 <button className="btn-accion-editar" onClick={() => handleEditarStock(stock)}>EDITAR</button>
+                                            )}
+                                            {!updateVisible && !activateVisible && (
+                                                <p>No tenes privilegios para interactuar con estos datos</p>
                                             )}
                                         </td>
                                     )}

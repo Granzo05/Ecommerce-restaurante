@@ -271,7 +271,7 @@ const Subsubcategorias = () => {
                                                         <button className="btn-accion-eliminar" onClick={() => handleEliminarCategoria(subcategoria)}>ELIMINAR</button>
                                                     ) : activateVisible ? (
                                                         <button className="btn-accion-activar" onClick={() => handleActivarCategoria(subcategoria)}>ACTIVAR</button>
-                                                    ) : <></>}
+                                                    ) : <></>}                                             
                                                 </div>
                                             </td>
                                         </tr>

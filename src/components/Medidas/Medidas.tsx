@@ -248,6 +248,9 @@ const Medidas = () => {
                                                 {deleteVisible && (
                                                     <button className="btn-accion-eliminar" onClick={() => handleEliminarMedida(medida)}>ELIMINAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
                                             </div>
 
                                         </td>
@@ -259,6 +262,9 @@ const Medidas = () => {
                                                 )}
                                                 {activateVisible && (
                                                     <button className="btn-accion-activar" onClick={() => handleActivarMedida(medida)}>ACTIVAR</button>
+                                                )}
+                                                {!updateVisible && !activateVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
                                                 )}
                                             </div>
                                         </td>

@@ -287,6 +287,9 @@ const Empleados = () => {
                                                 {deleteVisible && (
                                                     <button className="btn-accion-eliminar" onClick={() => handleEliminarEmpleado(empleado)}>ELIMINAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
                                             </div>
                                         </td>
                                     ) : (
@@ -297,6 +300,9 @@ const Empleados = () => {
                                                 )}
                                                 {updateVisible && (
                                                     <button className="btn-accion-editar" onClick={() => handleEditarEmpleado(empleado)}>EDITAR</button>
+                                                )}
+                                                {!updateVisible && !activateVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
                                                 )}
                                             </div>
                                         </td>

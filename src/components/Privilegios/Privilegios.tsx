@@ -251,6 +251,9 @@ const PrivilegiosEmpleados = () => {
                                                 {deleteVisible && (
                                                     <button className="btn-accion-eliminar" onClick={() => handleEliminarPrivilegio(privilegio)}>ELIMINAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
                                             </div>
 
                                         </td>
@@ -262,6 +265,9 @@ const PrivilegiosEmpleados = () => {
                                                 )}
                                                 {activateVisible && (
                                                     <button className="btn-accion-activar" onClick={() => handleActivarPrivilegio(privilegio)}>ACTIVAR</button>
+                                                )}
+                                                {!updateVisible && !activateVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
                                                 )}
                                             </div>
                                         </td>

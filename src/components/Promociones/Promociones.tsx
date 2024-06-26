@@ -427,6 +427,9 @@ const Promociones = () => {
                                                 {updateVisible && (
                                                     <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
                                             </>
                                         ) : (
                                             <>
@@ -435,6 +438,9 @@ const Promociones = () => {
                                                 )}
                                                 {updateVisible && (
                                                     <button className="btn-accion-editar" onClick={() => handleEditarPromocion(promocion)}>EDITAR</button>
+                                                )}
+                                                {!updateVisible && !activateVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
                                                 )}
                                             </>
                                         )}

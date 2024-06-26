@@ -27,6 +27,7 @@ const PedidosPendientes = () => {
             PedidoService.updateEstadoPedidoMercadopago(parseInt(externalReference), preference);
             CarritoService.limpiarCarrito();
             navigate('/cliente/opciones/1');
+            buscarPedidos();
         }
     }, [externalReference, preference]);
 

@@ -414,6 +414,9 @@ const Stocks = () => {
                                                 {deleteVisible && (
                                                     <button className="btn-accion-eliminar" onClick={() => { handleEliminarStock(stock); }}>ELIMINAR</button>
                                                 )}
+                                                {!updateVisible && !deleteVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
+                                                )}
                                             </div>
                                         </td>
                                     ) : (
@@ -424,6 +427,9 @@ const Stocks = () => {
                                                 )}
                                                 {activateVisible && (
                                                     <button className="btn-accion-activar" onClick={() => { handleActivarStock(stock) }}>ACTIVAR</button>
+                                                )}
+                                                {!updateVisible && !activateVisible && (
+                                                    <p>No tenes privilegios para interactuar con estos datos</p>
                                                 )}
                                             </div>
                                         </td>
