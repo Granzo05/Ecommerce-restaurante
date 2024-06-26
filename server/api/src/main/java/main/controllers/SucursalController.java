@@ -38,8 +38,10 @@ public class SucursalController {
     private final PromocionRepository promocionRepository;
     private final ArticuloMenuRepository articuloMenuRepository;
     private final ArticuloVentaRepository articuloVentaRepository;
+    private final PrivilegiosSucursalesRepository privilegiosSucursalesRepository;
+    private final RolesRepository rolesRepository;
 
-    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository, ImagenesRepository imagenesRepository, PromocionRepository promocionRepository, ArticuloMenuRepository articuloMenuRepository, ArticuloVentaRepository articuloVentaRepository) {
+    public SucursalController(SucursalRepository sucursalRepository, EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository, EmpresaRepository empresaRepository, LocalidadDeliveryRepository localidadDeliveryRepository, DomicilioRepository domicilioRepository, MedidaRepository medidaRepository, CategoriaRepository categoriaRepository, ImagenesRepository imagenesRepository, PromocionRepository promocionRepository, ArticuloMenuRepository articuloMenuRepository, ArticuloVentaRepository articuloVentaRepository, PrivilegiosSucursalesRepository privilegiosSucursalesRepository, RolesRepository rolesRepository) {
         this.sucursalRepository = sucursalRepository;
         this.empleadoRepository = empleadoRepository;
         this.clienteRepository = clienteRepository;
@@ -52,6 +54,8 @@ public class SucursalController {
         this.promocionRepository = promocionRepository;
         this.articuloMenuRepository = articuloMenuRepository;
         this.articuloVentaRepository = articuloVentaRepository;
+        this.privilegiosSucursalesRepository = privilegiosSucursalesRepository;
+        this.rolesRepository = rolesRepository;
     }
 
 
@@ -76,8 +80,6 @@ public class SucursalController {
         List<Sucursal> sucursales = sucursalRepository.findByIdEmpresa(idEmpresa);
 
         for (Sucursal sucursal : sucursales) {
-            Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
-            sucursal.getDomicilios().add(domicilio);
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
         }
 
@@ -90,8 +92,6 @@ public class SucursalController {
         List<Sucursal> sucursales = sucursalRepository.findAll();
 
         for (Sucursal sucursal : sucursales) {
-            Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
-            sucursal.getDomicilios().add(domicilio);
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
         }
 
@@ -104,8 +104,6 @@ public class SucursalController {
         List<Sucursal> sucursales = sucursalRepository.findByProvincia(provincia);
 
         for (Sucursal sucursal : sucursales) {
-            Domicilio domicilio = domicilioRepository.findByIdSucursal(sucursal.getId());
-            sucursal.getDomicilios().add(domicilio);
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
         }
 
@@ -191,7 +189,6 @@ public class SucursalController {
         if (sucursalDB.isEmpty()) {
             for (Domicilio domicilio: sucursalDetails.getDomicilios()) {
                 domicilio.setSucursal(sucursalDetails);
-                domicilio.setCalle(Encrypt.encriptarString(domicilio.getCalle()));
                 domicilio.setBorrado("NO");
             }
 
@@ -229,6 +226,15 @@ public class SucursalController {
                 categoria.setBorrado("NO");
 
                 sucursalDetails.getCategorias().add(categoria);
+            }
+
+            agregarPrivilegios(sucursalDetails);
+
+            HashSet<Roles> roles = new HashSet<>(rolesRepository.findAllByIdSucursalNotBorrado(1l));
+
+            for (Roles rolesDB : roles) {
+                rolesDB.getSucursales().add(sucursalDetails);
+                sucursalDetails.getRoles().add(rolesDB);
             }
 
             sucursalRepository.save(sucursalDetails);
@@ -400,5 +406,146 @@ public class SucursalController {
         } else {
             return ResponseEntity.ok("La sucursal no se encontró");
         }
+    }
+
+    private void agregarPrivilegios(Sucursal sucursal) {
+        PrivilegiosSucursales privilegio = new PrivilegiosSucursales();
+        privilegio.setNombre("Articulos de venta");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Artículos menú");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Clientes");
+        privilegio.setPermisos(Arrays.asList("READ", "DELETE", "ACTIVATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Stock");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Stock entrante");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Ingredientes");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Categorias");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Medidas");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Promociones");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Subcategorias");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Estadísticas");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Pedidos entrantes");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Pedidos aceptados");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Pedidos cocinados");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Pedidos entregados");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Pedidos en camino");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Empleados");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Sucursales");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Empresas");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
+
+        privilegio = new PrivilegiosSucursales();
+        privilegio.getSucursales().add(sucursal);
+        privilegio.setNombre("Roles");
+        privilegio.setPermisos(Arrays.asList("READ", "UPDATE", "DELETE", "ACTIVATE", "CREATE"));
+
+        sucursal.getPrivilegios().add(privilegio);
     }
 }

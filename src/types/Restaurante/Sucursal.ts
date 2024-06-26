@@ -6,6 +6,7 @@ import { Imagenes } from "../Productos/Imagenes";
 import { Promocion } from "../Productos/Promocion";
 import { Empresa } from "./Empresa";
 import { LocalidadDelivery } from "./LocalidadDelivery";
+import { PrivilegiosSucursales } from "./PrivilegiosSucursales";
 import { Roles } from "./Roles";
 
 export class Sucursal {
@@ -15,7 +16,6 @@ export class Sucursal {
     contraseña: string = '';
     telefono: number = 0;
     email: string = '';
-    privilegios: string = '';
     horarioApertura: string = '';
     horarioCierre: string = '';
     localidadesDisponiblesDelivery: LocalidadDelivery[] = [];
@@ -27,6 +27,7 @@ export class Sucursal {
     imagenes: Imagenes[] = [];
     borrado: string = '';
     roles: Roles[] = [];
+    privilegios: PrivilegiosSucursales[] = [];
 
     constructor() {
 

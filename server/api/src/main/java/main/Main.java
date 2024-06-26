@@ -93,6 +93,7 @@ public class Main {
                     sucursal.setHorarioCierre(LocalTime.of(23, 0));
                     sucursal.setEmail("a@gmail.com");
                     sucursal.setContraseña(Encrypt.cifrarPassword("123"));
+                    sucursal.setBorrado("NO");
 
                     Domicilio domicilio = new Domicilio();
                     domicilio.setNumero(774);

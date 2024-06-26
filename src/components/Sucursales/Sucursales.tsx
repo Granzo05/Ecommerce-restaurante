@@ -43,7 +43,7 @@ const Sucursales = () => {
     }
 
     const [privilegios, setPrivilegios] = useState<Privilegios[]>([]);
-    const [idSucursalElegida, setIdSucursalElegida] = useState<number>();
+    const [sucursalElegida, setSucursalElegida] = useState<Sucursal>();
 
     useEffect(() => {
         PrivilegiosService.getPrivilegios()
@@ -90,8 +90,8 @@ const Sucursales = () => {
 
     const handleAbrirSucursal = () => {
         let restaurante = {
-            id: idSucursalElegida,
-            nombre: empresa?.razonSocial,
+            id: sucursalElegida?.id,
+            nombre: empresa?.nombre + ' dentro de ' + sucursalElegida?.nombre,
             empleadoPrivilegios: privilegios,
             empresa: empresa
         }
@@ -138,6 +138,11 @@ const Sucursales = () => {
             } catch (error) {
                 console.error('Error:', error);
             }
+        } else if (empresa) {
+            setActivateVisible(true);
+            setDeleteVisible(true);
+            setUpdateVisible(true);
+            setCreateVisible(true);
         }
     }
 
@@ -307,7 +312,7 @@ const Sucursales = () => {
                                         <td>
                                             <div className="btns-acciones">
                                                 {createVisible && activateVisible && updateVisible && deleteVisible && (
-                                                    <button className="btn-accion-abrir" onClick={() => { setIdSucursalElegida(sucursal.id); setShowSolicitarCredencialesModal(true) }}>ABRIR</button>
+                                                    <button className="btn-accion-abrir" onClick={() => { setSucursalElegida(sucursal); setShowSolicitarCredencialesModal(true) }}>ABRIR</button>
                                                 )}
                                                 {updateVisible && (
                                                     <button className="btn-accion-editar" onClick={() => handleEditarSucursal(sucursal)}>EDITAR</button>
@@ -321,7 +326,7 @@ const Sucursales = () => {
                                         <td>
                                             <div className="btns-acciones">
                                                 {createVisible && activateVisible && updateVisible && deleteVisible && (
-                                                    <button className="btn-accion-abrir" onClick={() => { setIdSucursalElegida(sucursal.id); setShowSolicitarCredencialesModal(true) }}>ABRIR</button>
+                                                    <button className="btn-accion-abrir" onClick={() => { setSucursalElegida(sucursal); setShowSolicitarCredencialesModal(true) }}>ABRIR</button>
                                                 )}
                                                 {activateVisible && (
                                                     <button className="btn-accion-activar" onClick={() => handleActivarSucursal(sucursal)}>ACTIVAR</button>

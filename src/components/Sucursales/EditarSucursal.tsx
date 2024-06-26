@@ -139,7 +139,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
 
 
   function buscarDepartamentos() {
-    DepartamentoService.getDepartamentosByNombreProvincia(inputProvincia)
+    DepartamentoService.getDepartamentosByNombreProvincia(sucursalOriginal.domicilios[0].localidad.departamento.provincia.nombre)
       .then(async departamentos => {
         setDepartamentos(departamentos);
       })
@@ -149,7 +149,7 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
   }
 
   function buscarLocalidadesProvincia() {
-    LocalidadService.getLocalidadesByNombreProvincia(inputProvincia)
+    LocalidadService.getLocalidadesByNombreProvincia(sucursalOriginal.domicilios[0].localidad.departamento.provincia.nombre)
       .then(async localidades => {
         setLocalidadesProvincia(localidades);
       })
@@ -234,7 +234,6 @@ const EditarSucursal: React.FC<EditarSucursalProps> = ({ sucursalOriginal, onClo
       setIndexDomicilio(0);
     }
   };
-
 
   const quitarCampoDomicilioModificable = (index: number) => {
     if (domiciliosModificable.length > 0) {

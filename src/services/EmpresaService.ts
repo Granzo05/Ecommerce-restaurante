@@ -66,11 +66,12 @@ export const EmpresaService = {
     getEmpresa: async (email: string, contraseña: string): Promise<string> => {
         limpiarCredenciales();
         try {
-            const response = await fetch(URL_API + 'empresa/login/' + email + '/' + contraseña, {
-                method: 'GET',
+            const response = await fetch(URL_API + 'empresa/login', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ email, contraseña })
             });
 
             if (!response.ok) {
@@ -82,8 +83,8 @@ export const EmpresaService = {
             if (data.id > 0) {
                 let restaurante = {
                     id: data.id,
-                    razonSocial: data.razonSocial
-                }
+                    nombre: data.nombre
+                }                
 
                 localStorage.setItem('empresa', JSON.stringify(restaurante));
 
@@ -112,11 +113,12 @@ export const EmpresaService = {
 
     getEmpresaCredentials: async (cuit: string, contraseña: string) => {
         try {
-            const response = await fetch(URL_API + 'empresa/login/' + cuit + '/' + contraseña, {
-                method: 'GET',
+            const response = await fetch(URL_API + 'empresa/login', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ cuit, contraseña })
             });
 
             if (!response.ok) {
@@ -126,13 +128,11 @@ export const EmpresaService = {
             const data = await response.json();
 
             if (data.id > 0) {
-                window.location.href = getBaseUrl() + '/empresa'
-
+                window.location.href = getBaseUrl() + '/empresa';
                 return 'Acceso concedido';
             } else {
                 throw new Error('Los datos ingresados no corresponden a una empresa');
             }
-
         } catch (error) {
             throw new Error('Los datos ingresados no corresponden a una empresa');
         }

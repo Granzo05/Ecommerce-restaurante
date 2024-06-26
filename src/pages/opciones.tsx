@@ -92,7 +92,6 @@ const Opciones = () => {
             setOpcionSeleccionada(opcionSeleccionada);
         }
     };
-
     const toggleReportesVisibility = () => {
         setReportesVisible(!reportesVisible);
         setStockIcon(reportesVisible ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />);
@@ -159,13 +158,17 @@ const Opciones = () => {
             return (
                 <div className="welcome-employee">
                     <br /><br /><br /><br /><br /><br /><br /><br />
-                    {empresa && empresa?.nombre?.length > 0 ? (
-                        <h1 id="welcome">¡BIENVENIDO a {empresa?.nombre}!</h1>
+                    {empresa && empresa.nombre ? (
+                        sucursal ? (
+                            <h1 id="welcome">¡BIENVENIDO a {sucursal.nombre}!</h1>
+                        ) : (
+                            <h1 id="welcome">¡BIENVENIDO a {empresa.nombre}!</h1>
+                        )
                     ) : (
                         <h1 id="welcome">¡BIENVENIDO {empleado?.nombre} a {sucursal?.nombre}!</h1>
                     )}
                 </div>
-            );
+            )
         } else if (opcionSeleccionada === 12) {
             return <Categorias />;
         } else if (opcionSeleccionada === 13) {
@@ -269,7 +272,7 @@ const Opciones = () => {
             } catch (error) {
                 console.error('Error:', error);
             }
-        } else if (sucursal !== null && !DESACTIVAR_PRIVILEGIOS) {
+        } else if ((empresa || sucursal !== null) && !DESACTIVAR_PRIVILEGIOS) {
             setArticuloVentaVisibleEmpleado(true);
             setArticuloMenuVisibleEmpleado(true);
             setStockVisibleEmpleado(true);
@@ -291,6 +294,7 @@ const Opciones = () => {
             setRolesVisibleEmpleado(true);
             setPrivilegiosVisibleEmpleado(true);
             setClientesVisibleEmpleado(true);
+            if (empresa && !sucursal) setSucursalesVisibleEmpleado(true)
         }
     }
 

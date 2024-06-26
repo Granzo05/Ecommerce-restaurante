@@ -13,10 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class EmpresaController {
@@ -30,16 +27,19 @@ public class EmpresaController {
 
 
     @CrossOrigin
-    @GetMapping("/empresa/login/{variable}/{password}")
-    public Empresa loginEmpresa(@PathVariable("variable") String variable, @PathVariable("password") String password) throws Exception {
-        // Variable trabaja como un nombre de usuario donde puede ingresar el cuil o nombre de la empresa para loguearse
+    @PostMapping("/empresa/login")
+    public ResponseEntity<?> loginEmpresa(@RequestBody Map<String, String> credentials) {
+        String variable = credentials.get("cuit");
+        if (variable == null || variable.isEmpty() ) variable = credentials.get("email");
+        String password = credentials.get("contraseña");
+
         Optional<Empresa> empresa = empresaRepository.findByCuitOrNombreAndPassword(variable, Encrypt.cifrarPassword(password));
 
         if (empresa.isPresent()) {
-            return empresa.get();
+            return ResponseEntity.ok(empresa.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Los datos ingresados no corresponden a una empresa");
         }
-
-        return new Empresa();
     }
 
     @CrossOrigin
