@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+@CrossOrigin
 @RestController
 public class SucursalController {
     private final SucursalRepository sucursalRepository;
@@ -61,10 +62,18 @@ public class SucursalController {
 
 
     @CrossOrigin
-    @GetMapping("/sucursal/login/{email}/{password}")
-    public Sucursal loginSucursal(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+    @PostMapping("/sucursal/login")
+    public ResponseEntity<Sucursal> loginSucursal(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String password = credentials.get("contraseña");
+
         Optional<Sucursal> sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
-        return sucursal.orElse(new Sucursal());
+
+        if (sucursal.isPresent()) {
+            return ResponseEntity.ok(sucursal.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @CrossOrigin

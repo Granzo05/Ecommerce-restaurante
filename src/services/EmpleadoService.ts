@@ -41,49 +41,40 @@ export const EmpleadoService = {
 
         } catch (error) {
             console.log(error)
-            throw new Error ('Error al intentar cargar el empleado');
+            throw new Error('Error al intentar cargar el empleado');
         }
     },
 
     getEmpleado: async (email: string, contraseña: string) => {
-        limpiarCredenciales();
         try {
-            const response = await fetch(URL_API + 'empleado/login/' + email + '/' + contraseña, {
-                method: 'GET',
+            const response = await fetch(URL_API + 'empleado/login', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
-            })
+                },
+                body: JSON.stringify({ email, contraseña })
+            });
 
-            if (!response.ok) {
-                throw new Error('Usuario no encontrado');
-            }
-
-            const data = await response.json();
-
-            if (data.id > 0) {
+            if (response.ok) {
+                const data = await response.json();
                 let empleado = {
                     id: data.id,
                     nombre: data.nombre,
                     email: data.email,
                     empleadoPrivilegios: data.empleadoPrivilegios,
                     sucursales: data.sucursales
-                }
+                };
 
                 limpiarCredenciales();
-
                 localStorage.setItem('empleado', JSON.stringify(empleado));
 
-                // Redirige al usuario al menú principal
                 window.location.href = getBaseUrl() + '/opciones';
-
-                return 'Sesión iniciada correctamente';
+                return { ok: true, message: 'Sesión iniciada correctamente' };
             } else {
-                throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+                return { ok: false, message: await response.json() };
             }
-        }
-        catch (error) {
-            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+        } catch (error) {
+            return { ok: false, message: 'Los datos ingresados no corresponden a una cuenta activa' };
         }
     },
 

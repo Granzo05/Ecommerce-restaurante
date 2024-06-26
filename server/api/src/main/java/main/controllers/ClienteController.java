@@ -17,11 +17,9 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+@CrossOrigin
 @RestController
 public class ClienteController {
     private static final String EMAIL_RESPALDO = "contactodelbuensabor@gmail.com";
@@ -88,8 +86,12 @@ public class ClienteController {
     }
 
     @CrossOrigin
-    @GetMapping("/cliente/login/{email}/{password}")
-    public Cliente loginUser(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+    @PostMapping("/cliente/login")
+    public ResponseEntity<Cliente> loginUser(@RequestBody Map<String, String> credentials) throws Exception {
+        String email = credentials.get("email");
+        String password = credentials.get("contraseña");
+
+
         Optional<Cliente> cliente = clienteRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
         if (cliente.isPresent()) {
             // Buscamos la sucursal más cercana a los domicilios existentes del usuario
@@ -98,9 +100,10 @@ public class ClienteController {
                     cliente.get().setIdSucursalRecomendada(buscarRestauranteCercano(domicilio));
             }
 
-            return cliente.get();
+            return ResponseEntity.ok(cliente.get());
 
-        } else return new Cliente();
+        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
     }
 
     @CrossOrigin

@@ -28,7 +28,7 @@ public class EmpresaController {
 
     @CrossOrigin
     @PostMapping("/empresa/login")
-    public ResponseEntity<?> loginEmpresa(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<Empresa> loginEmpresa(@RequestBody Map<String, String> credentials) {
         String variable = credentials.get("cuit");
         if (variable == null || variable.isEmpty()) variable = credentials.get("email");
         String password = credentials.get("contraseña");
@@ -38,7 +38,8 @@ public class EmpresaController {
         if (empresa.isPresent()) {
             return ResponseEntity.ok(empresa.get());
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Los datos ingresados no corresponden a una empresa");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
         }
     }
 
