@@ -215,7 +215,7 @@ const PedidosEntregados = () => {
                                     </td>
 
                                 )}
-                                <td onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
+                                <td style={{cursor: 'pointer'}} onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
                             </tr>
                         ))}
                     </tbody>
