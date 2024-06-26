@@ -215,7 +215,7 @@ const Pago = () => {
                                 setTimeout(() => {
                                     toast.info('Dirigiéndose a pedidos...')
                                     CarritoService.limpiarCarrito();
-                                    window.location.href = getBaseUrlCliente() + `/cliente/${1}`
+                                    window.location.href = getBaseUrlCliente() + `/cliente/opciones/${1}`
                                 }, 3000);
                                 return message;
                             },

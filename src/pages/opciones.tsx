@@ -545,21 +545,7 @@ const Opciones = () => {
                 )}
                 <div className="spacer"></div>
                 <div className="bottom-section">
-                    <hr />
-                    <label id="label" className={`ajustes-link ${settingsBg}`} onClick={toggleSettingsVisibility}>
-                        _ajustes de cuenta
-                        {settingsIcon}
-                    </label>
-                    {settingsVisible && (
-                        <div className="settings">
-                            <h4
-                                className={opcionSeleccionada === 15 ? 'selected' : ''}
-                                onClick={() => handleOpcionClick(15)}
-                            >
-                                Preferencias
-                            </h4>
-                        </div>
-                    )}
+                    
 
                     <hr />
                     <div className="perfil-employee">

@@ -71,6 +71,8 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar roles &mdash;</h2>
           <div className="btns-filtrado">
+          <button className="btn-agregar" style={{marginRight: '10px'}} onClick={() => onSelectRol(new Roles())}>Eliminar opción elegida</button>
+
             <button className="btn-agregar" onClick={() => setShowAgregarSubcategoriaModal(true)}>+ Agregar rol al inventario</button>
           </div>
           <ModalCrud isOpen={showAgregarSubcategoriaModal} onClose={() => setShowAgregarSubcategoriaModal(false)}>
@@ -80,7 +82,6 @@ const ModalFlotanteRecomendacionesRoles: React.FC<{ onCloseModal: () => void, on
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <button onClick={() => onSelectRol(new Roles())}>BORRAR OPCIÓN ELEGIDA</button>
           <table className="tabla-recomendaciones">
             <thead>
               <tr>

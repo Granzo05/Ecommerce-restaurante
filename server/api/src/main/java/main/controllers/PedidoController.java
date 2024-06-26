@@ -1,8 +1,7 @@
 package main.controllers;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.mercadopago.MercadoPagoConfig;
@@ -42,6 +41,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.util.*;
+import java.util.List;
 
 @RestController
 public class PedidoController {
@@ -415,21 +415,54 @@ public class PedidoController {
             PdfWriter.getInstance(document, baos);
             document.open();
 
-            double total = 0;
+            // Título principal
+            Paragraph title = new Paragraph("EL BUEN SABOR", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 26, BaseColor.BLACK));
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
 
-            document.add(new Paragraph("Factura del Pedido"));
+            // Espacio
+            document.add(new Paragraph(" "));
+
+
+            // Información de la factura
+            Paragraph facturaInfo = new Paragraph("Factura del Pedido", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK));
+            facturaInfo.setAlignment(Element.ALIGN_CENTER);
+            document.add(facturaInfo);
             document.add(new Paragraph("Tipo: " + factura.get().getTipoFactura().toString()));
             document.add(new Paragraph("Cliente: " + pedido.getCliente().getNombre()));
-            document.add(new Paragraph(""));
-            document.add(new Paragraph("Detalles de la factura"));
+            document.add(new Paragraph(" "));
 
+            // Detalles de la factura
+            Paragraph detalleTitle = new Paragraph("Detalles de la Factura", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.BLACK));
+            detalleTitle.setAlignment(Element.ALIGN_CENTER);
+            document.add(detalleTitle);
+            document.add(new Paragraph(" "));
+
+            // Tabla de detalles
             PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
 
-            table.addCell("Nombre del Menú");
-            table.addCell("Cantidad");
-            table.addCell("Subtotal");
+            // Encabezados de la tabla
+            PdfPCell cell;
 
+            cell = new PdfPCell(new Phrase("Nombre del Menú"));
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase("Cantidad"));
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase("Subtotal"));
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            double total = 0;
             for (DetallesPedido detalle : pedido.getDetallesPedido()) {
                 if (detalle.getArticuloVenta() != null) {
                     table.addCell(detalle.getArticuloVenta().getNombre());
@@ -445,7 +478,12 @@ public class PedidoController {
             }
 
             document.add(table);
-            document.add(new Paragraph("Total: " + total));
+
+            // Total de la factura
+            Paragraph totalParagraph = new Paragraph("Total: " + total, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK));
+            totalParagraph.setAlignment(Element.ALIGN_RIGHT);
+            document.add(totalParagraph);
+
             document.close();
 
             byte[] pdfBytes = baos.toByteArray();
