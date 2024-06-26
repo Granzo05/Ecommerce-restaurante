@@ -16,6 +16,10 @@ import RolesEmpleado from '../components/Roles/Roles';
 import PrivilegiosEmpleados from '../components/Privilegios/Privilegios';
 import StocksEntregado from '../components/StockEntrante/StockEntregado';
 import Clientes from '../components/Cliente/ClientesSucursales/Clientes';
+import ReporteComidas from '../components/Reportes/ReporteComida';
+import ReporteIngresos from '../components/Reportes/ReporteIngresos';
+import ReporteGanancias from '../components/Reportes/ReporteGanancias';
+import ReportePedidosCliente from '../components/Reportes/ReportePedidosCliente';
 
 const StocksEntrantes = lazy(() => import('../components/StockEntrante/StockEntrante'));
 const Sucursales = lazy(() => import('../components/Sucursales/Sucursales'));
@@ -191,6 +195,14 @@ const Opciones = () => {
             return <StocksEntregado />;
         } else if (opcionSeleccionada === 23) {
             return <Clientes />;
+        } else if (opcionSeleccionada === 24) {
+            return <ReporteComidas/>
+        } else if (opcionSeleccionada === 25) {
+            return <ReporteIngresos/>
+        } else if (opcionSeleccionada === 26) {
+            return <ReportePedidosCliente/>
+        } else if (opcionSeleccionada === 27) {
+            return <ReporteGanancias/>
         }
     };
 
@@ -461,8 +473,17 @@ const Opciones = () => {
                                         </h4>
                                         {reportesVisible && (
                                             <>
-                                                <p className={opcionSeleccionada === 18 ? 'selected' : ''} onClick={() => handleOpcionClick(18)}>
-                                                    Reportes de ventas
+                                                <p className={opcionSeleccionada === 24 ? 'selected' : ''} onClick={() => handleOpcionClick(24)}>
+                                                    Comidas
+                                                </p>
+                                                <p className={opcionSeleccionada === 25 ? 'selected' : ''} onClick={() => handleOpcionClick(25)}>
+                                                    Ingresos
+                                                </p>
+                                                <p className={opcionSeleccionada === 26 ? 'selected' : ''} onClick={() => handleOpcionClick(26)}>
+                                                    Pedidos por cliente
+                                                </p>
+                                                <p className={opcionSeleccionada === 27 ? 'selected' : ''} onClick={() => handleOpcionClick(27)}>
+                                                    Ganancias
                                                 </p>
                                             </>
                                         )}

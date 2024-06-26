@@ -40,6 +40,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.*;
 
@@ -65,6 +67,34 @@ public class PedidoController {
         this.stockArticuloVentaRepository = stockArticuloVentaRepository;
         this.stockIngredientesRepository = stockIngredientesRepository;
         this.domicilioRepository = domicilioRepository;
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/top-comidas/{fechaInicio}/{fechaFin}")
+    public ResponseEntity<List<List<Object>>> getTopComidas(
+            @PathVariable("fechaInicio") LocalDate fechaInicio,
+            @PathVariable("fechaFin") LocalDate fechaFin) {
+
+        try {
+            LocalDateTime fechaInicioDateTime = fechaInicio.atStartOfDay();
+            LocalDateTime fechaFinDateTime = fechaFin.atStartOfDay().plusDays(1).minusSeconds(1);
+
+            List<Object[]> resultados = pedidoRepository.findTopComidasByFecha(fechaInicioDateTime, fechaFinDateTime);
+
+            List<List<Object>> data = new ArrayList<>();
+            data.add(List.of("Nombre Comida", "Cantidad Total"));
+
+            for (Object[] resultado : resultados) {
+                String nombreComida = (String) resultado[0];
+                Long cantidadTotal = (Long) resultado[1];
+                data.add(List.of(nombreComida, cantidadTotal));
+            }
+
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @CrossOrigin
