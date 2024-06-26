@@ -520,13 +520,148 @@ public class Main {
 
 
                     ArticuloVenta articuloVenta = new ArticuloVenta();
-                    articuloVenta.setCategoria();
-
+                    articuloVenta.setCategoria(categoriaBEBIDA_SIN_ALCOHOL);
+                    articuloVenta.setSubcategoria(subcategoria100);
+                    articuloVenta.setNombre("Coca-Cola");
+                    articuloVenta.setPrecioVenta(2500);
+                    articuloVenta.setMedida(medida2);
+                    articuloVenta.setCantidadMedida(2);
+                    articuloVenta.setBorrado("NO");
                     imagen = new Imagenes();
-                    imagen.setNombre("ACA BUSCA FOTO Y METELA EN LA CARPETA DE LAS IMAGESARTICULOS Y MANDALE EL MISMO NOMBRE.jpeg");
+                    imagen.setNombre("coca-cola.jpg");
                     imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta.getNombre() + "/" + imagen.getNombre());
                     imagen.getArticulosVenta().add(articuloVenta);
                     imagen.getSucursales().add(sucursal);
+
+                    ArticuloVenta articuloVenta1 = new ArticuloVenta();
+                    articuloVenta1.setCategoria(categoriaBEBIDA_SIN_ALCOHOL);
+                    articuloVenta1.setSubcategoria(subcategoria102);
+                    articuloVenta1.setNombre("Coca-Zero");
+                    articuloVenta1.setPrecioVenta(2000);
+                    articuloVenta1.setMedida(medida2);
+                    articuloVenta1.setCantidadMedida(2);
+                    articuloVenta1.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("coca-sin-azucar.png");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta1.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta1);
+                    imagen.getSucursales().add(sucursal);
+
+                    ArticuloVenta articuloVenta2 = new ArticuloVenta();
+                    articuloVenta2.setCategoria(categoriaBEBIDA_SIN_ALCOHOL);
+                    articuloVenta2.setSubcategoria(subcategoria100);
+                    articuloVenta2.setNombre("Coca-Cola retornable");
+                    articuloVenta2.setPrecioVenta(1800);
+                    articuloVenta2.setMedida(medida2);
+                    articuloVenta2.setCantidadMedida(2);
+                    articuloVenta2.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("coca-retornable.jpg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta2.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta2);
+                    imagen.getSucursales().add(sucursal);
+
+                    ArticuloVenta articuloVenta3 = new ArticuloVenta();
+                    articuloVenta3.setCategoria(categoriaBEBIDA_SIN_ALCOHOL);
+                    articuloVenta3.setSubcategoria(subcategoria101);
+                    articuloVenta3.setNombre("Awafrut");
+                    articuloVenta3.setPrecioVenta(1200);
+                    articuloVenta3.setMedida(medida2);
+                    articuloVenta3.setCantidadMedida(1);
+                    articuloVenta3.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("awafrut-pomelo.jpg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta3.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta3);
+                    imagen.getSucursales().add(sucursal);
+
+                    ArticuloVenta articuloVenta4 = new ArticuloVenta();
+                    articuloVenta4.setCategoria(categoriaBEBIDA_SIN_ALCOHOL);
+                    articuloVenta4.setSubcategoria(subcategoria101);
+                    articuloVenta4.setNombre("Fresh");
+                    articuloVenta4.setPrecioVenta(1000);
+                    articuloVenta4.setMedida(medida2);
+                    articuloVenta4.setCantidadMedida(1);
+                    articuloVenta4.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("fresh-mix.jpg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta4.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta4);
+                    imagen.getSucursales().add(sucursal);
+
+                    //CON ALCOHOL
+
+                    ArticuloVenta articuloVenta5 = new ArticuloVenta();
+                    articuloVenta5.setCategoria(categoriaBEBIDA_CON_ALCOHOL);
+                    articuloVenta5.setSubcategoria(subcategoria110);
+                    articuloVenta5.setNombre("Vino Don Valentin");
+                    articuloVenta5.setPrecioVenta(3000);
+                    articuloVenta5.setMedida(medida3);
+                    articuloVenta5.setCantidadMedida(1125);
+                    articuloVenta5.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("don-valentin.jpg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta5.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta5);
+                    imagen.getSucursales().add(sucursal);
+
+                    ArticuloVenta articuloVenta6 = new ArticuloVenta();
+                    articuloVenta6.setCategoria(categoriaBEBIDA_CON_ALCOHOL);
+                    articuloVenta6.setSubcategoria(subcategoria110);
+                    articuloVenta6.setNombre("Vino Vinas de Alvear");
+                    articuloVenta6.setPrecioVenta(6000);
+                    articuloVenta6.setMedida(medida3);
+                    articuloVenta6.setCantidadMedida(1200);
+                    articuloVenta6.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("vinas-de-alvear.jpg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta6.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta6);
+                    imagen.getSucursales().add(sucursal);
+
+                    ArticuloVenta articuloVenta7 = new ArticuloVenta();
+                    articuloVenta7.setCategoria(categoriaBEBIDA_CON_ALCOHOL);
+                    articuloVenta7.setSubcategoria(subcategoria111);
+                    articuloVenta7.setNombre("Vodka Smirnoff");
+                    articuloVenta7.setPrecioVenta(5500);
+                    articuloVenta7.setMedida(medida3);
+                    articuloVenta7.setCantidadMedida(1100);
+                    articuloVenta7.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("smirnoff.jpg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta7.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta7);
+                    imagen.getSucursales().add(sucursal);
+
+                    ArticuloVenta articuloVenta8 = new ArticuloVenta();
+                    articuloVenta8.setCategoria(categoriaBEBIDA_CON_ALCOHOL);
+                    articuloVenta8.setSubcategoria(subcategoria111);
+                    articuloVenta8.setNombre("Fernet Branca");
+                    articuloVenta8.setPrecioVenta(4800);
+                    articuloVenta8.setMedida(medida2);
+                    articuloVenta8.setCantidadMedida(1);
+                    articuloVenta8.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("fernet.jpeg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta8.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta8);
+                    imagen.getSucursales().add(sucursal);
+
+                    ArticuloVenta articuloVenta9 = new ArticuloVenta();
+                    articuloVenta9.setCategoria(categoriaBEBIDA_CON_ALCOHOL);
+                    articuloVenta9.setSubcategoria(subcategoria112);
+                    articuloVenta9.setNombre("Cerveza Andes Origen");
+                    articuloVenta9.setPrecioVenta(2800);
+                    articuloVenta9.setMedida(medida3);
+                    articuloVenta9.setCantidadMedida(1000);
+                    articuloVenta9.setBorrado("NO");
+                    imagen = new Imagenes();
+                    imagen.setNombre("andes-origen.jpg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta9.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta9);
+                    imagen.getSucursales().add(sucursal);
+
+
                     
 
                     PrivilegiosSucursales privilegio = new PrivilegiosSucursales();
