@@ -1,10 +1,12 @@
 package main;
 
 import main.EncryptMD5.Encrypt;
+import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.*;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.Subcategoria;
+import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Empresa;
 import main.entities.Restaurante.PrivilegiosSucursales;
@@ -24,8 +26,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
 
 @SpringBootApplication
@@ -43,9 +47,7 @@ public class Main {
     @Autowired(required = true)
     private EmpresaRepository empresaRepository;
     @Autowired(required = true)
-    private PrivilegiosSucursalesRepository privilegiosSucursalesRepository;
-    @Autowired(required = true)
-    private RolesRepository rolesRepository;
+    private ClienteRepository clienteRepository;
 
     public static void main(String[] args) throws GeneralSecurityException, IOException, MessagingException {
         SpringApplication.run(Main.class, args);
@@ -107,369 +109,369 @@ public class Main {
                     domicilio.setSucursal(sucursal);
                     sucursal.getDomicilios().add(domicilio);
 
-                    Categoria categoria = new Categoria();
-                    categoria.setNombre("HAMBURGUESAS");
-                    categoria.setBorrado("NO");
-                    categoria.getSucursales().add(sucursal);
+                    Categoria categoriaHamburguesa = new Categoria();
+                    categoriaHamburguesa.setNombre("HAMBURGUESAS");
+                    categoriaHamburguesa.setBorrado("NO");
+                    categoriaHamburguesa.getSucursales().add(sucursal);
 
-                    Subcategoria subcategoria0 = new Subcategoria();
-                    subcategoria0.setCategoria(categoria);
-                    subcategoria0.setNombre("Vegana");
-                    subcategoria0.getSucursales().add(sucursal);
+                    Subcategoria subcategoriaVegana = new Subcategoria();
+                    subcategoriaVegana.setCategoria(categoriaHamburguesa);
+                    subcategoriaVegana.setNombre("Vegana");
+                    subcategoriaVegana.getSucursales().add(sucursal);
 
-                    Subcategoria subcategoria1 = new Subcategoria();
-                    subcategoria1.setCategoria(categoria);
-                    subcategoria1.setNombre("Pollo");
-                    subcategoria1.getSucursales().add(sucursal);
+                    Subcategoria subcategoriaPollo = new Subcategoria();
+                    subcategoriaPollo.setCategoria(categoriaHamburguesa);
+                    subcategoriaPollo.setNombre("Pollo");
+                    subcategoriaPollo.getSucursales().add(sucursal);
 
-                    Subcategoria subcategoria2 = new Subcategoria();
-                    subcategoria2.setCategoria(categoria);
-                    subcategoria2.setNombre("Carne");
-                    subcategoria2.getSucursales().add(sucursal);
+                    Subcategoria subcategoriaCarne = new Subcategoria();
+                    subcategoriaCarne.setCategoria(categoriaHamburguesa);
+                    subcategoriaCarne.setNombre("Carne");
+                    subcategoriaCarne.getSucursales().add(sucursal);
 
-                    categoria.getSubcategorias().add(subcategoria0);
-                    categoria.getSubcategorias().add(subcategoria1);
-                    categoria.getSubcategorias().add(subcategoria2);
+                    categoriaHamburguesa.getSubcategorias().add(subcategoriaVegana);
+                    categoriaHamburguesa.getSubcategorias().add(subcategoriaPollo);
+                    categoriaHamburguesa.getSubcategorias().add(subcategoriaCarne);
 
                     Imagenes imagen = new Imagenes();
                     imagen.setNombre("hamburguesas.png");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaHamburguesa.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaHamburguesa);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria.getImagenes().add(imagen);
+                    categoriaHamburguesa.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria);
+                    sucursal.getCategorias().add(categoriaHamburguesa);
 
-                    Categoria categoria1 = new Categoria();
-                    categoria1.setNombre("PANCHOS");
-                    categoria1.setBorrado("NO");
-                    categoria1.getSucursales().add(sucursal);
+                    Categoria categoriaPanchos = new Categoria();
+                    categoriaPanchos.setNombre("PANCHOS");
+                    categoriaPanchos.setBorrado("NO");
+                    categoriaPanchos.getSucursales().add(sucursal);
 
-                    Subcategoria subcategoria10 = new Subcategoria();
-                    subcategoria10.setCategoria(categoria1);
-                    subcategoria10.setNombre("Completo");
-                    subcategoria10.getSucursales().add(sucursal);
+                    Subcategoria subcategoriaCompleto = new Subcategoria();
+                    subcategoriaCompleto.setCategoria(categoriaPanchos);
+                    subcategoriaCompleto.setNombre("Completo");
+                    subcategoriaCompleto.getSucursales().add(sucursal);
 
-                    Subcategoria subcategoria11 = new Subcategoria();
-                    subcategoria11.setCategoria(categoria1);
-                    subcategoria11.setNombre("Con poncho");
-                    subcategoria11.getSucursales().add(sucursal);
+                    Subcategoria subcategoriaConPoncho = new Subcategoria();
+                    subcategoriaConPoncho.setCategoria(categoriaPanchos);
+                    subcategoriaConPoncho.setNombre("Con poncho");
+                    subcategoriaConPoncho.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria12 = new Subcategoria();
-                    subcategoria12.setCategoria(categoria1);
+                    subcategoria12.setCategoria(categoriaPanchos);
                     subcategoria12.setNombre("Doble");
                     subcategoria12.getSucursales().add(sucursal);
 
-                    categoria1.getSubcategorias().add(subcategoria10);
-                    categoria1.getSubcategorias().add(subcategoria11);
-                    categoria1.getSubcategorias().add(subcategoria12);
+                    categoriaPanchos.getSubcategorias().add(subcategoriaCompleto);
+                    categoriaPanchos.getSubcategorias().add(subcategoriaConPoncho);
+                    categoriaPanchos.getSubcategorias().add(subcategoria12);
 
                     imagen = new Imagenes();
                     imagen.setNombre("panchos.webp");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria1.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria1);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaPanchos.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaPanchos);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria1.getImagenes().add(imagen);
+                    categoriaPanchos.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria1);
+                    sucursal.getCategorias().add(categoriaPanchos);
 
-                    Categoria categoria2 = new Categoria();
-                    categoria2.setNombre("EMPANADAS");
-                    categoria2.setBorrado("NO");
-                    categoria2.getSucursales().add(sucursal);
+                    Categoria categoriaEMPANADAS = new Categoria();
+                    categoriaEMPANADAS.setNombre("EMPANADAS");
+                    categoriaEMPANADAS.setBorrado("NO");
+                    categoriaEMPANADAS.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria20 = new Subcategoria();
-                    subcategoria20.setCategoria(categoria2);
+                    subcategoria20.setCategoria(categoriaEMPANADAS);
                     subcategoria20.setNombre("Jamón y queso");
                     subcategoria20.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria21 = new Subcategoria();
-                    subcategoria21.setCategoria(categoria2);
+                    subcategoria21.setCategoria(categoriaEMPANADAS);
                     subcategoria21.setNombre("Carne");
                     subcategoria21.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria22 = new Subcategoria();
-                    subcategoria22.setCategoria(categoria2);
+                    subcategoria22.setCategoria(categoriaEMPANADAS);
                     subcategoria22.setNombre("Cebolla");
                     subcategoria22.getSucursales().add(sucursal);
 
-                    categoria2.getSubcategorias().add(subcategoria20);
-                    categoria2.getSubcategorias().add(subcategoria21);
-                    categoria2.getSubcategorias().add(subcategoria22);
+                    categoriaEMPANADAS.getSubcategorias().add(subcategoria20);
+                    categoriaEMPANADAS.getSubcategorias().add(subcategoria21);
+                    categoriaEMPANADAS.getSubcategorias().add(subcategoria22);
 
                     imagen = new Imagenes();
                     imagen.setNombre("empanadas.jpg");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria2.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria2);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaEMPANADAS.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaEMPANADAS);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria2.getImagenes().add(imagen);
+                    categoriaEMPANADAS.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria2);
+                    sucursal.getCategorias().add(categoriaEMPANADAS);
 
-                    Categoria categoria3 = new Categoria();
-                    categoria3.setNombre("PIZZAS");
-                    categoria3.setBorrado("NO");
-                    categoria3.getSucursales().add(sucursal);
+                    Categoria categoriaPIZZAS = new Categoria();
+                    categoriaPIZZAS.setNombre("PIZZAS");
+                    categoriaPIZZAS.setBorrado("NO");
+                    categoriaPIZZAS.getSucursales().add(sucursal);
 
-                    Subcategoria subcategoria30 = new Subcategoria();
-                    subcategoria30.setCategoria(categoria3);
-                    subcategoria30.setNombre("A la piedra");
-                    subcategoria30.getSucursales().add(sucursal);
+                    Subcategoria subcategoriapiedra = new Subcategoria();
+                    subcategoriapiedra.setCategoria(categoriaPIZZAS);
+                    subcategoriapiedra.setNombre("A la piedra");
+                    subcategoriapiedra.getSucursales().add(sucursal);
 
-                    Subcategoria subcategoria31 = new Subcategoria();
-                    subcategoria31.setCategoria(categoria3);
-                    subcategoria31.setNombre("A la masa");
-                    subcategoria31.getSucursales().add(sucursal);
+                    Subcategoria subcategoriamasa = new Subcategoria();
+                    subcategoriamasa.setCategoria(categoriaPIZZAS);
+                    subcategoriamasa.setNombre("A la masa");
+                    subcategoriamasa.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria32 = new Subcategoria();
-                    subcategoria32.setCategoria(categoria3);
+                    subcategoria32.setCategoria(categoriaPIZZAS);
                     subcategoria32.setNombre("Media");
                     subcategoria32.getSucursales().add(sucursal);
 
-                    categoria3.getSubcategorias().add(subcategoria30);
-                    categoria3.getSubcategorias().add(subcategoria31);
-                    categoria3.getSubcategorias().add(subcategoria32);
+                    categoriaPIZZAS.getSubcategorias().add(subcategoriapiedra);
+                    categoriaPIZZAS.getSubcategorias().add(subcategoriamasa);
+                    categoriaPIZZAS.getSubcategorias().add(subcategoria32);
 
                     imagen = new Imagenes();
                     imagen.setNombre("pizzas.png");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria3.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria3);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaPIZZAS.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaPIZZAS);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria3.getImagenes().add(imagen);
+                    categoriaPIZZAS.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria3);
+                    sucursal.getCategorias().add(categoriaPIZZAS);
 
-                    Categoria categoria4 = new Categoria();
-                    categoria4.setNombre("LOMOS");
-                    categoria4.setBorrado("NO");
-                    categoria4.getSucursales().add(sucursal);
+                    Categoria categoriaLOMOS = new Categoria();
+                    categoriaLOMOS.setNombre("LOMOS");
+                    categoriaLOMOS.setBorrado("NO");
+                    categoriaLOMOS.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria40 = new Subcategoria();
-                    subcategoria40.setCategoria(categoria4);
+                    subcategoria40.setCategoria(categoriaLOMOS);
                     subcategoria40.setNombre("Cerdo");
                     subcategoria40.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria41 = new Subcategoria();
-                    subcategoria41.setCategoria(categoria4);
+                    subcategoria41.setCategoria(categoriaLOMOS);
                     subcategoria41.setNombre("Carne");
                     subcategoria41.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria42 = new Subcategoria();
-                    subcategoria42.setCategoria(categoria4);
+                    subcategoria42.setCategoria(categoriaLOMOS);
                     subcategoria42.setNombre("Pollo");
                     subcategoria42.getSucursales().add(sucursal);
 
-                    categoria4.getSubcategorias().add(subcategoria40);
-                    categoria4.getSubcategorias().add(subcategoria41);
-                    categoria4.getSubcategorias().add(subcategoria42);
+                    categoriaLOMOS.getSubcategorias().add(subcategoria40);
+                    categoriaLOMOS.getSubcategorias().add(subcategoria41);
+                    categoriaLOMOS.getSubcategorias().add(subcategoria42);
 
                     imagen = new Imagenes();
                     imagen.setNombre("lomos.avif");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria4.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria4);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaLOMOS.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaLOMOS);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria4.getImagenes().add(imagen);
+                    categoriaLOMOS.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria4);
+                    sucursal.getCategorias().add(categoriaLOMOS);
 
-                    Categoria categoria5 = new Categoria();
-                    categoria5.setNombre("HELADO");
-                    categoria5.setBorrado("NO");
-                    categoria5.getSucursales().add(sucursal);
+                    Categoria categoriaHELADO = new Categoria();
+                    categoriaHELADO.setNombre("HELADO");
+                    categoriaHELADO.setBorrado("NO");
+                    categoriaHELADO.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria50 = new Subcategoria();
-                    subcategoria50.setCategoria(categoria5);
+                    subcategoria50.setCategoria(categoriaHELADO);
                     subcategoria50.setNombre("A la crema");
                     subcategoria50.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria51 = new Subcategoria();
-                    subcategoria51.setCategoria(categoria5);
+                    subcategoria51.setCategoria(categoriaHELADO);
                     subcategoria51.setNombre("Al agua");
                     subcategoria51.getSucursales().add(sucursal);
 
-                    categoria5.getSubcategorias().add(subcategoria50);
-                    categoria5.getSubcategorias().add(subcategoria51);
+                    categoriaHELADO.getSubcategorias().add(subcategoria50);
+                    categoriaHELADO.getSubcategorias().add(subcategoria51);
 
                     imagen = new Imagenes();
                     imagen.setNombre("helados.jpg");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria5.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria5);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaHELADO.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaHELADO);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria5.getImagenes().add(imagen);
+                    categoriaHELADO.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria5);
+                    sucursal.getCategorias().add(categoriaHELADO);
 
-                    Categoria categoria6 = new Categoria();
-                    categoria6.setNombre("PARRILLA");
-                    categoria6.setBorrado("NO");
-                    categoria6.getSucursales().add(sucursal);
+                    Categoria categoriaPARRILLA = new Categoria();
+                    categoriaPARRILLA.setNombre("PARRILLA");
+                    categoriaPARRILLA.setBorrado("NO");
+                    categoriaPARRILLA.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria60 = new Subcategoria();
-                    subcategoria60.setCategoria(categoria6);
+                    subcategoria60.setCategoria(categoriaPARRILLA);
                     subcategoria60.setNombre("Vacio a la llama");
                     subcategoria60.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria61 = new Subcategoria();
-                    subcategoria60.setCategoria(categoria6);
+                    subcategoria60.setCategoria(categoriaPARRILLA);
                     subcategoria60.setNombre("Cordero a la llama");
                     subcategoria60.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria62 = new Subcategoria();
-                    subcategoria60.setCategoria(categoria6);
+                    subcategoria60.setCategoria(categoriaPARRILLA);
                     subcategoria60.setNombre("Costillar a la llama");
                     subcategoria60.getSucursales().add(sucursal);
 
-                    categoria6.getSubcategorias().add(subcategoria60);
-                    categoria6.getSubcategorias().add(subcategoria61);
-                    categoria6.getSubcategorias().add(subcategoria62);
+                    categoriaPARRILLA.getSubcategorias().add(subcategoria60);
+                    categoriaPARRILLA.getSubcategorias().add(subcategoria61);
+                    categoriaPARRILLA.getSubcategorias().add(subcategoria62);
 
                     imagen = new Imagenes();
                     imagen.setNombre("parrilla.avif");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria6.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria6);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaPARRILLA.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaPARRILLA);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria6.getImagenes().add(imagen);
+                    categoriaPARRILLA.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria6);
+                    sucursal.getCategorias().add(categoriaPARRILLA);
 
-                    Categoria categoria7 = new Categoria();
-                    categoria7.setNombre("PASTAS");
-                    categoria7.setBorrado("NO");
-                    categoria7.getSucursales().add(sucursal);
+                    Categoria categoriaPASTAS = new Categoria();
+                    categoriaPASTAS.setNombre("PASTAS");
+                    categoriaPASTAS.setBorrado("NO");
+                    categoriaPASTAS.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria70 = new Subcategoria();
-                    subcategoria70.setCategoria(categoria7);
+                    subcategoria70.setCategoria(categoriaPASTAS);
                     subcategoria70.setNombre("Ñoquis");
                     subcategoria70.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria71 = new Subcategoria();
-                    subcategoria71.setCategoria(categoria7);
+                    subcategoria71.setCategoria(categoriaPASTAS);
                     subcategoria71.setNombre("Fideos");
                     subcategoria71.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria72 = new Subcategoria();
-                    subcategoria72.setCategoria(categoria7);
+                    subcategoria72.setCategoria(categoriaPASTAS);
                     subcategoria72.setNombre("Ravioles");
                     subcategoria72.getSucursales().add(sucursal);
 
-                    categoria7.getSubcategorias().add(subcategoria70);
-                    categoria7.getSubcategorias().add(subcategoria71);
-                    categoria7.getSubcategorias().add(subcategoria72);
+                    categoriaPASTAS.getSubcategorias().add(subcategoria70);
+                    categoriaPASTAS.getSubcategorias().add(subcategoria71);
+                    categoriaPASTAS.getSubcategorias().add(subcategoria72);
 
                     imagen = new Imagenes();
                     imagen.setNombre("pastas.jpeg");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria7.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria7);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaPASTAS.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaPASTAS);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria7.getImagenes().add(imagen);
+                    categoriaPASTAS.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria7);
+                    sucursal.getCategorias().add(categoriaPASTAS);
 
-                    Categoria categoria8 = new Categoria();
-                    categoria8.setNombre("SUSHI");
-                    categoria8.setBorrado("NO");
-                    categoria8.getSucursales().add(sucursal);
+                    Categoria categoriaSUSHI = new Categoria();
+                    categoriaSUSHI.setNombre("SUSHI");
+                    categoriaSUSHI.setBorrado("NO");
+                    categoriaSUSHI.getSucursales().add(sucursal);
 
                     imagen = new Imagenes();
                     imagen.setNombre("sushi.jpg");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria8.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria8);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaSUSHI.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaSUSHI);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria8.getImagenes().add(imagen);
+                    categoriaSUSHI.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria8);
+                    sucursal.getCategorias().add(categoriaSUSHI);
 
-                    Categoria categoria9 = new Categoria();
-                    categoria9.setNombre("MILANESAS");
-                    categoria9.setBorrado("NO");
-                    categoria9.getSucursales().add(sucursal);
+                    Categoria categoriaMILANESAS = new Categoria();
+                    categoriaMILANESAS.setNombre("MILANESAS");
+                    categoriaMILANESAS.setBorrado("NO");
+                    categoriaMILANESAS.getSucursales().add(sucursal);
 
                     imagen = new Imagenes();
                     imagen.setNombre("milanesas.png");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria9.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria9);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaMILANESAS.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaMILANESAS);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria9.getImagenes().add(imagen);
+                    categoriaMILANESAS.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria9);
+                    sucursal.getCategorias().add(categoriaMILANESAS);
 
-                    Categoria categoria10 = new Categoria();
-                    categoria10.setNombre("BEBIDA_SIN_ALCOHOL");
-                    categoria10.setBorrado("NO");
-                    categoria10.getSucursales().add(sucursal);
+                    Categoria categoriaBEBIDA_SIN_ALCOHOL = new Categoria();
+                    categoriaBEBIDA_SIN_ALCOHOL.setNombre("BEBIDA_SIN_ALCOHOL");
+                    categoriaBEBIDA_SIN_ALCOHOL.setBorrado("NO");
+                    categoriaBEBIDA_SIN_ALCOHOL.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria100 = new Subcategoria();
-                    subcategoria100.setCategoria(categoria10);
+                    subcategoria100.setCategoria(categoriaBEBIDA_SIN_ALCOHOL);
                     subcategoria100.setNombre("Gaseosas");
                     subcategoria100.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria101 = new Subcategoria();
-                    subcategoria101.setCategoria(categoria10);
+                    subcategoria101.setCategoria(categoriaBEBIDA_SIN_ALCOHOL);
                     subcategoria101.setNombre("Agua");
                     subcategoria101.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria102 = new Subcategoria();
-                    subcategoria102.setCategoria(categoria10);
+                    subcategoria102.setCategoria(categoriaBEBIDA_SIN_ALCOHOL);
                     subcategoria102.setNombre("Gaseosas sin azúcar");
                     subcategoria102.getSucursales().add(sucursal);
 
-                    categoria10.getSubcategorias().add(subcategoria100);
-                    categoria10.getSubcategorias().add(subcategoria101);
-                    categoria10.getSubcategorias().add(subcategoria102);
+                    categoriaBEBIDA_SIN_ALCOHOL.getSubcategorias().add(subcategoria100);
+                    categoriaBEBIDA_SIN_ALCOHOL.getSubcategorias().add(subcategoria101);
+                    categoriaBEBIDA_SIN_ALCOHOL.getSubcategorias().add(subcategoria102);
 
                     imagen = new Imagenes();
                     imagen.setNombre("sin-alcohol.jpg");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria10.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria10);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaBEBIDA_SIN_ALCOHOL.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaBEBIDA_SIN_ALCOHOL);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria10.getImagenes().add(imagen);
+                    categoriaBEBIDA_SIN_ALCOHOL.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria10);
+                    sucursal.getCategorias().add(categoriaBEBIDA_SIN_ALCOHOL);
 
-                    Categoria categoria11 = new Categoria();
-                    categoria11.setNombre("BEBIDA_CON_ALCOHOL");
-                    categoria11.setBorrado("NO");
-                    categoria11.getSucursales().add(sucursal);
+                    Categoria categoriaBEBIDA_CON_ALCOHOL = new Categoria();
+                    categoriaBEBIDA_CON_ALCOHOL.setNombre("BEBIDA_CON_ALCOHOL");
+                    categoriaBEBIDA_CON_ALCOHOL.setBorrado("NO");
+                    categoriaBEBIDA_CON_ALCOHOL.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria110 = new Subcategoria();
-                    subcategoria110.setCategoria(categoria11);
+                    subcategoria110.setCategoria(categoriaBEBIDA_CON_ALCOHOL);
                     subcategoria110.setNombre("Vino");
                     subcategoria110.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria111 = new Subcategoria();
-                    subcategoria111.setCategoria(categoria11);
+                    subcategoria111.setCategoria(categoriaBEBIDA_CON_ALCOHOL);
                     subcategoria111.setNombre("Cerveza");
                     subcategoria111.getSucursales().add(sucursal);
 
                     Subcategoria subcategoria112 = new Subcategoria();
-                    subcategoria112.setCategoria(categoria11);
+                    subcategoria112.setCategoria(categoriaBEBIDA_CON_ALCOHOL);
                     subcategoria112.setNombre("Tragos");
                     subcategoria112.getSucursales().add(sucursal);
 
-                    categoria11.getSubcategorias().add(subcategoria110);
-                    categoria11.getSubcategorias().add(subcategoria111);
-                    categoria11.getSubcategorias().add(subcategoria112);
+                    categoriaBEBIDA_CON_ALCOHOL.getSubcategorias().add(subcategoria110);
+                    categoriaBEBIDA_CON_ALCOHOL.getSubcategorias().add(subcategoria111);
+                    categoriaBEBIDA_CON_ALCOHOL.getSubcategorias().add(subcategoria112);
 
                     imagen = new Imagenes();
                     imagen.setNombre("alcohol.jpg");
-                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoria11.getNombre() + "/" + imagen.getNombre());
-                    imagen.getCategorias().add(categoria11);
+                    imagen.setRuta("http://localhost:8080/imagesCategoria/" + categoriaBEBIDA_CON_ALCOHOL.getNombre() + "/" + imagen.getNombre());
+                    imagen.getCategorias().add(categoriaBEBIDA_CON_ALCOHOL);
                     imagen.getSucursales().add(sucursal);
 
-                    categoria11.getImagenes().add(imagen);
+                    categoriaBEBIDA_CON_ALCOHOL.getImagenes().add(imagen);
 
-                    sucursal.getCategorias().add(categoria11);
+                    sucursal.getCategorias().add(categoriaBEBIDA_CON_ALCOHOL);
 
                     Medida medida = new Medida();
                     medida.setNombre("KILOGRAMOS");
@@ -512,6 +514,20 @@ public class Main {
                     medida5.setBorrado("NO");
 
                     sucursal.getMedidas().add(medida5);
+                    
+                    
+                    /// ARTICULOS
+
+
+                    ArticuloVenta articuloVenta = new ArticuloVenta();
+                    articuloVenta.setCategoria();
+
+                    imagen = new Imagenes();
+                    imagen.setNombre("ACA BUSCA FOTO Y METELA EN LA CARPETA DE LAS IMAGESARTICULOS Y MANDALE EL MISMO NOMBRE.jpeg");
+                    imagen.setRuta("http://localhost:8080/imagesArticulos/" + articuloVenta.getNombre() + "/" + imagen.getNombre());
+                    imagen.getArticulosVenta().add(articuloVenta);
+                    imagen.getSucursales().add(sucursal);
+                    
 
                     PrivilegiosSucursales privilegio = new PrivilegiosSucursales();
                     privilegio.setNombre("Articulos de venta");
@@ -739,6 +755,267 @@ public class Main {
 
                     empresaRepository.save(empresa);
                 }
+
+                // CARGA DE PEDIDOS Y CLIENTES
+
+
+                Cliente cliente = new Cliente();
+                cliente.setContraseña("123456");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615488541l);
+                cliente.setFechaNacimiento(LocalDate.of(1991, 7, 4));
+                cliente.setNombre("Juliana Vargas");
+
+                Domicilio domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(1518);
+                domicilio.setCalle("San martin");
+                domicilio.setCodigoPostal(4485);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("COLONIA EL SALADO").get());
+
+                cliente.getDomicilios().add(domicilio);
+
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("123456");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489123l);
+                cliente.setFechaNacimiento(LocalDate.of(1992, 7, 4));
+                cliente.setNombre("Raul Garcia");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(785);
+                domicilio.setCalle("Belgrano");
+                domicilio.setCodigoPostal(4874);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("MANANTIALES DE PEREDA").get());
+
+                cliente.getDomicilios().add(domicilio);
+
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("123456");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489553l);
+                cliente.setFechaNacimiento(LocalDate.of(2001, 8, 5));
+                cliente.setNombre("Victor Heredia");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(123);
+                domicilio.setCalle("San Juan");
+                domicilio.setCodigoPostal(4174);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("LA TORTUGA").get());
+
+                cliente.getDomicilios().add(domicilio);
+
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("123456");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615484417l);
+                cliente.setFechaNacimiento(LocalDate.of(1985, 7, 25));
+                cliente.setNombre("Sofia Lopez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(123);
+                domicilio.setCalle("Rivadavia");
+                domicilio.setCodigoPostal(5584);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("SAN MIGUEL DEL MONTE").get());
+
+                cliente.getDomicilios().add(domicilio);
+
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("123456");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615484417l);
+                cliente.setFechaNacimiento(LocalDate.of(2002, 7, 25));
+                cliente.setNombre("Manuel Lopez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(537);
+                domicilio.setCalle("Sarmiento");
+                domicilio.setCodigoPostal(5514);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("BELEN DE ESCOBAR").get());
+
+                cliente.getDomicilios().add(domicilio);
+
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("abcdef");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489592L);
+                cliente.setFechaNacimiento(LocalDate.of(1985, 12, 15));
+                cliente.setNombre("Maria Lopez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(456);
+                domicilio.setCalle("Córdoba");
+                domicilio.setCodigoPostal(5500);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("COLONIA SAN LUIS").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("qwerty");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489593L);
+                cliente.setFechaNacimiento(LocalDate.of(1978, 3, 22));
+                cliente.setNombre("Carlos Martinez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(789);
+                domicilio.setCalle("Rivadavia");
+                domicilio.setCodigoPostal(4000);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("MOORES").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("pass1234");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489594L);
+                cliente.setFechaNacimiento(LocalDate.of(1993, 9, 5));
+                cliente.setNombre("Ana Perez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(321);
+                domicilio.setCalle("Belgrano");
+                domicilio.setCodigoPostal(5000);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("HUESO CLAVADO").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("mypassword");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489595L);
+                cliente.setFechaNacimiento(LocalDate.of(2000, 11, 10));
+                cliente.setNombre("Lucia Fernandez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(654);
+                domicilio.setCalle("Mitre");
+                domicilio.setCodigoPostal(4400);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("INGENIERO PABLO NOGUES").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("secure123");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489596L);
+                cliente.setFechaNacimiento(LocalDate.of(1989, 5, 18));
+                cliente.setNombre("Federico Gomez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(987);
+                domicilio.setCalle("Las Heras");
+                domicilio.setCodigoPostal(4600);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("GUAYMALLEN").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("hunter2");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489597L);
+                cliente.setFechaNacimiento(LocalDate.of(1975, 2, 28));
+                cliente.setNombre("Gabriela Suarez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(741);
+                domicilio.setCalle("San Martin");
+                domicilio.setCodigoPostal(4300);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("SAN SIMON").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("1234abcd");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489598L);
+                cliente.setFechaNacimiento(LocalDate.of(1997, 6, 30));
+                cliente.setNombre("Diego Ramirez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(258);
+                domicilio.setCalle("Colon");
+                domicilio.setCodigoPostal(5700);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("EL GLIPTODONTE").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("pass4321");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489599L);
+                cliente.setFechaNacimiento(LocalDate.of(1982, 4, 12));
+                cliente.setNombre("Laura Diaz");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(159);
+                domicilio.setCalle("Sarmiento");
+                domicilio.setCodigoPostal(6200);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("LA BLANQUEADA").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
+                cliente = new Cliente();
+                cliente.setContraseña("abcdefg");
+                cliente.setBorrado("NO");
+                cliente.setTelefono(2615489600L);
+                cliente.setFechaNacimiento(LocalDate.of(1990, 8, 20));
+                cliente.setNombre("Sofia Lopez");
+
+                domicilio = new Domicilio();
+                domicilio.setCliente(cliente);
+                domicilio.setNumero(852);
+                domicilio.setCalle("9 de Julio");
+                domicilio.setCodigoPostal(6600);
+                domicilio.setBorrado("NO");
+                domicilio.setLocalidad(localidadRepository.findByName("SAN GENARO").get());
+
+                cliente.getDomicilios().add(domicilio);
+                clienteRepository.save(cliente);
+
             } catch (Exception ignored) {
             }
         };
