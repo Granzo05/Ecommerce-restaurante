@@ -56,6 +56,19 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
   const [imagenes, setImagenes] = useState<Imagenes[]>([]);
   const [selectIndex, setSelectIndex] = useState<number>(0);
 
+  const filteredPrivilegios = privilegios?.filter(
+    (privilegio) =>
+      privilegio.nombre !== 'Empleados' &&
+      privilegio.nombre !== 'Sucursales' &&
+      privilegio.nombre !== 'Estadísticas' &&
+      privilegio.nombre !== 'Empresas'
+  );
+
+  const filteredPrivilegiosOpcionales = privilegios?.filter(
+    (privilegio) =>
+      privilegio.nombre == 'Empleados' || privilegio.nombre == 'Sucursales' || privilegio.nombre == 'Estadísticas' || privilegio.nombre == 'Empresas'
+  );
+
   const handleImagen = (index: number, file: File | null) => {
     if (file) {
       const newImagenes = [...imagenes];
@@ -338,7 +351,7 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       toast.info("Se debe agregar al menos un domicilio.");
       return;
     }
-    
+
     setIsLoading(true);
 
     let domiciliosValidos = [...domiciliosModificable, ...domicilios].filter(domicilio =>
@@ -555,6 +568,15 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       nextStep();
     }
   }
+
+  const estanTodosMarcados = (privilegiosElegidos: { [x: string]: string | any[] | string[]; }, privilegio: PrivilegiosSucursales) => {
+    return privilegio.permisos.every((permiso: any) => privilegiosElegidos[privilegio.nombre]?.includes(permiso));
+  };
+
+  const estanTodosDesmarcados = (privilegiosElegidos: { [x: string]: string | any[] | string[]; }, privilegio: PrivilegiosSucursales) => {
+    return privilegio.permisos.every((permiso: any) => !privilegiosElegidos[privilegio.nombre]?.includes(permiso));
+  };
+
 
   //VALIDAR CUIL
 
@@ -804,70 +826,106 @@ const EditarEmpleado: React.FC<EditarEmpleadoProps> = ({ empleadoOriginal, onClo
       case 5:
         return (
           <>
-            <h4>Paso 5 - Privilegios comunes</h4>
-            {privilegios && privilegios.map((privilegio, index) => (
-              <div key={index}>
-                {privilegio.nombre !== 'Empleados' && privilegio.nombre !== 'Sucursales' && privilegio.nombre !== 'Estadísticas' && privilegio.nombre !== 'Empresas' && (
-                  <>
-                    <hr />
-                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.nombre)}>Desmarcar todo</p>
-                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.nombre, privilegio.permisos)}>Marcar todo</p>
-                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.nombre}</h4>
-                    {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
-                      <div key={permisoIndex}>
-                        <input
-                          type="checkbox"
-                          value={permiso}
-                          checked={privilegiosElegidos[privilegio.nombre]?.includes(permiso) || false}
-                          onChange={() => handleModificarPrivilegios(privilegio.nombre, permiso)}
-                        />
-                        <label>{permiso}</label>
+            <h4 className="paso-titulo">Paso 5 - Privilegios comunes</h4>
+            <div className="privilegios-container">
+              {filteredPrivilegios && filteredPrivilegios.map((privilegio, index) => (
+                <div key={index} className='privilegio'>
+                  {privilegio.nombre !== 'Empleados' && privilegio.nombre !== 'Sucursales' && privilegio.nombre !== 'Estadísticas' && privilegio.nombre !== 'Empresas' && (
+                    <>
+                      <div className="marcajes">
+                        <p
+                          className={`cierre-privilegios ${estanTodosDesmarcados(privilegiosElegidos, privilegio) ? 'desactivado' : ''}`}
+                          onClick={() => !estanTodosDesmarcados(privilegiosElegidos, privilegio) && desmarcarTarea(privilegio.nombre)}
+                        >
+                          Desmarcar todo
+                        </p>
+                        <p
+                          className={`cierre-privilegios ${estanTodosMarcados(privilegiosElegidos, privilegio) ? 'desactivado' : ''}`}
+                          onClick={() => !estanTodosMarcados(privilegiosElegidos, privilegio) && marcarTarea(privilegio.nombre, privilegio.permisos)}
+                        >
+                          Marcar todo
+                        </p>
                       </div>
-                    ))}
-                    <hr />
-                  </>
-                )}
-              </div>
-            ))}
+                      <h4 className="privilegio-titulo">&mdash; {privilegio.nombre} &mdash;</h4>
+                      <div className="permisos-container">
+                        {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
+                          <div key={permisoIndex} className="permiso">
+                            <input
+                              type="checkbox"
+                              value={permiso}
+                              checked={privilegiosElegidos[privilegio.nombre]?.includes(permiso) || false}
+                              onChange={() => handleModificarPrivilegios(privilegio.nombre, permiso)}
+                            />
+                            <label>{permiso}</label>
+                          </div>
+                        ))}
+                      </div>
+
+                      <hr />
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
+
+              <button className='btn-accion-adelante' onClick={nextStep}>Privilegios sensibles (opcional) ⭢</button>
               <button className='btn-accion-completar' onClick={editarEmpleado} disabled={isLoading}>
                 {isLoading ? 'Cargando...' : 'Editar empleado ✓'}
               </button>
-              <button className='btn-accion-adelante' onClick={nextStep}>Siguiente ⭢</button>
             </div>
           </>
         );
       case 6:
         return (
           <>
-            <h4>Paso opcional - Privilegios sensibles</h4>
+            <h4 className="paso-titulo">Paso opcional - Privilegios sensibles</h4>
             <p>Recomendamos que estos privilegios estén deshabilitados ya que pueden dar acceso a datos sensibles</p>
-            {privilegios && privilegios.map((privilegio, index) => (
-              <div key={index}>
-                {(privilegio.nombre === 'Empleados' || privilegio.nombre === 'Sucursales' || privilegio.nombre === 'Estadísticas' || privilegio.nombre === 'Empresas') && (
-                  <>
-                    <hr />
-                    <p className='cierre-ingrediente' onClick={() => desmarcarTarea(privilegio.nombre)}>Desmarcar todo</p>
-                    <p className='cierre-ingrediente' onClick={() => marcarTarea(privilegio.nombre, privilegio.permisos)}>Marcar todo</p>
-                    <h4 style={{ fontSize: '18px' }}>Tarea: {privilegio.nombre}</h4>
-                    {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
-                      <div key={permisoIndex}>
-                        <input
-                          type="checkbox"
-                          value={permiso}
-                          checked={privilegiosElegidos[privilegio.nombre]?.includes(permiso) || false}
-                          onChange={() => handleModificarPrivilegios(privilegio.nombre, permiso)}
-                        />
-                        <label>{permiso}</label>
+            <div className="privilegios-container">
+              {filteredPrivilegiosOpcionales && filteredPrivilegiosOpcionales.map((privilegio, index) => (
+                <div key={index} className='privilegio-opcional'>
+                  {(privilegio.nombre === 'Empleados' || privilegio.nombre === 'Sucursales' || privilegio.nombre === 'Estadísticas' || privilegio.nombre === 'Empresas') && (
+                    <>
+                      <hr />
+                      <div className="marcajes">
+                        <p
+                          className={`cierre-privilegios ${estanTodosDesmarcados(privilegiosElegidos, privilegio) ? 'desactivado' : ''}`}
+                          onClick={() => !estanTodosDesmarcados(privilegiosElegidos, privilegio) && desmarcarTarea(privilegio.nombre)}
+                        >
+                          Desmarcar todo
+                        </p>
+                        <p
+                          className={`cierre-privilegios ${estanTodosMarcados(privilegiosElegidos, privilegio) ? 'desactivado' : ''}`}
+                          onClick={() => !estanTodosMarcados(privilegiosElegidos, privilegio) && marcarTarea(privilegio.nombre, privilegio.permisos)}
+                        >
+                          Marcar todo
+                        </p>
                       </div>
-                    ))}
-                    <hr />
-                  </>
-                )}
-              </div>
-            ))}
+                      <h4 className="privilegio-titulo" style={{ fontSize: '18px' }}>Tarea: {privilegio.nombre}</h4>
+                      <div className="permisos-container">
+                        {privilegio.permisos && privilegio.permisos.map((permiso, permisoIndex) => (
+                          <div key={permisoIndex}>
+                            <input
+                              type="checkbox"
+                              value={permiso}
+                              checked={privilegiosElegidos[privilegio.nombre]?.includes(permiso) || false}
+                              onChange={() => handleModificarPrivilegios(privilegio.nombre, permiso)}
+                            />
+                            <label>{permiso}</label>
+                          </div>
+                        ))}
+                      </div>
+
+                      <hr />
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+
             <hr />
             <div className="btns-pasos">
               <button className='btn-accion-atras' onClick={prevStep}>⭠ Atrás</button>
