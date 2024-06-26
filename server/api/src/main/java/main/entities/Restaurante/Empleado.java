@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Productos.Imagenes;
-import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.util.HashSet;

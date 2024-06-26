@@ -1,12 +1,10 @@
 package main.controllers;
 
 import main.entities.Ingredientes.Categoria;
-import main.entities.Ingredientes.Ingrediente;
 import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
-import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,12 +83,12 @@ public class ArticuloVentaController {
     public Set<ArticuloVenta> getArticulosPorNombre(@PathVariable("nombre") String nombre, @PathVariable("idSucursal") Long idSucursal) {
         List<ArticuloVenta> articulos = articuloVentaRepository.findByNameArticuloAndIdSucursalEqualsNotBorrado(nombre, idSucursal);
 
-        if(articulos.isEmpty()) {
+        if (articulos.isEmpty()) {
             articulos = articuloVentaRepository.findByNameCategoriaAndIdSucursalEquals(nombre, idSucursal);
         }
         // Hacemos el último intento
 
-        if(articulos.isEmpty()) {
+        if (articulos.isEmpty()) {
             articulos = articuloVentaRepository.findByNameSubcategoriaAndIdSucursalEquals(nombre, idSucursal);
         }
 
@@ -121,8 +119,10 @@ public class ArticuloVentaController {
                     articuloVenta = articuloVentaRepository.save(articuloVenta);
 
                     sucursal.getArticulosVenta().add(articuloVenta);
+                    sucursal.setBorrado("NO");
 
-                    sucursalRepository.save(sucursal);                }
+                    sucursalRepository.save(sucursal);
+                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
@@ -133,6 +133,7 @@ public class ArticuloVentaController {
                         articuloVenta = articuloVentaRepository.save(articuloVenta);
 
                         sucursal.getArticulosVenta().add(articuloVenta);
+                        sucursal.setBorrado("NO");
 
                         sucursalRepository.save(sucursal);
                     }

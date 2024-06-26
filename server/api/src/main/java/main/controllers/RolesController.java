@@ -1,10 +1,8 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Ingredientes.Medida;
 import main.entities.Restaurante.Roles;
 import main.entities.Restaurante.Sucursal;
-import main.repositories.MedidaRepository;
 import main.repositories.RolesRepository;
 import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
@@ -59,6 +57,7 @@ public class RolesController {
                     rolDetails = rolesRepository.save(rolDetails);
 
                     sucursal.getRoles().add(rolDetails);
+                    sucursal.setBorrado("NO");
 
                     sucursalRepository.save(sucursal);
                 }
@@ -72,6 +71,7 @@ public class RolesController {
                         rolDetails = rolesRepository.save(rolDetails);
 
                         sucursal.getRoles().add(rolDetails);
+                        sucursal.setBorrado("NO");
 
                         sucursalRepository.save(sucursal);
                     }

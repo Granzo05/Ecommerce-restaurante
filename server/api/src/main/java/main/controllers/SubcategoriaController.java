@@ -64,8 +64,10 @@ public class SubcategoriaController {
                             categoria.getSubcategorias().add(categoriaDetails);
 
                             sucursal.getCategorias().add(categoria);
+                            sucursal.setBorrado("NO");
 
-                            sucursalRepository.save(sucursal);                        }
+                            sucursalRepository.save(sucursal);
+                        }
                     }
                 }
             } else {
@@ -83,6 +85,7 @@ public class SubcategoriaController {
                             categoria.getSubcategorias().add(categoriaDetails);
 
                             sucursal.getCategorias().add(categoria);
+                            sucursal.setBorrado("NO");
 
                             sucursalRepository.save(sucursal);
                         }

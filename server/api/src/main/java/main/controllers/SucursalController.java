@@ -8,9 +8,11 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloMenu;
-import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
-import main.entities.Restaurante.*;
+import main.entities.Restaurante.LocalidadDelivery;
+import main.entities.Restaurante.PrivilegiosSucursales;
+import main.entities.Restaurante.Roles;
+import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.*;
 
 @RestController
@@ -187,7 +188,7 @@ public class SucursalController {
         Optional<Sucursal> sucursalDB = sucursalRepository.findByEmail(sucursalDetails.getEmail());
 
         if (sucursalDB.isEmpty()) {
-            for (Domicilio domicilio: sucursalDetails.getDomicilios()) {
+            for (Domicilio domicilio : sucursalDetails.getDomicilios()) {
                 domicilio.setSucursal(sucursalDetails);
                 domicilio.setBorrado("NO");
             }

@@ -2,7 +2,10 @@ package main.entities.Productos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.Subcategoria;

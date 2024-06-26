@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Restaurante.Sucursal;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDate;
 import java.util.HashSet;

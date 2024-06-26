@@ -53,9 +53,11 @@ public class MedidaController {
 
                     medidaDetails = medidaRepository.save(medidaDetails);
 
+                    sucursal.setBorrado("NO");
                     sucursal.getMedidas().add(medidaDetails);
 
-                    sucursalRepository.save(sucursal);                }
+                    sucursalRepository.save(sucursal);
+                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
@@ -66,6 +68,7 @@ public class MedidaController {
                         medidaDetails = medidaRepository.save(medidaDetails);
 
                         sucursal.getMedidas().add(medidaDetails);
+                        sucursal.setBorrado("NO");
 
                         sucursalRepository.save(sucursal);
                     }

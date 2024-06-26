@@ -2,11 +2,9 @@ package main.repositories;
 
 import main.entities.Ingredientes.Subcategoria;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +23,7 @@ public interface SubcategoriaRepository extends JpaRepository<Subcategoria, Long
 
     @Query("SELECT sc FROM Subcategoria sc JOIN sc.sucursales s WHERE sc.categoria.id = :idCategoria AND s.id = :idSucursal")
     List<Subcategoria> findAllByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
+
     @Query("SELECT sc FROM Subcategoria sc JOIN sc.sucursales s WHERE sc.categoria.id = :idCategoria AND s.id = :idSucursal AND sc.borrado = 'NO'")
     List<Subcategoria> findAllByIdCategoriaAndIdSucursalNotBorrado(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 

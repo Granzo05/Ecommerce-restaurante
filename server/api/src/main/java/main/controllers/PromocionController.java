@@ -85,8 +85,10 @@ public class PromocionController {
                     promocionDetails = promocionRepository.save(promocionDetails);
 
                     sucursal.getPromociones().add(promocionDetails);
+                    sucursal.setBorrado("NO");
 
-                    sucursalRepository.save(sucursal);                }
+                    sucursalRepository.save(sucursal);
+                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
@@ -97,6 +99,7 @@ public class PromocionController {
                         promocionDetails = promocionRepository.save(promocionDetails);
 
                         sucursal.getPromociones().add(promocionDetails);
+                        sucursal.setBorrado("NO");
 
                         sucursalRepository.save(sucursal);
                     }

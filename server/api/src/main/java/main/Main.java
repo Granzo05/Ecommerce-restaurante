@@ -6,7 +6,10 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
 import main.entities.Ingredientes.Subcategoria;
 import main.entities.Productos.Imagenes;
-import main.entities.Restaurante.*;
+import main.entities.Restaurante.Empresa;
+import main.entities.Restaurante.PrivilegiosSucursales;
+import main.entities.Restaurante.Roles;
+import main.entities.Restaurante.Sucursal;
 import main.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -736,7 +739,8 @@ public class Main {
 
                     empresaRepository.save(empresa);
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         };
     }
 

@@ -3,10 +3,8 @@ package main.controllers;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.Medida;
-import main.entities.Pedidos.DetallesPedido;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockEntrante;
 import main.entities.Stock.StockIngredientes;
 import main.repositories.*;
@@ -86,12 +84,13 @@ public class StockIngredientesController {
 
         Set<Ingrediente> ingredientesSinStock = new HashSet<>();
 
-        for (Ingrediente ingrediente: ingredientes) {
+        for (Ingrediente ingrediente : ingredientes) {
             Optional<StockIngredientes> stockDB = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
 
-            if(stockDB.isPresent()) {
+            if (stockDB.isPresent()) {
                 StockIngredientes stock = stockDB.get();
-                if (stock.getCantidadActual() == 0 && stock.getCantidadMinima() == 0 && stock.getCantidadMinima() == 0) ingredientesSinStock.add(ingrediente);
+                if (stock.getCantidadActual() == 0 && stock.getCantidadMinima() == 0 && stock.getCantidadMinima() == 0)
+                    ingredientesSinStock.add(ingrediente);
             }
         }
 
@@ -188,6 +187,7 @@ public class StockIngredientesController {
 
         return ResponseEntity.ofNullable("El stock ya existe");
     }
+
     @CrossOrigin
     @PutMapping("sucursal/{idSucursal}/stockIngredientes/{nombreIngrediente}/cantidad/{cantidad}")
     public ResponseEntity<String> reponerStock(@PathVariable("nombreIngrediente") String nombreIngrediente, @PathVariable("cantidad") int cantidad, @PathVariable("idSucursal") long id) {

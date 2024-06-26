@@ -112,12 +112,13 @@ public class StockEntranteController {
                 Optional<StockArticuloVenta> stockArticulo = stockArticuloRepository.findByIdArticuloAndIdSucursal(articulo.getId(), id);
 
                 // Comparamos el precio almacenado de compra con la nueva compra
-                if(stockArticulo.isPresent()) {
+                if (stockArticulo.isPresent()) {
                     // Verificamos si el posible stock entrante supera los maximos
-                    if(detalle.getCantidad() + stockArticulo.get().getCantidadActual() >= stockArticulo.get().getCantidadMaxima()) productosStockEntranteMayorAlMaximo.add(articulo.getNombre());
+                    if (detalle.getCantidad() + stockArticulo.get().getCantidadActual() >= stockArticulo.get().getCantidadMaxima())
+                        productosStockEntranteMayorAlMaximo.add(articulo.getNombre());
 
                     // Si los precios son distintos, asignamos el precio de compra nuevo para poder calcular mejor el costo de los menus y no perder plata
-                    if(stockArticulo.get().getPrecioCompra() != detalle.getCostoUnitario() && detalle.isModificarPrecio()) {
+                    if (stockArticulo.get().getPrecioCompra() != detalle.getCostoUnitario() && detalle.isModificarPrecio()) {
                         stockArticulo.get().setPrecioCompra(detalle.getCostoUnitario());
                     }
 
@@ -131,11 +132,12 @@ public class StockEntranteController {
                 // Buscamos el stock almacenado del articulo
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findStockByIngredienteNameAndIdSucursal(ingrediente.getNombre(), id);
                 // Comparamos el precio almacenado de compra con la nueva compra
-                if(stockIngrediente.isPresent()) {
-                    if(detalle.getCantidad() + stockIngrediente.get().getCantidadActual() >= stockIngrediente.get().getCantidadMaxima()) productosStockEntranteMayorAlMaximo.add(ingrediente.getNombre());
+                if (stockIngrediente.isPresent()) {
+                    if (detalle.getCantidad() + stockIngrediente.get().getCantidadActual() >= stockIngrediente.get().getCantidadMaxima())
+                        productosStockEntranteMayorAlMaximo.add(ingrediente.getNombre());
 
                     // Si los precios son distintos, asignamos el precio de compra nuevo para poder calcular mejor el costo de los menus y no perder plata
-                    if(stockIngrediente.get().getPrecioCompra() != detalle.getCostoUnitario() && detalle.isModificarPrecio()) {
+                    if (stockIngrediente.get().getPrecioCompra() != detalle.getCostoUnitario() && detalle.isModificarPrecio()) {
                         stockIngrediente.get().setPrecioCompra(detalle.getCostoUnitario());
                     }
 
@@ -156,12 +158,12 @@ public class StockEntranteController {
         // Guardar el StockEntrante y sus detalles
         stockEntranteRepository.save(stockDetail);
 
-        if(productosStockEntranteMayorAlMaximo.isEmpty()) {
+        if (productosStockEntranteMayorAlMaximo.isEmpty()) {
             return ResponseEntity.ok("El pedido fue cargado con éxito");
         } else {
             StringBuilder mensaje = new StringBuilder("Stock entrante guardado, tenga en cuenta que los siguientes productos superan sus máximos en almacenamiento: \n");
 
-            for(String producto: productosStockEntranteMayorAlMaximo) {
+            for (String producto : productosStockEntranteMayorAlMaximo) {
                 mensaje.append("\n *").append(producto).append("\n");
             }
 

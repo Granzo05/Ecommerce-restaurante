@@ -6,7 +6,6 @@ import lombok.*;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloVenta;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Getter
 @Setter

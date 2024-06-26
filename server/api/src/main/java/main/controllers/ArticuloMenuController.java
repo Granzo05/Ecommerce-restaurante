@@ -114,12 +114,12 @@ public class ArticuloMenuController {
         Set<ArticuloMenu> menusFiltrados = new HashSet<>();
 
         // SI no se encuentra por nombre capaz se puede encontrar algo por categoria para intentar devolver todo lo posible
-        if(menus.isEmpty()) {
+        if (menus.isEmpty()) {
             menus = articuloMenuRepository.findByNameCategoriaMenuAndIdSucursalEquals(nombre, idSucursal);
         }
         // Hacemos el último intento
 
-        if(menus.isEmpty()) {
+        if (menus.isEmpty()) {
             menus = articuloMenuRepository.findByNameSubcategoriaMenuAndIdSucursalEquals(nombre, idSucursal);
         }
 
@@ -176,7 +176,7 @@ public class ArticuloMenuController {
                         articuloMenu = articuloMenuRepository.save(articuloMenu);
 
                         sucursal.getArticulosMenu().add(articuloMenu);
-
+                        sucursal.setBorrado("NO");
                         sucursalRepository.save(sucursal);
                     }
                 } else {
@@ -189,6 +189,7 @@ public class ArticuloMenuController {
                         articuloMenu = articuloMenuRepository.save(articuloMenu);
 
                         sucursal.getArticulosMenu().add(articuloMenu);
+                        sucursal.setBorrado("NO");
 
                         sucursalRepository.save(sucursal);
                     } else {

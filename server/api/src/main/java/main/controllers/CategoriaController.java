@@ -3,10 +3,12 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Subcategoria;
-import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Sucursal;
-import main.repositories.*;
+import main.repositories.CategoriaRepository;
+import main.repositories.ImagenesRepository;
+import main.repositories.SubcategoriaRepository;
+import main.repositories.SucursalRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ public class CategoriaController {
     private final SubcategoriaRepository subcategoriaRepository;
     private final SucursalRepository sucursalRepository;
     private final ImagenesRepository imagenesRepository;
+
     public CategoriaController(CategoriaRepository categoriaRepository, SubcategoriaRepository subcategoriaRepository, SucursalRepository sucursalRepository, ImagenesRepository imagenesRepository) {
         this.categoriaRepository = categoriaRepository;
         this.subcategoriaRepository = subcategoriaRepository;
@@ -41,7 +44,7 @@ public class CategoriaController {
         for (Categoria categoria : categorias) {
             List<Subcategoria> subcategorias = subcategoriaRepository.findAllByIdCategoria(categoria.getId());
 
-            if(!subcategorias.isEmpty()) categoria.setSubcategorias(new HashSet<>(subcategorias));
+            if (!subcategorias.isEmpty()) categoria.setSubcategorias(new HashSet<>(subcategorias));
 
             categoria.setImagenes(new HashSet<>(imagenesRepository.findByIdCategoria(categoria.getId())));
         }
@@ -57,7 +60,7 @@ public class CategoriaController {
         for (Categoria categoria : categorias) {
             List<Subcategoria> subcategorias = subcategoriaRepository.findAllByIdCategoria(categoria.getId());
 
-            if(!subcategorias.isEmpty()) categoria.setSubcategorias(new HashSet<>(subcategorias));
+            if (!subcategorias.isEmpty()) categoria.setSubcategorias(new HashSet<>(subcategorias));
 
             categoria.setImagenes(new HashSet<>(imagenesRepository.findByIdCategoria(categoria.getId())));
         }
@@ -83,8 +86,10 @@ public class CategoriaController {
                     categoriaDetails = categoriaRepository.save(categoriaDetails);
 
                     sucursal.getCategorias().add(categoriaDetails);
+                    sucursal.setBorrado("NO");
 
-                    sucursalRepository.save(sucursal);                }
+                    sucursalRepository.save(sucursal);
+                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
@@ -95,6 +100,7 @@ public class CategoriaController {
                         categoriaDetails = categoriaRepository.save(categoriaDetails);
 
                         sucursal.getCategorias().add(categoriaDetails);
+                        sucursal.setBorrado("NO");
 
                         sucursalRepository.save(sucursal);
                     }

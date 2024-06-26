@@ -1,7 +1,6 @@
 package main.controllers;
 
 import jakarta.transaction.Transactional;
-import main.entities.Restaurante.Privilegios;
 import main.entities.Restaurante.PrivilegiosSucursales;
 import main.entities.Restaurante.Sucursal;
 import main.repositories.PrivilegiosSucursalesRepository;
@@ -52,8 +51,10 @@ public class PrivilegiosController {
                     privilegiosDetails = privilegiosSucursalesRepository.save(privilegiosDetails);
 
                     sucursal.getPrivilegios().add(privilegiosDetails);
+                    sucursal.setBorrado("NO");
 
-                    sucursalRepository.save(sucursal);                }
+                    sucursalRepository.save(sucursal);
+                }
             } else {
                 Optional<Sucursal> sucursalOpt = sucursalRepository.findById(idSucursal);
                 if (sucursalOpt.isPresent()) {
@@ -64,6 +65,7 @@ public class PrivilegiosController {
                         privilegiosDetails = privilegiosSucursalesRepository.save(privilegiosDetails);
 
                         sucursal.getPrivilegios().add(privilegiosDetails);
+                        sucursal.setBorrado("NO");
 
                         sucursalRepository.save(sucursal);
                     }
@@ -95,7 +97,7 @@ public class PrivilegiosController {
             rolDB.get().setNombre(privilegio.getNombre());
             rolDB.get().setBorrado(privilegio.getBorrado());
             rolDB.get().setPermisos(privilegio.getPermisos());
-            
+
             privilegiosSucursalesRepository.save(rolDB.get());
             return ResponseEntity.ok("Privilegios actualizados correctamente");
         }

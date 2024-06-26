@@ -19,15 +19,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "facturas", schema = "buen_sabor")
 public class Factura implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(name = "fecha_creacion", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     public LocalDateTime fechaFacturacion;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Column(name = "tipo_factura")
     private EnumTipoFactura tipoFactura;
 

@@ -21,13 +21,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 @RestController
 public class ClienteController {
+    private static final String EMAIL_RESPALDO = "contactodelbuensabor@gmail.com";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private final ClienteRepository clienteRepository;
     private final DomicilioRepository domicilioRepository;
     private final SucursalRepository sucursalRepository;
-    private static final String EMAIL_RESPALDO = "contactodelbuensabor@gmail.com";
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public ClienteController(ClienteRepository clienteRepository, DomicilioRepository domicilioRepository, LocalidadRepository localidadRepository, SucursalRepository sucursalRepository) {
         this.clienteRepository = clienteRepository;

@@ -3,7 +3,6 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
-import main.entities.Productos.ArticuloVenta;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.*;
 import main.repositories.*;
@@ -15,7 +14,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class EmpleadoController {
@@ -153,7 +155,8 @@ public class EmpleadoController {
                 for (Domicilio domicilio : domicilios) {
                     domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
                 }
-            } catch (Exception ignored){}
+            } catch (Exception ignored) {
+            }
 
             empleado.setDomicilios(new HashSet<>(domicilios));
 
@@ -308,7 +311,7 @@ public class EmpleadoController {
                 for (RolesEmpleados rolNuevo : empleadoDetails.getRoles()) {
                     if (rolDB.getRol().getNombre().equals(rolNuevo.getRol().getNombre())) {
                         // Actualizar atributos del rol existente
-                        if(rolDB.getBorrado().equals("SI")) {
+                        if (rolDB.getBorrado().equals("SI")) {
                             rolDB.setBorrado("NO");
                             rolesActualizados.add(rolDB);
                         } else {

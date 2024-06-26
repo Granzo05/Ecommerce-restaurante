@@ -3,18 +3,15 @@ package main.controllers;
 import jakarta.transaction.Transactional;
 import main.entities.Ingredientes.Ingrediente;
 import main.entities.Restaurante.Sucursal;
-import main.entities.Stock.StockIngredientes;
 import main.repositories.IngredienteRepository;
 import main.repositories.MedidaRepository;
 import main.repositories.StockIngredientesRepository;
 import main.repositories.SucursalRepository;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -62,6 +59,7 @@ public class IngredienteController {
                     ingredienteDetails = ingredienteRepository.save(ingredienteDetails);
 
                     sucursal.getIngredientes().add(ingredienteDetails);
+                    sucursal.setBorrado("NO");
 
                     sucursalRepository.save(sucursal);
                 }
@@ -76,6 +74,7 @@ public class IngredienteController {
                         ingredienteDetails = ingredienteRepository.save(ingredienteDetails);
 
                         sucursal.getIngredientes().add(ingredienteDetails);
+                        sucursal.setBorrado("NO");
 
                         sucursalRepository.save(sucursal);
                     }
