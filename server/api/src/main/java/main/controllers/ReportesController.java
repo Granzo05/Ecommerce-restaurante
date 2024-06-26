@@ -286,7 +286,7 @@ public class ReportesController {
 
 
 
-    @GetMapping("/pedidos/{fechaDesde}/{fechaHasta}/datachartbar/comidas/{idSucursal}")
+    @GetMapping("/pedidos/{fechaDesde}/{fechaHasta}/datachartpie/{idSucursal}")
     public ResponseEntity<List<List<Object>>> getDataChartPie() {
         try {
             int pageNumber = 0;

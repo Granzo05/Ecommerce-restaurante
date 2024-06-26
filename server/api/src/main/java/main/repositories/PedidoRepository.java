@@ -81,7 +81,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             "JOIN p.detallesPedido d " +
             "JOIN p.sucursales s " +
             "WHERE s.id = :id " +
-            "AND p.fechaPedido BETWEEN :fechaInicio AND :fechaFin " +
+            "AND p.fechaPedido BETWEEN :fechaDesde AND :fechaHasta " +
             "GROUP BY p.fechaPedido, d.articuloMenu.nombre")
     Page<Object[]> findCantidadPedidosPorFechaYSucursal(Pageable pageable, @Param("id") Long id, @Param("fechaDesde") LocalDate fechaDesde, @Param("fechaHasta") LocalDate fechaHasta);
 
@@ -98,36 +98,33 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
                                                                @Param("fechaInicio") LocalDate fechaInicio,
                                                                @Param("fechaFin") LocalDate fechaFin);
 
-
-    @Query("SELECT DATE_FORMAT(p.fechaPedido, '%Y-%m') AS mesAnio, SUM(d.cantidad * d.articuloMenu.precioVenta) AS totalIngresos " +
-            "FROM Pedido p JOIN p.detallesPedido d JOIN p.sucursales s " +
-            "WHERE s.id = :id " +
-            "GROUP BY mesAnio")
-    Page<Object[]> findCantidadIngresosArticulosMenuPorFechaYSucursal(Pageable pageable, @Param("id") Long id);
-
-    @Query("SELECT DATE_FORMAT(p.fechaPedido, '%Y-%m') AS mesAnio, SUM(d.cantidad * d.articuloVenta.precioVenta) AS totalIngresos " +
-            "FROM Pedido p JOIN p.detallesPedido d JOIN p.sucursales s " +
-            "WHERE s.id = :id " +
-            "GROUP BY mesAnio")
-    Page<Object[]> findCantidadIngresosArticulosPorFechaYSucursal(Pageable pageable, @Param("id") Long id);
-
     @Query("SELECT DATE_FORMAT(p.fechaPedido, '%Y-%m') AS mesAnio, " +
             "SUM(CASE WHEN d.articuloMenu IS NOT NULL THEN d.cantidad * d.articuloMenu.precioVenta ELSE 0 END) + " +
             "SUM(CASE WHEN d.articuloVenta IS NOT NULL THEN d.cantidad * d.articuloVenta.precioVenta ELSE 0 END) AS totalIngresos " +
             "FROM Pedido p JOIN p.detallesPedido d JOIN p.sucursales s " +
             "WHERE s.id = :id " +
-            "AND p.fechaPedido BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY mesAnio")
-    Page<Object[]> findCantidadIngresosPorFechaYSucursal(Pageable pageable, @Param("id") Long id, @Param("fechaDesde") LocalDate fechaDesde, @Param("fechaHasta") LocalDate fechaHasta);
+            "AND p.fechaPedido BETWEEN :fechaDesde AND :fechaHasta " +
+            "GROUP BY DATE_FORMAT(p.fechaPedido, '%Y-%m')")
+    Page<Object[]> findCantidadIngresosPorFechaYSucursal(Pageable pageable,
+                                                         @Param("id") Long id,
+                                                         @Param("fechaDesde") LocalDate fechaDesde,
+                                                         @Param("fechaHasta") LocalDate fechaHasta);
 
     @Query("SELECT DATE_FORMAT(p.fechaPedido, '%Y-%m') AS mesAnio, " +
             "SUM(CASE WHEN d.articuloMenu IS NOT NULL THEN (d.articuloMenu.ganancia) ELSE 0 END) + " +
             "SUM(CASE WHEN d.articuloVenta IS NOT NULL THEN (d.cantidad * d.articuloVenta.precioVenta - d.articuloVenta.stockArticuloVenta.precioCompra * d.cantidad) ELSE 0 END) AS totalIngresos " +
-            "FROM Pedido p JOIN p.detallesPedido d JOIN p.sucursales s JOIN d.articuloMenu.ingredientesMenu ingred " +
+            "FROM Pedido p " +
+            "JOIN p.detallesPedido d " +
+            "JOIN p.sucursales s " +
+            "JOIN d.articuloMenu am " +
+            "LEFT JOIN am.ingredientesMenu ingred " +
             "WHERE s.id = :id " +
-            "AND p.fechaPedido BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY mesAnio")
-    Page<Object[]> findCantidadGananciaPorFechaYSucursal(Pageable pageable, @Param("id") Long id, @Param("fechaDesde") LocalDate fechaDesde, @Param("fechaHasta") LocalDate fechaHasta);
+            "AND p.fechaPedido BETWEEN :fechaDesde AND :fechaHasta " +
+            "GROUP BY DATE_FORMAT(p.fechaPedido, '%Y-%m')")
+    Page<Object[]> findCantidadGananciaPorFechaYSucursal(Pageable pageable,
+                                                         @Param("id") Long id,
+                                                         @Param("fechaDesde") LocalDate fechaDesde,
+                                                         @Param("fechaHasta") LocalDate fechaHasta);
 
 
 }
