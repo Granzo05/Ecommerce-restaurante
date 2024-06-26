@@ -49,7 +49,7 @@ export const ReportesServices = {
     getPedidosGraficoBarraComidas: async (fechaDesde: string, fechaHasta: string) => {
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
-
+        
         const response = await fetch(URL_API + `pedidos/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/comidas/` + sucursalId(), {
             method: 'GET',
             headers: {

@@ -7,6 +7,15 @@ export const URL_API = 'http://localhost:8080/';
 
 export const DESACTIVAR_PRIVILEGIOS = false; // false hay privilegios, true no hay privilegios
 
+export function convertirFecha(fecha: Date): string {
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const año = fecha.getFullYear().toString();
+
+    return `${año}-${mes}-${dia}`;
+}
+
+
 export function sucursalId(): number {
     const usuarioString = localStorage.getItem('usuario');
     const empleadoString = localStorage.getItem('empleado');

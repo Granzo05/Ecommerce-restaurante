@@ -6,6 +6,7 @@ import { ReportesServices } from '../../services/ReportesServices';
 import { formatearFechaDDMMYYYY } from '../../utils/global_variables/functions';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import { convertirFecha } from '../../utils/global_variables/const';
 
 export type IngresoData = {
     fecha: string;
@@ -19,7 +20,7 @@ const ReporteComidas: React.FC = () => {
     const [fechaHasta, setFechaHasta] = useState<Date>(new Date(Date.now()));
 
     const getBarChart = async () => {
-        const datos = await ReportesServices.getPedidosGraficoBarraComidas(fechaDesde.toString(), fechaHasta.toString());
+        const datos = await ReportesServices.getPedidosGraficoBarraComidas(convertirFecha(fechaDesde), convertirFecha(fechaHasta));
         setDatosChartBarOriginal(datos);
         setDatosChartBar(datos);
     };

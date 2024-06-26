@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,7 @@ public class ReportesController {
         this.pedidoRepository = pedidoRepository;
     }
 
+    @CrossOrigin
     @GetMapping("/downloadExcelPedidos/{fechaDesde}/{fechaHasta}")
     public ResponseEntity<byte[]> downloadExcelPedidosPorFecha(@PathVariable("fechaDesde") String fechaDesde, @PathVariable("fechaHasta") String fechaHasta) {
         try {
@@ -83,6 +85,7 @@ public class ReportesController {
     }
 
 
+    @CrossOrigin
     @GetMapping("/pedidos/{fechaDesde}/{fechaHasta}/datachartbar/ganancias/{idSucursal}")
     public ResponseEntity<List<List<Object>>> getGananciasTotales(@PathVariable("fechaDesde") String fechaDesde, @PathVariable("fechaHasta") String fechaHasta, @PathVariable("idSucursal") Long id) {
         try {
@@ -127,6 +130,7 @@ public class ReportesController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/pedidos/{fechaDesde}/{fechaHasta}/datachartbar/ingresos/{idSucursal}")
     public ResponseEntity<List<List<Object>>> getIngresosTotales(@PathVariable("fechaDesde") String fechaDesde, @PathVariable("fechaHasta") String fechaHasta, @PathVariable("idSucursal") Long id) {
         try {
@@ -171,6 +175,7 @@ public class ReportesController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/pedidos/cliente/{idCliente}/{fechaDesde}/{fechaHasta}/datachartbar/ingresos/{idSucursal}")
     public ResponseEntity<List<List<Object>>> getPedidosTotales(@PathVariable("idCliente") Long idCliente,
                                                                 @PathVariable("fechaDesde") String fechaDesde,
@@ -218,12 +223,15 @@ public class ReportesController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/pedidos/{fechaDesde}/{fechaHasta}/datachartbar/comidas/{idSucursal}")
     public ResponseEntity<List<List<Object>>> getComidasFamosas(@PathVariable("fechaDesde") String fechaDesde, @PathVariable("fechaHasta") String fechaHasta, @PathVariable("idSucursal") Long id) {
         try {
+
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate dateFechaDesde = LocalDate.parse(fechaDesde.replace("N", "-"), dateFormat);
             LocalDate dateFechaHasta = LocalDate.parse(fechaHasta.replace("N", "-"), dateFormat);
+
             int pageNumber = 0;
             int pageSize = 200;
             Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("fechaPedido").ascending());
@@ -286,6 +294,7 @@ public class ReportesController {
 
 
 
+    @CrossOrigin
     @GetMapping("/pedidos/{fechaDesde}/{fechaHasta}/datachartpie/{idSucursal}")
     public ResponseEntity<List<List<Object>>> getDataChartPie() {
         try {

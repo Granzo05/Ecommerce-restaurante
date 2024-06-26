@@ -30,7 +30,6 @@ const Subcategorias = lazy(() => import('../components/Subcategorias/Subcategori
 const Medidas = lazy(() => import('../components/Medidas/Medidas'));
 const Promociones = lazy(() => import('../components/Promociones/Promociones'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
-const Reportes = lazy(() => import('../components/Reportes/Reportes'));
 const PedidosEntrantes = lazy(() => import('../components/Pedidos/PedidosEntrantesRestaurante'));
 const PedidosAceptados = lazy(() => import('../components/Pedidos/PedidosAceptadosRestaurante'));
 const PedidosEntregados = lazy(() => import('../components/Pedidos/PedidosEntregadosRestaurante'));
@@ -183,8 +182,6 @@ const Opciones = () => {
             return <Promociones />;
         } else if (opcionSeleccionada === 17) {
             return <Empresas />;
-        } else if (opcionSeleccionada === 18) {
-            return <Reportes />;
         } else if (opcionSeleccionada === 19) {
             return <PedidosEnCamino />;
         } else if (opcionSeleccionada === 20) {
@@ -196,13 +193,13 @@ const Opciones = () => {
         } else if (opcionSeleccionada === 23) {
             return <Clientes />;
         } else if (opcionSeleccionada === 24) {
-            return <ReporteComidas/>
+            return <ReporteComidas />
         } else if (opcionSeleccionada === 25) {
-            return <ReporteIngresos/>
+            return <ReporteIngresos />
         } else if (opcionSeleccionada === 26) {
-            return <ReportePedidosCliente/>
+            return <ReportePedidosCliente />
         } else if (opcionSeleccionada === 27) {
-            return <ReporteGanancias/>
+            return <ReporteGanancias />
         }
     };
 
@@ -566,7 +563,7 @@ const Opciones = () => {
                 )}
                 <div className="spacer"></div>
                 <div className="bottom-section">
-                    
+
 
                     <hr />
                     <div className="perfil-employee">

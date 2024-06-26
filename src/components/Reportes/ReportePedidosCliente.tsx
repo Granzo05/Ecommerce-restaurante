@@ -6,6 +6,7 @@ import { ReportesServices } from '../../services/ReportesServices';
 import { formatearFechaDDMMYYYY } from '../../utils/global_variables/functions';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import { convertirFecha } from '../../utils/global_variables/const';
 
 export type IngresoData = {
     fecha: string;
@@ -20,7 +21,7 @@ const ReportePedidosCliente: React.FC = () => {
     const [idCliente, setIdCliente] = useState<number>(0);
 
     const getBarChart = async () => {
-        const datos = await ReportesServices.getPedidosGraficoBarraPedidosCliente(idCliente, fechaDesde.toString(), fechaHasta.toString());
+        const datos = await ReportesServices.getPedidosGraficoBarraPedidosCliente(idCliente, convertirFecha(fechaDesde), convertirFecha(fechaHasta));
         setDatosChartBarOriginal(datos);
         setDatosChartBar(datos);
     };
