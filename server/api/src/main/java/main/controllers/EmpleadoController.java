@@ -14,11 +14,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+@CrossOrigin
 @RestController
 public class EmpleadoController {
     private final SucursalRepository sucursalRepository;
@@ -39,8 +37,11 @@ public class EmpleadoController {
     }
 
     @CrossOrigin
-    @GetMapping("/empleado/login/{email}/{password}")
-    public Empleado loginEmpleado(@PathVariable("email") String email, @PathVariable("password") String password) throws Exception {
+    @PostMapping("/empleado/login")
+    public ResponseEntity<Empleado> loginEmpleado(@RequestBody Map<String, String> credentials) throws Exception {
+        String email = credentials.get("email");
+        String password = credentials.get("contraseña");
+
         Optional<Empleado> empleadoDb = empleadoRepository.findByEmailAndPassword(Encrypt.encriptarString(email), Encrypt.cifrarPassword(password));
 
         if (empleadoDb.isPresent()) {
@@ -59,11 +60,10 @@ public class EmpleadoController {
 
             empleado.setSucursales(sucursal);
 
-            return empleadoDb.get();
+            return ResponseEntity.ok(empleado);
 
         }
-
-        return new Empleado();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @Transactional

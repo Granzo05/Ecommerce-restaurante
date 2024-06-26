@@ -2,7 +2,7 @@ import { Cliente } from '../types/Cliente/Cliente';
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
-import { getBaseUrl, sucursalId, URL_API } from '../utils/global_variables/const';
+import { getBaseUrl, limpiarCredenciales, sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const SucursalService = {
     createSucursal: async (sucursal: Sucursal, imagenes: Imagenes[]): Promise<string> => {
@@ -48,36 +48,33 @@ export const SucursalService = {
     },
 
     getSucursal: async (email: string, contraseña: string) => {
+        limpiarCredenciales;
         try {
-            const response = await fetch(URL_API + 'sucursal/login/' + email + '/' + contraseña, {
-                method: 'GET',
+            const response = await fetch(URL_API + 'sucursal/login', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ email, contraseña })
             });
 
-            if (!response.ok) {
-                throw new Error('Usuario no encontrado');
-            }
-
-            const data = await response.json();
-            
-            if (data.id > 0) {
+            if (response.ok) {
+                const data = await response.json();
                 let sucursal = {
                     id: data.id,
                     nombre: data.nombre
-                }
+                };
 
                 localStorage.setItem('sucursal', JSON.stringify(sucursal));
 
                 window.location.href = getBaseUrl() + '/opciones';
 
-                return 'Sesión iniciada correctamente';
+                return { ok: true, message: 'Sesión iniciada correctamente' };
             } else {
-                throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+                return { ok: false, message: await response.json() };
             }
         } catch (error) {
-            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+            return { ok: false, message: 'Los datos ingresados no corresponden a una cuenta activa' };
         }
     },
 

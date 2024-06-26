@@ -37,10 +37,10 @@ const LoginNegocio = () => {
     toast.promise(EmpresaService.getEmpresa(email, contraseña), {
       loading: 'Iniciando sesión...',
       success: 'Abriendo sesión',
+      error: 'Credenciales incorrectas',
       duration: 3000,
       finally: () => {
         setIsLoading(false);
-        toast.error('Credenciales inválidas');
       }
     });
   };
@@ -165,7 +165,7 @@ const LoginNegocio = () => {
                           <div className="error-message">Formato incorrecto de e-mail.</div>
                         </div>
                         <div className="btns-pasos">
-                        <button className='btn-agregar'>Enviar correo</button>
+                          <button className='btn-agregar'>Enviar correo</button>
 
                         </div>
                       </div>

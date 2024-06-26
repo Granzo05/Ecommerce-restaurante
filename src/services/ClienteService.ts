@@ -69,11 +69,12 @@ export const ClienteService = {
     getUser: async (email: string, contraseña: string): Promise<string> => {
         limpiarCredenciales();
         try {
-            const response = await fetch(URL_API + 'cliente/login/' + email + '/' + contraseña, {
-                method: 'GET',
+            const response = await fetch(URL_API + 'cliente/login', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ email, contraseña })
             })
 
             if (!response.ok) {

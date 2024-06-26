@@ -74,17 +74,13 @@ export const EmpresaService = {
                 body: JSON.stringify({ email, contraseña })
             });
 
-            if (!response.ok) {
-                throw new Error('Usuario no encontrado');
-            }
+            if (response.ok) {
+                const data = await response.json();
 
-            const data = await response.json();
-
-            if (data.id > 0) {
                 let restaurante = {
                     id: data.id,
                     nombre: data.nombre
-                }                
+                };
 
                 localStorage.setItem('empresa', JSON.stringify(restaurante));
 
@@ -92,22 +88,22 @@ export const EmpresaService = {
 
                 return 'Sesión iniciada correctamente';
             } else {
+                // Intentar iniciar sesión como sucursal
                 const mensajeSucursal = await SucursalService.getSucursal(email, contraseña);
-                if (mensajeSucursal) {
-                    return mensajeSucursal;
+                if (mensajeSucursal.ok) {
+                    return 'Sesión iniciada correctamente';
                 } else {
-                    // Si no se pudo iniciar sesión en la sucursal, intenta como empleado
+                    // Intentar iniciar sesión como empleado
                     const mensajeEmpleado = await EmpleadoService.getEmpleado(email, contraseña);
-                    if (mensajeEmpleado) {
-                        return mensajeEmpleado;
+                    if (mensajeEmpleado.ok) {
+                        return 'Sesión iniciada correctamente';
                     } else {
-                        // Si ninguno inició sesión, lanza el error correspondiente
                         throw new Error('Los datos ingresados no corresponden a una cuenta activa');
                     }
                 }
             }
         } catch (error) {
-            throw new Error('Los datos ingresados no corresponden a una cuenta activa');
+            throw new Error('Ocurrió un error al intentar iniciar sesión');
         }
     },
 
