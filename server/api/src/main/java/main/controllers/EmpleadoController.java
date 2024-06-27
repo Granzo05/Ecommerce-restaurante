@@ -5,6 +5,7 @@ import main.EncryptMD5.Encrypt;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.*;
+import main.mapper.Restaurante.EmpleadoDTO;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class EmpleadoController {
 
     @CrossOrigin
     @PostMapping("/empleado/login")
-    public ResponseEntity<Empleado> loginEmpleado(@RequestBody Map<String, String> credentials) throws Exception {
+    public ResponseEntity<EmpleadoDTO> loginEmpleado(@RequestBody Map<String, String> credentials) throws Exception {
         String email = credentials.get("email");
         String password = credentials.get("contraseña");
 
@@ -60,7 +61,7 @@ public class EmpleadoController {
 
             empleado.setSucursales(sucursal);
 
-            return ResponseEntity.ok(empleado);
+            return ResponseEntity.ok(EmpleadoDTO.toDTO(empleado));
 
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -130,7 +131,7 @@ public class EmpleadoController {
 
     @CrossOrigin
     @GetMapping("/empleados/{idSucursal}")
-    public Set<Empleado> getEmpleados(@PathVariable("idSucursal") Long idSucursal) throws Exception {
+    public Set<EmpleadoDTO> getEmpleados(@PathVariable("idSucursal") Long idSucursal) throws Exception {
 
         List<Empleado> empleados = empleadoRepository.findAllByIdSucursal(idSucursal);
 
@@ -163,7 +164,13 @@ public class EmpleadoController {
             empleado.setFechaContratacion(new HashSet<>(fechaContratacionRepository.findByIdEmpleado(empleado.getId())));
         }
 
-        return new HashSet<>(empleados);
+        Set<EmpleadoDTO> empleadoDTOS = new HashSet<>();
+
+        for (Empleado empleado: empleados) {
+            empleadoDTOS.add(EmpleadoDTO.toDTO(empleado));
+        }
+
+        return new HashSet<>(empleadoDTOS);
     }
 
     @CrossOrigin

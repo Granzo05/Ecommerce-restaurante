@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import main.EncryptMD5.Encrypt;
 import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.Domicilio;
+import main.mapper.Cliente.ClienteDTO;
 import main.repositories.ClienteRepository;
 import main.repositories.DomicilioRepository;
 import main.repositories.LocalidadRepository;
@@ -37,7 +38,7 @@ public class ClienteController {
     @Transactional
     @CrossOrigin
     @PostMapping("/cliente/create")
-    public Cliente crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
+    public ClienteDTO crearCliente(@RequestBody Cliente clienteDetails) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findByEmail(clienteDetails.getEmail());
 
         if (cliente.isEmpty()) {
@@ -55,9 +56,9 @@ public class ClienteController {
 
             clienteDetails.setBorrado("NO");
             clienteDetails = clienteRepository.save(clienteDetails);
-            return clienteDetails;
+            return ClienteDTO.toDTO(clienteDetails);
         } else {
-            return new Cliente();
+            return ClienteDTO.toDTO(new Cliente());
         }
     }
 
@@ -134,7 +135,7 @@ public class ClienteController {
 
     @CrossOrigin
     @GetMapping("/cliente/id/{id}")
-    public Cliente getUserById(@PathVariable("id") Long id) throws Exception {
+    public ClienteDTO getUserById(@PathVariable("id") Long id) throws Exception {
         Optional<Cliente> cliente = clienteRepository.findById(id);
 
         if (cliente.isPresent()) {
@@ -142,9 +143,10 @@ public class ClienteController {
                 domicilio.setCalle(Encrypt.desencriptarString(domicilio.getCalle()));
             }
 
-            return cliente.get();
+            return ClienteDTO.toDTO(cliente.get());
 
-        } else return new Cliente();
+        } else return ClienteDTO.toDTO(new Cliente());
+
     }
 
     @CrossOrigin

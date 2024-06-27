@@ -2,7 +2,7 @@ package main.mapper.Restaurante;
 
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
-import main.mapper.Domicilio.LocalidadDTO;
+import main.entities.Domicilio.Localidad;
 
 @Setter
 @Getter
@@ -20,7 +20,7 @@ public class DomicilioDTO {
 
     private String borrado = "NO";
 
-    private LocalidadDTO localidad;
+    private Localidad localidad;
 
     public static DomicilioDTO toDTO(Domicilio domicilio) {
         DomicilioDTO dto = new DomicilioDTO();
@@ -29,7 +29,7 @@ public class DomicilioDTO {
         dto.setNumero(domicilio.getNumero());
         dto.setCodigoPostal(domicilio.getCodigoPostal());
         dto.setBorrado(domicilio.getBorrado());
-        dto.setLocalidad(LocalidadDTO.toDTO(domicilio.getLocalidad()));
+        dto.setLocalidad(domicilio.getLocalidad());
 
         return dto;
     }
