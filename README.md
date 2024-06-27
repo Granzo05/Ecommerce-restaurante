@@ -10,8 +10,10 @@ Intellij:
   - En application.properties modificar la contraseña con tu contraseña del servidor de MySQL
   - Para crear la base de datos hay 2 opciones:
       1) Crear una base de datos con el nombres 'utn': CREATE DATABASE utn;
-      2) Cambiar el nombre de la base de datos de la ruta que apunta el servidor:
+      2) Cambiar el nombre de la base de datos de la ruta que apunta el servidor
+         
         - spring.datasource.url=jdbc:mysql://localhost:3306/utn a => spring.datasource.url=jdbc:mysql://localhost:3306/{NOMBRE DE TU BASE DE DATOS}
+    
   - Ejecutar el main
 
 Una vez finalizados ambos pasos, abrir http://localhost:5173/
