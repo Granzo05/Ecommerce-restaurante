@@ -170,29 +170,11 @@ const Pago = () => {
                         });
 
                         carrito?.promociones?.forEach(promocion => {
-                            promocion.detallesPromocion.forEach(detallePromo => {
-                                if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
-                                    let detalle = new DetallesPedido();
-                                    detalle.articuloMenu = detallePromo.articuloMenu;
-                                    detalle.cantidad = detallePromo.cantidad;
-
-                                    // Aplicar el descuento correctamente
-                                    let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
-                                    detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                    detalles.push(detalle);
-                                } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
-                                    let detalle = new DetallesPedido();
-                                    detalle.articuloVenta = detallePromo.articuloVenta;
-                                    detalle.cantidad = detallePromo.cantidad;
-
-                                    // Aplicar el descuento correctamente
-                                    let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
-                                    detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                    detalles.push(detalle);
-                                }
-                            });
+                            let detalle = new DetallesPedido();
+                            detalle.promocion = promocion;
+                            detalle.cantidad = promocion.cantidad;
+                            detalle.subTotal = promocion.cantidad * promocion.precio;
+                            detalles.push(detalle);
                         });
 
                         pedido.factura = null;
@@ -306,29 +288,11 @@ const Pago = () => {
                                 });
 
                                 carrito?.promociones?.forEach(promocion => {
-                                    promocion.detallesPromocion.forEach(detallePromo => {
-                                        if (detallePromo.articuloMenu && detallePromo.articuloMenu.nombre.length > 0) {
-                                            let detalle = new DetallesPedido();
-                                            detalle.articuloMenu = detallePromo.articuloMenu;
-                                            detalle.cantidad = detallePromo.cantidad;
-
-                                            // Aplicar el descuento correctamente
-                                            let precioConDescuento = detallePromo.articuloMenu.precioVenta * (1 - promocion.descuento);
-                                            detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                            detalles.push(detalle);
-                                        } else if (detallePromo.articuloVenta && detallePromo.articuloVenta.nombre.length > 0) {
-                                            let detalle = new DetallesPedido();
-                                            detalle.articuloVenta = detallePromo.articuloVenta;
-                                            detalle.cantidad = detallePromo.cantidad;
-
-                                            // Aplicar el descuento correctamente
-                                            let precioConDescuento = detallePromo.articuloVenta.precioVenta * (1 - promocion.descuento);
-                                            detalle.subTotal = precioConDescuento * detallePromo.cantidad;
-
-                                            detalles.push(detalle);
-                                        }
-                                    });
+                                    let detalle = new DetallesPedido();
+                                    detalle.promocion = promocion;
+                                    detalle.cantidad = promocion.cantidad;
+                                    detalle.subTotal = promocion.cantidad * promocion.precio;
+                                    detalles.push(detalle);
                                 });
 
                                 pedido.factura = null;

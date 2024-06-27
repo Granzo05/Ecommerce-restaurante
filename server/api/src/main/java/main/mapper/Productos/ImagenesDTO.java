@@ -1,10 +1,7 @@
 package main.mapper.Productos;
 
 import lombok.*;
-import main.entities.Domicilio.Localidad;
 import main.entities.Productos.Imagenes;
-import main.mapper.Domicilio.DepartamentoDTO;
-import main.mapper.Domicilio.LocalidadDTO;
 
 import java.io.Serializable;
 

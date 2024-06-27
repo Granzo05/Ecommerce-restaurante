@@ -249,6 +249,15 @@ public class PedidoController {
                                 .unitPrice(new BigDecimal(detallesPedido.getArticuloVenta().getPrecioVenta()))
                                 .build();
                         items.add(itemRequest);
+                    } else if (detallesPedido.getPromocion() != null) {
+                        PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
+                                .id(String.valueOf(detallesPedido.getPromocion().getId()))
+                                .title(detallesPedido.getPromocion().getNombre())
+                                .quantity(detallesPedido.getCantidad())
+                                .currencyId("ARS")
+                                .unitPrice(new BigDecimal(detallesPedido.getPromocion().getPrecio()))
+                                .build();
+                        items.add(itemRequest);
                     }
                 }
 
