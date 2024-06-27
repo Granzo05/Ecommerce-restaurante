@@ -390,9 +390,9 @@ const Stocks = () => {
                             {datosFiltrados.map(stock => (
                                 <tr key={stock.ingrediente?.nombre}>
                                     <td>{stock.ingrediente?.nombre}{stock.articuloVenta?.nombre}</td>
-                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadActual} {stock.medida?.nombre}</td>
-                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMinima} {stock.medida?.nombre}</td>
-                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMaxima} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadActual.toFixed(2)} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMinima.toFixed(2)} {stock.medida?.nombre}</td>
+                                    <td style={{ textTransform: 'lowercase' }}>{stock.cantidadMaxima.toFixed(2)} {stock.medida?.nombre}</td>
                                     <td>${stock.precioCompra}</td>
                                     <td>{stock.fechaLlegadaProxima ? (
                                         formatearFechaDDMMYYYY(new Date(stock.fechaLlegadaProxima))

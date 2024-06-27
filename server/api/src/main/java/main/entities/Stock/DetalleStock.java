@@ -20,7 +20,7 @@ public class DetalleStock {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "cantidad")
-    private int cantidad;
+    private double cantidad;
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
     @JoinColumn(name = "id_medida")

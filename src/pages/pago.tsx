@@ -90,7 +90,6 @@ const Pago = () => {
     }, [preferenceId]);
 
     useEffect(() => {
-        cargarPedido();
         cargarUsuario();
     }, []);
 
@@ -100,6 +99,10 @@ const Pago = () => {
 
         setCliente(clienteMem);
     }
+
+    useEffect(() => {
+        cargarPedido();
+    }, [carrito]);
 
     async function cargarPedido() {
         setCarrito(await CarritoService.getCarrito());
@@ -229,7 +232,7 @@ const Pago = () => {
         const horaActual = now.toTimeString().slice(0, 5);
         setIsLoading(true);
 
-        if (verificarPedidos()) {
+        if (true) {
             if (true) {
                 if (envio === 0) {
                     let hayStock = true;

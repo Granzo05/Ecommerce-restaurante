@@ -32,13 +32,13 @@ public class StockIngredientes {
     private double precioCompra;
 
     @Column(name = "cantidad_actual")
-    private int cantidadActual;
+    private double cantidadActual;
 
     @Column(name = "cantidad_minima")
-    private int cantidadMinima;
+    private double cantidadMinima;
 
     @Column(name = "cantidad_maxima")
-    private int cantidadMaxima;
+    private double cantidadMaxima;
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne
