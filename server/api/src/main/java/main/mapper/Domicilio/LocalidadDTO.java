@@ -1,8 +1,8 @@
 package main.mapper.Domicilio;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.*;
+import main.entities.Domicilio.Domicilio;
+import main.entities.Domicilio.Localidad;
 
 @Getter
 @Setter
@@ -15,4 +15,13 @@ public class LocalidadDTO {
     private String nombre;
 
     private DepartamentoDTO departamento;
+
+    public static LocalidadDTO toDTO(Localidad localidad) {
+        LocalidadDTO dto = new LocalidadDTO();
+        dto.setId(localidad.getId());
+        dto.setNombre(localidad.getNombre());
+        dto.setDepartamento(DepartamentoDTO.toDTO(localidad.getDepartamento()));
+
+        return dto;
+    }
 }

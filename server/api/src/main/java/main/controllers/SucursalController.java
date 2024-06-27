@@ -8,11 +8,14 @@ import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.IngredienteMenu;
 import main.entities.Ingredientes.Medida;
 import main.entities.Productos.ArticuloMenu;
+import main.entities.Productos.DetallePromocion;
 import main.entities.Productos.Imagenes;
+import main.entities.Productos.Promocion;
 import main.entities.Restaurante.LocalidadDelivery;
 import main.entities.Restaurante.PrivilegiosSucursales;
 import main.entities.Restaurante.Roles;
 import main.entities.Restaurante.Sucursal;
+import main.mapper.Restaurante.SucursalDTO;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -122,7 +124,7 @@ public class SucursalController {
 
     @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}")
-    public Sucursal getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
+    public SucursalDTO getSucursal(@PathVariable("idSucursal") Long idSucursal) throws Exception {
         Optional<Sucursal> sucursalDB = sucursalRepository.findById(idSucursal);
 
         if (sucursalDB.isPresent()) {
@@ -174,9 +176,56 @@ public class SucursalController {
 
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(idSucursal)));
 
-            sucursal.setPromociones(new HashSet<>(promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now())));
+            Set<Promocion> promocionesConStock = new HashSet<>();
 
-            return sucursal;
+            //for (Promocion promocion : promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now())) {
+            for (Promocion promocion : promocionRepository.findAllBySucursall(idSucursal)) {
+                boolean stockMenu = false;
+
+                for (DetallePromocion detalle : promocion.getDetallesPromocion()) {
+                    if (detalle.getArticuloMenu() != null) {
+                        boolean todosIngredientesConStock = true;
+
+                        for (IngredienteMenu ingredienteMenu : detalle.getArticuloMenu().getIngredientesMenu()) {
+                            int cantidadDisponible = articuloMenuRepository.findCantidadDisponiblesByIdCategoriaAndIdSucursal(
+                                    ingredienteMenu.getArticuloMenu().getCategoria().getId(),
+                                    ingredienteMenu.getId(),
+                                    idSucursal
+                            );
+
+                            if (cantidadDisponible == 0) {
+                                todosIngredientesConStock = false;
+                                break;
+                            }
+                        }
+
+                        if (todosIngredientesConStock) {
+                            stockMenu = true;
+                        }
+                    } else if (detalle.getArticuloVenta() != null) {
+                        int cantidadArticulosDisponibles = articuloVentaRepository.findCantidadDisponiblesByIdCategoriaAndIdSucursalNotBorrado(
+                                detalle.getArticuloVenta().getCategoria().getId(),
+                                idSucursal
+                        );
+
+                        if (cantidadArticulosDisponibles > 0) {
+                            promocionesConStock.add(promocion);
+                            break;
+                        }
+                    }
+                }
+
+                // Verificar si el menú tiene stock y no hay artículos de venta disponibles
+                if (stockMenu && promocion.getDetallesPromocion().stream().noneMatch(detalle -> detalle.getArticuloVenta() != null)) {
+                    promocionesConStock.add(promocion);
+                }
+            }
+
+            sucursal.getPromociones().clear();
+            sucursal.setPromociones(promocionesConStock);
+
+            return SucursalDTO.toDTO(sucursal);
+
         }
 
         return null;

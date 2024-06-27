@@ -35,14 +35,14 @@ export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion, onCloseM
           ))}
         </Carousel>
         <h2>{selectedPromocion.nombre}</h2>
+        <img className='art-menu' src={selectedPromocion.imagenes[0]?.ruta} alt="" />
+
         <h4><strong>Descripción: </strong>{selectedPromocion.descripcion}</h4>
         <hr />
         <h3 className='productos'>Productos:</h3>
         <ul>
           {selectedPromocion.detallesPromocion?.map((detalle) => (
             <div key={detalle.id}>
-              <img className='art-menu' src={detalle.articuloMenu?.imagenes[0]?.ruta} alt="" />
-              <img className='art-venta' src={detalle.articuloVenta?.imagenes[0]?.ruta} alt="" />
               <li key={detalle.id}>* {detalle.articuloMenu?.nombre} {detalle.articuloVenta?.nombre} - {detalle.cantidad} - {detalle.medida?.nombre}</li>
             </div>
           ))}

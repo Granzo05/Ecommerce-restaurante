@@ -1,16 +1,12 @@
 package main.mapper.Productos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.*;
-import main.mapper.Ingredientes.Categoria;
-import main.mapper.Restaurante.Empleado;
-import main.mapper.Restaurante.Empresa;
-import main.mapper.Restaurante.Sucursal;
+import main.entities.Domicilio.Localidad;
+import main.entities.Productos.Imagenes;
+import main.mapper.Domicilio.DepartamentoDTO;
+import main.mapper.Domicilio.LocalidadDTO;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -26,4 +22,15 @@ public class ImagenesDTO implements Serializable {
     private String formato;
 
     private String borrado = "NO";
+
+    public static ImagenesDTO toDTO(Imagenes imagenes) {
+        ImagenesDTO dto = new ImagenesDTO();
+        dto.setId(imagenes.getId());
+        dto.setNombre(imagenes.getNombre());
+        dto.setRuta(imagenes.getRuta());
+        dto.setFormato(imagenes.getFormato());
+        dto.setBorrado(imagenes.getBorrado());
+
+        return dto;
+    }
 }

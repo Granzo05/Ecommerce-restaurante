@@ -171,42 +171,25 @@ export const EmpleadoService = {
         }
     },
 
-    deleteEmpleado: async (cuilEmpleado: string): Promise<string> => {
+    updateBorrado: async (empleado: Empleado): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/' + cuilEmpleado + '/delete/' + sucursalId(), {
+            const response = await fetch(URL_API + 'empleado/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(empleado)
             })
 
             if (!response.ok) {
                 throw new Error(await response.text());
             }
 
-            return await response.text();
+            return response.text();
 
         } catch (error) {
             console.error('Error:', error);
             throw error;
         }
     },
-
-    checkUser: async (): Promise<boolean> => {
-        /*
-        const empleadoStr: string | null = localStorage.getItem('usuario');
-        const empleado: Empleado = empleadoStr ? JSON.parse(empleadoStr) : new Empleado();
- 
-        // Si no hay un usuario, o el usuario no cumple con los requisitos entonces se le niega la entrada
-        if (!empleado || empleado.privilegios === null) {
-            window.location.href = '/acceso-denegado';
-        }
- 
-        // Si los privilegios son solo para el negocio entonces en caso de ser empleado se devuelve un false para no mostrarle las opciones donde no deberia poder acceder
-        if (empleado && empleado.privilegios.match('empleado')) {
-            return false;
-        }
-*/
-        return true;
-    }
 }

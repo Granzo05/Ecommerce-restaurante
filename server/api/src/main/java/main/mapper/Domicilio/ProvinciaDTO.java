@@ -1,4 +1,4 @@
-package main.entities.Domicilio;
+package main.mapper.Domicilio;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import main.entities.Domicilio.Departamento;
+import main.entities.Domicilio.Pais;
+import main.entities.Domicilio.Provincia;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,22 +17,19 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "provincias", schema = "buen_sabor")
-public class Provincia {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ProvinciaDTO {
     private Long id;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @JsonIgnoreProperties(value = {"provincias"}, allowSetters = true)
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_pais")
-    private Pais pais;
+    private PaisDTO pais;
 
-    @JsonIgnoreProperties(value = {"provincia"}, allowSetters = true)
-    @OneToMany(mappedBy = "provincia", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Departamento> departamentos = new HashSet<>();
+    public static ProvinciaDTO toDTO(Provincia provincia) {
+        ProvinciaDTO dto = new ProvinciaDTO();
+        dto.setId(provincia.getId());
+        dto.setNombre(provincia.getNombre());
+        dto.setPais(PaisDTO.toDTO(provincia.getPais()));
+
+        return dto;
+    }
 }

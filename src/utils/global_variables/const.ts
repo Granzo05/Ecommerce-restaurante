@@ -81,7 +81,10 @@ export function getBaseUrlCliente(): string {
 }
 
 export function limpiarCredenciales() {
-    localStorage.clear();
+    localStorage.removeItem('usuario');
+    localStorage.removeItem('empleado');
+    localStorage.removeItem('sucursal');
+    localStorage.removeItem('empresa');
 }
 
 // Frases del login del restaurante

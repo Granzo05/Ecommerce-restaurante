@@ -13,7 +13,7 @@ const EliminarEmpleado: React.FC<EliminarEmpleadoProps> = ({ empleadoOriginal, o
 
   const onConfirm = () => {
     empleadoOriginal.borrado = 'SI';
-    toast.promise(EmpleadoService.updateEmpleado(empleadoOriginal), {
+    toast.promise(EmpleadoService.updateBorrado(empleadoOriginal), {
       loading: 'Eliminando empleado...',
       success: (message) => {
         setTimeout(() => {

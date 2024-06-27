@@ -200,13 +200,11 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
   function calcularCostos() {
     let precioRecomendado: number = 0;
-    console.log(detallesArticuloMenu)
     detallesArticuloMenu.forEach(detalle => {
       if (detalle?.articuloMenu && detalle?.articuloMenu.nombre.length > 0) {
         precioRecomendado += detalle?.articuloMenu?.precioVenta * detalle?.cantidad;
       }
     });
-    console.log(detallesArticuloVenta)
 
     detallesArticuloVenta.forEach(detalle => {
       if (detalle.articuloVenta && detalle?.articuloVenta.nombre.length > 0) {
@@ -307,11 +305,17 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     const detallesPromocion: DetallePromocion[] = [];
 
     detallesArticuloMenu.forEach(detalle => {
-      if (detalle.articuloMenu?.nombre && detalle.articuloMenu?.nombre.length > 2) detallesPromocion.push(detalle);
+      if (detalle.articuloMenu?.nombre && detalle.articuloMenu?.nombre.length > 2) {
+        detalle.articuloMenu.precioVenta = detalle.articuloMenu.precioVenta * (1 - (descuento / 100));
+        detallesPromocion.push(detalle);
+      }
     });
 
     detallesArticuloVenta.forEach(detalle => {
-      if (detalle.articuloVenta?.nombre && detalle.articuloVenta?.nombre.length > 2) detallesPromocion.push(detalle);
+      if (detalle.articuloVenta?.nombre && detalle.articuloVenta?.nombre.length > 2) {
+        detalle.articuloVenta.precioVenta = detalle.articuloVenta.precioVenta * (1 - (descuento / 100));
+        detallesPromocion.push(detalle);
+      }
     });
 
     promocion.detallesPromocion = detallesPromocion;
@@ -334,8 +338,6 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
     promocion.sucursales = sucursalesElegidas;
 
-    console.log(promocion)
-
     toast.promise(PromocionService.createPromocion(promocion, imagenes), {
       loading: 'Creando promoción...',
       success: (message) => {
@@ -351,7 +353,6 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
         setIsLoading(false);
       }
     });
-
   }
 
   //SEPARAR EN PASOS
@@ -385,13 +386,13 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\+]+" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
+              <input type="text" required={true} value={nombre} onChange={(e) => setNombre(e.target.value)} />
               <span>Nombre de la promoción</span>
 
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\+]+" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+              <input type="text" required={true} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
               <span>Descrición de la promoción</span>
               <div className="error-message">La descripción debe contener letras y espacios.</div>
 
@@ -555,7 +556,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
                       step="0.01"
                       min={0}
                       required={true}
-                      value={total.toFixed(2)}
+                      value={total}
                       onChange={(e) => handleTotalChange(parseFloat(e.target.value))}
                     />
                     <span>Precio</span>

@@ -108,16 +108,14 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
 
     for (const ingredienteMenu of ingredientesMenu) {
       if (ingredienteMenu.ingrediente?.nombre.length > 0) {
-        const medidaIngredienteMenu = ingredienteMenu.medida?.nombre;
 
         let stock = await StockIngredientesService.getStockPorProducto(ingredienteMenu.ingrediente.nombre);
 
-        if (medidaIngredienteMenu === stock.medida.nombre) {
-          // Si coinciden las medidas, el cálculo es directo
-          precioRecomendado += stock.precioCompra * ingredienteMenu.cantidad;
-        } else if (stock.medida.nombre && ingredienteMenu.ingrediente.stockIngrediente?.precioCompra) {
+        if ((stock.medida.nombre === 'KILOGRAMOS' && ingredienteMenu.medida.nombre === 'GRAMOS') || (stock.medida.nombre === 'LITROS' && ingredienteMenu.medida.nombre === 'CENTIMETROS_CUBICOS')) {
           // Si no coinciden, se necesita ajustar la cantidad a la medida del stock
-          precioRecomendado += (stock.precioCompra * ingredienteMenu.cantidad) / 1000;
+          precioRecomendado += (stock.precioCompra * (ingredienteMenu.cantidad) / 1000);
+        } else {
+          precioRecomendado += stock.precioCompra * ingredienteMenu.cantidad;
         }
       }
     }
@@ -254,7 +252,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     menu.sucursales = sucursalesElegidas;
 
     menu.ganancia = precio - precioSugerido;
-
+   
     toast.promise(MenuService.createMenu(menu, imagenes), {
       loading: 'Creando menu...',
       success: (message) => {
@@ -270,14 +268,15 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
         setIsLoading(false);
       }
     });
+ 
   }
 
   //SEPARAR EN PASOS
   const [step, setStep] = useState(1);
 
   useEffect(() => {
-    if(step === 4)
-    calcularCostos();
+    if (step === 4)
+      calcularCostos();
   }, [step]);
 
   const nextStep = () => {
