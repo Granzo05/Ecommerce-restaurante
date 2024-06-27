@@ -183,7 +183,19 @@ export const CarritoService = {
         }
 
         CarritoService.actualizarCarrito(carrito);
+    },
 
+    borrarPromocion: async (promoNombre: string) => {
+        let carrito = await CarritoService.getCarrito();
+
+        // Encuentra el producto en el carrito
+        let index = carrito.promociones.findIndex((item) => item.nombre === promoNombre);
+
+        if (index !== -1) {
+            carrito.promociones.splice(index, 1);
+        } 
+
+        CarritoService.actualizarCarrito(carrito);
     },
 
 

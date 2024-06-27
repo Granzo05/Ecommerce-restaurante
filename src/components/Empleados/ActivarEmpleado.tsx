@@ -13,7 +13,7 @@ const ActivarEmpleado: React.FC<ActivarEmpleadoProps> = ({ empleadoOriginal, onC
 
   const onConfirm = () => {
     empleadoOriginal.borrado = 'NO';
-    toast.promise(EmpleadoService.updateEmpleado(empleadoOriginal), {
+    toast.promise(EmpleadoService.updateBorrado(empleadoOriginal), {
       loading: 'Activando empleado...',
       success: (message) => {
         setTimeout(() => {

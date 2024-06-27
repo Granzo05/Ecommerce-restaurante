@@ -218,7 +218,7 @@ const Header = () => {
                                                 {carrito?.promociones && carrito?.promociones?.length > 0 && (
                                                     carrito?.promociones?.map((item) => (
                                                         <div key={item.id} className="cart-item">
-                                                            <button className="remove-item" onClick={() => CarritoService.borrarProducto(item.nombre)}>X</button>
+                                                            <button className="remove-item" onClick={() => CarritoService.borrarPromocion(item.nombre)}>X</button>
                                                             <p id="name-item">{item.nombre}</p>
                                                             <p id="price-item"><strong>Precio unitario:&nbsp;</strong>${formatPrice(item.precio)}</p>
                                                             <p id="price-item"><strong>Precio:&nbsp;</strong>${formatPrice(item.precio * item.cantidad)}</p>

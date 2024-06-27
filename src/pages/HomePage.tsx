@@ -33,6 +33,7 @@ export default function MainMenu() {
             SucursalService.getSucursalDTOById(parseInt(id))
                 .then(async sucursal => {
                     if (sucursal) {
+                        console.log(sucursal)
                         setSucursal(sucursal);
                     }
                 })
