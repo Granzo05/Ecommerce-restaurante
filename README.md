@@ -18,7 +18,13 @@ Intellij:
 
 Una vez finalizados ambos pasos, abrir http://localhost:5173/
 
-Pasos para loguearte como sucursal:
+
+Pasos para loguearte en el sistema con privilegios:
+
   - Una vez que tengas el Visual e Intellij ejecutándose al mismo tiempo puedes navegar a http://localhost:5173/login-negocio y loguearte:
     - Como empresa => Cuit: 201234566 Contraseña: 123456
     - Como sucursal => Email: a@gmail.com Contraseña: 123 
+
+Pasos para loguearte en el sistema como cliente:
+
+  - http://localhost:5173/login-cliente y crear un usuario
