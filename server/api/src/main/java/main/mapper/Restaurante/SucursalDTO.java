@@ -34,6 +34,7 @@ public class SucursalDTO implements Serializable {
     private String borrado = "NO";
 
     private Set<Promocion> promociones = new HashSet<>();
+
     private Set<Categoria> categorias = new HashSet<>();
 
     private Set<ImagenesDTO> imagenes = new HashSet<>();
@@ -43,8 +44,12 @@ public class SucursalDTO implements Serializable {
         dto.setId(sucursal.getId());
         dto.setNombre(sucursal.getNombre());
         dto.setEmail(sucursal.getEmail());
+        dto.setTelefono(sucursal.getTelefono());
         dto.setDomicilios(sucursal.getDomicilios().stream()
                 .map(DomicilioDTO::toDTO)
+                .collect(Collectors.toSet()));
+        dto.setImagenes(sucursal.getImagenes().stream()
+                .map(ImagenesDTO::toDTO)
                 .collect(Collectors.toSet()));
         dto.setHorarioApertura(sucursal.getHorarioCierre());
         dto.setCategorias(sucursal.getCategorias());

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import main.EncryptMD5.Encrypt;
 import main.entities.Productos.Imagenes;
 import main.entities.Restaurante.Empresa;
+import main.mapper.Restaurante.EmpresaDTO;
 import main.repositories.EmpresaRepository;
 import main.repositories.ImagenesRepository;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class EmpresaController {
 
     @CrossOrigin
     @PostMapping("/empresa/login")
-    public ResponseEntity<Empresa> loginEmpresa(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<EmpresaDTO> loginEmpresa(@RequestBody Map<String, String> credentials) {
         String variable = credentials.get("cuit");
         if (variable == null || variable.isEmpty()) variable = credentials.get("email");
         String password = credentials.get("contraseña");
@@ -36,7 +37,7 @@ public class EmpresaController {
         Optional<Empresa> empresa = empresaRepository.findByCuitOrNombreAndPassword(variable, Encrypt.cifrarPassword(password));
 
         if (empresa.isPresent()) {
-            return ResponseEntity.ok(empresa.get());
+            return ResponseEntity.ok(EmpresaDTO.toDTO(empresa.get()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 

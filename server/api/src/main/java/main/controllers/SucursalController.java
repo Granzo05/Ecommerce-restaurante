@@ -15,6 +15,7 @@ import main.entities.Restaurante.LocalidadDelivery;
 import main.entities.Restaurante.PrivilegiosSucursales;
 import main.entities.Restaurante.Roles;
 import main.entities.Restaurante.Sucursal;
+import main.mapper.Restaurante.EmpresaDTO;
 import main.mapper.Restaurante.SucursalDTO;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;
@@ -65,14 +66,14 @@ public class SucursalController {
 
     @CrossOrigin
     @PostMapping("/sucursal/login")
-    public ResponseEntity<Sucursal> loginSucursal(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<SucursalDTO> loginSucursal(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
         String password = credentials.get("contraseña");
 
         Optional<Sucursal> sucursal = sucursalRepository.findByEmailAndPassword(email, Encrypt.cifrarPassword(password));
 
         if (sucursal.isPresent()) {
-            return ResponseEntity.ok(sucursal.get());
+            return ResponseEntity.ok(SucursalDTO.toDTO(sucursal.get()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -88,38 +89,47 @@ public class SucursalController {
 
     @CrossOrigin
     @GetMapping("/sucursales/{idEmpresa}")
-    public Set<Sucursal> getSucursalesEmpresa(@PathVariable("idEmpresa") Long idEmpresa) throws Exception {
+    public Set<SucursalDTO> getSucursalesEmpresa(@PathVariable("idEmpresa") Long idEmpresa) throws Exception {
         List<Sucursal> sucursales = sucursalRepository.findByIdEmpresa(idEmpresa);
+
+        Set<SucursalDTO> sucursalDTOS = new HashSet<>();
 
         for (Sucursal sucursal : sucursales) {
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
+            sucursalDTOS.add(SucursalDTO.toDTO(sucursal));
         }
 
-        return new HashSet<>(sucursales);
+        return sucursalDTOS;
     }
 
     @CrossOrigin
     @GetMapping("/sucursales")
-    public Set<Sucursal> getSucursales() throws Exception {
+    public Set<SucursalDTO> getSucursales() throws Exception {
         List<Sucursal> sucursales = sucursalRepository.findAll();
+
+        Set<SucursalDTO> sucursalDTOS = new HashSet<>();
 
         for (Sucursal sucursal : sucursales) {
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
+            sucursalDTOS.add(SucursalDTO.toDTO(sucursal));
         }
 
-        return new HashSet<>(sucursales);
+        return sucursalDTOS;
     }
 
     @CrossOrigin
     @GetMapping("/sucursales/provincia/{provincia}")
-    public Set<Sucursal> getSucursalesPorProvincia(@PathVariable("provincia") String provincia) throws Exception {
+    public Set<SucursalDTO> getSucursalesPorProvincia(@PathVariable("provincia") String provincia) throws Exception {
         List<Sucursal> sucursales = sucursalRepository.findByProvincia(provincia);
+
+        Set<SucursalDTO> sucursalDTOS = new HashSet<>();
 
         for (Sucursal sucursal : sucursales) {
             sucursal.setLocalidadesDisponiblesDelivery(new HashSet<>(localidadDeliveryRepository.findByIdSucursal(sucursal.getId())));
+            sucursalDTOS.add(SucursalDTO.toDTO(sucursal));
         }
 
-        return new HashSet<>(sucursales);
+        return sucursalDTOS;
     }
 
     @CrossOrigin
