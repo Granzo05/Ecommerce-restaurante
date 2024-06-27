@@ -52,33 +52,23 @@ const AppRoutes: React.FC = () => {
 
 
           <Route path="/:id/pago" element={
-            <RutaPrivadaCliente>
-              <Pago />
-            </RutaPrivadaCliente>}>
+              <Pago />}>
           </Route>
 
           <Route path="/panel" element={
-            <RutaPrivadaEmpresa>
-              <Empresas />
-            </RutaPrivadaEmpresa>}>
+              <Empresas />}>
           </Route>
 
           <Route path=":id/empresa" element={
-            <RutaPrivadaEmpresa>
-              <Opciones />
-            </RutaPrivadaEmpresa>}>
+              <Opciones />}>
           </Route>
 
           <Route path="/:id/opciones" element={
-            <RutaPrivadaEmpleado>
-              <Opciones />
-            </RutaPrivadaEmpleado>}>
+              <Opciones />}>
           </Route>
 
           <Route path="/:id/opciones/:opcionElegida" element={
-            <RutaPrivadaEmpleado>
-              <Opciones />
-            </RutaPrivadaEmpleado>}>
+              <Opciones />}>
           </Route>
 
         </Routes>
