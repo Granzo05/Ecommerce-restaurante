@@ -35,9 +35,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/login-cliente" element={<LoginCliente />} />
 
           <Route path="/login-negocio" element={
-            <RutaPrivadaLogin>
-              <LoginNegocio />
-            </RutaPrivadaLogin>}>
+              <LoginNegocio />}>
           </Route>
 
           <Route path="/:id/:categoria" element={<Menu />} />
