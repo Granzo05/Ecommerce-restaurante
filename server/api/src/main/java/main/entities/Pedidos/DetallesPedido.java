@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Productos.ArticuloMenu;
 import main.entities.Productos.ArticuloVenta;
+import main.entities.Productos.Promocion;
 
 import java.io.Serializable;
 
@@ -31,6 +32,11 @@ public class DetallesPedido implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_articulo")
     private ArticuloVenta articuloVenta;
+
+    @JsonIgnoreProperties({"sucursales"})
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_promocion")
+    private Promocion promocion;
 
     @JsonIgnoreProperties({
             "factura", "cliente", "sucursales", "detallesPedido",

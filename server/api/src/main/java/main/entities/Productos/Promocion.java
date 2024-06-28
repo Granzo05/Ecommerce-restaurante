@@ -47,9 +47,6 @@ public class Promocion implements Serializable {
     @Column(name = "precio_promocion")
     private double precio;
 
-    @Column(name = "descuento_porcentual")
-    private double descuento;
-
     @Column(name = "borrado")
     private String borrado = "NO";
 

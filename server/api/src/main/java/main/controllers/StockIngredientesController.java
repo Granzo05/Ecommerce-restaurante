@@ -69,9 +69,7 @@ public class StockIngredientesController {
                 page++;
             }
 
-            if (stock.getCantidadActual() > 0) {
-                stocksCargados.add(stock);
-            }
+            stocksCargados.add(stock);
         }
 
         return stocksCargados;

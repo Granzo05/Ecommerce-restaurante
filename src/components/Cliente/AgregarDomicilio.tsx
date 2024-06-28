@@ -24,7 +24,11 @@ const AgregarDomicilio: React.FC<AgregarCategoriaProps> = ({ onCloseModal }) => 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (cliente && cliente?.domicilios.length > 0) setNewDomicilios(cliente.domicilios);
+    if (cliente && cliente?.domicilios?.length > 0) {
+      setNewDomicilios(cliente.domicilios);
+    } else {
+      añadirCampoDomicilio();
+    }
   }, [cliente]);
 
   useEffect(() => {

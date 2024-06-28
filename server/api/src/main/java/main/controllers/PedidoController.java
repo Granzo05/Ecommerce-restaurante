@@ -23,6 +23,7 @@ import main.entities.Pedidos.DetallesPedido;
 import main.entities.Pedidos.EnumEstadoPedido;
 import main.entities.Pedidos.EnumTipoEnvio;
 import main.entities.Pedidos.Pedido;
+import main.entities.Productos.DetallePromocion;
 import main.entities.Restaurante.Sucursal;
 import main.entities.Stock.StockArticuloVenta;
 import main.entities.Stock.StockIngredientes;
@@ -249,6 +250,15 @@ public class PedidoController {
                                 .unitPrice(new BigDecimal(detallesPedido.getArticuloVenta().getPrecioVenta()))
                                 .build();
                         items.add(itemRequest);
+                    } else if (detallesPedido.getPromocion() != null) {
+                        PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
+                                .id(String.valueOf(detallesPedido.getPromocion().getId()))
+                                .title(detallesPedido.getPromocion().getNombre())
+                                .quantity(detallesPedido.getCantidad())
+                                .currencyId("ARS")
+                                .unitPrice(new BigDecimal(detallesPedido.getPromocion().getPrecio()))
+                                .build();
+                        items.add(itemRequest);
                     }
                 }
 
@@ -303,6 +313,7 @@ public class PedidoController {
 
             if (stockArticuloVenta.isPresent()) {
                 stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() - detallesPedido.getCantidad());
+                stockArticuloVentaRepository.save(stockArticuloVenta.get());
             }
         }
 
@@ -310,11 +321,42 @@ public class PedidoController {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
 
-                if (stockIngrediente.isPresent()) {
-                    stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - detallesPedido.getCantidad());
+                // Si la cantidad del ingrediente es superior a la maxima almacenada quiere decir que probablemente se trate de una diferencia de medidas
+                if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
+                    stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000 * detallesPedido.getCantidad()));
+                } else {
+                    stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * detallesPedido.getCantidad()));
+                }
+
+                stockIngredientesRepository.save(stockIngrediente.get());
+            }
+        }
+
+        if (detallesPedido.getPromocion() != null) {
+            for (DetallePromocion detalle : detallesPedido.getPromocion().getDetallesPromocion()) {
+                if (detalle.getArticuloMenu() != null) {
+                    for (IngredienteMenu ingrediente : detalle.getArticuloMenu().getIngredientesMenu()) {
+                        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
+
+                        // Si la cantidad del ingrediente es superior a la maxima almacenada quiere decir que probablemente se trate de una diferencia de medidas
+                        if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
+                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000 * detalle.getCantidad()));
+                        } else {
+                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * detalle.getCantidad()));
+                        }
+
+                        stockIngredientesRepository.save(stockIngrediente.get());
+                    }
+                }
+                if (detalle.getArticuloVenta() != null) {
+                    Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detalle.getArticuloVenta().getId(), idSucursal);
+
+                    if (stockArticuloVenta.isPresent()) {
+                        stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() - detalle.getCantidad());
+                        stockArticuloVentaRepository.save(stockArticuloVenta.get());
+                    }
                 }
             }
-
         }
     }
 
@@ -324,6 +366,7 @@ public class PedidoController {
 
             if (stockArticuloVenta.isPresent()) {
                 stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() + detallesPedido.getCantidad());
+                stockArticuloVentaRepository.save(stockArticuloVenta.get());
             }
         }
 
@@ -333,6 +376,14 @@ public class PedidoController {
 
                 if (stockIngrediente.isPresent()) {
                     stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + detallesPedido.getCantidad());
+
+                    if (stockIngrediente.get().getCantidadMaxima() > ingrediente.getCantidad()) {
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - detallesPedido.getCantidad() / 1000);
+                    } else {
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - detallesPedido.getCantidad());
+                    }
+
+                    stockIngredientesRepository.save(stockIngrediente.get());
                 }
             }
 

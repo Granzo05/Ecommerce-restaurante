@@ -66,9 +66,7 @@ public class StockArticulosController {
                 page++;
             }
 
-            if (stock.getCantidadActual() > 0) {
-                stocksCargados.add(stock);
-            }
+            stocksCargados.add(stock);
         }
         return stocksCargados;
     }
