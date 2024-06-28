@@ -1,4 +1,27 @@
-[x] Carga de menu con fotos
+[] Al ingresar sin sucursal, te mete con sucursal capital igual.
+[] No me muestra el botón de mercado pago. Error 400.
+[] Te descuenta el stock a números negativos.
+[] No te deja comprar pero te descuenta stock por más que no hayas comprado.
+[x] Meter mililitros para manejar el stock de los litros.
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------//
+
+
+
+
+/*[x] Carga de menu con fotos
 [x] Visualizacion de menu correctamente por tipo
 [x] Crear exclusiones para el check de privilegios dependiendo la ruta en la que estoy, como por ej acceso-denegado
 [x] Login restaurante 
@@ -362,4 +385,4 @@ router.post('/forgot-password', async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-});
+}); */
