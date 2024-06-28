@@ -409,12 +409,14 @@ h3 {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 
-.menu-img {
+ .menu-img {
     max-width: 500px;
     width: 100%;
+    max-height: 270px;
     display: block;
     transition: opacity 0.3s;
 }
+
 
 .overlay {
     position: absolute;

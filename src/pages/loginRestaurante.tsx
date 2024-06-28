@@ -185,7 +185,7 @@ const LoginNegocio = () => {
 
               </div>
             </div>
-            <button className="my-form__button" onClick={ingresar} disabled={isLoading}>
+            <button className="my-form__button" onClick={handleIniciarSesionNegocio} disabled={isLoading}>
               {isLoading ? 'Iniciando sesión...' : 'Ingresar'}
             </button>
           </div>

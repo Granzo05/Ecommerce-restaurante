@@ -40,3 +40,39 @@
   background-color: #2C2C2C;
   transition: background-color 0.3s ease; /* Transición para un efecto suave */
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-all {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 0;
+  }
+
+  .menu-icono-all {
+    margin-right: 10px;
+  }
+
+  .header-all .navbar .ul-header-all {
+    flex-direction: column;
+  }
+
+  .header-all .navbar .ul-header-all li {
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-all {
+    padding: 10px 0;
+  }
+
+  .menu-icono-all {
+    width: 30px;
+    margin-right: 5px;
+  }
+
+  .header-all .navbar .ul-header-all li {
+    margin-bottom: 5px;
+  }
+}
