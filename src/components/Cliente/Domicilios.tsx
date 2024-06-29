@@ -22,7 +22,7 @@ const Domicilios = () => {
     const [cambios, setCambios] = useState(false);
 
     useEffect(() => {
-        if (cliente && cliente?.domicilios.length > 0) setNewDomicilios(cliente.domicilios);
+        if (cliente && cliente?.domicilios?.length > 0) setNewDomicilios(cliente.domicilios);
     }, [cliente]);
 
     useEffect(() => {
