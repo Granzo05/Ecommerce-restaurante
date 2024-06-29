@@ -31,7 +31,7 @@ const Medidas = lazy(() => import('../components/Medidas/Medidas'));
 const Promociones = lazy(() => import('../components/Promociones/Promociones'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
 const PedidosEntrantes = lazy(() => import('../components/Pedidos/PedidosEntrantesRestaurante'));
-const PedidosAceptados = lazy(() => import('../components/Pedidos/PedidosAceptadosRestaurante'));
+const PedidosAceptados = lazy(() => import('../components/Pedidos/PedidosEnCocina'));
 const PedidosEntregados = lazy(() => import('../components/Pedidos/PedidosEntregadosRestaurante'));
 const PedidosParaEntregar = lazy(() => import('../components/Pedidos/PedidosParaEntregarRestaurante'));
 const Empleados = lazy(() => import('../components/Empleados/Empleados'));

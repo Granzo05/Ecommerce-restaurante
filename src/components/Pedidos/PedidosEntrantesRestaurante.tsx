@@ -58,19 +58,16 @@ const PedidosEntrantes = () => {
 
         // Calcular el tiempo de preparación en minutos
         const tiempoMayor: number = await calcularTiempoPreparacion(pedido);
-        console.log(await tiempoMayor)
         // Sumar los minutos del tiempo mayor al objeto Date
         horaActual.setMinutes(horaActual.getMinutes() + tiempoMayor);
 
         // Obtener horas y minutos de la hora estimada de finalización
         const horaFinalizacion = horaActual.getHours();
+        
         const minutosFinalizacion = horaActual.getMinutes();
 
         // Formatear la hora estimada de finalización como una cadena HH:MM
         const horaFinalizacionFormateada = `${horaFinalizacion.toString().padStart(2, '0')}:${minutosFinalizacion.toString().padStart(2, '0')}`;
-
-        // Almacenar la hora de finalización estimada en localStorage
-        localStorage.setItem('horaFinalizacionPedido', horaFinalizacionFormateada);
 
         // Asignar la hora de finalización al pedido
         pedido.horaFinalizacion = horaFinalizacionFormateada;

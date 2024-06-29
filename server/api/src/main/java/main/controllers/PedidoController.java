@@ -43,6 +43,8 @@ import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.*;
 
@@ -144,6 +146,8 @@ public class PedidoController {
         EnumEstadoPedido estado = EnumEstadoPedido.fromValue(estadoValue);
         List<Pedido> pedidos = pedidoRepository.findPedidosByEstadoAndIdSucursal(estado, idSucursal);
 
+        checkPedidosSinPagar(idSucursal);
+
         for (Pedido pedido : pedidos) {
             try {
                 pedido.getDomicilioEntrega().setCalle(Encrypt.desencriptarString(pedido.getDomicilioEntrega().getCalle()));
@@ -152,6 +156,32 @@ public class PedidoController {
         }
 
         return new HashSet<>(pedidos);
+    }
+
+    private void checkPedidosSinPagar(Long idSucursal) {
+        List<Pedido> pedidos = pedidoRepository.findPedidosByEstadoAndIdSucursal(EnumEstadoPedido.PROCESO_DE_PAGO, idSucursal);
+
+        for (Pedido pedido : pedidos) {
+            if (!pedido.getHoraFinalizacion().isEmpty()) {
+                // Vemos si el pedido esta en estado de pago y ya han pasado los 5 minutos para finalizar el pago
+                LocalTime horaActual = LocalTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+                LocalTime horaPedido = LocalTime.parse(pedido.getHoraFinalizacion(), formatter);
+
+                if (pedido.getEstado().equals(EnumEstadoPedido.PROCESO_DE_PAGO) && horaPedido.isBefore(horaActual)) {
+                    // Lo marcamos como rechazado
+                    pedido.setEstado(EnumEstadoPedido.RECHAZADOS);
+                    // Reponemos stock
+                    for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
+                        reponerStock(detallesPedido, idSucursal);
+                    }
+                    // Guardamos el estado
+                    pedidoRepository.save(pedido);
+                    break;
+                }
+            }
+        }
     }
 
     @CrossOrigin
@@ -174,7 +204,7 @@ public class PedidoController {
             Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
             pedido.getSucursales().add(sucursal);
 
-            // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
+            // Si el domicilio es null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
             if (pedido.getDomicilioEntrega() == null) {
                 // Que se no borrado quiere decir que es el domicilio actual de la sucursal
                 pedido.setDomicilioEntrega(domicilioRepository.findByIdSucursalNotBorrado(sucursal.getId()));
@@ -226,7 +256,7 @@ public class PedidoController {
                 pedidoRepository.save(pedido);
 
 
-                MercadoPagoConfig.setAccessToken("TEST-4348060094658217-052007-d8458fa36a2d40dd8023bfcb9f27fd4e-1819307913");
+                MercadoPagoConfig.setAccessToken("TEST-2399300778988406-062918-711bdd3cdd7e7bed5c73cbb0f31491a3-738770102");
 
                 List<PreferenceItemRequest> items = new ArrayList<>();
 
@@ -277,8 +307,9 @@ public class PedidoController {
                         .build();
                 PreferenceClient client = new PreferenceClient();
 
+                // 5 minutos la ventana de pago
                 MPRequestOptions options = MPRequestOptions.builder()
-                        .connectionTimeout(120000)
+                        .connectionTimeout(300000)
                         .build();
 
                 Preference preference = client.create(preferenceRequest, options);
@@ -369,7 +400,7 @@ public class PedidoController {
     }
 
     private void reponerStock(DetallesPedido detallesPedido, Long idSucursal) {
-        // Descontar stock de ArticuloVenta
+        // Reponer stock de ArticuloVenta
         if (detallesPedido.getArticuloVenta() != null) {
             Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detallesPedido.getArticuloVenta().getId(), idSucursal);
 
@@ -379,7 +410,7 @@ public class PedidoController {
             }
         }
 
-        // Descontar stock de ArticuloMenu
+        // Reponer stock de ArticuloMenu
         if (detallesPedido.getArticuloMenu() != null) {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
@@ -395,12 +426,11 @@ public class PedidoController {
             }
         }
 
-        // Descontar stock de Promocion
+
         if (detallesPedido.getPromocion() != null) {
             for (DetallePromocion detalle : detallesPedido.getPromocion().getDetallesPromocion()) {
-                // Descontar stock de ArticuloMenu en la promocion
+                // Reponer stock de ArticuloMenu en la promocion
                 if (detalle.getArticuloMenu() != null) {
-                    System.out.println(detalle.getArticuloMenu().getNombre());
                     for (IngredienteMenu ingrediente : detalle.getArticuloMenu().getIngredientesMenu()) {
                         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
                         if (stockIngrediente.isPresent()) {
@@ -415,7 +445,7 @@ public class PedidoController {
                     }
                 }
 
-                // Descontar stock de ArticuloVenta en la promocion
+                // Reponer stock de ArticuloVenta en la promocion
                 if (detalle.getArticuloVenta() != null) {
                     Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detalle.getArticuloVenta().getId(), idSucursal);
                     if (stockArticuloVenta.isPresent()) {

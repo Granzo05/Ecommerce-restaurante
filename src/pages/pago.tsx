@@ -76,9 +76,10 @@ const Pago = () => {
 
     useEffect(() => {
         if (preferenceId) {
-            initMercadoPago("TEST-41b327fc-a375-4756-a0af-e30b0344a817", {
+            initMercadoPago("TEST-6f85e1a5-3c13-4308-b8df-47057a926b0a", {
                 locale: "es-AR",
             });
+            console.log(preferenceId)
 
             if (preferenceId && preferenceId !== "") {
                 setIsVisible(true);
@@ -304,11 +305,28 @@ const Pago = () => {
 
                                 pedido.domicilioEntrega = domicilio;
 
-                                let preference = await PedidoService.crearPedidoMercadopago(pedido);
+                                const horaActual = new Date();
 
+                                // Colocar un temporizador de 5 minutos para el pago, sino se devuelve el stock
+                                horaActual.setMinutes(horaActual.getMinutes() + 5);
+
+                                // Obtener horas y minutos de la hora estimada de finalización
+                                const horaFinalizacion = horaActual.getHours();
+
+                                const minutosFinalizacion = horaActual.getMinutes();
+
+                                // Formatear la hora estimada de finalización como una cadena HH:MM
+                                const horaFinalizacionFormateada = `${horaFinalizacion.toString().padStart(2, '0')}:${minutosFinalizacion.toString().padStart(2, '0')}`;
+
+                                // Asignar la hora de cancelacion del pedido en caso que no se pague
+                                pedido.horaFinalizacion = horaFinalizacionFormateada;
+
+                                let preference = await PedidoService.crearPedidoMercadopago(pedido);
+                                // Si el restaurante bloquea al usuario siempre va a retornar 0
                                 if (preference.id === "0") {
                                     toast.error('Tu cuenta ha sido bloqueada por el restaurante')
                                 } else {
+                                    // Sumamos un pedido al actual de la hora
                                     actualizarPedidos();
                                     setPreferenceId(preference.id);
                                 }
@@ -504,16 +522,16 @@ const Pago = () => {
                             <h2><strong>Total:</strong> ${carrito?.totalPrecio}</h2>
 
                             {domicilio && domicilio?.calle?.length > 0 ? (
-                                <div className={isVisible ? "divVisible" : "divInvisible"}>
+                                <>
                                     {preferenceId && preferenceId.length > 2 && (
-                                        <button className="checkout-btn" disabled={isLoading}>
+                                        <button className="checkout-btn" disabled={false}>
                                             <Wallet
-                                                initialization={{ preferenceId: preferenceId, redirectMode: "self" }}
+                                                initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
                                                 customization={{ texts: { valueProp: "smart_option" } }}
                                             />
                                         </button>
                                     )}
-                                </div>
+                                </>
                             ) : (
                                 <p>El botón de pago se mostrará una vez que se asigne un domicilio de entrega</p>
                             )}
