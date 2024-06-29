@@ -310,6 +310,7 @@ public class PedidoController {
     }
 
     private void descontarStock(DetallesPedido detallesPedido, Long idSucursal) {
+        // Descontar stock de ArticuloVenta
         if (detallesPedido.getArticuloVenta() != null) {
             Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detallesPedido.getArticuloVenta().getId(), idSucursal);
 
@@ -319,42 +320,47 @@ public class PedidoController {
             }
         }
 
+        // Descontar stock de ArticuloMenu
         if (detallesPedido.getArticuloMenu() != null) {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
-
-                // Si la cantidad del ingrediente es superior a la maxima almacenada quiere decir que probablemente se trate de una diferencia de medidas
-                if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                    stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000 * detallesPedido.getCantidad()));
-                } else {
-                    stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * detallesPedido.getCantidad()));
+                if (stockIngrediente.isPresent()) {
+                    // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
+                    if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000 * detallesPedido.getCantidad()));
+                    } else {
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * detallesPedido.getCantidad()));
+                    }
+                    stockIngredientesRepository.save(stockIngrediente.get());
                 }
-
-                stockIngredientesRepository.save(stockIngrediente.get());
             }
         }
 
+        // Descontar stock de Promocion
         if (detallesPedido.getPromocion() != null) {
             for (DetallePromocion detalle : detallesPedido.getPromocion().getDetallesPromocion()) {
+                // Descontar stock de ArticuloMenu en la promocion
                 if (detalle.getArticuloMenu() != null) {
                     for (IngredienteMenu ingrediente : detalle.getArticuloMenu().getIngredientesMenu()) {
                         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
-
-                        // Si la cantidad del ingrediente es superior a la maxima almacenada quiere decir que probablemente se trate de una diferencia de medidas
-                        if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) * detalle.getCantidad());
-                        } else {
-                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * detalle.getCantidad()));
+                        if (stockIngrediente.isPresent()) {
+                            // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
+                            if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
+                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) * (detalle.getCantidad() + detallesPedido.getCantidad()));
+                            } else {
+                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * (detalle.getCantidad() + detallesPedido.getCantidad())));
+                            }
+                            stockIngredientesRepository.save(stockIngrediente.get());
                         }
-
-                        stockIngredientesRepository.save(stockIngrediente.get());
                     }
                 }
+
+                // Descontar stock de ArticuloVenta en la promocion
                 if (detalle.getArticuloVenta() != null) {
                     Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detalle.getArticuloVenta().getId(), idSucursal);
 
                     if (stockArticuloVenta.isPresent()) {
-                        stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() - detalle.getCantidad());
+                        stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() - (detalle.getCantidad() * detallesPedido.getCantidad()));
                         stockArticuloVentaRepository.save(stockArticuloVenta.get());
                     }
                 }
@@ -363,6 +369,7 @@ public class PedidoController {
     }
 
     private void reponerStock(DetallesPedido detallesPedido, Long idSucursal) {
+        // Descontar stock de ArticuloVenta
         if (detallesPedido.getArticuloVenta() != null) {
             Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detallesPedido.getArticuloVenta().getId(), idSucursal);
 
@@ -372,45 +379,47 @@ public class PedidoController {
             }
         }
 
+        // Descontar stock de ArticuloMenu
         if (detallesPedido.getArticuloMenu() != null) {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
-                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getIngrediente().getId(), idSucursal);
-
+                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
                 if (stockIngrediente.isPresent()) {
-                    stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + detallesPedido.getCantidad());
-
-                    if (stockIngrediente.get().getCantidadMaxima() > ingrediente.getCantidad()) {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + detallesPedido.getCantidad() / 1000);
+                    // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
+                    if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000 * detallesPedido.getCantidad()));
                     } else {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + detallesPedido.getCantidad());
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() * detallesPedido.getCantidad()));
                     }
-
                     stockIngredientesRepository.save(stockIngrediente.get());
                 }
             }
         }
 
+        // Descontar stock de Promocion
         if (detallesPedido.getPromocion() != null) {
             for (DetallePromocion detalle : detallesPedido.getPromocion().getDetallesPromocion()) {
+                // Descontar stock de ArticuloMenu en la promocion
                 if (detalle.getArticuloMenu() != null) {
+                    System.out.println(detalle.getArticuloMenu().getNombre());
                     for (IngredienteMenu ingrediente : detalle.getArticuloMenu().getIngredientesMenu()) {
                         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
-
-                        // Si la cantidad del ingrediente es superior a la maxima almacenada quiere decir que probablemente se trate de una diferencia de medidas
-                        if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) * detalle.getCantidad());
-                        } else {
-                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() * detalle.getCantidad()));
+                        if (stockIngrediente.isPresent()) {
+                            // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
+                            if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
+                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) * (detalle.getCantidad() + detallesPedido.getCantidad()));
+                            } else {
+                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() * (detalle.getCantidad() + detallesPedido.getCantidad())));
+                            }
+                            stockIngredientesRepository.save(stockIngrediente.get());
                         }
-
-                        stockIngredientesRepository.save(stockIngrediente.get());
                     }
                 }
+
+                // Descontar stock de ArticuloVenta en la promocion
                 if (detalle.getArticuloVenta() != null) {
                     Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detalle.getArticuloVenta().getId(), idSucursal);
-
                     if (stockArticuloVenta.isPresent()) {
-                        stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() + detalle.getCantidad());
+                        stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() + (detalle.getCantidad() * detallesPedido.getCantidad()));
                         stockArticuloVentaRepository.save(stockArticuloVenta.get());
                     }
                 }
@@ -438,6 +447,12 @@ public class PedidoController {
         }
 
         pedidoDb.get().setEstado(pedido.getEstado());
+
+        if (pedido.getEstado().equals(EnumEstadoPedido.RECHAZADOS)) {
+            for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
+                reponerStock(detallesPedido, idSucursal);
+            }
+        }
 
         if (pedido.getEstado().equals(EnumEstadoPedido.ENTREGADOS)) {
             pedidoDb.get().setFactura(pedido.getFactura());
@@ -483,24 +498,6 @@ public class PedidoController {
         pedidoRepository.save(pedidoDb.get());
 
         return new ResponseEntity<>("El pedido ha sido recibido por el restaurante", HttpStatus.ACCEPTED);
-    }
-
-    @Transactional
-    @CrossOrigin
-    @PutMapping("/pedido/delete/{preference}/{idSucursal}")
-    public void deletePedidoFallido(@PathVariable("preference") String preference, @PathVariable("idSucursal") Long idSucursal) {
-
-        Optional<Pedido> pedido = pedidoRepository.findByPreference(preference);
-
-        if (pedido.isPresent()) {
-
-            for (DetallesPedido detallesPedido : pedido.get().getDetallesPedido()) {
-                reponerStock(detallesPedido, idSucursal);
-            }
-
-            pedido.get().setBorrado("SI");
-            pedidoRepository.save(pedido.get());
-        }
     }
 
     @GetMapping("/pdf/factura/{idPedido}")

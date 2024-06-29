@@ -8,12 +8,25 @@
 
 
 
+Prueba stock
+1 pizza -> 0.5 muzza, salsa 1, harina 0,5
+1 hamburguesa -> 0.4 molida, 1 pan, 0.2 beacon, 0.2 cheddar
+1 promo -> 2 hamburguesas y 1 gaseosa
 
+pedido
+1 pizza, 2 hamburguesas y 2 promos(4 hamburguesas y 2 gaseosas)
 
+impacto stock:
+Muzza 5 a 4.5 CHECK CHECK REPOSICION
+Salsa 75 a 74 CHECK CHECK REPOSICION
+Harina 50 a 49.5 CHECK CHECK REPOSICION
 
+Molida 12.8 a 10.4 CHECK CHECK REPOSICION
+Pan 43 a 37 CHECK CHECK REPOSICION
+Beacon 12.4 a 11.2 CHECK CHECK REPOSICION
+Cheddar 7.4 a 6.2 CHECK CHECK REPOSICION
 
-
-
+Gaseosa 41 a 39 CHECKSSS
 
 
 
