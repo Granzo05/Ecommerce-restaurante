@@ -180,8 +180,8 @@ const ArticuloVentas = () => {
                 recomendacion.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
             ));
         } else {
-            setDatosFiltrados(datosFiltrados.length > 0 ? datosFiltrados : []);
-            setPaginasTotales(Math.ceil(datosFiltrados.length / cantidadProductosMostrables));
+            setDatosFiltrados(articulosVenta.length > 0 ? articulosVenta : []);
+            setPaginasTotales(Math.ceil(articulosVenta.length / cantidadProductosMostrables));
         }
     };
 

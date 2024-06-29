@@ -19,6 +19,7 @@ function NotFound() {
             <p className="display-4">Creo que te has perdido</p>
             <p>No se ha encontrado la página buscada</p>
             <a onClick={() => window.location.href = getBaseUrl()}
+              style={{cursor: 'pointer'}}
               className="text-white text-decoration-none px-4 py-3 
                           bg-success d-inline-block mt-2 rounded">
               Volver a la página principal

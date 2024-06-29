@@ -51,7 +51,7 @@ public class SucursalDTO implements Serializable {
         dto.setImagenes(sucursal.getImagenes().stream()
                 .map(ImagenesDTO::toDTO)
                 .collect(Collectors.toSet()));
-        dto.setHorarioApertura(sucursal.getHorarioCierre());
+        dto.setHorarioApertura(sucursal.getHorarioApertura());
         dto.setCategorias(sucursal.getCategorias());
         dto.setHorarioCierre(sucursal.getHorarioCierre());
         dto.setBorrado(sucursal.getBorrado());

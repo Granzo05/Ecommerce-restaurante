@@ -5,7 +5,7 @@ import { Sucursal } from "../../types/Restaurante/Sucursal";
 
 export const URL_API = 'http://localhost:8080/';
 
-export const DESACTIVAR_PRIVILEGIOS = true; // false hay privilegios, true no hay privilegios
+export const DESACTIVAR_PRIVILEGIOS = false; // false hay privilegios, true no hay privilegios
 
 export function convertirFecha(fecha: Date): string {
     const dia = fecha.getDate().toString().padStart(2, '0');
@@ -27,8 +27,6 @@ export function sucursalId(): number {
 
         if (usuario.idSucursal > 0 && usuario.idSucursal !== undefined) {
             return usuario.idSucursal;
-        } else {
-            return 1;
         }
     } else if (empleadoString) {
         if (empleadoString) {

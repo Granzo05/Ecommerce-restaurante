@@ -22,11 +22,11 @@ function ProductosPorCategoria() {
   const [sucursal, setSucursal] = useState<SucursalDTO>(new SucursalDTO());
 
   useEffect(() => {
-    if (categoria && id) {
-      MenuService.getMenusPorTipoAndIdSucursal(categoria, parseInt(id))
+    if (categoria && id === '0') {
+      MenuService.getMenusPorTipoAndIdSucursal(categoria, 1)
         .then(menus => {
           if (menus.length === 0) {
-            ArticuloVentaService.getArticulosPorCategoriaAndIdSucursal(categoria, parseInt(id))
+            ArticuloVentaService.getArticulosPorCategoriaAndIdSucursal(categoria, 1)
               .then(articulos => {
                 setArticulos(articulos);
               })
@@ -40,11 +40,41 @@ function ProductosPorCategoria() {
         .catch(error => {
           console.error("Error al obtener los menús:", error);
         });
+    } else if (id) {
+      if (categoria && id) {
+        MenuService.getMenusPorTipoAndIdSucursal(categoria, parseInt(id))
+          .then(menus => {
+            if (menus.length === 0) {
+              ArticuloVentaService.getArticulosPorCategoriaAndIdSucursal(categoria, parseInt(id))
+                .then(articulos => {
+                  setArticulos(articulos);
+                })
+                .catch(error => {
+                  console.error("Error al obtener los artículos:", error);
+                });
+            } else {
+              setMenus(menus);
+            }
+          })
+          .catch(error => {
+            console.error("Error al obtener los menús:", error);
+          });
+      }
     }
   }, [categoria, id]);
 
   useEffect(() => {
-    if (id)
+    if (id && id === '0') {
+      SucursalService.getSucursalDTOById(1)
+        .then(async sucursal => {
+          if (sucursal) {
+            setSucursal(sucursal);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } else if (id) {
       SucursalService.getSucursalDTOById(parseInt(id))
         .then(async sucursal => {
           if (sucursal) {
@@ -54,6 +84,7 @@ function ProductosPorCategoria() {
         .catch(error => {
           console.error('Error:', error);
         });
+    }
   }, [id]);
 
 
@@ -86,11 +117,17 @@ function ProductosPorCategoria() {
               <div className="details">
                 <div className="details-sub">
                   <h5>{ }</h5>
-                  <h5 className='price'>${menu.precioVenta}</h5>
+                  {id === '0' ? (
+                    <p>Esta sucursal es una muestra, elije una para ver el precio</p>
+                  ) : (
+                    <h5 className='price'>${menu.precioVenta}</h5>
+                  )}
                 </div>
                 <h5>{menu.nombre}</h5>
                 <p>{menu.descripcion}</p>
-                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
+                {id !== '0' && (
+                  <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
+                )}
               </div>
             </div>
             <div className="back">
@@ -108,7 +145,9 @@ function ProductosPorCategoria() {
                 )}
               </div>
               <div className='details-back'>
-                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
+                {id !== '0' && (
+                  <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(menu, null, 1)}>Añadir al carrito</button>
+                )}
               </div>
             </div>
           </div>
@@ -123,10 +162,18 @@ function ProductosPorCategoria() {
               <div className="details">
                 <div className="details-sub">
                   <h5>{ }</h5>
-                  <h5 className='price'>${articulo.precioVenta}</h5>
+                  {id === '0' ? (
+                    <p className='price'>Esta sucursal es una muestra, elije una para ver el precio</p>
+                  ) : (
+                    <h5 className='price'>${articulo.precioVenta}</h5>
+                  )}
                 </div>
                 <h5>{articulo.nombre} - {articulo.cantidadMedida} {articulo.medida.nombre}</h5>
-                <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(null, articulo, 1)}>Añadir al carrito</button>
+                <div className='details-back'>
+                  {id !== '0' && (
+                    <button className='btn-agregar' onClick={() => CarritoService.agregarAlCarrito(null, articulo, 1)}>Añadir al carrito</button>
+                  )}
+                </div>
               </div>
             </div>
           </div>

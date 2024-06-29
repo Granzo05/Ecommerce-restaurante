@@ -29,17 +29,27 @@ export default function MainMenu() {
     }, []);
 
     useEffect(() => {
-        if (id)
-            SucursalService.getSucursalDTOById(parseInt(id))
+        if (id && id === '0') {
+            SucursalService.getSucursalDTOById(1)
                 .then(async sucursal => {
                     if (sucursal) {
-                        console.log(sucursal)
                         setSucursal(sucursal);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
+        } else if (id) {
+            SucursalService.getSucursalDTOById(parseInt(id))
+                .then(async sucursal => {
+                    if (sucursal) {
+                        setSucursal(sucursal);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     }, [id]);
 
 

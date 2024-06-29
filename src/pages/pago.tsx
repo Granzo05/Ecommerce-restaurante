@@ -115,8 +115,8 @@ const Pago = () => {
         const now = new Date();
         const horaActual = now.toTimeString().slice(0, 5);
 
-        if (verificarPedidos()) {
-            if ((sucursal.horarioApertura < horaActual && sucursal.horarioCierre > horaActual)) {
+        if (true) {
+            if (true) {
                 let hayStock = true;
                 let productoFaltante: ArticuloMenu | ArticuloVenta | null = null;
 

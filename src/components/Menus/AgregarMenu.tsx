@@ -191,7 +191,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function agregarMenu() {
-    if (!nombre) {
+    if (nombre.length === 0) {
       toast.error("Por favor, es necesario el nombre");
       return;
     } else if (!tiempoCoccion) {
@@ -209,7 +209,7 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
     } else if (imagenes.length === 0) {
       toast.info("No se asignó ninguna imagen");
       return;
-    } else if (!descripcion) {
+    } else if (descripcion.length === 0) {
       toast.error("Por favor, es necesario la descripción");
       return;
     } else if (!subcategoria) {
@@ -289,10 +289,10 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
 
   const validateAndNextStep = () => {
 
-    if (!nombre || !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)\,]+$/)) {
+    if (!nombre) {
       toast.error("Por favor, es necesario el nombre");
       return;
-    } else if (!descripcion || !descripcion.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)\,]+$/)) {
+    } else if (!descripcion) {
       toast.error("Por favor, es necesario una descripcion");
       return;
     } else if (!tiempoCoccion || tiempoCoccion == 0) {
@@ -352,12 +352,12 @@ const AgregarMenu: React.FC<AgregarMenuProps> = ({ onCloseModal }) => {
           <>
             <h4>Paso 1 - Datos</h4>
             <div className="inputBox">
-              <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)\,]+" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
+              <input type="text" required={true} value={nombre} onChange={(e) => { setNombre(e.target.value) }} />
               <span>Nombre del menú</span>
               <div className="error-message">El nombre debe contener letras y espacios.</div>
             </div>
             <div className="inputBox">
-              <input type="text" required={true} pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-\(\)\,]+" value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
+              <input type="text" required={true} value={descripcion} onChange={(e) => { setDescripcion(e.target.value) }} />
               <span>Descripción del menu</span>
               <div className="error-message">La descripción debe contener letras y espacios.</div>
             </div>

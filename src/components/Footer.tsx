@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import '../styles/footer.css';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
 
@@ -6,6 +7,7 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ sucursal }) => {
+  const { id } = useParams()
 
   return (
     <footer id='contactos' className='footer'>
@@ -13,8 +15,17 @@ const Footer: React.FC<FooterProps> = ({ sucursal }) => {
         {sucursal && (
           <>
             <div>
-              <h3 style={{ color: '#FFFFFF' }}>{sucursal.nombre}</h3>
-              <a className='selec-otra-sucur' style={{ textDecoration: 'underline', display: 'flex' }} onClick={() => window.location.href = '/sucursales'}>SELECCIONAR OTRA SUCURSAL</a>
+              {id === '0' ? (
+                <>
+                  <h3 style={{ color: '#FFFFFF' }}>Sucursal de muestra</h3>
+                  <a className='selec-otra-sucur' style={{ textDecoration: 'underline', display: 'flex' }} onClick={() => window.location.href = '/sucursales'}>SELECCIONAR OTRA SUCURSAL</a>
+                </>
+              ) : (
+                <>
+                  <h3 style={{ color: '#FFFFFF' }}>{sucursal.nombre}</h3>
+                  <a className='selec-otra-sucur' style={{ textDecoration: 'underline', display: 'flex' }} onClick={() => window.location.href = '/sucursales'}>SELECCIONAR OTRA SUCURSAL</a>
+                </>
+              )}
 
             </div>
           </>

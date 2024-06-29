@@ -13,8 +13,6 @@ const OpcionesCliente = lazy(() => import('../pages/opcionesCliente'));
 const LoginNegocio = lazy(() => import('../pages/loginRestaurante'));
 const LoginCliente = lazy(() => import('../pages/loginCliente'));
 const Pago = lazy(() => import('../pages/pago'));
-const PedidosPendientes = lazy(() => import('../components/Cliente/PedidosPendientes'));
-const PedidosRealizados = lazy(() => import('../components/Cliente/PedidosRealizados'));
 const Menu = lazy(() => import('../pages/menu'));
 const Empresas = lazy(() => import('../components/Empresas/Empresas'));
 const SucursalCards = lazy(() => import('../pages/SucursalCards'));
@@ -35,7 +33,9 @@ const AppRoutes: React.FC = () => {
           <Route path="/login-cliente" element={<LoginCliente />} />
 
           <Route path="/login-negocio" element={
-              <LoginNegocio />}>
+            <RutaPrivadaLogin>
+              <LoginNegocio />
+            </RutaPrivadaLogin>}>
           </Route>
 
           <Route path="/:id/:categoria" element={<Menu />} />
@@ -50,23 +50,34 @@ const AppRoutes: React.FC = () => {
 
 
           <Route path="/:id/pago" element={
-              <Pago />}>
+            <RutaPrivadaCliente>
+              <Pago />
+            </RutaPrivadaCliente>}>
           </Route>
 
+
           <Route path="/panel" element={
-              <Empresas />}>
+            <RutaPrivadaEmpresa>
+              <Empresas />
+            </RutaPrivadaEmpresa>}>
           </Route>
 
           <Route path=":id/empresa" element={
-              <Opciones />}>
+            <RutaPrivadaEmpresa>
+              <Opciones />
+            </RutaPrivadaEmpresa>}>
           </Route>
 
           <Route path="/:id/opciones" element={
-              <Opciones />}>
+            <RutaPrivadaEmpleado>
+              <Opciones />
+            </RutaPrivadaEmpleado>}>
           </Route>
 
           <Route path="/:id/opciones/:opcionElegida" element={
-              <Opciones />}>
+            <RutaPrivadaEmpleado>
+              <Opciones />
+            </RutaPrivadaEmpleado>}>
           </Route>
 
         </Routes>

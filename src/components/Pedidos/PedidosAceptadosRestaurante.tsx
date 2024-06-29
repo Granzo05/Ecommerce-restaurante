@@ -247,11 +247,7 @@ const PedidosAceptados = () => {
                                 <td>{pedido.id}</td>
                                 <td>{pedido.tipoEnvio.toString().replace(/_/g, ' ')}</td>
                                 <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
-                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                        <div key={detalle.id}>
-                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} </p>
-                                        </div>
-                                    ))}
+                                    <p>Ver detalles</p>
                                 </td>
                                 <td>
                                     {updateVisible && (

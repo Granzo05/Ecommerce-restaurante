@@ -12,7 +12,6 @@ import org.hibernate.annotations.Cascade;
 @NoArgsConstructor
 @Entity
 @Builder
-@ToString
 @Table(name = "ingredientes_menu", schema = "buen_sabor")
 public class IngredienteMenu {
     @Id
@@ -20,7 +19,7 @@ public class IngredienteMenu {
     private Long id;
 
     @Column(name = "cantidad_ingrediente")
-    private int cantidad;
+    private double cantidad;
 
     @JsonIgnoreProperties(value = {"sucursales"}, allowSetters = true)
     @ManyToOne

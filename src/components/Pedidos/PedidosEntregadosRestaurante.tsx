@@ -213,7 +213,6 @@ const PedidosEntregados = () => {
                                         <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
                                         <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p>
                                     </td>
-
                                 )}
                                 <td style={{cursor: 'pointer'}} onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
                             </tr>

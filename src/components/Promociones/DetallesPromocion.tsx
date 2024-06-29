@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CarritoService } from '../../services/CarritoService';
 import { Promocion } from '../../types/Productos/Promocion';
 import { toast, Toaster } from 'sonner';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   selectedPromocion: Promocion;
@@ -13,6 +14,7 @@ interface Props {
 export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion, onCloseModal }) => {
   const imagenesInvertidas = [...selectedPromocion.imagenes].reverse();
   const [cantidadPromocion, setCantidadPromocion] = useState<number>(1);
+  const { id } = useParams()
 
   async function handleAñadirPromocionAlCarrito(promocion: Promocion) {
     if (cantidadPromocion <= 0) {
@@ -47,15 +49,23 @@ export const DetallesPromocion: React.FC<Props> = ({ selectedPromocion, onCloseM
             </div>
           ))}
         </ul>
-        <h4>Precio: ${selectedPromocion.precio}</h4>
+        {id === '0' ? (
+          <p>Esta sucursal es una muestra, elije una para ver el precio</p>
+        ) : (
+          <h4>Precio: ${selectedPromocion.precio}</h4>
+        )}
 
-        <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '20%' }} className="inputBox">
-          <label style={{ display: 'flex', fontWeight: 'bold' }}>Cantidad:</label>
+        {id !== '0' && (
+          <>
+            <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '20%' }} className="inputBox">
+              <label style={{ display: 'flex', fontWeight: 'bold' }}>Cantidad:</label>
 
-          <input type="number" required={true} value={cantidadPromocion} onChange={(e) => { setCantidadPromocion(parseInt(e.target.value)) }} />
+              <input type="number" required={true} value={cantidadPromocion} onChange={(e) => { setCantidadPromocion(parseInt(e.target.value)) }} />
 
-        </div>
-        <button type='submit' onClick={() => handleAñadirPromocionAlCarrito(selectedPromocion)}>Añadir al carrito</button>
+            </div>
+            <button type='submit' onClick={() => handleAñadirPromocionAlCarrito(selectedPromocion)}>Añadir al carrito</button>
+          </>
+        )}
       </div>
     </div>
   );

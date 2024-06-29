@@ -12,6 +12,8 @@ import { ArticuloMenu } from "../../types/Productos/ArticuloMenu";
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
+import DetallesMenu from "./DetallesMenu";
+import { Articulo } from "../../types/Productos/Articulo";
 
 const Menus = () => {
     const [menus, setMenus] = useState<ArticuloMenu[]>([]);
@@ -22,7 +24,7 @@ const Menus = () => {
     const [showEliminarMenuModal, setShowEliminarMenuModal] = useState(false);
     const [showActivarMenuModal, setShowActivarMenuModal] = useState(false);
 
-    const [selectedMenu, setSelectedMenu] = useState<ArticuloMenu>();
+    const [selectedMenu, setSelectedMenu] = useState<ArticuloMenu>(new ArticuloMenu());
 
     useEffect(() => {
         setDatosFiltrados([]);
@@ -49,6 +51,8 @@ const Menus = () => {
     const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
     const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [showDetallesMenu, setShowDetallesMenu] = useState(false);
+
 
     const [paginaActual, setPaginaActual] = useState(1);
     const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
@@ -77,18 +81,27 @@ const Menus = () => {
         }
     }
 
-    function filtrarNombre(filtro: string) {
-        if (filtro.length > 0) {
-            const filtradas = menus.filter(recomendacion =>
-                recomendacion.nombre.toLowerCase().includes(filtro.toLowerCase())
-            );
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+    const [filtroNombre, setFiltroNombre] = useState('');
+
+    useEffect(() => {
+        filtrarNombre();
+    }, [filtroNombre]);
+
+    const filtrarNombre = () => {
+        console.log(datosFiltrados)
+        if (filtroNombre.length > 0 && datosFiltrados.length > 0) {
+            setDatosFiltrados(datosFiltrados.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
+            ));
+        } else if (filtroNombre.length > 0 && menus.length > 0) {
+            setDatosFiltrados(menus.filter(recomendacion =>
+                recomendacion.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
+            ));
         } else {
-            setDatosFiltrados(menus.slice(indexPrimerProducto, indexUltimoProducto));
+            setDatosFiltrados(menus.length > 0 ? menus : []);
             setPaginasTotales(Math.ceil(menus.length / cantidadProductosMostrables));
         }
-    }
+    };
 
     const [signoTiempo, setSignoTiempo] = useState('>');
 
@@ -145,18 +158,30 @@ const Menus = () => {
         }
     }
 
-    function filtrarCategoria(filtro: string) {
-        if (filtro.length > 0) {
-            const filtradas = menus.filter(recomendacion =>
-                recomendacion.categoria.nombre.toLowerCase().includes(filtro.toLowerCase())
-            );
-            setDatosFiltrados(filtradas.length > 0 ? filtradas : []);
-            setPaginasTotales(Math.ceil(filtradas.length / cantidadProductosMostrables));
+    const [filtroCategoria, setFiltroCategoria] = useState('');
+
+    useEffect(() => {
+        filtrarCategoria();
+    }, [filtroCategoria]);
+
+    const filtrarCategoria = () => {
+        if (filtroCategoria.length > 0 && datosFiltrados.length > 0) {
+            setDatosFiltrados(datosFiltrados.filter(recomendacion =>
+                recomendacion.categoria.nombre.toLowerCase().includes(filtroCategoria.toLowerCase())
+            ));
+        } else if (filtroCategoria.length > 0 && menus.length > 0) {
+            setDatosFiltrados(menus.filter(recomendacion =>
+                recomendacion.categoria.nombre.toLowerCase().includes(filtroCategoria.toLowerCase())
+            ));
         } else {
-            setDatosFiltrados(menus.slice(indexPrimerProducto, indexUltimoProducto));
+            setDatosFiltrados(menus.length > 0 ? menus : []);
             setPaginasTotales(Math.ceil(menus.length / cantidadProductosMostrables));
         }
-    }
+    };
+
+    useEffect(() => {
+        if (menus.length > 0) cantidadDatosMostrables(11);
+    }, [menus]);
 
     useEffect(() => {
         if (menus.length > 0) {
@@ -249,6 +274,7 @@ const Menus = () => {
         setShowActivarMenuModal(false);
         setMostrarMenus(true);
         fetchMenu();
+        setShowDetallesMenu(false);
     };
 
     useEffect(() => {
@@ -262,6 +288,9 @@ const Menus = () => {
     return (
         <div className="opciones-pantallas">
             <h1>- Menú -</h1>
+            <ModalCrud isOpen={showDetallesMenu} onClose={handleModalClose}>
+                <DetallesMenu selectedMenu={selectedMenu} />
+            </ModalCrud>
 
             {createVisible && (
                 <div className="btns-menu">
@@ -287,7 +316,7 @@ const Menus = () => {
                         <input
                             type="text"
                             required
-                            onChange={(e) => filtrarNombre(e.target.value)}
+                            onChange={(e) => setFiltroNombre(e.target.value)}
                         />
                         <span>Filtrar por nombre</span>
                     </div>
@@ -331,7 +360,7 @@ const Menus = () => {
                         <input
                             type="text"
                             required
-                            onChange={(e) => filtrarCategoria(e.target.value)}
+                            onChange={(e) => setFiltroCategoria(e.target.value)}
                         />
                         <span>Filtrar por categoría</span>
                     </div>
@@ -356,18 +385,14 @@ const Menus = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {datosFiltrados.length > 0 && menus.map(menu => (
+                            {datosFiltrados.length > 0 && datosFiltrados.map(menu => (
                                 <tr key={menu.id}>
                                     <td>{menu.nombre}</td>
                                     <td>{menu.tiempoCoccion} minutos</td>
                                     <td>{menu.comensales}</td>
                                     <td>{menu.descripcion}</td>
-                                    <td>
-                                        {menu.ingredientesMenu?.map((ingrediente, index) => (
-                                            <span key={index}>
-                                                {ingrediente.ingrediente.nombre} - {ingrediente.cantidad} {ingrediente.medida.nombre.toString().replace(/_/g, ' ')}<br />
-                                            </span>
-                                        ))}
+                                    <td onClick={() => { setSelectedMenu(menu); setShowDetallesMenu(true) }}>
+                                        <p style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>Ver detalles</p>
                                     </td>
                                     <td>${menu.precioVenta}</td>
                                     <td>{capitalizeFirstLetter(menu.categoria.nombre)}</td>

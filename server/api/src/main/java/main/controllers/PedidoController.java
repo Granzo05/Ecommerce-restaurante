@@ -200,30 +200,32 @@ public class PedidoController {
         Cliente cliente = clienteRepository.findById(pedido.getCliente().getId()).get();
 
         if (pedidoDB.isEmpty() && pedido.getPreferencia() == null && cliente.getBorrado().equals("NO")) {
-            for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
-                detallesPedido.setPedido(pedido);
-                descontarStock(detallesPedido, idSucursal);
-            }
-
-            pedido.setEstado(EnumEstadoPedido.PROCESO_DE_PAGO);
-
-            pedido.setCliente(cliente);
-
-            Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
-            pedido.getSucursales().add(sucursal);
-
-            // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
-            if (pedido.getDomicilioEntrega() == null) {
-                pedido.setDomicilioEntrega(domicilioRepository.findByIdSucursalNotBorrado(sucursal.getId()));
-            } else {
-                Domicilio domicilio = domicilioRepository.findById(pedido.getDomicilioEntrega().getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Domicilio no encontrado"));
-                pedido.setDomicilioEntrega(domicilio);
-            }
-
-            pedidoRepository.save(pedido);
-
             try {
+
+                for (DetallesPedido detallesPedido : pedido.getDetallesPedido()) {
+                    detallesPedido.setPedido(pedido);
+                    descontarStock(detallesPedido, idSucursal);
+                }
+
+                pedido.setEstado(EnumEstadoPedido.PROCESO_DE_PAGO);
+
+                pedido.setCliente(cliente);
+
+                Sucursal sucursal = sucursalRepository.findById(idSucursal).get();
+                pedido.getSucursales().add(sucursal);
+
+                // Si el domicilio el null es porque es un retiro en tienda, por lo tanto almacenamos la tienda de donde se retira
+                if (pedido.getDomicilioEntrega() == null) {
+                    pedido.setDomicilioEntrega(domicilioRepository.findByIdSucursalNotBorrado(sucursal.getId()));
+                } else {
+                    Domicilio domicilio = domicilioRepository.findById(pedido.getDomicilioEntrega().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Domicilio no encontrado"));
+                    pedido.setDomicilioEntrega(domicilio);
+                }
+
+                pedidoRepository.save(pedido);
+
+
                 MercadoPagoConfig.setAccessToken("TEST-4348060094658217-052007-d8458fa36a2d40dd8023bfcb9f27fd4e-1819307913");
 
                 List<PreferenceItemRequest> items = new ArrayList<>();
@@ -319,7 +321,7 @@ public class PedidoController {
 
         if (detallesPedido.getArticuloMenu() != null) {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
-                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
+                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
 
                 // Si la cantidad del ingrediente es superior a la maxima almacenada quiere decir que probablemente se trate de una diferencia de medidas
                 if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
@@ -336,11 +338,11 @@ public class PedidoController {
             for (DetallePromocion detalle : detallesPedido.getPromocion().getDetallesPromocion()) {
                 if (detalle.getArticuloMenu() != null) {
                     for (IngredienteMenu ingrediente : detalle.getArticuloMenu().getIngredientesMenu()) {
-                        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
+                        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
 
                         // Si la cantidad del ingrediente es superior a la maxima almacenada quiere decir que probablemente se trate de una diferencia de medidas
                         if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000 * detalle.getCantidad()));
+                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) * detalle.getCantidad());
                         } else {
                             stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * detalle.getCantidad()));
                         }
@@ -372,21 +374,47 @@ public class PedidoController {
 
         if (detallesPedido.getArticuloMenu() != null) {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
-                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getId(), idSucursal);
+                Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(ingrediente.getIngrediente().getId(), idSucursal);
 
                 if (stockIngrediente.isPresent()) {
                     stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + detallesPedido.getCantidad());
 
                     if (stockIngrediente.get().getCantidadMaxima() > ingrediente.getCantidad()) {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - detallesPedido.getCantidad() / 1000);
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + detallesPedido.getCantidad() / 1000);
                     } else {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - detallesPedido.getCantidad());
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + detallesPedido.getCantidad());
                     }
 
                     stockIngredientesRepository.save(stockIngrediente.get());
                 }
             }
+        }
 
+        if (detallesPedido.getPromocion() != null) {
+            for (DetallePromocion detalle : detallesPedido.getPromocion().getDetallesPromocion()) {
+                if (detalle.getArticuloMenu() != null) {
+                    for (IngredienteMenu ingrediente : detalle.getArticuloMenu().getIngredientesMenu()) {
+                        Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
+
+                        // Si la cantidad del ingrediente es superior a la maxima almacenada quiere decir que probablemente se trate de una diferencia de medidas
+                        if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
+                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) * detalle.getCantidad());
+                        } else {
+                            stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() * detalle.getCantidad()));
+                        }
+
+                        stockIngredientesRepository.save(stockIngrediente.get());
+                    }
+                }
+                if (detalle.getArticuloVenta() != null) {
+                    Optional<StockArticuloVenta> stockArticuloVenta = stockArticuloVentaRepository.findByIdArticuloAndIdSucursal(detalle.getArticuloVenta().getId(), idSucursal);
+
+                    if (stockArticuloVenta.isPresent()) {
+                        stockArticuloVenta.get().setCantidadActual(stockArticuloVenta.get().getCantidadActual() + detalle.getCantidad());
+                        stockArticuloVentaRepository.save(stockArticuloVenta.get());
+                    }
+                }
+            }
         }
     }
 
