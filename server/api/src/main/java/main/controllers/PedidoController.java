@@ -358,7 +358,7 @@ public class PedidoController {
                 if (stockIngrediente.isPresent()) {
                     // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
                     if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000 * detallesPedido.getCantidad()));
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad());
                     } else {
                         stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * detallesPedido.getCantidad()));
                     }
