@@ -611,6 +611,11 @@ public class PedidoController {
                     table.addCell(String.valueOf(detalle.getCantidad()));
                     table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta()));
                     total += detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta();
+                } else if (detalle.getPromocion() != null) {
+                    table.addCell(detalle.getPromocion().getNombre());
+                    table.addCell(String.valueOf(detalle.getCantidad()));
+                    table.addCell(String.valueOf(detalle.getPromocion().getPrecio()));
+                    total += detalle.getCantidad() * detalle.getPromocion().getPrecio();
                 }
             }
 
