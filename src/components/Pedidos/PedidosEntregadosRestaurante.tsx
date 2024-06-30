@@ -127,6 +127,8 @@ const PedidosEntregados = () => {
     useEffect(() => {
         if (pedidosEntregados.length > 0) {
             setDatosFiltrados(pedidosEntregados.slice(indexPrimerProducto, indexUltimoProducto));
+        } else {
+            setDatosFiltrados([]);
         }
     }, [pedidosEntregados, paginaActual, cantidadProductosMostrables]);
 

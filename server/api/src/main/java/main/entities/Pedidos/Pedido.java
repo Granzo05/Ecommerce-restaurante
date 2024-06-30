@@ -37,6 +37,9 @@ public class Pedido implements Serializable {
     @CreationTimestamp
     private LocalDateTime fechaPedido;
 
+    @Column(name = "fecha_entrega", updatable = false)
+    private LocalDateTime fechaEntrega;
+
     @JsonIgnore
     @Column(name = "borrado")
     private String borrado = "NO";

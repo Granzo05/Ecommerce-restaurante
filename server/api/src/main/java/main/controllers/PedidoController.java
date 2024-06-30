@@ -485,6 +485,7 @@ public class PedidoController {
         }
 
         if (pedido.getEstado().equals(EnumEstadoPedido.ENTREGADOS)) {
+            pedidoDb.get().setFechaEntrega(LocalDateTime.now());
             pedidoDb.get().setFactura(pedido.getFactura());
 
             ResponseEntity<byte[]> archivo = generarFacturaPDF(pedidoDb.get().getId());

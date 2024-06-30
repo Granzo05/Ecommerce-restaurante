@@ -35,13 +35,13 @@ const PedidosAceptados = () => {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.COCINADOS), {
             loading: 'Enviando pedido al administrador...',
             success: (message) => {
-                buscarPedidos();
                 return message;
             },
             error: (message) => {
                 return message;
             },
             finally: () => {
+                buscarPedidos();
                 setIsLoading(false);
             }
         });
@@ -176,6 +176,8 @@ const PedidosAceptados = () => {
     useEffect(() => {
         if (pedidosAceptados.length > 0) {
             setDatosFiltrados(pedidosAceptados.slice(indexPrimerProducto, indexUltimoProducto));
+        } else {
+            setDatosFiltrados([]);
         }
     }, [pedidosAceptados, paginaActual, cantidadProductosMostrables]);
 

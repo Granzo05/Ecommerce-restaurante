@@ -209,8 +209,9 @@ const StocksEntrantes = () => {
     useEffect(() => {
         if (stockEntrante.length > 0) {
             const stockOrdenado = [...stockEntrante].sort(ordenarPorFecha);
-            // Aquí puedes aplicar cualquier otra lógica de paginación o filtrado si es necesario
             setDatosFiltrados(stockOrdenado.slice(indexPrimerProducto, indexUltimoProducto));
+        } else {
+            setDatosFiltrados([]);
         }
     }, [stockEntrante, paginaActual, cantidadProductosMostrables]);
 

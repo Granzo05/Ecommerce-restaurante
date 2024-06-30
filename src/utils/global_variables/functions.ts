@@ -12,6 +12,19 @@ export function clearInputs() {
   });
 }
 
+export const formatearFechaReportesYYYYMMDD = (date: Date | undefined) => {
+  if (date) {
+    const dia = date.getDate();
+    const mes = date.getMonth() + 1;
+    const año = date.getFullYear();
+
+    const diaFormateado = dia < 10 ? `0${dia}` : dia;
+    const mesFormateado = mes < 10 ? `0${mes}` : mes;
+    return `${año}-${mesFormateado}-${diaFormateado}`;
+  }
+  return '';
+};
+
 
 export const formatearFechaDDMMYYYY = (date: Date) => {
   const dia = date.getDate() + 1;

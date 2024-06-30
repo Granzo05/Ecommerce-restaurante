@@ -76,17 +76,18 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             "GROUP BY d.articuloMenu.nombre")
     Integer findTotalVentasArticuloMenu(@Param("nombre") String nombre);
 
-    @Query("SELECT p.fechaPedido, COUNT(p), d.articuloMenu.nombre " +
+    @Query("SELECT p.fechaPedido, d.articuloMenu.nombre, SUM(d.cantidad) " +
             "FROM Pedido p " +
             "JOIN p.detallesPedido d " +
             "JOIN p.sucursales s " +
             "WHERE s.id = :id " +
             "AND p.fechaPedido BETWEEN :fechaDesde AND :fechaHasta " +
+            "AND p.estado = 3 " +
             "GROUP BY p.fechaPedido, d.articuloMenu.nombre")
     Page<Object[]> findCantidadPedidosPorFechaYSucursal(Pageable pageable,
                                                         @Param("id") Long id,
-                                                        @Param("fechaDesde") LocalDate fechaDesde,
-                                                        @Param("fechaHasta") LocalDate fechaHasta);
+                                                        @Param("fechaDesde") LocalDateTime fechaDesde,
+                                                        @Param("fechaHasta") LocalDateTime fechaHasta);
 
     @Query("SELECT DATE_FORMAT(p.fechaPedido, '%Y-%m'), COUNT(p) " +
             "FROM Pedido p " +
@@ -98,8 +99,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     Page<Object[]> findCantidadPedidosClientePorFechaYSucursal(Pageable pageable,
                                                                @Param("id") Long id,
                                                                @Param("idCliente") Long idCliente,
-                                                               @Param("fechaInicio") LocalDate fechaInicio,
-                                                               @Param("fechaFin") LocalDate fechaFin);
+                                                               @Param("fechaInicio") LocalDateTime fechaInicio,
+                                                               @Param("fechaFin") LocalDateTime fechaFin);
 
     @Query("SELECT DATE_FORMAT(p.fechaPedido, '%Y-%m') AS mesAnio, " +
             "SUM(CASE WHEN d.articuloMenu IS NOT NULL THEN d.cantidad * d.articuloMenu.precioVenta ELSE 0 END) + " +
@@ -110,24 +111,16 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             "GROUP BY DATE_FORMAT(p.fechaPedido, '%Y-%m')")
     Page<Object[]> findCantidadIngresosPorFechaYSucursal(Pageable pageable,
                                                          @Param("id") Long id,
-                                                         @Param("fechaDesde") LocalDate fechaDesde,
-                                                         @Param("fechaHasta") LocalDate fechaHasta);
+                                                         @Param("fechaDesde") LocalDateTime fechaDesde,
+                                                         @Param("fechaHasta") LocalDateTime fechaHasta);
 
-    @Query("SELECT DATE_FORMAT(p.fechaPedido, '%Y-%m') AS mesAnio, " +
-            "SUM(CASE WHEN d.articuloMenu IS NOT NULL THEN (d.articuloMenu.ganancia) ELSE 0 END) + " +
-            "SUM(CASE WHEN d.articuloVenta IS NOT NULL THEN (d.cantidad * d.articuloVenta.precioVenta - d.articuloVenta.stockArticuloVenta.precioCompra * d.cantidad) ELSE 0 END) AS totalIngresos " +
-            "FROM Pedido p " +
-            "JOIN p.detallesPedido d " +
-            "JOIN p.sucursales s " +
-            "JOIN d.articuloMenu am " +
-            "LEFT JOIN am.ingredientesMenu ingred " +
-            "WHERE s.id = :id " +
-            "AND p.fechaPedido BETWEEN :fechaDesde AND :fechaHasta " +
-            "GROUP BY DATE_FORMAT(p.fechaPedido, '%Y-%m')")
-    Page<Object[]> findCantidadGananciaPorFechaYSucursal(Pageable pageable,
+    @Query("SELECT p FROM Pedido p JOIN p.detallesPedido d JOIN p.sucursales s WHERE s.id = :id AND p.fechaPedido BETWEEN :fechaDesde AND :fechaHasta AND p.estado = 3")
+    Page<Pedido> findPedidosBetweenFechas(Pageable pageable,
                                                          @Param("id") Long id,
-                                                         @Param("fechaDesde") LocalDate fechaDesde,
-                                                         @Param("fechaHasta") LocalDate fechaHasta);
+                                                         @Param("fechaDesde") LocalDateTime fechaDesde,
+                                                         @Param("fechaHasta") LocalDateTime fechaHasta);
+
+
 
 
 }

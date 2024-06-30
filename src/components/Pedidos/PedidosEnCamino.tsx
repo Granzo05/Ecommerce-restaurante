@@ -202,6 +202,8 @@ const PedidosEnCamino = () => {
     useEffect(() => {
         if (pedidosEnCamino.length > 0) {
             setDatosFiltrados(pedidosEnCamino.slice(indexPrimerProducto, indexUltimoProducto));
+        } else {
+            setDatosFiltrados([]);
         }
     }, [pedidosEnCamino, paginaActual, cantidadProductosMostrables]);
 

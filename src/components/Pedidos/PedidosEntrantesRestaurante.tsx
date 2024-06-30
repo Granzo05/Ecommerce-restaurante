@@ -281,6 +281,8 @@ const PedidosEntrantes = () => {
     useEffect(() => {
         if (pedidosEntrantes.length > 0) {
             setDatosFiltrados(pedidosEntrantes.slice(indexPrimerProducto, indexUltimoProducto));
+        } else {
+            setDatosFiltrados([]);
         }
     }, [pedidosEntrantes, paginaActual, cantidadProductosMostrables]);
 

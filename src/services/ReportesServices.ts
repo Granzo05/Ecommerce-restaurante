@@ -1,3 +1,4 @@
+import { IngresoData } from "../components/Reportes/ReporteComida";
 import { sucursalId, URL_API } from "../utils/global_variables/const";
 
 export const ReportesServices = {
@@ -49,7 +50,6 @@ export const ReportesServices = {
     getPedidosGraficoBarraComidas: async (fechaDesde: string, fechaHasta: string) => {
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
-        
         const response = await fetch(URL_API + `pedidos/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/comidas/` + sucursalId(), {
             method: 'GET',
             headers: {
@@ -58,6 +58,7 @@ export const ReportesServices = {
             },
             mode: 'cors'
         });
+        //console.log(await response.json())
         return await response.json();
     },
 
@@ -88,5 +89,29 @@ export const ReportesServices = {
         a.click();
         window.URL.revokeObjectURL(url);
     },
+    descargarExcelGraficos: async (datos: IngresoData[], informacion: string) => {
+        const response = await fetch(URL_API + `downloadExcelGrafico/` + informacion, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+            mode: 'cors',
+            body: JSON.stringify(datos)
+        });
 
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `${informacion}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    },
 }

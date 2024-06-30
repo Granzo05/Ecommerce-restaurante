@@ -67,7 +67,11 @@ const Stocks = () => {
 
     // Obtener los elementos de la página actual
     useEffect(() => {
-        setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
+        if (stocks.length > 0) {
+            setDatosFiltrados(stocks.slice(indexPrimerProducto, indexUltimoProducto));
+        } else {
+            setDatosFiltrados([]);
+        }
     }, [stocks, indexPrimerProducto, indexUltimoProducto]);
 
     useEffect(() => {

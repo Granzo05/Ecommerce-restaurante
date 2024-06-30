@@ -63,7 +63,6 @@ const PedidosParaEntregar = () => {
         PedidoService.getPedidos(EnumEstadoPedido.COCINADOS)
             .then(data => {
                 setPedidos(data);
-                calcularTotal();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -95,7 +94,6 @@ const PedidosParaEntregar = () => {
                 setIsLoading(false);
             }
         });
-        buscarPedidos();
     }
 
     function filtrarId(filtro: number) {
@@ -207,27 +205,32 @@ const PedidosParaEntregar = () => {
         }
     }
 
-    const [total, setTotal] = useState<number>(0);
-
-    function calcularTotal() {
+    function calcularTotal(pedido: Pedido) {
         let nuevoTotal = 0;
-
-        datosFiltrados.forEach(pedido => {
-            pedido.detallesPedido.forEach(detalle => {
-                if (detalle.articuloVenta && detalle.articuloVenta.precioVenta > 0) {
-                    nuevoTotal += detalle.cantidad * detalle.articuloVenta.precioVenta;
-                } else if (detalle.articuloMenu && detalle.articuloMenu.precioVenta > 0) {
-                    nuevoTotal += detalle.cantidad * detalle.articuloMenu.precioVenta;
-                }
-            });
+        pedido.detallesPedido.forEach(detalle => {
+            if (detalle.articuloVenta && detalle.articuloVenta.precioVenta > 0) {
+                nuevoTotal += detalle.cantidad * detalle.articuloVenta.precioVenta;
+            } else if (detalle.articuloMenu && detalle.articuloMenu.precioVenta > 0) {
+                nuevoTotal += detalle.cantidad * detalle.articuloMenu.precioVenta;
+            } else if (detalle.promocion && detalle.promocion.detallesPromocion.length > 0) {
+                detalle.promocion.detallesPromocion.forEach(detallePromocion => {
+                    if (detallePromocion.articuloVenta && detallePromocion.articuloVenta.precioVenta > 0) {
+                        nuevoTotal += detallePromocion.cantidad * detallePromocion.articuloVenta.precioVenta;
+                    } else if (detallePromocion.articuloMenu && detallePromocion.articuloMenu.precioVenta > 0) {
+                        nuevoTotal += detallePromocion.cantidad * detallePromocion.articuloMenu.precioVenta;
+                    }
+                });
+            }
         });
 
-        setTotal(nuevoTotal);
+        return nuevoTotal.toLocaleString('es-AR')
     }
 
     useEffect(() => {
         if (pedidosEntregables.length > 0) {
             setDatosFiltrados(pedidosEntregables.slice(indexPrimerProducto, indexUltimoProducto));
+        } else {
+            setDatosFiltrados([]);
         }
     }, [pedidosEntregables, paginaActual, cantidadProductosMostrables]);
 
@@ -323,7 +326,7 @@ const PedidosParaEntregar = () => {
                                     ))}
                                 </td>
                                 <td>
-                                    ${total.toLocaleString('es-AR')}
+                                    ${calcularTotal(pedido)}
                                 </td>
 
                                 <td>

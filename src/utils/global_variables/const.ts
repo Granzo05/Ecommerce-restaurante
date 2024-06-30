@@ -7,12 +7,26 @@ export const URL_API = 'http://localhost:8080/';
 
 export const DESACTIVAR_PRIVILEGIOS = false; // false hay privilegios, true no hay privilegios
 
-export function convertirFecha(fecha: Date): string {
-    const dia = fecha.getDate().toString().padStart(2, '0');
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-    const año = fecha.getFullYear().toString();
+export function convertirFecha(fecha: Date) {
+    const dia = fecha.getDate() + 1;
+    const mes = fecha.getMonth() + 1;
+    const año = fecha.getFullYear();
 
-    return `${año}-${mes}-${dia}`;
+    // Verificar si el día es el último día del mes
+    let ultimoDiaMes = new Date(año, mes, 0).getDate();
+
+    // Si el día actual es el último día del mes, ajustar el día a 1
+    if (año.toString().length === 4) {
+        if (dia === ultimoDiaMes) {
+            // Asegurarse de que el mes siguiente sea válido (evitar que sea 13)
+            const siguienteMes = mes === 12 ? 1 : mes + 1;
+            return `${año}-${siguienteMes < 10 ? '0' + siguienteMes : siguienteMes}-01`;
+        } else {
+            const diaFormateado = dia < 10 ? `0${dia}` : dia;
+            const mesFormateado = mes < 10 ? `0${mes}` : mes;
+            return `${año}-${mesFormateado}-${diaFormateado}`;
+        }
+    }
 }
 
 
