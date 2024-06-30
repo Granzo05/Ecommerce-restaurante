@@ -319,25 +319,31 @@ h3 {
 .ofert-content {
     display: flex;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    margin-top: -50px;
+    
+    
 }
 
 .ofert-1 {
     flex-basis: 25%;
+    margin-top: -50px;
+    box-shadow: 0 0 20px black;
 }
 
 .ofert-txt {
     padding: 25px;
     text-align: center;
     background-color: #FFFFFF;
+    
 }
 
 .ofert-img {
     height: 230px;
+    width: 100%;
 }
 
 .ofert-img img {
-    height: 230px;
+    height: 260px;
+    width: 100%;
 }
 
 .btn-2 {
@@ -361,7 +367,7 @@ h3 {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 500px;
+    height: 350px;
     margin-top: -50px;
 }
 

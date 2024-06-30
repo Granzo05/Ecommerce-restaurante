@@ -306,7 +306,7 @@ const PedidosEntrantes = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado">
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
                             required
@@ -323,13 +323,6 @@ const PedidosEntrantes = () => {
                         <span>Filtrar por cliente</span>
                     </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
-                        <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
-                            <option value={0}>Seleccionar tipo de envío (Todos)</option>
-                            <option value={EnumTipoEnvio.DELIVERY}>Delivery</option>
-                            <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Retiro en tienda</option>
-                        </select>
-                    </div>
-                    <div className="inputBox-filtrado">
                         <input
                             type="text"
                             required
@@ -337,6 +330,14 @@ const PedidosEntrantes = () => {
                         />
                         <span>Filtrar por menú</span>
                     </div>
+                    <div className="inputBox-filtrado">
+                        <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
+                            <option value={0}>Seleccionar tipo de envío (Todos)</option>
+                            <option value={EnumTipoEnvio.DELIVERY}>Retiro en tienda</option>
+                            <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Delivery</option>
+                        </select>
+                    </div>
+                    
                 </div>
             </div>
 
@@ -386,16 +387,16 @@ const PedidosEntrantes = () => {
                                 </td>
                                 <td>
                                     {updateVisible && (
-                                        <button className='btn-accion-completar' onClick={() => handleAceptarPedido(pedido)} disabled={isLoading}>
-                                            {isLoading ? 'Cargando...' : 'Aceptar ✓'}
+                                        <button className='btn-accion-activar' onClick={() => handleAceptarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'ACEPTAR ✓'}
                                         </button>
                                     )}
                                 </td>
 
                                 <td>
                                     {updateVisible && (
-                                        <button className='btn-accion-completar' onClick={() => handleRechazarPedido(pedido)} disabled={isLoading}>
-                                            {isLoading ? 'Cargando...' : 'Rechazar ✓'}
+                                        <button className='btn-accion-eliminar' onClick={() => handleRechazarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'RECHAZAR ✓'}
                                         </button>
                                     )}
                                 </td>

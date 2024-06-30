@@ -204,8 +204,8 @@ const PedidosAceptados = () => {
                     </select>
                 </div>
 
-                <div className="filtros-datos">
-                    <div className="inputBox-filtrado">
+                <div className="filtros-datos" >
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
                             required
@@ -213,20 +213,21 @@ const PedidosAceptados = () => {
                         />
                         <span>Filtrar por ID</span>
                     </div>
+                    
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
-                        <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
-                            <option value={0}>Seleccionar tipo de envío (Todos)</option>
-                            <option value={EnumTipoEnvio.DELIVERY}>Delivery</option>
-                            <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Retiro en tienda</option>
-                        </select>
-                    </div>
-                    <div className="inputBox-filtrado">
                         <input
                             type="text"
                             required
                             onChange={(e) => filtrarMenus(e.target.value)}
                         />
                         <span>Filtrar por menú</span>
+                    </div>
+                    <div className="inputBox-filtrado" >
+                        <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
+                            <option value={0}>Seleccionar tipo de envío (Todos)</option>
+                            <option value={EnumTipoEnvio.DELIVERY}>Retiro en tienda</option>
+                            <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Delivery</option>
+                        </select>
                     </div>
                 </div>
 
@@ -249,12 +250,12 @@ const PedidosAceptados = () => {
                                 <td>{pedido.id}</td>
                                 <td>{pedido.tipoEnvio.toString().replace(/_/g, ' ')}</td>
                                 <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
-                                    <p>Ver detalles</p>
+                                <button className="btn-accion-detalle">VER DETALLE</button>
                                 </td>
                                 <td>
                                     {updateVisible && (
-                                        <button className='btn-accion-completar' onClick={() => handleFinalizarPedido(pedido)} disabled={isLoading}>
-                                            {isLoading ? 'Cargando...' : 'Finalizar ✓'}
+                                        <button className='btn-accion-activar' onClick={() => handleFinalizarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'FINALIZAR ✓'}
                                         </button>
                                     )}
                                 </td>

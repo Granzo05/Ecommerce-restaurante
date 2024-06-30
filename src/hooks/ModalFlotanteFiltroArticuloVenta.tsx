@@ -74,14 +74,15 @@ const ModalFlotanteRecomendacionesArticulo: React.FC<{ onCloseModal: () => void,
 
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar artículos &mdash;</h2>
-          <div className="inputBox">
+          <div className="btns-filtrado">
+            <button className="btn-agregar" style={{marginRight: '10px'}} onClick={() => onSelectArticuloVenta(new ArticuloVenta())}>Eliminar opción elegida</button>
+            <button className="btn-agregar" onClick={() => handleAgregar()}> + Agregar articulo</button>
+          </div>
+          <div className="inputBox" style={{ marginBottom: '0px' }}>
             <input type="text" required onChange={(e) => filtrarRecomendaciones(e.target.value)} />
             <span>Filtrar por nombre...</span>
           </div>
-          <div className="btns-filtrado">
-            <button onClick={() => onSelectArticuloVenta(new ArticuloVenta())}>BORRAR OPCIÓN ELEGIDA</button>
-            <button className="btn-agregar" onClick={() => handleAgregar()}> + Agregar articulo</button>
-          </div>
+          
           <ModalCrud isOpen={showAgregarModal} onClose={() => setShowAgregarModal(false)}>
             <AgregarArticuloVenta onCloseModal={buscarArticulos} />
           </ModalCrud>

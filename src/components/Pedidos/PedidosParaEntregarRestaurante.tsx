@@ -8,6 +8,8 @@ import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
+import ModalCrud from '../ModalCrud';
+import DetallesPedido from './DetallesPedido';
 
 
 const PedidosParaEntregar = () => {
@@ -226,6 +228,13 @@ const PedidosParaEntregar = () => {
         return nuevoTotal.toLocaleString('es-AR')
     }
 
+    const [showDetallesPedido, setShowDetallesPedido] = useState(false);
+
+    const [selectedPedido, setSelectedPedido] = useState<Pedido>(new Pedido());
+    const handleModalClose = () => {
+        setShowDetallesPedido(false);
+    };
+
     useEffect(() => {
         if (pedidosEntregables.length > 0) {
             setDatosFiltrados(pedidosEntregables.slice(indexPrimerProducto, indexUltimoProducto));
@@ -239,6 +248,9 @@ const PedidosParaEntregar = () => {
             <h1>- Pedidos listos -</h1>
             <Toaster />
             <hr />
+            <ModalCrud isOpen={showDetallesPedido} onClose={handleModalClose}>
+                <DetallesPedido pedido={selectedPedido} />
+            </ModalCrud>
 
             <div className="filtros">
                 <div className="inputBox-filtrado">
@@ -254,7 +266,7 @@ const PedidosParaEntregar = () => {
                 </div>
 
                 <div className="filtros-datos">
-                    <div className="inputBox-filtrado">
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
                             required
@@ -271,13 +283,6 @@ const PedidosParaEntregar = () => {
                         <span>Filtrar por cliente</span>
                     </div>
                     <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
-                        <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
-                            <option value={0}>Seleccionar tipo de envío (Todos)</option>
-                            <option value={EnumTipoEnvio.DELIVERY}>Delivery</option>
-                            <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Retiro en tienda</option>
-                        </select>
-                    </div>
-                    <div className="inputBox-filtrado">
                         <input
                             type="text"
                             required
@@ -285,6 +290,14 @@ const PedidosParaEntregar = () => {
                         />
                         <span>Filtrar por menú</span>
                     </div>
+                    <div className="inputBox-filtrado" >
+                        <select name="" id="" onChange={(e) => filtrarEnvio(parseInt(e.target.value))}>
+                            <option value={0}>Seleccionar tipo de envío (Todos)</option>
+                            <option value={EnumTipoEnvio.DELIVERY}>Retiro en tienda</option>
+                            <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Delivery</option>
+                        </select>
+                    </div>
+                    
                 </div>
             </div>
 
@@ -318,12 +331,8 @@ const PedidosParaEntregar = () => {
                                 ) : (
                                     <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</td>
                                 )}
-                                <td>
-                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                        <div key={detalle.id}>
-                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre}{detalle.promocion?.nombre} </p>
-                                        </div>
-                                    ))}
+                                <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
+                                <button className="btn-accion-detalle">VER DETALLE</button>
                                 </td>
                                 <td>
                                     ${calcularTotal(pedido)}
@@ -331,15 +340,15 @@ const PedidosParaEntregar = () => {
 
                                 <td>
                                     {updateVisible && (
-                                        <button className='btn-accion-completar' onClick={() => handleEntregarPedido(pedido)} disabled={isLoading}>
-                                            {isLoading ? 'Cargando...' : 'Entregar ✓'}
+                                        <button className='btn-accion-activar' onClick={() => handleEntregarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'ENTREGAR ✓'}
                                         </button>
                                     )}
                                 </td>
                                 <td>
                                     {updateVisible && (
-                                        <button className='btn-accion-completar' onClick={() => handleCancelarPedido(pedido)} disabled={isLoading}>
-                                            {isLoading ? 'Cargando...' : 'Cancelar ✓'}
+                                        <button className='btn-accion-eliminar' onClick={() => handleCancelarPedido(pedido)} disabled={isLoading}>
+                                            {isLoading ? 'Cargando...' : 'CANCELAR ✓'}
                                         </button>
                                     )}
                                 </td>

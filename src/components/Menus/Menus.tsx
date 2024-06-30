@@ -392,7 +392,7 @@ const Menus = () => {
                                     <td>{menu.comensales}</td>
                                     <td>{menu.descripcion}</td>
                                     <td onClick={() => { setSelectedMenu(menu); setShowDetallesMenu(true) }}>
-                                        <p style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>Ver detalles</p>
+                                    <button className="btn-accion-detalle">VER DETALLE</button>
                                     </td>
                                     <td>${menu.precioVenta}</td>
                                     <td>{capitalizeFirstLetter(menu.categoria.nombre)}</td>

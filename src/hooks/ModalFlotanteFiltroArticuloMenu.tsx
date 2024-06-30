@@ -77,8 +77,8 @@ const ModalFlotanteRecomendacionesArticuloMenu: React.FC<{ onCloseModal: () => v
           <button className="modal-close" onClick={handleModalClose}><CloseIcon /></button>
           <h2>&mdash; Filtrar menús &mdash;</h2>
           <div className="btns-filtrado">
-            <button className="btn-agregar" onClick={() => onSelectArticuloMenu(new ArticuloMenu())}>BORRAR OPCIÓN ELEGIDA</button>
-            <button className="btn-agregar" onClick={() => handleAgregar()}> + Agregar menú</button>
+            <button className="btn-agregar" style={{marginRight: '10px'}} onClick={() => onSelectArticuloMenu(new ArticuloMenu())}>Eliminar opción elegida</button>
+            <button className="btn-agregar" onClick={() => handleAgregar()}> + Agregar menú al inventario</button>
           </div>
           <ModalCrud isOpen={showAgregarModal} onClose={() => setShowAgregarModal(false)}>
             <AgregarMenu onCloseModal={buscarMenus} />
