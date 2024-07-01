@@ -128,6 +128,7 @@ const PedidosEntrantes = () => {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
             loading: 'Rechazando pedido...',
             success: (message) => {
+                buscarPedidos();
                 return message;
             },
             error: (message) => {

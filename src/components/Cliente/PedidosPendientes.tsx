@@ -121,7 +121,7 @@ const PedidosPendientes = () => {
                                         <td>
                                             {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
                                                 <div key={detalle.id}>
-                                                    <p>{detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre} - {detalle.cantidad}</p>
+                                                    <p>{detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre}{detalle.promocion?.nombre} - {detalle.cantidad}</p>
                                                 </div>
                                             ))}
                                         </td>

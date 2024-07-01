@@ -79,7 +79,7 @@ const PedidosRealizados = () => {
 
                                 )}
                                 <td style={{cursor: 'pointer'}} onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
-                                <td><button onClick={() => repetirPedido(pedido)}>Repetir pedido</button></td>
+                                <td><button className='btn-accion-detalle' onClick={() => repetirPedido(pedido)}>REPETIR PEDIDO</button></td>
                             </tr>
                         ))}
                     </tbody>

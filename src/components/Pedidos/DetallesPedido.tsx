@@ -23,13 +23,13 @@ export const DetallesPedido: React.FC<Props> = ({ pedido }) => {
                     <div key={dp.id}>
                       {dp.articuloVenta?.nombre && (
                         <>
-                          <h2 className="detalle-title"><strong>Artículo: {dp.articuloVenta.nombre} - {dp.articuloVenta.cantidadMedida} {dp.articuloVenta.medida.nombre}</strong></h2>
-                          <p className='detalle-info'><strong>Cantidad: </strong> {dp.articuloVenta.cantidad}</p>
+                          <h2 className="detalle-title"><strong>Artículo promoción: {dp.articuloVenta.nombre} - {dp.articuloVenta.cantidadMedida} {dp.articuloVenta.medida.nombre}</strong></h2>
+                          <p className='detalle-info'><strong>Cantidad artículo: </strong> {dp.cantidad}</p>
                         </>
                       )}
                       {dp.articuloMenu?.nombre && (
                         <>
-                          <h2 className="detalle-title"><strong>Menú: {dp.articuloMenu.nombre}</strong></h2>
+                          <h2 className="detalle-title"><strong>Menú promoción: {dp.articuloMenu.nombre}</strong></h2>
                           <h2 className="detalle-title"><strong>Ingredientes:</strong></h2>
                           {dp.articuloMenu.ingredientesMenu?.map(ingrediente => (
                             <div key={ingrediente.ingrediente.nombre}>
@@ -42,7 +42,9 @@ export const DetallesPedido: React.FC<Props> = ({ pedido }) => {
                       )}
                     </div>
                   ))}
-                  <p className='detalle-info'><strong>Cantidad: </strong> {detalle.promocion?.cantidad}</p>
+                  
+                  <hr />
+                  <p className='detalle-info'><strong>Cantidad pedida: </strong> {detalle.cantidad}</p>
                 </>
               )}
 

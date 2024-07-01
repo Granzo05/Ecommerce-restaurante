@@ -215,13 +215,7 @@ const PedidosParaEntregar = () => {
             } else if (detalle.articuloMenu && detalle.articuloMenu.precioVenta > 0) {
                 nuevoTotal += detalle.cantidad * detalle.articuloMenu.precioVenta;
             } else if (detalle.promocion && detalle.promocion.detallesPromocion.length > 0) {
-                detalle.promocion.detallesPromocion.forEach(detallePromocion => {
-                    if (detallePromocion.articuloVenta && detallePromocion.articuloVenta.precioVenta > 0) {
-                        nuevoTotal += detallePromocion.cantidad * detallePromocion.articuloVenta.precioVenta;
-                    } else if (detallePromocion.articuloMenu && detallePromocion.articuloMenu.precioVenta > 0) {
-                        nuevoTotal += detallePromocion.cantidad * detallePromocion.articuloMenu.precioVenta;
-                    }
-                });
+                nuevoTotal += detalle.promocion.precio*detalle.cantidad
             }
         });
 
