@@ -1,5 +1,4 @@
-[] Al ingresar sin sucursal, te mete con sucursal capital igual.
-[] No te deja comprar pero te descuenta stock por más que no hayas comprado.
+[x] Al ingresar sin sucursal, te mete con sucursal capital igual.
 [x] Meter mililitros para manejar el stock de los litros.
 [] Se rompieron los domicilios en editar domicilio del cliente.
 [x] Actualizar pagina al aceptar pedido.
