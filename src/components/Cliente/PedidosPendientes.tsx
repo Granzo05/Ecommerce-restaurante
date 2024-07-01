@@ -98,6 +98,18 @@ const PedidosPendientes = () => {
         setShowDetallesPedido(false);
     };
 
+    function mostrarFecha(fecha: Date) {
+        // Obtener los componentes de la fecha
+        const año = fecha.getFullYear();
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        const dia = fecha.getDate().toString().padStart(2, '0');
+        const horas = fecha.getHours().toString().padStart(2, '0');
+        const minutos = fecha.getMinutes().toString().padStart(2, '0');
+
+        // Formatear la fecha y hora
+        return `${dia}-${mes}-${año} - ${horas}:${minutos} `;
+    }
+
     return (
         <div className="opciones-pantallas">
             <Toaster />
@@ -112,6 +124,7 @@ const PedidosPendientes = () => {
                         <table>
                             <thead>
                                 <tr>
+                                    <th>Fecha de pedido</th>
                                     <th>Tipo de envío</th>
                                     <th>Menu</th>
                                     <th>Estado</th>
@@ -120,6 +133,7 @@ const PedidosPendientes = () => {
                             <tbody>
                                 {pedidosPendientes.map((pedido, index) => (
                                     <tr key={pedido.id}>
+                                        <td>{mostrarFecha(new Date(pedido.fechaPedido))}</td>
                                         <td>
                                             <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
                                             <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero}, {pedido.domicilioEntrega?.localidad?.nombre}</p>

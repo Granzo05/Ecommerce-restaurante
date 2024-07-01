@@ -9,6 +9,8 @@ import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { EmpleadoService } from '../../services/EmpleadoService';
+import ModalCrud from '../ModalCrud';
+import DetallesPedido from './DetallesPedido';
 
 
 const PedidosEntrantes = () => {
@@ -63,7 +65,7 @@ const PedidosEntrantes = () => {
 
         // Obtener horas y minutos de la hora estimada de finalización
         const horaFinalizacion = horaActual.getHours();
-        
+
         const minutosFinalizacion = horaActual.getMinutes();
 
         // Formatear la hora estimada de finalización como una cadena HH:MM
@@ -287,11 +289,20 @@ const PedidosEntrantes = () => {
         }
     }, [pedidosEntrantes, paginaActual, cantidadProductosMostrables]);
 
+    const [showDetallesPedido, setShowDetallesPedido] = useState(false);
+
+    const [selectedPedido, setSelectedPedido] = useState<Pedido>(new Pedido());
+    const handleModalClose = () => {
+        setShowDetallesPedido(false);
+    };
     return (
 
         <div className="opciones-pantallas">
             <Toaster />
             <h1>- Pedidos entrantes -</h1>
+            <ModalCrud isOpen={showDetallesPedido} onClose={handleModalClose}>
+                <DetallesPedido pedido={selectedPedido} />
+            </ModalCrud>
             <hr />
             <div className="filtros">
                 <div className="inputBox-filtrado">
@@ -338,7 +349,7 @@ const PedidosEntrantes = () => {
                             <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Delivery</option>
                         </select>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -379,12 +390,8 @@ const PedidosEntrantes = () => {
                                     </td>
 
                                 )}
-                                <td>
-                                    {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                        <div key={detalle.id}>
-                                            <p>{detalle.cantidad} - {detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre}{detalle.promocion?.nombre} </p>
-                                        </div>
-                                    ))}
+                                <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
+                                    <button className="btn-accion-detalle">VER DETALLE</button>
                                 </td>
                                 <td>
                                     {updateVisible && (

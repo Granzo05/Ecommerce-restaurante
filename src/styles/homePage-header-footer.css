@@ -318,15 +318,14 @@ h3 {
 
 .ofert-content {
     display: flex;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    
     
 }
 
 .ofert-1 {
     flex-basis: 25%;
+    
     margin-top: -50px;
-    box-shadow: 0 0 20px black;
+    margin-bottom: 50px;
 }
 
 .ofert-txt {
@@ -337,7 +336,7 @@ h3 {
 }
 
 .ofert-img {
-    height: 230px;
+    height: 260px;
     width: 100%;
 }
 
@@ -955,6 +954,7 @@ h3 {
         margin-top: 0;
         flex-direction: column;
         align-items: center;
+        
     }
 
     .ofert-1 {
@@ -962,6 +962,8 @@ h3 {
         flex-direction: column;
         align-items: center;
         background-color: #FFFFFF;
+        box-shadow: 0 0 20px black;
+        width: 70%;
     }
 
     .ofert-img {
@@ -973,9 +975,13 @@ h3 {
         margin-top: 0;
     }
 
+    #menus{
+        
+        margin-top: 100%;
+    }
+
     .food {
         padding: 30px;
-
     }
 
     .food-content {
