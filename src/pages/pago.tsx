@@ -448,6 +448,11 @@ const Pago = () => {
     const handleExitCancel = () => {
         setShowExitModal(false);
     };
+
+    const handleCheckout = () => {
+        const checkoutUrl = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference_id=${preferenceId}`;
+        window.location.href = checkoutUrl;
+    };
     return (
         <>
             <Header />
@@ -524,7 +529,10 @@ const Pago = () => {
                             {domicilio && domicilio?.calle?.length > 0 ? (
                                 <>
                                     {preferenceId && preferenceId.length > 2 && (
-                                        <button className="checkout-btn" disabled={false}>
+                                        <button className="checkout-btn">
+                                            <button className="checkout-btn" onClick={handleCheckout}>
+                                                Pagar con Mercado Pago
+                                            </button>
                                             <Wallet
                                                 initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
                                                 customization={{ texts: { valueProp: "smart_option" } }}
