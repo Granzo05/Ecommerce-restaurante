@@ -1,10 +1,8 @@
 [] Al ingresar sin sucursal, te mete con sucursal capital igual.
-[] No me muestra el botón de mercado pago. Error 400.
-[] Te descuenta el stock a números negativos.
 [] No te deja comprar pero te descuenta stock por más que no hayas comprado.
 [x] Meter mililitros para manejar el stock de los litros.
 [] Se rompieron los domicilios en editar domicilio del cliente.
-[] Actualizar pagina al aceptar pedido.
+[x] Actualizar pagina al aceptar pedido.
 
 
 
