@@ -113,7 +113,7 @@ public class StockIngredientesController {
                     // 4 menus, entonces necesitaría en total 1200 gramos de eso
                     if (stockEncontrado.get().getMedida().equals(ingrediente.getMedida()) && stockEncontrado.get().getCantidadActual() < ingrediente.getCantidad() * cantidad) {
                         return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
-                    } else if (!stockEncontrado.get().getMedida().equals("Kg") && ingrediente.getMedida().equals("Gramos")) {
+                    } else if (!stockEncontrado.get().getMedida().equals("KILOGRAMOS") && ingrediente.getMedida().equals("GRAMOS")) {
                         // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
                         if (stockEncontrado.get().getCantidadActual() * 1000 < ingrediente.getCantidad() * cantidad) {
                             return new ResponseEntity<>("El stockIngredientes no es suficiente", HttpStatus.BAD_REQUEST);
@@ -145,7 +145,7 @@ public class StockIngredientesController {
             // Si el ingrediente tiene la misma medida que el stockIngredientes almacenado entonces se calcula a la misma medida.
             if (stockIngrediente.get().getMedida() != null && stockIngrediente.get().getMedida().equals(medida) && stockIngrediente.get().getCantidadActual() < cantidad || stockIngrediente.get().getCantidadActual() - cantidad <= 0) {
                 return false;
-            } else if (stockIngrediente.get().getMedida().equals("Kg") && medida.equals("Gramos")) {
+            } else if (stockIngrediente.get().getMedida().equals("KILOGRAMOS") && medida.equals("GRAMOS")) {
                 // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
                 if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad || stockIngrediente.get().getCantidadActual() * 1000 - cantidad <= 0) {
                     return false;
