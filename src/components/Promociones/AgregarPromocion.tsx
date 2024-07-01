@@ -274,9 +274,6 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
     } else if (!fechaHasta) {
       toast.error("Por favor, la fecha de finalización es necesaria");
       return;
-    } else if (new Date(fechaDesde) < hoy || new Date(fechaHasta) < hoy) {
-      toast.error("Por favor, las fechas debe ser posterior a la fecha actual");
-      return;
     } else if (new Date(fechaHasta) <= new Date(fechaDesde)) {
       toast.error("Por favor, las fecha de inicio no puede ser posterior a la de finalización");
       return;

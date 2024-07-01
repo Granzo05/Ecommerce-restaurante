@@ -32,8 +32,9 @@ const ActivarPromocion: React.FC<ActivarPromocionProps> = ({ promocion, onCloseM
   return (
     <div className="modal-info">
       <Toaster />
-      <p>¿Seguro que quieres activar la promoción?</p>
+      <h2>¿Seguro que quieres activar la promoción?</h2>
       <button onClick={onConfirm}>Confirmar</button>
+      <br />
       <button onClick={onCancel}>Cancelar</button>
     </div>
   );

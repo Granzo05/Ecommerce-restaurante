@@ -356,11 +356,21 @@ public class PedidoController {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
                 if (stockIngrediente.isPresent()) {
+
+                    double cantidadIngrediente = ingrediente.getCantidad();
                     // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
-                    if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad());
+                    if ((stockIngrediente.get().getMedida().getNombre().equalsIgnoreCase("KILOGRAMOS") && ingrediente.getMedida().getNombre().equalsIgnoreCase("GRAMOS")) || (stockIngrediente.get().getMedida().getNombre().equalsIgnoreCase("LITROS") && ingrediente.getMedida().getNombre().equalsIgnoreCase("CENTIMETROS CUBICOS"))) {
+                        cantidadIngrediente = cantidadIngrediente / 1000;
+                        System.out.println("Cantidad en gramos convertida a kilogramos o litros: " + cantidadIngrediente);
+
+                        // Descontar la cantidad convertida del stock
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - cantidadIngrediente * detallesPedido.getCantidad());
+                        System.out.println("Cantidad final (después de conversión): " + (stockIngrediente.get().getCantidadActual()));
+
+                        System.out.println("Cantidad final IF: "+ (stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad()));
                     } else {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * detallesPedido.getCantidad()));
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - cantidadIngrediente * detallesPedido.getCantidad());
+                        System.out.println("Cantidad final ELSE: " + (stockIngrediente.get().getCantidadActual() - cantidadIngrediente * detallesPedido.getCantidad()));
                     }
                     stockIngredientesRepository.save(stockIngrediente.get());
                 }
@@ -375,11 +385,21 @@ public class PedidoController {
                     for (IngredienteMenu ingrediente : detalle.getArticuloMenu().getIngredientesMenu()) {
                         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
                         if (stockIngrediente.isPresent()) {
+
+                            double cantidadIngrediente = ingrediente.getCantidad();
                             // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
-                            if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) * (detalle.getCantidad() + detallesPedido.getCantidad()));
+                            if ((stockIngrediente.get().getMedida().getNombre().equalsIgnoreCase("KILOGRAMOS") && ingrediente.getMedida().getNombre().equalsIgnoreCase("GRAMOS")) || (stockIngrediente.get().getMedida().getNombre().equalsIgnoreCase("LITROS") && ingrediente.getMedida().getNombre().equalsIgnoreCase("CENTIMETROS CUBICOS"))) {
+                                cantidadIngrediente = cantidadIngrediente / 1000;
+                                System.out.println("Cantidad en gramos convertida a kilogramos o litros: " + cantidadIngrediente);
+
+                                // Descontar la cantidad convertida del stock
+                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - cantidadIngrediente * (detalle.getCantidad() * detallesPedido.getCantidad()));
+                                System.out.println("Cantidad final (después de conversión): " + (stockIngrediente.get().getCantidadActual()));
+
+                                System.out.println("Cantidad final IF: "+ (stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad()));
                             } else {
-                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() * (detalle.getCantidad() + detallesPedido.getCantidad())));
+                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - cantidadIngrediente * (detalle.getCantidad() * detallesPedido.getCantidad()));
+                                System.out.println("Cantidad final ELSE: " + (stockIngrediente.get().getCantidadActual() - cantidadIngrediente * detallesPedido.getCantidad()));
                             }
                             stockIngredientesRepository.save(stockIngrediente.get());
                         }
@@ -415,11 +435,21 @@ public class PedidoController {
             for (IngredienteMenu ingrediente : detallesPedido.getArticuloMenu().getIngredientesMenu()) {
                 Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
                 if (stockIngrediente.isPresent()) {
+
+                    double cantidadIngrediente = ingrediente.getCantidad();
                     // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
-                    if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000 * detallesPedido.getCantidad()));
+                    if ((stockIngrediente.get().getMedida().getNombre().equalsIgnoreCase("KILOGRAMOS") && ingrediente.getMedida().getNombre().equalsIgnoreCase("GRAMOS")) || (stockIngrediente.get().getMedida().getNombre().equalsIgnoreCase("LITROS") && ingrediente.getMedida().getNombre().equalsIgnoreCase("CENTIMETROS CUBICOS"))) {
+                        cantidadIngrediente = cantidadIngrediente / 1000;
+                        System.out.println("Cantidad en gramos convertida a kilogramos o litros: " + cantidadIngrediente);
+
+                        // Descontar la cantidad convertida del stock
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + cantidadIngrediente * detallesPedido.getCantidad());
+                        System.out.println("Cantidad final (después de conversión): " + (stockIngrediente.get().getCantidadActual()));
+
+                        System.out.println("Cantidad final IF: "+ (stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad()));
                     } else {
-                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() * detallesPedido.getCantidad()));
+                        stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + cantidadIngrediente * detallesPedido.getCantidad());
+                        System.out.println("Cantidad final ELSE: " + (stockIngrediente.get().getCantidadActual() + cantidadIngrediente * detallesPedido.getCantidad()));
                     }
                     stockIngredientesRepository.save(stockIngrediente.get());
                 }
@@ -434,11 +464,21 @@ public class PedidoController {
                     for (IngredienteMenu ingrediente : detalle.getArticuloMenu().getIngredientesMenu()) {
                         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByNameIngredienteAndIdSucursal(ingrediente.getIngrediente().getNombre(), idSucursal);
                         if (stockIngrediente.isPresent()) {
+
+                            double cantidadIngrediente = ingrediente.getCantidad();
                             // Si la cantidad del ingrediente es superior a la maxima almacenada, ajustar medida
-                            if (stockIngrediente.get().getCantidadMaxima() < ingrediente.getCantidad()) {
-                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) * (detalle.getCantidad() + detallesPedido.getCantidad()));
+                            if ((stockIngrediente.get().getMedida().getNombre().equalsIgnoreCase("KILOGRAMOS") && ingrediente.getMedida().getNombre().equalsIgnoreCase("GRAMOS")) || (stockIngrediente.get().getMedida().getNombre().equalsIgnoreCase("LITROS") && ingrediente.getMedida().getNombre().equalsIgnoreCase("CENTIMETROS CUBICOS"))) {
+                                cantidadIngrediente = cantidadIngrediente / 1000;
+                                System.out.println("Cantidad en gramos convertida a kilogramos o litros: " + cantidadIngrediente);
+
+                                // Descontar la cantidad convertida del stock
+                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + cantidadIngrediente * (detalle.getCantidad() * detallesPedido.getCantidad()));
+                                System.out.println("Cantidad final (después de conversión): " + (stockIngrediente.get().getCantidadActual()));
+
+                                System.out.println("Cantidad final IF: "+ (stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad()));
                             } else {
-                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() * (detalle.getCantidad() + detallesPedido.getCantidad())));
+                                stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + cantidadIngrediente * (detalle.getCantidad() * detallesPedido.getCantidad()));
+                                System.out.println("Cantidad final ELSE: " + (stockIngrediente.get().getCantidadActual() + cantidadIngrediente * detallesPedido.getCantidad()));
                             }
                             stockIngredientesRepository.save(stockIngrediente.get());
                         }
