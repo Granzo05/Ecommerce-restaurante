@@ -162,10 +162,11 @@ public class ReportesController {
                     if (detallePromocion.getArticuloVenta() != null) {
                         ArticuloVenta articulo = detallePromocion.getArticuloVenta();
                         double precioCompra = articulo.getStockArticuloVenta().getPrecioCompra();
-                        ganancias += (articulo.getPrecioVenta() - precioCompra) * detallePromocion.getCantidad();
+                        ganancias += ((articulo.getPrecioVenta() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0))) - precioCompra) * detallePromocion.getCantidad();
+
                     } else if (detallePromocion.getArticuloMenu() != null) {
                         ArticuloMenu articuloMenu = detallePromocion.getArticuloMenu();
-                        ganancias += articuloMenu.getGanancia() * detalle.getCantidad() * detallePromocion.getCantidad();
+                        ganancias += (articuloMenu.getGanancia() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0))) * detalle.getCantidad() * detallePromocion.getCantidad();
                     }
                 }
             }
@@ -249,10 +250,10 @@ public class ReportesController {
                     if (detallePromocion.getArticuloVenta() != null) {
                         ArticuloVenta articulo = detallePromocion.getArticuloVenta();
 
-                        ingresos += articulo.getPrecioVenta()* detallePromocion.getCantidad();
+                        ingresos += (articulo.getPrecioVenta() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0))) * detallePromocion.getCantidad();
                     } else if (detallePromocion.getArticuloMenu() != null) {
                         ArticuloMenu articuloMenu = detallePromocion.getArticuloMenu();
-                        ingresos += articuloMenu.getPrecioVenta() * detalle.getCantidad() * detallePromocion.getCantidad();
+                        ingresos += (articuloMenu.getPrecioVenta() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0))) * detalle.getCantidad() * detallePromocion.getCantidad();
                     }
                 }
             }

@@ -76,18 +76,10 @@ const Pago = () => {
 
     useEffect(() => {
         if (preferenceId) {
-            initMercadoPago("TEST-6f85e1a5-3c13-4308-b8df-47057a926b0a", {
+            initMercadoPago("TEST-8b8033c8-691b-4875-8a5b-84733f25c7e9", {
                 locale: "es-AR",
             });
-            console.log(preferenceId)
-
-            if (preferenceId && preferenceId !== "") {
-                setIsVisible(true);
-            } else {
-                setIsVisible(false);
-            }
         }
-
     }, [preferenceId]);
 
     useEffect(() => {
@@ -424,25 +416,10 @@ const Pago = () => {
     }, []);
 
     const [showExitModal, setShowExitModal] = useState(false);
-    /*
-        useEffect(() => {
-            const handleBeforeUnload = (event: { preventDefault: () => void; returnValue: string; }) => {
-                event.preventDefault();
-                event.returnValue = ''; // Este mensaje no se muestra en todos los navegadores
-                setShowExitModal(true);
-                return '';
-            };
-    
-            window.addEventListener('beforeunload', handleBeforeUnload);
-    
-            return () => {
-                window.removeEventListener('beforeunload', handleBeforeUnload);
-            };
-        }, [carrito]);
-    */
+
     const handleExitConfirm = () => {
         setShowExitModal(false);
-        window.location.href = getBaseUrl(); // Redirigir al usuario a la página de inicio o a otra página
+        window.location.href = getBaseUrl(); 
     };
 
     const handleExitCancel = () => {
@@ -523,13 +500,12 @@ const Pago = () => {
 
                             {domicilio && domicilio?.calle?.length > 0 ? (
                                 <>
-                                    {preferenceId && preferenceId.length > 2 && (
-                                        <button className="checkout-btn" disabled={false}>
-                                            <Wallet
-                                                initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
-                                                customization={{ texts: { valueProp: "smart_option" } }}
-                                            />
-                                        </button>
+                                    {preferenceId && (
+                                        <>
+                                            <div id="wallet_container">
+                                                <Wallet initialization={{ preferenceId: preferenceId }} />
+                                            </div>
+                                        </>
                                     )}
                                 </>
                             ) : (
