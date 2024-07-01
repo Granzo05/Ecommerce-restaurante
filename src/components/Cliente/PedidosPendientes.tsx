@@ -7,6 +7,8 @@ import { CarritoService } from '../../services/CarritoService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ClienteService } from '../../services/ClienteService';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
+import ModalCrud from '../ModalCrud';
+import DetallesPedido from '../Pedidos/DetallesPedido';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -89,9 +91,19 @@ const PedidosPendientes = () => {
         return 0;
     }
 
+    const [showDetallesPedido, setShowDetallesPedido] = useState(false);
+
+    const [selectedPedido, setSelectedPedido] = useState<Pedido>(new Pedido());
+    const handleModalClose = () => {
+        setShowDetallesPedido(false);
+    };
+
     return (
         <div className="opciones-pantallas">
             <Toaster />
+            <ModalCrud isOpen={showDetallesPedido} onClose={handleModalClose}>
+                <DetallesPedido pedido={selectedPedido} />
+            </ModalCrud>
             <h1>- Pedidos pendientes -</h1>
             <hr />
             <div id="pedidos">
@@ -118,12 +130,8 @@ const PedidosPendientes = () => {
                                                 </>
                                             )}
                                         </td>
-                                        <td>
-                                            {pedido && pedido.detallesPedido && pedido.detallesPedido.map(detalle => (
-                                                <div key={detalle.id}>
-                                                    <p>{detalle.articuloMenu?.nombre}{detalle.articuloVenta?.nombre}{detalle.promocion?.nombre} - {detalle.cantidad}</p>
-                                                </div>
-                                            ))}
+                                        <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
+                                            <button className="btn-accion-detalle">VER DETALLE</button>
                                         </td>
                                         <td>
                                             {pedido.estado === 'ENTRANTES' ? (

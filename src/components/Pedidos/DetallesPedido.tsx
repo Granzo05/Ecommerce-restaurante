@@ -66,6 +66,7 @@ export const DetallesPedido: React.FC<Props> = ({ pedido }) => {
                     </div>
                   ))}
                   <p className="detalle-info"><strong>Tiempo de cocción:</strong> {detalle.articuloMenu?.tiempoCoccion} minutos</p>
+                  <p className='detalle-info'><strong>Cantidad menú: </strong> {detalle.cantidad}</p>
                 </>
               )}
             </li>

@@ -8,6 +8,8 @@ import FacturaIMG from '../../assets/icons/facturas.png'
 import { CarritoService } from '../../services/CarritoService';
 import { useNavigate } from 'react-router-dom';
 import { ClienteService } from '../../services/ClienteService';
+import ModalCrud from '../ModalCrud';
+import DetallesPedido from '../Pedidos/DetallesPedido';
 
 const PedidosRealizados = () => {
     const [pedidosRealizados, setPedidosRealizados] = useState<Pedido[]>([]);
@@ -43,16 +45,28 @@ const PedidosRealizados = () => {
         navigate('/pago')
     }
 
+    const [showDetallesPedido, setShowDetallesPedido] = useState(false);
+
+    const [selectedPedido, setSelectedPedido] = useState<Pedido>(new Pedido());
+    const handleModalClose = () => {
+        setShowDetallesPedido(false);
+    };
+
+
     return (
         <div className="opciones-pantallas">
             <h1>- Pedidos realizados -</h1>
             <hr />
+            <ModalCrud isOpen={showDetallesPedido} onClose={handleModalClose}>
+                <DetallesPedido pedido={selectedPedido} />
+            </ModalCrud>
             <div id="pedidos">
                 <table>
                     <thead>
                         <tr>
                             <th>Cliente</th>
                             <th>Tipo de envío</th>
+                            <th>Menú</th>
                             <th>Factura</th>
                             <th>Volver a pedir</th>
                         </tr>
@@ -78,7 +92,10 @@ const PedidosRealizados = () => {
                                     </td>
 
                                 )}
-                                <td style={{cursor: 'pointer'}} onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
+                                <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
+                                    <button className="btn-accion-detalle">VER DETALLE</button>
+                                </td>
+                                <td style={{ cursor: 'pointer' }} onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
                                 <td><button className='btn-accion-detalle' onClick={() => repetirPedido(pedido)}>REPETIR PEDIDO</button></td>
                             </tr>
                         ))}
