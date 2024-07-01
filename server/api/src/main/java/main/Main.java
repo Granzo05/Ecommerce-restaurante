@@ -493,14 +493,7 @@ public class Main {
                     medida2.setBorrado("NO");
 
                     sucursal.getMedidas().add(medida2);
-
-                    Medida medida6 = new Medida();
-                    medida6.setNombre("MILILITROS");
-                    medida6.getSucursales().add(sucursal);
-                    medida6.setBorrado("NO");
-
-                    sucursal.getMedidas().add(medida6);
-
+                    
                     Medida medida3 = new Medida();
                     medida3.setNombre("CENTIMETROS CUBICOS");
                     medida3.getSucursales().add(sucursal);
