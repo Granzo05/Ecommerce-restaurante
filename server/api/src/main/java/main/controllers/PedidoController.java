@@ -256,7 +256,7 @@ public class PedidoController {
                 pedidoRepository.save(pedido);
 
 
-                MercadoPagoConfig.setAccessToken("TEST-2399300778988406-062918-711bdd3cdd7e7bed5c73cbb0f31491a3-738770102");
+                MercadoPagoConfig.setAccessToken("TEST-4688637220056917-061412-b34e0ec8d897ddbbbaa72a332a8da930-1040037215");
 
                 List<PreferenceItemRequest> items = new ArrayList<>();
 
@@ -634,6 +634,11 @@ public class PedidoController {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
+            cell = new PdfPCell(new Phrase("Precio unitario"));
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
             cell = new PdfPCell(new Phrase("Subtotal"));
             cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -655,6 +660,7 @@ public class PedidoController {
                     table.addCell(detalle.getPromocion().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad()));
                     table.addCell(String.valueOf(detalle.getPromocion().getPrecio()));
+                    table.addCell(String.valueOf(detalle.getPromocion().getPrecio() * detalle.getCantidad()));
                     total += detalle.getCantidad() * detalle.getPromocion().getPrecio();
                 }
             }

@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class StockIngredientesController {
@@ -143,9 +140,14 @@ public class StockIngredientesController {
         if (stockIngrediente.isPresent()) {
             Medida medida = medidaRepository.findById(idMedida).get();
             // Si el ingrediente tiene la misma medida que el stockIngredientes almacenado entonces se calcula a la misma medida.
-            if (stockIngrediente.get().getMedida() != null && stockIngrediente.get().getMedida().equals(medida) && stockIngrediente.get().getCantidadActual() < cantidad || stockIngrediente.get().getCantidadActual() - cantidad <= 0) {
+            if (stockIngrediente.get().getMedida() != null && stockIngrediente.get().getMedida().getNombre().equals(medida.getNombre()) && stockIngrediente.get().getCantidadActual() - cantidad <= 0) {
                 return false;
-            } else if (stockIngrediente.get().getMedida().equals("KILOGRAMOS") && medida.equals("GRAMOS")) {
+            } else if (Objects.requireNonNull(stockIngrediente.get().getMedida()).getNombre().equals("KILOGRAMOS") && medida.getNombre().equals("GRAMOS")) {
+                // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
+                if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad || stockIngrediente.get().getCantidadActual() * 1000 - cantidad <= 0) {
+                    return false;
+                }
+            }else if (stockIngrediente.get().getMedida().getNombre().equals("LITROS") && medida.getNombre().equals("CENTRIMETROS_CUBICOS")) {
                 // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
                 if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad || stockIngrediente.get().getCantidadActual() * 1000 - cantidad <= 0) {
                     return false;
