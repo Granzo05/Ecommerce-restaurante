@@ -126,7 +126,7 @@ const Pago = () => {
                         }
                         if (!hayStock) break;
                     }
-                }
+                }         
 
                 // Verificar stock de ArticuloVenta
                 if (hayStock && carrito?.articuloVenta) {
@@ -136,6 +136,23 @@ const Pago = () => {
                             productoFaltante = articulo;
                             break;
                         }
+                    }
+                }
+
+                if (carrito?.promociones) {
+                    for (const promocion of carrito.promociones) {
+                        for (const detalle of promocion.detallesPromocion) {
+                            if (detalle.articuloMenu)
+                                for (const ingrediente of detalle.articuloMenu?.ingredientesMenu) {
+                                    hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, detalle.articuloMenu.cantidad);
+
+                                    if (!hayStock) {
+                                        productoFaltante = detalle.articuloMenu;
+                                        break;
+                                    }
+                                }
+                        }
+                        if (!hayStock) break;
                     }
                 }
 
@@ -183,26 +200,26 @@ const Pago = () => {
                         if (preferenceId) {
                             PedidoService.eliminarPedidoFallido(preferenceId);
                         }
-/*
-                        toast.promise(PedidoService.crearPedido(pedido), {
-                            loading: 'Creando pedido...',
-                            success: (message) => {
-                                actualizarPedidos();
-                                setTimeout(() => {
-                                    toast.info('Dirigiéndose a pedidos...')
-                                    CarritoService.limpiarCarrito();
-                                    window.location.href = getBaseUrlCliente() + `/cliente/opciones/${1}`
-                                }, 3000);
-                                return message;
-                            },
-                            error: (message) => {
-                                return message;
-                            },
-                            finally: () => {
-                                setIsLoading(false);
-                            }
-                        });
-                        */
+                        /*
+                                                toast.promise(PedidoService.crearPedido(pedido), {
+                                                    loading: 'Creando pedido...',
+                                                    success: (message) => {
+                                                        actualizarPedidos();
+                                                        setTimeout(() => {
+                                                            toast.info('Dirigiéndose a pedidos...')
+                                                            CarritoService.limpiarCarrito();
+                                                            window.location.href = getBaseUrlCliente() + `/cliente/opciones/${1}`
+                                                        }, 3000);
+                                                        return message;
+                                                    },
+                                                    error: (message) => {
+                                                        return message;
+                                                    },
+                                                    finally: () => {
+                                                        setIsLoading(false);
+                                                    }
+                                                });
+                                                */
                         setIsLoading(false);
 
                     } else {
@@ -420,7 +437,7 @@ const Pago = () => {
 
     const handleExitConfirm = () => {
         setShowExitModal(false);
-        window.location.href = getBaseUrl(); 
+        window.location.href = getBaseUrl();
     };
 
     const handleExitCancel = () => {
