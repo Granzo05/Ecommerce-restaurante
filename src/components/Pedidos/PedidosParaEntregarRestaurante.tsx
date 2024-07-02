@@ -7,7 +7,7 @@ import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empleado } from '../../types/Restaurante/Empleado';
-import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
+import { DESACTIVAR_PRIVILEGIOS, mostrarFecha } from '../../utils/global_variables/const';
 import ModalCrud from '../ModalCrud';
 import DetallesPedido from './DetallesPedido';
 
@@ -64,7 +64,8 @@ const PedidosParaEntregar = () => {
         setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.COCINADOS)
             .then(data => {
-                setPedidos(data);
+                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+                setPedidos(sortedData);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -79,7 +80,7 @@ const PedidosParaEntregar = () => {
         let estadoPedido = EnumEstadoPedido.ENTREGADOS;
 
         // En caso de ser delivery pasa por un estado extra
-        if (pedido.tipoEnvio === EnumTipoEnvio.DELIVERY) {
+        if (pedido.tipoEnvio === "DELIVERY") {
             estadoPedido = EnumEstadoPedido.EN_CAMINO;
         }
 
@@ -215,7 +216,7 @@ const PedidosParaEntregar = () => {
             } else if (detalle.articuloMenu && detalle.articuloMenu.precioVenta > 0) {
                 nuevoTotal += detalle.cantidad * detalle.articuloMenu.precioVenta;
             } else if (detalle.promocion && detalle.promocion.detallesPromocion.length > 0) {
-                nuevoTotal += detalle.promocion.precio*detalle.cantidad
+                nuevoTotal += detalle.promocion.precio * detalle.cantidad
             }
         });
 
@@ -291,7 +292,7 @@ const PedidosParaEntregar = () => {
                             <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Delivery</option>
                         </select>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -317,6 +318,7 @@ const PedidosParaEntregar = () => {
                                         <p>{pedido.cliente?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
+                                        <p>{mostrarFecha(new Date(pedido.fechaPedido))}</p>
                                     </div>
                                 </td>
 
@@ -326,7 +328,7 @@ const PedidosParaEntregar = () => {
                                     <td>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</td>
                                 )}
                                 <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
-                                <button className="btn-accion-detalle">VER DETALLE</button>
+                                    <button className="btn-accion-detalle">VER DETALLE</button>
                                 </td>
                                 <td>
                                     ${calcularTotal(pedido)}

@@ -5,7 +5,7 @@ import '../../styles/pedidos.css';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
-import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
+import { DESACTIVAR_PRIVILEGIOS, mostrarFecha } from '../../utils/global_variables/const';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { EmpleadoService } from '../../services/EmpleadoService';
@@ -30,7 +30,8 @@ const PedidosEntrantes = () => {
     const buscarPedidos = async () => {
         PedidoService.getPedidos(EnumEstadoPedido.ENTRANTES)
             .then(data => {
-                setPedidos(data);
+                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+                setPedidos(sortedData);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -375,8 +376,7 @@ const PedidosEntrantes = () => {
                                         <p>{pedido.cliente?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
-
-                                        <p>{parseDate(pedido.fechaPedido.toString())}</p>
+                                        <p>{mostrarFecha(new Date(pedido.fechaPedido))}</p>
                                     </div>
                                 </td>
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (

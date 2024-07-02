@@ -7,6 +7,18 @@ export const URL_API = 'http://localhost:8080/';
 
 export const DESACTIVAR_PRIVILEGIOS = false; // false hay privilegios, true no hay privilegios
 
+export function mostrarFecha(fecha: Date) {
+    // Obtener los componentes de la fecha
+    const año = fecha.getFullYear();
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const horas = fecha.getHours().toString().padStart(2, '0');
+    const minutos = fecha.getMinutes().toString().padStart(2, '0');
+
+    // Formatear la fecha y hora
+    return `${dia}-${mes}-${año} - ${horas}:${minutos} `;
+}
+
 export function convertirFecha(fecha: Date) {
     const dia = fecha.getDate() + 1;
     const mes = fecha.getMonth() + 1;

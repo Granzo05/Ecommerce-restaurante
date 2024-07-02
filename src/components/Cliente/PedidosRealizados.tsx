@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { ClienteService } from '../../services/ClienteService';
 import ModalCrud from '../ModalCrud';
 import DetallesPedido from '../Pedidos/DetallesPedido';
+import { mostrarFecha } from '../../utils/global_variables/const';
 
 const PedidosRealizados = () => {
     const [pedidosRealizados, setPedidosRealizados] = useState<Pedido[]>([]);
@@ -22,7 +23,9 @@ const PedidosRealizados = () => {
     const buscarPedidosRealizados = async () => {
         ClienteService.getPedidos(EnumEstadoPedido.ENTREGADOS)
             .then(data => {
-                setPedidosRealizados(data);
+                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+
+                setPedidosRealizados(sortedData);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -52,10 +55,9 @@ const PedidosRealizados = () => {
         setShowDetallesPedido(false);
     };
 
-
     return (
         <div className="opciones-pantallas">
-            <h1>- Pedidos realizados -</h1>
+            <h1>- Pedidos entregados -</h1>
             <hr />
             <ModalCrud isOpen={showDetallesPedido} onClose={handleModalClose}>
                 <DetallesPedido pedido={selectedPedido} />
@@ -65,6 +67,7 @@ const PedidosRealizados = () => {
                     <thead>
                         <tr>
                             <th>Cliente</th>
+                            <th>Fecha</th>
                             <th>Tipo de envío</th>
                             <th>Menú</th>
                             <th>Factura</th>
@@ -81,6 +84,8 @@ const PedidosRealizados = () => {
                                         <p>{pedido.cliente?.email}</p>
                                     </div>
                                 </td>
+                                <td>{mostrarFecha(new Date(pedido.fechaPedido))}</td>
+
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
                                     <td>
                                         <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>

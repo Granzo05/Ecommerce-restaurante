@@ -5,6 +5,7 @@ import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 import FacturaIMG from '../../assets/icons/facturas.png'
 import { FacturaService } from '../../services/FacturaService';
+import { mostrarFecha } from '../../utils/global_variables/const';
 
 const PedidosEntregados = () => {
     const [pedidosEntregados, setPedidos] = useState<Pedido[]>([]);
@@ -18,7 +19,8 @@ const PedidosEntregados = () => {
         setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.ENTREGADOS)
             .then(data => {
-                setPedidos(data);
+                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+                setPedidos(sortedData);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -151,7 +153,7 @@ const PedidosEntregados = () => {
                 </div>
 
                 <div className="filtros-datos">
-                <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
+                    <div className="inputBox-filtrado" style={{ marginRight: '10px' }}>
                         <input
                             type="text"
                             required
@@ -182,7 +184,7 @@ const PedidosEntregados = () => {
                             <option value={EnumTipoEnvio.RETIRO_EN_TIENDA}>Delivery</option>
                         </select>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -205,6 +207,7 @@ const PedidosEntregados = () => {
                                         <p>{pedido.cliente?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
+                                        <p>{mostrarFecha(new Date(pedido.fechaPedido))}</p>
                                     </div>
                                 </td>
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
@@ -217,7 +220,7 @@ const PedidosEntregados = () => {
                                         <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero} {pedido.domicilioEntrega?.localidad?.nombre}</p>
                                     </td>
                                 )}
-                                <td style={{cursor: 'pointer'}} onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
+                                <td style={{ cursor: 'pointer' }} onClick={() => descargarFactura(pedido.id)}><img src={FacturaIMG} alt="logo de factura" /></td>
                             </tr>
                         ))}
                     </tbody>

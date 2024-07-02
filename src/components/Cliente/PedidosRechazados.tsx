@@ -15,7 +15,7 @@ function useQuery() {
     return new URLSearchParams(useLocation().search);
 }
 
-const PedidosPendientes = () => {
+const PedidosRechazados = () => {
     const [pedidosPendientes, setPedidosPendientes] = useState<Pedido[]>([]);
     const [horaFinalizacion, setHoraFinalizacion] = useState<string[]>([]);
     const [tiempoRestante, setTiempoRestante] = useState<number[]>([]);
@@ -38,60 +38,17 @@ const PedidosPendientes = () => {
         buscarPedidos();
     }, []);
 
-    useEffect(() => {
-        const intervalo = setInterval(() => {
-            actualizarTiempoRestante();
-        }, 1000);
-
-        return () => clearInterval(intervalo);
-    }, [horaFinalizacion]);
-
     const buscarPedidos = async () => {
         try {
-            const data = await ClienteService.getPedidosPorOtrosEstados(EnumEstadoPedido.ENTREGADOS);
+            const data = await ClienteService.getPedidos(EnumEstadoPedido.RECHAZADOS);
             if (data) {
-                const pendientes = [];
-                const horasFinalizacion = [];
-
-                for (const pedido of data) {
-                    pendientes.push(pedido);
-                    if (pedido.horaFinalizacion) {
-                        horasFinalizacion.push(pedido.horaFinalizacion);
-                    }
-                }
-
-                const sortedData = pendientes.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
 
                 setPedidosPendientes(sortedData);
-
-                setHoraFinalizacion(horasFinalizacion);
             }
         } catch (error) {
             console.error('Error:', error);
         }
-    }
-
-    const actualizarTiempoRestante = () => {
-        const tiemposRestantes = horaFinalizacion.map(hora => calcularTiempoRestante(hora));
-        setTiempoRestante(tiemposRestantes);
-    }
-
-    const calcularTiempoRestante = (horaFinalizacion: string) => {
-        if (horaFinalizacion) {
-            const [horas, minutos] = horaFinalizacion.split(':').map(Number);
-
-            const horaFinalizacionPedido = new Date();
-            horaFinalizacionPedido.setHours(horas);
-            horaFinalizacionPedido.setMinutes(minutos);
-            horaFinalizacionPedido.setSeconds(0);
-
-            const horaActual = new Date();
-
-            const tiempoRestante = Math.max(0, (horaFinalizacionPedido.getTime() - horaActual.getTime()) / 1000);
-
-            return tiempoRestante;
-        }
-        return 0;
     }
 
     const [showDetallesPedido, setShowDetallesPedido] = useState(false);
@@ -107,7 +64,7 @@ const PedidosPendientes = () => {
             <ModalCrud isOpen={showDetallesPedido} onClose={handleModalClose}>
                 <DetallesPedido pedido={selectedPedido} />
             </ModalCrud>
-            <h1>- Pedidos pendientes -</h1>
+            <h1>- Pedidos rechazados -</h1>
             <hr />
             <div id="pedidos">
                 {pedidosPendientes.length > 0 && (
@@ -127,13 +84,7 @@ const PedidosPendientes = () => {
                                         <td>{mostrarFecha(new Date(pedido.fechaPedido))}</td>
                                         <td>
                                             <p>{pedido.tipoEnvio?.toString().replace(/_/g, ' ')}</p>
-                                            <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero}, {pedido.domicilioEntrega?.localidad?.nombre}</p>
-                                            {tiempoRestante[index] > 0 && pedido.estado !== 'ENTREGADOS' && (
-                                                <>
-                                                    <p>El restaurante está preparando tu pedido</p>
-                                                    <p>Tiempo restante: {Math.floor(tiempoRestante[index] / 60)}:{(Math.floor(tiempoRestante[index] % 60)).toString().padStart(2, '0')}</p>
-                                                </>
-                                            )}
+                                            <p>{pedido.domicilioEntrega?.calle} {pedido.domicilioEntrega?.numero}, {pedido.domicilioEntrega?.localidad?.nombre}</p>                          
                                         </td>
                                         <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
                                             <button className="btn-accion-detalle">VER DETALLE</button>
@@ -166,4 +117,4 @@ const PedidosPendientes = () => {
     )
 }
 
-export default PedidosPendientes;
+export default PedidosRechazados;

@@ -7,7 +7,7 @@ import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
-import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
+import { DESACTIVAR_PRIVILEGIOS, mostrarFecha } from '../../utils/global_variables/const';
 
 
 const PedidosEnCamino = () => {
@@ -22,7 +22,9 @@ const PedidosEnCamino = () => {
         setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.EN_CAMINO)
             .then(data => {
-                setPedidos(data);
+                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+
+                setPedidos(sortedData);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -35,6 +37,7 @@ const PedidosEnCamino = () => {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.ENTREGADOS), {
             loading: 'Enviando factura al cliente...',
             success: (message) => {
+                buscarPedidos();
                 return message;
             },
             error: (message) => {
@@ -44,8 +47,6 @@ const PedidosEnCamino = () => {
                 setIsLoading(false);
             }
         });
-
-        buscarPedidos();
     }
 
     function filtrarId(filtro: number) {
@@ -73,6 +74,7 @@ const PedidosEnCamino = () => {
         toast.promise(PedidoService.updateEstadoPedido(pedido, EnumEstadoPedido.RECHAZADOS), {
             loading: 'Rechazando pedido...',
             success: (message) => {
+                buscarPedidos();
                 return message;
             },
             error: (message) => {
@@ -82,8 +84,6 @@ const PedidosEnCamino = () => {
                 setIsLoading(false);
             }
         });
-
-        buscarPedidos();
     }
 
     useEffect(() => {
@@ -281,8 +281,7 @@ const PedidosEnCamino = () => {
                                         <p>{pedido.cliente?.nombre}</p>
                                         <p>{pedido.cliente?.telefono}</p>
                                         <p>{pedido.cliente?.email}</p>
-
-                                        <p>{pedido.fechaPedido.toString()}</p>
+                                        <p>{mostrarFecha(new Date(pedido.fechaPedido))}</p>
                                     </div>
                                 </td>
                                 {pedido.tipoEnvio === EnumTipoEnvio.DELIVERY ? (
