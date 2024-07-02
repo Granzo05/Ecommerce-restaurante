@@ -256,7 +256,7 @@ public class PedidoController {
                 pedidoRepository.save(pedido);
 
 
-                MercadoPagoConfig.setAccessToken("TEST-4688637220056917-061412-b34e0ec8d897ddbbbaa72a332a8da930-1040037215");
+                MercadoPagoConfig.setAccessToken("TEST-4348060094658217-052007-d8458fa36a2d40dd8023bfcb9f27fd4e-1819307913");
 
                 List<PreferenceItemRequest> items = new ArrayList<>();
 
@@ -649,19 +649,31 @@ public class PedidoController {
                 if (detalle.getArticuloVenta() != null) {
                     table.addCell(detalle.getArticuloVenta().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad()));
+                    table.addCell(String.valueOf(detalle.getArticuloVenta().getPrecioVenta()));
                     table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta()));
                     total += detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta();
                 } else if (detalle.getArticuloMenu() != null) {
                     table.addCell(detalle.getArticuloMenu().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad()));
+                    table.addCell(String.valueOf(detalle.getArticuloMenu().getPrecioVenta()));
                     table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta()));
                     total += detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta();
                 } else if (detalle.getPromocion() != null) {
-                    table.addCell(detalle.getPromocion().getNombre());
-                    table.addCell(String.valueOf(detalle.getCantidad()));
-                    table.addCell(String.valueOf(detalle.getPromocion().getPrecio()));
-                    table.addCell(String.valueOf(detalle.getPromocion().getPrecio() * detalle.getCantidad()));
-                    total += detalle.getCantidad() * detalle.getPromocion().getPrecio();
+                    for (DetallePromocion detallePromocion: detalle.getPromocion().getDetallesPromocion()) {
+                        if(detallePromocion.getArticuloMenu() != null) {
+                            table.addCell(detalle.getPromocion().getNombre() + "(" + detallePromocion.getArticuloMenu().getNombre() + ")");
+                            table.addCell(String.valueOf(detallePromocion.getCantidad()));
+                            table.addCell(String.valueOf(detallePromocion.getArticuloMenu().getPrecioVenta() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0))));
+                            table.addCell(String.valueOf(detallePromocion.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0)))));
+                            total += detallePromocion.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() - (1 - (detallePromocion.getPromocion().getDescuento() / 100.0)));
+                        } else if(detallePromocion.getArticuloVenta() != null) {
+                            table.addCell(detalle.getPromocion().getNombre() + "(" + detallePromocion.getArticuloVenta().getNombre() + ")");
+                            table.addCell(String.valueOf(detallePromocion.getCantidad()));
+                            table.addCell(String.valueOf(detallePromocion.getArticuloVenta().getPrecioVenta() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0))));
+                            table.addCell(String.valueOf(detallePromocion.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0)))));
+                            total += detallePromocion.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * (1 - (detallePromocion.getPromocion().getDescuento() / 100.0)));
+                        }
+                    }
                 }
             }
 
