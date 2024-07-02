@@ -76,10 +76,18 @@ const Pago = () => {
 
     useEffect(() => {
         if (preferenceId) {
-            initMercadoPago("TEST-8b8033c8-691b-4875-8a5b-84733f25c7e9", {
+            initMercadoPago("TEST-6f85e1a5-3c13-4308-b8df-47057a926b0a", {
                 locale: "es-AR",
             });
+            console.log(preferenceId)
+
+            if (preferenceId && preferenceId !== "") {
+                setIsVisible(true);
+            } else {
+                setIsVisible(false);
+            }
         }
+
     }, [preferenceId]);
 
     useEffect(() => {
@@ -434,7 +442,22 @@ const Pago = () => {
     }, []);
 
     const [showExitModal, setShowExitModal] = useState(false);
-
+    /*
+        useEffect(() => {
+            const handleBeforeUnload = (event: { preventDefault: () => void; returnValue: string; }) => {
+                event.preventDefault();
+                event.returnValue = ''; // Este mensaje no se muestra en todos los navegadores
+                setShowExitModal(true);
+                return '';
+            };
+    
+            window.addEventListener('beforeunload', handleBeforeUnload);
+    
+            return () => {
+                window.removeEventListener('beforeunload', handleBeforeUnload);
+            };
+        }, [carrito]);
+    */
     const handleExitConfirm = () => {
         setShowExitModal(false);
         window.location.href = getBaseUrl();
@@ -442,6 +465,11 @@ const Pago = () => {
 
     const handleExitCancel = () => {
         setShowExitModal(false);
+    };
+
+    const handleCheckout = () => {
+        const checkoutUrl = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference_id=${preferenceId}`;
+        window.location.href = checkoutUrl;
     };
     return (
         <>
@@ -518,12 +546,16 @@ const Pago = () => {
 
                             {domicilio && domicilio?.calle?.length > 0 ? (
                                 <>
-                                    {preferenceId && (
-                                        <>
-                                            <div id="wallet_container">
-                                                <Wallet initialization={{ preferenceId: preferenceId }} />
-                                            </div>
-                                        </>
+                                    {preferenceId && preferenceId.length > 2 && (
+                                        <button className="checkout-btn">
+                                            <button className="checkout-btn" onClick={handleCheckout}>
+                                                Pagar con Mercado Pago
+                                            </button>
+                                            <Wallet
+                                                initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
+                                                customization={{ texts: { valueProp: "smart_option" } }}
+                                            />
+                                        </button>
                                     )}
                                 </>
                             ) : (
