@@ -126,8 +126,7 @@ const Pago = () => {
                     for (const producto of carrito.articuloMenu) {
                         for (const ingrediente of producto.ingredientesMenu) {
                             hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
-                            console.log(hayStock)
-           
+
                             if (!hayStock) {
                                 productoFaltante = producto;
                                 break;
@@ -135,8 +134,7 @@ const Pago = () => {
                         }
                         if (!hayStock) break;
                     }
-                }         
-                console.log('Menu' + hayStock)
+                }
                 // Verificar stock de ArticuloVenta
                 if (hayStock && carrito?.articuloVenta) {
                     for (const articulo of carrito.articuloVenta) {
@@ -147,7 +145,6 @@ const Pago = () => {
                         }
                     }
                 }
-                console.log('articuloVenta' + hayStock)
 
                 if (carrito?.promociones) {
                     for (const promocion of carrito.promociones) {
@@ -211,27 +208,26 @@ const Pago = () => {
                         if (preferenceId) {
                             PedidoService.eliminarPedidoFallido(preferenceId);
                         }
-                        /*
-                                                toast.promise(PedidoService.crearPedido(pedido), {
-                                                    loading: 'Creando pedido...',
-                                                    success: (message) => {
-                                                        actualizarPedidos();
-                                                        setTimeout(() => {
-                                                            toast.info('Dirigiéndose a pedidos...')
-                                                            CarritoService.limpiarCarrito();
-                                                            window.location.href = getBaseUrlCliente() + `/cliente/opciones/${1}`
-                                                        }, 3000);
-                                                        return message;
-                                                    },
-                                                    error: (message) => {
-                                                        return message;
-                                                    },
-                                                    finally: () => {
-                                                        setIsLoading(false);
-                                                    }
-                                                });
-                                                */
-                        setIsLoading(false);
+
+                        toast.promise(PedidoService.crearPedido(pedido), {
+                            loading: 'Creando pedido...',
+                            success: (message) => {
+                                actualizarPedidos();
+                                setTimeout(() => {
+                                    toast.info('Dirigiéndose a pedidos...')
+                                    CarritoService.limpiarCarrito();
+                                    window.location.href = getBaseUrlCliente() + `/cliente/opciones/${1}`
+                                }, 3000);
+                                return message;
+                            },
+                            error: (message) => {
+                                return message;
+                            },
+                            finally: () => {
+                                setIsLoading(false);
+                            }
+                        });
+
 
                     } else {
                         toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));

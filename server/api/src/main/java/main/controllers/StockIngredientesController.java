@@ -152,25 +152,16 @@ public class StockIngredientesController {
                 // Verificar si las medidas son iguales
                 if (stockMedida != null && stockMedida.getNombre().equals(medida.getNombre())) {
                     // Comparar directamente si las medidas son las mismas
-                    System.out.println("LIMPIO");
-                    System.out.println(cantidadActual);
-                    System.out.println(cantidad);
                     if(cantidadActual <= cantidad) {
                         return false;
                     }
                 } else if ("KILOGRAMOS".equals(stockMedida.getNombre()) && "GRAMOS".equals(medida.getNombre())) {
                     // Convertir KG a gramos y verificar
-                    System.out.println("KG");
-                    System.out.println(cantidadActual);
-                    System.out.println(cantidad);
                     if(cantidadActual * 1000 <= cantidad) {
                         return false;
                     }
                 } else if ("LITROS".equals(stockMedida.getNombre()) && "CENTIMETROS CUBICOS".equals(medida.getNombre())) {
                     // Convertir litros a centímetros cúbicos y verificar
-                    System.out.println("LITROS");
-                    System.out.println(cantidadActual);
-                    System.out.println(cantidad);
                     if(cantidadActual * 1000 <= cantidad) {
                         return false;
                     }
