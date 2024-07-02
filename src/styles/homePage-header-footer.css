@@ -1010,3 +1010,42 @@ h3 {
         margin: 0 0 15px 0;
     }
 }
+
+@media (max-width: 1376px) and (max-height: 720px) {
+    .header {
+        padding: 30px 0 0 0;
+    }
+
+    .header-txt h1 {
+        font-size: 60px;
+    }
+
+    .header-txt p {
+        font-size: 28px;
+    }
+
+    .menu {
+        padding: 15px 20px;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .menu-icono-search{
+        margin-right: -10px;
+    }
+
+    .menu .navbar ul li {
+        float: none;
+        display: inline-block;
+    }
+
+    .menu .navbar .btn-iniciar-sesion {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .menu .navbar ul li a {
+        padding: 10px;
+        font-size: 16px;
+    }
+}
