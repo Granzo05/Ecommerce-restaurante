@@ -59,8 +59,8 @@ const ReportePedidosCliente: React.FC = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>- Reporte de ingresos -</h1>
-            <Toaster />
+            <h1>- Reporte de Pedidos por Cliente -</h1>
+            <Toaster/>
             <hr />
             <div className="filtros">
                 <div className="filtros-container">

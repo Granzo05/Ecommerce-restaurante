@@ -76,7 +76,7 @@ const Pago = () => {
 
     useEffect(() => {
         if (preferenceId) {
-            initMercadoPago("TEST-41b327fc-a375-4756-a0af-e30b0344a817", {
+            initMercadoPago("TEST-7ade0306-4207-4389-a493-99007cce038d", {
                 locale: "es-AR",
             });
             console.log(preferenceId)
@@ -325,7 +325,7 @@ const Pago = () => {
                                 const horaActual = new Date();
 
                                 // Colocar un temporizador de 5 minutos para el pago, sino se devuelve el stock
-                                horaActual.setMinutes(horaActual.getMinutes() + 2);
+                                horaActual.setMinutes(horaActual.getMinutes() + 5);
 
                                 // Obtener horas y minutos de la hora estimada de finalización
                                 const horaFinalizacion = horaActual.getHours();
