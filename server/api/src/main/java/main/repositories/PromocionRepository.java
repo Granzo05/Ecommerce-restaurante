@@ -16,7 +16,7 @@ public interface PromocionRepository extends JpaRepository<Promocion, Long> {
     @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :id AND :fechaActual BETWEEN p.fechaDesde AND p.fechaHasta")
     List<Promocion> findAllInTimeByIdSucursal(@Param("id") Long id, @Param("fechaActual") LocalDateTime fechaActual);
 
-    @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :id")
+    @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :id AND p.borrado = 'NO'")
     List<Promocion> findAllBySucursall(@Param("id") Long id);
 
     @Query("SELECT p FROM Promocion p JOIN p.sucursales s WHERE s.id = :id")

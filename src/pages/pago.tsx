@@ -25,6 +25,7 @@ import { SucursalDTO } from "../types/Restaurante/SucursalDTO";
 import ModalCrud from "../components/ModalCrud";
 import { getBaseUrl, getBaseUrlCliente } from "../utils/global_variables/const";
 import { ClienteService } from "../services/ClienteService";
+import { Promocion } from "../types/Productos/Promocion";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -79,7 +80,6 @@ const Pago = () => {
             initMercadoPago("TEST-7ade0306-4207-4389-a493-99007cce038d", {
                 locale: "es-AR",
             });
-            console.log(preferenceId)
 
             if (preferenceId && preferenceId !== "") {
                 setIsVisible(true);
@@ -191,7 +191,7 @@ const Pago = () => {
                             let detalle = new DetallesPedido();
                             detalle.promocion = promocion;
                             detalle.cantidad = promocion.cantidad;
-                            detalle.subTotal = promocion.cantidad * (promocion.precio - 1 * (promocion.descuento + 10) / 100);
+                            detalle.subTotal = promocion.cantidad * (promocion.precio - (1 * (promocion.descuento + 10) / 100));
                             detalles.push(detalle);
                         });
 
@@ -479,6 +479,23 @@ const Pago = () => {
         const checkoutUrl = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference_id=${preferenceId}`;
         window.location.href = checkoutUrl;
     };
+
+    function calcularTotal(promocion: Promocion, descuentoAdicional: number) {
+        let nuevoTotal = 0;
+        promocion.detallesPromocion.forEach(detalle => {
+            if (detalle.articuloVenta && detalle.articuloVenta.precioVenta > 0) {
+                nuevoTotal += (detalle.cantidad * promocion.cantidad) * (detalle.articuloVenta.precioVenta * (1 - promocion.descuento / 100));
+
+            } else if (detalle.articuloMenu && detalle.articuloMenu.precioVenta > 0) {
+                nuevoTotal += detalle.cantidad * promocion.cantidad * (detalle.articuloMenu.precioVenta * (1 - promocion.descuento / 100));
+            }
+        });
+    
+        nuevoTotal = nuevoTotal * descuentoAdicional;;
+    
+        return nuevoTotal.toLocaleString('es-AR');
+    }
+    
     return (
         <>
             <Header />
@@ -547,7 +564,11 @@ const Pago = () => {
                                 <p className="name-product">{producto.nombre}</p>
                                 <div className="cant-sub">
                                     <p className="cant-product"><strong>Cantidad:</strong> {carrito.promociones[index].cantidad}</p>
-                                    <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.promociones[index].cantidad * carrito.promociones[index].precio}</p>
+                                    {envio === EnumTipoEnvio.RETIRO_EN_TIENDA ? (
+                                        <p className="subtotal-product"><strong>Subtotal:</strong> ${calcularTotal(producto, 0.9)}</p>
+                                    ) : (
+                                        <p className="subtotal-product"><strong>Subtotal:</strong> ${calcularTotal(producto, 0)}</p>
+                                    )}
                                 </div>
                             </div>
                         ))}

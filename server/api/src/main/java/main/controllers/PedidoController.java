@@ -644,15 +644,14 @@ public class PedidoController {
             table.addCell(cell);
 
             boolean descuentoRetiro = pedido.getTipoEnvio().equals(EnumTipoEnvio.RETIRO_EN_TIENDA);
-            System.out.println(pedido.getTipoEnvio());
             double total = 0;
             for (DetallesPedido detalle : pedido.getDetallesPedido()) {
                 if (detalle.getArticuloVenta() != null) {
                     table.addCell(detalle.getArticuloVenta().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad()));
 
-                    if(descuentoRetiro) {
-                        table.addCell(String.valueOf(detalle.getArticuloVenta().getPrecioVenta()));
+                    if (descuentoRetiro) {
+                        table.addCell(String.valueOf(detalle.getArticuloVenta().getPrecioVenta() * 0.9));
                         table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta() * 0.9));
                         total += detalle.getCantidad() * (detalle.getArticuloVenta().getPrecioVenta() * 0.9);
                     } else {
@@ -663,8 +662,8 @@ public class PedidoController {
                 } else if (detalle.getArticuloMenu() != null) {
                     table.addCell(detalle.getArticuloMenu().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad()));
-                    if(descuentoRetiro) {
-                        table.addCell(String.valueOf(detalle.getArticuloMenu().getPrecioVenta()));
+                    if (descuentoRetiro) {
+                        table.addCell(String.valueOf(detalle.getArticuloMenu().getPrecioVenta() * 0.9));
                         table.addCell(String.valueOf(detalle.getCantidad() * (detalle.getArticuloMenu().getPrecioVenta() * 0.9)));
                         total += detalle.getCantidad() * (detalle.getArticuloMenu().getPrecioVenta() * 0.9);
                     } else {
@@ -675,32 +674,36 @@ public class PedidoController {
                 } else if (detalle.getPromocion() != null) {
                     for (DetallePromocion detallePromocion : detalle.getPromocion().getDetallesPromocion()) {
                         if (detallePromocion.getArticuloVenta() != null) {
-                            table.addCell(detallePromocion.getPromocion().getNombre() + "(" + detallePromocion.getArticuloVenta().getNombre() + ")");
+                            String nombreArticulo = detallePromocion.getArticuloVenta().getNombre();
+                            double precioUnitario = detallePromocion.getArticuloVenta().getPrecioVenta();
+                            double descuentoPromocion = detalle.getPromocion().getDescuento();
+                            double descuentoAdicional = descuentoRetiro ? 10 : 0;
+                            double precioConDescuento = precioUnitario * (1 - (descuentoPromocion + descuentoAdicional) / 100);
+
+                            table.addCell(detallePromocion.getPromocion().getNombre() + "(" + nombreArticulo + ")");
                             table.addCell(String.valueOf(detallePromocion.getCantidad()));
-                            if(descuentoRetiro) {
-                                table.addCell(String.valueOf(detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100));
-                                table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100)));
-                                total += detalle.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100);
-                            } else {
-                                table.addCell(String.valueOf(detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100));
-                                table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100)));
-                                total += detalle.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100);
-                            }
+                            table.addCell(String.valueOf(precioConDescuento));
+                            table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * precioConDescuento));
+
+                            total += detalle.getCantidad() * detallePromocion.getCantidad() * precioConDescuento;
                         } else if (detallePromocion.getArticuloMenu() != null) {
-                            table.addCell(detallePromocion.getPromocion().getNombre() + "(" + detallePromocion.getArticuloMenu().getNombre() + ")");
+                            String nombreMenu = detallePromocion.getArticuloMenu().getNombre();
+                            double precioUnitario = detallePromocion.getArticuloMenu().getPrecioVenta();
+                            double descuentoPromocion = detalle.getPromocion().getDescuento();
+                            double descuentoAdicional = descuentoRetiro ? 10 : 0;
+                            double precioConDescuento = precioUnitario * (1 - (descuentoPromocion + descuentoAdicional) / 100);
+
+                            table.addCell(detallePromocion.getPromocion().getNombre() + "(" + nombreMenu + ")");
                             table.addCell(String.valueOf(detallePromocion.getCantidad()));
-                            if(descuentoRetiro) {
-                                table.addCell(String.valueOf(detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100));
-                                table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10/ 100)));
-                                total += detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100);
-                            } else {
-                                table.addCell(String.valueOf(detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100));
-                                table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100)));
-                                total += detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100);
-                            }
+                            table.addCell(String.valueOf(precioConDescuento));
+                            table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * precioConDescuento));
+
+                            total += detallePromocion.getCantidad() * detalle.getCantidad() * precioConDescuento;
                         }
                     }
+
                 }
+
             }
 
             document.add(table);

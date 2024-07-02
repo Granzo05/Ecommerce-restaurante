@@ -323,7 +323,7 @@ const AgregarPromocion: React.FC<AgregarPromocionProps> = ({ onCloseModal }) => 
 
     promocion.descripcion = descripcion;
 
-    promocion.descuento = total * ((1 + descuento) / 100);
+    promocion.descuento = descuento;
 
     let sucursalesElegidas: Sucursal[] = [];
 

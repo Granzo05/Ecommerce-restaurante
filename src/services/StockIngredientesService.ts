@@ -4,7 +4,6 @@ import { sucursalId, URL_API } from '../utils/global_variables/const';
 
 export const StockIngredientesService = {
     createStock: async (stock: StockIngredientes): Promise<string> => {
-        console.log(stock)
         try {
             const response = await fetch(URL_API + `sucursal/${sucursalId()}/stockIngredientes/create`, {
                 method: 'POST',
@@ -66,10 +65,6 @@ export const StockIngredientesService = {
     },
 
     checkStock: async (idIngrediente: number, medidaId: number, cantidadNecesaria: number): Promise<boolean> => {
-        console.log(sucursalId())
-        console.log(idIngrediente)
-        console.log(medidaId)
-        console.log(cantidadNecesaria)
         try {
             const response = await fetch(URL_API + `sucursal/${sucursalId()}/stockIngredientes/check/${idIngrediente}/${medidaId}/${cantidadNecesaria}`, {
                 method: 'GET',
