@@ -325,7 +325,7 @@ const Pago = () => {
                                 const horaActual = new Date();
 
                                 // Colocar un temporizador de 5 minutos para el pago, sino se devuelve el stock
-                                horaActual.setMinutes(horaActual.getMinutes() + 5);
+                                horaActual.setMinutes(horaActual.getMinutes() + 2);
 
                                 // Obtener horas y minutos de la hora estimada de finalización
                                 const horaFinalizacion = horaActual.getHours();
