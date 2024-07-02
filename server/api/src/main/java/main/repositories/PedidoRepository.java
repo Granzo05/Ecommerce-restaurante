@@ -82,7 +82,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
             "JOIN p.sucursales s " +
             "WHERE s.id = :id " +
             "AND p.fechaPedido BETWEEN :fechaDesde AND :fechaHasta " +
-            "AND p.estado = 3 " +
             "GROUP BY p.fechaPedido, d.articuloMenu.nombre")
     Page<Object[]> findCantidadPedidosPorFechaYSucursal(Pageable pageable,
                                                         @Param("id") Long id,

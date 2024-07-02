@@ -47,7 +47,7 @@ const PedidosPendientes = () => {
 
     const buscarPedidos = async () => {
         try {
-            const data = await ClienteService.getPedidosPorOtrosEstados(EnumEstadoPedido.ENTREGADOS);
+            const data = await ClienteService.getPedidos(EnumEstadoPedido.ENTRANTES);
             if (data) {
                 const pendientes = [];
                 const horasFinalizacion = [];
