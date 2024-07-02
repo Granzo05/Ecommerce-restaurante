@@ -133,30 +133,40 @@ public class StockIngredientesController {
 
     @CrossOrigin
     @GetMapping("/sucursal/{idSucursal}/stockIngredientes/check/{idIngrediente}/{idMedida}/{cantidadNecesaria}")
-    public boolean checkStock(@PathVariable("idIngrediente") long idIngrediente, @PathVariable("idSucursal") long idSucursal, @PathVariable("idMedida") Long idMedida, @PathVariable("cantidadNecesaria") int cantidad) {
-        // True hay stock, false no
+    public boolean checkStock(@PathVariable("idIngrediente") long idIngrediente,
+                              @PathVariable("idSucursal") long idSucursal,
+                              @PathVariable("idMedida") Long idMedida,
+                              @PathVariable("cantidadNecesaria") int cantidad) {
+        // Buscar el stock del ingrediente en la sucursal
         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(idIngrediente, idSucursal);
 
         if (stockIngrediente.isPresent()) {
-            Medida medida = medidaRepository.findById(idMedida).get();
-            // Si el ingrediente tiene la misma medida que el stockIngredientes almacenado entonces se calcula a la misma medida.
-            if (stockIngrediente.get().getMedida() != null && stockIngrediente.get().getMedida().getNombre().equals(medida.getNombre()) && stockIngrediente.get().getCantidadActual() - cantidad <= 0) {
-                return false;
-            } else if (Objects.requireNonNull(stockIngrediente.get().getMedida()).getNombre().equals("KILOGRAMOS") && medida.getNombre().equals("GRAMOS")) {
-                // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
-                if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad || stockIngrediente.get().getCantidadActual() * 1000 - cantidad <= 0) {
-                    return false;
-                }
-            }else if (stockIngrediente.get().getMedida().getNombre().equals("LITROS") && medida.getNombre().equals("CENTRIMETROS_CUBICOS")) {
-                // Si almacené el ingrediente por KG, y necesito 300 gramos en el menu, entonces convierto de KG a gramos para calcularlo en la misma medida
-                if (stockIngrediente.get().getCantidadActual() * 1000 < cantidad || stockIngrediente.get().getCantidadActual() * 1000 - cantidad <= 0) {
-                    return false;
+            StockIngredientes stock = stockIngrediente.get();
+            Optional<Medida> medidaOpt = medidaRepository.findById(idMedida);
+
+            if (medidaOpt.isPresent()) {
+                Medida medida = medidaOpt.get();
+                Medida stockMedida = stock.getMedida();
+                double cantidadActual = stock.getCantidadActual();
+
+                // Verificar si las medidas son iguales
+                if (stockMedida != null && stockMedida.getNombre().equals(medida.getNombre())) {
+                    // Comparar directamente si las medidas son las mismas
+                    return cantidadActual >= cantidad;
+                } else if ("KILOGRAMOS".equals(stockMedida.getNombre()) && "GRAMOS".equals(medida.getNombre())) {
+                    // Convertir KG a gramos y verificar
+                    return cantidadActual * 1000 >= cantidad;
+                } else if ("LITROS".equals(stockMedida.getNombre()) && "CENTRIMETROS_CUBICOS".equals(medida.getNombre())) {
+                    // Convertir litros a centímetros cúbicos y verificar
+                    return cantidadActual * 1000 >= cantidad;
                 }
             }
         }
 
-        return true;
+        // Si no hay stock o la medida no es compatible, se retorna false
+        return false;
     }
+
 
 
     @CrossOrigin
