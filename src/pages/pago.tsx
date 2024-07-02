@@ -126,7 +126,8 @@ const Pago = () => {
                     for (const producto of carrito.articuloMenu) {
                         for (const ingrediente of producto.ingredientesMenu) {
                             hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
-
+                            console.log(hayStock)
+           
                             if (!hayStock) {
                                 productoFaltante = producto;
                                 break;
@@ -135,7 +136,7 @@ const Pago = () => {
                         if (!hayStock) break;
                     }
                 }         
-
+                console.log('Menu' + hayStock)
                 // Verificar stock de ArticuloVenta
                 if (hayStock && carrito?.articuloVenta) {
                     for (const articulo of carrito.articuloVenta) {
@@ -146,6 +147,7 @@ const Pago = () => {
                         }
                     }
                 }
+                console.log('articuloVenta' + hayStock)
 
                 if (carrito?.promociones) {
                     for (const promocion of carrito.promociones) {
@@ -163,6 +165,7 @@ const Pago = () => {
                         if (!hayStock) break;
                     }
                 }
+                console.log('promociones' + hayStock)
 
                 if (cliente && cliente?.email?.length > 0) {
                     if (hayStock) {
