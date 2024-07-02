@@ -42,7 +42,11 @@ const ReportePedidosCliente: React.FC = () => {
     };
 
     const descargarExcel = async () => {
-        await ReportesServices.descargarExcelGraficos(datosChartBar, 'Pedidos');
+        if (datosChartBar.length > 0) {
+            await ReportesServices.descargarExcelGraficos(datosChartBar, 'Pedidos');
+        } else {
+            toast.error('No hay datos para exportar');
+        }
     };
 
     const options = {

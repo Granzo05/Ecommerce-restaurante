@@ -1,8 +1,14 @@
 package main.mapper.Restaurante;
 
 
-import lombok.*;
-import main.entities.Restaurante.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import main.entities.Restaurante.Empleado;
+import main.entities.Restaurante.FechaContratacionEmpleado;
+import main.entities.Restaurante.PrivilegiosEmpleados;
+import main.entities.Restaurante.RolesEmpleados;
 import main.mapper.Productos.ImagenesDTO;
 
 import java.time.LocalDate;

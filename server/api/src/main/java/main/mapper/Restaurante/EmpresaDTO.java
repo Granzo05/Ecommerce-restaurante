@@ -1,11 +1,10 @@
 package main.mapper.Restaurante;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.*;
-import main.entities.Productos.Imagenes;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Restaurante.Empresa;
-import main.entities.Restaurante.Sucursal;
 import main.mapper.Productos.ImagenesDTO;
 
 import java.util.HashSet;

@@ -1,7 +1,6 @@
 package main;
 
 import main.EncryptMD5.Encrypt;
-import main.entities.Cliente.Cliente;
 import main.entities.Domicilio.*;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Ingredientes.Medida;
@@ -26,10 +25,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 
 @SpringBootApplication

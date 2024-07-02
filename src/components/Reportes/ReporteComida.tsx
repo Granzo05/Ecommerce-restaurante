@@ -75,7 +75,11 @@ const ReporteComidas: React.FC = () => {
     }, []);
 
     const descargarExcel = async () => {
-        await ReportesServices.descargarExcelGraficos(datosChartBar, 'Ranking de comidas');
+        if (datosChartBar.length > 0) {
+            await ReportesServices.descargarExcelGraficos(datosChartBar, 'Ranking de comidas');
+        } else {
+            toast.error('No hay datos para exportar');
+        }
     };
 
     const options = {

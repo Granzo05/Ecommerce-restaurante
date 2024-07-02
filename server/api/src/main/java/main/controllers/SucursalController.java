@@ -15,7 +15,6 @@ import main.entities.Restaurante.LocalidadDelivery;
 import main.entities.Restaurante.PrivilegiosSucursales;
 import main.entities.Restaurante.Roles;
 import main.entities.Restaurante.Sucursal;
-import main.mapper.Restaurante.EmpresaDTO;
 import main.mapper.Restaurante.SucursalDTO;
 import main.repositories.*;
 import org.springframework.http.HttpStatus;

@@ -44,10 +44,15 @@ const ReporteGanancias: React.FC = () => {
         getBarChart();
     }, []);
 
-    const descargarExcel = async () => {
-        await ReportesServices.descargarExcelGraficos(datosChartBar, 'Ganancias');
-    };
 
+    const descargarExcel = async () => {
+        if (datosChartBar.length > 0) {
+            await ReportesServices.descargarExcelGraficos(datosChartBar, 'Ganancias');
+        } else {
+            toast.error('No hay datos para exportar');
+        }
+    };
+    
     const options = {
         title: 'Ganancias mensuales',
         legend: { position: 'none' },

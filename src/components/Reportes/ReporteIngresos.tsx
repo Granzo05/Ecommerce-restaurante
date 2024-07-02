@@ -48,7 +48,11 @@ const ReporteIngresos: React.FC = () => {
     }, []);
 
     const descargarExcel = async () => {
-        await ReportesServices.descargarExcelGraficos(datosChartBar, 'Ingresos');
+        if (datosChartBar.length > 0) {
+            await ReportesServices.descargarExcelGraficos(datosChartBar, 'Ingresos');
+        } else {
+            toast.error('No hay datos para exportar');
+        }
     };
 
     const options = {

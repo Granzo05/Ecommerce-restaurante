@@ -1,6 +1,9 @@
 package main.mapper.Restaurante;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import main.entities.Ingredientes.Categoria;
 import main.entities.Productos.Promocion;
 import main.entities.Restaurante.Sucursal;

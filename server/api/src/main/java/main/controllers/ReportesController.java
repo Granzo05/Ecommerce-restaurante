@@ -121,7 +121,7 @@ public class ReportesController {
                 page = pedidoRepository.findPedidosBetweenFechas(pageable, id, dateFechaDesdeInicio, dateFechaHastaFin);
                 List<Pedido> resultados = page.getContent();
 
-                DateTimeFormatter formatter = mismoMes ? DateTimeFormatter.ofPattern("yyyy-MM-dd") : DateTimeFormatter.ofPattern("yyyy-MM");
+                DateTimeFormatter formatter = mismoMes ? DateTimeFormatter.ofPattern("dd-MM-yyyy") : DateTimeFormatter.ofPattern("MM-yyyy");
 
                 for (Pedido pedido : resultados) {
                     double ganancias = calcularGanancias(pedido);
@@ -207,7 +207,7 @@ public class ReportesController {
                 page = pedidoRepository.findPedidosBetweenFechas(pageable, id, dateFechaDesdeInicio, dateFechaHastaFin);
                 List<Pedido> resultados = page.getContent();
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
 
                 for (Pedido pedido : resultados) {
                     double ingresos = calcularIngresos(pedido);
@@ -290,7 +290,7 @@ public class ReportesController {
 
             Page<Object[]> page;
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
             do {
                 page = pedidoRepository.findCantidadPedidosClientePorFechaYSucursal(pageable, id, idCliente, dateFechaDesdeInicio, dateFechaHastaFin);
@@ -348,7 +348,7 @@ public class ReportesController {
                 page = pedidoRepository.findCantidadPedidosPorFechaYSucursal(pageable, id, dateFechaDesdeInicio, dateFechaHastaFin);
                 List<Object[]> resultados = page.getContent();
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
 
                 for (Object[] resultado : resultados) {
                     LocalDateTime fechaPedido = (LocalDateTime) resultado[0];
