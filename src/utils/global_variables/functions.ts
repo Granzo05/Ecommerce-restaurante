@@ -18,11 +18,21 @@ export const formatearFechaReportesYYYYMMDD = (date: Date | undefined) => {
     const mes = date.getMonth() + 1;
     const año = date.getFullYear();
 
-    const diaFormateado = dia < 10 ? `0${dia}` : dia;
-    const mesFormateado = mes < 10 ? `0${mes}` : mes;
-    return `${año}-${mesFormateado}-${diaFormateado}`;
+    let ultimoDiaMes = new Date(año, mes, 0).getDate();
+
+    // Si el día actual es el último día del mes, ajustar el día a 1
+    if (año.toString().length === 4) {
+      if (dia === ultimoDiaMes) {
+        // Asegurarse de que el mes siguiente sea válido (evitar que sea 13)
+        const siguienteMes = mes === 12 ? 1 : mes + 1;
+        return `${año}-${siguienteMes < 10 ? '0' + siguienteMes : siguienteMes}-01`;
+      } else {
+        const diaFormateado = dia < 10 ? `0${dia}` : dia;
+        const mesFormateado = mes < 10 ? `0${mes}` : mes;
+        return `${diaFormateado}-${mesFormateado}-${año}`;
+      }
+    }
   }
-  return '';
 };
 
 

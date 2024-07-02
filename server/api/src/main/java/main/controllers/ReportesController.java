@@ -105,11 +105,15 @@ public class ReportesController {
             LocalDateTime dateFechaDesdeInicio = dateFechaDesde.atStartOfDay();
             LocalDateTime dateFechaHastaFin = dateFechaHasta.atTime(LocalTime.MAX);
 
+            // Verificar si las fechas abarcan más de un mes
+            boolean mismoMes = dateFechaDesde.getMonthValue() == dateFechaHasta.getMonthValue()
+                    && dateFechaDesde.getYear() == dateFechaHasta.getYear();
+
             int pageNumber = 0;
             int pageSize = 200;
             Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("fechaPedido").ascending());
 
-            Map<String, Double> agrupadosPorMesAnio = new TreeMap<>();
+            Map<String, Double> agrupadosPorFecha = new TreeMap<>();
 
             Page<Pedido> page;
 
@@ -117,15 +121,15 @@ public class ReportesController {
                 page = pedidoRepository.findPedidosBetweenFechas(pageable, id, dateFechaDesdeInicio, dateFechaHastaFin);
                 List<Pedido> resultados = page.getContent();
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+                DateTimeFormatter formatter = mismoMes ? DateTimeFormatter.ofPattern("yyyy-MM-dd") : DateTimeFormatter.ofPattern("yyyy-MM");
 
                 for (Pedido pedido : resultados) {
                     double ganancias = calcularGanancias(pedido);
 
                     LocalDateTime fechaPedido = pedido.getFechaPedido();
-                    String mesAnio = fechaPedido.format(formatter);
+                    String claveAgrupacion = mismoMes ? fechaPedido.format(formatter) : fechaPedido.format(formatter);
 
-                    agrupadosPorMesAnio.put(mesAnio, agrupadosPorMesAnio.getOrDefault(mesAnio, 0.0) + ganancias);
+                    agrupadosPorFecha.put(claveAgrupacion, agrupadosPorFecha.getOrDefault(claveAgrupacion, 0.0) + ganancias);
                 }
 
                 pageNumber++;
@@ -133,9 +137,9 @@ public class ReportesController {
             } while (page.hasNext());
 
             List<List<Object>> data = new ArrayList<>();
-            data.add(Arrays.asList("Mes y Año", "Ganancias"));
+            data.add(Arrays.asList(mismoMes ? "Día" : "Mes y Año", "Ganancias"));
 
-            for (Map.Entry<String, Double> entry : agrupadosPorMesAnio.entrySet()) {
+            for (Map.Entry<String, Double> entry : agrupadosPorFecha.entrySet()) {
                 data.add(Arrays.asList(entry.getKey(), entry.getValue()));
             }
 
@@ -145,6 +149,7 @@ public class ReportesController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     private double calcularGanancias(Pedido pedido) {
         double ganancias = 0.0;
@@ -263,7 +268,7 @@ public class ReportesController {
     }
 
     @CrossOrigin
-    @GetMapping("/pedidos/cliente/{idCliente}/{fechaDesde}/{fechaHasta}/datachartbar/ingresos/{idSucursal}")
+    @GetMapping("/pedidos/cliente/{idCliente}/{fechaDesde}/{fechaHasta}/datachartbar/{idSucursal}")
     public ResponseEntity<List<List<Object>>> getPedidosTotales(@PathVariable("idCliente") Long idCliente,
                                                                 @PathVariable("fechaDesde") String fechaDesde,
                                                                 @PathVariable("fechaHasta") String fechaHasta,
@@ -276,23 +281,27 @@ public class ReportesController {
             // Convertir LocalDate a LocalDateTime
             LocalDateTime dateFechaDesdeInicio = dateFechaDesde.atStartOfDay();
             LocalDateTime dateFechaHastaFin = dateFechaHasta.atTime(LocalTime.MAX);
+
             int pageNumber = 0;
             int pageSize = 200;
             Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("fechaPedido").ascending());
 
-            Map<String, Integer> agrupadosPorMesAnio = new TreeMap<>();
+            Map<String, Integer> agrupadosPorDia = new TreeMap<>();
 
             Page<Object[]> page;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             do {
                 page = pedidoRepository.findCantidadPedidosClientePorFechaYSucursal(pageable, id, idCliente, dateFechaDesdeInicio, dateFechaHastaFin);
                 List<Object[]> resultados = page.getContent();
 
                 for (Object[] resultado : resultados) {
-                    String mesAnio = (String) resultado[0];
+                    LocalDateTime fechaPedido = (LocalDateTime) resultado[0];
+                    String dia = fechaPedido.format(formatter);
                     Integer pedidos = ((Number) resultado[1]).intValue();
 
-                    agrupadosPorMesAnio.put(mesAnio, agrupadosPorMesAnio.getOrDefault(mesAnio, 0) + pedidos);
+                    agrupadosPorDia.put(dia, agrupadosPorDia.getOrDefault(dia, 0) + pedidos);
                 }
 
                 pageNumber++;
@@ -300,9 +309,9 @@ public class ReportesController {
             } while (page.hasNext());
 
             List<List<Object>> data = new ArrayList<>();
-            data.add(Arrays.asList("Mes y Año", "Pedidos"));
+            data.add(Arrays.asList("Día", "Pedidos"));
 
-            for (Map.Entry<String, Integer> entry : agrupadosPorMesAnio.entrySet()) {
+            for (Map.Entry<String, Integer> entry : agrupadosPorDia.entrySet()) {
                 data.add(Arrays.asList(entry.getKey(), entry.getValue()));
             }
 
@@ -312,6 +321,7 @@ public class ReportesController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @CrossOrigin
     @GetMapping("/pedidos/{fechaDesde}/{fechaHasta}/datachartbar/comidas/{idSucursal}")

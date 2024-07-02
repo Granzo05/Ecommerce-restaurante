@@ -69,11 +69,11 @@ const ReporteGanancias: React.FC = () => {
                     <div className="fechas">
                         <div style={{ marginRight: '10px' }}>
                             <label style={{ display: 'flex', fontWeight: 'bold', color: 'black' }}>Fecha inicio:</label>
-                            <input type="date" value={formatearFechaReportesYYYYMMDD(fechaDesde)} onChange={e => setFechaDesde(new Date(e.target.value))} />
+                            <input type="date" onChange={e => setFechaDesde(new Date(e.target.value))} />
                         </div>
                         <div>
                             <label style={{ display: 'flex', fontWeight: 'bold', color: 'black' }}>Fecha fin:</label>
-                            <input type="date" value={formatearFechaReportesYYYYMMDD(fechaHasta)} onChange={e => setFechaHasta(new Date(e.target.value))} />
+                            <input type="date" onChange={e => setFechaHasta(new Date(e.target.value))} />
                         </div>
                     </div>
                 </div>

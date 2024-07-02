@@ -88,13 +88,13 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
                                                         @Param("fechaDesde") LocalDateTime fechaDesde,
                                                         @Param("fechaHasta") LocalDateTime fechaHasta);
 
-    @Query("SELECT DATE_FORMAT(p.fechaPedido, '%Y-%m'), COUNT(p) " +
+    @Query("SELECT p.fechaPedido, COUNT(p) " +
             "FROM Pedido p " +
-            "JOIN p.detallesPedido d " +
-            "JOIN p.sucursales s " +
-            "WHERE s.id = :id AND p.cliente.id = :idCliente " +
+            "JOIN p.sucursales suc " +
+            "WHERE p.cliente.id = :idCliente " +
+            "AND suc.id = :id " +
             "AND p.fechaPedido BETWEEN :fechaInicio AND :fechaFin " +
-            "GROUP BY DATE_FORMAT(p.fechaPedido, '%Y-%m')")
+            "GROUP BY p.fechaPedido")
     Page<Object[]> findCantidadPedidosClientePorFechaYSucursal(Pageable pageable,
                                                                @Param("id") Long id,
                                                                @Param("idCliente") Long idCliente,

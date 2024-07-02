@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { IngresoData } from "../components/Reportes/ReporteComida";
 import { sucursalId, URL_API } from "../utils/global_variables/const";
 
@@ -14,10 +15,17 @@ export const ReportesServices = {
             },
             mode: 'cors'
         });
+
+        if (!response.ok) {
+            toast.error('Error al obtener datos en las fechas ingresadas');
+            return;
+        }
+
         return await response.json();
     },
 
     getPedidosGraficoBarraGanancias: async (fechaDesde: string, fechaHasta: string) => {
+        console.log(fechaDesde, fechaHasta);
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
 
@@ -29,6 +37,12 @@ export const ReportesServices = {
             },
             mode: 'cors'
         });
+
+        if (!response.ok) {
+            toast.error('Error al obtener datos en las fechas ingresadas');
+            return;
+        }
+
         return await response.json();
     },
 
@@ -36,7 +50,7 @@ export const ReportesServices = {
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
 
-        const response = await fetch(URL_API + `pedidos/cliente/${idCliente}/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/ganancias/` + sucursalId(), {
+        const response = await fetch(URL_API + `pedidos/cliente/${idCliente}/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/` + sucursalId(), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -44,6 +58,12 @@ export const ReportesServices = {
             },
             mode: 'cors'
         });
+
+        if (!response.ok) {
+            toast.error('Error al obtener datos en las fechas ingresadas');
+            return;
+        }
+
         return await response.json();
     },
 
@@ -89,6 +109,7 @@ export const ReportesServices = {
         a.click();
         window.URL.revokeObjectURL(url);
     },
+    
     descargarExcelGraficos: async (datos: IngresoData[], informacion: string) => {
         const response = await fetch(URL_API + `downloadExcelGrafico/` + informacion, {
             method: 'POST',
