@@ -132,7 +132,6 @@ const Pago = () => {
                 if (hayStock && carrito?.articuloVenta) {
                     for (const articulo of carrito.articuloVenta) {
                         hayStock = await StockArticuloVentaService.checkStock(articulo.id, articulo.cantidad);
-
                         if (!hayStock) {
                             productoFaltante = articulo;
                             break;
@@ -141,7 +140,6 @@ const Pago = () => {
                 }
 
                 if (cliente && cliente?.email?.length > 0) {
-
                     if (hayStock) {
                         let pedido = new Pedido();
                         if (cliente) pedido.cliente = cliente;
@@ -185,7 +183,7 @@ const Pago = () => {
                         if (preferenceId) {
                             PedidoService.eliminarPedidoFallido(preferenceId);
                         }
-
+/*
                         toast.promise(PedidoService.crearPedido(pedido), {
                             loading: 'Creando pedido...',
                             success: (message) => {
@@ -204,6 +202,9 @@ const Pago = () => {
                                 setIsLoading(false);
                             }
                         });
+                        */
+                        setIsLoading(false);
+
                     } else {
                         toast.error('Lo sentimos, no hay suficiente stock de: ' + (productoFaltante?.nombre ?? 'producto desconocido'));
                         setIsLoading(false);
