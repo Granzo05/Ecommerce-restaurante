@@ -38,6 +38,7 @@ export const DetallesPedido: React.FC<Props> = ({ pedido }) => {
                                 <p className="detalle-info">{ingrediente.ingrediente?.nombre} - {ingrediente.cantidad} {ingrediente.medida.nombre}</p>
                               </div>
                             ))}
+                            <p className='detalle-info'><strong>Cantidad menú: </strong> {dp.cantidad}</p>
                             <hr />
                           </div>
                         )}

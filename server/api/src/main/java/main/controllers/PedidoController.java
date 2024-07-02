@@ -256,7 +256,7 @@ public class PedidoController {
                 pedidoRepository.save(pedido);
 
 
-                MercadoPagoConfig.setAccessToken("TEST-4688637220056917-061412-b34e0ec8d897ddbbbaa72a332a8da930-1040037215");
+                MercadoPagoConfig.setAccessToken("TEST-1054800052942896-052114-15b18485b226b0ce5fb98ea47547819a-1821353489");
 
                 List<PreferenceItemRequest> items = new ArrayList<>();
 

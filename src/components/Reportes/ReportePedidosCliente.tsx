@@ -109,7 +109,7 @@ const ReporteComidas: React.FC = () => {
 
     return (
         <div className="opciones-pantallas">
-            <h1>- Reporte de Comidas Famosas -</h1>
+            <h1>- Reporte de Pedidos por Cliente -</h1>
             <Toaster/>
             <hr />
             <div className="filtros">

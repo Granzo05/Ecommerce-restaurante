@@ -76,7 +76,7 @@ const Pago = () => {
 
     useEffect(() => {
         if (preferenceId) {
-            initMercadoPago("TEST-6f85e1a5-3c13-4308-b8df-47057a926b0a", {
+            initMercadoPago("TEST-7ade0306-4207-4389-a493-99007cce038d", {
                 locale: "es-AR",
             });
             console.log(preferenceId)
