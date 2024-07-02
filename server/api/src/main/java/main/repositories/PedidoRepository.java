@@ -22,7 +22,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :id AND p.estado = :estado AND p.borrado = 'NO'")
     List<Pedido> findPedidosByEstadoAndIdCliente(@Param("estado") EnumEstadoPedido estado, @Param("id") long id);
 
-    @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :id AND p.estado != :estado AND p.borrado = 'NO'")
+    @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :id AND p.estado != :estado AND p.estado != 4 AND p.estado != 6 AND p.borrado = 'NO'")
     List<Pedido> findPedidosByEstadosDistntosAndIdCliente(@Param("estado") EnumEstadoPedido estado, @Param("id") long id);
 
     @Query("SELECT p FROM Pedido p JOIN p.sucursales s WHERE s.id = :idSucursal")

@@ -7,7 +7,7 @@ import ModalCrud from '../ModalCrud';
 import DetallesPedido from './DetallesPedido';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
-import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
+import { DESACTIVAR_PRIVILEGIOS, mostrarFecha } from '../../utils/global_variables/const';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 
 const PedidosAceptados = () => {
@@ -22,7 +22,8 @@ const PedidosAceptados = () => {
         setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.ACEPTADOS)
             .then(data => {
-                setPedidos(data);
+                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+                setPedidos(sortedData);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -240,6 +241,7 @@ const PedidosAceptados = () => {
                         <tr>
                             <th>ID</th>
                             <th>Tipo de envío</th>
+                            <th>Fecha</th>
                             <th>Menu</th>
                             <th>Finalizar</th>
                         </tr>
@@ -249,6 +251,8 @@ const PedidosAceptados = () => {
                             <tr key={pedido.id}>
                                 <td>{pedido.id}</td>
                                 <td>{pedido.tipoEnvio.toString().replace(/_/g, ' ')}</td>
+                                <td>{mostrarFecha(new Date(pedido.fechaPedido))}</td>
+
                                 <td onClick={() => { setSelectedPedido(pedido); setShowDetallesPedido(true) }}>
                                 <button className="btn-accion-detalle">VER DETALLE</button>
                                 </td>

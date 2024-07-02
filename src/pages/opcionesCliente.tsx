@@ -12,6 +12,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { getBaseUrl } from '../utils/global_variables/const';
 import Domicilios from '../components/Cliente/Domicilios';
 import Logo from '../assets/img/HatchfulExport-All/logo_transparent_header.png';
+import PedidosRechazados from '../components/Cliente/PedidosRechazados';
 
 const OpcionesCliente = () => {
     const { opcionElegida } = useParams();
@@ -70,6 +71,8 @@ const OpcionesCliente = () => {
                 return <Domicilios />;
             case 4:
                 return <Cuenta />;
+            case 5:
+                return <PedidosRechazados />;
         }
     };
 
@@ -104,6 +107,9 @@ const OpcionesCliente = () => {
                                         </p>
                                         <p className={opcionSeleccionada === 2 ? 'selected' : ''} onClick={() => handleOpcionClick(2)}>
                                             Pedidos realizados
+                                        </p>
+                                        <p className={opcionSeleccionada === 5 ? 'selected' : ''} onClick={() => handleOpcionClick(5)}>
+                                            Pedidos rechazados
                                         </p>
                                     </>
                                 )}
