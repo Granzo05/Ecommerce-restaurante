@@ -151,7 +151,7 @@ const Pago = () => {
                         for (const detalle of promocion.detallesPromocion) {
                             if (detalle.articuloMenu)
                                 for (const ingrediente of detalle.articuloMenu?.ingredientesMenu) {
-                                    hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, detalle.articuloMenu.cantidad);
+                                    hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, ingrediente.cantidad);
 
                                     if (!hayStock) {
                                         productoFaltante = detalle.articuloMenu;
@@ -162,7 +162,6 @@ const Pago = () => {
                         if (!hayStock) break;
                     }
                 }
-                console.log('promociones' + hayStock)
 
                 if (cliente && cliente?.email?.length > 0) {
                     if (hayStock) {
@@ -192,7 +191,7 @@ const Pago = () => {
                             let detalle = new DetallesPedido();
                             detalle.promocion = promocion;
                             detalle.cantidad = promocion.cantidad;
-                            detalle.subTotal = promocion.cantidad * promocion.precio;
+                            detalle.subTotal = promocion.cantidad * (promocion.precio - 1 * (promocion.descuento + 10) / 100);
                             detalles.push(detalle);
                         });
 
@@ -205,7 +204,7 @@ const Pago = () => {
                             pedido.domicilioEntrega = null;
                         }
 
-                        if (preferenceId) {
+                        if (preferenceId && preferenceId.length > 0) {
                             PedidoService.eliminarPedidoFallido(preferenceId);
                         }
 
@@ -308,13 +307,23 @@ const Pago = () => {
                                     detalles.push(detalle);
                                 });
 
-                                carrito?.promociones?.forEach(promocion => {
-                                    let detalle = new DetallesPedido();
-                                    detalle.promocion = promocion;
-                                    detalle.cantidad = promocion.cantidad;
-                                    detalle.subTotal = promocion.cantidad * promocion.precio;
-                                    detalles.push(detalle);
-                                });
+
+                                if (carrito?.promociones) {
+                                    for (const promocion of carrito.promociones) {
+                                        for (const detalle of promocion.detallesPromocion) {
+                                            if (detalle.articuloMenu)
+                                                for (const ingrediente of detalle.articuloMenu?.ingredientesMenu) {
+                                                    hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, ingrediente.cantidad);
+
+                                                    if (!hayStock) {
+                                                        productoFaltante = detalle.articuloMenu;
+                                                        break;
+                                                    }
+                                                }
+                                        }
+                                        if (!hayStock) break;
+                                    }
+                                }
 
                                 pedido.factura = null;
                                 pedido.detallesPedido = detalles;
@@ -506,8 +515,11 @@ const Pago = () => {
                                 <p className="name-product">{producto.nombre}</p>
                                 <div className="cant-sub">
                                     <p className="cant-product"><strong>Cantidad:</strong> {carrito.articuloMenu[index].cantidad}</p>
-                                    <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.articuloMenu[index].cantidad * carrito.articuloMenu[index].precioVenta}</p>
-
+                                    {envio === EnumTipoEnvio.RETIRO_EN_TIENDA ? (
+                                        <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.articuloMenu[index].cantidad * (carrito.articuloMenu[index].precioVenta * 0.9)}</p>
+                                    ) : (
+                                        <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.articuloMenu[index].cantidad * carrito.articuloMenu[index].precioVenta}</p>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -519,7 +531,11 @@ const Pago = () => {
                                 <p className="name-product">{producto.nombre}</p>
                                 <div className="cant-sub">
                                     <p className="cant-product"><strong>Cantidad:</strong> {carrito.articuloVenta[index].cantidad}</p>
-                                    <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.articuloVenta[index].cantidad * carrito.articuloVenta[index].precioVenta}</p>
+                                    {envio === EnumTipoEnvio.RETIRO_EN_TIENDA ? (
+                                        <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.articuloVenta[index].cantidad * (carrito.articuloVenta[index].precioVenta * 0.9)}</p>
+                                    ) : (
+                                        <p className="subtotal-product"><strong>Subtotal:</strong> ${carrito.articuloVenta[index].cantidad * carrito.articuloVenta[index].precioVenta}</p>
+                                    )}
                                 </div>
                             </div>
                         ))}

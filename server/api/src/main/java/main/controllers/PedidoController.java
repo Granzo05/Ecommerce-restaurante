@@ -367,7 +367,7 @@ public class PedidoController {
                         stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - cantidadIngrediente * detallesPedido.getCantidad());
                         System.out.println("Cantidad final (después de conversión): " + (stockIngrediente.get().getCantidadActual()));
 
-                        System.out.println("Cantidad final IF: "+ (stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad()));
+                        System.out.println("Cantidad final IF: " + (stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) * detallesPedido.getCantidad()));
                     } else {
                         stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - cantidadIngrediente * detallesPedido.getCantidad());
                         System.out.println("Cantidad final ELSE: " + (stockIngrediente.get().getCantidadActual() - cantidadIngrediente * detallesPedido.getCantidad()));
@@ -396,7 +396,7 @@ public class PedidoController {
                                 stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - cantidadIngrediente * (detalle.getCantidad() * detallesPedido.getCantidad()));
                                 System.out.println("Cantidad final (después de conversión): " + (stockIngrediente.get().getCantidadActual()));
 
-                                System.out.println("Cantidad final IF: "+ (stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad()));
+                                System.out.println("Cantidad final IF: " + (stockIngrediente.get().getCantidadActual() - (ingrediente.getCantidad() / 1000) * detallesPedido.getCantidad()));
                             } else {
                                 stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() - cantidadIngrediente * (detalle.getCantidad() * detallesPedido.getCantidad()));
                                 System.out.println("Cantidad final ELSE: " + (stockIngrediente.get().getCantidadActual() - cantidadIngrediente * detallesPedido.getCantidad()));
@@ -446,7 +446,7 @@ public class PedidoController {
                         stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + cantidadIngrediente * detallesPedido.getCantidad());
                         System.out.println("Cantidad final (después de conversión): " + (stockIngrediente.get().getCantidadActual()));
 
-                        System.out.println("Cantidad final IF: "+ (stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad()));
+                        System.out.println("Cantidad final IF: " + (stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) * detallesPedido.getCantidad()));
                     } else {
                         stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + cantidadIngrediente * detallesPedido.getCantidad());
                         System.out.println("Cantidad final ELSE: " + (stockIngrediente.get().getCantidadActual() + cantidadIngrediente * detallesPedido.getCantidad()));
@@ -475,7 +475,7 @@ public class PedidoController {
                                 stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + cantidadIngrediente * (detalle.getCantidad() * detallesPedido.getCantidad()));
                                 System.out.println("Cantidad final (después de conversión): " + (stockIngrediente.get().getCantidadActual()));
 
-                                System.out.println("Cantidad final IF: "+ (stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) *  detallesPedido.getCantidad()));
+                                System.out.println("Cantidad final IF: " + (stockIngrediente.get().getCantidadActual() + (ingrediente.getCantidad() / 1000) * detallesPedido.getCantidad()));
                             } else {
                                 stockIngrediente.get().setCantidadActual(stockIngrediente.get().getCantidadActual() + cantidadIngrediente * (detalle.getCantidad() * detallesPedido.getCantidad()));
                                 System.out.println("Cantidad final ELSE: " + (stockIngrediente.get().getCantidadActual() + cantidadIngrediente * detallesPedido.getCantidad()));
@@ -600,7 +600,6 @@ public class PedidoController {
             // Espacio
             document.add(new Paragraph(" "));
 
-
             // Información de la factura
             Paragraph facturaInfo = new Paragraph("Factura del Pedido", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK));
             facturaInfo.setAlignment(Element.ALIGN_CENTER);
@@ -616,7 +615,7 @@ public class PedidoController {
             document.add(new Paragraph(" "));
 
             // Tabla de detalles
-            PdfPTable table = new PdfPTable(3);
+            PdfPTable table = new PdfPTable(4);
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f);
             table.setSpacingAfter(10f);
@@ -644,31 +643,70 @@ public class PedidoController {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
+            boolean descuentoRetiro = pedido.getTipoEnvio().equals(EnumTipoEnvio.RETIRO_EN_TIENDA);
+            System.out.println(pedido.getTipoEnvio());
             double total = 0;
             for (DetallesPedido detalle : pedido.getDetallesPedido()) {
                 if (detalle.getArticuloVenta() != null) {
                     table.addCell(detalle.getArticuloVenta().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad()));
-                    table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta()));
-                    total += detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta();
+
+                    if(descuentoRetiro) {
+                        table.addCell(String.valueOf(detalle.getArticuloVenta().getPrecioVenta()));
+                        table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta() * 0.9));
+                        total += detalle.getCantidad() * (detalle.getArticuloVenta().getPrecioVenta() * 0.9);
+                    } else {
+                        table.addCell(String.valueOf(detalle.getArticuloVenta().getPrecioVenta()));
+                        table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta()));
+                        total += detalle.getCantidad() * detalle.getArticuloVenta().getPrecioVenta();
+                    }
                 } else if (detalle.getArticuloMenu() != null) {
                     table.addCell(detalle.getArticuloMenu().getNombre());
                     table.addCell(String.valueOf(detalle.getCantidad()));
-                    table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta()));
-                    total += detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta();
+                    if(descuentoRetiro) {
+                        table.addCell(String.valueOf(detalle.getArticuloMenu().getPrecioVenta()));
+                        table.addCell(String.valueOf(detalle.getCantidad() * (detalle.getArticuloMenu().getPrecioVenta() * 0.9)));
+                        total += detalle.getCantidad() * (detalle.getArticuloMenu().getPrecioVenta() * 0.9);
+                    } else {
+                        table.addCell(String.valueOf(detalle.getArticuloMenu().getPrecioVenta()));
+                        table.addCell(String.valueOf(detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta()));
+                        total += detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta();
+                    }
                 } else if (detalle.getPromocion() != null) {
-                    table.addCell(detalle.getPromocion().getNombre());
-                    table.addCell(String.valueOf(detalle.getCantidad()));
-                    table.addCell(String.valueOf(detalle.getPromocion().getPrecio()));
-                    table.addCell(String.valueOf(detalle.getPromocion().getPrecio() * detalle.getCantidad()));
-                    total += detalle.getCantidad() * detalle.getPromocion().getPrecio();
+                    for (DetallePromocion detallePromocion : detalle.getPromocion().getDetallesPromocion()) {
+                        if (detallePromocion.getArticuloVenta() != null) {
+                            table.addCell(detallePromocion.getPromocion().getNombre() + "(" + detallePromocion.getArticuloVenta().getNombre() + ")");
+                            table.addCell(String.valueOf(detallePromocion.getCantidad()));
+                            if(descuentoRetiro) {
+                                table.addCell(String.valueOf(detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100));
+                                table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100)));
+                                total += detalle.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100);
+                            } else {
+                                table.addCell(String.valueOf(detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100));
+                                table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100)));
+                                total += detalle.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloVenta().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100);
+                            }
+                        } else if (detallePromocion.getArticuloMenu() != null) {
+                            table.addCell(detallePromocion.getPromocion().getNombre() + "(" + detallePromocion.getArticuloMenu().getNombre() + ")");
+                            table.addCell(String.valueOf(detallePromocion.getCantidad()));
+                            if(descuentoRetiro) {
+                                table.addCell(String.valueOf(detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100));
+                                table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10/ 100)));
+                                total += detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() + 10 / 100);
+                            } else {
+                                table.addCell(String.valueOf(detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100));
+                                table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100)));
+                                total += detallePromocion.getCantidad() * detalle.getCantidad() * (detallePromocion.getArticuloMenu().getPrecioVenta() * 1 - detalle.getPromocion().getDescuento() / 100);
+                            }
+                        }
+                    }
                 }
             }
 
             document.add(table);
 
             // Total de la factura
-            Paragraph totalParagraph = new Paragraph("Total: " + total, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK));
+            Paragraph totalParagraph = new Paragraph("Total: $" + String.format("%.2f", total), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK));
             totalParagraph.setAlignment(Element.ALIGN_RIGHT);
             document.add(totalParagraph);
 
@@ -688,5 +726,4 @@ public class PedidoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 }

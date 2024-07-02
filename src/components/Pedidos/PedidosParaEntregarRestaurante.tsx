@@ -64,7 +64,7 @@ const PedidosParaEntregar = () => {
         setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.COCINADOS)
             .then(data => {
-                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+                const sortedData = data.sort((a, b) => new Date(a.fechaPedido).getTime() - new Date(b.fechaPedido).getTime());
                 setPedidos(sortedData);
             })
             .catch(error => {
@@ -220,6 +220,10 @@ const PedidosParaEntregar = () => {
             }
         });
 
+        if (pedido.tipoEnvio === "RETIRO_EN_TIENDA") {
+            nuevoTotal = nuevoTotal * (1 - 10 / 100);
+        }
+        
         return nuevoTotal.toLocaleString('es-AR')
     }
 

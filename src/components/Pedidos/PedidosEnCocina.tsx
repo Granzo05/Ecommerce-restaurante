@@ -22,7 +22,7 @@ const PedidosAceptados = () => {
         setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.ACEPTADOS)
             .then(data => {
-                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+                const sortedData = data.sort((a, b) => new Date(a.fechaPedido).getTime() - new Date(b.fechaPedido).getTime());
                 setPedidos(sortedData);
             })
             .catch(error => {

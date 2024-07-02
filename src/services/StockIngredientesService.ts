@@ -66,6 +66,10 @@ export const StockIngredientesService = {
     },
 
     checkStock: async (idIngrediente: number, medidaId: number, cantidadNecesaria: number): Promise<boolean> => {
+        console.log(sucursalId())
+        console.log(idIngrediente)
+        console.log(medidaId)
+        console.log(cantidadNecesaria)
         try {
             const response = await fetch(URL_API + `sucursal/${sucursalId()}/stockIngredientes/check/${idIngrediente}/${medidaId}/${cantidadNecesaria}`, {
                 method: 'GET',

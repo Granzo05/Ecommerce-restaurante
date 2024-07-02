@@ -30,7 +30,7 @@ const PedidosEntrantes = () => {
     const buscarPedidos = async () => {
         PedidoService.getPedidos(EnumEstadoPedido.ENTRANTES)
             .then(data => {
-                const sortedData = data.sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
+                const sortedData = data.sort((a, b) => new Date(a.fechaPedido).getTime() - new Date(b.fechaPedido).getTime());
                 setPedidos(sortedData);
             })
             .catch(error => {
