@@ -42,7 +42,7 @@ public interface ArticuloMenuRepository extends JpaRepository<ArticuloMenu, Long
     List<ArticuloMenu> findByIdCategoriaAndIdSucursalNotBorrado(@Param("idCategoria") Long idCategoria, @Param("idSucursal") Long idSucursal);
 
     @Query("SELECT COUNT(m) FROM ArticuloMenu m LEFT JOIN m.sucursales sucursal LEFT JOIN StockIngredientes stock ON stock.ingrediente.id = :idIngrediente WHERE m.categoria.id = :idCategoria AND sucursal.id = :idSucursal " +
-            "AND stock.cantidadActual > stock.cantidadMinima AND stock.cantidadActual > 0 AND stock.ingrediente.id = :idIngrediente"
+            "AND stock.cantidadActual >= 1 AND stock.ingrediente.id = :idIngrediente"
     )
     int findCantidadDisponiblesByIdCategoriaAndIdSucursal(@Param("idCategoria") Long idCategoria, @Param("idIngrediente") Long idIngrediente, @Param("idSucursal") Long idSucursal);
 

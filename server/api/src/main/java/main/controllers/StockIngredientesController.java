@@ -139,11 +139,11 @@ public class StockIngredientesController {
     public boolean checkStock(@PathVariable("idIngrediente") long idIngrediente,
                               @PathVariable("idSucursal") long idSucursal,
                               @PathVariable("idMedida") Long idMedida,
-                              @PathVariable("cantidadNecesaria") int cantidad) {
+                              @PathVariable("cantidadNecesaria") double cantidad) {
         // Buscar el stock del ingrediente en la sucursal
         Optional<StockIngredientes> stockIngrediente = stockIngredientesRepository.findByIdIngredienteAndIdSucursal(idIngrediente, idSucursal);
-
         if (stockIngrediente.isPresent()) {
+            System.out.println(stockIngrediente.get().getIngrediente().getNombre());
             StockIngredientes stock = stockIngrediente.get();
             Optional<Medida> medidaOpt = medidaRepository.findById(idMedida);
 
@@ -155,17 +155,17 @@ public class StockIngredientesController {
                 // Verificar si las medidas son iguales
                 if (stockMedida != null && stockMedida.getNombre().equals(medida.getNombre())) {
                     // Comparar directamente si las medidas son las mismas
-                    if(cantidadActual <= cantidad) {
+                    if(cantidadActual < cantidad || cantidadActual - cantidad < 0) {
                         return false;
                     }
                 } else if ("KILOGRAMOS".equals(stockMedida.getNombre()) && "GRAMOS".equals(medida.getNombre())) {
                     // Convertir KG a gramos y verificar
-                    if(cantidadActual * 1000 <= cantidad) {
+                    if(cantidadActual * 1000 < cantidad || cantidadActual * 1000 - cantidad < 0) {
                         return false;
                     }
                 } else if ("LITROS".equals(stockMedida.getNombre()) && "CENTIMETROS CUBICOS".equals(medida.getNombre())) {
                     // Convertir litros a centímetros cúbicos y verificar
-                    if(cantidadActual * 1000 <= cantidad) {
+                    if(cantidadActual * 1000 < cantidad || cantidadActual * 1000 - cantidad < 0) {
                         return false;
                     }
                 }

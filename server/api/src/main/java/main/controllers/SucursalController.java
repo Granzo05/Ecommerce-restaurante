@@ -171,7 +171,6 @@ public class SucursalController {
                         // si la cantidad es igual a los ingredientes del menu entonces si cargamos esta categoria
                         if (ingredientesEncontrados == menu.getIngredientesMenu().size()) {
                             categorias.add(categoria);
-                            // Rompemos el for de menu ya que con un solo menu existente ya debo mostrar la categoría
                             break;
                         }
                     }
@@ -189,12 +188,10 @@ public class SucursalController {
 
             //for (Promocion promocion : promocionRepository.findAllInTimeByIdSucursal(idSucursal, LocalDateTime.now())) {
             for (Promocion promocion : promocionRepository.findAllBySucursall(idSucursal)) {
-                boolean stockMenu = false;
+                boolean stockMenu = true;
 
                 for (DetallePromocion detalle : promocion.getDetallesPromocion()) {
                     if (detalle.getArticuloMenu() != null) {
-                        boolean todosIngredientesConStock = true;
-
                         for (IngredienteMenu ingredienteMenu : detalle.getArticuloMenu().getIngredientesMenu()) {
                             int cantidadDisponible = articuloMenuRepository.findCantidadDisponiblesByIdCategoriaAndIdSucursal(
                                     ingredienteMenu.getArticuloMenu().getCategoria().getId(),
@@ -203,13 +200,9 @@ public class SucursalController {
                             );
 
                             if (cantidadDisponible == 0) {
-                                todosIngredientesConStock = false;
+                                stockMenu = false;
                                 break;
                             }
-                        }
-
-                        if (todosIngredientesConStock) {
-                            stockMenu = true;
                         }
                     } else if (detalle.getArticuloVenta() != null) {
                         int cantidadArticulosDisponibles = articuloVentaRepository.findCantidadDisponiblesByIdCategoriaAndIdSucursalNotBorrado(
@@ -217,15 +210,13 @@ public class SucursalController {
                                 idSucursal
                         );
 
-                        if (cantidadArticulosDisponibles > 0) {
-                            promocionesConStock.add(promocion);
+                        if (cantidadArticulosDisponibles == 0) {
+                            stockMenu = false;
                             break;
                         }
                     }
                 }
-
-                // Verificar si el menú tiene stock y no hay artículos de venta disponibles
-                if (stockMenu && promocion.getDetallesPromocion().stream().noneMatch(detalle -> detalle.getArticuloVenta() != null)) {
+                if (stockMenu) {
                     promocionesConStock.add(promocion);
                 }
             }

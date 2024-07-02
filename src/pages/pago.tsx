@@ -125,14 +125,15 @@ const Pago = () => {
                 if (carrito?.articuloMenu) {
                     for (const producto of carrito.articuloMenu) {
                         for (const ingrediente of producto.ingredientesMenu) {
-                            hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, producto.cantidad);
+                            console.log(ingrediente)
+
+                            hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, ingrediente.cantidad);
 
                             if (!hayStock) {
                                 productoFaltante = producto;
                                 break;
                             }
                         }
-                        if (!hayStock) break;
                     }
                 }
                 // Verificar stock de ArticuloVenta
@@ -307,23 +308,13 @@ const Pago = () => {
                                     detalles.push(detalle);
                                 });
 
-
-                                if (carrito?.promociones) {
-                                    for (const promocion of carrito.promociones) {
-                                        for (const detalle of promocion.detallesPromocion) {
-                                            if (detalle.articuloMenu)
-                                                for (const ingrediente of detalle.articuloMenu?.ingredientesMenu) {
-                                                    hayStock = await StockIngredientesService.checkStock(ingrediente.id, ingrediente.medida.id, ingrediente.cantidad);
-
-                                                    if (!hayStock) {
-                                                        productoFaltante = detalle.articuloMenu;
-                                                        break;
-                                                    }
-                                                }
-                                        }
-                                        if (!hayStock) break;
-                                    }
-                                }
+                                carrito?.promociones?.forEach(promocion => {
+                                    let detalle = new DetallesPedido();
+                                    detalle.promocion = promocion;
+                                    detalle.cantidad = promocion.cantidad;
+                                    detalle.subTotal = promocion.cantidad * (promocion.precio - (1 * (promocion.descuento + 10) / 100));
+                                    detalles.push(detalle);
+                                });
 
                                 pedido.factura = null;
                                 pedido.detallesPedido = detalles;
@@ -346,7 +337,7 @@ const Pago = () => {
 
                                 // Asignar la hora de cancelacion del pedido en caso que no se pague
                                 pedido.horaFinalizacion = horaFinalizacionFormateada;
-
+                                console.log(pedido)
                                 let preference = await PedidoService.crearPedidoMercadopago(pedido);
                                 // Si el restaurante bloquea al usuario siempre va a retornar 0
                                 if (preference.id === "0") {
@@ -490,12 +481,12 @@ const Pago = () => {
                 nuevoTotal += detalle.cantidad * promocion.cantidad * (detalle.articuloMenu.precioVenta * (1 - promocion.descuento / 100));
             }
         });
-    
+
         nuevoTotal = nuevoTotal * descuentoAdicional;;
-    
+
         return nuevoTotal.toLocaleString('es-AR');
     }
-    
+
     return (
         <>
             <Header />
@@ -567,7 +558,7 @@ const Pago = () => {
                                     {envio === EnumTipoEnvio.RETIRO_EN_TIENDA ? (
                                         <p className="subtotal-product"><strong>Subtotal:</strong> ${calcularTotal(producto, 0.9)}</p>
                                     ) : (
-                                        <p className="subtotal-product"><strong>Subtotal:</strong> ${calcularTotal(producto, 0)}</p>
+                                        <p className="subtotal-product"><strong>Subtotal:</strong> ${calcularTotal(producto, 1)}</p>
                                     )}
                                 </div>
                             </div>

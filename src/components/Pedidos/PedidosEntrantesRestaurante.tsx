@@ -28,6 +28,7 @@ const PedidosEntrantes = () => {
     }, []);
 
     const buscarPedidos = async () => {
+        setDatosFiltrados([]);
         PedidoService.getPedidos(EnumEstadoPedido.ENTRANTES)
             .then(data => {
                 const sortedData = data.sort((a, b) => new Date(a.fechaPedido).getTime() - new Date(b.fechaPedido).getTime());
@@ -109,7 +110,6 @@ const PedidosEntrantes = () => {
                 tiempoTotal += detalle.articuloMenu.tiempoCoccion;
             }
         });
-        console.log(cantidadCocineros)
         // Verificar que cantidadCocineros no sea 0 para evitar división por 0
         if (cantidadCocineros > 0) {
             tiempoTotal += tiempoTotal / cantidadCocineros;
@@ -141,8 +141,6 @@ const PedidosEntrantes = () => {
                 setIsLoading(false);
             }
         });
-
-        buscarPedidos();
     }
 
     function filtrarId(filtro: number) {
@@ -193,17 +191,6 @@ const PedidosEntrantes = () => {
     });
 
     const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-
-    const parseDate = (dateOriginal: string) => {
-        const date = new Date(dateOriginal);
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-
-        return `${day}/${month}/${year}  ${hours}:${minutes}`
-    };
 
     const [paginaActual, setPaginaActual] = useState(1);
     const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);

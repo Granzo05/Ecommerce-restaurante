@@ -40,7 +40,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @Query("SELECT p FROM Pedido p WHERE p.preferencia = :preference AND p.id = :idPedido")
     Optional<Pedido> findByIdAndPreference(@Param("idPedido") Long idPedido, @Param("preference") String preference);
 
-    @Query("SELECT p FROM Pedido p JOIN p.sucursales s WHERE p.estado = :estado AND s.id =:idSucursal")
+    @Query("SELECT p FROM Pedido p JOIN p.sucursales s WHERE p.estado = :estado AND s.id = :idSucursal")
     List<Pedido> findPedidosByEstadoAndIdSucursal(@Param("estado") EnumEstadoPedido estado, @Param("idSucursal") Long idSucursal);
 
     @Query("SELECT dp.articuloMenu.nombre AS nombreComida, SUM(dp.cantidad) AS cantidadTotal " +

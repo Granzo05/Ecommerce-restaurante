@@ -532,10 +532,17 @@ public class PedidoController {
             Gmail gmail = new Gmail();
 
             if (pedido.getTipoEnvio().equals(EnumTipoEnvio.DELIVERY)) {
+                /*
                 Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
 
                 if (sucursal.isPresent()) {
                     gmail.enviarCorreoConArchivo("Su pedido está en camino", "Gracias por su compra", pedido.getCliente().getEmail(), sucursal.get().getEmail(), archivo.getBody());
+                }
+*/
+                Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
+
+                if (sucursal.isPresent()) {
+                    gmail.enviarCorreoConArchivo("Su pedido ya fue entregado", "Gracias por su compra", pedido.getCliente().getEmail(), sucursal.get().getEmail(), archivo.getBody());
                 }
             } else {
                 Optional<Sucursal> sucursal = sucursalRepository.findById(idSucursal);
@@ -672,36 +679,16 @@ public class PedidoController {
                         total += detalle.getCantidad() * detalle.getArticuloMenu().getPrecioVenta();
                     }
                 } else if (detalle.getPromocion() != null) {
-                    for (DetallePromocion detallePromocion : detalle.getPromocion().getDetallesPromocion()) {
-                        if (detallePromocion.getArticuloVenta() != null) {
-                            String nombreArticulo = detallePromocion.getArticuloVenta().getNombre();
-                            double precioUnitario = detallePromocion.getArticuloVenta().getPrecioVenta();
-                            double descuentoPromocion = detalle.getPromocion().getDescuento();
-                            double descuentoAdicional = descuentoRetiro ? 10 : 0;
-                            double precioConDescuento = precioUnitario * (1 - (descuentoPromocion + descuentoAdicional) / 100);
+                    double descuento = 1.0;
 
-                            table.addCell(detallePromocion.getPromocion().getNombre() + "(" + nombreArticulo + ")");
-                            table.addCell(String.valueOf(detallePromocion.getCantidad()));
-                            table.addCell(String.valueOf(precioConDescuento));
-                            table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * precioConDescuento));
+                    if (pedido.getTipoEnvio().equals(EnumTipoEnvio.RETIRO_EN_TIENDA)) descuento = 0.9;
 
-                            total += detalle.getCantidad() * detallePromocion.getCantidad() * precioConDescuento;
-                        } else if (detallePromocion.getArticuloMenu() != null) {
-                            String nombreMenu = detallePromocion.getArticuloMenu().getNombre();
-                            double precioUnitario = detallePromocion.getArticuloMenu().getPrecioVenta();
-                            double descuentoPromocion = detalle.getPromocion().getDescuento();
-                            double descuentoAdicional = descuentoRetiro ? 10 : 0;
-                            double precioConDescuento = precioUnitario * (1 - (descuentoPromocion + descuentoAdicional) / 100);
+                    table.addCell("Promoción: " + detalle.getPromocion().getNombre());
+                    table.addCell(String.valueOf(detalle.getCantidad()));
+                    table.addCell(String.valueOf(detalle.getPromocion().getPrecio() * (descuento)));
+                    table.addCell(String.valueOf(detalle.getCantidad() * detalle.getPromocion().getPrecio() * (descuento)));
 
-                            table.addCell(detallePromocion.getPromocion().getNombre() + "(" + nombreMenu + ")");
-                            table.addCell(String.valueOf(detallePromocion.getCantidad()));
-                            table.addCell(String.valueOf(precioConDescuento));
-                            table.addCell(String.valueOf(detallePromocion.getCantidad() * detalle.getCantidad() * precioConDescuento));
-
-                            total += detallePromocion.getCantidad() * detalle.getCantidad() * precioConDescuento;
-                        }
-                    }
-
+                    total += detalle.getCantidad() * detalle.getPromocion().getPrecio() * (descuento);
                 }
 
             }
