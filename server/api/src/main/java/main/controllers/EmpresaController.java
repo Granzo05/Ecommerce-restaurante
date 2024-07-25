@@ -147,8 +147,8 @@ public class EmpresaController {
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
-            String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesEmpresas" + File.separator + cuit.replaceAll(" ", "").replaceAll("-", "") + File.separator;
+            String basePath = "/app/imagesEmpresas";
+            String rutaCarpeta = basePath + File.separator + cuit.replaceAll(" ", "") + File.separator;
 
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);

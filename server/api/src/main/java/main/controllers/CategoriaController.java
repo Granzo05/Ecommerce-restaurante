@@ -123,8 +123,8 @@ public class CategoriaController {
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
-            String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesCategoria" + File.separator + nombreCategoria.replaceAll(" ", "") + File.separator;
+            String basePath = "/app/imagesCategoria";
+            String rutaCarpeta = basePath + File.separator + nombreCategoria.replaceAll(" ", "") + File.separator;
 
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);
@@ -136,7 +136,7 @@ public class CategoriaController {
             file.transferTo(new File(rutaArchivo));
 
             String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("imagesCategoria/")
+                    .path("/imagesCategoria/")
                     .path(nombreCategoria.replaceAll(" ", "") + "/")
                     .path(fileName.replaceAll(" ", ""))
                     .toUriString();

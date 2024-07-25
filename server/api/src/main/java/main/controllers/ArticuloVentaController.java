@@ -158,8 +158,8 @@ public class ArticuloVentaController {
         // Buscamos el nombre de la foto
         String fileName = file.getOriginalFilename().replaceAll(" ", "");
         try {
-            String basePath = new File("").getAbsolutePath();
-            String rutaCarpeta = basePath + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "imagesArticuloVenta" + File.separator + nombreArticulo.replaceAll(" ", "") + File.separator;
+            String basePath = "/app/imagesArticuloVenta";
+            String rutaCarpeta = basePath + File.separator + nombreArticulo.replaceAll(" ", "") + File.separator;
 
             // Verificar si la carpeta existe, caso contrario, crearla
             File carpeta = new File(rutaCarpeta);

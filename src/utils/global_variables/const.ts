@@ -5,7 +5,7 @@ import { Sucursal } from "../../types/Restaurante/Sucursal";
 
 export function getPathNodeMode() {
     const path = process.env.NODE_ENV === 'production'
-        ? `https://buen-sabor-app-typescript-react.vercel.app/`
+        ? `https://buensabor.vercel.app/`
         : `${window.location.protocol}//${window.location.host}/`;
 
     return path;

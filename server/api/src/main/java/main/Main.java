@@ -33,7 +33,7 @@ import java.util.Optional;
 @EntityScan("main.entities")
 @ComponentScan(basePackages = {"main.controllers", "main.repositories", "main.*"})
 public class Main {
-    private final String RUTACSV = "C://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//resources//localidades.csv";
+    private final String RUTACSV = "/app/localidades.csv";
     private final String SEPARACIONCSV = ";";
     @Autowired(required = true)
     private PaisRepository paisRepository;
