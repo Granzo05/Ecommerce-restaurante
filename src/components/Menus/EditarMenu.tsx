@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { IngredienteMenu } from '../../types/Ingredientes/IngredienteMenu';
 import { MenuService } from '../../services/MenuService';
-import ModalFlotante from '../ModalFlotante';
 import { Ingrediente } from '../../types/Ingredientes/Ingrediente';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
-import './editarMenu.css'
+import '../../styles/editarMenu.css'
 import AgregarIngrediente from '../Ingrediente/AgregarIngrediente';
 import InputComponent from '../InputFiltroComponent';
 import ModalFlotanteRecomendacionesMedidas from '../../hooks/ModalFlotanteFiltroMedidas';
