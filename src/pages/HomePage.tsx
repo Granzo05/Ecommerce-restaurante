@@ -11,6 +11,8 @@ import ModalCrud from '../components/ModalCrud';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { formatearFechaDDMMYYYYHHMMPromociones } from '../utils/global_variables/functions';
 import { getBaseUrl } from '../utils/global_variables/const';
+import img1 from '../src/assets/img/restaurante-bg.avif';
+import img2 from '../src/assets/img/meseros.jpg';
 
 export default function MainMenu() {
     const [scrolled, setScrolled] = useState(false);
@@ -102,12 +104,12 @@ export default function MainMenu() {
                             <p>"El Buen Sabor", fundado en 2000 por Carlos Rodríguez, ofrece una experiencia culinaria auténtica y única en nuestro país. Desde entonces, nos dedicamos a brindar platos que reflejan nuestra tradición gastronómica.</p>
                         </div>
                         <div className="information-a1">
-                            <img src="../src/assets/img/restaurante-bg.avif" alt="" />
+                            <img src={img1} alt="" />
                         </div>
                     </div>
                     <div className='information-2'>
                         <div className="information-b1">
-                            <img src="../src/assets/img/meseros.jpg" alt="" />
+                            <img src={img2} alt="" />
                         </div>
                         <div className="information-c1">
                             <h3>&mdash; Sobre nosotros &mdash;</h3>
