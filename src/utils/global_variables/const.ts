@@ -3,7 +3,13 @@ import { Empleado } from "../../types/Restaurante/Empleado";
 import { Empresa } from "../../types/Restaurante/Empresa";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 
-export const DESACTIVAR_PRIVILEGIOS = false; // false hay privilegios, true no hay privilegios
+export function getPathNodeMode() {
+    const path = process.env.NODE_ENV === 'production'
+        ? `https://buen-sabor-app-typescript-react.vercel.app/`
+        : `${window.location.protocol}//${window.location.host}/`;
+
+    return path;
+}
 
 export function mostrarFecha(fecha: Date) {
     // Obtener los componentes de la fecha
@@ -94,20 +100,13 @@ export function empresaId(): number {
 
 export function getBaseUrl(): string {
     const idSucursal = sucursalId();
+    const baseURL = getPathNodeMode() + idSucursal;
 
-    const baseUrl = process.env.NODE_ENV === 'production'
-        ? `https://buen-sabor-app-typescript-react.vercel.app/${idSucursal}`
-        : `${window.location.protocol}//${window.location.host}/${idSucursal}`;
-
-    return baseUrl;
+    return baseURL;
 }
 
 export function getBaseUrlCliente(): string {
-    const baseUrl = process.env.NODE_ENV !== 'production'
-        ? `https://buen-sabor-app-typescript-react.vercel.app/`
-        : `${window.location.protocol}//${window.location.host}/`;
-
-    return baseUrl;
+    return getPathNodeMode();
 }
 
 export function limpiarCredenciales() {

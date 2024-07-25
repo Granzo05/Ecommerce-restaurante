@@ -19,11 +19,13 @@ const SucursalCards = lazy(() => import('../pages/SucursalCards'));
 const ProductosBuscados = lazy(() => import('../pages/menuBusqueda'));
 
 const AppRoutes: React.FC = () => {
+
+  const clientId = process.env.CLIENT_GOOGLE_LOGIN;
+
   return (
     <Suspense fallback={<SpinnerSuspense />}>
-      <GoogleOAuthProvider clientId="285186085169-1gsak2212rblu7i4hmiiaa3j8aodmi3r.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={clientId || ''}>
         <Routes>
-
           <Route path="/sucursales" element={<SucursalCards />} />
 
           <Route path="/" element={<SucursalCards />} />
