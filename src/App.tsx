@@ -28,6 +28,7 @@ import './styles/spinnerLoader.css'
 import './styles/stock.css'
 import './styles/stock.css'
 import './styles/sucursales.css'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 function App() {
 
