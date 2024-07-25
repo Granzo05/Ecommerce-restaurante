@@ -11,8 +11,8 @@ import ModalCrud from '../components/ModalCrud';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { formatearFechaDDMMYYYYHHMMPromociones } from '../utils/global_variables/functions';
 import { getBaseUrl } from '../utils/global_variables/const';
-import img1 from '../src/assets/img/restaurante-bg.avif';
-import img2 from '../src/assets/img/meseros.jpg';
+import img1 from '../../src/assets/img/restaurante-bg.avif';
+import img2 from '../../src/assets/img/meseros.jpg';
 
 export default function MainMenu() {
     const [scrolled, setScrolled] = useState(false);
