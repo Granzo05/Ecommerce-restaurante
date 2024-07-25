@@ -71,9 +71,12 @@ const SucursalCards: React.FC = () => {
 
       localStorage.setItem('usuario', JSON.stringify(usuario));
 
-      window.location.href = getBaseUrl();
+      const baseUrl = getBaseUrl();
+
+      window.location.href = baseUrl;
     }
   }
+
   const [inputProvincia, setInputProvincia] = useState<string>('');
   const [inputDepartamento, setInputDepartamento] = useState<string>('');
   const [modalBusquedaDepartamento, setModalBusquedaDepartamento] = useState<boolean>(false);
