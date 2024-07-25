@@ -5,7 +5,7 @@ import '../../styles/pedidos.css';
 import { EnumEstadoPedido } from '../../types/Pedidos/EnumEstadoPedido';
 import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
-import { DESACTIVAR_PRIVILEGIOS, mostrarFecha } from '../../utils/global_variables/const';
+import { mostrarFecha } from '../../utils/global_variables/const';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { EmpleadoService } from '../../services/EmpleadoService';
@@ -190,7 +190,7 @@ const PedidosEntrantes = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [updateVisible, setUpdateVisible] = useState(false);
 
     const [paginaActual, setPaginaActual] = useState(1);
     const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);

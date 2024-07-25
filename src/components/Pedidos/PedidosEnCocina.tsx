@@ -7,7 +7,7 @@ import ModalCrud from '../ModalCrud';
 import DetallesPedido from './DetallesPedido';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
-import { DESACTIVAR_PRIVILEGIOS, mostrarFecha } from '../../utils/global_variables/const';
+import { mostrarFecha } from '../../utils/global_variables/const';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 
 const PedidosAceptados = () => {
@@ -82,7 +82,7 @@ const PedidosAceptados = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [updateVisible, setUpdateVisible] = useState(false);
 
 
     const [showDetallesPedido, setShowDetallesPedido] = useState(false);

@@ -1,11 +1,11 @@
 import { Privilegios } from '../types/Restaurante/Privilegios';
 import { PrivilegiosSucursales } from '../types/Restaurante/PrivilegiosSucursales';
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { sucursalId } from '../utils/global_variables/const';
 
 export const PrivilegiosService = {
     createPrivilegio: async (privilegio: PrivilegiosSucursales): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `privilegio/create/${sucursalId()}`, {
+            const response = await fetch(process.env.URL_API + `privilegio/create/${sucursalId()}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -25,7 +25,7 @@ export const PrivilegiosService = {
 
     getPrivilegios: async (): Promise<PrivilegiosSucursales[]> => {
         try {
-            const response = await fetch(URL_API + 'privilegios/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'privilegios/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ export const PrivilegiosService = {
 
     updatePrivilegios: async (privilegio: Privilegios): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'privilegio/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'privilegio/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

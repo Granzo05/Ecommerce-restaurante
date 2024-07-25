@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Chart } from 'react-google-charts';
-import { parseISO, format } from 'date-fns';
 import '../../styles/reportes.css';
 import { ReportesServices } from '../../services/ReportesServices';
-import { formatearFechaReportesYYYYMMDD, formatearFechaYYYYMMDD } from '../../utils/global_variables/functions';
-import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
 import { convertirFecha } from '../../utils/global_variables/const';
 import { toast, Toaster } from 'sonner';
 

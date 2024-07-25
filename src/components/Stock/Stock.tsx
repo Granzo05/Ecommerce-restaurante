@@ -12,7 +12,6 @@ import { StockArticuloVenta } from "../../types/Stock/StockArticuloVenta";
 import { StockIngredientes } from "../../types/Stock/StockIngredientes";
 import { formatearFechaDDMMYYYY } from "../../utils/global_variables/functions";
 import { Empleado } from "../../types/Restaurante/Empleado";
-import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 
 const Stocks = () => {
@@ -46,10 +45,10 @@ const Stocks = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
 
     // Combinar los stocks
     const stocks = useMemo(() => {

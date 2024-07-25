@@ -1,10 +1,10 @@
 import { Ingrediente } from '../types/Ingredientes/Ingrediente';
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { sucursalId } from '../utils/global_variables/const';
 
 export const IngredienteService = {
     getIngredientes: async (): Promise<Ingrediente[]> => {
         try {
-            const response = await fetch(URL_API + 'ingredientes/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'ingredientes/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ export const IngredienteService = {
 
     getIngredientesNoBorrados: async (): Promise<Ingrediente[]> => {
         try {
-            const response = await fetch(URL_API + 'ingredientes/disponibles/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'ingredientes/disponibles/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ export const IngredienteService = {
 
     getIngredientesVacios: async (): Promise<Ingrediente[]> => {
         try {
-            const response = await fetch(URL_API + 'ingredientes/vacios/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'ingredientes/vacios/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ export const IngredienteService = {
 
     createIngrediente: async (ingrediente: Ingrediente): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'ingrediente/create/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'ingrediente/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -81,7 +81,7 @@ export const IngredienteService = {
 
     updateIngrediente: async (ingrediente: Ingrediente): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'ingrediente/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'ingrediente/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

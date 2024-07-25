@@ -1,12 +1,12 @@
 import { ArticuloMenu } from '../types/Productos/ArticuloMenu';
 import { Imagenes } from '../types/Productos/Imagenes';
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { sucursalId } from '../utils/global_variables/const';
 
 export const MenuService = {
 
     getMenus: async (): Promise<ArticuloMenu[]> => {
         try {
-            const response = await fetch(URL_API + 'menus/' + sucursalId())
+            const response = await fetch(process.env.URL_API + 'menus/' + sucursalId())
 
             return await response.json();
         } catch (error) {
@@ -18,7 +18,7 @@ export const MenuService = {
 
     getMenusNoBorrados: async (): Promise<ArticuloMenu[]> => {
         try {
-            const response = await fetch(URL_API + 'menus/disponibles/' + sucursalId())
+            const response = await fetch(process.env.URL_API + 'menus/disponibles/' + sucursalId())
 
             return await response.json();
         } catch (error) {
@@ -30,7 +30,7 @@ export const MenuService = {
 
     getMenusPorTipoAndIdSucursal: async (tipoComida: string, idSucursal: number): Promise<ArticuloMenu[]> => {
         try {
-            const response = await fetch(URL_API + 'menu/tipo/' + tipoComida + '/' + idSucursal);
+            const response = await fetch(process.env.URL_API + 'menu/tipo/' + tipoComida + '/' + idSucursal);
 
             return await response.json();
         } catch (error) {
@@ -42,7 +42,7 @@ export const MenuService = {
 
     getMenusPorNombreAndIdSucursal: async (nombre: string, idSucursal: number): Promise<ArticuloMenu[]> => {
         try {
-            const response = await fetch(URL_API + 'menu/busqueda/' + nombre + '/' + idSucursal);
+            const response = await fetch(process.env.URL_API + 'menu/busqueda/' + nombre + '/' + idSucursal);
 
             return await response.json();
         } catch (error) {
@@ -53,7 +53,7 @@ export const MenuService = {
 
     createMenu: async (menu: ArticuloMenu, imagenes: Imagenes[]): Promise<string> => {
         try {
-            const menuResponse = await fetch(URL_API + 'menu/create/' + sucursalId(), {
+            const menuResponse = await fetch(process.env.URL_API + 'menu/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        await fetch(URL_API + 'menu/imagenes/' + sucursalId(), {
+                        await fetch(process.env.URL_API + 'menu/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -96,7 +96,7 @@ export const MenuService = {
 
     updateMenu: async (menu: ArticuloMenu, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'menu/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'menu/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -120,7 +120,7 @@ export const MenuService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreMenu', menu.nombre);
 
-                        await fetch(URL_API + 'menu/imagenes/' + sucursalId(), {
+                        await fetch(process.env.URL_API + 'menu/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -130,7 +130,7 @@ export const MenuService = {
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        await fetch(URL_API + 'menu/imagen/' + imagen.id + '/delete', {
+                        await fetch(process.env.URL_API + 'menu/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
 
@@ -148,7 +148,7 @@ export const MenuService = {
 
     updateBorradoMenu: async (menu: ArticuloMenu): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'menu/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'menu/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

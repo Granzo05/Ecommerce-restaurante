@@ -10,7 +10,7 @@ import '../../styles/sucursales.css'
 import { Empleado } from "../../types/Restaurante/Empleado";
 import { PrivilegiosService } from "../../services/PrivilegiosService";
 import { Privilegios } from "../../types/Restaurante/Privilegios";
-import { DESACTIVAR_PRIVILEGIOS, getBaseUrl } from "../../utils/global_variables/const";
+import { getBaseUrl } from "../../utils/global_variables/const";
 import { Empresa } from "../../types/Restaurante/Empresa";
 import { toast, Toaster } from "sonner";
 import { EmpresaService } from "../../services/EmpresaService";
@@ -111,10 +111,10 @@ const Sucursales = () => {
         return empleadoString ? (JSON.parse(empleadoString) as Empleado) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {

@@ -1,13 +1,13 @@
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Empresa } from '../types/Restaurante/Empresa';
 import { Sucursal } from '../types/Restaurante/Sucursal';
-import { empresaId, getBaseUrl, limpiarCredenciales, URL_API } from '../utils/global_variables/const';
+import { empresaId, getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { EmpleadoService } from './EmpleadoService';
 import { SucursalService } from './SucursalService';
 
 export const EmpresaService = {
     createEmpresa: async (empresa: Empresa, imagenes: Imagenes[]): Promise<string> => {
-        const response = await fetch(URL_API + 'empresa/create', {
+        const response = await fetch(process.env.URL_API + 'empresa/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ export const EmpresaService = {
                     formData.append('file', imagen.file);
                     formData.append('cuit', empresa.cuit);
 
-                    await fetch(URL_API + 'empresa/imagenes', {
+                    await fetch(process.env.URL_API + 'empresa/imagenes', {
                         method: 'POST',
                         body: formData
                     });
@@ -44,7 +44,7 @@ export const EmpresaService = {
 
     getSucursales: async (): Promise<Sucursal[]> => {
         try {
-            const response = await fetch(URL_API + 'sucursales/' + empresaId(), {
+            const response = await fetch(process.env.URL_API + 'sucursales/' + empresaId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ export const EmpresaService = {
     getEmpresa: async (email: string, contraseña: string): Promise<string> => {
         limpiarCredenciales();
         try {
-            const response = await fetch(URL_API + 'empresa/login', {
+            const response = await fetch(process.env.URL_API + 'empresa/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ export const EmpresaService = {
 
     getEmpresaCredentials: async (cuit: string, contraseña: string) => {
         try {
-            const response = await fetch(URL_API + 'empresa/login', {
+            const response = await fetch(process.env.URL_API + 'empresa/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ export const EmpresaService = {
 
     getEmpresas: async (): Promise<Empresa[]> => {
         try {
-            const response = await fetch(URL_API + 'empresas', {
+            const response = await fetch(process.env.URL_API + 'empresas', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -156,7 +156,7 @@ export const EmpresaService = {
 
     updateEmpresa: async (empresa: Empresa, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]) => {
         try {
-            const response = await fetch(URL_API + 'empresa/update/', {
+            const response = await fetch(process.env.URL_API + 'empresa/update/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -180,7 +180,7 @@ export const EmpresaService = {
                         formData.append('file', imagen.file);
                         formData.append('cuit', empresa.cuit);
 
-                        await fetch(URL_API + 'empresa/imagenes', {
+                        await fetch(process.env.URL_API + 'empresa/imagenes', {
                             method: 'POST',
                             body: formData
                         });
@@ -189,7 +189,7 @@ export const EmpresaService = {
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        await fetch(URL_API + 'empresa/imagen/' + imagen.id + '/delete', {
+                        await fetch(process.env.URL_API + 'empresa/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
                     }));
@@ -206,7 +206,7 @@ export const EmpresaService = {
 
     updateEmpresaBorrado: async (empresa: Empresa) => {
         try {
-            const response = await fetch(URL_API + 'empresa/update/', {
+            const response = await fetch(process.env.URL_API + 'empresa/update/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

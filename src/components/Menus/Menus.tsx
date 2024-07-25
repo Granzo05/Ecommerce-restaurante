@@ -10,10 +10,8 @@ import '../../styles/modalFlotante.css';
 import ActivarMenu from "./ActivarMenu";
 import { ArticuloMenu } from "../../types/Productos/ArticuloMenu";
 import { Empleado } from "../../types/Restaurante/Empleado";
-import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 import DetallesMenu from "./DetallesMenu";
-import { Articulo } from "../../types/Productos/Articulo";
 
 const Menus = () => {
     const [menus, setMenus] = useState<ArticuloMenu[]>([]);
@@ -47,10 +45,10 @@ const Menus = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
     const [showDetallesMenu, setShowDetallesMenu] = useState(false);
 
 

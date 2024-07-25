@@ -1,11 +1,11 @@
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Empleado } from '../types/Restaurante/Empleado'
-import { getBaseUrl, limpiarCredenciales, sucursalId, URL_API } from '../utils/global_variables/const';
+import { getBaseUrl, limpiarCredenciales, sucursalId } from '../utils/global_variables/const';
 
 export const EmpleadoService = {
     createEmpleado: async (empleado: Empleado, imagenes: Imagenes[]): Promise<string> => {
         try {
-            let response = await fetch(URL_API + 'empleado/create/' + sucursalId(), {
+            let response = await fetch(process.env.URL_API + 'empleado/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -29,7 +29,7 @@ export const EmpleadoService = {
                         formData.append('file', imagen.file);
                         formData.append('cuilEmpleado', empleado.cuil);
 
-                        await fetch(URL_API + 'empleado/imagenes/' + sucursalId(), {
+                        await fetch(process.env.URL_API + 'empleado/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -47,7 +47,7 @@ export const EmpleadoService = {
 
     getEmpleado: async (email: string, contraseña: string) => {
         try {
-            const response = await fetch(URL_API + 'empleado/login', {
+            const response = await fetch(process.env.URL_API + 'empleado/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ export const EmpleadoService = {
 
     getEmpleados: async (): Promise<Empleado[]> => {
         try {
-            const response = await fetch(URL_API + 'empleados/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'empleados/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ export const EmpleadoService = {
 
     getCantidadCocineros: async (): Promise<number> => {
         try {
-            const response = await fetch(URL_API + 'cocineros/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'cocineros/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -121,7 +121,7 @@ export const EmpleadoService = {
 
     updateEmpleado: async (empleado: Empleado, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'empleado/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -145,7 +145,7 @@ export const EmpleadoService = {
                         formData.append('file', imagen.file);
                         formData.append('cuilEmpleado', empleado.cuil);
 
-                        await fetch(URL_API + 'empleado/imagenes/' + sucursalId(), {
+                        await fetch(process.env.URL_API + 'empleado/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -154,7 +154,7 @@ export const EmpleadoService = {
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        await fetch(URL_API + 'empleado/imagen/' + imagen.id + '/delete', {
+                        await fetch(process.env.URL_API + 'empleado/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
                     }));
@@ -173,7 +173,7 @@ export const EmpleadoService = {
 
     updateBorrado: async (empleado: Empleado): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'empleado/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'empleado/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

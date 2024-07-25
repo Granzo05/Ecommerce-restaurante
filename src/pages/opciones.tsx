@@ -8,7 +8,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Empleado } from '../types/Restaurante/Empleado';
 import { useParams } from 'react-router-dom';
 import { Sucursal } from '../types/Restaurante/Sucursal';
-import { DESACTIVAR_PRIVILEGIOS, getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
+import { getBaseUrl, limpiarCredenciales } from '../utils/global_variables/const';
 import { Empresa } from '../types/Restaurante/Empresa';
 import ModalFlotante from '../components/ModalFlotante';
 import PedidosEnCamino from '../components/Pedidos/PedidosEnCamino';
@@ -203,27 +203,27 @@ const Opciones = () => {
         }
     };
 
-    const [articuloVentaVisibleEmpleado, setArticuloVentaVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [articuloMenuVisibleEmpleado, setArticuloMenuVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [stockVisibleEmpleado, setStockVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [stockEntranteVisibleEmpleado, setStockEntranteVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [ingredientesVisibleEmpleado, setIngredientesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [categoriasVisibleEmpleado, setCategoriasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [medidasVisibleEmpleado, setMedidasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [promocionesVisibleEmpleado, setPromocionesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [subcategoriasVisibleEmpleado, setSubcategoriasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [estadisticasVisibleEmpleado, setEstadisticasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [empleadosVisibleEmpleado, setEmpleadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [sucursalesVisibleEmpleado, setSucursalesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [empresasVisibleEmpleado, setEmpresasVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [pedidosEntrantesVisibleEmpleado, setPedidosEntrantesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [pedidosAceptadosVisibleEmpleado, setPedidosAceptadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [pedidosCocinadosVisibleEmpleado, setPedidosCocinadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [pedidosEntregadosVisibleEmpleado, setPedidosEntregadosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [pedidosEnCaminoVisibleEmpleado, setPedidosEnCaminoVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [rolesVisibleEmpleado, setRolesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [privilegiosVisibleEmpleado, setPrivilegiosVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [clientesVisibleEmpleado, setClientesVisibleEmpleado] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [articuloVentaVisibleEmpleado, setArticuloVentaVisibleEmpleado] = useState(false);
+    const [articuloMenuVisibleEmpleado, setArticuloMenuVisibleEmpleado] = useState(false);
+    const [stockVisibleEmpleado, setStockVisibleEmpleado] = useState(false);
+    const [stockEntranteVisibleEmpleado, setStockEntranteVisibleEmpleado] = useState(false);
+    const [ingredientesVisibleEmpleado, setIngredientesVisibleEmpleado] = useState(false);
+    const [categoriasVisibleEmpleado, setCategoriasVisibleEmpleado] = useState(false);
+    const [medidasVisibleEmpleado, setMedidasVisibleEmpleado] = useState(false);
+    const [promocionesVisibleEmpleado, setPromocionesVisibleEmpleado] = useState(false);
+    const [subcategoriasVisibleEmpleado, setSubcategoriasVisibleEmpleado] = useState(false);
+    const [estadisticasVisibleEmpleado, setEstadisticasVisibleEmpleado] = useState(false);
+    const [empleadosVisibleEmpleado, setEmpleadosVisibleEmpleado] = useState(false);
+    const [sucursalesVisibleEmpleado, setSucursalesVisibleEmpleado] = useState(false);
+    const [empresasVisibleEmpleado, setEmpresasVisibleEmpleado] = useState(false);
+    const [pedidosEntrantesVisibleEmpleado, setPedidosEntrantesVisibleEmpleado] = useState(false);
+    const [pedidosAceptadosVisibleEmpleado, setPedidosAceptadosVisibleEmpleado] = useState(false);
+    const [pedidosCocinadosVisibleEmpleado, setPedidosCocinadosVisibleEmpleado] = useState(false);
+    const [pedidosEntregadosVisibleEmpleado, setPedidosEntregadosVisibleEmpleado] = useState(false);
+    const [pedidosEnCaminoVisibleEmpleado, setPedidosEnCaminoVisibleEmpleado] = useState(false);
+    const [rolesVisibleEmpleado, setRolesVisibleEmpleado] = useState(false);
+    const [privilegiosVisibleEmpleado, setPrivilegiosVisibleEmpleado] = useState(false);
+    const [clientesVisibleEmpleado, setClientesVisibleEmpleado] = useState(false);
 
     useEffect(() => {
         checkPrivilegies();
@@ -231,7 +231,7 @@ const Opciones = () => {
     }, []);
 
     async function checkPrivilegies() {
-        if (!DESACTIVAR_PRIVILEGIOS && (empleado !== null && empleado.privilegios?.length > 0)) {
+        if (!false && (empleado !== null && empleado.privilegios?.length > 0)) {
             try {
                 empleado?.privilegios?.forEach(privilegio => {
                     if (privilegio.nombre === 'Articulos de venta' && privilegio.permisos.includes('READ')) {
@@ -281,7 +281,7 @@ const Opciones = () => {
             } catch (error) {
                 console.error('Error:', error);
             }
-        } else if ((empresa || sucursal !== null) && !DESACTIVAR_PRIVILEGIOS) {
+        } else if ((empresa || sucursal !== null) && !false) {
             setArticuloVentaVisibleEmpleado(true);
             setArticuloMenuVisibleEmpleado(true);
             setStockVisibleEmpleado(true);

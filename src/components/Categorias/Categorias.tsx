@@ -7,7 +7,6 @@ import EditarCategoria from "./EditarCategoria";
 import AgregarCategoria from "./AgregarCategoria";
 import '../../styles/categorias.css'
 import { Empleado } from "../../types/Restaurante/Empleado";
-import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 import ActivarCategoria from "./ActivarCategoria";
 import EliminarCategoria from "./EliminarCategoria";
@@ -59,10 +58,10 @@ const Categorias = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
 
     const [paginaActual, setPaginaActual] = useState(1);
     const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);

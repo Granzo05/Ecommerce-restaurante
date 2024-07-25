@@ -1,11 +1,11 @@
 import { Categoria } from '../types/Ingredientes/Categoria';
 import { Imagenes } from '../types/Productos/Imagenes';
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { sucursalId } from '../utils/global_variables/const';
 
 export const CategoriaService = {
     getCategorias: async (): Promise<Categoria[]> => {
         try {
-            const response = await fetch(URL_API + 'categorias/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'categorias/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ export const CategoriaService = {
 
     getCategoriasNoBorradas: async (): Promise<Categoria[]> => {
         try {
-            const response = await fetch(URL_API + 'categorias/disponibles/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'categorias/disponibles/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ export const CategoriaService = {
 
     createCategoria: async (categoria: Categoria, imagenes: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'categoria/create/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'categoria/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export const CategoriaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreCategoria', categoria.nombre);
 
-                        await fetch(URL_API + 'categoria/imagenes/' + sucursalId(), {
+                        await fetch(process.env.URL_API + 'categoria/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -84,7 +84,7 @@ export const CategoriaService = {
 
     updateCategoria: async (categoria: Categoria, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'categoria/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'categoria/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ export const CategoriaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreCategoria', categoria.nombre);
 
-                        await fetch(URL_API + 'categoria/imagenes/' + sucursalId(), {
+                        await fetch(process.env.URL_API + 'categoria/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -118,7 +118,7 @@ export const CategoriaService = {
 
             if (cargarImagenes && imagenesEliminadas) {
                 await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                    await fetch(URL_API + 'categoria/imagen/' + imagen.id + '/delete', {
+                    await fetch(process.env.URL_API + 'categoria/imagen/' + imagen.id + '/delete', {
                         method: 'PUT',
                     });
                 }));
@@ -134,7 +134,7 @@ export const CategoriaService = {
 
     updateCategoriaBorrado: async (categoria: Categoria): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'categoria/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'categoria/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

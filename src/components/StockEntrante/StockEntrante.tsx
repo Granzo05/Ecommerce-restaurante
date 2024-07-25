@@ -10,12 +10,11 @@ import DetallesStock from "./DetallesStock";
 import { DetalleStock } from "../../types/Stock/DetalleStock";
 import { StockEntrante } from "../../types/Stock/StockEntrante";
 import { Empleado } from "../../types/Restaurante/Empleado";
-import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 import { toast, Toaster } from "sonner";
 import { StockArticuloVentaService } from "../../services/StockArticulosService";
 import { StockIngredientesService } from "../../services/StockIngredientesService";
-import { desparsearMonedaArgentina, formatearFechaYYYYMMDD, parsearMonedaArgentina } from "../../utils/global_variables/functions";
+import { desparsearMonedaArgentina, formatearFechaYYYYMMDD } from "../../utils/global_variables/functions";
 
 const StocksEntrantes = () => {
     const [stockEntrante, setStockEntrante] = useState<StockEntrante[]>([]);
@@ -81,10 +80,10 @@ const StocksEntrantes = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
 
 
     const [paginaActual, setPaginaActual] = useState(1);

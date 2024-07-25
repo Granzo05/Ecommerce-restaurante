@@ -7,7 +7,7 @@ import { toast, Toaster } from 'sonner';
 import { EnumTipoEnvio } from '../../types/Pedidos/EnumTipoEnvio';
 import { Empleado } from '../../types/Restaurante/Empleado';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
-import { DESACTIVAR_PRIVILEGIOS, mostrarFecha } from '../../utils/global_variables/const';
+import { mostrarFecha } from '../../utils/global_variables/const';
 
 
 const PedidosEnCamino = () => {
@@ -120,7 +120,7 @@ const PedidosEnCamino = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [updateVisible, setUpdateVisible] = useState(false);
 
     const [paginaActual, setPaginaActual] = useState(1);
     const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);

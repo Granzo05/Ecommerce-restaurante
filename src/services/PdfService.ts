@@ -1,7 +1,5 @@
-import { URL_API } from "../utils/global_variables/const";
-
 export function descargarFactura(idPedido: number, fechaPedido: string) {
-    fetch(URL_API + "factura/pedido/" + idPedido + "/pdf", {
+    fetch(process.env.URL_API + "factura/pedido/" + idPedido + "/pdf", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -29,7 +27,7 @@ export function descargarFactura(idPedido: number, fechaPedido: string) {
 }
 
 export function descargarPedido(idPedido: number, fechaPedido: string) {
-    fetch(URL_API+ "pedido/" + idPedido + "/pdf", {
+    fetch(process.env.URL_API+ "pedido/" + idPedido + "/pdf", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

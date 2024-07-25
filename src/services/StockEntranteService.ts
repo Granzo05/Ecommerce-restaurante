@@ -1,10 +1,10 @@
 import { StockEntrante } from '../types/Stock/StockEntrante';
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { sucursalId } from '../utils/global_variables/const';
 
 export const StockEntranteService = {
     createStock: async (stock: StockEntrante): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId()}/StockEntrante/create`, {
+            const response = await fetch(process.env.URL_API + `sucursal/${sucursalId()}/StockEntrante/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -25,7 +25,7 @@ export const StockEntranteService = {
 
     getStockPendiente: async (): Promise<StockEntrante[]> => {
         try {
-            const response = await fetch(URL_API + 'stockEntrante/pendientes/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'stockEntrante/pendientes/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ export const StockEntranteService = {
 
     getStockEntregados: async (): Promise<StockEntrante[]> => {
         try {
-            const response = await fetch(URL_API + 'stockEntrante/entregados/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'stockEntrante/entregados/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -65,7 +65,7 @@ export const StockEntranteService = {
 
     updateStock: async (stock: StockEntrante): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `sucursal/${sucursalId()}/stockEntrante/update`, {
+            const response = await fetch(process.env.URL_API + `sucursal/${sucursalId()}/stockEntrante/update`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

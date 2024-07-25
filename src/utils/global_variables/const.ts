@@ -3,10 +3,6 @@ import { Empleado } from "../../types/Restaurante/Empleado";
 import { Empresa } from "../../types/Restaurante/Empresa";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 
-export const URL_API = 'http://localhost:8080/';
-
-export const DESACTIVAR_PRIVILEGIOS = false; // false hay privilegios, true no hay privilegios
-
 export function mostrarFecha(fecha: Date) {
     // Obtener los componentes de la fecha
     const año = fecha.getFullYear();

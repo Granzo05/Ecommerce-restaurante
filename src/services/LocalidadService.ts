@@ -1,11 +1,10 @@
 import { Localidad } from '../types/Domicilio/Localidad';
 import { LocalidadDelivery } from '../types/Restaurante/LocalidadDelivery';
-import { URL_API } from '../utils/global_variables/const';
 
 export const LocalidadService = {
     getLocalidades: async (): Promise<Localidad[] | null> => {
         try {
-            const response = await fetch(URL_API + `localidades`, {
+            const response = await fetch(process.env.URL_API + `localidades`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -25,7 +24,7 @@ export const LocalidadService = {
 
     getLocalidadesDeliveryByIdSucursal: async (id: number): Promise<LocalidadDelivery[] | []> => {
         try {
-            const response = await fetch(URL_API + `localidades/delivery/sucursal/${id}`, {
+            const response = await fetch(process.env.URL_API + `localidades/delivery/sucursal/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -45,7 +44,7 @@ export const LocalidadService = {
 
     getLocalidadesByNombreDepartamento: async (nombreDepartamento: string): Promise<Localidad[] | []> => {
         try {
-            const response = await fetch(URL_API + `localidades/departamento/${nombreDepartamento}`, {
+            const response = await fetch(process.env.URL_API + `localidades/departamento/${nombreDepartamento}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -65,7 +64,7 @@ export const LocalidadService = {
 
     getLocalidadesByNombreDepartamentoAndProvincia: async (nombreDepartamento: string, nombreProvincia: string): Promise<Localidad[] | []> => {
         try {
-            const response = await fetch(URL_API + `localidades/${nombreDepartamento}/${nombreProvincia}`, {
+            const response = await fetch(process.env.URL_API + `localidades/${nombreDepartamento}/${nombreProvincia}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -85,7 +84,7 @@ export const LocalidadService = {
 
     getLocalidadesByNombreProvincia: async (nombreProvincia: string): Promise<Localidad[] | []> => {
         try {
-            const response = await fetch(URL_API + `localidades/provincia/${nombreProvincia}`, {
+            const response = await fetch(process.env.URL_API + `localidades/provincia/${nombreProvincia}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

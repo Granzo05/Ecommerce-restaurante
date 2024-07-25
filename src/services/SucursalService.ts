@@ -2,12 +2,12 @@ import { Cliente } from '../types/Cliente/Cliente';
 import { Imagenes } from '../types/Productos/Imagenes';
 import { Sucursal } from '../types/Restaurante/Sucursal';
 import { SucursalDTO } from '../types/Restaurante/SucursalDTO';
-import { getBaseUrl, limpiarCredenciales, sucursalId, URL_API } from '../utils/global_variables/const';
+import { getBaseUrl, limpiarCredenciales, sucursalId } from '../utils/global_variables/const';
 
 export const SucursalService = {
     createSucursal: async (sucursal: Sucursal, imagenes: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'sucursal/create', {
+            const response = await fetch(process.env.URL_API + 'sucursal/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ export const SucursalService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreSucursal', sucursal.nombre);
 
-                        await fetch(URL_API + 'sucursal/imagenes', {
+                        await fetch(process.env.URL_API + 'sucursal/imagenes', {
                             method: 'POST',
                             body: formData
                         });
@@ -50,7 +50,7 @@ export const SucursalService = {
     getSucursal: async (email: string, contraseña: string) => {
         limpiarCredenciales;
         try {
-            const response = await fetch(URL_API + 'sucursal/login', {
+            const response = await fetch(process.env.URL_API + 'sucursal/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ export const SucursalService = {
 
     getSucursales: async (): Promise<Sucursal[]> => {
         try {
-            const response = await fetch(URL_API + 'sucursales', {
+            const response = await fetch(process.env.URL_API + 'sucursales', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ export const SucursalService = {
 
     getSucursalesByProvincia: async (provincia: string): Promise<Sucursal[]> => {
         try {
-            const response = await fetch(URL_API + 'sucursales/provincia/' + provincia, {
+            const response = await fetch(process.env.URL_API + 'sucursales/provincia/' + provincia, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -122,7 +122,7 @@ export const SucursalService = {
 
     getClientes: async (): Promise<Cliente[]> => {
         try {
-            const response = await fetch(URL_API + 'clientes/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'clientes/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -143,7 +143,7 @@ export const SucursalService = {
 
     getSucursalDTOById: async (idSucursal: number): Promise<SucursalDTO | null> => {
         try {
-            const response = await fetch(URL_API + 'sucursal/' + idSucursal, {
+            const response = await fetch(process.env.URL_API + 'sucursal/' + idSucursal, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -163,7 +163,7 @@ export const SucursalService = {
 
     updateSucursal: async (sucursal: Sucursal, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]) => {
         try {
-            const response = await fetch(URL_API + 'sucursal/update', {
+            const response = await fetch(process.env.URL_API + 'sucursal/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -187,7 +187,7 @@ export const SucursalService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreSucursal', sucursal.nombre);
 
-                        await fetch(URL_API + 'sucursal/imagenes/', {
+                        await fetch(process.env.URL_API + 'sucursal/imagenes/', {
                             method: 'POST',
                             body: formData
                         });
@@ -196,7 +196,7 @@ export const SucursalService = {
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        await fetch(URL_API + 'sucursal/imagen/' + imagen.id + '/delete', {
+                        await fetch(process.env.URL_API + 'sucursal/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
                     }));
@@ -213,7 +213,7 @@ export const SucursalService = {
 
     updateBorrado: async (sucursal: Sucursal) => {
         try {
-            const response = await fetch(URL_API + 'sucursal/update', {
+            const response = await fetch(process.env.URL_API + 'sucursal/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

@@ -2,13 +2,13 @@ import { Cliente } from '../types/Cliente/Cliente'
 import { Domicilio } from '../types/Domicilio/Domicilio';
 import { EnumEstadoPedido } from '../types/Pedidos/EnumEstadoPedido';
 import { Pedido } from '../types/Pedidos/Pedido';
-import { limpiarCredenciales, URL_API } from '../utils/global_variables/const';
+import { limpiarCredenciales } from '../utils/global_variables/const';
 
 export const ClienteService = {
     createUser: async (cliente: Cliente) => {
         limpiarCredenciales();
 
-        const response = await fetch(URL_API + 'cliente/create', {
+        const response = await fetch(process.env.URL_API + 'cliente/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ export const ClienteService = {
     //CONTRASEÑA OLVIDADA--------------------------------------------------//
 
     requestPasswordReset: async (email: string): Promise<string> => {
-        const response = await fetch(URL_API + 'cliente/recoverpassword', {
+        const response = await fetch(process.env.URL_API + 'cliente/recoverpassword', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export const ClienteService = {
     getUser: async (email: string, contraseña: string): Promise<string> => {
         limpiarCredenciales();
         try {
-            const response = await fetch(URL_API + 'cliente/login', {
+            const response = await fetch(process.env.URL_API + 'cliente/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -113,7 +113,7 @@ export const ClienteService = {
     getUserByEmailLogin: async (email: string): Promise<boolean> => {
         limpiarCredenciales();
         try {
-            const response = await fetch(URL_API + 'cliente/email/' + email, {
+            const response = await fetch(process.env.URL_API + 'cliente/email/' + email, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -156,7 +156,7 @@ export const ClienteService = {
 
     getUserById: async (id: number): Promise<Cliente> => {
         try {
-            const response = await fetch(URL_API + 'cliente/id/' + id, {
+            const response = await fetch(process.env.URL_API + 'cliente/id/' + id, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -176,7 +176,7 @@ export const ClienteService = {
 
     checkPassword: async (id: number, contraseña: string): Promise<boolean> => {
         try {
-            const response = await fetch(URL_API + `cliente/check/${id}/${contraseña}`, {
+            const response = await fetch(process.env.URL_API + `cliente/check/${id}/${contraseña}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -196,7 +196,7 @@ export const ClienteService = {
 
     getDomicilios: async (id: number): Promise<Domicilio[]> => {
         try {
-            const response = await fetch(URL_API + `cliente/${id}/domicilios`, {
+            const response = await fetch(process.env.URL_API + `cliente/${id}/domicilios`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -217,7 +217,7 @@ export const ClienteService = {
 
     getDomiciliosNoBorrados: async (id: number): Promise<Domicilio[]> => {
         try {
-            const response = await fetch(URL_API + `cliente/${id}/domicilios/disponibles`, {
+            const response = await fetch(process.env.URL_API + `cliente/${id}/domicilios/disponibles`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -243,7 +243,7 @@ export const ClienteService = {
             const usuario: Cliente = JSON.parse(usuarioString);
 
             try {
-                const response = await fetch(URL_API + `cliente/${usuario.id}/pedidos/${estado}`, {
+                const response = await fetch(process.env.URL_API + `cliente/${usuario.id}/pedidos/${estado}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -272,7 +272,7 @@ export const ClienteService = {
             const usuario: Cliente = JSON.parse(usuarioString);
 
             try {
-                const response = await fetch(URL_API + `cliente/${usuario.id}/pedidos/distintos/${estado}`, {
+                const response = await fetch(process.env.URL_API + `cliente/${usuario.id}/pedidos/distintos/${estado}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -296,7 +296,7 @@ export const ClienteService = {
 
     updateUser: async (cliente: Cliente): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'cliente/update', {
+            const response = await fetch(process.env.URL_API + 'cliente/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

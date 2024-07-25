@@ -17,7 +17,6 @@ import PedidosRechazados from '../components/Cliente/PedidosRechazados';
 const OpcionesCliente = () => {
     const { opcionElegida } = useParams();
     const [opcionSeleccionada, setOpcionSeleccionada] = useState<number>(0);
-    const location = useLocation();
     const [isVisible, setVisible] = useState<boolean>(true);
     const [pedidosVisible, setPedidosVisible] = useState(false);
     const [pedidosIcon, setPedidosIcon] = useState(<KeyboardArrowRightIcon />);

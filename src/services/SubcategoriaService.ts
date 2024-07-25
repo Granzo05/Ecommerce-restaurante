@@ -1,10 +1,10 @@
 import { Subcategoria } from '../types/Ingredientes/Subcategoria';
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { sucursalId } from '../utils/global_variables/const';
 
 export const SubcategoriaService = {
     getSubcategorias: async (): Promise<Subcategoria[]> => {
         try {
-            const response = await fetch(URL_API + 'subcategorias/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'subcategorias/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ export const SubcategoriaService = {
 
     getSubcategoriasByCategoriaId: async (idCategoria: number): Promise<Subcategoria[]> => {
         try {
-            const response = await fetch(URL_API + 'categoria/' + idCategoria + '/subcategorias/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'categoria/' + idCategoria + '/subcategorias/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ export const SubcategoriaService = {
 
     getSubcategoriasByCategoriaIdNoBorradas: async (idCategoria: number): Promise<Subcategoria[]> => {
         try {
-            const response = await fetch(URL_API + 'categoria/' + idCategoria + '/subcategorias/disponibles/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'categoria/' + idCategoria + '/subcategorias/disponibles/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ export const SubcategoriaService = {
 
     updateSubcategoria: async (subcategoria: Subcategoria): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'subcategoria/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'subcategoria/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

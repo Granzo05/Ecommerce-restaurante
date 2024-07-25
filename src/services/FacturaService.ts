@@ -1,13 +1,12 @@
 import { Factura } from '../types/Factura/Factura'
 import { Pedido } from '../types/Pedidos/Pedido';
-import { URL_API } from '../utils/global_variables/const';
 
 export const FacturaService = {
 
     crearFactura: async (pedido: Pedido) => {
         console.log(pedido)
         try {
-            const response = await fetch(URL_API + 'factura/create', {
+            const response = await fetch(process.env.URL_API + 'factura/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -27,7 +26,7 @@ export const FacturaService = {
 
     getFactura: async (userId: number): Promise<Factura[]> => {
         try {
-            const response = await fetch(URL_API + `facturas/cliente/${userId}`, {
+            const response = await fetch(process.env.URL_API + `facturas/cliente/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -50,7 +49,7 @@ export const FacturaService = {
 
     getPdfFactura: async (idPedido: number) => {
         try {
-            const response = await fetch(URL_API + `pdf/factura/${idPedido}`, {
+            const response = await fetch(process.env.URL_API + `pdf/factura/${idPedido}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

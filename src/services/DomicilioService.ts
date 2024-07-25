@@ -1,10 +1,9 @@
 import { Domicilio } from '../types/Domicilio/Domicilio';
-import { URL_API } from '../utils/global_variables/const';
 
 export const DomicilioService = {
     getDomiciliosEmpleado: async (idEmpleado: number): Promise<Domicilio[] | null> => {
         try {
-            const response = await fetch(URL_API + `domicilios/${idEmpleado}`, {
+            const response = await fetch(process.env.URL_API + `domicilios/${idEmpleado}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

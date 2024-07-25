@@ -1,12 +1,12 @@
 import { ArticuloVenta } from '../types/Productos/ArticuloVenta';
 import { Imagenes } from '../types/Productos/Imagenes';
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { sucursalId } from '../utils/global_variables/const';
 
 export const ArticuloVentaService = {
 
     getArticulos: async (): Promise<ArticuloVenta[]> => {
         try {
-            const response = await fetch(URL_API + `articulos/${sucursalId()}`)
+            const response = await fetch(process.env.URL_API + `articulos/${sucursalId()}`)
 
             return await response.json();
         } catch (error) {
@@ -17,7 +17,7 @@ export const ArticuloVentaService = {
 
     getArticulosNoBorrados: async (): Promise<ArticuloVenta[]> => {
         try {
-            const response = await fetch(URL_API + `articulos/disponibles/${sucursalId()}`)
+            const response = await fetch(process.env.URL_API + `articulos/disponibles/${sucursalId()}`)
 
             return await response.json();
         } catch (error) {
@@ -28,7 +28,7 @@ export const ArticuloVentaService = {
 
     getArticulosPorCategoriaAndIdSucursal: async (nombreCategoria: string, idSucursal: number): Promise<ArticuloVenta[]> => {
         try {
-            const response = await fetch(URL_API + `articulos/tipo/${nombreCategoria}/${idSucursal}`);
+            const response = await fetch(process.env.URL_API + `articulos/tipo/${nombreCategoria}/${idSucursal}`);
 
             return await response.json();
         } catch (error) {
@@ -39,7 +39,7 @@ export const ArticuloVentaService = {
 
     getArticulosPorNombreAndIdSucursal: async (nombre: string, idSucursal: number): Promise<ArticuloVenta[]> => {
         try {
-            const response = await fetch(URL_API + `articulos/busqueda/${nombre}/${idSucursal}`);
+            const response = await fetch(process.env.URL_API + `articulos/busqueda/${nombre}/${idSucursal}`);
 
             return await response.json();
         } catch (error) {
@@ -50,7 +50,7 @@ export const ArticuloVentaService = {
 
     getArticulosVacios: async (): Promise<ArticuloVenta[]> => {
         try {
-            const response = await fetch(URL_API + 'articulos/vacios/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'articulos/vacios/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -69,7 +69,7 @@ export const ArticuloVentaService = {
 
     createArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[]): Promise<string> => {
         try {
-            const menuResponse = await fetch(URL_API + 'articulo/create/' + sucursalId(), {
+            const menuResponse = await fetch(process.env.URL_API + 'articulo/create/' + sucursalId(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ export const ArticuloVentaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        await fetch(URL_API + 'articulo/imagenes/' + sucursalId(), {
+                        await fetch(process.env.URL_API + 'articulo/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -111,7 +111,7 @@ export const ArticuloVentaService = {
 
     updateArticulo: async (articuloVenta: ArticuloVenta, imagenes: Imagenes[], imagenesEliminadas: Imagenes[]): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'articulo/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'articulo/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -135,7 +135,7 @@ export const ArticuloVentaService = {
                         formData.append('file', imagen.file);
                         formData.append('nombreArticulo', articuloVenta.nombre);
 
-                        await fetch(URL_API + 'articulo/imagenes/' + sucursalId(), {
+                        await fetch(process.env.URL_API + 'articulo/imagenes/' + sucursalId(), {
                             method: 'POST',
                             body: formData
                         });
@@ -144,7 +144,7 @@ export const ArticuloVentaService = {
 
                 if (imagenesEliminadas) {
                     await Promise.all(imagenesEliminadas.map(async (imagen) => {
-                        await fetch(URL_API + 'articulo/imagen/' + imagen.id + '/delete', {
+                        await fetch(process.env.URL_API + 'articulo/imagen/' + imagen.id + '/delete', {
                             method: 'PUT',
                         });
                     }));
@@ -162,7 +162,7 @@ export const ArticuloVentaService = {
 
     updateBorradoArticulo: async (articuloVenta: ArticuloVenta): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'articulo/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'articulo/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

@@ -1,10 +1,9 @@
 import { Departamento } from '../types/Domicilio/Departamento';
-import { URL_API } from '../utils/global_variables/const';
 
 export const DepartamentoService = {
     getDepartamentos: async (): Promise<Departamento[] | null> => {
         try {
-            const response = await fetch(URL_API + `departamentos`, {
+            const response = await fetch(process.env.URL_API + `departamentos`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -24,7 +23,7 @@ export const DepartamentoService = {
 
     getDepartamentosByNombreProvincia: async (nombreProvincia: string): Promise<Departamento[] | []> => {
         try {
-            const response = await fetch(URL_API + `departamentos/${nombreProvincia}`, {
+            const response = await fetch(process.env.URL_API + `departamentos/${nombreProvincia}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

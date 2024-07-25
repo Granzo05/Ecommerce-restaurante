@@ -1,13 +1,13 @@
 import { toast } from "sonner";
 import { IngresoData } from "../components/Reportes/ReporteComida";
-import { sucursalId, URL_API } from "../utils/global_variables/const";
+import { sucursalId } from "../utils/global_variables/const";
 
 export const ReportesServices = {
     getPedidosGraficoBarraIngresos: async (fechaDesde: string, fechaHasta: string) => {
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
 
-        const response = await fetch(URL_API + `pedidos/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/ingresos/` + sucursalId(), {
+        const response = await fetch(process.env.URL_API + `pedidos/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/ingresos/` + sucursalId(), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export const ReportesServices = {
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
 
-        const response = await fetch(URL_API + `pedidos/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/ganancias/` + sucursalId(), {
+        const response = await fetch(process.env.URL_API + `pedidos/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/ganancias/` + sucursalId(), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export const ReportesServices = {
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
 
-        const response = await fetch(URL_API + `pedidos/cliente/${idCliente}/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/` + sucursalId(), {
+        const response = await fetch(process.env.URL_API + `pedidos/cliente/${idCliente}/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/` + sucursalId(), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export const ReportesServices = {
     getPedidosGraficoBarraComidas: async (fechaDesde: string, fechaHasta: string) => {
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
-        const response = await fetch(URL_API + `pedidos/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/comidas/` + sucursalId(), {
+        const response = await fetch(process.env.URL_API + `pedidos/${fechaDesdeFormatted}/${fechaHastaFormatted}/datachartbar/comidas/` + sucursalId(), {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export const ReportesServices = {
         const fechaDesdeFormatted = fechaDesde.replace(/-/g, 'N');
         const fechaHastaFormatted = fechaHasta.replace(/-/g, 'N');
 
-        const response = await fetch(URL_API + `downloadExcelPedidos/${sucursalId()}/${fechaDesdeFormatted}/${fechaHastaFormatted}`, {
+        const response = await fetch(process.env.URL_API + `downloadExcelPedidos/${sucursalId()}/${fechaDesdeFormatted}/${fechaHastaFormatted}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -111,7 +111,7 @@ export const ReportesServices = {
     },
     
     descargarExcelGraficos: async (datos: IngresoData[], informacion: string) => {
-        const response = await fetch(URL_API + `downloadExcelGrafico/` + informacion, {
+        const response = await fetch(process.env.URL_API + `downloadExcelGrafico/` + informacion, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

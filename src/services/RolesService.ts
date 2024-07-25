@@ -1,10 +1,10 @@
 import { Roles } from '../types/Restaurante/Roles';
-import { sucursalId, URL_API } from '../utils/global_variables/const';
+import { sucursalId } from '../utils/global_variables/const';
 
 export const RolesService = {
     createRol: async (rol: Roles): Promise<string> => {
         try {
-            const response = await fetch(URL_API + `roles/create/${sucursalId()}`, {
+            const response = await fetch(process.env.URL_API + `roles/create/${sucursalId()}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ export const RolesService = {
 
     getRoles: async (): Promise<Roles[]> => {
         try {
-            const response = await fetch(URL_API + 'roles/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'roles/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ export const RolesService = {
 
     getRolesNoBorrados: async (): Promise<Roles[]> => {
         try {
-            const response = await fetch(URL_API + 'roles/disponibles/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'roles/disponibles/' + sucursalId(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ export const RolesService = {
 
     updateRol: async (rol: Roles): Promise<string> => {
         try {
-            const response = await fetch(URL_API + 'rol/update/' + sucursalId(), {
+            const response = await fetch(process.env.URL_API + 'rol/update/' + sucursalId(), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

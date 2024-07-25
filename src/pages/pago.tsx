@@ -24,7 +24,6 @@ import { SucursalService } from "../services/SucursalService";
 import { SucursalDTO } from "../types/Restaurante/SucursalDTO";
 import ModalCrud from "../components/ModalCrud";
 import { getBaseUrl, getBaseUrlCliente } from "../utils/global_variables/const";
-import { ClienteService } from "../services/ClienteService";
 import { Promocion } from "../types/Productos/Promocion";
 
 function useQuery() {

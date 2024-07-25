@@ -9,7 +9,6 @@ import AgregarSubcategoria from "./AgregarSubcategoria";
 import { Categoria } from "../../types/Ingredientes/Categoria";
 import React from "react";
 import { Empleado } from "../../types/Restaurante/Empleado";
-import { DESACTIVAR_PRIVILEGIOS } from "../../utils/global_variables/const";
 import { Sucursal } from "../../types/Restaurante/Sucursal";
 import { CategoriaService } from "../../services/CategoriaService";
 
@@ -55,10 +54,10 @@ const Subsubcategorias = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
 
 
     const [paginaActual, setPaginaActual] = useState(1);

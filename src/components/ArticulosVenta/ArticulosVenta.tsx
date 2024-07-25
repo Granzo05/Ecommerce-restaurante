@@ -11,7 +11,6 @@ import EliminarArticuloVenta from './EliminarArticulo';
 import ActivarArticuloVenta from './ActivarArticulo';
 import '../../styles/articulosVenta.css'
 import { Empleado } from '../../types/Restaurante/Empleado';
-import { DESACTIVAR_PRIVILEGIOS } from '../../utils/global_variables/const';
 import { Sucursal } from '../../types/Restaurante/Sucursal';
 
 const ArticuloVentas = () => {
@@ -43,10 +42,10 @@ const ArticuloVentas = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [createVisible, setCreateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [updateVisible, setUpdateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [createVisible, setCreateVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
 
     async function checkPrivilegies() {
         if (empleado && empleado.privilegios?.length > 0) {

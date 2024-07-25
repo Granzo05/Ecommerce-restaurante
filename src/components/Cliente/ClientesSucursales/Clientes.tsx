@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Empleado } from "../../../types/Restaurante/Empleado";
-import { DESACTIVAR_PRIVILEGIOS } from "../../../utils/global_variables/const";
 import { Sucursal } from "../../../types/Restaurante/Sucursal";
 import { SucursalService } from "../../../services/SucursalService";
 import { Cliente } from "../../../types/Cliente/Cliente";
@@ -48,8 +47,8 @@ const Clientes = () => {
         return sucursalString ? (JSON.parse(sucursalString) as Sucursal) : null;
     });
 
-    const [deleteVisible, setDeleteVisible] = useState(DESACTIVAR_PRIVILEGIOS);
-    const [activateVisible, setActivateVisible] = useState(DESACTIVAR_PRIVILEGIOS);
+    const [deleteVisible, setDeleteVisible] = useState(false);
+    const [activateVisible, setActivateVisible] = useState(false);
 
     const [paginaActual, setPaginaActual] = useState(1);
     const [cantidadProductosMostrables, setCantidadProductosMostrables] = useState(11);
