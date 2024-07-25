@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArticuloVentaService } from '../../services/ArticuloVentaService';
 import { Imagenes } from '../../types/Productos/Imagenes';
 import { Toaster, toast } from 'sonner'
-import '../../editarArticuloVenta.css'
+import '../../styles/editarArticuloVenta.css'
 import { ArticuloVenta } from '../../types/Productos/ArticuloVenta';
 import '../../styles/modalCrud.css'
 import InputComponent from '../InputFiltroComponent';
