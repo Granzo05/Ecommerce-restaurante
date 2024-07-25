@@ -95,7 +95,7 @@ export function empresaId(): number {
 export function getBaseUrl(): string {
     const idSucursal = sucursalId();
 
-    const baseUrl = process.env.NODE_ENV !== 'production'
+    const baseUrl = process.env.NODE_ENV === 'production'
         ? `https://buen-sabor-app-typescript-react.vercel.app/${idSucursal}`
         : `${window.location.protocol}//${window.location.host}/${idSucursal}`;
 
