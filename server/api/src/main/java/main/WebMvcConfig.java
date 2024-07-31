@@ -15,7 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:C://Buen-sabor//buen-sabor-app-typescript-react//server//api//src//main//webapp//WEB-INF//images")
+                .addResourceLocations("file:app//src//main//webapp//WEB-INF//")
                 .setCacheControl(CacheControl.maxAge(2, TimeUnit.HOURS).cachePublic());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
