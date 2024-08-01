@@ -54,6 +54,7 @@ const SucursalCards: React.FC = () => {
 
   useEffect(() => {
     document.title = 'El Buen Sabor - Seleccionar sucursal';
+    console.log(process.env.URL_API)
   }, []);
 
   async function handleSucursalClick(sucursal: Sucursal) {
