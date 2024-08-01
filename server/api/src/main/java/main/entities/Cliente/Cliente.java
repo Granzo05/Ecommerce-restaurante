@@ -1,11 +1,11 @@
 package main.entities.Cliente;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import main.entities.Domicilio.Domicilio;
 import main.entities.Pedidos.Pedido;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
@@ -23,7 +23,6 @@ import java.util.Set;
 @ToString
 @Table(name = "clientes", schema = "buen_sabor")
 public class Cliente implements Serializable {
-    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     @Column(name = "fecha_registro", updatable = false, nullable = false)
