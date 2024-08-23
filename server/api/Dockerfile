@@ -17,5 +17,6 @@ COPY --from=build ./src/main/webapp/WEB-INF/imagesEmpresas /app/src/main/webapp/
 COPY --from=build ./src/main/webapp/WEB-INF/imagesMenu /app/src/main/webapp/WEB-INF/imagesMenu
 COPY --from=build ./src/main/webapp/WEB-INF/imagesPromocion /app/src/main/webapp/WEB-INF/imagesPromocion
 COPY --from=build ./src/main/webapp/WEB-INF/imagesSucursales /app/src/main/webapp/WEB-INF/imagesSucursales
+COPY --from=build ./src/main/resources/localidades.csv /app/src/main/resources/localidades.csv
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
